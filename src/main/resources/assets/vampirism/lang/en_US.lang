@@ -335,6 +335,10 @@ advancement.vampirism.regicide=Regicide
 advancement.vampirism.regicide.desc=Defeat a vampire baron
 advancement.vampirism.blood_cult=Blood cult
 advancement.vampirism.blood_cult.desc=Perform an ritual at the Altar of Infusion
+advancement.vampirism.yuck=Yuck!
+advancement.vampirism.yuck.desc=Suck blood from an undead creature
+advancement.vampirism.sniped=Sniped!
+advancement.vampirism.sniped.dec=Get sniped while in bat mode
 
 
 #POTIONS
