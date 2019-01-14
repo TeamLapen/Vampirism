@@ -34,10 +34,7 @@ import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -515,6 +512,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onDeath(DamageSource src) {
+        if (actionHandler.isActionActive(VampireActions.bat) && src.getImmediateSource() instanceof IProjectile) {
+            if (player instanceof EntityPlayerMP) {
+                ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.SNIPED_IN_BAT);
+            }
+        }
         actionHandler.deactivateAllActions();
         wasDead = true;
     }
@@ -1109,6 +1111,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
         if (entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) {
             player.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
+            if (player instanceof EntityPlayerMP) {
+                ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.POISONOUS_BITE);
+            }
         } else if (hunter) {
             if (entity instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) entity)) {
                 player.attackEntityFrom(DamageSource.causeThornsDamage(entity), damage);
