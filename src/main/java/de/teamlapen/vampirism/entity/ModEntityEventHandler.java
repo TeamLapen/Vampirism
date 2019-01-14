@@ -44,6 +44,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ModEntityEventHandler {
 
     private boolean skipAttackDamageOnce = false;
+    private boolean warnAboutCreeper = true;
 
     @SubscribeEvent
     public void onAttachCapabilityEntity(AttachCapabilitiesEvent<Entity> event) {
@@ -122,7 +123,10 @@ public class ModEntityEventHandler {
                     ((EntityCreeper) event.getEntity()).targetTasks.removeTask(target);
                     ((EntityCreeper) event.getEntity()).targetTasks.addTask(1, new EntityAINearestAttackableTarget<>((EntityCreeper) event.getEntity(), EntityPlayer.class, 10, true, false, input -> input != null && !VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers));
                 } else {
-                    VampirismMod.log.w("EntityEventHandler", "Could not replace creeper target task");
+                    if (warnAboutCreeper) {
+                        VampirismMod.log.w("EntityEventHandler", "Could not replace creeper target task");
+                        warnAboutCreeper = false;
+                    }
                 }
             }
         }
