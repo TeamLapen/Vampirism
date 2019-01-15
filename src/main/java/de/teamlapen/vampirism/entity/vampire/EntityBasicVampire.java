@@ -295,12 +295,16 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
-    protected void setAvailableActions() {
+    protected void setAvailableActions() { // TODO edit
         super.setAvailableActions();
-        // this.availableActions.add(EntityActions.entity_invisible); // TODO edit
-        this.availableActions.add(EntityActions.entity_heal);
-        // this.availableActions.add(EntityActions.entity_regeneration);
-        // this.availableActions.add(EntityActions.entity_speed);
+        if (getLevel() == 1) {
+            this.availableActions.add(EntityActions.entity_regeneration);
+            this.availableActions.add(EntityActions.entity_speed);
+        } else if (getLevel() == 2) {
+            this.availableActions.add(EntityActions.entity_invisible);
+            this.availableActions.add(EntityActions.entity_speed);
+            this.availableActions.add(EntityActions.entity_regeneration);
+        }
     }
 
 }
