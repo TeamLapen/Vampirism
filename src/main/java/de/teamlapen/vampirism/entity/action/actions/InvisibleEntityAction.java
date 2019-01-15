@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityVampirism;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.EnumParticleTypes;
 
 public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
     
@@ -31,6 +33,13 @@ public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & 
             entity.getRepresentingEntity().setInvisible(true);
         }
         return false;
+    }
+
+    @Override
+    public void activate(T entity, int duration) {
+        for (int i = 0; i < 3; i++) {
+            Minecraft.getMinecraft().world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, entity.posX, entity.posY, entity.posZ, 0, 0.5, 0);
+        }
     }
 
 }

@@ -11,4 +11,6 @@ public interface ILastingAction<T extends IFactionEntity> extends IEntityAction 
     void deactivate(T entity);
 
     boolean onUpdate(T entity, int duration);
+
+    void activate(T entity, int duration);
 }

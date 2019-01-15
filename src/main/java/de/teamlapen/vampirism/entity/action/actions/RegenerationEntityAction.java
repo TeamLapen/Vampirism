@@ -9,8 +9,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import java.util.Random;
 
 public class RegenerationEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
 
@@ -36,10 +35,13 @@ public class RegenerationEntityAction<T extends EntityVampirism & IFactionEntity
         return true;
     }
 
-    @SideOnly(Side.CLIENT)
     public void effects(T entity, int duration) {
         if (duration % 20 == 0) {
-            VampLib.proxy.getParticleHandler().spawnParticle(Minecraft.getMinecraft().world, new ResourceLocation("vampirism", "heal"), entity.posX, entity.posY, entity.posZ, entity);
+            VampLib.proxy.getParticleHandler().spawnParticles(Minecraft.getMinecraft().world, new ResourceLocation("vampirism", "heal"), entity.posX, entity.posY + 1, entity.posZ, 2, 0.01D, new Random(), entity);
         }
+    }
+
+    @Override
+    public void activate(T entity, int duration) {
     }
 }
