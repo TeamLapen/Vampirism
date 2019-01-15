@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-
 import de.teamlapen.lib.util.ParticleHandler;
 import de.teamlapen.vampirism.client.render.particle.FlyingBloodEntityParticle;
 import de.teamlapen.vampirism.client.render.particle.FlyingBloodParticle;
@@ -166,34 +165,19 @@ public class ModParticles {
             @SideOnly(Side.CLIENT)
             @Override
             public Object[] readParticleInfo(NBTTagCompound nbt) {
-                int i = nbt.getInteger("0");
-                World world = Minecraft.getMinecraft().world;
-                if (world == null)
-                    return null;
-                Entity e = world.getEntityByID(i);
-                if (e == null)
-                    return null;
-                Object[] data = new Object[1];
-                data[0] = e;
-                return data;
+                return new Object[0];
             }
 
             @Override
             public NBTTagCompound createParticleInfo(Object... param) {
-                NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setInteger("0", ((Entity) param[0]).getEntityId());
-                return nbt;
+                return new NBTTagCompound();
             }
 
             @SideOnly(Side.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new HealingParticle(world, posX, posY, posZ, posZ, posZ, posZ, (Entity) param[0]);
+                return new HealingParticle(world, posX, posY, posZ, posZ, posZ, posZ);
             }
         });
-    }
-
-    public static void setParticleTextureAtlas(TextureAtlasSprite atlas) {
-        modParticleAtlas = atlas;
     }
 }
