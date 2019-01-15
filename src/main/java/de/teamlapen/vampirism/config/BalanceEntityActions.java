@@ -29,7 +29,7 @@ public class BalanceEntityActions extends BalanceValues {
     @DefaultInt(value = 5, minValue = 1, name = "Regeneration Cooldown", comment = "In seconds")
     public int REGENERATION_COOLDOWN;
 
-    @DefaultInt(value = 20, minValue = 0, maxValue = 100, name = "Regeneration Amount", comment = "In percent")
+    @DefaultInt(value = 30, minValue = 0, maxValue = 100, name = "Regeneration Amount", comment = "In percent")
     public int REGENERATION_AMOUNT;
 
     /* Speed Action */
@@ -39,7 +39,7 @@ public class BalanceEntityActions extends BalanceValues {
     @DefaultInt(value = 5, minValue = 1, name = "Speed Cooldown", comment = "In seconds")
     public int SPEED_COOLDOWN;
 
-    @DefaultDouble(value = 0.1, name = "Speed Amount", comment = "Speed = basevalue * (1 + SPEED_AMOUNT)")
+    @DefaultDouble(value = 0.15, name = "Speed Amount", comment = "Speed = basevalue * (1 + SPEED_AMOUNT)")
     public double SPEED_AMOUNT;
 
 
