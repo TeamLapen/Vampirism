@@ -45,15 +45,25 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
 
     @Override
     public void updateTask() {
-        if (duration > 0 && cooldown > 0) {
+        if (duration > 0) {
             duration--;
             updateAction();
-        } else if (cooldown > 0 && duration <= 0) {
+        } else if (cooldown > 0) {
             cooldown--;
-        } else if (cooldown <= 0 && duration <= 0) {
+        } else {
             newAction();
             duration = action.getDuration(entity.getLevel());
             cooldown = action.getCooldown(entity.getLevel());
+            if (action instanceof ILastingAction) {
+                ((ILastingAction) action).activate(entity, action.getDuration(entity.getLevel()));
+            }
+        }
+
+        if (duration == 0) {
+            if (action instanceof ILastingAction) {
+                ((ILastingAction) action).deactivate(entity);
+            }
+            duration--;
         }
     }
 
