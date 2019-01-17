@@ -1,16 +1,42 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
+import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.entity.EntityVampirism;
+import net.minecraft.entity.EntityLiving;
 
 public interface ILastingAction<T extends IFactionEntity> extends IEntityAction {
 
+    /**
+     * @param level
+     *            level of the IFactionEntity
+     * @return duration of the action in ticks
+     */
     int getDuration(int level);
 
-    int getCooldown(int level);
-
+    /**
+     * called when the duration of the action is over
+     * 
+     * @param entity
+     *            entity which action should be deactivated
+     */
     void deactivate(T entity);
 
-    boolean onUpdate(T entity, int duration);
+    /**
+     * called every LivingUpdate of {@link EntityLiving} which implements {@link EntityVampirism} & {@link IFactionEntity} & {@link IAdjustableLevel}
+     * 
+     * @param entity
+     *            entity whose action is to be updated
+     * @param duration
+     *            lasting duration of the action
+     */
+    void onUpdate(T entity, int duration);
 
-    void activate(T entity, int duration);
+    /**
+     * called to activate the action
+     * 
+     * @param entity
+     *            for which the action should be activated
+     */
+    void activate(T entity);
 }

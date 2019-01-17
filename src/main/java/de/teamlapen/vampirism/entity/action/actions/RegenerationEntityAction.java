@@ -29,19 +29,14 @@ public class RegenerationEntityAction<T extends EntityVampirism & IFactionEntity
     }
 
     @Override
-    public boolean onUpdate(T entity, int duration) {
+    public void onUpdate(T entity, int duration) {
         entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * Balance.ea.REGENERATION_AMOUNT / (getDuration(entity.getLevel()) * 20)); // seconds in ticks
-        effects(entity, duration);
-        return true;
-    }
-
-    public void effects(T entity, int duration) {
         if (duration % 20 == 0) {
-            VampLib.proxy.getParticleHandler().spawnParticles(Minecraft.getMinecraft().world, new ResourceLocation("vampirism", "heal"), entity.posX, entity.posY + 1, entity.posZ, 2, 0.01D, new Random(), entity);
+            VampLib.proxy.getParticleHandler().spawnParticles(Minecraft.getMinecraft().getIntegratedServer().getEntityWorld(), new ResourceLocation("vampirism", "heal"), entity.posX, entity.posY + 1, entity.posZ, 2, 0.01D, new Random(), entity);
         }
     }
 
     @Override
-    public void activate(T entity, int duration) {
+    public void activate(T entity) {
     }
 }

@@ -28,17 +28,16 @@ public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & 
     }
 
     @Override
-    public boolean onUpdate(T entity, int duration) {
+    public void onUpdate(T entity, int duration) {
         if (!entity.getRepresentingEntity().isInvisible()) {
             entity.getRepresentingEntity().setInvisible(true);
         }
-        return false;
     }
 
     @Override
-    public void activate(T entity, int duration) {
+    public void activate(T entity) {
         for (int i = 0; i < 3; i++) {
-            Minecraft.getMinecraft().world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, entity.posX, entity.posY, entity.posZ, 0, 0.5, 0);
+            Minecraft.getMinecraft().world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.posY, entity.posZ, 0, 0.5, 0);
         }
     }
 

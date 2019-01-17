@@ -6,5 +6,11 @@ import de.teamlapen.vampirism.entity.EntityVampirism;
 
 public interface IInstantAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends IEntityAction {
 
+    /**
+     * called to active the action
+     * 
+     * @param entity
+     *            for which the action should be activated
+     */
     boolean activate(T entity);
 }
