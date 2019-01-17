@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.client.render.particle.HealingParticle;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -28,8 +27,6 @@ public class ModParticles {
      * Arguments: Particle ID (Vanilla texture,int), TicksToLive(int), Color(int), [speed modifier (double)]
      */
     public static final ResourceLocation GENERIC_PARTICLE = new ResourceLocation(REFERENCE.MODID, "generic");
-
-    public static TextureAtlasSprite modParticleAtlas;
 
     public static void init() {
         ParticleHandler.registerParticle(GENERIC_PARTICLE, new ParticleHandler.ICustomParticleFactory() {
@@ -176,7 +173,7 @@ public class ModParticles {
             @SideOnly(Side.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new HealingParticle(world, posX, posY, posZ, posZ, posZ, posZ);
+                return new HealingParticle(world, posX, posY, posZ);
             }
         });
     }

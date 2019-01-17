@@ -19,8 +19,8 @@ public class HealingParticle extends Particle {
     private static final ResourceLocation HEART_TEXTURE = new ResourceLocation("vampirism", "textures/particle/particles.png");
     private static final VertexFormat VERTEX_FORMAT = (new VertexFormat()).addElement(DefaultVertexFormats.POSITION_3F).addElement(DefaultVertexFormats.TEX_2F).addElement(DefaultVertexFormats.COLOR_4UB).addElement(DefaultVertexFormats.TEX_2S).addElement(DefaultVertexFormats.NORMAL_3B).addElement(DefaultVertexFormats.PADDING_1B);
 
-    public HealingParticle(World worldIn, double posX, double posY, double posZ, double speedX, double speedY, double speedZ) {
-        super(worldIn, posX, posY, posZ, speedX, speedY, speedZ);
+    public HealingParticle(World worldIn, double posX, double posY, double posZ) {
+        super(worldIn, posX, posY, posZ, 0, 0, 0);
         this.particleMaxAge = 14;
     }
 
@@ -49,9 +49,6 @@ public class HealingParticle extends Particle {
 
     @Override
     public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-        int i = (int) (((float) this.particleAge + partialTicks) * 3.0F / (float) this.particleMaxAge);
-
-        if (i <= 7) {
             this.textureManager.bindTexture(HEART_TEXTURE);
             float f = 0F;// minU
             float f1 = 0.030188679245283F;// maxU
@@ -77,7 +74,6 @@ public class HealingParticle extends Particle {
             buffer.pos((double) f5 + avec3d[3].x, (double) f6 + avec3d[3].y, (double) f7 + avec3d[3].z).tex((double) f, (double) f3).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(0, 240).normal(0.0F, 1.0F, 0.0F).endVertex();
             Tessellator.getInstance().draw();
             GlStateManager.enableLighting();
-        }
     }
 
 }
