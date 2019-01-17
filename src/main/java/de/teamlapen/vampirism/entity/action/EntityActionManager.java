@@ -12,7 +12,7 @@ public class EntityActionManager implements IEntityActionManager {
 
     @Override
     public List<IEntityAction> getAllEntityActions() {
-        return Lists.newArrayList(VampirismRegistries.ENTITYACTIONS.getValues());
+        return Lists.newArrayList(VampirismRegistries.ENTITYACTIONS.getValuesCollection());
     }
 
     @Override

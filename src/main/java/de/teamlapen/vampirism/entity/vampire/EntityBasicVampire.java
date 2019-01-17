@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.vampire;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -45,6 +46,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import java.util.List;
 import javax.annotation.Nullable;
 
 /**
@@ -66,6 +68,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         hasArms = true;
         this.restrictedSpawn = true;
         this.setSize(0.6F, 1.95F);
+        this.entityAIUseAction = new EntityAIUseAction(this, getAvailableActions());
     }
 
     @Override
@@ -280,12 +283,6 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     }
 
-    @Override
-    protected void initEntityAI1() {
-        super.initEntityAI1();
-        this.actionTasks.addTask(0, new EntityAIUseAction<EntityBasicVampire>(this, this.availableActions));
-    }
-
 
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
@@ -295,16 +292,17 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
-    protected void setAvailableActions() { // TODO edit
-        super.setAvailableActions();
-        if (getLevel() == 1) {
-            this.availableActions.add(EntityActions.entity_regeneration);
-            this.availableActions.add(EntityActions.entity_speed);
+    protected List<DefaultEntityAction> getAvailableActions() {
+        List<DefaultEntityAction> availableActions = super.getAvailableActions();
+        if (getLevel() <= 1) {
+            availableActions.add(EntityActions.entity_regeneration);
+            availableActions.add(EntityActions.entity_speed);
         } else if (getLevel() == 2) {
-            this.availableActions.add(EntityActions.entity_invisible);
-            this.availableActions.add(EntityActions.entity_speed);
-            this.availableActions.add(EntityActions.entity_regeneration);
+            availableActions.add(EntityActions.entity_invisible);
+            availableActions.add(EntityActions.entity_speed);
+            availableActions.add(EntityActions.entity_regeneration);
         }
+        return availableActions;
     }
 
 }

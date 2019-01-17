@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
-import de.teamlapen.vampirism.entity.ai.EntityAIUseAction;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
@@ -35,6 +35,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import java.util.List;
 import javax.annotation.Nullable;
 
 /**
@@ -232,12 +233,6 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
-    @Override
-    protected void initEntityAI1() {
-        super.initEntityAI1();
-        this.actionTasks.addTask(0, new EntityAIUseAction<EntityAdvancedVampire>(this, this.availableActions));
-    }
-
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH + Balance.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
@@ -247,11 +242,12 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     }
 
     @Override
-    protected void setAvailableActions() { // TODO edit
-        super.setAvailableActions();
-        this.availableActions.add(EntityActions.entity_invisible);
-        this.availableActions.add(EntityActions.entity_speed);
-        this.availableActions.add(EntityActions.entity_regeneration);
-        this.availableActions.add(EntityActions.entity_heal);
+    protected List<DefaultEntityAction> getAvailableActions() {
+        List<DefaultEntityAction> availableActions = super.getAvailableActions();
+        availableActions.add(EntityActions.entity_invisible);
+        availableActions.add(EntityActions.entity_speed);
+        availableActions.add(EntityActions.entity_regeneration);
+        availableActions.add(EntityActions.entity_heal);
+        return availableActions;
     }
 }
