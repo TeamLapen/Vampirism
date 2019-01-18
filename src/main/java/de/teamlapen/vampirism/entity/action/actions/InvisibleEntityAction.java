@@ -6,11 +6,10 @@ import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityVampirism;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumParticleTypes;
 
 public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
-    
+
     @Override
     public int getCooldown(int level) {
         return Balance.ea.INVISIBLE_COOLDOWN * 20; // seconds into ticks
@@ -24,7 +23,7 @@ public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & 
     @Override
     public void deactivate(T entity) {
         entity.getRepresentingEntity().setInvisible(false);
-        
+
     }
 
     @Override
@@ -37,7 +36,8 @@ public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & 
     @Override
     public void activate(T entity) {
         for (int i = 0; i < 3; i++) {
-            Minecraft.getMinecraft().world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.posY, entity.posZ, 0, 0.5, 0);
+                entity.getRepresentingEntity().getEntityWorld().spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.posY, entity.posZ, 0, 0.5, 0);
+
         }
     }
 

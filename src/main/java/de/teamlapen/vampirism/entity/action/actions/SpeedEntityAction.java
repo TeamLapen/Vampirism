@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityVampirism;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.EnumParticleTypes;
@@ -39,7 +38,7 @@ public class SpeedEntityAction<T extends EntityVampirism & IFactionEntity & IAdj
             entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(uuid, "speedaction", Balance.ea.SPEED_AMOUNT, 2));
         }
         if (duration % 5 == 0) {
-            Minecraft.getMinecraft().world.spawnParticle(EnumParticleTypes.CLOUD, entity.posX, entity.posY, entity.posZ, -entity.motionX, 0.05, -entity.motionZ);
+            entity.getRepresentingEntity().getEntityWorld().spawnParticle(EnumParticleTypes.CLOUD, entity.posX, entity.posY, entity.posZ, -entity.motionX, 0.05, -entity.motionZ);
         }
     }
 
