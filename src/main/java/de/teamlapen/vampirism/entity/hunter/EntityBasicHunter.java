@@ -68,7 +68,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     /**
      * Player currently being trained otherwise null
      */
-    private EntityPlayer trainee;
+    private @Nullable
+    EntityPlayer trainee;
     /**
      * Caches the village of this hunter if he is a villageHunter
      */
