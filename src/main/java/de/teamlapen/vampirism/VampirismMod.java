@@ -50,6 +50,7 @@ import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageOld;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -225,6 +226,7 @@ public class VampirismMod {
         FactionPlayerHandler.registerCapability();
         ExtendedCreature.registerCapability();
         VampirismVillageOld.registerCapability();
+        VampirismVillage.registerCapability();
 
         setupAPI2();
         Configs.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);

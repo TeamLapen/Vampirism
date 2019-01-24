@@ -399,6 +399,10 @@ text.vampirism.village.neutral=Neutral village
 text.vampirism.village.totem_destroy.fail_other_capturing=Cannot destroy totem while another faction is capturing it
 text.vampirism.village.totem_destroy.fail_capture_in_progress=Cannot destroy totem while someone is capturing it
 text.vampirism.village.totem_destroy.fail_other_faction=Cannot destroy a totem of another faction
+text.vampirism.village.village_captured_by=A nearby village has been captured by %s
+text.vampirism.village.village_capture_aborted=The attack on a nearby village has been aborted
+text.vampirism.village.neutral_village_under_attack=A nearby neutral village is under attack from %s
+text.vampirism.village.faction_village_under_attack=A nearby %s village is under attack from %s
 
 #ETC
 text.vampirism.vampire=Vampire

@@ -36,6 +36,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
@@ -64,6 +65,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     private final EntityAIAttackRangedCrossbow attackRange;
     private boolean villageHunter = false;
     private boolean defendVillageAdded = false;
+
     /**
      * Player currently being trained otherwise null
      */
@@ -421,6 +423,22 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             defendVillageAdded = true;
         }
 
+    }
+
+    @Override
+    public void attackVillage(BlockPos pos) {
+        this.setCustomNameTag("Attacking Village");
+    }
+
+    @Override
+    public void defendVillage(BlockPos pos) {
+        setDefendVillage(true);
+        this.setCustomNameTag("Defending Village");
+    }
+
+    @Override
+    public void stopVillageAttackDefense() {
+        setDefendVillage(false);
     }
 
     protected void updateEntityAttributes() {

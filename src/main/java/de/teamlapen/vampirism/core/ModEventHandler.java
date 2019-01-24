@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.network.SyncConfigPacket;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.ModWorldEventListener;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import de.teamlapen.vampirism.world.villages.VampirismVillageOld;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -44,6 +45,8 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onAttachCapabilitiesVillage(AttachCapabilitiesEvent<Village> event) {
         event.addCapability(REFERENCE.VAMPIRISM_VILLAGE_KEY, VampirismVillageOld.createNewCapability(event.getObject()));
+        event.addCapability(REFERENCE.VAMPIRISM_VILLAGE_KEY_NEW, VampirismVillage.createNewCapability(event.getObject()));
+
     }
 
     @SideOnly(Side.CLIENT)

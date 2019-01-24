@@ -27,6 +27,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -45,6 +46,23 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     private int bloodtimer = 100;
     private EntityAdvancedVampire advancedLeader = null;
     private int angryTimer = 0;
+
+    private EntityAIBase tasks_avoidHunter;
+    @Nullable
+    private EntityAIBase tasks_defendVillage;
+    @Nullable
+    private EntityAIBase tasks_attackVillage;
+
+    /**
+     * If this is non-null we are currently attacking a village center
+     */
+    @Nullable
+    private BlockPos village_attack_center;
+    /**
+     * If this is non-null we are currently defending a village center
+     */
+    @Nullable
+    private BlockPos village_defense_center;
 
     public EntityBasicVampire(World world) {
         super(world, true);
@@ -240,6 +258,33 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
+    public void attackVillage(BlockPos pos) {
+        this.tasks.removeTask(tasks_avoidHunter);
+        village_attack_center = pos;
+        this.setCustomNameTag("Attacking Village");//Debug
+    }
+
+    @Override
+    public void defendVillage(BlockPos pos) {
+        this.tasks.removeTask(tasks_avoidHunter);
+        village_defense_center = pos;
+        this.setCustomNameTag("Defending Village"); //Debug
+    }
+
+    @Override
+    public void stopVillageAttackDefense() {
+        this.setCustomNameTag("");
+        if (village_defense_center != null) {
+            this.tasks.addTask(2, this.tasks_avoidHunter);
+            village_defense_center = null;
+        } else if (village_attack_center != null) {
+            this.tasks.addTask(2, this.tasks_avoidHunter);
+
+            village_attack_center = null;
+        }
+    }
+
+    @Override
     protected void initEntityAI() {
         super.initEntityAI();
         if (world.getDifficulty() == EnumDifficulty.HARD) {
@@ -247,7 +292,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
             this.tasks.addTask(1, new EntityAIBreakDoor(this));
             ((PathNavigateGround) this.getNavigator()).setBreakDoors(true);
         }
-        this.tasks.addTask(2, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1));
+        this.tasks_avoidHunter = new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1);
+        this.tasks.addTask(2, this.tasks_avoidHunter);
         this.tasks.addTask(2, new VampireAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
@@ -266,7 +312,6 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
 
     }
-
 
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);

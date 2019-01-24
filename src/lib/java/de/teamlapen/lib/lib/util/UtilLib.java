@@ -98,11 +98,16 @@ public class UtilLib {
     public static BlockPos getRandomPosInBox(World w, AxisAlignedBB box) {
         int x = (int) box.minX + w.rand.nextInt((int) (box.maxX - box.minX) + 1);
         int z = (int) box.minZ + w.rand.nextInt((int) (box.maxZ - box.minZ) + 1);
-        int y = w.getHeight(new BlockPos(x, 0, z)).getY();
-        if (y < box.minX || y > box.maxY) {
-            y = (int) box.minY + w.rand.nextInt((int) (box.maxY - box.minY) + 1);
+        int y = w.getHeight(x, z) + 5;
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, y, z);
+        while (y > box.minY && !w.getBlockState(pos).isNormalCube()) {
+            pos.setPos(x, --y, z);
         }
-        return new BlockPos(x, y, z);
+
+        if (y < box.minY || y > box.maxY - 1) {
+            pos.setPos(x, (int) box.minY + w.rand.nextInt((int) (box.maxY - box.minY) + 1), z);
+        }
+        return pos.up();
     }
 
     /**
@@ -197,9 +202,9 @@ public class UtilLib {
         boolean flag = false;
         int i = 0;
         while (!flag && i++ < maxTry) {
-            BlockPos c = getRandomPosInBox(world, box);
+            BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
             if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementForEntity(e.getClass()), world, c)) {
-                e.setPosition(c.getX(), c.getY(), c.getZ());
+                e.setPosition(c.getX(), c.getY() + 0.2, c.getZ());
                 if (!(e instanceof EntityLiving) || (((EntityLiving) e).getCanSpawnHere() && ((EntityLiving) e).isNotColliding())) {
                     flag = true;
                 }
@@ -218,7 +223,9 @@ public class UtilLib {
         if (spawnEntityInWorld(world, box, e, maxTry)) {
             return e;
         } else {
-            e.setDead();
+            if (e != null) {
+                e.setDead();
+            }
             return null;
         }
     }

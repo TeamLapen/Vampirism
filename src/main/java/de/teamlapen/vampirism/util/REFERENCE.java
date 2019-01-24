@@ -40,4 +40,6 @@ public class REFERENCE {
     public final static ResourceLocation HUNTER_PLAYER_KEY = new ResourceLocation(MODID, "ihunterplayer");
     public final static ResourceLocation EXTENDED_CREATURE_KEY = new ResourceLocation(MODID, "iextendedcreature");
     public final static ResourceLocation VAMPIRISM_VILLAGE_KEY = new ResourceLocation(MODID, "ivampirismvillage");
+    public final static ResourceLocation VAMPIRISM_VILLAGE_KEY_NEW = new ResourceLocation(MODID, "ivv");
+
 }

@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.tileentity.TileTotem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -9,6 +11,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -99,10 +103,29 @@ public class BlockTotemTop extends VampirismBlockContainer {
         return super.removedByPlayer(state, world, pos, player, willHarvest);
     }
 
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        TileTotem tile = getTile(worldIn, pos);
+        if (tile != null) {
+            tile.onRemoved();
+        }
+        super.breakBlock(worldIn, pos, state);
+    }
+
     @Nullable
     private TileTotem getTile(World world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof TileTotem) return (TileTotem) tile;
         return null;
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        IPlayableFaction f = FactionPlayerHandler.get(playerIn).getCurrentFaction();
+        TileTotem t = getTile(worldIn, pos);
+        if (f != null && t != null) {
+            t.initiateCapture(f);
+        }
+        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
     }
 }
