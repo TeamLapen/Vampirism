@@ -228,7 +228,7 @@ public class GuideBook implements IGuideBook {
         String become = UtilLib.translateFormatted(base + "getting_started.become", UtilLib.translate("entity." + ModEntities.HUNTER_TRAINER + ".name"), new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC).getDisplayName());
         gettingStarted.addAll(GuideHelper.addLinks(GuideHelper.pagesForLongText(become), new ResourceLocation("guide.vampirism.items.injection")));
         gettingStarted.add(new PageImage(new ResourceLocation(IMAGE_BASE + "hunter_trainer.png")));
-        gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "getting_started.asHunter")));
+        gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "getting_started.as_hunter")));
         entries.put(new ResourceLocation(base + "getting_started"), new EntryText(gettingStarted, base + "getting_started"));
 
         HunterLevelingConf levelingConf = HunterLevelingConf.instance();
