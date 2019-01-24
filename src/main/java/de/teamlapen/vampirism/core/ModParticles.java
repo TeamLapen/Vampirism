@@ -6,18 +6,15 @@ import de.teamlapen.vampirism.client.render.particle.FlyingBloodParticle;
 import de.teamlapen.vampirism.client.render.particle.GenericParticle;
 import de.teamlapen.vampirism.client.render.particle.HalloweenParticle;
 import de.teamlapen.vampirism.client.render.particle.HealingParticle;
-import de.teamlapen.vampirism.client.render.particle.TestParticle;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.particle.ParticleCloud;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,7 +27,7 @@ public class ModParticles {
     public static final ResourceLocation HEAL = new ResourceLocation(REFERENCE.MODID, "heal");
 
     /**
-     * Arguments: motionX [double], motionY [double], motionZ [double], Particle ID [Vanilla texture,int], TicksToLive [int], Color [int],
+     * Arguments: motionX [double], motionY [double], motionZ [double]
      */
     public static final ResourceLocation CLOUD = new ResourceLocation(REFERENCE.MODID, "cloud");
 
@@ -189,6 +186,18 @@ public class ModParticles {
         });
 
         ParticleHandler.registerParticle(CLOUD, new ParticleHandler.ICustomParticleFactory() {
+
+            @SideOnly(Side.CLIENT)
+            @Nonnull
+            @Override
+            public Object[] readParticleInfo(NBTTagCompound nbt) {
+                Object[] data = new Object[nbt.hasKey("3") ? 4 : 3];
+                data[0] = nbt.getDouble("0");
+                data[1] = nbt.getDouble("1");
+                data[2] = nbt.getDouble("2");
+                return data;
+            }
+
             @Nonnull
             @Override
             public NBTTagCompound createParticleInfo(Object... param) {
@@ -196,90 +205,14 @@ public class ModParticles {
                 nbt.setDouble("0", (Double) param[0]);
                 nbt.setDouble("1", (Double) param[1]);
                 nbt.setDouble("2", (Double) param[2]);
-                nbt.setInteger("3", (Integer) param[3]);
-                nbt.setInteger("4", (Integer) param[4]);
                 return nbt;
-            }
-
-            @Nonnull
-            @SideOnly(Side.CLIENT)
-            @Override
-            public Object[] readParticleInfo(NBTTagCompound nbt) {
-                Object[] data = new Object[5];
-                data[0] = nbt.getDouble("0");
-                data[1] = nbt.getDouble("1");
-                data[2] = nbt.getDouble("2");
-                data[3] = nbt.getInteger("3");
-                data[4] = nbt.getInteger("4");
-                return data;
             }
 
             @SideOnly(Side.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new TestParticle(world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2], EnumParticleTypes.CLOUD.getParticleID(), (int) param[3], (int) param[4]) {
-                    float oSize;
-                    @Override
-                    public void setup(World worldIn, double posXIn, double posYIn, double posZIn, double moveXIn, double moveYIn, double moveZIn, int particleId, int maxAge, int color) {
-                        this.setParticleTextureIndex(particleId);
-                        this.motionX *= 0.10000000149011612D;
-                        this.motionY *= 0.10000000149011612D;
-                        this.motionZ *= 0.10000000149011612D;
-                        this.motionX += moveXIn;
-                        this.motionY += moveYIn;
-                        this.motionZ += moveZIn;
-                        float f1 = 1.0F - (float) (Math.random() * 0.30000001192092896D);
-                        this.particleRed = f1;
-                        this.particleGreen = f1;
-                        this.particleBlue = f1;
-                        this.particleScale *= 0.75F;
-                        this.particleScale *= 2.5F;
-                        this.oSize = this.particleScale;
-                        this.particleMaxAge = (int) (8.0D / (Math.random() * 0.8D + 0.3D));
-                        this.particleMaxAge = (int) ((float) this.particleMaxAge * 2.5F);
-                    }
-
-                    @Override
-                    public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-                        float f = ((float) this.particleAge + partialTicks) / (float) this.particleMaxAge * 32.0F;
-                        f = MathHelper.clamp(f, 0.0F, 1.0F);
-                        this.particleScale = this.oSize * f;
-                        super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
-                    }
-
-                    @Override
-                    public void onUpdate() {
-                        this.prevPosX = this.posX;
-                        this.prevPosY = this.posY;
-                        this.prevPosZ = this.posZ;
-
-                        if (this.particleAge++ >= this.particleMaxAge) {
-                            this.setExpired();
-                        }
-
-                        this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
-                        this.move(this.motionX, this.motionY, this.motionZ);
-                        this.motionX *= 0.9599999785423279D;
-                        this.motionY *= 0.9599999785423279D;
-                        this.motionZ *= 0.9599999785423279D;
-                        EntityPlayer entityplayer = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 2.0D, false);
-
-                        if (entityplayer != null) {
-                            AxisAlignedBB axisalignedbb = entityplayer.getEntityBoundingBox();
-
-                            if (this.posY > axisalignedbb.minY) {
-                                this.posY += (axisalignedbb.minY - this.posY) * 0.2D;
-                                this.motionY += (entityplayer.motionY - this.motionY) * 0.2D;
-                                this.setPosition(this.posX, this.posY, this.posZ);
-                            }
-                        }
-
-                        if (this.onGround) {
-                            this.motionX *= 0.699999988079071D;
-                            this.motionZ *= 0.699999988079071D;
-                        }
-                    }
-                };
+                IParticleFactory par = new ParticleCloud.Factory();
+                return par.createParticle(EnumParticleTypes.CLOUD.getParticleID(), world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
             }
         });
     }
