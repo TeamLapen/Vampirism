@@ -1,9 +1,6 @@
 package de.teamlapen.lib.lib.util;
 
 import de.teamlapen.vampirism.util.REFERENCE;
-
-import jline.internal.Nullable;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -15,6 +12,8 @@ import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * Simple mob spawning logic. More configurable than {@link MobSpawnerBaseLogic} but less functional.
