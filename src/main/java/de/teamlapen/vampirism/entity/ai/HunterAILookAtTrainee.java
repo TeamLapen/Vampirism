@@ -7,18 +7,15 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Makes the hunter trainer look at his trainee
  */
-public class HunterAILookAtTrainee extends EntityAIWatchClosest {
-    private final ITrainer theTrainer;
+public class HunterAILookAtTrainee<T extends EntityLiving & HunterAILookAtTrainee.ITrainer> extends EntityAIWatchClosest {
+    private final T theTrainer;
 
     /**
      * @param theTrainer Has to be instance of ITrainer
      */
-    public HunterAILookAtTrainee(EntityLiving theTrainer) {
+    public HunterAILookAtTrainee(T theTrainer) {
         super(theTrainer, EntityPlayer.class, 8.0F);
-        if (!(theTrainer instanceof ITrainer)) {
-            throw new IllegalArgumentException("The trainer has to implement ITrainer");
-        }
-        this.theTrainer = (ITrainer) theTrainer;
+        this.theTrainer = theTrainer;
         this.setMutexBits(5);
     }
 
