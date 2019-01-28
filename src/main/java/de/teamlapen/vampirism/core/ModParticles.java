@@ -36,6 +36,9 @@ public class ModParticles {
      */
     public static final ResourceLocation GENERIC_PARTICLE = new ResourceLocation(REFERENCE.MODID, "generic");
 
+    /* Vanilla Particle Factories */
+    public static final IParticleFactory PARTICLE_CLOUD_FACTORY = new ParticleCloud.Factory();
+    
     public static void init() {
         ParticleHandler.registerParticle(GENERIC_PARTICLE, new ParticleHandler.ICustomParticleFactory() {
             @SideOnly(Side.CLIENT)
@@ -211,8 +214,7 @@ public class ModParticles {
             @SideOnly(Side.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                IParticleFactory par = new ParticleCloud.Factory();
-                return par.createParticle(EnumParticleTypes.CLOUD.getParticleID(), world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
+                return PARTICLE_CLOUD_FACTORY.createParticle(EnumParticleTypes.CLOUD.getParticleID(), world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
             }
         });
     }
