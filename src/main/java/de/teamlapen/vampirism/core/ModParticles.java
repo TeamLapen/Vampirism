@@ -194,7 +194,7 @@ public class ModParticles {
             @Nonnull
             @Override
             public Object[] readParticleInfo(NBTTagCompound nbt) {
-                Object[] data = new Object[nbt.hasKey("3") ? 4 : 3];
+                Object[] data = new Object[3];
                 data[0] = nbt.getDouble("0");
                 data[1] = nbt.getDouble("1");
                 data[2] = nbt.getDouble("2");
