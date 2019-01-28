@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
+import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -242,8 +242,8 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     }
 
     @Override
-    protected List<DefaultEntityAction> getAvailableActions() {
-        List<DefaultEntityAction> availableActions = super.getAvailableActions();
+    protected List<IEntityAction> getAvailableActions() {
+        List<IEntityAction> availableActions = super.getAvailableActions();
         availableActions.add(EntityActions.entity_invisible);
         availableActions.add(EntityActions.entity_speed);
         availableActions.add(EntityActions.entity_regeneration);

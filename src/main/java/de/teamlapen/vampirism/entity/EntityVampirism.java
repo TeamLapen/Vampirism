@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.entity.IEntityWithHome;
 import de.teamlapen.vampirism.api.entity.IVampirismEntity;
-import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
+import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.ai.EntityAIUseAction;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -37,7 +37,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected boolean hasArms = true;
     protected boolean peaceful = false;
     /** available actions for AI task */
-    public EntityAIUseAction entityAIUseAction;
+    public EntityAIUseAction<?> entityAIUseAction;
     /**
      * Whether the home should be saved to nbt or not
      */
@@ -175,6 +175,9 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             if (nbt.hasKey("homeMovePrio")) {
                 this.setMoveTowardsRestriction(nbt.getInteger("moveHomePrio"), true);
             }
+        }
+        if (entityAIUseAction != null) {
+            entityAIUseAction.reset();
         }
     }
 
@@ -335,8 +338,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         }
     }
 
-    protected List<DefaultEntityAction> getAvailableActions() {
-        return new ArrayList<DefaultEntityAction>();
+    protected List<IEntityAction> getAvailableActions() {
+        return new ArrayList<IEntityAction>();
     }
-
 }

@@ -39,8 +39,32 @@ public class BalanceEntityActions extends BalanceValues {
     @DefaultInt(value = 5, minValue = 1, name = "Speed Cooldown", comment = "In seconds")
     public int SPEED_COOLDOWN;
 
-    @DefaultDouble(value = 0.15, name = "Speed Amount", comment = "Speed = basevalue * (1 + SPEED_AMOUNT)")
+    @DefaultDouble(value = 0.1, name = "Speed Amount", comment = "Speed = basevalue * (1 + SPEED_AMOUNT)")
     public double SPEED_AMOUNT;
+
+    /* Bat Spawn Action */
+    @DefaultInt(value = 5, minValue = 1, name = "Batspawn Cooldown")
+    public int BATSPAWN_COOLDOWN;
+
+    @DefaultInt(value = 5, minValue = 1, name = "Batspawn Amount")
+    public int BATSPAWN_AMOUNT;
+
+    /* Dark Projectile Action */
+    @DefaultInt(value = 5, minValue = 1, comment = "In seconds")
+    public int DARK_PROJECTILE_COOLDOWN;
+
+    @DefaultDouble(value = 6, minValue = 0, comment = "Damage of the direct projectile hit")
+    public double DARK_BLOOD_PROJECTILE_DAMAGE;
+
+    @DefaultDouble(value = 3, minValue = 0, comment = "Damage of the indirect projectile hit")
+    public double DARK_BLOOD_PROJECTILE_INDIRECT_DAMAGE;
+
+    /* Sunscreen Action */
+    @DefaultInt(value = 5, minValue = 1, name = "Sunscreen Duration", comment = "In seconds")
+    public int SUNSCREEN_DURATION;
+
+    @DefaultInt(value = 5, minValue = 1, name = "Sunscreen Cooldown", comment = "In seconds")
+    public int SUNSCREEN_COOLDOWN;
 
 
     /**

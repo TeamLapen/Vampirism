@@ -19,14 +19,14 @@ import java.util.Random;
 public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends EntityAIBase {
 
     private T entity;
-    private List<DefaultEntityAction> availableActions;
+    private List<IEntityAction> availableActions;
     private int cooldown = 0;
     private int duration = 0;
     private IEntityAction action;
     private Random rand = new Random();
     private boolean flag;
 
-    public EntityAIUseAction(T entityIn, List<DefaultEntityAction> actions) {
+    public EntityAIUseAction(T entityIn, List<IEntityAction> actions) {
         this.entity = entityIn;
         this.availableActions = actions;
     }
@@ -66,17 +66,17 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
             newAction();
             cooldown = action.getCooldown(entity.getLevel());
             if (action instanceof ILastingAction) {
-                duration = ((ILastingAction) action).getDuration(entity.getLevel());
-                ((ILastingAction) action).activate(entity);
+                duration = ((ILastingAction<T>) action).getDuration(entity.getLevel());
+                ((ILastingAction<T>) action).activate(entity);
             } else if (action instanceof IInstantAction) {
-                ((IInstantAction) action).activate(entity);
+                ((IInstantAction<T>) action).activate(entity);
             }
         }
 
         /* calls deactivate() for {@link ILastingAction} once per action */
         if (duration == 0) {
             if (action instanceof ILastingAction) {
-                ((ILastingAction) action).deactivate(entity);
+                ((ILastingAction<T>) action).deactivate(entity);
             }
             duration--;
         }
@@ -90,7 +90,7 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
     @Override
     public void resetTask() {
         if (action instanceof ILastingAction) {
-            ((ILastingAction) action).deactivate(entity);
+            ((ILastingAction<T>) action).deactivate(entity);
         }
     }
 
@@ -99,7 +99,7 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
      */
     private void updateAction() {
         if (action instanceof ILastingAction) {
-            ((ILastingAction) action).onUpdate(entity, duration);
+            ((ILastingAction<T>) action).onUpdate(entity, duration);
         }
     }
 
@@ -136,6 +136,14 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
                 resetTask();
             }
             flag = false;
+        }
+    }
+
+    public void reset() {
+        for (IEntityAction action : availableActions) {
+            if (action instanceof ILastingAction) {
+                ((ILastingAction<T>) action).deactivate(entity);
+            }
         }
     }
 }

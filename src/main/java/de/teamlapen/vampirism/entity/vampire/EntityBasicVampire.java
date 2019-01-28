@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.vampire;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
+import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -68,7 +68,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         hasArms = true;
         this.restrictedSpawn = true;
         this.setSize(0.6F, 1.95F);
-        this.entityAIUseAction = new EntityAIUseAction(this, getAvailableActions());
+        this.entityAIUseAction = new EntityAIUseAction<>(this, getAvailableActions());
     }
 
     @Override
@@ -292,8 +292,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
-    protected List<DefaultEntityAction> getAvailableActions() {
-        List<DefaultEntityAction> availableActions = super.getAvailableActions();
+    protected List<IEntityAction> getAvailableActions() {
+        List<IEntityAction> availableActions = super.getAvailableActions();
         if (getLevel() <= 1) {
             availableActions.add(EntityActions.entity_regeneration);
             availableActions.add(EntityActions.entity_speed);

@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.entity.action.actions;
 
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.util.EnumParticleTypes;
 
@@ -35,10 +37,7 @@ public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & 
 
     @Override
     public void activate(T entity) {
-        for (int i = 0; i < 3; i++) {
-                entity.getRepresentingEntity().getEntityWorld().spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.posY, entity.posZ, 0, 0.5, 0);
-
-        }
+        VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), ModParticles.GENERIC_PARTICLE, entity.posX, entity.posY, entity.posZ, 60, 1, entity.getRNG(), EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), 16, 0xF0F0F0);
     }
 
 }
