@@ -6,23 +6,16 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.action.EntityActions;
-import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
-import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
-import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
-import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
+import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIBreakDoor;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,8 +28,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import java.util.List;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Advanced vampire. Is strong. Represents supporters
@@ -60,6 +54,8 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.canSuckBloodFromPlayer = true;
         this.restrictedSpawn = true;
         this.setDontDropEquipment();
+        this.setAvailableActions();
+        this.entityActionHandler = new EntityActionHandler<>(this, this.entityActions);
     }
 
     @Override
@@ -241,13 +237,21 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(13);
     }
 
-    @Override
-    protected List<IEntityAction> getAvailableActions() {
-        List<IEntityAction> availableActions = super.getAvailableActions();
-        availableActions.add(EntityActions.entity_invisible);
-        availableActions.add(EntityActions.entity_speed);
-        availableActions.add(EntityActions.entity_regeneration);
-        availableActions.add(EntityActions.entity_heal);
-        return availableActions;
+    protected void setAvailableActions() {
+        List<IEntityAction[]> actionstmp = new ArrayList<IEntityAction[]>();
+        switch (getLevel()) {
+            case 1:
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_regeneration });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_dark_projectile });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_heal });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_sunscream });
+                break;
+            default:
+                this.setAvailableActions(actionstmp);
+        }
+        this.setAvailableActions(actionstmp);
     }
 }

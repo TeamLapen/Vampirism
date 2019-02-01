@@ -8,27 +8,15 @@ import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.entity.EntityVampirism;
+import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.action.EntityActions;
-import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
-import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
-import de.teamlapen.vampirism.entity.ai.EntityAIUseAction;
-import de.teamlapen.vampirism.entity.ai.VampireAIBiteNearbyEntity;
-import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
-import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
-import de.teamlapen.vampirism.entity.ai.VampireAIFollowAdvanced;
-import de.teamlapen.vampirism.entity.ai.VampireAIMoveToBiteable;
-import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
+import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAvoidEntity;
-import net.minecraft.entity.ai.EntityAIBreakDoor;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
@@ -46,8 +34,9 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import java.util.List;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Basic vampire mob.
@@ -68,7 +57,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         hasArms = true;
         this.restrictedSpawn = true;
         this.setSize(0.6F, 1.95F);
-        this.entityAIUseAction = new EntityAIUseAction<>(this, getAvailableActions());
+        this.setAvailableActions();
+        this.entityActionHandler = new EntityActionHandler<>(this, this.entityActions);
     }
 
     @Override
@@ -291,18 +281,29 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_SPEED);
     }
 
-    @Override
-    protected List<IEntityAction> getAvailableActions() {
-        List<IEntityAction> availableActions = super.getAvailableActions();
-        if (getLevel() <= 1) {
-            availableActions.add(EntityActions.entity_regeneration);
-            availableActions.add(EntityActions.entity_speed);
-        } else if (getLevel() == 2) {
-            availableActions.add(EntityActions.entity_invisible);
-            availableActions.add(EntityActions.entity_speed);
-            availableActions.add(EntityActions.entity_regeneration);
+    /**
+     * sets the possible action combos and sets a random with setAvailableActions() of {@linkplain EntityVampirism}
+     */
+    protected void setAvailableActions() {
+        List<IEntityAction[]> actionstmp = new ArrayList<IEntityAction[]>();
+        switch(getLevel()) {
+            case 0:
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_regeneration });
+                break;
+            case 1:
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed });
+                break;
+            case 2:
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_regeneration });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_sunscream });
+                break;
+            default:
+                this.setAvailableActions(actionstmp);
         }
-        return availableActions;
+        this.setAvailableActions(actionstmp);
     }
 
 }

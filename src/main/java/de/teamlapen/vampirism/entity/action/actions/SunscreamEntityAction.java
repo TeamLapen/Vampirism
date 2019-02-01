@@ -11,6 +11,10 @@ import net.minecraft.potion.PotionEffect;
 
 public class SunscreamEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
 
+    public SunscreamEntityAction() {
+        super();
+    }
+
     @Override
     public int getCooldown(int level) {
         return Balance.ea.SUNSCREEN_COOLDOWN * 20;

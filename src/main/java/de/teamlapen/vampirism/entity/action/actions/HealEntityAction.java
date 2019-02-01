@@ -13,6 +13,10 @@ import java.util.Random;
 
 public class HealEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements IInstantAction<T> {
 
+    public HealEntityAction() {
+        super();
+    }
+
     @Override
     public int getCooldown(int level) {
         return Balance.ea.HEAL_COOLDOWN * 20;

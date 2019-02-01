@@ -13,8 +13,11 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import java.util.UUID;
 
 public class SpeedEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
+    public static final UUID UUIDS = UUID.fromString("2b49cf70-b634-4e85-8c3e-0147919eaf54");
 
-    private static final UUID UUIDS = UUID.fromString("2b49cf70-b634-4e85-8c3e-0147919eaf54");
+    public SpeedEntityAction() {
+        super();
+    }
 
     @Override
     public int getDuration(int level) {

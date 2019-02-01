@@ -12,6 +12,10 @@ import net.minecraft.util.SoundCategory;
 
 public class BatsSpawnEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements IInstantAction<T> {
 
+    public BatsSpawnEntityAction() {
+        super();
+    }
+
     @Override
     public int getCooldown(int level) {
         return Balance.ea.BATSPAWN_COOLDOWN * 20;

@@ -1,22 +1,21 @@
-package de.teamlapen.vampirism.entity.ai;
+package de.teamlapen.vampirism.entity.action;
 
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.entity.EntityVampirism;
-import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
 /**
- * Usage for every {@link IFactionEntity} like Hunter/Vampire entities
- * can be used as AITask in custom task list or with {@link handle()} in UpdateLiving in an Entity
+ * Usage for every {@link IFactionEntity} like Hunter/Vampire entities,
+ * can be used with {@link handle()} in UpdateLiving in an Entity
  */
-public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends EntityAIBase {
+public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> {
 
     private T entity;
     private List<IEntityAction> availableActions;
@@ -24,22 +23,17 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
     private int duration = 0;
     private IEntityAction action;
     private Random rand = new Random();
+    /** true if a player is used as target by actions */
     private boolean flag;
 
-    public EntityAIUseAction(T entityIn, List<IEntityAction> actions) {
+    public EntityActionHandler(T entityIn, List<IEntityAction> actions) {
         this.entity = entityIn;
         this.availableActions = actions;
     }
 
-    @Override
-    public boolean shouldExecute() {
-        if (entity.getAttackTarget() instanceof EntityPlayer && !availableActions.isEmpty()) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
+    /**
+     * starts the execution by setting the base values
+     */
     public void startExecuting() {
         action = null;
         cooldown = 100;
@@ -47,7 +41,7 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
     }
 
     /**
-     * Keep ticking a continuous task that has already been started,
+     * Keep ticking a continuous task that has already been started and sets a new action
      * 
      * {@link duration} > 0 action in progress,
      * {@link duration} = 0 action will be deactivated,
@@ -55,15 +49,18 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
      * {@link duration} <= 0 && {@link cooldown} > 0 actions on cooldown,
      * {@link duration} <= 0 && {@link cooldown} = 0 new action will be set & activated
      */
-    @Override
-    public void updateTask() {
+    public void updateHandler() {
         if (duration > 0) {
             duration--;
             updateAction();
         } else if (cooldown > 0) {
             cooldown--;
         } else {
-            newAction();
+            action = getRandomAction();
+            if (action == null) {
+                cooldown = (int) (100 * (1 + rand.nextFloat() * 2)); //TODO modify
+                return;
+            }
             cooldown = action.getCooldown(entity.getLevel());
             if (action instanceof ILastingAction) {
                 duration = ((ILastingAction<T>) action).getDuration(entity.getLevel());
@@ -75,20 +72,19 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
 
         /* calls deactivate() for {@link ILastingAction} once per action */
         if (duration == 0) {
-            if (action instanceof ILastingAction) {
-                ((ILastingAction<T>) action).deactivate(entity);
-            }
+            resetAction(null);
             duration--;
         }
     }
 
-    @Override
-    public boolean isInterruptible() {
-        return false;
-    }
-
-    @Override
-    public void resetTask() {
+    /**
+     * resets the action. called if the target switches from a player to null or something else and after the duration of an action is over
+     * 
+     * @param actionIn
+     *            called with an action if a specific action should be deactivated else null
+     */
+    public void resetAction(IEntityAction actionIn) {
+        IEntityAction action = actionIn != null ? actionIn : this.action;
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).deactivate(entity);
         }
@@ -104,46 +100,42 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
     }
 
     /**
-     * sets a new random action from {@link availableActions} for the entity,
-     * otherwise a placeholder
+     * returns a new random action from {@link availableActions} or null
      */
-    private void newAction() {
+    @Nullable
+    private IEntityAction getRandomAction() {
         if (rand.nextInt(1) == 0) { // TODO usable balance
-                action = availableActions.get(rand.nextInt(availableActions.size()));
-        } else {
-            action = new DefaultEntityAction() {
-                @Override
-                public int getCooldown(int level) {
-                    return (int) (100 * (1 + rand.nextFloat() * 2)); // TODO edit
-                }
-            };
+            return availableActions.get(rand.nextInt(availableActions.size()));
         }
+        return null;
     }
 
     /**
-     * use this method if EntityAIUseAction is used in onUpdate() in an Entity
+     * use this method if EntityAIUseAction is used in onUpdate() in an IFactionEntity class
      */
     public void handle() {
-        if (shouldExecute()) {
-            if (flag) {
-                updateTask();
+        if (availableActions != null && !availableActions.isEmpty()) {
+            if (entity.getAttackTarget() instanceof EntityPlayer) {
+                if (flag) {
+                    updateHandler();
+                } else {
+                    startExecuting();
+                    flag = true;
+                }
             } else {
-                startExecuting();
-                flag = true;
+                if (flag) {
+                    flag = false;
+                    resetAction(null);
+                }
             }
-        } else if (!availableActions.isEmpty()) {
-            if (flag) {
-                resetTask();
-            }
-            flag = false;
         }
     }
 
-    public void reset() {
-        for (IEntityAction action : availableActions) {
-            if (action instanceof ILastingAction) {
-                ((ILastingAction<T>) action).deactivate(entity);
-            }
-        }
+    public IEntityAction getAction() {
+        return action;
+    }
+
+    public boolean getFlag() {
+        return flag;
     }
 }
