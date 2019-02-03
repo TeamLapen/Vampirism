@@ -155,10 +155,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd) {
             vampire.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_end"));
             return true;
-        } else if (vampire.getRepresentingPlayer().isInWater()) {
-            return true;
-        }
-        return false;
+        } else return vampire.getRepresentingPlayer().isInWater();
     }
 
     /**
@@ -173,7 +170,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
             IAttributeInstance health = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
             if (health.getModifier(healthModifierUUID) == null) {
-                health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -0.9, 2).setSaved(false));
+                health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -Balance.vpa.BAT_HEALTH_REDUCTION, 2).setSaved(false));
             }
 
             player.capabilities.allowFlying = true;
