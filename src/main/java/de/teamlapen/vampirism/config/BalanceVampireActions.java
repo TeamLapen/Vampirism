@@ -73,6 +73,9 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultInt(value = Integer.MAX_VALUE, minValue = 10, name = "bat_duration")
     public int BAT_DURATION;
 
+    @DefaultDouble(value = 0.90, minValue = 0, maxValue = 0.95, name = "bat_health_reduction", comment = "The player's health will be reduced by this factor in bat mode")
+    public double BAT_HEALTH_REDUCTION;
+
 
     @DefaultBoolean(value = true, name = "summon_bats_enabled")
     public boolean SUMMON_BAT_ENABLED;
