@@ -16,7 +16,6 @@ public class SpeedEntityAction<T extends EntityVampirism & IFactionEntity & IAdj
     public static final UUID UUIDS = UUID.fromString("2b49cf70-b634-4e85-8c3e-0147919eaf54");
 
     public SpeedEntityAction() {
-        super();
     }
 
     @Override

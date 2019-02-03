@@ -14,7 +14,7 @@ import java.util.Random;
 public class RegenerationEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
 
     public RegenerationEntityAction() {
-        super();
+
     }
 
     @Override

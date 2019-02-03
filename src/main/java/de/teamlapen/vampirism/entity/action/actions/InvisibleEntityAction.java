@@ -13,7 +13,7 @@ import net.minecraft.util.EnumParticleTypes;
 public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
 
     public InvisibleEntityAction() {
-        super();
+
     }
     
     @Override

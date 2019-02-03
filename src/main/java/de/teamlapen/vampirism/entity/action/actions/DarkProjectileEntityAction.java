@@ -13,7 +13,6 @@ import net.minecraft.util.math.Vec3d;
 public class DarkProjectileEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements IInstantAction<T> {
 
     public DarkProjectileEntityAction() {
-        super();
     }
 
     @Override

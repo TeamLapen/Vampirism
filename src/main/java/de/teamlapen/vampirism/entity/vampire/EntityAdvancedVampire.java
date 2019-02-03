@@ -8,7 +8,10 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.action.EntityActions;
-import de.teamlapen.vampirism.entity.ai.*;
+import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
+import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
+import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
+import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
@@ -54,8 +57,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.canSuckBloodFromPlayer = true;
         this.restrictedSpawn = true;
         this.setDontDropEquipment();
-        this.setAvailableActions();
-        this.entityActionHandler = new EntityActionHandler<>(this, this.entityActions);
+        this.entityActionHandler = new EntityActionHandler<>(this, getAvailableActions());
     }
 
     @Override
@@ -237,21 +239,21 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(13);
     }
 
-    protected void setAvailableActions() {
+    protected List<IEntityAction> getAvailableActions() {
         List<IEntityAction[]> actionstmp = new ArrayList<IEntityAction[]>();
         switch (getLevel()) {
+            case 0:
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_sunscream });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_invisible });
+                break;
             case 1:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_regeneration });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_dark_projectile });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_heal });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_sunscream });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_heal, EntityActions.entity_bat_spawn });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_heal });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_dark_projectile, EntityActions.entity_sunscream });
                 break;
             default:
-                this.setAvailableActions(actionstmp);
+                break;
         }
-        this.setAvailableActions(actionstmp);
+        return getAvailableActions(actionstmp);
     }
 }

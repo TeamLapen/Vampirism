@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
-import de.teamlapen.vampirism.entity.action.EntityActionManager;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -26,6 +25,7 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -39,7 +39,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected boolean peaceful = false;
     /** available actions for AI task & task */
     protected EntityActionHandler<?> entityActionHandler;
-    protected List<IEntityAction> entityActions;
     /**
      * Whether the home should be saved to nbt or not
      */
@@ -178,8 +177,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
                 this.setMoveTowardsRestriction(nbt.getInteger("moveHomePrio"), true);
             }
         }
-        if (nbt.hasKey("activeAction")) {
-            entityActionHandler.resetAction(EntityActionManager.actionsByID.get(nbt.getInteger("activeAction")));
+        if (entityActionHandler != null) {
+            entityActionHandler.readFromNBT(nbt);
         }
     }
 
@@ -204,9 +203,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             }
         }
         if (entityActionHandler != null) {
-            if (entityActionHandler.getFlag() && entityActionHandler.getAction() != null) {
-                nbt.setInteger("activeAction", EntityActionManager.idByActions.get(entityActionHandler.getAction()));
-            }
+            entityActionHandler.writeToNBT(nbt);
         }
     }
 
@@ -346,16 +343,16 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     /**
-     * gets a list of action combos and adding a random combo to the available actions of the IFaction entity
+     * get a list of possible action sets, saves a random one
      * 
      * @param actionstmp
-     *            list of action combos
+     *            list of action sets
      */
-    protected void setAvailableActions(List<IEntityAction[]> actionstmp) {
+    protected List<IEntityAction> getAvailableActions(List<IEntityAction[]> actionstmp) {
+        List<IEntityAction> entityActions = new ArrayList<IEntityAction>();
         if (actionstmp.size() == 0)
-            return;
-        entityActions = new ArrayList<IEntityAction>();
-        for (IEntityAction e : actionstmp.get(this.getRNG().nextInt(actionstmp.size())))
-            entityActions.add(e);
+            return null;
+        entityActions.addAll(Arrays.asList(actionstmp.get(this.getRNG().nextInt(actionstmp.size()))));
+        return entityActions;
     }
 }

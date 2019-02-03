@@ -57,8 +57,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         hasArms = true;
         this.restrictedSpawn = true;
         this.setSize(0.6F, 1.95F);
-        this.setAvailableActions();
-        this.entityActionHandler = new EntityActionHandler<>(this, this.entityActions);
+        this.entityActionHandler = new EntityActionHandler<>(this, getAvailableActions());
     }
 
     @Override
@@ -282,28 +281,28 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     /**
-     * sets the possible action combos and sets a random with setAvailableActions() of {@linkplain EntityVampirism}
+     * sets the possible action sets and returns a random action set with setAvailableActions() of {@linkplain EntityVampirism}
+     * 
+     * @returns an action set
      */
-    protected void setAvailableActions() {
+    protected List<IEntityAction> getAvailableActions() {
         List<IEntityAction[]> actionstmp = new ArrayList<IEntityAction[]>();
         switch(getLevel()) {
             case 0:
                 actionstmp.add(new IEntityAction[] { EntityActions.entity_regeneration });
                 break;
             case 1:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn, EntityActions.entity_regeneration });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_regeneration });
                 break;
             case 2:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_regeneration });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_sunscream });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_regeneration });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_sunscream });
                 break;
             default:
-                this.setAvailableActions(actionstmp);
+                break;
         }
-        this.setAvailableActions(actionstmp);
+        return getAvailableActions(actionstmp);
     }
 
 }

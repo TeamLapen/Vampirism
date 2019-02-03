@@ -1,19 +1,25 @@
 package de.teamlapen.vampirism.entity.action;
 
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.hunter.IHunter;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Usage for every {@link IFactionEntity} like Hunter/Vampire entities,
- * can be used with {@link handle()} in UpdateLiving in an Entity
+ * is used with {@link handle()} in UpdateLiving in an EntityVampirism
  */
 public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> {
 
@@ -23,8 +29,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
     private int duration = 0;
     private IEntityAction action;
     private Random rand = new Random();
-    /** true if a player is used as target by actions */
-    private boolean flag;
+    private boolean isPlayerTarget;
 
     public EntityActionHandler(T entityIn, List<IEntityAction> actions) {
         this.entity = entityIn;
@@ -56,11 +61,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
         } else if (cooldown > 0) {
             cooldown--;
         } else {
-            action = getRandomAction();
-            if (action == null) {
-                cooldown = (int) (100 * (1 + rand.nextFloat() * 2)); //TODO modify
-                return;
-            }
+            action = getIntelligentAction();
             cooldown = action.getCooldown(entity.getLevel());
             if (action instanceof ILastingAction) {
                 duration = ((ILastingAction<T>) action).getDuration(entity.getLevel());
@@ -104,10 +105,72 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
      */
     @Nullable
     private IEntityAction getRandomAction() {
-        if (rand.nextInt(1) == 0) { // TODO usable balance
-            return availableActions.get(rand.nextInt(availableActions.size()));
+        return availableActions.get(rand.nextInt(availableActions.size()));
+    }
+
+    /**
+     * returns a plausible action
+     * 
+     * elevates the chance of the actions, based on the entity and its target
+     * 
+     * @returns
+     */
+    private IEntityAction getIntelligentAction() {
+        Map<IEntityAction, Integer> actionsMap = new HashMap<>();
+        for (IEntityAction e : availableActions) {
+            actionsMap.put(e, 1);
         }
-        return null;
+        double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).lengthVector();
+        double healthPercent = entity.getHealth() / entity.getMaxHealth();
+        /* Speed Action */
+        if (distanceToTarget > 10)
+            actionsMap.computeIfPresent(EntityActions.entity_speed, (k, v) -> v + 2);
+        else if (distanceToTarget > 5)
+            actionsMap.computeIfPresent(EntityActions.entity_speed, (k, v) -> v + 1);
+        /* Regeneration Action && Heal Action */
+        if (actionsMap.containsKey(EntityActions.entity_heal)) {
+            /* Heal */
+            if (healthPercent < 0.1)
+                actionsMap.compute(EntityActions.entity_heal, (k, v) -> v + 2);
+            else if (healthPercent < 0.4)
+                actionsMap.compute(EntityActions.entity_heal, (k, v) -> v + 1);
+        } else {
+            /* Regeneration */
+            if (healthPercent < 0.1)
+                actionsMap.computeIfPresent(EntityActions.entity_regeneration, (k, v) -> v + 2);
+            else if (healthPercent < 0.4)
+                actionsMap.computeIfPresent(EntityActions.entity_regeneration, (k, v) -> v + 1);
+        }
+
+        if (entity instanceof IVampire) {
+            /* Vampire Only Actions */
+            IVampire entity = (IVampire) this.entity;
+            /* Sunscream Action */
+            if (entity.isGettingSundamage() && !entity.isIgnoringSundamage()) {
+                actionsMap.computeIfPresent(EntityActions.entity_sunscream, (k, v) -> v + actionsMap.size() < 5 ? 4 : 2);
+            }
+            /* Bat Spawn Action */
+            actionsMap.computeIfPresent(EntityActions.entity_bat_spawn, (k, v) -> v + actionsMap.size() < 4 ? (int) 1 * this.entity.getRNG().nextInt(2) : 0);
+            /* Dark Projectile Action */
+            if (distanceToTarget > 20)
+                actionsMap.computeIfPresent(EntityActions.entity_speed, (k, v) -> v + 2);
+            else if (distanceToTarget > 10)
+                actionsMap.computeIfPresent(EntityActions.entity_speed, (k, v) -> v + 1);
+            /* Invisible Action */
+            if (distanceToTarget > 4 && actionsMap.size() < 5)
+                actionsMap.computeIfPresent(EntityActions.entity_invisible, (k, v) -> v + actionsMap.size() < 5 ? 2 : 1);
+        } else if (entity instanceof IHunter) {
+            /* Hunter Only Actions */
+            IHunter entity = (IHunter) this.entity;
+        }
+
+        List<IEntityAction> actionList = new ArrayList<>();
+        for (Map.Entry<IEntityAction, Integer> e : actionsMap.entrySet()) {
+            for (int i = 0; i < e.getValue(); i++) {
+                actionList.add(e.getKey());
+            }
+        }
+        return actionList.get(entity.getRNG().nextInt(actionList.size() - 1));
     }
 
     /**
@@ -116,15 +179,15 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
     public void handle() {
         if (availableActions != null && !availableActions.isEmpty()) {
             if (entity.getAttackTarget() instanceof EntityPlayer) {
-                if (flag) {
+                if (isPlayerTarget) {
                     updateHandler();
                 } else {
                     startExecuting();
-                    flag = true;
+                    isPlayerTarget = true;
                 }
             } else {
-                if (flag) {
-                    flag = false;
+                if (isPlayerTarget) {
+                    isPlayerTarget = false;
                     resetAction(null);
                 }
             }
@@ -135,7 +198,24 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
         return action;
     }
 
-    public boolean getFlag() {
-        return flag;
+    public boolean isPlayerTarget() {
+        return isPlayerTarget;
     }
+
+    public void readFromNBT(NBTTagCompound nbt) {
+        if (nbt.hasKey("activeAction")) {
+            resetAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation("vampirism", nbt.getString("activeAction"))));
+        }
+    }
+
+    public void writeToNBT(NBTTagCompound nbt) {
+        if (isPlayerTarget() && getAction() != null) {
+            nbt.setString("activeAction", action.getRegistryName().getResourcePath());
+        }
+    }
+
+    public void setAvailableActions(List<IEntityAction> actionsIn) {
+        this.availableActions = actionsIn;
+    }
+
 }
