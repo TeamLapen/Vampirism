@@ -290,27 +290,27 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         List<IEntityAction[]> actionstmp = new ArrayList<IEntityAction[]>();
         switch (level) {
             case 0:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_regeneration });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_regeneration_areaofeffect });
                 actionstmp.add(new IEntityAction[] { EntityActions.entity_speed });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn, EntityActions.entity_regeneration });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn, EntityActions.entity_regeneration_areaofeffect });
                 actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn });
                 break;
             case 1:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn, EntityActions.entity_regeneration });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_regeneration });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn, EntityActions.entity_regeneration_areaofeffect });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_regeneration_areaofeffect });
                 actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible });
                 actionstmp.add(new IEntityAction[] { EntityActions.entity_sunscream });
                 break;
             case 2:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_regeneration, EntityActions.entity_speed });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_regeneration_areaofeffect, EntityActions.entity_speed });
                 actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_sunscream, EntityActions.entity_invisible });
                 actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_heal });
                 break;
             default:
                 break;
         }
-        List<IEntityAction> a = getAvailableActions(actionstmp);
-        return a;
+
+        return getAvailableActions(actionstmp);
     }
 
 }

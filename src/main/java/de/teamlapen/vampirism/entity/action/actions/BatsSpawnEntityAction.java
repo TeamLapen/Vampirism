@@ -3,14 +3,14 @@ package de.teamlapen.vampirism.entity.action.actions;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.util.SoundCategory;
 
-public class BatsSpawnEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements IInstantAction<T> {
+public class BatsSpawnEntityAction<T extends EntityVampirism & IVampire & IAdjustableLevel> extends DefaultEntityAction implements IInstantAction<T> {
 
     public BatsSpawnEntityAction() {
     }

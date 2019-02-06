@@ -196,9 +196,9 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
         } else {
             /* Regeneration */
             if (healthPercent < 0.1)
-                actionsMap.computeIfPresent(EntityActions.entity_regeneration, (k, v) -> v + 2);
+                actionsMap.computeIfPresent(EntityActions.entity_regeneration_areaofeffect, (k, v) -> v + 2);
             else if (healthPercent < 0.4)
-                actionsMap.computeIfPresent(EntityActions.entity_regeneration, (k, v) -> v + 1);
+                actionsMap.computeIfPresent(EntityActions.entity_regeneration_areaofeffect, (k, v) -> v + 1);
         }
 
         if (entity instanceof IVampire) {
@@ -212,9 +212,9 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
             actionsMap.computeIfPresent(EntityActions.entity_bat_spawn, (k, v) -> v + actionsMap.size() < 4 ? (int) 1 * this.entity.getRNG().nextInt(2) : 0);
             /* Dark Projectile Action */
             if (distanceToTarget > 20)
-                actionsMap.computeIfPresent(EntityActions.entity_speed, (k, v) -> v + 2);
+                actionsMap.computeIfPresent(EntityActions.entity_dark_projectile, (k, v) -> v + 2);
             else if (distanceToTarget > 10)
-                actionsMap.computeIfPresent(EntityActions.entity_speed, (k, v) -> v + 1);
+                actionsMap.computeIfPresent(EntityActions.entity_dark_projectile, (k, v) -> v + 1);
             /* Invisible Action */
             if (distanceToTarget > 4 && actionsMap.size() < 5)
                 actionsMap.computeIfPresent(EntityActions.entity_invisible, (k, v) -> v + actionsMap.size() < 5 ? 2 : 1);

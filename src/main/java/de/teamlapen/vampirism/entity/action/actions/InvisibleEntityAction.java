@@ -4,13 +4,13 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.util.EnumParticleTypes;
 
-public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
+public class InvisibleEntityAction<T extends EntityVampirism & IVampire & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
 
     public InvisibleEntityAction() {
 
