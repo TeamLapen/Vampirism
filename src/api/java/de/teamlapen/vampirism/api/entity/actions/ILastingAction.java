@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
+import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.entity.EntityLiving;
 
-public interface ILastingAction<T extends IFactionEntity> extends IEntityAction {
+public interface ILastingAction<T extends IVampirismEntity & IFactionEntity & IAdjustableLevel> extends IEntityAction {
 
     /**
      * @param level
@@ -39,4 +40,12 @@ public interface ILastingAction<T extends IFactionEntity> extends IEntityAction 
      *            for which the action should be activated
      */
     void activate(T entity);
+
+    /**
+     * called before action will be activated
+     * 
+     * @param entity
+     *            for which the action should be activated
+     */
+    void updatePreAction(T entity, int duration);
 }

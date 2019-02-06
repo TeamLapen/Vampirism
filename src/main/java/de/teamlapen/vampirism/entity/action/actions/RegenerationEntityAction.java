@@ -42,4 +42,8 @@ public class RegenerationEntityAction<T extends EntityVampirism & IFactionEntity
     @Override
     public void activate(T entity) {
     }
+
+    @Override
+    public void updatePreAction(T entity, int duration) {
+    }
 }

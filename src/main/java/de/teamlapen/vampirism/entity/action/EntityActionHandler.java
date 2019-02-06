@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.action;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
@@ -15,7 +14,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Usage for every {@link IFactionEntity} like Hunter/Vampire entities,
@@ -25,65 +27,76 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
 
     private T entity;
     private List<IEntityAction> availableActions;
+    private int preActivation = 0;
     private int cooldown = 0;
     private int duration = 0;
     private IEntityAction action;
-    private Random rand = new Random();
     private boolean isPlayerTarget;
 
-    public EntityActionHandler(T entityIn, List<IEntityAction> actions) {
+    public EntityActionHandler(T entityIn) {
         this.entity = entityIn;
-        this.availableActions = actions;
     }
 
-    /**
-     * starts the execution by setting the base values
-     */
     public void startExecuting() {
         action = null;
-        cooldown = 100;
+        cooldown = 50;
         duration = -1;
+        preActivation = -1;
     }
 
     /**
      * Keep ticking a continuous task that has already been started and sets a new action
      * 
+     * {@link preActivation} > 0 action will be started soon
+     * {@link preActivation} = 0 action is starting now
+     * {@link preActivation} = -1 action was started
      * {@link duration} > 0 action in progress,
      * {@link duration} = 0 action will be deactivated,
      * {@link duration} = -1 no action is active,
      * {@link duration} <= 0 && {@link cooldown} > 0 actions on cooldown,
-     * {@link duration} <= 0 && {@link cooldown} = 0 new action will be set & activated
+     * {@link duration} <= 0 && {@link cooldown} = 0 new action will be set
      */
     public void updateHandler() {
-        if (duration > 0) {
+        if (preActivation == 0) {
+            /* calls activate() for {@link ILastingAction} & {@link IInstantAction} once per action */
+            activateAction();
+            preActivation--;
+        } else if (preActivation > 0) {
+            /* calls updatePreAction() for {@link ILastingAction} & {@link IInstantAction} as long as the action need to be activated */
+            updatePreAction();
+            preActivation--;
+        } else if (duration == 0) {
+            /* calls resetAction() for {@link ILastingAction} once per action */
+            resetAction();
+            duration--;
+        } else if (duration > 0) {
+            /* calls updateAction() for {@link ILastingAction} & {@link IInstantAction} as long as the actions duration last */
             duration--;
             updateAction();
         } else if (cooldown > 0) {
+            /* calls updateAction() for {@link ILastingAction} & {@link IInstantAction} as long as the actions cooldown last */
             cooldown--;
         } else {
+            /* sets a new action if cooldown is over */
             action = getIntelligentAction();
             cooldown = action.getCooldown(entity.getLevel());
+            preActivation = action.getPreActivationTime();
             if (action instanceof ILastingAction) {
                 duration = ((ILastingAction<T>) action).getDuration(entity.getLevel());
-                ((ILastingAction<T>) action).activate(entity);
-            } else if (action instanceof IInstantAction) {
-                ((IInstantAction<T>) action).activate(entity);
             }
-        }
-
-        /* calls deactivate() for {@link ILastingAction} once per action */
-        if (duration == 0) {
-            resetAction(null);
-            duration--;
         }
     }
 
+    public void resetAction() {
+        resetAction(null);
+    }
+
     /**
-     * resets the action. called if the target switches from a player to null or something else and after the duration of an action is over
+     * reset the given {@link IEntityAction} or if null, reset the {@link action}
      * 
      * @param actionIn
-     *            called with an action if a specific action should be deactivated else null
      */
+    @Nullable
     public void resetAction(IEntityAction actionIn) {
         IEntityAction action = actionIn != null ? actionIn : this.action;
         if (action instanceof ILastingAction) {
@@ -91,21 +104,67 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
         }
     }
 
+    public void updateAction() {
+        updateAction(null);
+    }
+
     /**
-     * updates action based on actiontype
+     * updates the given {@link IEntityAction} or if null, activates the {@link action}
+     * 
+     * @param actionIn
      */
-    private void updateAction() {
+    @Nullable
+    public void updateAction(IEntityAction actionIn) {
+        IEntityAction action = actionIn != null ? actionIn : this.action;
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).onUpdate(entity, duration);
         }
     }
 
+    public void updatePreAction() {
+        updateAction(null);
+    }
+
     /**
-     * returns a new random action from {@link availableActions} or null
+     * updates the given {@link IEntityAction} pre activation or if null, updates the {@link action}
+     * 
+     * @param actionIn
+     */
+    @Nullable
+    public void updatePreAction(IEntityAction actionIn) {
+        IEntityAction action = actionIn != null ? actionIn : this.action;
+        if (action instanceof ILastingAction) {
+            ((ILastingAction<T>) action).updatePreAction(entity, preActivation);
+        } else if (action instanceof IInstantAction) {
+            ((IInstantAction<T>) action).updatePreAction(entity, preActivation);
+        }
+    }
+
+    public void activateAction() {
+        activateAction(null);
+    }
+
+    /**
+     * activates the given {@link IEntityAction} or if null, activates the {@link action}
+     * 
+     * @param actionIn
+     */
+    @Nullable
+    public void activateAction(IEntityAction actionIn) {
+        IEntityAction action = actionIn != null ? actionIn : this.action;
+        if (action instanceof ILastingAction) {
+            ((ILastingAction<T>) action).activate(entity);
+        } else if (action instanceof IInstantAction) {
+            ((IInstantAction<T>) action).activate(entity);
+        }
+    }
+
+    /**
+     * returns a new random action from {@link availableActions}
      */
     @Nullable
     private IEntityAction getRandomAction() {
-        return availableActions.get(rand.nextInt(availableActions.size()));
+        return availableActions.get(entity.getRNG().nextInt(availableActions.size()));
     }
 
     /**
@@ -170,12 +229,9 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
                 actionList.add(e.getKey());
             }
         }
-        return actionList.get(entity.getRNG().nextInt(actionList.size() - 1));
+        return actionList.get(entity.getRNG().nextInt(actionList.size()));
     }
 
-    /**
-     * use this method if EntityAIUseAction is used in onUpdate() in an IFactionEntity class
-     */
     public void handle() {
         if (availableActions != null && !availableActions.isEmpty()) {
             if (entity.getAttackTarget() instanceof EntityPlayer) {
@@ -188,7 +244,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
             } else {
                 if (isPlayerTarget) {
                     isPlayerTarget = false;
-                    resetAction(null);
+                    resetAction();
                 }
             }
         }
@@ -205,6 +261,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
     public void readFromNBT(NBTTagCompound nbt) {
         if (nbt.hasKey("activeAction")) {
             resetAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation("vampirism", nbt.getString("activeAction"))));
+            isPlayerTarget = true;
         }
     }
 
@@ -214,8 +271,16 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
         }
     }
 
+    /**
+     * Sets the given list of actions to the actions the EntityActionHandler should use
+     * 
+     * @param actionsIn
+     */
     public void setAvailableActions(List<IEntityAction> actionsIn) {
         this.availableActions = actionsIn;
     }
 
+    public void removeAction(IEntityAction actionIn) {
+        availableActions.remove(actionIn);
+    }
 }

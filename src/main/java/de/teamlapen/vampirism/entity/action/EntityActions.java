@@ -13,6 +13,9 @@ import net.minecraftforge.registries.IForgeRegistry;
 @GameRegistry.ObjectHolder(REFERENCE.MODID)
 public class EntityActions {
     public static final InvisibleEntityAction<?> entity_invisible = UtilLib.getNull();
+    /**
+     * Healing action is preferred to the regeneration action
+     */
     public static final HealEntityAction<?> entity_heal = UtilLib.getNull();
     public static final RegenerationEntityAction<?> entity_regeneration = UtilLib.getNull();
     public static final SpeedEntityAction<?> entity_speed = UtilLib.getNull();

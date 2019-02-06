@@ -16,24 +16,24 @@ public class BalanceEntityActions extends BalanceValues {
     public int INVISIBLE_DURATION;
 
     /* Heal Action */
-    @DefaultInt(value = 5, minValue = 1, name = "Invisible Cooldown", comment = "In seconds")
+    @DefaultInt(value = 6, minValue = 1, name = "Invisible Cooldown", comment = "In seconds")
     public int HEAL_COOLDOWN;
 
     @DefaultInt(value = 20, minValue = 0, maxValue = 100, name = "Heal Amount", comment = "In percent")
     public int HEAL_AMOUNT;
 
     /* Regeneration Action */
-    @DefaultInt(value = 10, minValue = 0, name = "Regeneration Duration", comment = "In seconds")
+    @DefaultInt(value = 5, minValue = 0, name = "Regeneration Duration", comment = "In seconds")
     public int REGENERATION_DURATION;
 
-    @DefaultInt(value = 5, minValue = 1, name = "Regeneration Cooldown", comment = "In seconds")
+    @DefaultInt(value = 4, minValue = 1, name = "Regeneration Cooldown", comment = "In seconds")
     public int REGENERATION_COOLDOWN;
 
     @DefaultInt(value = 30, minValue = 0, maxValue = 100, name = "Regeneration Amount", comment = "In percent")
     public int REGENERATION_AMOUNT;
 
     /* Speed Action */
-    @DefaultInt(value = 10, minValue = 0, name = "Speed Duration", comment = "In seconds")
+    @DefaultInt(value = 4, minValue = 0, name = "Speed Duration", comment = "In seconds")
     public int SPEED_DURATION;
 
     @DefaultInt(value = 5, minValue = 1, name = "Speed Cooldown", comment = "In seconds")
@@ -50,20 +50,20 @@ public class BalanceEntityActions extends BalanceValues {
     public int BATSPAWN_AMOUNT;
 
     /* Dark Projectile Action */
-    @DefaultInt(value = 5, minValue = 1, comment = "In seconds")
+    @DefaultInt(value = 6, minValue = 1, comment = "In seconds")
     public int DARK_PROJECTILE_COOLDOWN;
 
-    @DefaultDouble(value = 6, minValue = 0, comment = "Damage of the direct projectile hit")
+    @DefaultDouble(value = 4, minValue = 0, comment = "Damage of the direct projectile hit")
     public double DARK_BLOOD_PROJECTILE_DAMAGE;
 
-    @DefaultDouble(value = 3, minValue = 0, comment = "Damage of the indirect projectile hit")
+    @DefaultDouble(value = 1, minValue = 0, comment = "Damage of the indirect projectile hit")
     public double DARK_BLOOD_PROJECTILE_INDIRECT_DAMAGE;
 
     /* Sunscreen Action */
     @DefaultInt(value = 5, minValue = 1, name = "Sunscreen Duration", comment = "In seconds")
     public int SUNSCREEN_DURATION;
 
-    @DefaultInt(value = 5, minValue = 1, name = "Sunscreen Cooldown", comment = "In seconds")
+    @DefaultInt(value = 3, minValue = 1, name = "Sunscreen Cooldown", comment = "In seconds")
     public int SUNSCREEN_COOLDOWN;
 
 

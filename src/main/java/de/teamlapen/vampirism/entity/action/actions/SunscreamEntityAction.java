@@ -40,5 +40,8 @@ public class SunscreamEntityAction<T extends EntityVampirism & IFactionEntity & 
 
     }
 
+    @Override
+    public void updatePreAction(T entity, int duration) {
+    }
 
 }

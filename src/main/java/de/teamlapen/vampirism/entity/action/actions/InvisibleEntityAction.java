@@ -44,4 +44,11 @@ public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & 
         VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), ModParticles.GENERIC_PARTICLE, entity.posX, entity.posY, entity.posZ, 60, 1, entity.getRNG(), EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), 16, 0xF0F0F0);
     }
 
+    @Override
+    public void updatePreAction(T entity, int duration) {
+        if (duration % 5 == 0) {
+            VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), ModParticles.GENERIC_PARTICLE, entity.posX, entity.posY, entity.posZ, 10, 1, entity.getRNG(), EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), 16, 0xF0F0F0);
+        }
+    }
+
 }

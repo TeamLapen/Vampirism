@@ -33,4 +33,8 @@ public class BatsSpawnEntityAction<T extends EntityVampirism & IFactionEntity & 
         return true;
     }
 
+    @Override
+    public void updatePreAction(T entity, int duration) {
+    }
+
 }

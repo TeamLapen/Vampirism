@@ -35,4 +35,8 @@ public class DarkProjectileEntityAction<T extends EntityVampirism & IFactionEnti
         return true;
     }
 
+    @Override
+    public void updatePreAction(T entity, int duration) {
+    }
+
 }
