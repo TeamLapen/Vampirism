@@ -57,7 +57,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         hasArms = true;
         this.restrictedSpawn = true;
         this.setSize(0.6F, 1.95F);
-        this.entityActionHandler = new EntityActionHandler<>(this, getAvailableActions());
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -103,6 +103,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         if (level >= 0) {
             getDataManager().set(LEVEL, level);
             this.updateEntityAttributes();
+            entityActionHandler.setAvailableActions(getAvailableActions(level));
             if (level == 2) {
                 this.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1000000, 1));
             }
@@ -285,23 +286,30 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
      * 
      * @returns an action set
      */
-    protected List<IEntityAction> getAvailableActions() {
+    protected List<IEntityAction> getAvailableActions(int level) {
         List<IEntityAction[]> actionstmp = new ArrayList<IEntityAction[]>();
-        switch(getLevel()) {
+        switch (level) {
             case 0:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_regeneration });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_regeneration_areaofeffect });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn, EntityActions.entity_regeneration_areaofeffect });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn });
                 break;
             case 1:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn, EntityActions.entity_regeneration });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_regeneration });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn, EntityActions.entity_regeneration_areaofeffect });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_regeneration_areaofeffect });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_sunscream });
                 break;
             case 2:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_regeneration });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_sunscream });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_regeneration_areaofeffect, EntityActions.entity_speed });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_sunscream, EntityActions.entity_invisible });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_heal });
                 break;
             default:
                 break;
         }
+
         return getAvailableActions(actionstmp);
     }
 

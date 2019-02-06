@@ -27,4 +27,8 @@ public class HealEntityAction<T extends EntityVampirism & IFactionEntity & IAdju
         VampLib.proxy.getParticleHandler().spawnParticles(Minecraft.getMinecraft().getIntegratedServer().getEntityWorld(), new ResourceLocation("vampirism", "heal"), entity.posX, entity.posY + 1, entity.posZ, 10, 0.3D, new Random(), entity);
         return true;
     }
+
+    @Override
+    public void updatePreAction(T entity, int duration) {
+    }
 }

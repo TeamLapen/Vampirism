@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
@@ -57,7 +58,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.canSuckBloodFromPlayer = true;
         this.restrictedSpawn = true;
         this.setDontDropEquipment();
-        this.entityActionHandler = new EntityActionHandler<>(this, getAvailableActions());
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -239,16 +240,18 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(13);
     }
 
-    protected List<IEntityAction> getAvailableActions() {
+    protected List<IEntityAction> getAvailableActions(int level) {
+        VampirismMod.log.e("BasicVampire", "new Advanced Vampire, level: %s", level);
         List<IEntityAction[]> actionstmp = new ArrayList<IEntityAction[]>();
-        switch (getLevel()) {
+        switch (level) {
             case 0:
                 actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_sunscream });
                 actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_invisible });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_heal, EntityActions.entity_invisible });
                 break;
             case 1:
                 actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_heal, EntityActions.entity_bat_spawn });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_heal });
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_heal, EntityActions.entity_speed });
                 actionstmp.add(new IEntityAction[] { EntityActions.entity_dark_projectile, EntityActions.entity_sunscream });
                 break;
             default:

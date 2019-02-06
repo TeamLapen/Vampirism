@@ -46,4 +46,9 @@ public class SpeedEntityAction<T extends EntityVampirism & IFactionEntity & IAdj
     @Override
     public void activate(T entity) {
     }
+
+    @Override
+    public void updatePreAction(T entity, int duration) {
+    }
+
 }

@@ -3,10 +3,13 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.action.EntityActionHandler;
+import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackRangedCrossbow;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
 import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
@@ -40,9 +43,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -93,6 +97,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         this.attackMelee = new EntityAIAttackMelee(this, 1.0, false);
         this.attackRange = new EntityAIAttackRangedCrossbow(this, this, 0.6, 60, 20);
         this.updateCombatTask();
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -118,6 +123,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Override
     public void setLevel(int level) {
         if (level >= 0) {
+            entityActionHandler.setAvailableActions(getAvailableActions(level));
             getDataManager().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 3) {
@@ -436,5 +442,23 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     private void updateWatchedId(int id) {
         getDataManager().set(WATCHED_ID, id);
+    }
+
+    protected List<IEntityAction> getAvailableActions(int level) {
+        List<IEntityAction[]> actionstmp = new ArrayList<IEntityAction[]>();
+        switch (level) {
+            case 0:
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_garlic_areaofeffect });
+                break;
+            case 1:
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_garlic_areaofeffect });
+                break;
+            case 2:
+                actionstmp.add(new IEntityAction[] { EntityActions.entity_garlic_areaofeffect });
+                break;
+            default:
+                break;
+        }
+        return getAvailableActions(actionstmp);
     }
 }
