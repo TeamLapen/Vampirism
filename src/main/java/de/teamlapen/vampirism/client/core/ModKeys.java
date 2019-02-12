@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -104,7 +105,8 @@ public class ModKeys {
         if (!suckKeyDown && keyPressed == KEY.SUCK) {
             RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
             suckKeyDown = true;
-            if (mouseOver != null && !Minecraft.getMinecraft().player.isSpectator() && !VampirePlayer.get(Minecraft.getMinecraft().player).getActionHandler().isActionActive(VampireActions.bat)) {
+            EntityPlayer player = Minecraft.getMinecraft().player;
+            if (mouseOver != null && !player.isSpectator() && FactionPlayerHandler.get(player).isInFaction(VReference.VAMPIRE_FACTION) && !VampirePlayer.get(player).getActionHandler().isActionActive(VampireActions.bat)) {
                 if (mouseOver.entityHit != null) {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
                 } else if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
