@@ -5,29 +5,23 @@ import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
-import net.minecraft.potion.PotionEffect;
 
-public class SunscreamEntityAction<T extends EntityVampireBase & IVampire & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
-
-    public SunscreamEntityAction() {
-    }
+public class IgnoreSunDamageEntityAction<T extends EntityVampireBase & IVampire & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.SUNSCREEN_COOLDOWN * 20;
+        return Balance.ea.IGNORE_SUNDAMAGE_COOLDOWN;
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.ea.SUNSCREEN_DURATION * 20;
+        return Balance.ea.IGNORE_SUNDAMAGE_DURATION;
     }
 
     @Override
     public void deactivate(T entity) {
-        entity.getRepresentingEntity().removePotionEffect(ModPotions.sunscreen);
-
+        entity.setIgnoreSundamage(false);
     }
 
     @Override
@@ -36,7 +30,7 @@ public class SunscreamEntityAction<T extends EntityVampireBase & IVampire & IAdj
 
     @Override
     public void activate(T entity) {
-        entity.getRepresentingEntity().addPotionEffect(new PotionEffect(ModPotions.sunscreen, getDuration(entity.getLevel()), 3, false, false));
+        entity.setIgnoreSundamage(true);
 
     }
 

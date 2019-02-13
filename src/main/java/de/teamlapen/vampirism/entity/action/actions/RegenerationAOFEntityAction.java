@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityVampirism;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -36,12 +35,12 @@ public class RegenerationAOFEntityAction<T extends EntityVampirism & IFactionEnt
 
     @Override
     public void onUpdate(T entity, int duration) {
-        List<EntityLiving> players = entity.getEntityWorld().getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(entity.posX - 4, entity.posY - 1, entity.posZ - 4, entity.posX + 4, entity.posY + 3, entity.posZ + 4));
-        for (EntityLiving e : players) {
+        List<EntityLiving> entities = entity.getEntityWorld().getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(entity.posX - 4, entity.posY - 1, entity.posZ - 4, entity.posX + 4, entity.posY + 3, entity.posZ + 4));
+        for (EntityLiving e : entities) {
             if (VampirismAPI.factionRegistry().getFaction(entity) == VampirismAPI.factionRegistry().getFaction(e)) {
                 e.heal(entity.getMaxHealth() / 100 * Balance.ea.REGENERATION_AMOUNT / (getDuration(entity.getLevel()) * 20));
                 if (duration % 20 == 0) {
-                    VampLib.proxy.getParticleHandler().spawnParticles(Minecraft.getMinecraft().getIntegratedServer().getEntityWorld(), new ResourceLocation("vampirism", "heal"), e.posX, e.posY + 1, e.posZ, 2, 0.01D, new Random(), e);
+                    VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), new ResourceLocation("vampirism", "heal"), e.posX, e.posY + 1, e.posZ, 3, 0.01D, new Random(), e);
                 }
             }
         }

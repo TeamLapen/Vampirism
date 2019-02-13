@@ -7,10 +7,10 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
-import de.teamlapen.vampirism.entity.EntityVampirism;
+import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import net.minecraft.util.SoundCategory;
 
-public class BatsSpawnEntityAction<T extends EntityVampirism & IVampire & IAdjustableLevel> extends DefaultEntityAction implements IInstantAction<T> {
+public class BatsSpawnEntityAction<T extends EntityVampireBase & IVampire & IAdjustableLevel> extends DefaultEntityAction implements IInstantAction<T> {
 
     public BatsSpawnEntityAction() {
     }

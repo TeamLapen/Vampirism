@@ -97,7 +97,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         this.attackMelee = new EntityAIAttackMelee(this, 1.0, false);
         this.attackRange = new EntityAIAttackRangedCrossbow(this, this, 0.6, 60, 20);
         this.updateCombatTask();
-        this.entityActionHandler = new EntityActionHandler<>(this);
+        this.entityActionHandler = new EntityActionHandler<>(this, this.entityclass);
     }
 
     @Override
@@ -123,7 +123,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Override
     public void setLevel(int level) {
         if (level >= 0) {
-            entityActionHandler.setAvailableActions(getAvailableActions(level));
             getDataManager().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 3) {
@@ -444,21 +443,16 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         getDataManager().set(WATCHED_ID, id);
     }
 
-    protected List<IEntityAction> getAvailableActions(int level) {
-        List<IEntityAction[]> actionstmp = new ArrayList<IEntityAction[]>();
-        switch (level) {
-            case 0:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_garlic_areaofeffect });
-                break;
-            case 1:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_garlic_areaofeffect });
-                break;
-            case 2:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_garlic_areaofeffect });
+    @Override
+    public List<IEntityAction> getAvailableActions(EntityClass entityClass) {
+        List<IEntityAction> actionstmp = new ArrayList<IEntityAction>();
+        switch (entityClass) {
+            case Caster:
+                actionstmp.add(EntityActions.entity_garlic_areaofeffect);
                 break;
             default:
                 break;
         }
-        return getAvailableActions(actionstmp);
+        return actionstmp;
     }
 }

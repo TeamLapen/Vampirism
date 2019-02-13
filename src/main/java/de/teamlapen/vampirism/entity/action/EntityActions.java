@@ -18,20 +18,24 @@ public class EntityActions {
      */
     public static final HealEntityAction<?> entity_heal = UtilLib.getNull();
     public static final RegenerationAOFEntityAction<?> entity_regeneration_areaofeffect = UtilLib.getNull();
+    public static final RegenerationEntityAction<?> entity_regeneration = UtilLib.getNull();
     public static final SpeedEntityAction<?> entity_speed = UtilLib.getNull();
     public static final BatsSpawnEntityAction<?> entity_bat_spawn = UtilLib.getNull();
     public static final DarkProjectileEntityAction<?> entity_dark_projectile = UtilLib.getNull();
     public static final SunscreamEntityAction<?> entity_sunscream = UtilLib.getNull();
     public static final GarlicAOFEntityAction<?> entity_garlic_areaofeffect = UtilLib.getNull();
+    public static final IgnoreSunDamageEntityAction<?> entity_ignoresundamage = UtilLib.getNull();
 
     public static void registerDefaultActions(IForgeRegistry<IEntityAction> registry) {
         registry.register(new InvisibleEntityAction<>().setRegistryName("vampirism", "entity_invisible"));
         registry.register(new HealEntityAction<>().setRegistryName("vampirism", "entity_heal"));
         registry.register(new RegenerationAOFEntityAction<>().setRegistryName("vampirism", "entity_regeneration_areaofeffect"));
+        registry.register(new RegenerationEntityAction<>().setRegistryName("vampirism", "entity_regeneration"));
         registry.register(new SpeedEntityAction<>().setRegistryName("vampirism", "entity_speed"));
         registry.register(new BatsSpawnEntityAction<>().setRegistryName("vampirism", "entity_bat_spawn"));
         registry.register(new DarkProjectileEntityAction<>().setRegistryName("vampirism", "entity_dark_projectile"));
         registry.register(new SunscreamEntityAction<>().setRegistryName("vampirism", "entity_sunscream"));
         registry.register(new GarlicAOFEntityAction<>().setRegistryName("vampirism", "entity_garlic_areaofeffect"));
+        registry.register(new IgnoreSunDamageEntityAction<>().setRegistryName("vampirism", "entity_ignoresundamage"));
     }
 }

@@ -13,6 +13,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -24,10 +25,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Base class for most vampirism mobs
@@ -39,6 +40,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected boolean peaceful = false;
     /** available actions for AI task & task */
     protected EntityActionHandler<?> entityActionHandler;
+    protected EntityClass entityclass;
     /**
      * Whether the home should be saved to nbt or not
      */
@@ -53,6 +55,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     public EntityVampirism(World world) {
         super(world);
+        setupEntityClass();
         moveTowardsRestriction = new EntityAIMoveTowardsRestriction(this, 1.0F);
     }
 
@@ -87,7 +90,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             }
         }
 
-
         return flag;
     }
 
@@ -114,7 +116,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     @Override
     public BlockPos getHomePosition() {
-        if (!hasHome()) return new BlockPos(0, 0, 0);
+        if (!hasHome())
+            return new BlockPos(0, 0, 0);
         int posX, posY, posZ;
         posX = (int) (home.minX + (home.maxX - home.minX) / 2);
         posY = (int) (home.minY + (home.maxY - home.minY) / 2);
@@ -134,7 +137,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         }
         return true;
     }
-
 
     @Override
     public boolean isWithinHomeDistanceCurrentPosition() {
@@ -196,7 +198,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         if (saveHome && hasHome()) {
-            int[] h = {(int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ};
+            int[] h = { (int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ };
             nbt.setIntArray("home", h);
             if (moveTowardsRestrictionAdded && moveTowardsRestrictionPrio > -1) {
                 nbt.setInteger("homeMovePrio", moveTowardsRestrictionPrio);
@@ -305,12 +307,15 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
      * Add the MoveTowardsRestriction task with the given priority.
      * Overrides prior priorities if existent
      *
-     * @param prio   Priority of the task
-     * @param active If the task should be active or not
+     * @param prio
+     *            Priority of the task
+     * @param active
+     *            If the task should be active or not
      */
     protected void setMoveTowardsRestriction(int prio, boolean active) {
         if (moveTowardsRestrictionAdded) {
-            if (active && moveTowardsRestrictionPrio == prio) return;
+            if (active && moveTowardsRestrictionPrio == prio)
+                return;
             this.tasks.removeTask(moveTowardsRestriction);
             moveTowardsRestrictionAdded = false;
         }
@@ -348,11 +353,57 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
      * @param actionstmp
      *            list of action sets
      */
-    protected List<IEntityAction> getAvailableActions(List<IEntityAction[]> actionstmp) {
-        List<IEntityAction> entityActions = new ArrayList<IEntityAction>();
-        if (actionstmp.size() == 0)
-            return null;
-        entityActions.addAll(Arrays.asList(actionstmp.get(this.getRNG().nextInt(actionstmp.size()))));
-        return entityActions;
+    public List<IEntityAction> getAvailableActions(EntityClass entityClass) {
+        List<IEntityAction> actionstmp = new ArrayList<IEntityAction>();
+        switch (entityClass) {
+            default:
+                break;
+        }
+        return actionstmp;
+    }
+
+    public EntityClass getEntityClass() {
+        return entityclass;
+    }
+
+    protected void setupEntityClass() {
+        entityclass = EntityClass.getRandomClass();
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
+    }
+
+    public enum EntityClass {
+            Tank(0.3, 0, 0),
+            Fighter(0, 0.1, 0),
+            Support(0, 0, 0),
+            Caster(0, 0.1, 0),
+            Assassin(0, 0, 0.08);
+
+        AttributeModifier healthModifier;
+        AttributeModifier damageModifier;
+        AttributeModifier speedModifier;
+
+        EntityClass(double healthModifier, double damageModifier, double speedModifier) {
+            this.healthModifier = new AttributeModifier("entity_class_health", healthModifier, 1);
+            this.damageModifier = new AttributeModifier("entity_class_damage", damageModifier, 1);
+            this.speedModifier = new AttributeModifier("entity_class_speed", speedModifier, 1);
+        }
+
+        public static EntityClass getRandomClass() {
+            return values()[new Random().nextInt(values().length - 1)];
+        }
+
+        public AttributeModifier getHealthModifier() {
+            return healthModifier;
+        }
+
+        public AttributeModifier getDamageModifier() {
+            return damageModifier;
+        }
+
+        public AttributeModifier getSpeedModifier() {
+            return speedModifier;
+        }
     }
 }

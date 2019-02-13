@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.ai.*;
@@ -57,7 +56,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         hasArms = true;
         this.restrictedSpawn = true;
         this.setSize(0.6F, 1.95F);
-        this.entityActionHandler = new EntityActionHandler<>(this);
+        this.entityActionHandler = new EntityActionHandler<>(this, this.entityclass);
     }
 
     @Override
@@ -103,7 +102,6 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         if (level >= 0) {
             getDataManager().set(LEVEL, level);
             this.updateEntityAttributes();
-            entityActionHandler.setAvailableActions(getAvailableActions(level));
             if (level == 2) {
                 this.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1000000, 1));
             }
@@ -282,35 +280,37 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     /**
-     * sets the possible action sets and returns a random action set with setAvailableActions() of {@linkplain EntityVampirism}
+     * returns the available actions based on {@link EntityClass}
      * 
      * @returns an action set
      */
-    protected List<IEntityAction> getAvailableActions(int level) {
-        List<IEntityAction[]> actionstmp = new ArrayList<IEntityAction[]>();
-        switch (level) {
-            case 0:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_regeneration_areaofeffect });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn, EntityActions.entity_regeneration_areaofeffect });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn });
+    @Override
+    public List<IEntityAction> getAvailableActions(EntityClass entityClass) {
+        List<IEntityAction> actionstmp = new ArrayList<IEntityAction>();
+        switch (entityClass) {
+            case Fighter:
+                actionstmp.add(EntityActions.entity_speed);
+                actionstmp.add(EntityActions.entity_regeneration);
                 break;
-            case 1:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_bat_spawn, EntityActions.entity_regeneration_areaofeffect });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_regeneration_areaofeffect });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_sunscream });
+            case Support:
+                actionstmp.add(EntityActions.entity_regeneration_areaofeffect);
                 break;
-            case 2:
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_regeneration_areaofeffect, EntityActions.entity_speed });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_speed, EntityActions.entity_sunscream, EntityActions.entity_invisible });
-                actionstmp.add(new IEntityAction[] { EntityActions.entity_invisible, EntityActions.entity_heal });
+            case Tank:
+                actionstmp.add(EntityActions.entity_sunscream);
+                actionstmp.add(EntityActions.entity_regeneration);
+                break;
+            case Caster:
+                actionstmp.add(EntityActions.entity_bat_spawn);
+                break;
+            case Assassin:
+                actionstmp.add(EntityActions.entity_speed);
+                actionstmp.add(EntityActions.entity_invisible);
                 break;
             default:
                 break;
         }
 
-        return getAvailableActions(actionstmp);
+        return actionstmp;
     }
 
 }

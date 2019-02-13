@@ -7,13 +7,13 @@ import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.core.ModPotions;
-import de.teamlapen.vampirism.entity.EntityVampirism;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 
-public class GarlicAOFEntityAction<T extends EntityVampirism & IHunter & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
+public class GarlicAOFEntityAction<T extends EntityHunterBase & IHunter & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
 
     @Override
     public int getCooldown(int level) {

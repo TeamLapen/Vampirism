@@ -8,7 +8,9 @@ import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityVampirism;
+import de.teamlapen.vampirism.entity.EntityVampirism.EntityClass;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -30,11 +32,15 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
     private int preActivation = 0;
     private int cooldown = 0;
     private int duration = 0;
+    private float healthForDisruption;
     private IEntityAction action;
     private boolean isPlayerTarget;
+    private EntityClass entityClass;
 
-    public EntityActionHandler(T entityIn) {
+    public EntityActionHandler(T entityIn, EntityClass entityClassIn) {
         this.entity = entityIn;
+        this.entityClass = entityClassIn;
+        this.availableActions = entityIn.getAvailableActions(entityClassIn);
     }
 
     public void startExecuting() {
@@ -45,50 +51,54 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
     }
 
     /**
-     * Keep ticking a continuous task that has already been started and sets a new action
-     * 
-     * {@link preActivation} > 0 action will be started soon
-     * {@link preActivation} = 0 action is starting now
-     * {@link preActivation} = -1 action was started
-     * {@link duration} > 0 action in progress,
-     * {@link duration} = 0 action will be deactivated,
-     * {@link duration} = -1 no action is active,
-     * {@link duration} <= 0 && {@link cooldown} > 0 actions on cooldown,
-     * {@link duration} <= 0 && {@link cooldown} = 0 new action will be set
+     * called every time the entity is fighting a player, handles the actions
      */
     public void updateHandler() {
-        if (preActivation == 0) {
+        if (preActivation == 0) { /* action starts now */
             /* calls activate() for {@link ILastingAction} & {@link IInstantAction} once per action */
             activateAction();
             preActivation--;
-        } else if (preActivation > 0) {
+        } else if (preActivation > 0) {/* action will be started soon */
             /* calls updatePreAction() for {@link ILastingAction} & {@link IInstantAction} as long as the action need to be activated */
             updatePreAction();
             preActivation--;
-        } else if (duration == 0) {
-            /* calls resetAction() for {@link ILastingAction} once per action */
-            resetAction();
+            if (entity.getHealth() < healthForDisruption) {
+                cancelActivation();
+            }
+        } else if (duration == 0) { /* deactivate action */
+            /* calls deactivateAction() for {@link ILastingAction} once per action */
+            deactivateAction();
             duration--;
-        } else if (duration > 0) {
+        } else if (duration > 0) { /* action is in progress */
             /* calls updateAction() for {@link ILastingAction} & {@link IInstantAction} as long as the actions duration last */
             duration--;
             updateAction();
-        } else if (cooldown > 0) {
+        } else if (cooldown > 0) {/* action on cooldown */
             /* calls updateAction() for {@link ILastingAction} & {@link IInstantAction} as long as the actions cooldown last */
             cooldown--;
-        } else {
+        } else { /* new action */
             /* sets a new action if cooldown is over */
             action = getIntelligentAction();
             cooldown = action.getCooldown(entity.getLevel());
             preActivation = action.getPreActivationTime();
+            healthForDisruption = entity.getHealth() - (entity.getMaxHealth() * (float) Balance.ea.DISRUPTION_HEALTH_AMOUNT);
             if (action instanceof ILastingAction) {
                 duration = ((ILastingAction<T>) action).getDuration(entity.getLevel());
             }
         }
     }
 
-    public void resetAction() {
-        resetAction(null);
+    /**
+     * cancels the action by setting {@link preActivation}, {@link duration} and {@link cooldown} to default
+     */
+    public void cancelActivation() {
+        preActivation = -1;
+        duration = -1;
+        cooldown = 100;
+    }
+
+    public void deactivateAction() {
+        deactivateAction(null);
     }
 
     /**
@@ -97,7 +107,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
      * @param actionIn
      */
     @Nullable
-    public void resetAction(IEntityAction actionIn) {
+    public void deactivateAction(IEntityAction actionIn) {
         IEntityAction action = actionIn != null ? actionIn : this.action;
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).deactivate(entity);
@@ -122,7 +132,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
     }
 
     public void updatePreAction() {
-        updateAction(null);
+        updatePreAction(null);
     }
 
     /**
@@ -208,8 +218,6 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
             if (entity.isGettingSundamage() && !entity.isIgnoringSundamage()) {
                 actionsMap.computeIfPresent(EntityActions.entity_sunscream, (k, v) -> v + actionsMap.size() < 5 ? 4 : 2);
             }
-            /* Bat Spawn Action */
-            actionsMap.computeIfPresent(EntityActions.entity_bat_spawn, (k, v) -> v + actionsMap.size() < 4 ? (int) 1 * this.entity.getRNG().nextInt(2) : 0);
             /* Dark Projectile Action */
             if (distanceToTarget > 20)
                 actionsMap.computeIfPresent(EntityActions.entity_dark_projectile, (k, v) -> v + 2);
@@ -244,7 +252,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
             } else {
                 if (isPlayerTarget) {
                     isPlayerTarget = false;
-                    resetAction();
+                    deactivateAction();
                 }
             }
         }
@@ -260,7 +268,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
 
     public void readFromNBT(NBTTagCompound nbt) {
         if (nbt.hasKey("activeAction")) {
-            resetAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation("vampirism", nbt.getString("activeAction"))));
+            deactivateAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation("vampirism", nbt.getString("activeAction"))));
             isPlayerTarget = true;
         }
     }

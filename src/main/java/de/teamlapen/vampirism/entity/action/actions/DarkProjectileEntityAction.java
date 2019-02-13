@@ -6,11 +6,11 @@ import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityDarkBloodProjectile;
-import de.teamlapen.vampirism.entity.EntityVampirism;
+import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.Vec3d;
 
-public class DarkProjectileEntityAction<T extends EntityVampirism & IVampire & IAdjustableLevel> extends DefaultEntityAction implements IInstantAction<T> {
+public class DarkProjectileEntityAction<T extends EntityVampireBase & IVampire & IAdjustableLevel> extends DefaultEntityAction implements IInstantAction<T> {
 
     public DarkProjectileEntityAction() {
     }
