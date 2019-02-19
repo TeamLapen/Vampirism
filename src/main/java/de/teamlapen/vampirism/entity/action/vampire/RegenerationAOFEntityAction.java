@@ -1,9 +1,10 @@
-package de.teamlapen.vampirism.entity.action.actions;
+package de.teamlapen.vampirism.entity.action.vampire;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
@@ -14,9 +15,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 import java.util.Random;
 
-public class RegenerationAOFEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
+public class RegenerationAOFEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends VampireEntityAction implements ILastingAction<T> {
 
-    public RegenerationAOFEntityAction() {
+    public RegenerationAOFEntityAction(EntityActionTier tier, EntityClassType... param) {
+        super(tier, param);
     }
 
     @Override

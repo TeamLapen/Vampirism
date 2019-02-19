@@ -1,9 +1,13 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.lib.VampLib;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.IEntityWithHome;
 import de.teamlapen.vampirism.api.entity.IVampirismEntity;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -13,7 +17,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -26,9 +29,7 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Base class for most vampirism mobs
@@ -40,7 +41,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected boolean peaceful = false;
     /** available actions for AI task & task */
     protected EntityActionHandler<?> entityActionHandler;
-    protected EntityClass entityclass;
+    protected EntityClassType entityclass;
+    protected EntityActionTier entitytier;
     /**
      * Whether the home should be saved to nbt or not
      */
@@ -348,62 +350,32 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     /**
-     * get a list of possible action sets, saves a random one
+     * gets all available actions for this entity.
      * 
-     * @param actionstmp
-     *            list of action sets
+     * @throws ClassCastException
+     *             if the entity isn't instanceof {@link IFactionEntity}
      */
-    public List<IEntityAction> getAvailableActions(EntityClass entityClass) {
-        List<IEntityAction> actionstmp = new ArrayList<IEntityAction>();
-        switch (entityClass) {
-            default:
-                break;
-        }
-        return actionstmp;
+    public List<IEntityAction> getAvailableActions() {
+        return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
     }
 
-    public EntityClass getEntityClass() {
+    public EntityClassType getEntityClass() {
         return entityclass;
     }
 
+    public EntityActionTier getEntityTier() {
+        return entitytier;
+    }
+
+    /**
+     * sets entity Tier & Class, applies class modifier
+     */
+    @Nullable
     protected void setupEntityClass() {
-        entityclass = EntityClass.getRandomClass();
+        entitytier = EntityActionTier.Default;
+        entityclass = EntityClassType.getRandomClass(this.getRNG());
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
-    }
-
-    public enum EntityClass {
-            Tank(0.3, 0, 0),
-            Fighter(0, 0.1, 0),
-            Support(0, 0, 0),
-            Caster(0, 0.1, 0),
-            Assassin(0, 0, 0.08);
-
-        AttributeModifier healthModifier;
-        AttributeModifier damageModifier;
-        AttributeModifier speedModifier;
-
-        EntityClass(double healthModifier, double damageModifier, double speedModifier) {
-            this.healthModifier = new AttributeModifier("entity_class_health", healthModifier, 1);
-            this.damageModifier = new AttributeModifier("entity_class_damage", damageModifier, 1);
-            this.speedModifier = new AttributeModifier("entity_class_speed", speedModifier, 1);
-        }
-
-        public static EntityClass getRandomClass() {
-            return values()[new Random().nextInt(values().length - 1)];
-        }
-
-        public AttributeModifier getHealthModifier() {
-            return healthModifier;
-        }
-
-        public AttributeModifier getDamageModifier() {
-            return damageModifier;
-        }
-
-        public AttributeModifier getSpeedModifier() {
-            return speedModifier;
-        }
     }
 }

@@ -1,0 +1,21 @@
+package de.teamlapen.vampirism.entity.action.vampire;
+
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
+import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
+import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+
+public abstract class VampireEntityAction extends DefaultEntityAction implements IEntityAction {
+
+    public VampireEntityAction(EntityActionTier tier, EntityClassType[] param) {
+        super(tier, param);
+    }
+
+    @Override
+    public IPlayableFaction getFaction() {
+        return VReference.VAMPIRE_FACTION;
+    }
+
+}

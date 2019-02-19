@@ -3,13 +3,12 @@ package de.teamlapen.vampirism.entity.vampire;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
-import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.world.loot.LootHandler;
@@ -34,8 +33,6 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Basic vampire mob.
@@ -56,7 +53,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         hasArms = true;
         this.restrictedSpawn = true;
         this.setSize(0.6F, 1.95F);
-        this.entityActionHandler = new EntityActionHandler<>(this, this.entityclass);
+        this.entitytier = EntityActionTier.Medium;
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -278,39 +276,4 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_SPEED);
     }
-
-    /**
-     * returns the available actions based on {@link EntityClass}
-     * 
-     * @returns an action set
-     */
-    @Override
-    public List<IEntityAction> getAvailableActions(EntityClass entityClass) {
-        List<IEntityAction> actionstmp = new ArrayList<IEntityAction>();
-        switch (entityClass) {
-            case Fighter:
-                actionstmp.add(EntityActions.entity_speed);
-                actionstmp.add(EntityActions.entity_regeneration);
-                break;
-            case Support:
-                actionstmp.add(EntityActions.entity_regeneration_areaofeffect);
-                break;
-            case Tank:
-                actionstmp.add(EntityActions.entity_sunscream);
-                actionstmp.add(EntityActions.entity_regeneration);
-                break;
-            case Caster:
-                actionstmp.add(EntityActions.entity_bat_spawn);
-                break;
-            case Assassin:
-                actionstmp.add(EntityActions.entity_speed);
-                actionstmp.add(EntityActions.entity_invisible);
-                break;
-            default:
-                break;
-        }
-
-        return actionstmp;
-    }
-
 }

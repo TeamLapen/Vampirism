@@ -76,6 +76,13 @@ public class BalanceEntityActions extends BalanceValues {
     @DefaultInt(value = 6, minValue = 1, name = "Ignore SunDamage Cooldown")
     public int IGNORE_SUNDAMAGE_COOLDOWN;
 
+    /* Garlic AOF Action */
+    @DefaultInt(value = 5, minValue = 1, name = "Garlic AOF Duration")
+    public int GARLIC_DURATION;
+
+    @DefaultInt(value = 5, minValue = 1, name = "Garlic AOF Cooldown")
+    public int GARLIC_COOLDOWN;
+
     /**
      * Creates a configuration for balance values
      *

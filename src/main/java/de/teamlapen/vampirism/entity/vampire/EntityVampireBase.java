@@ -47,7 +47,6 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     protected boolean vulnerableToFire = true;
     private boolean sundamageCache;
     private EnumStrength garlicCache = EnumStrength.NONE;
-    private boolean ignoreSundamageAction = false;
     /**
      * If the vampire should spawn a vampire soul at the end of its death animation.
      * No need to store this in NBT as it is only set during onDeath() so basically 20 ticks beforehand.
@@ -145,7 +144,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     @Override
     public boolean isIgnoringSundamage() {
-        return this.isPotionActive(ModPotions.sunscreen) || this.ignoreSundamageAction;
+        return this.isPotionActive(ModPotions.sunscreen);
     }
 
     @Override
@@ -243,9 +242,5 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         if (!vampireBiome) return isLowLightLevel();
         IBlockState iblockstate = this.world.getBlockState((new BlockPos(this)).down());
         return ModBlocks.cursed_earth.equals(iblockstate.getBlock());
-    }
-
-    public void setIgnoreSundamage(boolean ignore) {
-        this.ignoreSundamageAction = ignore;
     }
 }

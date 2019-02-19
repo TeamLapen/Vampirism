@@ -1,17 +1,19 @@
-package de.teamlapen.vampirism.entity.action.actions;
+package de.teamlapen.vampirism.entity.action.vampire;
 
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
-import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
-import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
+import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.potion.PotionEffect;
 
-public class SunscreamEntityAction<T extends EntityVampireBase & IVampire & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
+public class SunscreamEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends VampireEntityAction implements ILastingAction<T> {
 
-    public SunscreamEntityAction() {
+    public SunscreamEntityAction(EntityActionTier tier, EntityClassType... param) {
+        super(tier, param);
     }
 
     @Override

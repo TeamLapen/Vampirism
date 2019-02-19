@@ -1,21 +1,22 @@
-package de.teamlapen.vampirism.entity.action.actions;
+package de.teamlapen.vampirism.entity.action.vampire;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
-import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.util.EnumParticleTypes;
 
-public class InvisibleEntityAction<T extends EntityVampirism & IVampire & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
+public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends VampireEntityAction implements ILastingAction<T> {
 
-    public InvisibleEntityAction() {
-
+    public InvisibleEntityAction(EntityActionTier tier, EntityClassType... param) {
+        super(tier, param);
     }
-    
+
     @Override
     public int getCooldown(int level) {
         return Balance.ea.INVISIBLE_COOLDOWN * 20; // seconds into ticks

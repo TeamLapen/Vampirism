@@ -1,8 +1,11 @@
 package de.teamlapen.vampirism.entity.action;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionManager;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.core.VampirismRegistries;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -20,4 +23,10 @@ public class EntityActionManager implements IEntityActionManager {
         return net.minecraftforge.registries.RegistryManager.ACTIVE.getRegistry(new ResourceLocation("vampirism:entityactions"));
     }
 
+    @Override
+    public List<IEntityAction> getAllEntityActionsByTierAndClassType(IFaction faction, EntityActionTier tier, EntityClassType classtype) {
+        List<IEntityAction> actions = Lists.newArrayList(VampirismRegistries.ENTITYACTIONS.getValuesCollection());
+        actions.removeIf(action -> action.getFaction() != faction || action.getTier().getId() > tier.getId() || !Lists.newArrayList(action.getClassTypes()).contains(classtype));
+        return actions;
+    }
 }

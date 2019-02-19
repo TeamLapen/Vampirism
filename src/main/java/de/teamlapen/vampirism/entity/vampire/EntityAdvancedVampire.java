@@ -2,12 +2,11 @@ package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
-import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
@@ -32,8 +31,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Advanced vampire. Is strong. Represents supporters
@@ -57,7 +54,8 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.canSuckBloodFromPlayer = true;
         this.restrictedSpawn = true;
         this.setDontDropEquipment();
-        this.entityActionHandler = new EntityActionHandler<>(this, this.entityclass);
+        this.entitytier = EntityActionTier.High;
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -237,32 +235,5 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_SPEED);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(13);
-    }
-
-    public List<IEntityAction> getAvailableActions(EntityClass entityClass) {
-        List<IEntityAction> actionstmp = new ArrayList<IEntityAction>();
-        switch (entityClass) {
-            case Caster:
-                actionstmp.add(EntityActions.entity_bat_spawn);
-                actionstmp.add(EntityActions.entity_dark_projectile);
-                break;
-            case Fighter:
-                actionstmp.add(EntityActions.entity_speed);
-                actionstmp.add(EntityActions.entity_heal);
-                actionstmp.add(EntityActions.entity_ignoresundamage);
-                break;
-            case Support:
-                actionstmp.add(EntityActions.entity_regeneration_areaofeffect);
-                break;
-            case Tank:
-                actionstmp.add(EntityActions.entity_sunscream);
-                break;
-            case Assassin:
-                actionstmp.add(EntityActions.entity_speed);
-                actionstmp.add(EntityActions.entity_invisible);
-                break;
-            default:
-        }
-        return actionstmp;
     }
 }

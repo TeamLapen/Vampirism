@@ -1,8 +1,11 @@
 package de.teamlapen.vampirism.entity.action;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
-import de.teamlapen.vampirism.entity.action.actions.*;
+import de.teamlapen.vampirism.entity.action.hunter.GarlicAOFEntityAction;
+import de.teamlapen.vampirism.entity.action.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -27,15 +30,15 @@ public class EntityActions {
     public static final IgnoreSunDamageEntityAction<?> entity_ignoresundamage = UtilLib.getNull();
 
     public static void registerDefaultActions(IForgeRegistry<IEntityAction> registry) {
-        registry.register(new InvisibleEntityAction<>().setRegistryName("vampirism", "entity_invisible"));
-        registry.register(new HealEntityAction<>().setRegistryName("vampirism", "entity_heal"));
-        registry.register(new RegenerationAOFEntityAction<>().setRegistryName("vampirism", "entity_regeneration_areaofeffect"));
-        registry.register(new RegenerationEntityAction<>().setRegistryName("vampirism", "entity_regeneration"));
-        registry.register(new SpeedEntityAction<>().setRegistryName("vampirism", "entity_speed"));
-        registry.register(new BatsSpawnEntityAction<>().setRegistryName("vampirism", "entity_bat_spawn"));
-        registry.register(new DarkProjectileEntityAction<>().setRegistryName("vampirism", "entity_dark_projectile"));
-        registry.register(new SunscreamEntityAction<>().setRegistryName("vampirism", "entity_sunscream"));
-        registry.register(new GarlicAOFEntityAction<>().setRegistryName("vampirism", "entity_garlic_areaofeffect"));
-        registry.register(new IgnoreSunDamageEntityAction<>().setRegistryName("vampirism", "entity_ignoresundamage"));
+        registry.register(new InvisibleEntityAction<>(EntityActionTier.Medium, EntityClassType.Assassin).setRegistryName("vampirism", "entity_invisible"));
+        registry.register(new HealEntityAction<>(EntityActionTier.High, EntityClassType.Fighter).setRegistryName("vampirism", "entity_heal"));
+        registry.register(new RegenerationAOFEntityAction<>(EntityActionTier.Medium, EntityClassType.Support).setRegistryName("vampirism", "entity_regeneration_areaofeffect"));
+        registry.register(new RegenerationEntityAction<>(EntityActionTier.Medium, EntityClassType.Fighter).setRegistryName("vampirism", "entity_regeneration"));
+        registry.register(new SpeedEntityAction<>(EntityActionTier.Medium, EntityClassType.Assassin, EntityClassType.Fighter).setRegistryName("vampirism", "entity_speed"));
+        registry.register(new BatsSpawnEntityAction<>(EntityActionTier.Medium, EntityClassType.Caster).setRegistryName("vampirism", "entity_bat_spawn"));
+        registry.register(new DarkProjectileEntityAction<>(EntityActionTier.High, EntityClassType.Caster).setRegistryName("vampirism", "entity_dark_projectile"));
+        registry.register(new SunscreamEntityAction<>(EntityActionTier.Medium, EntityClassType.Tank).setRegistryName("vampirism", "entity_sunscream"));
+        registry.register(new GarlicAOFEntityAction<>(EntityActionTier.High, EntityClassType.Caster).setRegistryName("vampirism", "entity_garlic_areaofeffect"));
+        registry.register(new IgnoreSunDamageEntityAction<>(EntityActionTier.High, EntityClassType.Fighter).setRegistryName("vampirism", "entity_ignoresundamage"));
     }
 }

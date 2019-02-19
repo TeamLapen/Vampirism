@@ -2,11 +2,10 @@ package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
-import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
@@ -28,8 +27,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Advanced hunter. Is strong. Represents supporters
@@ -52,7 +49,8 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
 
 
         this.setDontDropEquipment();
-        this.entityActionHandler = new EntityActionHandler<>(this, this.entityclass);
+        this.entitytier = EntityActionTier.High;
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -216,18 +214,4 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE_PL * l);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_SPEED);
     }
-
-    @Override
-    public List<IEntityAction> getAvailableActions(EntityClass entityClass) {
-        List<IEntityAction> actionstmp = new ArrayList<IEntityAction>();
-        switch (entityClass) {
-            case Caster:
-                actionstmp.add(EntityActions.entity_garlic_areaofeffect);
-                break;
-            default:
-                break;
-        }
-        return actionstmp;
-    }
-
 }

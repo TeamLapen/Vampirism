@@ -1,36 +1,38 @@
-package de.teamlapen.vampirism.entity.action.actions;
+package de.teamlapen.vampirism.entity.action.hunter;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
-import de.teamlapen.vampirism.api.entity.hunter.IHunter;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
+import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 
-public class GarlicAOFEntityAction<T extends EntityHunterBase & IHunter & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
+public class GarlicAOFEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends HunterEntityAction implements ILastingAction<T> {
+
+    public GarlicAOFEntityAction(EntityActionTier tier, EntityClassType... param) {
+        super(tier, param);
+    }
 
     @Override
     public int getCooldown(int level) {
-        // TODO Auto-generated method stub
-        return 100;
+        return Balance.ea.GARLIC_COOLDOWN * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        // TODO Auto-generated method stub
-        return 40;
+        return Balance.ea.GARLIC_DURATION * 20;
     }
 
     @Override
     public void deactivate(T entity) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override

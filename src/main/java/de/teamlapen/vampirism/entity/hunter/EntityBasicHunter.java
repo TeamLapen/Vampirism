@@ -3,13 +3,12 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
-import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackRangedCrossbow;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
 import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
@@ -45,8 +44,6 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -97,7 +94,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         this.attackMelee = new EntityAIAttackMelee(this, 1.0, false);
         this.attackRange = new EntityAIAttackRangedCrossbow(this, this, 0.6, 60, 20);
         this.updateCombatTask();
-        this.entityActionHandler = new EntityActionHandler<>(this, this.entityclass);
+        this.entitytier = EntityActionTier.Medium;
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -441,18 +439,5 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     private void updateWatchedId(int id) {
         getDataManager().set(WATCHED_ID, id);
-    }
-
-    @Override
-    public List<IEntityAction> getAvailableActions(EntityClass entityClass) {
-        List<IEntityAction> actionstmp = new ArrayList<IEntityAction>();
-        switch (entityClass) {
-            case Caster:
-                actionstmp.add(EntityActions.entity_garlic_areaofeffect);
-                break;
-            default:
-                break;
-        }
-        return actionstmp;
     }
 }

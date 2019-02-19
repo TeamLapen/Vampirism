@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityVampirism;
-import de.teamlapen.vampirism.entity.EntityVampirism.EntityClass;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -35,12 +34,10 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
     private float healthForDisruption;
     private IEntityAction action;
     private boolean isPlayerTarget;
-    private EntityClass entityClass;
 
-    public EntityActionHandler(T entityIn, EntityClass entityClassIn) {
+    public EntityActionHandler(T entityIn) {
         this.entity = entityIn;
-        this.entityClass = entityClassIn;
-        this.availableActions = entityIn.getAvailableActions(entityClassIn);
+        this.availableActions = entityIn.getAvailableActions();
     }
 
     public void startExecuting() {
