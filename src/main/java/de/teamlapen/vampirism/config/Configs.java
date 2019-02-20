@@ -10,7 +10,6 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import javax.annotation.Nonnull;
 import java.io.File;
 
@@ -30,6 +29,7 @@ public class Configs {
     public static boolean resetConfigurationInDev;
     public static int gui_level_offset_x;
     public static int gui_level_offset_y;
+    public static boolean gui_skill_button_enable;
     public static boolean renderVampireForestFog;
     public static boolean renderVampireForestFogEnforce;
     public static int blood_vision_recompile_ticks;
@@ -149,6 +149,7 @@ public class Configs {
         // Gui
         gui_level_offset_x = main_config.getInt("level_offset_x", CATEGORY_GUI, 0, -250, 250, "X-Offset of the level indicator from the center in pixels");
         gui_level_offset_y = main_config.getInt("level_offset_y", CATEGORY_GUI, 47, 0, 270, "Y-Offset of the level indicator from the bottom in pixels");
+        gui_skill_button_enable = main_config.getBoolean("skill_button_enable", CATEGORY_GUI, true, "If the skill button in inventory should be rendered");
 
 
         //WorldGen
