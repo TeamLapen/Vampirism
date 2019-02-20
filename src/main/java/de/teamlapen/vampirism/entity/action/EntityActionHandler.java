@@ -213,7 +213,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
             IVampire entity = (IVampire) this.entity;
             /* Sunscream Action */
             if (entity.isGettingSundamage() && !entity.isIgnoringSundamage()) {
-                actionsMap.computeIfPresent(EntityActions.entity_sunscream, (k, v) -> v + actionsMap.size() < 5 ? 4 : 2);
+                actionsMap.computeIfPresent(EntityActions.entity_sunscreen, (k, v) -> v + actionsMap.size() < 5 ? 4 : 2);
             }
             /* Dark Projectile Action */
             if (distanceToTarget > 20)

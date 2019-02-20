@@ -25,7 +25,7 @@ public class EntityActions {
     public static final SpeedEntityAction<?> entity_speed = UtilLib.getNull();
     public static final BatsSpawnEntityAction<?> entity_bat_spawn = UtilLib.getNull();
     public static final DarkProjectileEntityAction<?> entity_dark_projectile = UtilLib.getNull();
-    public static final SunscreamEntityAction<?> entity_sunscream = UtilLib.getNull();
+    public static final SunscreenEntityAction<?> entity_sunscreen = UtilLib.getNull();
     public static final GarlicAOFEntityAction<?> entity_garlic_areaofeffect = UtilLib.getNull();
     public static final IgnoreSunDamageEntityAction<?> entity_ignoresundamage = UtilLib.getNull();
 
@@ -37,7 +37,7 @@ public class EntityActions {
         registry.register(new SpeedEntityAction<>(EntityActionTier.Medium, EntityClassType.Assassin, EntityClassType.Fighter).setRegistryName("vampirism", "entity_speed"));
         registry.register(new BatsSpawnEntityAction<>(EntityActionTier.Medium, EntityClassType.Caster).setRegistryName("vampirism", "entity_bat_spawn"));
         registry.register(new DarkProjectileEntityAction<>(EntityActionTier.High, EntityClassType.Caster).setRegistryName("vampirism", "entity_dark_projectile"));
-        registry.register(new SunscreamEntityAction<>(EntityActionTier.Medium, EntityClassType.Tank).setRegistryName("vampirism", "entity_sunscream"));
+        registry.register(new SunscreenEntityAction<>(EntityActionTier.Medium, EntityClassType.Tank).setRegistryName("vampirism", "entity_sunscreen"));
         registry.register(new GarlicAOFEntityAction<>(EntityActionTier.High, EntityClassType.Caster).setRegistryName("vampirism", "entity_garlic_areaofeffect"));
         registry.register(new IgnoreSunDamageEntityAction<>(EntityActionTier.High, EntityClassType.Fighter).setRegistryName("vampirism", "entity_ignoresundamage"));
     }

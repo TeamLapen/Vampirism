@@ -10,9 +10,9 @@ import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.potion.PotionEffect;
 
-public class SunscreamEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends VampireEntityAction implements ILastingAction<T> {
+public class SunscreenEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends VampireEntityAction implements ILastingAction<T> {
 
-    public SunscreamEntityAction(EntityActionTier tier, EntityClassType... param) {
+    public SunscreenEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
     }
 
