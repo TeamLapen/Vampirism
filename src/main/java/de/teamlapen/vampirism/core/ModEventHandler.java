@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.client.gui.GuiSkills;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.modcompat.IntegrationsNotifier;
 import de.teamlapen.vampirism.network.SyncConfigPacket;
 import de.teamlapen.vampirism.util.DaySleepHelper;
@@ -25,8 +26,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.village.Village;
-import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -161,8 +161,8 @@ public class ModEventHandler {
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onInitGuiEventPost(InitGuiEvent.Post event) {
-        if (Configs.gui_skill_button_enable && event.getGui() instanceof GuiInventory) {
+    public void onInitGuiEventPost(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (Configs.gui_skill_button_enable && event.getGui() instanceof GuiInventory && FactionPlayerHandler.get(event.getGui().mc.player).getCurrentFactionPlayer() != null) {
             List<GuiButton> buttonList = event.getButtonList();
             GuiButton button = new GuiButtonImage(SKILLBUTTONID, ((GuiInventory) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22, 20, 18, 178, 0, 19, INVENTORY_SKILLS);
             buttonList.add(button);
@@ -172,7 +172,7 @@ public class ModEventHandler {
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onActionPerformedPre(ActionPerformedEvent.Post event) {
+    public void onActionPerformedPre(GuiScreenEvent.ActionPerformedEvent.Post event) {
         if (Configs.gui_skill_button_enable && event.getGui() instanceof GuiInventory) {
             if (event.getButton().id == SKILLBUTTONID) {
                 event.getGui().mc.displayGuiScreen(new GuiSkills());
