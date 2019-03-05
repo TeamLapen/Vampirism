@@ -19,14 +19,14 @@ public class BalanceEntityActions extends BalanceValues {
     public int INVISIBLE_DURATION;
 
     /* Heal Action */
-    @DefaultInt(value = 6, minValue = 1, name = "Invisible Cooldown", comment = "In seconds")
+    @DefaultInt(value = 7, minValue = 1, name = "Invisible Cooldown", comment = "In seconds")
     public int HEAL_COOLDOWN;
 
     @DefaultInt(value = 30, minValue = 0, maxValue = 100, name = "Heal Amount", comment = "In percent")
     public int HEAL_AMOUNT;
 
     /* Regeneration Action */
-    @DefaultInt(value = 4, minValue = 0, name = "Regeneration Duration", comment = "In seconds")
+    @DefaultInt(value = 5, minValue = 0, name = "Regeneration Duration", comment = "In seconds")
     public int REGENERATION_DURATION;
 
     @DefaultInt(value = 6, minValue = 1, name = "Regeneration Cooldown", comment = "In seconds")
@@ -49,11 +49,11 @@ public class BalanceEntityActions extends BalanceValues {
     @DefaultInt(value = 7, minValue = 1, name = "Batspawn Cooldown")
     public int BATSPAWN_COOLDOWN;
 
-    @DefaultInt(value = 6, minValue = 1, name = "Batspawn Amount")
+    @DefaultInt(value = 4, minValue = 1, name = "Batspawn Amount")
     public int BATSPAWN_AMOUNT;
 
     /* Dark Projectile Action */
-    @DefaultInt(value = 7, minValue = 1, comment = "In seconds")
+    @DefaultInt(value = 9, minValue = 1, comment = "In seconds")
     public int DARK_PROJECTILE_COOLDOWN;
 
     @DefaultDouble(value = 5, minValue = 0, comment = "Damage of the direct projectile hit")
@@ -63,10 +63,10 @@ public class BalanceEntityActions extends BalanceValues {
     public double DARK_BLOOD_PROJECTILE_INDIRECT_DAMAGE;
 
     /* Sunscreen Action */
-    @DefaultInt(value = 7, minValue = 1, name = "Sunscreen Duration", comment = "In seconds")
+    @DefaultInt(value = 6, minValue = 1, name = "Sunscreen Duration", comment = "In seconds")
     public int SUNSCREEN_DURATION;
 
-    @DefaultInt(value = 5, minValue = 1, name = "Sunscreen Cooldown", comment = "In seconds")
+    @DefaultInt(value = 9, minValue = 1, name = "Sunscreen Cooldown", comment = "In seconds")
     public int SUNSCREEN_COOLDOWN;
 
     /* Ignore SunDamage Action */
