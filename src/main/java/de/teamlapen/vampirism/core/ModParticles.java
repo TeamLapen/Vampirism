@@ -1,14 +1,9 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.util.ParticleHandler;
-import de.teamlapen.vampirism.client.render.particle.FlyingBloodEntityParticle;
-import de.teamlapen.vampirism.client.render.particle.FlyingBloodParticle;
-import de.teamlapen.vampirism.client.render.particle.GenericParticle;
-import de.teamlapen.vampirism.client.render.particle.HalloweenParticle;
-import de.teamlapen.vampirism.client.render.particle.HealingParticle;
+import de.teamlapen.vampirism.client.render.particle.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleCloud;
 import net.minecraft.entity.Entity;
@@ -35,9 +30,6 @@ public class ModParticles {
      * Arguments: Particle ID (Vanilla texture,int), TicksToLive(int), Color(int), [speed modifier (double)]
      */
     public static final ResourceLocation GENERIC_PARTICLE = new ResourceLocation(REFERENCE.MODID, "generic");
-
-    /* Vanilla Particle Factories */
-    public static final IParticleFactory PARTICLE_CLOUD_FACTORY = new ParticleCloud.Factory();
     
     public static void init() {
         ParticleHandler.registerParticle(GENERIC_PARTICLE, new ParticleHandler.ICustomParticleFactory() {
@@ -214,7 +206,7 @@ public class ModParticles {
             @SideOnly(Side.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return PARTICLE_CLOUD_FACTORY.createParticle(EnumParticleTypes.CLOUD.getParticleID(), world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
+                return new ParticleCloud.Factory().createParticle(EnumParticleTypes.CLOUD.getParticleID(), world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
             }
         });
     }
