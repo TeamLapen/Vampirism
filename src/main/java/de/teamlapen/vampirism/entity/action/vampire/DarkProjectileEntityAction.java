@@ -10,7 +10,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.Vec3d;
 
-public class DarkProjectileEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction implements IInstantAction<T> {
+public class DarkProjectileEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
 
     public DarkProjectileEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -40,4 +40,15 @@ public class DarkProjectileEntityAction<T extends EntityCreature & IEntityAction
     public void updatePreAction(T entity, int duration) {
     }
 
+    @Override
+    public int getWeight(T entity) {
+        double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).lengthVector();
+        if (distanceToTarget > 20) {
+            return 3;
+        } else if (distanceToTarget > 12) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
 }

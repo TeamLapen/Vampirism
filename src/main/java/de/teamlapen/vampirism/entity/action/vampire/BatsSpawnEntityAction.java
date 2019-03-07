@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.SoundCategory;
 
-public class BatsSpawnEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction implements IInstantAction<T> {
+public class BatsSpawnEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
 
     public BatsSpawnEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -37,5 +37,4 @@ public class BatsSpawnEntityAction<T extends EntityCreature & IEntityActionUser>
     @Override
     public void updatePreAction(T entity, int duration) {
     }
-
 }

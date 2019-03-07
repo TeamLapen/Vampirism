@@ -4,6 +4,9 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+/**
+ * all actions must extend {@link DefaultEntityAction}
+ */
 public interface IEntityAction extends IForgeRegistryEntry<IEntityAction> {
     /**
      * @return cooldown after completing the action before another action can be used in ticks

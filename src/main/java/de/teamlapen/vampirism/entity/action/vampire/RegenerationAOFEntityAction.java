@@ -14,7 +14,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 import java.util.Random;
 
-public class RegenerationAOFEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction implements ILastingAction<T> {
+public class RegenerationAOFEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
 
     public RegenerationAOFEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -54,5 +54,17 @@ public class RegenerationAOFEntityAction<T extends EntityCreature & IEntityActio
 
     @Override
     public void updatePreAction(T entity, int duration) {
+    }
+
+    @Override
+    public int getWeight(T entity) {
+        double healthPercent = entity.getHealth() / entity.getMaxHealth();
+        if (healthPercent < 0.1) {
+            return 3;
+        } else if (healthPercent < 0.4) {
+            return 2;
+        } else {
+            return 1;
+        }
     }
 }

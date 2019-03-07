@@ -10,7 +10,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.ResourceLocation;
 import java.util.Random;
 
-public class RegenerationEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction implements ILastingAction<T> {
+public class RegenerationEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
 
     public RegenerationEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -45,5 +45,17 @@ public class RegenerationEntityAction<T extends EntityCreature & IEntityActionUs
 
     @Override
     public void updatePreAction(T entity, int duration) {
+    }
+
+    @Override
+    public int getWeight(T entity) {
+        double healthPercent = entity.getHealth() / entity.getMaxHealth();
+        if (healthPercent < 0.1) {
+            return 3;
+        } else if (healthPercent < 0.4) {
+            return 2;
+        } else {
+            return 1;
+        }
     }
 }

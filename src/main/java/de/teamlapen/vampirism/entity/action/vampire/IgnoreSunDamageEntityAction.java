@@ -4,12 +4,13 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.potion.PotionEffect;
 
-public class IgnoreSunDamageEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction implements ILastingAction<T> {
+public class IgnoreSunDamageEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
 
     public IgnoreSunDamageEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -46,4 +47,8 @@ public class IgnoreSunDamageEntityAction<T extends EntityCreature & IEntityActio
     public void updatePreAction(T entity, int duration) {
     }
 
+    @Override
+    public int getWeight(T entity) {
+        return ((IVampire) entity).isGettingSundamage() ? 3 : 1;
+    }
 }

@@ -1,25 +1,16 @@
 package de.teamlapen.vampirism.entity.action;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
-import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
-import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
-import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
+import de.teamlapen.vampirism.api.entity.actions.*;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.hunter.IHunter;
-import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Usage for every {@link IFactionEntity} like Hunter/Vampire entities,
@@ -164,75 +155,23 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
     }
 
     /**
-     * returns a new random action from {@link availableActions}
-     */
-    @Nullable
-    private IEntityAction getRandomAction() {
-        return availableActions.get(entity.getRNG().nextInt(availableActions.size()));
-    }
-
-    /**
-     * returns a plausible action
-     * 
      * elevates the chance of the actions, based on the entity and its target
-     * 
-     * @returns
      */
     @Nonnull
     private IEntityAction chooseNewAction() {
-        Map<IEntityAction, Integer> actionsMap = new HashMap<>();
+        int totalWeight = 0;
         for (IEntityAction e : availableActions) {
-            actionsMap.put(e, 1);
+            totalWeight += ((DefaultEntityAction<T>) e).getWeight(entity);
+            System.out.println(e.getRegistryName() + "" + ((DefaultEntityAction<T>) e).getWeight(entity));
         }
-        double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).lengthVector();
-        double healthPercent = entity.getHealth() / entity.getMaxHealth();
-        /* Speed Action */
-        if (distanceToTarget > 10)
-            actionsMap.computeIfPresent(EntityActions.entity_speed, (k, v) -> v + 2);
-        else if (distanceToTarget > 5)
-            actionsMap.computeIfPresent(EntityActions.entity_speed, (k, v) -> v + 1);
-        /* Regeneration Action && Heal Action */
-        if (actionsMap.containsKey(EntityActions.entity_heal)) {
-            /* Heal */
-            if (healthPercent < 0.1)
-                actionsMap.compute(EntityActions.entity_heal, (k, v) -> v + 2);
-            else if (healthPercent < 0.4)
-                actionsMap.compute(EntityActions.entity_heal, (k, v) -> v + 1);
-        } else {
-            /* Regeneration */
-            if (healthPercent < 0.1)
-                actionsMap.computeIfPresent(EntityActions.entity_regeneration_areaofeffect, (k, v) -> v + 2);
-            else if (healthPercent < 0.4)
-                actionsMap.computeIfPresent(EntityActions.entity_regeneration_areaofeffect, (k, v) -> v + 1);
-        }
-
-        if (entity instanceof IVampire) {
-            /* Vampire Only Actions */
-            IVampire entity = (IVampire) this.entity;
-            /* Sunscream Action */
-            if (entity.isGettingSundamage() && !entity.isIgnoringSundamage()) {
-                actionsMap.computeIfPresent(EntityActions.entity_sunscreen, (k, v) -> v + actionsMap.size() < 5 ? 4 : 2);
-            }
-            /* Dark Projectile Action */
-            if (distanceToTarget > 20)
-                actionsMap.computeIfPresent(EntityActions.entity_dark_projectile, (k, v) -> v + 2);
-            else if (distanceToTarget > 10)
-                actionsMap.computeIfPresent(EntityActions.entity_dark_projectile, (k, v) -> v + 1);
-            /* Invisible Action */
-            if (distanceToTarget > 4 && actionsMap.size() < 5)
-                actionsMap.computeIfPresent(EntityActions.entity_invisible, (k, v) -> v + actionsMap.size() < 5 ? 2 : 1);
-        } else if (entity instanceof IHunter) {
-            /* Hunter Only Actions */
-            IHunter entity = (IHunter) this.entity;
-        }
-
-        List<IEntityAction> actionList = new ArrayList<>();
-        for (Map.Entry<IEntityAction, Integer> e : actionsMap.entrySet()) {
-            for (int i = 0; i < e.getValue(); i++) {
-                actionList.add(e.getKey());
+        double random = Math.random() * totalWeight;
+        for (IEntityAction e : availableActions) {
+            random -= ((DefaultEntityAction<T>) e).getWeight(entity);
+            if (random <= 0.0d) {
+                return e;
             }
         }
-        return actionList.get(entity.getRNG().nextInt(actionList.size()));
+        return availableActions.get(0);
     }
 
     public void handle() {
@@ -281,6 +220,9 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
      */
     public void setAvailableActions(List<IEntityAction> actionsIn) {
         this.availableActions = actionsIn;
+        if (availableActions.contains(EntityActions.entity_heal) && availableActions.contains(EntityActions.entity_regeneration)) {
+            availableActions.remove(EntityActions.entity_regeneration);
+        }
     }
 
     public void removeAction(IEntityAction actionIn) {

@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
 import de.teamlapen.vampirism.api.entity.EntityClassType;
+import net.minecraft.entity.EntityCreature;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public abstract class DefaultEntityAction extends IForgeRegistryEntry.Impl<IEntityAction> implements IEntityAction {
+public abstract class DefaultEntityAction<T extends EntityCreature & IEntityActionUser> extends IForgeRegistryEntry.Impl<IEntityAction> implements IEntityAction {
     protected EntityClassType[] entityClassTypes;
     protected EntityActionTier entityActionTier;
 
@@ -29,5 +30,12 @@ public abstract class DefaultEntityAction extends IForgeRegistryEntry.Impl<IEnti
      */
     public EntityClassType[] getClassTypes() {
         return entityClassTypes;
+    }
+
+    /**
+     * @return weight of this action
+     */
+    public int getWeight(T entity) {
+        return 1;
     }
 }

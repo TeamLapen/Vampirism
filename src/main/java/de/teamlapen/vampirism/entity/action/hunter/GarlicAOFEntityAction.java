@@ -14,7 +14,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 
-public class GarlicAOFEntityAction<T extends EntityCreature & IEntityActionUser> extends HunterEntityAction implements ILastingAction<T> {
+public class GarlicAOFEntityAction<T extends EntityCreature & IEntityActionUser> extends HunterEntityAction<T> implements ILastingAction<T> {
 
     public GarlicAOFEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
