@@ -1,19 +1,18 @@
 package de.teamlapen.vampirism.entity.action.vampire;
 
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
+import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.entity.EntityVampirism;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import java.util.UUID;
 
-public class SpeedEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends VampireEntityAction implements ILastingAction<T> {
+public class SpeedEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction implements ILastingAction<T> {
     public static final UUID UUIDS = UUID.fromString("2b49cf70-b634-4e85-8c3e-0147919eaf54");
 
     public SpeedEntityAction(EntityActionTier tier, EntityClassType... param) {

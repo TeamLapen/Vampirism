@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.vampire;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
+import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -35,7 +36,7 @@ import javax.annotation.Nullable;
 /**
  * Advanced vampire. Is strong. Represents supporters
  */
-public class EntityAdvancedVampire extends EntityVampireBase implements IAdvancedVampire, IPlayerFace {
+public class EntityAdvancedVampire extends EntityVampireBase implements IAdvancedVampire, IPlayerFace, IEntityActionUser {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityAdvancedVampire.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(EntityAdvancedVampire.class, DataSerializers.VARINT);
     private static final DataParameter<String> NAME = EntityDataManager.createKey(EntityAdvancedVampire.class, DataSerializers.STRING);

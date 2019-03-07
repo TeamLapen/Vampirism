@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
-import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import de.teamlapen.vampirism.api.entity.IVampirismEntity;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import net.minecraft.entity.EntityCreature;
 
-public interface IInstantAction<T extends IVampirismEntity & IFactionEntity & IAdjustableLevel> extends IEntityAction {
+public interface IInstantAction<T extends EntityCreature & IEntityActionUser> extends IEntityAction {
 
     /**
      * called to active the action

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
+import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -38,7 +39,7 @@ import javax.annotation.Nullable;
  * Basic vampire mob.
  * Follows nearby advanced hunters
  */
-public class EntityBasicVampire extends EntityVampireBase implements IBasicVampire {
+public class EntityBasicVampire extends EntityVampireBase implements IBasicVampire, IEntityActionUser {
 
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityBasicVampire.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 2;

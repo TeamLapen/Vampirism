@@ -1,16 +1,15 @@
 package de.teamlapen.vampirism.entity.action.vampire;
 
-import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
+import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
-import de.teamlapen.vampirism.entity.EntityVampirism;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.potion.PotionEffect;
 
-public class IgnoreSunDamageEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends VampireEntityAction implements ILastingAction<T> {
+public class IgnoreSunDamageEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction implements ILastingAction<T> {
 
     public IgnoreSunDamageEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);

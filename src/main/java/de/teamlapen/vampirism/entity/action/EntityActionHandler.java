@@ -1,19 +1,20 @@
 package de.teamlapen.vampirism.entity.action;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
+import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.EntityVampirism;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,14 +25,14 @@ import java.util.Map;
  * Usage for every {@link IFactionEntity} like Hunter/Vampire entities,
  * is used with {@link handle()} in UpdateLiving in an EntityVampirism
  */
-public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> {
+public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
 
     private T entity;
     private List<IEntityAction> availableActions;
     private int preActivation = 0;
     private int cooldown = 0;
     private int duration = 0;
-    private float healthForDisruption;
+    private float healthTresholdForDisruption;
     private IEntityAction action;
     private boolean isPlayerTarget;
 
@@ -59,7 +60,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
             /* calls updatePreAction() for {@link ILastingAction} & {@link IInstantAction} as long as the action need to be activated */
             updatePreAction();
             preActivation--;
-            if (entity.getHealth() < healthForDisruption) {
+            if (entity.getHealth() < healthTresholdForDisruption) {
                 cancelActivation();
             }
         } else if (duration == 0) { /* deactivate action */
@@ -75,10 +76,10 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
             cooldown--;
         } else { /* new action */
             /* sets a new action if cooldown is over */
-            action = getIntelligentAction();
+            action = chooseNewAction();
             cooldown = action.getCooldown(entity.getLevel());
             preActivation = action.getPreActivationTime();
-            healthForDisruption = entity.getHealth() - (entity.getMaxHealth() * (float) Balance.ea.DISRUPTION_HEALTH_AMOUNT);
+            healthTresholdForDisruption = entity.getHealth() - (entity.getMaxHealth() * (float) Balance.ea.DISRUPTION_HEALTH_AMOUNT);
             if (action instanceof ILastingAction) {
                 duration = ((ILastingAction<T>) action).getDuration(entity.getLevel());
             }
@@ -103,8 +104,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
      * 
      * @param actionIn
      */
-    @Nullable
-    public void deactivateAction(IEntityAction actionIn) {
+    public void deactivateAction(@Nullable IEntityAction actionIn) {
         IEntityAction action = actionIn != null ? actionIn : this.action;
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).deactivate(entity);
@@ -120,8 +120,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
      * 
      * @param actionIn
      */
-    @Nullable
-    public void updateAction(IEntityAction actionIn) {
+    public void updateAction(@Nullable IEntityAction actionIn) {
         IEntityAction action = actionIn != null ? actionIn : this.action;
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).onUpdate(entity, duration);
@@ -137,8 +136,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
      * 
      * @param actionIn
      */
-    @Nullable
-    public void updatePreAction(IEntityAction actionIn) {
+    public void updatePreAction(@Nullable IEntityAction actionIn) {
         IEntityAction action = actionIn != null ? actionIn : this.action;
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).updatePreAction(entity, preActivation);
@@ -156,8 +154,7 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
      * 
      * @param actionIn
      */
-    @Nullable
-    public void activateAction(IEntityAction actionIn) {
+    public void activateAction(@Nullable IEntityAction actionIn) {
         IEntityAction action = actionIn != null ? actionIn : this.action;
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).activate(entity);
@@ -181,7 +178,8 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
      * 
      * @returns
      */
-    private IEntityAction getIntelligentAction() {
+    @Nonnull
+    private IEntityAction chooseNewAction() {
         Map<IEntityAction, Integer> actionsMap = new HashMap<>();
         for (IEntityAction e : availableActions) {
             actionsMap.put(e, 1);
@@ -265,14 +263,14 @@ public class EntityActionHandler<T extends EntityVampirism & IFactionEntity & IA
 
     public void readFromNBT(NBTTagCompound nbt) {
         if (nbt.hasKey("activeAction")) {
-            deactivateAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation("vampirism", nbt.getString("activeAction"))));
+            deactivateAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation(nbt.getString("activeAction"))));
             isPlayerTarget = true;
         }
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
         if (isPlayerTarget() && getAction() != null) {
-            nbt.setString("activeAction", action.getRegistryName().getResourcePath());
+            nbt.setString("activeAction", action.getRegistryName().toString());
         }
     }
 

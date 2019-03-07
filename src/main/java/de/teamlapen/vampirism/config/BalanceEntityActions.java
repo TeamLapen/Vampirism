@@ -8,7 +8,7 @@ import java.io.File;
 
 public class BalanceEntityActions extends BalanceValues {
 
-    @DefaultDouble(value = 0.3, name = "Disruption health amount", comment = "health points until action will be disrupted of max health")
+    @DefaultDouble(value = 0.3, minValue = 0, maxValue = 1, name = "Disruption Health Amount", comment = "Health points of maximum health that the entity must lose in order to interrupt the action")
     public double DISRUPTION_HEALTH_AMOUNT;
 
     /* Invisible Action */

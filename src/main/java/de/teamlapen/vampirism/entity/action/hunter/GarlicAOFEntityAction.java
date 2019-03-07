@@ -2,20 +2,19 @@ package de.teamlapen.vampirism.entity.action.hunter;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
+import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
-import de.teamlapen.vampirism.entity.EntityVampirism;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 
-public class GarlicAOFEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends HunterEntityAction implements ILastingAction<T> {
+public class GarlicAOFEntityAction<T extends EntityCreature & IEntityActionUser> extends HunterEntityAction implements ILastingAction<T> {
 
     public GarlicAOFEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
