@@ -102,33 +102,23 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         }
     }
 
-    public void updateAction() {
-        updateAction(null);
-    }
-
     /**
-     * updates the given {@link IEntityAction} or if null, activates the {@link action}
+     * updates the {@link action}
      * 
      * @param actionIn
      */
-    public void updateAction(@Nullable IEntityAction actionIn) {
-        IEntityAction action = actionIn != null ? actionIn : this.action;
+    public void updateAction() {
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).onUpdate(entity, duration);
         }
     }
 
-    public void updatePreAction() {
-        updatePreAction(null);
-    }
-
     /**
-     * updates the given {@link IEntityAction} pre activation or if null, updates the {@link action}
+     * updates the {@link action}
      * 
      * @param actionIn
      */
-    public void updatePreAction(@Nullable IEntityAction actionIn) {
-        IEntityAction action = actionIn != null ? actionIn : this.action;
+    public void updatePreAction() {
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).updatePreAction(entity, preActivation);
         } else if (action instanceof IInstantAction) {
@@ -136,17 +126,12 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         }
     }
 
-    public void activateAction() {
-        activateAction(null);
-    }
-
     /**
-     * activates the given {@link IEntityAction} or if null, activates the {@link action}
+     * activates the {@link action}
      * 
      * @param actionIn
      */
-    public void activateAction(@Nullable IEntityAction actionIn) {
-        IEntityAction action = actionIn != null ? actionIn : this.action;
+    public void activateAction() {
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).activate(entity);
         } else if (action instanceof IInstantAction) {
@@ -162,7 +147,6 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         int totalWeight = 0;
         for (IEntityAction e : availableActions) {
             totalWeight += ((DefaultEntityAction<T>) e).getWeight(entity);
-            System.out.println(e.getRegistryName() + "" + ((DefaultEntityAction<T>) e).getWeight(entity));
         }
         double random = Math.random() * totalWeight;
         for (IEntityAction e : availableActions) {
