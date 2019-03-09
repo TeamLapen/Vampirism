@@ -10,7 +10,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
             case ENHANCED:
                 return getTextureLocation("hunter_coat_enhanced", slot, type);
             case ULTIMATE:
-                return getTextureLocation("hunter_coat_enhanced", slot, type);
+                return getTextureLocation("hunter_coat_ultimate", slot, type);
             default:
                 return getTextureLocation("hunter_coat", slot, type);
         }
