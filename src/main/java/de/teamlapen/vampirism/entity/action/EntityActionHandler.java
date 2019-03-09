@@ -8,13 +8,14 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * Usage for every {@link IFactionEntity} like Hunter/Vampire entities,
- * is used with {@link handle()} in UpdateLiving in an EntityVampirism
+ * is used with {@link EntityActionHandler#handle()} in UpdateLiving in an EntityVampirism
  */
 public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
 
@@ -23,7 +24,7 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
     private int preActivation = 0;
     private int cooldown = 0;
     private int duration = 0;
-    private float healthTresholdForDisruption;
+    private float healthThresholdForDisruption;
     private IEntityAction action;
     private boolean isPlayerTarget;
 
@@ -40,9 +41,66 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
     }
 
     /**
+     * Sets the given list of actions to the actions the EntityActionHandler should use
+     *
+     * @param actionsIn
+     */
+    public void setAvailableActions(List<IEntityAction> actionsIn) {
+        this.availableActions = actionsIn;
+        if (availableActions.contains(EntityActions.entity_heal)) {
+            availableActions.remove(EntityActions.entity_regeneration);
+        }
+    }
+
+    /**
+     * activates the {@link EntityActionHandler#action}
+     */
+    private void activateAction() {
+        if (action instanceof ILastingAction) {
+            ((ILastingAction<T>) action).activate(entity);
+        } else if (action instanceof IInstantAction) {
+            ((IInstantAction<T>) action).activate(entity);
+        }
+    }
+
+    /**
+     * cancels the action by setting {@link EntityActionHandler#preActivation}, {@link EntityActionHandler#duration} and {@link EntityActionHandler#cooldown} to default
+     */
+    private void cancelActivation() {
+        preActivation = -1;
+        duration = -1;
+        cooldown = 100;
+    }
+
+    /**
+     * reset the given {@link IEntityAction} or if null, reset the {@link EntityActionHandler#action}
+     *
+     * @param actionIn
+     */
+    private void deactivateAction(@Nullable IEntityAction actionIn) {
+        IEntityAction action = actionIn != null ? actionIn : this.action;
+        if (action instanceof ILastingAction) {
+            ((ILastingAction<T>) action).deactivate(entity);
+        }
+    }
+
+    private void deactivateAction() {
+        deactivateAction(null);
+    }
+
+    /**
+     * updates the {@link EntityActionHandler#action}
+     */
+    private void updateAction() {
+        if (action instanceof ILastingAction) {
+            ((ILastingAction<T>) action).onUpdate(entity, duration);
+        }
+    }
+
+    /**
      * called every time the entity is fighting a player, handles the actions
      */
-    public void updateHandler() {
+    private void updateHandler() {
         if (preActivation == 0) { /* action starts now */
             /* calls activate() for {@link ILastingAction} & {@link IInstantAction} once per action */
             activateAction();
@@ -51,7 +109,7 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
             /* calls updatePreAction() for {@link ILastingAction} & {@link IInstantAction} as long as the action need to be activated */
             updatePreAction();
             preActivation--;
-            if (entity.getHealth() < healthTresholdForDisruption) {
+            if (entity.getHealth() < healthThresholdForDisruption) {
                 cancelActivation();
             }
         } else if (duration == 0) { /* deactivate action */
@@ -70,72 +128,10 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
             action = chooseNewAction();
             cooldown = action.getCooldown(entity.getLevel());
             preActivation = action.getPreActivationTime();
-            healthTresholdForDisruption = entity.getHealth() - (entity.getMaxHealth() * (float) Balance.ea.DISRUPTION_HEALTH_AMOUNT);
+            healthThresholdForDisruption = entity.getHealth() - (entity.getMaxHealth() * (float) Balance.ea.DISRUPTION_HEALTH_AMOUNT);
             if (action instanceof ILastingAction) {
                 duration = ((ILastingAction<T>) action).getDuration(entity.getLevel());
             }
-        }
-    }
-
-    /**
-     * cancels the action by setting {@link preActivation}, {@link duration} and {@link cooldown} to default
-     */
-    public void cancelActivation() {
-        preActivation = -1;
-        duration = -1;
-        cooldown = 100;
-    }
-
-    public void deactivateAction() {
-        deactivateAction(null);
-    }
-
-    /**
-     * reset the given {@link IEntityAction} or if null, reset the {@link action}
-     * 
-     * @param actionIn
-     */
-    public void deactivateAction(@Nullable IEntityAction actionIn) {
-        IEntityAction action = actionIn != null ? actionIn : this.action;
-        if (action instanceof ILastingAction) {
-            ((ILastingAction<T>) action).deactivate(entity);
-        }
-    }
-
-    /**
-     * updates the {@link action}
-     * 
-     * @param actionIn
-     */
-    public void updateAction() {
-        if (action instanceof ILastingAction) {
-            ((ILastingAction<T>) action).onUpdate(entity, duration);
-        }
-    }
-
-    /**
-     * updates the {@link action}
-     * 
-     * @param actionIn
-     */
-    public void updatePreAction() {
-        if (action instanceof ILastingAction) {
-            ((ILastingAction<T>) action).updatePreAction(entity, preActivation);
-        } else if (action instanceof IInstantAction) {
-            ((IInstantAction<T>) action).updatePreAction(entity, preActivation);
-        }
-    }
-
-    /**
-     * activates the {@link action}
-     * 
-     * @param actionIn
-     */
-    public void activateAction() {
-        if (action instanceof ILastingAction) {
-            ((ILastingAction<T>) action).activate(entity);
-        } else if (action instanceof IInstantAction) {
-            ((IInstantAction<T>) action).activate(entity);
         }
     }
 
@@ -198,14 +194,13 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
     }
 
     /**
-     * Sets the given list of actions to the actions the EntityActionHandler should use
-     * 
-     * @param actionsIn
-     */
-    public void setAvailableActions(List<IEntityAction> actionsIn) {
-        this.availableActions = actionsIn;
-        if (availableActions.contains(EntityActions.entity_heal) && availableActions.contains(EntityActions.entity_regeneration)) {
-            availableActions.remove(EntityActions.entity_regeneration);
+     * updates the {@link EntityActionHandler#action}
+     **/
+    private void updatePreAction() {
+        if (action instanceof ILastingAction) {
+            ((ILastingAction<T>) action).updatePreAction(entity, preActivation);
+        } else if (action instanceof IInstantAction) {
+            ((IInstantAction<T>) action).updatePreAction(entity, preActivation);
         }
     }
 

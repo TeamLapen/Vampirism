@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.config.BalanceValues;
 import de.teamlapen.lib.lib.config.DefaultDouble;
 import de.teamlapen.lib.lib.config.DefaultInt;
 import de.teamlapen.vampirism.VampirismMod;
+
 import java.io.File;
 
 public class BalanceEntityActions extends BalanceValues {
@@ -15,7 +16,7 @@ public class BalanceEntityActions extends BalanceValues {
     @DefaultInt(value = 7, minValue = 1, name = "Invisible Cooldown", comment = "In seconds")
     public int INVISIBLE_COOLDOWN;
 
-    @DefaultInt(value = 40, minValue = 1, name = "Invisible Duration", comment = "In ticks")
+    @DefaultInt(value = 4, minValue = 1, name = "Invisible Duration", comment = "In seconds")
     public int INVISIBLE_DURATION;
 
     /* Heal Action */
@@ -46,7 +47,7 @@ public class BalanceEntityActions extends BalanceValues {
     public double SPEED_AMOUNT;
 
     /* Bat Spawn Action */
-    @DefaultInt(value = 7, minValue = 1, name = "Batspawn Cooldown")
+    @DefaultInt(value = 15, minValue = 1, name = "Batspawn Cooldown")
     public int BATSPAWN_COOLDOWN;
 
     @DefaultInt(value = 4, minValue = 1, name = "Batspawn Amount")
@@ -63,10 +64,10 @@ public class BalanceEntityActions extends BalanceValues {
     public double DARK_BLOOD_PROJECTILE_INDIRECT_DAMAGE;
 
     /* Sunscreen Action */
-    @DefaultInt(value = 6, minValue = 1, name = "Sunscreen Duration", comment = "In seconds")
+    @DefaultInt(value = 8, minValue = 1, name = "Sunscreen Duration", comment = "In seconds")
     public int SUNSCREEN_DURATION;
 
-    @DefaultInt(value = 9, minValue = 1, name = "Sunscreen Cooldown", comment = "In seconds")
+    @DefaultInt(value = 10, minValue = 1, name = "Sunscreen Cooldown", comment = "In seconds")
     public int SUNSCREEN_COOLDOWN;
 
     /* Ignore SunDamage Action */

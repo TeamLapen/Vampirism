@@ -18,12 +18,12 @@ public class IgnoreSunDamageEntityAction<T extends EntityCreature & IEntityActio
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.IGNORE_SUNDAMAGE_COOLDOWN;
+        return Balance.ea.IGNORE_SUNDAMAGE_COOLDOWN * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.ea.IGNORE_SUNDAMAGE_DURATION;
+        return Balance.ea.IGNORE_SUNDAMAGE_DURATION * 20;
     }
 
     @Override
@@ -49,6 +49,9 @@ public class IgnoreSunDamageEntityAction<T extends EntityCreature & IEntityActio
 
     @Override
     public int getWeight(T entity) {
+        if (!entity.getEntityWorld().isDaytime() || entity.getEntityWorld().isRaining()) {//Not perfectly accurate (the actual sundamage checks for celestial angle and also might exclude certain dimensions and biomes
+            return 0;
+        }
         return ((IVampire) entity).isGettingSundamage() ? 3 : 1;
     }
 }

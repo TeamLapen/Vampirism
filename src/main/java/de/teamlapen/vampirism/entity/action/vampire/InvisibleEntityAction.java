@@ -24,7 +24,7 @@ public class InvisibleEntityAction<T extends EntityCreature & IEntityActionUser>
 
     @Override
     public int getDuration(int level) {
-        return Balance.ea.INVISIBLE_DURATION;
+        return Balance.ea.INVISIBLE_DURATION * 20;
     }
 
     @Override
