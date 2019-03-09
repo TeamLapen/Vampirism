@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.action;
 
+import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.actions.*;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
@@ -8,7 +9,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-
+import net.minecraft.util.WeightedRandom;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
@@ -140,18 +141,11 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
      */
     @Nonnull
     private IEntityAction chooseNewAction() {
-        int totalWeight = 0;
+        List<EntityActionEntry> entry = Lists.newArrayList();
         for (IEntityAction e : availableActions) {
-            totalWeight += ((DefaultEntityAction<T>) e).getWeight(entity);
+            entry.add(new EntityActionEntry(((DefaultEntityAction<T>) e).getWeight(entity), e));
         }
-        double random = Math.random() * totalWeight;
-        for (IEntityAction e : availableActions) {
-            random -= ((DefaultEntityAction<T>) e).getWeight(entity);
-            if (random <= 0.0d) {
-                return e;
-            }
-        }
-        return availableActions.get(0);
+        return WeightedRandom.getRandomItem(entity.getRNG(), entry).getAction();
     }
 
     public void handle() {
