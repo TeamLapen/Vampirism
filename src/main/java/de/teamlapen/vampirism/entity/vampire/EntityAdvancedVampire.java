@@ -2,9 +2,12 @@ package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
+import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
@@ -28,13 +31,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-
 import javax.annotation.Nullable;
 
 /**
  * Advanced vampire. Is strong. Represents supporters
  */
-public class EntityAdvancedVampire extends EntityVampireBase implements IAdvancedVampire, IPlayerFace {
+public class EntityAdvancedVampire extends EntityVampireBase implements IAdvancedVampire, IPlayerFace, IEntityActionUser {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityAdvancedVampire.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(EntityAdvancedVampire.class, DataSerializers.VARINT);
     private static final DataParameter<String> NAME = EntityDataManager.createKey(EntityAdvancedVampire.class, DataSerializers.STRING);
@@ -53,6 +55,8 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.canSuckBloodFromPlayer = true;
         this.restrictedSpawn = true;
         this.setDontDropEquipment();
+        this.entitytier = EntityActionTier.High;
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override

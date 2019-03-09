@@ -3,10 +3,13 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
+import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackRangedCrossbow;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
 import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
@@ -40,7 +43,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -48,7 +50,7 @@ import javax.annotation.Nullable;
 /**
  * Exists in {@link EntityBasicHunter#MAX_LEVEL}+1 different levels
  */
-public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter, HunterAIDefendVillage.IVillageHunterCreature, HunterAILookAtTrainee.ITrainer, EntityAIAttackRangedCrossbow.IAttackWithCrossbow {
+public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter, HunterAIDefendVillage.IVillageHunterCreature, HunterAILookAtTrainee.ITrainer, EntityAIAttackRangedCrossbow.IAttackWithCrossbow, IEntityActionUser {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityBasicHunter.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(EntityBasicHunter.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> WATCHED_ID = EntityDataManager.createKey(EntityBasicHunter.class, DataSerializers.VARINT);
@@ -93,6 +95,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         this.attackMelee = new EntityAIAttackMelee(this, 1.0, false);
         this.attackRange = new EntityAIAttackRangedCrossbow(this, this, 0.6, 60, 20);
         this.updateCombatTask();
+        this.entitytier = EntityActionTier.Medium;
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
+import de.teamlapen.vampirism.api.entity.actions.IEntityActionManager;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionManager;
@@ -20,9 +21,8 @@ import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-
-import javax.annotation.Nonnull;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 /**
  * Class for core api methods
@@ -48,6 +48,7 @@ public class VampirismAPI {
     private static Set<Integer> worldGenDimensions = Sets.newHashSet();
     private static ISkillManager skillManager;
     private static IActionManager actionManager;
+    private static IEntityActionManager entityActionManager;
 
     public static ISkillManager skillManager() {
         return skillManager;
@@ -55,6 +56,10 @@ public class VampirismAPI {
 
     public static IActionManager actionManager() {
         return actionManager;
+    }
+
+    public static IEntityActionManager entityActionManager() {
+        return entityActionManager;
     }
 
     public static IVampireVisionRegistry vampireVisionRegistry() {
@@ -141,7 +146,8 @@ public class VampirismAPI {
      * Setup the API registries
      * FOR INTERNAL USAGE ONLY
      */
-    public static void setUpRegistries(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IVampirismEntityRegistry biteableReg, IActionManager actionMan, ISkillManager skillMan, IVampireVisionRegistry vampireVisionReg, IBloodPotionRegistry bloodPotionReg) {
+    public static void setUpRegistries(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IVampirismEntityRegistry biteableReg, IActionManager actionMan, ISkillManager skillMan,
+            IVampireVisionRegistry vampireVisionReg, IBloodPotionRegistry bloodPotionReg, IEntityActionManager entityActionMan) {
         factionRegistry = factionReg;
         sundamageRegistry = sundamageReg;
         entityRegistry = biteableReg;
@@ -149,6 +155,8 @@ public class VampirismAPI {
         skillManager = skillMan;
         vampireVisionRegistry = vampireVisionReg;
         bloodPotionRegistry = bloodPotionReg;
+        entityActionManager = entityActionMan;
+
     }
 
     /**
