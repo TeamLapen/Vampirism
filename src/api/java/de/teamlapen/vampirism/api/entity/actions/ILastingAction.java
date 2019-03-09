@@ -1,8 +1,5 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
-import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 
@@ -24,7 +21,7 @@ public interface ILastingAction<T extends EntityCreature & IEntityActionUser> ex
     void deactivate(T entity);
 
     /**
-     * called every LivingUpdate of {@link EntityLiving} which implements {@link EntityVampirism} & {@link IFactionEntity} & {@link IAdjustableLevel}
+     * (should be) called every LivingUpdate of {@link EntityLiving}
      * 
      * @param entity
      *            entity whose action is to be updated
