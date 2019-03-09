@@ -1,33 +1,36 @@
 package de.teamlapen.vampirism.core;
 
-
 import de.teamlapen.lib.util.ParticleHandler;
-import de.teamlapen.vampirism.client.render.particle.FlyingBloodEntityParticle;
-import de.teamlapen.vampirism.client.render.particle.FlyingBloodParticle;
-import de.teamlapen.vampirism.client.render.particle.GenericParticle;
-import de.teamlapen.vampirism.client.render.particle.HalloweenParticle;
+import de.teamlapen.vampirism.client.render.particle.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleCloud;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import javax.annotation.Nonnull;
 
 public class ModParticles {
     public static final ResourceLocation FLYING_BLOOD = new ResourceLocation(REFERENCE.MODID, "flying_blood");
     public static final ResourceLocation FLYING_BLOOD_ENTITY = new ResourceLocation(REFERENCE.MODID, "flying_blood_entity");
     public static final ResourceLocation HALLOWEEN = new ResourceLocation(REFERENCE.MODID, "halloween");
+    public static final ResourceLocation HEAL = new ResourceLocation(REFERENCE.MODID, "heal");
+
+    /**
+     * Arguments: motionX [double], motionY [double], motionZ [double]
+     */
+    public static final ResourceLocation CLOUD = new ResourceLocation(REFERENCE.MODID, "cloud");
 
     /**
      * Arguments: Particle ID (Vanilla texture,int), TicksToLive(int), Color(int), [speed modifier (double)]
      */
     public static final ResourceLocation GENERIC_PARTICLE = new ResourceLocation(REFERENCE.MODID, "generic");
-
+    
     public static void init() {
         ParticleHandler.registerParticle(GENERIC_PARTICLE, new ParticleHandler.ICustomParticleFactory() {
             @SideOnly(Side.CLIENT)
@@ -155,6 +158,55 @@ public class ModParticles {
             @Override
             public Object[] readParticleInfo(NBTTagCompound nbt) {
                 return new Object[0];
+            }
+        });
+
+        ParticleHandler.registerParticle(HEAL, new ParticleHandler.ICustomParticleFactory() {
+            @SideOnly(Side.CLIENT)
+            @Override
+            public Object[] readParticleInfo(NBTTagCompound nbt) {
+                return new Object[0];
+            }
+
+            @Override
+            public NBTTagCompound createParticleInfo(Object... param) {
+                return new NBTTagCompound();
+            }
+
+            @SideOnly(Side.CLIENT)
+            @Override
+            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
+                return new HealingParticle(world, posX, posY, posZ);
+            }
+        });
+
+        ParticleHandler.registerParticle(CLOUD, new ParticleHandler.ICustomParticleFactory() {
+
+            @SideOnly(Side.CLIENT)
+            @Nonnull
+            @Override
+            public Object[] readParticleInfo(NBTTagCompound nbt) {
+                Object[] data = new Object[3];
+                data[0] = nbt.getDouble("0");
+                data[1] = nbt.getDouble("1");
+                data[2] = nbt.getDouble("2");
+                return data;
+            }
+
+            @Nonnull
+            @Override
+            public NBTTagCompound createParticleInfo(Object... param) {
+                NBTTagCompound nbt = new NBTTagCompound();
+                nbt.setDouble("0", (Double) param[0]);
+                nbt.setDouble("1", (Double) param[1]);
+                nbt.setDouble("2", (Double) param[2]);
+                return nbt;
+            }
+
+            @SideOnly(Side.CLIENT)
+            @Override
+            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
+                return new ParticleCloud.Factory().createParticle(EnumParticleTypes.CLOUD.getParticleID(), world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
             }
         });
     }
