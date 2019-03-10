@@ -11,6 +11,9 @@ public class HunterPlayerSpecialAttribute {
     private boolean disguised = false;
     private int disguiseTicks = 0;
 
+    private boolean vampireNearby = false;
+    private int vampireNearbyTicks = 0;
+
     public void activateDisguise() {
         disguised = true;
         disguiseTicks = 1;
@@ -31,5 +34,27 @@ public class HunterPlayerSpecialAttribute {
     public void resetDisguise() {
         disguiseTicks = 0;
         disguised = false;
+    }
+
+    public void nearbyVampire() {
+        if (vampireNearby) {
+            vampireNearbyTicks++;
+        } else {
+            vampireNearby = true;
+            vampireNearbyTicks = 1;
+        }
+    }
+
+    public float getVampireNearbyProgress() {
+        return vampireNearbyTicks > 20 ? 0.2F : 0.2F * (vampireNearbyTicks / (float) 20);
+    }
+
+    public boolean isVampireNearby() {
+        return vampireNearby;
+    }
+
+    public void resetVampireNearby() {
+        vampireNearby = false;
+        vampireNearbyTicks = 0;
     }
 }
