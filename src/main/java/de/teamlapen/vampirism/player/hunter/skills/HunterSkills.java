@@ -155,6 +155,7 @@ public class HunterSkills {
         SkillNode skill6 = skillManager.createSkillNode(skill5, garlic_beacon);
         SkillNode skill7 = skillManager.createSkillNode(skill6, purified_garlic, holy_water_enhanced);
         SkillNode skill8 = skillManager.createSkillNode(skill7, garlic_beacon_improved);
+        SkillNode skill9 = skillManager.createSkillNode(skill8, hunter_awareness);
     }
 
     private static void registerBloodAlchemy(ISkillManager skillManager, SkillNode root) {
@@ -164,6 +165,5 @@ public class HunterSkills {
         SkillNode skill8 = skillManager.createSkillNode(skill7, blood_potion_duration);
         SkillNode skill9 = skillManager.createSkillNode(skill8, blood_potion_portable_crafting);
         SkillNode skill10 = skillManager.createSkillNode(skill9, blood_potion_less_bad_2, blood_potion_identify_some);
-        SkillNode skill11 = skillManager.createSkillNode(skill9, hunter_awareness);
     }
 }
