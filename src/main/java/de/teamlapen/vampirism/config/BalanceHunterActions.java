@@ -29,7 +29,7 @@ public class BalanceHunterActions extends BalanceValues {
     @DefaultBoolean(value = true)
     public boolean AWARENESS_ENABLED;
 
-    @DefaultInt(value = 12, minValue = 0, maxValue = 50, comment = "Radius in which vampires should be detected")
+    @DefaultInt(value = 24, minValue = 0, maxValue = 50, comment = "Radius in which vampires should be detected")
     public int AWARENESS_RADIUS;
 
     /**

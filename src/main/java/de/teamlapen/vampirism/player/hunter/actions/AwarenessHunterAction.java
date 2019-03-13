@@ -75,7 +75,10 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     @Override
     public boolean onUpdate(IHunterPlayer player) {
-        if (nearbyVampire(player)) {
+        if (!(player.getRepresentingEntity().ticksExisted % 20 == 0)) {
+            if (((HunterPlayer) player).getSpecialAttributes().isVampireNearby())
+                ((HunterPlayer) player).getSpecialAttributes().nearbyVampire();
+        } else if (nearbyVampire(player)) {
             ((HunterPlayer) player).getSpecialAttributes().nearbyVampire();
         } else {
             ((HunterPlayer) player).getSpecialAttributes().resetVampireNearby();
@@ -86,7 +89,7 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     private boolean nearbyVampire(IHunterPlayer player) {
         List<EntityLivingBase> entities = player.getRepresentingEntity().getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(player.getRepresentingEntity().posX - Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posY
                 - Balance.hpa.AWARENESS_RADIUS + 1, player.getRepresentingEntity().posZ
-                        - Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posX + 12, player.getRepresentingEntity().posY + Balance.hpa.AWARENESS_RADIUS + 1, player.getRepresentingEntity().posZ + Balance.hpa.AWARENESS_RADIUS));
+                        - Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posX + Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posY + Balance.hpa.AWARENESS_RADIUS + 1, player.getRepresentingEntity().posZ + Balance.hpa.AWARENESS_RADIUS));
         for (EntityLivingBase e : entities) {
             if (Helper.isVampire(e))
                 return true;

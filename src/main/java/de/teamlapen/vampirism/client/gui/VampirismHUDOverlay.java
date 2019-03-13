@@ -328,7 +328,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             fullScreen = false;
         } else if (hunter.getSpecialAttributes().isVampireNearby()) {
             screenPercentage = (int) (100 * hunter.getSpecialAttributes().getVampireNearbyProgress());
-            screenColor = 0x80ba4d95;
+            screenColor = 0x80ba1836;
             fullScreen = false;
         } else {
             screenPercentage = (int) Math.max(0F, (screenPercentage / 20F) * 19F);
