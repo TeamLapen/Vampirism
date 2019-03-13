@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity;
 
 import com.google.common.collect.Maps;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Random;
 
@@ -45,8 +46,13 @@ public enum EntityClassType {
         return ENTITYCLASSTYPES.get(entityclasstypes);
     }
 
+    /**
+     * @returns {@link EntityClassType} for the given id
+     *          if id < 0 or >= {@link ID#size()} return null
+     */
+    @Nullable
     public static EntityClassType getEntityClassType(int id) {
-        return ID.get(id);
+        return (id >= ID.size() || id < 0) ? null : ID.get(id);
     }
 
     static {

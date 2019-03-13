@@ -150,6 +150,7 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
             int weight = ((DefaultEntityAction<T>) e).getWeight(entity);
             if (weight > 0) {
                 entry.add(new EntityActionEntry(weight, e));
+                weightsum += weight;
             }
         }
         if (weightsum > 0) {
