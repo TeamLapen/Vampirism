@@ -184,6 +184,9 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         if (entityActionHandler != null) {
             entityActionHandler.readFromNBT(nbt);
         }
+        if (nbt.hasKey("entityclasstype")) {
+            entityclass = EntityClassType.getEntityClassType(nbt.getInteger("entityclasstype"));
+        }
     }
 
     @Override
@@ -209,6 +212,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         if (entityActionHandler != null) {
             entityActionHandler.writeToNBT(nbt);
         }
+        nbt.setInteger("entityclasstype", EntityClassType.getID(entityclass));
     }
 
     @Override
