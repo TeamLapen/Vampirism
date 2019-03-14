@@ -61,4 +61,9 @@ public class HunterAIDefendVillage<T extends EntityCreature & HunterAIDefendVill
         @Nullable
         IVampirismVillageOLD getVampirismVillage();
     }
+
+    @Override
+    protected double getTargetDistance() {
+        return super.getTargetDistance() * 4;
+    }
 }

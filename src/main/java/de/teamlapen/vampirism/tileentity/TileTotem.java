@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
@@ -294,8 +295,9 @@ public class TileTotem extends TileEntity implements ITickable {
                         capture_timer = 1;
                         this.capture_phase = CAPTURE_PHASE.PHASE_2;
                         this.markDirty();
+                        notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.almost_captured", defender));
                     } else {
-                        if (capture_timer % 4 == 0) {
+                        if (capture_timer % 2 == 0) {
                             if (attacker * attackStrength * 0.8f > defender * defenseStrength) {
                                 spawnCreature(false);
                             } else if (attacker * attackStrength < defender * defenseStrength * 0.8f) {
@@ -306,7 +308,7 @@ public class TileTotem extends TileEntity implements ITickable {
                     }
                     break;
                 case PHASE_2:
-                    if ((this.controllingFaction != null || neutral == 0) && defender == 0) {
+                    if (defender == 0) {
                         capture_timer++;
                         if (capture_timer > 4) {
                             this.completeCapture();
@@ -446,9 +448,8 @@ public class TileTotem extends TileEntity implements ITickable {
         force_village_update = true;
         this.markDirty();
         VampirismMod.log.t("Abort capture");
-
+        informEntitiesAboutCaptureStop();
         notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_capture_aborted"));
-
     }
 
     private void completeCapture() {
@@ -457,7 +458,17 @@ public class TileTotem extends TileEntity implements ITickable {
         force_village_update = true;
         this.markDirty();
         VampirismMod.log.t("Completed capture");
+        informEntitiesAboutCaptureStop();
         notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_captured_by", new TextComponentTranslation(controllingFaction.getUnlocalizedNamePlural())));
+    }
+
+    private void informEntitiesAboutCaptureStop() {
+        List<EntityVampirism> list = this.world.getEntitiesWithinAABB(EntityVampirism.class, getAffectedArea());
+        for (EntityVampirism e : list) {
+            if (e instanceof IVillageCaptureEntity) {
+                ((IVillageCaptureEntity) e).stopVillageAttackDefense();
+            }
+        }
     }
 
     @Nonnull
@@ -517,9 +528,9 @@ public class TileTotem extends TileEntity implements ITickable {
         Entity e = UtilLib.spawnEntityInWorld(this.world, this.getAffectedArea(), id, 50);
         if (e instanceof IVillageCaptureEntity) {
             if (attack) {
-                ((IVillageCaptureEntity) e).attackVillage(this.getPos());
+                ((IVillageCaptureEntity) e).attackVillage(this.getAffectedArea());
             } else {
-                ((IVillageCaptureEntity) e).defendVillage(this.getPos());
+                ((IVillageCaptureEntity) e).defendVillage(this.getAffectedArea());
             }
             VampirismMod.log.t("Spawned %s", e.getName());
         } else if (e != null) {
@@ -534,7 +545,7 @@ public class TileTotem extends TileEntity implements ITickable {
         @Nullable VampirismVillage v = getVillage();
         AxisAlignedBB box;
         BlockPos b = v == null ? this.pos : v.getVillage().getCenter();
-        int r = v == null ? 15 : v.getVillage().getVillageRadius();
+        int r = v == null ? 15 : v.getVillage().getVillageRadius() + 5;
         box = new AxisAlignedBB(b).grow(r, 1, r);
 
         if (!box.contains(new Vec3d(this.pos))) {

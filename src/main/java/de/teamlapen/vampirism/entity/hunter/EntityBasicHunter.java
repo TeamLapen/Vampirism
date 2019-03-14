@@ -7,10 +7,7 @@ import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.IVampirismVillageOLD;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.entity.ai.EntityAIAttackRangedCrossbow;
-import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
-import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
-import de.teamlapen.vampirism.entity.ai.HunterAILookAtTrainee;
+import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.inventory.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
@@ -36,7 +33,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
@@ -56,9 +52,9 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     private static final DataParameter<Integer> WATCHED_ID = EntityDataManager.createKey(EntityBasicHunter.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 3;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
-    private final int DEFEND_VILLAGE_PRIO = 3;
+    private final int DEFEND_VILLAGE_PRIO = 4;
     private final int WANDER_VILLAGE_PRIO = 5;
-    private final int ATTACK_ZOMBIE_PRIO = 5;
+    private final int ATTACK_ZOMBIE_PRIO = 6;
     private final EntityAIBase wanderVillage = new EntityAIMoveThroughVillageCustom(this, 0.7F, false, 300);
     private final EntityAIBase defendVillage = new HunterAIDefendVillage(this);
     private final EntityAIBase targetZombies = new EntityAINearestAttackableTarget<>(this, EntityZombie.class, true, true);
@@ -82,6 +78,17 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
      * Stores the x axis angle between when targeting an enemy with the crossbow
      */
     private float targetAngle = 0;
+
+    /**
+     * If this is non-null we are currently attacking a village center
+     */
+    @Nullable
+    private AxisAlignedBB village_attack_area;
+    /**
+     * If this is non-null we are currently defending a village center
+     */
+    @Nullable
+    private AxisAlignedBB village_defense_area;
 
     public EntityBasicHunter(World world) {
         super(world, true);
@@ -347,28 +354,9 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-
-        this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
-        //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
-        this.tasks.addTask(3, new HunterAILookAtTrainee(this));
-
-        this.tasks.addTask(6, new EntityAIWander(this, 0.7, 50));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
-        this.tasks.addTask(8, new EntityAILookIdle(this));
-
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<EntityCreature>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
-
-            @Override
-            protected double getTargetDistance() {
-                return super.getTargetDistance() / 2;
-            }
-        });
-        //Also check the priority of tasks that are dynamically added. See top of class
+    public void attackVillage(AxisAlignedBB area) {
+        this.setCustomNameTag("Attacking Village");
+        this.village_attack_area = area;
     }
 
     @Override
@@ -427,19 +415,58 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    public void attackVillage(BlockPos pos) {
-        this.setCustomNameTag("Attacking Village");
+    public void defendVillage(AxisAlignedBB area) {
+        setDefendVillage(true);
+        this.setCustomNameTag("Defending Village");
+        this.village_defense_area = area;
+    }
+
+    @Nullable
+    @Override
+    public AxisAlignedBB getTargetVillageArea() {
+        return village_attack_area == null ? village_defense_area : village_attack_area;
     }
 
     @Override
-    public void defendVillage(BlockPos pos) {
-        setDefendVillage(true);
-        this.setCustomNameTag("Defending Village");
+    public boolean isAttackingVillage() {
+        return village_attack_area != null;
     }
 
     @Override
     public void stopVillageAttackDefense() {
-        setDefendVillage(false);
+        this.setCustomNameTag("");
+        if (village_defense_area != null) {
+            village_defense_area = null;
+            setDefendVillage(false);
+        } else if (village_attack_area != null) {
+            village_attack_area = null;
+        }
+    }
+
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+
+        this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
+        //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
+        this.tasks.addTask(3, new HunterAILookAtTrainee(this));
+
+        this.tasks.addTask(6, new EntityAIWander(this, 0.7, 50));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
+
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(2, new EntityAIAttackVillage<>(this));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<EntityCreature>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
+
+            @Override
+            protected double getTargetDistance() {
+                return super.getTargetDistance() / 2;
+            }
+        });
+        //Also check the priority of tasks that are dynamically added. See top of class
     }
 
     protected void updateEntityAttributes() {
