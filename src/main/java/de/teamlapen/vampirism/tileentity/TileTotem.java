@@ -17,6 +17,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -29,9 +30,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.BossInfo;
+import net.minecraft.world.BossInfoServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
@@ -49,6 +51,7 @@ public class TileTotem extends TileEntity implements ITickable {
     private final static int DURATION_PHASE_1 = 60;
     private boolean force_village_update = false;
     private boolean isComplete;
+    private final BossInfoServer captureInfo = (BossInfoServer) (new BossInfoServer(new TextComponentTranslation("text.vampirism.village.bossinfo.capture", new Object[0]), BossInfo.Color.YELLOW, BossInfo.Overlay.PROGRESS));
 
     private boolean insideVillage;
 
@@ -126,6 +129,7 @@ public class TileTotem extends TileEntity implements ITickable {
         if (faction.equals(controllingFaction)) return;
         if (this.world.isRemote) return;
         capturingFaction = faction;
+        captureInfo.setPercent(0F);
 
         if (this.controllingFaction == null) {
             this.capture_phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
@@ -155,6 +159,7 @@ public class TileTotem extends TileEntity implements ITickable {
         if (v != null) {
             v.removeTotemAndReset(this.pos);
         }
+        removePlayerFromBossInfo();
     }
 
     @SideOnly(Side.CLIENT)
@@ -242,7 +247,7 @@ public class TileTotem extends TileEntity implements ITickable {
         }
         //Handle capture
         if (this.capturingFaction != null && time % 40 == 9) {
-
+            removePlayerFromBossInfo();
             List<Entity> entities = this.world.getEntitiesWithinAABB(EntityLivingBase.class, getAffectedArea());
             int attacker = 0; //Includes players
             int attackerPlayer = 0;
@@ -259,12 +264,14 @@ public class TileTotem extends TileEntity implements ITickable {
                     if (e instanceof EntityPlayer) {
                         attackerPlayer++;
                         attackStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
+                        captureInfo.addPlayer((EntityPlayerMP) e);
                     }
                 } else if (controllingFaction != null && controllingFaction.equals(f)) {
                     defender++;
                     if (e instanceof EntityPlayer) {
                         defenderPlayer++;
                         defenseStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
+                        captureInfo.addPlayer((EntityPlayerMP) e);
                     }
                 } else {
                     neutral++;
@@ -320,6 +327,7 @@ public class TileTotem extends TileEntity implements ITickable {
                 default:
                     break;
             }
+            captureInfo.setPercent((float) getCaptureProgress() / 100);
         }
     }
 
@@ -450,6 +458,7 @@ public class TileTotem extends TileEntity implements ITickable {
         VampirismMod.log.t("Abort capture");
         informEntitiesAboutCaptureStop();
         notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_capture_aborted"));
+        removePlayerFromBossInfo();
     }
 
     private void completeCapture() {
@@ -460,6 +469,7 @@ public class TileTotem extends TileEntity implements ITickable {
         VampirismMod.log.t("Completed capture");
         informEntitiesAboutCaptureStop();
         notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_captured_by", new TextComponentTranslation(controllingFaction.getUnlocalizedNamePlural())));
+        removePlayerFromBossInfo();
     }
 
     private void informEntitiesAboutCaptureStop() {
@@ -588,6 +598,12 @@ public class TileTotem extends TileEntity implements ITickable {
 
     private enum CAPTURE_PHASE {
         PHASE_1_NEUTRAL, PHASE_1_OPPOSITE, PHASE_2
+    }
+
+    private void removePlayerFromBossInfo() {
+        for (EntityPlayerMP p : captureInfo.getPlayers()) {
+            captureInfo.removePlayer(p);
+        }
     }
 
 }
