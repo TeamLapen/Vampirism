@@ -405,6 +405,7 @@ text.vampirism.village.neutral_village_under_attack=A nearby neutral village is 
 text.vampirism.village.faction_village_under_attack=A nearby %s village is under attack from %s
 text.vampirism.village.almost_captured=Village almost captured. %s defenders left
 text.vampirism.village.bossinfo.capture=Village capturing progress
+text.vampirism.village.no_near_village=No village nearby
 
 #ETC
 text.vampirism.vampire=Vampire

@@ -127,10 +127,14 @@ public class TileTotem extends TileEntity implements ITickable {
      *
      * @param faction The attacking faction
      */
-    public void initiateCapture(@Nonnull IPlayableFaction faction) {
+    public void initiateCapture(@Nonnull IPlayableFaction faction, EntityPlayer player) {
         if (capturingFaction != null) return;
         if (faction.equals(controllingFaction)) return;
-        if (this.world.isRemote) return;
+        updateTotem();
+        if(!insideVillage) {
+            player.sendMessage(new TextComponentTranslation("text.vampirism.village.no_near_village"));
+            return;
+        }
         capturingFaction = faction;
         captureInfo.setPercent(0F);
 
