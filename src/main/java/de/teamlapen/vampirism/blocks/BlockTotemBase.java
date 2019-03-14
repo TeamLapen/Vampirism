@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.core.ModBlocks;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +15,9 @@ public class BlockTotemBase extends VampirismBlock {
 
     public BlockTotemBase() {
         super(regName, Material.ROCK);
+        this.setHardness(35.0F);
+        this.setResistance(2000.0F);
+        setSoundType(SoundType.STONE);
     }
 
     @Override
