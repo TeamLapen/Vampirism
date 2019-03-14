@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.world.villages;
 
+import de.teamlapen.vampirism.tileentity.TileTotem;
 import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
@@ -32,6 +34,18 @@ public class VampirismVillageHelper {
         Village v = w.villageCollection.getNearestVillage(pos, r);
         if (v != null) {
             return VampirismVillage.get(v);
+        }
+        return null;
+    }
+
+    public static @Nullable
+    TileTotem getNearestVillageTotem(World w, BlockPos pos, int r) {
+        VampirismVillage v = getNearestVillageNew(w, pos, r);
+        if (v != null && v.getTotemLocation() != null) {
+            TileEntity t = w.getTileEntity(v.getTotemLocation());
+            if (t instanceof TileTotem) {
+                return (TileTotem) t;
+            }
         }
         return null;
     }

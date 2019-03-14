@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world.villages;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
@@ -505,23 +504,11 @@ public class VampirismVillageOld implements IVampirismVillageOLD {
     }
 
     private void spawnHunter() {
-        EntityBasicHunter hunter = new EntityBasicHunter(village.world);
-        boolean flag = UtilLib.spawnEntityInWorld(village.world, getBoundingBox(), hunter, 5);
-        if (flag) {
-            hunter.makeVillageHunter(this);
-            recentlySpawnedHunters++;
-        } else {
-            hunter.setDead();
-        }
+
     }
 
     private void spawnVampire() {
-        EntityBasicVampire vampire = new EntityBasicVampire(village.world);
-        boolean flag = UtilLib.spawnEntityInWorld(village.world, getBoundingBox(), vampire, 5);
-        //TODO make home
-        if (!flag) {
-            vampire.setDead();
-        }
+
     }
 
     private void spawnVillager() {

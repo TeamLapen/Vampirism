@@ -80,7 +80,7 @@ public class VampirismVillage implements IVampirismVillage {
     @Nullable
     @Override
     public IFaction getControllingFaction() {
-        return null;
+        return controllingFaction;
     }
 
     @Nonnull

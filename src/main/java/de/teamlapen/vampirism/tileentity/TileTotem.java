@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.tileentity;
 
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
@@ -8,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
@@ -26,6 +28,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.IntHashMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -34,11 +37,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -91,6 +96,15 @@ public class TileTotem extends TileEntity implements ITickable {
      * General purpose (phase specific) counter for the capture procedure
      */
     private int capture_timer;
+
+    /**
+     * Store a dimension -> blockpos -> BoundingBox map of villages controlled by vampires. Added/Updated on update package. Removed on invalidate.
+     * <p>
+     * This is originally intended to store the area on clientside, but also used on server side to create a matching experience.
+     * On integrated servers this is updated from both client and server (so twice), but values should just override each other
+     */
+    private final static IntHashMap<HashMap<BlockPos, StructureBoundingBox>> vampireVillages = new IntHashMap<>();
+
 
     public boolean canPlayerRemoveBlock(EntityPlayer player) {
         if (player.capabilities.isCreativeMode) return true;
@@ -146,10 +160,16 @@ public class TileTotem extends TileEntity implements ITickable {
         this.markDirty();
     }
 
-    @Override
-    public void markDirty() {
-        super.markDirty();
-        world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+    public static boolean insideVampireAreaCached(int dimension, BlockPos pos) {
+        HashMap<BlockPos, StructureBoundingBox> map = vampireVillages.lookup(dimension);
+        if (map != null) {
+            for (StructureBoundingBox bb : map.values()) {
+                if (bb.isVecInside(pos)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @SideOnly(Side.CLIENT)
@@ -234,104 +254,11 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     @Override
-    public void update() {
-        int time = (int) this.world.getTotalWorldTime();
-
-        if (this.world.isRemote) {
-            if (this.capturingFaction != null && time % 40 == 9) {
-                this.capture_timer++;
-            }
-
-            return;
-        }
-        if (force_village_update || time % 80 == 0L) {
-            this.updateTotem();
-            force_village_update = false;
-        }
-        //Handle capture
-        if (this.capturingFaction != null && time % 40 == 9) {
-            removePlayerFromBossInfo();
-            List<Entity> entities = this.world.getEntitiesWithinAABB(EntityLivingBase.class, getAffectedArea());
-            int attacker = 0; //Includes players
-            int attackerPlayer = 0;
-            int defender = 0;//Includes player
-            int defenderPlayer = 0;
-            int neutral = 0;
-            float attackStrength = 1;
-            float defenseStrength = 1;
-            for (Entity e : entities) {
-                IFaction f = VampirismAPI.factionRegistry().getFaction(e);
-                if (f == null) continue;
-                if (this.capturingFaction.equals(f)) {
-                    attacker++;
-                    if (e instanceof EntityPlayer) {
-                        attackerPlayer++;
-                        attackStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
-                        captureInfo.addPlayer((EntityPlayerMP) e);
-                    }
-                } else if (controllingFaction != null && controllingFaction.equals(f)) {
-                    defender++;
-                    if (e instanceof EntityPlayer) {
-                        defenderPlayer++;
-                        defenseStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
-                        captureInfo.addPlayer((EntityPlayerMP) e);
-                    }
-                } else {
-                    neutral++;
-                }
-            }
-            VampirismMod.log.t("Capture progress update: Timer %d [%s], Abort Timer %s. Attacker %d(%d) - %s. Defender %d(%d) - %s. Neutral %d", capture_timer, capture_phase, capture_abort_timer, attacker, attackerPlayer, attacker * attackStrength, defender, defenderPlayer, defender * defenseStrength, neutral);
-            if (attackerPlayer == 0) {
-                this.capture_abort_timer++;
-            } else {
-                capture_abort_timer = 0;
-                capture_timer++;
-            }
-
-            if (this.capture_abort_timer > 7) {
-                this.abortCapture();
-            }
-
-            switch (capture_phase) {
-                case PHASE_1_NEUTRAL:
-                    if (capture_timer >= DURATION_PHASE_1) {
-                        capture_timer = 1;
-                        this.capture_phase = CAPTURE_PHASE.PHASE_2;
-                        this.markDirty();
-                    }
-                    break;
-                case PHASE_1_OPPOSITE:
-                    if (capture_timer >= DURATION_PHASE_1) {
-                        capture_timer = 1;
-                        this.capture_phase = CAPTURE_PHASE.PHASE_2;
-                        this.markDirty();
-                        notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.almost_captured", defender));
-                    } else {
-                        if (capture_timer % 2 == 0) {
-                            if (attacker * attackStrength * 1.1f > defender * defenseStrength) {
-                                spawnCreature(false);
-                            } else if (attacker * attackStrength < defender * defenseStrength * 1.1f) {
-                                spawnCreature(true);
-                            }
-                        }
-
-                    }
-                    break;
-                case PHASE_2:
-                    if (defender == 0) {
-                        capture_timer++;
-                        if (capture_timer > 4) {
-                            this.completeCapture();
-                        }
-                    } else {
-                        capture_timer = 1;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            captureInfo.setPercent((float) getCaptureProgress() / 100);
-        }
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        nbt.setIntArray("village_bb", UtilLib.bbToInt(getAffectedArea()));
+        return nbt;
     }
 
     @SideOnly(Side.CLIENT)
@@ -352,15 +279,20 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
-        return writeToNBT(new NBTTagCompound());
+    public void invalidate() {
+        super.invalidate();
+        unregisterVampireArea();
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.getNbtCompound());
-        //TODO client processing
+    public void markDirty() {
+        super.markDirty();
+        world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+        if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
+            registerVampireArea(new StructureBoundingBox(UtilLib.bbToInt(getAffectedArea())));
+        } else {
+            unregisterVampireArea();
+        }
     }
 
     public void updateTotem() {
@@ -484,12 +416,19 @@ public class TileTotem extends TileEntity implements ITickable {
         }
     }
 
-    @Nonnull
-    private AxisAlignedBB getAffectedArea() {
-        if (affectedArea == null) {
-            updateAffectedArea();
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        NBTTagCompound nbt = pkt.getNbtCompound();
+        readFromNBT(nbt);
+        if (nbt.hasKey("village_bb")) {
+            if (controllingFaction == VReference.VAMPIRE_FACTION) {
+                StructureBoundingBox bb = new StructureBoundingBox(nbt.getIntArray("village_bb"));
+                registerVampireArea(bb);
+            } else {
+                unregisterVampireArea();
+            }
         }
-        return affectedArea;
     }
 
     @Nullable
@@ -616,4 +555,135 @@ public class TileTotem extends TileEntity implements ITickable {
         }
     }
 
+    @Override
+    public void update() {
+        int time = (int) this.world.getTotalWorldTime();
+
+        if (this.world.isRemote) {
+            if (this.capturingFaction != null && time % 40 == 9) {
+                this.capture_timer++;
+            }
+            if (controllingFaction != null && time % 10 == 7) {
+                VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, this.pos.getX(), this.pos.getY(), this.pos.getZ(), 3, 30, this.world.rand, 4, 20, controllingFaction.getColor());
+            }
+
+            return;
+        }
+        if (force_village_update || time % 80 == 0L) {
+            this.updateTotem();
+            force_village_update = false;
+        }
+        //Handle capture
+        if (this.capturingFaction != null && time % 40 == 9) {
+            removePlayerFromBossInfo();
+            List<Entity> entities = this.world.getEntitiesWithinAABB(EntityLivingBase.class, getAffectedArea());
+            int attacker = 0; //Includes players
+            int attackerPlayer = 0;
+            int defender = 0;//Includes player
+            int defenderPlayer = 0;
+            int neutral = 0;
+            float attackStrength = 1;
+            float defenseStrength = 1;
+            for (Entity e : entities) {
+                IFaction f = VampirismAPI.factionRegistry().getFaction(e);
+                if (f == null) continue;
+                if (this.capturingFaction.equals(f)) {
+                    attacker++;
+                    if (e instanceof EntityPlayer) {
+                        attackerPlayer++;
+                        attackStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
+                        captureInfo.addPlayer((EntityPlayerMP) e);
+                    }
+                } else if (controllingFaction != null && controllingFaction.equals(f)) {
+                    defender++;
+                    if (e instanceof EntityPlayer) {
+                        defenderPlayer++;
+                        defenseStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
+                        captureInfo.addPlayer((EntityPlayerMP) e);
+                    }
+                } else {
+                    neutral++;
+                }
+            }
+            VampirismMod.log.t("Capture progress update: Timer %d [%s], Abort Timer %s. Attacker %d(%d) - %s. Defender %d(%d) - %s. Neutral %d", capture_timer, capture_phase, capture_abort_timer, attacker, attackerPlayer, attacker * attackStrength, defender, defenderPlayer, defender * defenseStrength, neutral);
+            if (attackerPlayer == 0) {
+                this.capture_abort_timer++;
+            } else {
+                capture_abort_timer = 0;
+                capture_timer++;
+            }
+
+            if (this.capture_abort_timer > 7) {
+                this.abortCapture();
+            }
+
+            switch (capture_phase) {
+                case PHASE_1_NEUTRAL:
+                    if (capture_timer >= DURATION_PHASE_1) {
+                        capture_timer = 1;
+                        this.capture_phase = CAPTURE_PHASE.PHASE_2;
+                        this.markDirty();
+                    }
+                    break;
+                case PHASE_1_OPPOSITE:
+                    if (capture_timer >= DURATION_PHASE_1) {
+                        capture_timer = 1;
+                        this.capture_phase = CAPTURE_PHASE.PHASE_2;
+                        this.markDirty();
+                        notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.almost_captured", defender));
+                    } else {
+                        if (capture_timer % 2 == 0) {
+                            if (attacker * attackStrength * 1.1f > defender * defenseStrength) {
+                                spawnCreature(false);
+                            } else if (attacker * attackStrength < defender * defenseStrength * 1.1f) {
+                                spawnCreature(true);
+                            }
+                        }
+
+                    }
+                    break;
+                case PHASE_2:
+                    if (defender == 0) {
+                        capture_timer++;
+                        if (capture_timer > 4) {
+                            this.completeCapture();
+                        }
+                    } else {
+                        capture_timer = 1;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            captureInfo.setPercent((float) getCaptureProgress() / 100);
+        }
+    }
+
+    @Nonnull
+    private AxisAlignedBB getAffectedArea() {
+        if (affectedArea == null) {
+            updateAffectedArea();
+            if (!this.world.isRemote) {
+                this.markDirty();
+            }
+        }
+        return affectedArea;
+    }
+
+    private void registerVampireArea(StructureBoundingBox box) {
+        HashMap<BlockPos, StructureBoundingBox> map = vampireVillages.lookup(this.world.provider.getDimension());
+        if (map == null) {
+            map = new HashMap<>();
+            vampireVillages.addKey(this.world.provider.getDimension(), map);
+        }
+        map.put(this.getPos(), box);
+
+    }
+
+    private void unregisterVampireArea() {
+        HashMap<BlockPos, StructureBoundingBox> map = vampireVillages.lookup(this.world.provider.getDimension());
+        if (map != null) {
+            map.remove(this.getPos());
+        }
+    }
 }
