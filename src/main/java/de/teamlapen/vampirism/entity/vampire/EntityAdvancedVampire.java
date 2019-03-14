@@ -51,7 +51,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         super(world, true);
         this.setSize(0.6F, 1.95F);
         this.canSuckBloodFromPlayer = true;
-        this.restrictedSpawn = true;
+        this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         this.setDontDropEquipment();
     }
 

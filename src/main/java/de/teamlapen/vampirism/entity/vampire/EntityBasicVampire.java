@@ -66,7 +66,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         super(world, true);
         this.canSuckBloodFromPlayer = true;
         hasArms = true;
-        this.restrictedSpawn = true;
+        this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         this.setSize(0.6F, 1.95F);
 
     }

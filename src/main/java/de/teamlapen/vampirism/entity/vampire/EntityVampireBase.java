@@ -38,15 +38,41 @@ import javax.annotation.Nonnull;
  */
 @SuppressWarnings("EntityConstructor")
 public abstract class EntityVampireBase extends EntityVampirism implements IVampireMob {
-    private final boolean countAsMonsterForSpawn;
+
     /**
-     * If this creature is only allowed to spawn at low light level or in the vampire biome on cursed earth
+     * Rules to consider for {@link #getCanSpawnHere()}
      */
-    protected boolean restrictedSpawn = false;
+    protected SpawnRestriction spawnRestriction = SpawnRestriction.NORMAL;
+    private final boolean countAsMonsterForSpawn;
+
+    @Override
+    public boolean getCanSpawnHere() {
+        if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
+            if (isGettingSundamage(true) || isGettingGarlicDamage(true) != EnumStrength.NONE) return false;
+
+            if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
+                if ((world.isDaytime() && rand.nextInt(5) != 0)) {
+                    return false;
+                }
+                if (world.getVillageCollection().getNearestVillage(getPosition(), 1) != null) {
+                    if (getRNG().nextInt(60) != 0) {
+                        return false;
+                    }
+                }
+
+                if (spawnRestriction.level >= SpawnRestriction.SPECIAL.level) {
+                    if (!getCanSpawnHereRestricted()) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return super.getCanSpawnHere();
+    }
     protected EnumStrength garlicResist = EnumStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
     protected boolean vulnerableToFire = true;
-    protected boolean avoidVillageSpawn = true;
     private boolean sundamageCache;
     private EnumStrength garlicCache = EnumStrength.NONE;
     /**
@@ -64,8 +90,11 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     }
 
-    public void allowVillageSpawn() {
-        this.avoidVillageSpawn = false;
+    /**
+     * Select rules to consider for {@link #getCanSpawnHere()}
+     */
+    public void setSpawnRestriction(SpawnRestriction r) {
+        this.spawnRestriction = r;
     }
 
     @Override
@@ -100,18 +129,29 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
     }
 
-    @Override
-    public boolean getCanSpawnHere() {
-        if (isGettingSundamage(true) || (world.isDaytime() && rand.nextInt(5) != 0)) return false;
-        if (isGettingGarlicDamage(true) != EnumStrength.NONE) return false;
+    public enum SpawnRestriction {
+        /**
+         * Only entity spawn checks
+         */
+        NONE(0),
+        /**
+         * +No direct sunlight or garlic
+         */
+        SIMPLE(1),
+        /**
+         * +Avoid villages and daytime (random chance)
+         */
+        NORMAL(2),
+        /**
+         * +Only at low light level or in vampire biome on cursed earth
+         */
+        SPECIAL(3);
 
-        //Careful. Vampires are very unlikely to spawn in villages unless {@link #allowVillageSpawn} has been called before
-        if (avoidVillageSpawn && world.getVillageCollection().getNearestVillage(getPosition(), 1) != null) {
-            if (getRNG().nextInt(60) != 0) {
-                return false;
-            }
+        int level;
+
+        SpawnRestriction(int level) {
+            this.level = level;
         }
-        return super.getCanSpawnHere() && (!restrictedSpawn || getCanSpawnHereRestricted());
     }
 
     @Override
