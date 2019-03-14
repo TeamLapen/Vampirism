@@ -12,8 +12,10 @@ import net.minecraftforge.registries.IForgeRegistry;
 @GameRegistry.ObjectHolder(REFERENCE.MODID)
 public class HunterActions {
     public static final DisguiseHunterAction disguise_hunter = UtilLib.getNull();
+    public static final AwarenessHunterAction awareness_hunter = UtilLib.getNull();
 
     public static void registerDefaultActions(IForgeRegistry<IAction> registry) {
         registry.register(new DisguiseHunterAction().setRegistryName("vampirism", "disguise_hunter"));
+        registry.register(new AwarenessHunterAction().setRegistryName("vampirism", "awareness_hunter"));
     }
 }

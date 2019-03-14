@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -48,6 +49,7 @@ public class HunterSkills {
     public static final ISkill hunter_attack_speed = UtilLib.getNull();
     public static final ISkill hunter_advanced_attack_speed = UtilLib.getNull();
     public static final ISkill hunter_disguise = UtilLib.getNull();
+    public static final ISkill hunter_awareness = UtilLib.getNull();
 
     public static void registerHunterSkills(IForgeRegistry<ISkill> registry) {
         registry.register(new VampirismSkill.SimpleHunterSkill(VReference.HUNTER_FACTION.getKey(), 0, 32, false));
@@ -115,6 +117,7 @@ public class HunterSkills {
                 return UtilLib.translate("text.vampirism.skill.disguise_hunter.desc");
             }
         });
+        registry.register(new ActionSkill<IHunterPlayer>(new ResourceLocation("vampirism", "hunter_awareness"), HunterActions.awareness_hunter));
 
         DefaultSkill<IHunterPlayer> advancedAttackSpeed = new VampirismSkill.SimpleHunterSkill("hunter_advanced_attack_speed", 32, 32, false);
         advancedAttackSpeed.registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", Balance.hps.MAJOR_ATTACK_SPEED_MODIFIER, 2);
@@ -152,6 +155,7 @@ public class HunterSkills {
         SkillNode skill6 = skillManager.createSkillNode(skill5, garlic_beacon);
         SkillNode skill7 = skillManager.createSkillNode(skill6, purified_garlic, holy_water_enhanced);
         SkillNode skill8 = skillManager.createSkillNode(skill7, garlic_beacon_improved);
+        SkillNode skill9 = skillManager.createSkillNode(skill8, hunter_awareness);
     }
 
     private static void registerBloodAlchemy(ISkillManager skillManager, SkillNode root) {

@@ -84,6 +84,7 @@ text.vampirism.skill.holy_water_enhanced=Enhanced Holy Water
 text.vampirism.skill.holy_water_enhanced.desc=Create enhanced Holy Water instead of normal one.
 text.vampirism.skill.garlic_beacon_improved=Improved diffuser
 text.vampirism.skill.garlic_beacon_improved.desc=Learn how to craft a garlic diffuser with a higher range
+text.vampirism.skill.awareness=Sense nearby vampire players or entities
 text.vampirism.command.available_subcommands=Available Subcommands:
 text.vampirism.command.subcommand_help=Use '/%s help <subcommand>' to get more information
 text.vampirism.command.usage=/%s <subcommand> <params> | Use /%s help to get all available subcommands
@@ -112,6 +113,7 @@ action.vampirism.vampire.halfinvulnerable_skill=Damage Limiter
 
 #HUNTER ACTIONS
 action.vampirism.hunter.disguise=Disguise
+action.vampirism.hunter.awareness=Vampire Awareness
 
 #BLOOD POTIONS
 text.vampirism.blood_potion.might_cause=Might cause:
