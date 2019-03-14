@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -127,6 +126,10 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         } else { /* new action */
             /* sets a new action if cooldown is over */
             action = chooseNewAction();
+            if (action == null) {
+                cancelActivation();
+                return;
+            }
             cooldown = action.getCooldown(entity.getLevel());
             preActivation = action.getPreActivationTime();
             healthThresholdForDisruption = entity.getHealth() - (entity.getMaxHealth() * (float) Balance.ea.DISRUPTION_HEALTH_AMOUNT);
@@ -139,13 +142,21 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
     /**
      * elevates the chance of the actions, based on the entity and its target
      */
-    @Nonnull
+    @Nullable
     private IEntityAction chooseNewAction() {
         List<EntityActionEntry> entry = Lists.newArrayList();
+        int weightsum = 0;
         for (IEntityAction e : availableActions) {
-            entry.add(new EntityActionEntry(((DefaultEntityAction<T>) e).getWeight(entity), e));
+            int weight = ((DefaultEntityAction<T>) e).getWeight(entity);
+            if (weight > 0) {
+                entry.add(new EntityActionEntry(weight, e));
+                weightsum += weight;
+            }
         }
-        return WeightedRandom.getRandomItem(entity.getRNG(), entry).getAction();
+        if (weightsum > 0) {
+            return WeightedRandom.getRandomItem(entity.getRNG(), entry, weightsum).getAction();
+        }
+        return null;
     }
 
     public void handle() {
