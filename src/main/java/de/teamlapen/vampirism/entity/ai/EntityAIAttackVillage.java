@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import com.google.common.base.Predicates;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.entity.EntityVampirism;
@@ -28,7 +29,9 @@ public class EntityAIAttackVillage<T extends EntityVampirism & IVillageCaptureEn
         if (!attacker.isAttackingVillage()) {
             return false;
         }
-        List<EntityLivingBase> list = this.attacker.world.getEntitiesWithinAABB(EntityLivingBase.class, attacker.getTargetVillageArea(), VampirismAPI.factionRegistry().getPredicate(attacker.getFaction(), false));
+        List<EntityLivingBase> list = this.attacker.world.getEntitiesWithinAABB(EntityLivingBase.class, attacker.getTargetVillageArea(), Predicates.and(VampirismAPI.factionRegistry().getPredicate(attacker.getFaction(), false), (entity -> {
+            return isSuitableTarget(entity, false);
+        })));
         if (list.isEmpty()) {
             return false;
         } else {

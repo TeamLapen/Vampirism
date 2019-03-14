@@ -199,6 +199,9 @@ public class UtilLib {
     }
 
     public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry) {
+        if (!world.isAreaLoaded((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ, true)) {
+            return false;
+        }
         boolean flag = false;
         int i = 0;
         while (!flag && i++ < maxTry) {

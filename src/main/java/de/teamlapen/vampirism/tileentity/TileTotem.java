@@ -10,11 +10,13 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -34,6 +36,7 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
@@ -51,7 +54,7 @@ public class TileTotem extends TileEntity implements ITickable {
     private final static int DURATION_PHASE_1 = 60;
     private boolean force_village_update = false;
     private boolean isComplete;
-    private final BossInfoServer captureInfo = (BossInfoServer) (new BossInfoServer(new TextComponentTranslation("text.vampirism.village.bossinfo.capture", new Object[0]), BossInfo.Color.YELLOW, BossInfo.Overlay.PROGRESS));
+    private final BossInfoServer captureInfo = (new BossInfoServer(new TextComponentTranslation("text.vampirism.village.bossinfo.capture"), BossInfo.Color.YELLOW, BossInfo.Overlay.PROGRESS));
 
     private boolean insideVillage;
 
@@ -305,9 +308,9 @@ public class TileTotem extends TileEntity implements ITickable {
                         notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.almost_captured", defender));
                     } else {
                         if (capture_timer % 2 == 0) {
-                            if (attacker * attackStrength * 0.8f > defender * defenseStrength) {
+                            if (attacker * attackStrength * 1.1f > defender * defenseStrength) {
                                 spawnCreature(false);
-                            } else if (attacker * attackStrength < defender * defenseStrength * 0.8f) {
+                            } else if (attacker * attackStrength < defender * defenseStrength * 1.1f) {
                                 spawnCreature(true);
                             }
                         }
@@ -535,7 +538,14 @@ public class TileTotem extends TileEntity implements ITickable {
             VampirismMod.log.w(TAG, "No village capture entity registered for %s", attack ? this.capturingFaction : this.controllingFaction);
             return;
         }
-        Entity e = UtilLib.spawnEntityInWorld(this.world, this.getAffectedArea(), id, 50);
+        Entity e = EntityList.createEntityByIDFromName(id, world);
+        if (e instanceof EntityVampireBase) {
+            ((EntityVampireBase) e).allowVillageSpawn();
+        }
+        if (e != null && !UtilLib.spawnEntityInWorld(world, this.getAffectedArea(), e, 50)) {
+            e.setDead();
+            e = null;
+        }
         if (e instanceof IVillageCaptureEntity) {
             if (attack) {
                 ((IVillageCaptureEntity) e).attackVillage(this.getAffectedArea());

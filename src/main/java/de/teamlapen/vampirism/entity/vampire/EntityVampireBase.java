@@ -46,6 +46,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     protected EnumStrength garlicResist = EnumStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
     protected boolean vulnerableToFire = true;
+    protected boolean avoidVillageSpawn = true;
     private boolean sundamageCache;
     private EnumStrength garlicCache = EnumStrength.NONE;
     /**
@@ -61,6 +62,10 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         super(world);
         this.countAsMonsterForSpawn = countAsMonsterForSpawn;
 
+    }
+
+    public void allowVillageSpawn() {
+        this.avoidVillageSpawn = false;
     }
 
     @Override
@@ -99,7 +104,9 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     public boolean getCanSpawnHere() {
         if (isGettingSundamage(true) || (world.isDaytime() && rand.nextInt(5) != 0)) return false;
         if (isGettingGarlicDamage(true) != EnumStrength.NONE) return false;
-        if (world.getVillageCollection().getNearestVillage(getPosition(), 1) != null) {
+
+        //Careful. Vampires are very unlikely to spawn in villages unless {@link #allowVillageSpawn} has been called before
+        if (avoidVillageSpawn && world.getVillageCollection().getNearestVillage(getPosition(), 1) != null) {
             if (getRNG().nextInt(60) != 0) {
                 return false;
             }
