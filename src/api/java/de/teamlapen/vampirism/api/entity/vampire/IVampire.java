@@ -96,6 +96,13 @@ public interface IVampire extends IFactionEntity {
     boolean isIgnoringSundamage();
 
     /**
+     * @return Whether the entity is a skilled biter which  is able to suck blood more efficiently
+     */
+    default boolean isAdvancedBiter() {
+        return false;
+    }
+
+    /**
      * Consumes blood (removes).
      * Unless allowPartial is true, blood is only consumed if enough is available
      *

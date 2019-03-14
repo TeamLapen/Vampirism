@@ -35,8 +35,6 @@ public class VampireSkills {
     public static final ISkill vampire_disguise = UtilLib.getNull();
     public static final ISkill vampire_invisibility = UtilLib.getNull();
     public static final ISkill vampire_rage = UtilLib.getNull();
-    public static final ISkill bite1 = UtilLib.getNull();
-    public static final ISkill bite2 = UtilLib.getNull();
     public static final ISkill freeze = UtilLib.getNull();
     public static final ISkill sunscreen = UtilLib.getNull();
     public static final ISkill vampire_jump = UtilLib.getNull();
@@ -49,6 +47,7 @@ public class VampireSkills {
     public static final ISkill sword_finisher = UtilLib.getNull();
     public static final ISkill dark_blood_projectile = UtilLib.getNull();
     public static final ISkill half_invulnerable = UtilLib.getNull();
+    public static final ISkill advanced_biter = UtilLib.getNull();
 
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
         registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getKey(), 32, 0, false));
@@ -93,43 +92,22 @@ public class VampireSkills {
         registry.register(new ActionSkill<>("vampire_disguise", VampireActions.disguise_vampire));
         registry.register(new ActionSkill<>("vampire_invisibility", VampireActions.vampire_invisibility));
         registry.register(new ActionSkill<>("vampire_rage", VampireActions.vampire_rage, true));
-        DefaultSkill<IVampirePlayer> bite = new VampirismSkill.SimpleVampireSkill("bite1", 128, 0, false) {
 
-            @Override
-            public String getLocalizedDescription() {
-                return UtilLib.translate("text.vampirism.skill.more_bite_damage.desc");
-            }
-
-            @Override
-            public String getUnlocalizedName() {
-                return "text.vampirism.skill.more_bite_damage";
-            }
-        };
-        bite.registerAttributeModifier(VReference.biteDamage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", Balance.vps.BITE_DAMAGE_MULT, 1);
-        registry.register(bite);
-        DefaultSkill<IVampirePlayer> bite2 = new VampirismSkill.SimpleVampireSkill("bite2", 112, 0, false) {
-            @Override
-            public String getLocalizedDescription() {
-                return UtilLib.translate("text.vampirism.skill.poisonous_bite.desc");
-            }
-
-
-            @Override
-            public String getUnlocalizedName() {
-                return "text.vampirism.skill.poisonous_bite";
-            }
-
+        VampirismSkill.SimpleVampireSkill advanced_biter = new VampirismSkill.SimpleVampireSkill("advanced_biter", 128, 0, false) {
             @Override
             protected void onDisabled(IVampirePlayer player) {
-                ((VampirePlayer) player).getSpecialAttributes().poisonous_bite = false;
+                ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false;
             }
 
             @Override
             protected void onEnabled(IVampirePlayer player) {
-                ((VampirePlayer) player).getSpecialAttributes().poisonous_bite = true;
+                ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true;
             }
         };
-        registry.register(bite2);
+        advanced_biter.setHasDefaultDescription();
+        advanced_biter.registerAttributeModifier(VReference.biteDamage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", Balance.vps.BITE_DAMAGE_MULT, 1);
+        registry.register(advanced_biter);
+
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", 240, 0, true));
         registry.register(new ActionSkill<>("freeze", VampireActions.freeze, true));
         registry.register(new ActionSkill<>("sunscreen", VampireActions.sunscreen, true));
@@ -252,7 +230,7 @@ public class VampireSkills {
         SkillNode skill1 = skillManager.createSkillNode(start, vampire_rage);
 
 
-        SkillNode skill2 = skillManager.createSkillNode(skill1, bite1, bite2);
+        SkillNode skill2 = skillManager.createSkillNode(skill1, advanced_biter);
         SkillNode skill3 = skillManager.createSkillNode(skill2, sword_finisher);
         SkillNode skill4 = skillManager.createSkillNode(skill3, dark_blood_projectile);
         SkillNode skill5 = skillManager.createSkillNode(skill4, blood_charge);
