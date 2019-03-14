@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.tileentity.TileTotem;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -20,7 +22,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import javax.annotation.Nullable;
 
 /**
@@ -38,7 +39,10 @@ public class BlockTotemTop extends VampirismBlockContainer {
     private final static String regName = "totem_top";
 
     public BlockTotemTop() {
-        super(regName, Material.WOOD);
+        super(regName, Material.ROCK);
+        this.setHardness(35.0F);
+        this.setResistance(2000.0F);
+        setSoundType(SoundType.STONE);
     }
 
     @Override
@@ -123,7 +127,7 @@ public class BlockTotemTop extends VampirismBlockContainer {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         IPlayableFaction f = FactionPlayerHandler.get(playerIn).getCurrentFaction();
         TileTotem t = getTile(worldIn, pos);
-        if (f != null && t != null) {
+        if (f != null && t != null && worldIn.getBlockState(pos.down()).getBlock().equals(ModBlocks.totem_base)) {
             t.initiateCapture(f);
         }
         return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
