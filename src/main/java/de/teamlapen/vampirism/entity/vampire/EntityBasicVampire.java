@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
@@ -174,6 +175,11 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         if (tagCompund.hasKey("level")) {
             setLevel(tagCompund.getInteger("level"));
         }
+        if (tagCompund.hasKey("village_attack_area")) {
+            this.attackVillage(UtilLib.intToBB(tagCompund.getIntArray("village_attack_area")));
+        } else if (tagCompund.hasKey("village_defense_area")) {
+            this.defendVillage(UtilLib.intToBB(tagCompund.getIntArray("village_defense_area")));
+        }
 
     }
 
@@ -208,6 +214,11 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         nbt.setInteger("level", getLevel());
+        if (village_attack_area != null) {
+            nbt.setIntArray("village_attack_area", UtilLib.bbToInt(village_attack_area));
+        } else if (village_defense_area != null) {
+            nbt.setIntArray("village_defense_area", UtilLib.bbToInt(village_defense_area));
+        }
     }
 
     @Override

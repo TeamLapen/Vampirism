@@ -584,4 +584,15 @@ public class UtilLib {
         int k = (color & 255);
         return new float[]{(float) i / 255.0F, (float) j / 255.0F, (float) k / 255.0F};
     }
+
+    @Nonnull
+    public static int[] bbToInt(@Nonnull AxisAlignedBB bb) {
+        return new int[]{(int) bb.minX, (int) bb.minY, (int) bb.minZ, (int) bb.maxX, (int) bb.maxY, (int) bb.maxZ};
+    }
+
+    @Nonnull
+    public static AxisAlignedBB intToBB(int[] array) {
+        return new AxisAlignedBB(array[0], array[1], array[2], array[3], array[4], array[5]);
+
+    }
 }

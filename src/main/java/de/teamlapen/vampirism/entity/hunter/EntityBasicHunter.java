@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
@@ -271,6 +272,11 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
         }
         this.updateCombatTask();
+        if (tagCompund.hasKey("village_attack_area")) {
+            this.attackVillage(UtilLib.intToBB(tagCompund.getIntArray("village_attack_area")));
+        } else if (tagCompund.hasKey("village_defense_area")) {
+            this.defendVillage(UtilLib.intToBB(tagCompund.getIntArray("village_defense_area")));
+        }
 
 
     }
@@ -319,6 +325,11 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         nbt.setInteger("level", getLevel());
         nbt.setBoolean("villageHunter", villageHunter);
         nbt.setBoolean("crossbow", isCrossbowInMainhand());
+        if (village_attack_area != null) {
+            nbt.setIntArray("village_attack_area", UtilLib.bbToInt(village_attack_area));
+        } else if (village_defense_area != null) {
+            nbt.setIntArray("village_defense_area", UtilLib.bbToInt(village_defense_area));
+        }
     }
 
     @Override
