@@ -40,7 +40,7 @@ public class BlockTotemTop extends VampirismBlockContainer {
 
     public BlockTotemTop() {
         super(regName, Material.ROCK);
-        this.setHardness(35.0F);
+        this.setHardness(50.0F);
         this.setResistance(2000.0F);
         setSoundType(SoundType.STONE);
     }
@@ -125,10 +125,11 @@ public class BlockTotemTop extends VampirismBlockContainer {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (worldIn.isRemote) return true;
         IPlayableFaction f = FactionPlayerHandler.get(playerIn).getCurrentFaction();
         TileTotem t = getTile(worldIn, pos);
         if (f != null && t != null && worldIn.getBlockState(pos.down()).getBlock().equals(ModBlocks.totem_base)) {
-            t.initiateCapture(f);
+            t.initiateCapture(f, playerIn);
         }
         return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
     }

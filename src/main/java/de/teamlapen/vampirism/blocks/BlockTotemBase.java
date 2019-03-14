@@ -15,7 +15,7 @@ public class BlockTotemBase extends VampirismBlock {
 
     public BlockTotemBase() {
         super(regName, Material.ROCK);
-        this.setHardness(35.0F);
+        this.setHardness(50.0F);
         this.setResistance(2000.0F);
         setSoundType(SoundType.STONE);
     }

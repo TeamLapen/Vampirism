@@ -393,7 +393,7 @@ enchantment.vampirism.arrow_frugality=Arrow Frugality
 enchantment.vampirism.vampire_slayer=Vampire Slayer
 
 #Village
-text.vampirism.village.faction_capturing_progress=%s are capturing this village (%s)%%
+text.vampirism.village.faction_capturing=%s are capturing this village
 text.vampirism.village.faction_controlling=%s are controlling this village
 text.vampirism.village.neutral=Neutral village
 text.vampirism.village.totem_destroy.fail_other_capturing=Cannot destroy totem while another faction is capturing it
@@ -405,6 +405,8 @@ text.vampirism.village.neutral_village_under_attack=A nearby neutral village is 
 text.vampirism.village.faction_village_under_attack=A nearby %s village is under attack from %s
 text.vampirism.village.almost_captured=Village almost captured. %s defenders left
 text.vampirism.village.bossinfo.capture=Village capturing progress
+text.vampirism.village.no_near_village=No village nearby
+test.vampirism.village.defender_remaining=Defender remaining
 
 #ETC
 text.vampirism.vampire=Vampire
