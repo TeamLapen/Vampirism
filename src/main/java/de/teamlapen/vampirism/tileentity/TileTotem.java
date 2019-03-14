@@ -55,6 +55,7 @@ public class TileTotem extends TileEntity implements ITickable {
     private boolean force_village_update = false;
     private boolean isComplete;
     private final BossInfoServer captureInfo = (new BossInfoServer(new TextComponentTranslation("text.vampirism.village.bossinfo.capture"), BossInfo.Color.YELLOW, BossInfo.Overlay.PROGRESS));
+    private int defenderMax;
 
     private boolean insideVillage;
 
@@ -136,7 +137,9 @@ public class TileTotem extends TileEntity implements ITickable {
             return;
         }
         capturingFaction = faction;
+        captureInfo.setName(new TextComponentTranslation("text.vampirism.village.bossinfo.capture"));
         captureInfo.setPercent(0F);
+        defenderMax = 0;
 
         if (this.controllingFaction == null) {
             this.capture_phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
@@ -228,7 +231,7 @@ public class TileTotem extends TileEntity implements ITickable {
     @Override
     public ITextComponent getDisplayName() {
         if (capturingFaction != null) {
-            return new TextComponentTranslation("text.vampirism.village.faction_capturing_progress", new TextComponentTranslation(capturingFaction.getUnlocalizedNamePlural()), getCaptureProgress());
+            return new TextComponentTranslation("text.vampirism.village.faction_capturing", new TextComponentTranslation(capturingFaction.getUnlocalizedNamePlural()));
         } else if (controllingFaction != null) {
             return new TextComponentTranslation("text.vampirism.village.faction_controlling", new TextComponentTranslation(controllingFaction.getUnlocalizedNamePlural()));
         } else {
@@ -334,7 +337,7 @@ public class TileTotem extends TileEntity implements ITickable {
                 default:
                     break;
             }
-            captureInfo.setPercent((float) getCaptureProgress() / 100);
+            handleBossBar(capture_phase, defender);
         }
     }
 
@@ -617,6 +620,20 @@ public class TileTotem extends TileEntity implements ITickable {
     private void removePlayerFromBossInfo() {
         for (EntityPlayerMP p : captureInfo.getPlayers()) {
             captureInfo.removePlayer(p);
+        }
+    }
+
+    private void handleBossBar(CAPTURE_PHASE phase, int defenderLeft) {
+        if (phase == CAPTURE_PHASE.PHASE_1_NEUTRAL || phase == CAPTURE_PHASE.PHASE_1_OPPOSITE) {
+            captureInfo.setPercent(this.capture_timer / (float) DURATION_PHASE_1);
+        } else if (phase == CAPTURE_PHASE.PHASE_2) {
+            if (defenderMax != 0) {
+                if (defenderLeft > defenderMax) defenderMax = defenderLeft;
+                captureInfo.setPercent(1F - ((float) defenderLeft / (float) defenderMax));
+            } else {
+                defenderMax = defenderLeft;
+                captureInfo.setName(new TextComponentTranslation("test.vampirism.village.defender_remaining"));
+            }
         }
     }
 
