@@ -40,7 +40,6 @@ import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -153,6 +152,7 @@ public class TileTotem extends TileEntity implements ITickable {
         capture_abort_timer = 0;
         capturingFaction = faction;
         captureInfo.setName(new TextComponentTranslation("text.vampirism.village.bossinfo.capture"));
+        captureInfo.setColor(BossInfo.Color.YELLOW);
         captureInfo.setPercent(0F);
         defenderMax = 0;
 
@@ -676,10 +676,11 @@ public class TileTotem extends TileEntity implements ITickable {
         } else if (phase == CAPTURE_PHASE.PHASE_2) {
             if (defenderMax != 0) {
                 if (defenderLeft > defenderMax) defenderMax = defenderLeft;
-                captureInfo.setPercent(1F - ((float) defenderLeft / (float) defenderMax));
+                captureInfo.setPercent((float) defenderLeft / (float) defenderMax);
             } else {
                 defenderMax = defenderLeft;
                 captureInfo.setName(new TextComponentTranslation("test.vampirism.village.defender_remaining"));
+                captureInfo.setColor(BossInfo.Color.WHITE);
             }
         }
     }
