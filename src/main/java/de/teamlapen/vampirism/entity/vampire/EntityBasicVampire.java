@@ -27,7 +27,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -48,21 +48,18 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     private int angryTimer = 0;
 
     private EntityAIBase tasks_avoidHunter;
-    @Nullable
-    private EntityAIBase tasks_defendVillage;
-    @Nullable
-    private EntityAIBase tasks_attackVillage;
+
 
     /**
      * If this is non-null we are currently attacking a village center
      */
     @Nullable
-    private BlockPos village_attack_center;
+    private AxisAlignedBB village_attack_area;
     /**
      * If this is non-null we are currently defending a village center
      */
     @Nullable
-    private BlockPos village_defense_center;
+    private AxisAlignedBB village_defense_area;
 
     public EntityBasicVampire(World world) {
         super(world, true);
@@ -258,29 +255,39 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
-    public void attackVillage(BlockPos pos) {
+    public void attackVillage(AxisAlignedBB area) {
         this.tasks.removeTask(tasks_avoidHunter);
-        village_attack_center = pos;
+        village_attack_area = area;
         this.setCustomNameTag("Attacking Village");//Debug
     }
 
     @Override
-    public void defendVillage(BlockPos pos) {
+    public void defendVillage(AxisAlignedBB area) {
         this.tasks.removeTask(tasks_avoidHunter);
-        village_defense_center = pos;
+        village_defense_area = area;
         this.setCustomNameTag("Defending Village"); //Debug
+    }
+
+    @Nullable
+    @Override
+    public AxisAlignedBB getTargetVillageArea() {
+        return village_attack_area == null ? village_defense_area : village_attack_area;
+    }
+
+    @Override
+    public boolean isAttackingVillage() {
+        return village_attack_area != null;
     }
 
     @Override
     public void stopVillageAttackDefense() {
         this.setCustomNameTag("");
-        if (village_defense_center != null) {
+        if (village_defense_area != null) {
             this.tasks.addTask(2, this.tasks_avoidHunter);
-            village_defense_center = null;
-        } else if (village_attack_center != null) {
+            village_defense_area = null;
+        } else if (village_attack_area != null) {
             this.tasks.addTask(2, this.tasks_avoidHunter);
-
-            village_attack_center = null;
+            village_attack_area = null;
         }
     }
 
@@ -308,8 +315,9 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.tasks.addTask(10, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
+        this.targetTasks.addTask(4, new EntityAIAttackVillage<>(this));
+        this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetTasks.addTask(6, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
 
     }
 

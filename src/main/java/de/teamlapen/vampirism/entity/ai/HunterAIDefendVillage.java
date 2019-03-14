@@ -12,15 +12,15 @@ import javax.annotation.Nullable;
 /**
  * Similar to vanilla EntityAIDefendVillage, but for hunter
  */
-public class HunterAIDefendVillage extends EntityAITarget {
+public class HunterAIDefendVillage<T extends EntityCreature & HunterAIDefendVillage.IVillageHunterCreature> extends EntityAITarget {
 
-    private final IVillageHunterCreature hunter;
+    private final T hunter;
     private EntityLivingBase targetEntity;
 
     /**
      * @param hunter The task owner
      */
-    public HunterAIDefendVillage(IVillageHunterCreature hunter) {
+    public HunterAIDefendVillage(T hunter) {
         super(hunter.getRepresentingCreature(), false, false);
         this.hunter = hunter;
 
@@ -49,10 +49,21 @@ public class HunterAIDefendVillage extends EntityAITarget {
         this.hunter.getRepresentingCreature().setAttackTarget(targetEntity);
     }
 
+    @Override
+    public void resetTask() {
+        super.resetTask();
+        this.targetEntity = null;
+    }
+
     public interface IVillageHunterCreature extends IHunter {
         EntityCreature getRepresentingCreature();
 
         @Nullable
         IVampirismVillageOLD getVampirismVillage();
+    }
+
+    @Override
+    protected double getTargetDistance() {
+        return super.getTargetDistance() * 4;
     }
 }
