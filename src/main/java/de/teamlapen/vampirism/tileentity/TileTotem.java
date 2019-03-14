@@ -55,7 +55,7 @@ public class TileTotem extends TileEntity implements ITickable {
     private boolean force_village_update = false;
     private boolean isComplete;
     private final BossInfoServer captureInfo = (new BossInfoServer(new TextComponentTranslation("text.vampirism.village.bossinfo.capture"), BossInfo.Color.YELLOW, BossInfo.Overlay.PROGRESS));
-    private int defenderMax;
+    private int defenderMax = 0;
 
     private boolean insideVillage;
 
@@ -136,6 +136,7 @@ public class TileTotem extends TileEntity implements ITickable {
             player.sendMessage(new TextComponentTranslation("text.vampirism.village.no_near_village"));
             return;
         }
+        capture_abort_timer = 0;
         capturingFaction = faction;
         captureInfo.setName(new TextComponentTranslation("text.vampirism.village.bossinfo.capture"));
         captureInfo.setPercent(0F);
@@ -213,6 +214,7 @@ public class TileTotem extends TileEntity implements ITickable {
             this.capture_abort_timer = compound.getInteger("abort_timer");
             this.capture_remainingEnemies_cache = compound.getInteger("rem_enem");
             this.capture_phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
+            this.defenderMax = compound.getInteger("defender_max");
         }
         force_village_update=true;
     }
@@ -457,6 +459,7 @@ public class TileTotem extends TileEntity implements ITickable {
             compound.setInteger("abort_timer", capture_abort_timer);
             compound.setString("phase", capture_phase.name());
             compound.setInteger("rem_enem", capture_remainingEnemies_cache);
+            compound.setInteger("defender_max", defenderMax);
         }
         return super.writeToNBT(compound);
     }
