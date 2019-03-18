@@ -12,17 +12,12 @@ import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
+import de.teamlapen.vampirism.blocks.VampirismFlower;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.BloodGrinderValueLoader;
 import de.teamlapen.vampirism.config.BloodValueLoader;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModEventHandler;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.RegistryManager;
-import de.teamlapen.vampirism.core.TestCommand;
-import de.teamlapen.vampirism.core.VampirismCommand;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -52,12 +47,7 @@ import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
-import de.teamlapen.vampirism.util.GeneralRegistryImpl;
-import de.teamlapen.vampirism.util.HalloweenSpecial;
-import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.util.ScoreboardUtil;
-import de.teamlapen.vampirism.util.SupporterManager;
-import de.teamlapen.vampirism.util.VampireBookManager;
+import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
@@ -77,16 +67,11 @@ import net.minecraftforge.common.util.ModFixs;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import java.awt.Color;
+
+import java.awt.*;
 import java.io.File;
 
 /**
@@ -170,6 +155,8 @@ public class VampirismMod {
 
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
         MinecraftForge.EVENT_BUS.register(LootHandler.getInstance());
+        if (Balance.general.DROP_ORCHID_FROM_SEEDS)
+            MinecraftForge.addGrassSeed(new ItemStack(ModBlocks.vampirism_flower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()), 1);
 
         GameRegistry.registerWorldGenerator(VampirismWorldGen.getInstance(), 1000);
         HelperRegistry.registerPlayerEventReceivingCapability(VampirePlayer.CAP, VampirePlayer.class);
