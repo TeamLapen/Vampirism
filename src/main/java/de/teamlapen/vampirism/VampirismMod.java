@@ -12,7 +12,6 @@ import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
-import de.teamlapen.vampirism.blocks.VampirismFlower;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.BloodGrinderValueLoader;
 import de.teamlapen.vampirism.config.BloodValueLoader;
@@ -155,8 +154,6 @@ public class VampirismMod {
 
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
         MinecraftForge.EVENT_BUS.register(LootHandler.getInstance());
-        if (Balance.general.DROP_ORCHID_FROM_SEEDS)
-            MinecraftForge.addGrassSeed(new ItemStack(ModBlocks.vampirism_flower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()), 1);
 
         GameRegistry.registerWorldGenerator(VampirismWorldGen.getInstance(), 1000);
         HelperRegistry.registerPlayerEventReceivingCapability(VampirePlayer.CAP, VampirePlayer.class);

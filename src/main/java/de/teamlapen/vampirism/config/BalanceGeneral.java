@@ -41,8 +41,8 @@ public class BalanceGeneral extends BalanceValues {
     @DefaultDouble(value = 0.005, minValue = 0, maxValue = 100, comment = "The percentage of stored blood used for every hit with the normal heart seeker vampire sword")
     public double HEART_SEEKER_USAGE_FACTOR;
 
-    @DefaultBoolean(value = false, comment = "Rarely drop a vampire orchid when harvesting tall grass")
-    public boolean DROP_ORCHID_FROM_SEEDS;
+    @DefaultInt(value = 25, minValue = 1, comment = "Drop orchid every n times breaking a leave in the vampire forest")
+    public int DROP_ORCHID_FROM_LEAVES_CHANCE;
 
     /**
      * Creates a configuration for balance values
