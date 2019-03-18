@@ -64,7 +64,7 @@ public class EntityHunterFactionVillager extends EntityFactionVillager implement
     @Nullable
     @Override
     public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
-        this.setProfession(ModVillages.profession_vampire_expert);
+        this.setProfession(ModVillages.profession_hunter_expert);
         return this.finalizeMobSpawn(difficulty, livingdata, false);
     }
 

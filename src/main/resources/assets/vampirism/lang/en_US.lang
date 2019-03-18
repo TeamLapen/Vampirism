@@ -143,6 +143,7 @@ entity.vampirism.converted_villager.name=Vampire Villager
 text.vampirism.entity_level=Level
 entity.Villager.vampirism.hunter_priest=Alchemical Priest
 entity.Villager.vampirism.vampire_expert=Vampire Expert
+entity.Villager.vampirism.hunter_expert=Hunter Expert
 
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual
@@ -292,6 +293,9 @@ item.vampirism.vampire_cloak.red_black.name=Vampire Cloak
 text.vampirism.hunter_villager.trade_successful=Thank you for hunting down those vampires
 text.vampirism.hunter_villager.decline_trade_vampire=I do not trade with wicked vampires
 text.vampirism.hunter_villager.decline_trade_normal=Sorry, but my trades are only interesting for vampire hunters
+text.vampirism.vampire_villager.trade_successful=Thank you for saving us from vampire hunters
+text.vampirism.vampire_villager.decline_trade_vampire=I do not trade with wicked vampire hunters
+text.vampirism.vampire_villager.decline_trade_normal=Sorry, but my trades are only interesting for vampire 
 
 #KEYS
 keys.vampirism.select_skills=Select Skills

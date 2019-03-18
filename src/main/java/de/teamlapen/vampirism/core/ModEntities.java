@@ -13,10 +13,7 @@ import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
 import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionSaveable;
 import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
-import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
-import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
-import de.teamlapen.vampirism.entity.vampire.EntityDummyBittenAnimal;
-import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
+import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -137,6 +134,7 @@ public class ModEntities {
         registry.register(prepareEntityEntry(EntityDarkBloodProjectile.class, DARK_BLOOD_PROJECTILE, null, EntityLiving.SpawnPlacementType.IN_AIR, false).build());
         registry.register(prepareEntityEntry(EntitySoulOrb.class, SOUL_ORB, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
         registry.register(prepareEntityEntry(EntityHunterFactionVillager.class, VILLAGER_HUNTER_FACTION, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
+        registry.register(prepareEntityEntry(EntityVampireFactionVillager.class, VILLAGER_VAMPIRE_FACTION, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
     }
 
     static Biome[] getZombieBiomes() {
