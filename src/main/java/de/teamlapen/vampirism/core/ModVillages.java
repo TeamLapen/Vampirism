@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.core;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceModChurch;
+import de.teamlapen.vampirism.world.gen.village.VillagePieceTotem;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceTrainer;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
@@ -19,6 +19,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistry;
+
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handles Village related stuff
@@ -39,12 +41,14 @@ public class ModVillages {
     private static void registerPieces() {
         MapGenStructureIO.registerStructureComponent(VillagePieceTrainer.class, "Vampirism-TR");
         MapGenStructureIO.registerStructureComponent(VillagePieceModChurch.class, "Vampirism-MC");
+        MapGenStructureIO.registerStructureComponent(VillagePieceTotem.class, "Vampirism-To");
     }
 
     private static void registerCreationHandlers() {
         if (!Configs.disable_all_worldgen) {
             VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceTrainer.CreationHandler());
             VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceModChurch.CreationHandler());
+            VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceTotem.CreationHandler());
         }
     }
 

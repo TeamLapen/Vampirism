@@ -40,6 +40,7 @@ import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -72,6 +73,12 @@ public class TileTotem extends TileEntity implements ITickable {
     private IPlayableFaction controllingFaction;
     private float[] baseColors = EnumDyeColor.WHITE.getColorComponentValues();
     private float[] capturingColors = EnumDyeColor.WHITE.getColorComponentValues();
+
+    /**
+     * Can be set (e.g. in world gen) to force a (immediate) faction change in the next tick. Variable is cleared afterwards
+     */
+    @Nullable
+    private IPlayableFaction forced_faction;
 
     @Nullable
     private IPlayableFaction capturingFaction;
@@ -260,6 +267,17 @@ public class TileTotem extends TileEntity implements ITickable {
             return new TextComponentTranslation("text.vampirism.village.neutral");
         }
 
+    }
+
+    /**
+     * Force change to the given faction.
+     * Is performed in the next update tick.
+     * Any ongoing capture is canceled
+     *
+     * @param newFaction
+     */
+    public void forceFactionChange(IPlayableFaction newFaction) {
+        this.forced_faction = newFaction;
     }
 
     @Override
@@ -628,17 +646,17 @@ public class TileTotem extends TileEntity implements ITickable {
         double xLength = box.maxX - box.minX;
         double zLength = box.maxZ - box.minZ;
         double cX = 0, cZ = 0;
-        if (xLength > 50) {
-            cX = 50 - xLength;
+        if (xLength > 100) {
+            cX = 100 - xLength;
         } else if (xLength < 15) {
             cX = 15 - xLength;
         }
-        if (zLength > 50) {
-            cZ = 50 - zLength;
+        if (zLength > 100) {
+            cZ = 100 - zLength;
         } else if (zLength < 15) {
             cZ = 15 - zLength;
         }
-        affectedArea = box.grow(cX / 2d, 10, cZ / 2d); //Ensure a maximum and minimum size of the village area. Also set y limits to +-10
+        affectedArea = new AxisAlignedBB(box.minX - cX / 2d, box.minY - 5, box.minZ - cZ / 2d, box.maxX + cX / 2d, box.maxY + 30, box.maxZ + cZ / 2d); //Ensure a maximum and minimum size of the village area. Also set y limits to +-10
     }
 
     /**
