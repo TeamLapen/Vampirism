@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.event;
 
-import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
-import de.teamlapen.vampirism.api.world.IVampirismVillageOLD;
+import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
+import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -12,14 +12,14 @@ import javax.annotation.Nullable;
 public abstract class VampirismVillageEvent extends Event {
 
     @Nullable
-    private final IVampirismVillageOLD village;
+    private final IVampirismVillage village;
 
-    public VampirismVillageEvent(@Nullable IVampirismVillageOLD village) {
+    public VampirismVillageEvent(@Nullable IVampirismVillage village) {
         this.village = village;
     }
 
     @Nullable
-    public IVampirismVillageOLD getVillage() {
+    public IVampirismVillage getVillage() {
         return village;
     }
 
@@ -48,7 +48,7 @@ public abstract class VampirismVillageEvent extends Event {
         private boolean willBeAggressive;
         private boolean willBeVampire;
 
-        public SpawnNewVillager(@Nonnull IVampirismVillageOLD village, @Nonnull EntityVillager seedVillager, boolean willBeAggressive, boolean willBeVampire) {
+        public SpawnNewVillager(@Nonnull IVampirismVillage village, @Nonnull EntityVillager seedVillager, boolean willBeAggressive, boolean willBeVampire) {
             super(village);
             this.seedVillager = seedVillager;
             this.willBeAggressive = willBeAggressive;
@@ -120,16 +120,16 @@ public abstract class VampirismVillageEvent extends Event {
 
         private final EntityVillager oldVillager;
         private @Nullable
-        IAggressiveVillager aggressiveVillager;
+        IVillageCaptureEntity captureVillager;
 
-        public MakeAggressive(@Nullable IVampirismVillageOLD village, @Nonnull EntityVillager villager) {
+        public MakeAggressive(@Nullable IVampirismVillage village, @Nonnull EntityVillager villager) {
             super(village);
             this.oldVillager = villager;
         }
 
         @Nullable
-        public IAggressiveVillager getAggressiveVillager() {
-            return aggressiveVillager;
+        public IVillageCaptureEntity getAggressiveVillager() {
+            return captureVillager;
         }
 
         /**
@@ -145,11 +145,11 @@ public abstract class VampirismVillageEvent extends Event {
          *
          * @param aggressiveVillager Must extend EntityVillager
          */
-        public void setAgressiveVillager(@Nullable IAggressiveVillager aggressiveVillager) {
-            if (!(aggressiveVillager instanceof EntityVillager)) {
+        public void setAgressiveVillager(@Nullable IVillageCaptureEntity captureVillager) {
+            if (!(captureVillager instanceof EntityVillager)) {
                 throw new IllegalArgumentException("Aggressive villager must be a instanceof EntityVillager");
             }
-            this.aggressiveVillager = aggressiveVillager;
+            this.captureVillager = captureVillager;
         }
     }
 }

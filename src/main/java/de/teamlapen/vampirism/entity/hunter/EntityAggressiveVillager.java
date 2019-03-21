@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
+import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
@@ -16,6 +17,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
@@ -23,7 +25,8 @@ import net.minecraft.world.World;
 /**
  * Villager that is equipped with a fork and hunts vampires
  */
-public class EntityAggressiveVillager extends EntityVillagerVampirism implements IHunterMob, IAggressiveVillager, HunterAIDefendVillage.IVillageHunterCreature {
+public class EntityAggressiveVillager extends EntityVillagerVampirism implements IHunterMob, IAggressiveVillager, HunterAIDefendVillage.IVillageHunterCreature, IVillageCaptureEntity {
+    private AxisAlignedBB area;
     /**
      * Creates a hunter villager as an copy to the given villager
      *
@@ -104,5 +107,36 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
                 return super.getTargetDistance() / 2;
             }
         });
+    }
+
+    @Override
+    public void attackVillage(AxisAlignedBB area) {
+        this.area = area;
+    }
+
+    @Override
+    public void defendVillage(AxisAlignedBB area) {
+        this.area = area;
+    }
+
+    @Override
+    public AxisAlignedBB getTargetVillageArea() {
+        return area;
+    }
+
+    @Override
+    public boolean isAttackingVillage() {
+        return false;
+    }
+
+    @Override
+    public void stopVillageAttackDefense() {
+        EntityVillager villager = new EntityVillager(this.world);
+        NBTTagCompound nbt = new NBTTagCompound();
+        this.writeToNBT(nbt);
+        villager.readFromNBT(nbt);
+        villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
+        world.spawnEntity(villager);
+        this.setDead();
     }
 }
