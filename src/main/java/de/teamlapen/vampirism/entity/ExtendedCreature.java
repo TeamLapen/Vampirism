@@ -27,7 +27,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
-
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
@@ -84,6 +83,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     private final EntityCreature entity;
     private final boolean canBecomeVampire;
+    private boolean poisonousBlood;
     /**
      * If the blood value of this creatures should be calculated
      */
@@ -109,6 +109,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             canBecomeVampire = false;
         }
         blood = maxBlood;
+        poisonousBlood = false;
     }
 
     @Override
@@ -314,6 +315,16 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             ((ExtendedCreature) instance).saveNBTData(nbt);
             return nbt;
         }
+    }
+
+    @Override
+    public boolean hasPoisonousBlood() {
+        return poisonousBlood;
+    }
+
+    @Override
+    public void setPoisonousBlood(boolean poisonous) {
+        poisonousBlood = poisonous;
     }
 
 }

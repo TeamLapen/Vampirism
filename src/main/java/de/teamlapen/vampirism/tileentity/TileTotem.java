@@ -11,8 +11,13 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.EntityVampirism;
+import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterFactionVillager;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
+import de.teamlapen.vampirism.entity.vampire.EntityVampireFactionVillager;
+import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.block.material.Material;
@@ -20,6 +25,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumDyeColor;
@@ -530,6 +537,7 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     private void completeCapture() {
+        this.entityCapture();
         this.setControllingFaction(capturingFaction);
         this.setCapturingFaction(null);
         force_village_update = true;
@@ -730,6 +738,53 @@ public class TileTotem extends TileEntity implements ITickable {
         if (map != null) {
             map.remove(this.getPos());
         }
+    }
+
+    private void entityCapture() {
+        List<EntityVillager> villager = this.world.<EntityVillager>getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
+        if (capturingFaction == VReference.HUNTER_FACTION) {
+            List<EntityHunterBase> hunter = this.world.<EntityHunterBase>getEntitiesWithinAABB(EntityHunterBase.class, getAffectedArea());
+            if (controllingFaction == VReference.VAMPIRE_FACTION) {
+                int i = Math.max(2, hunter.size() / 2);
+                if (hunter.size() > 0) {
+                    for (EntityHunterBase e : hunter) {
+                        if (i-- > 0) {
+                            newVillager(new EntityVillager(this.world), e, true);
+                        }
+                    }
+                }
+                for (int o = i; o > 0; o--) {
+                    newVillager(new EntityVillager(this.world), null, true);
+                }
+            } else {
+                for (EntityVillager e : villager) {
+                    e.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(true);
+                }
+            }
+            newVillager(new EntityHunterFactionVillager(this.world), null, false);
+        } else if (capturingFaction == VReference.VAMPIRE_FACTION) {
+            for (EntityVillager e : villager) {
+                e.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(false);
+                ;
+                PotionSanguinare.addRandom(e, false);
+            }
+            newVillager(new EntityVampireFactionVillager(this.world), null, false);
+        }
+    }
+
+    private void newVillager(EntityVillager newE, Entity oldE, boolean isPoisonous) {
+        if (oldE != null) {
+            newE.copyLocationAndAnglesFrom(oldE);
+        } else {
+            Vec3d vec = this.getVillage().getVillage().findRandomSpawnPos(this.getVillage().getVillage().getCenter(), 1, 2, 1);
+            newE.setPosition(vec.x, vec.y, vec.z);
+        }
+        newE.setLookingForHome();
+        newE.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(newE)), (IEntityLivingData) null);
+        newE.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(isPoisonous);
+        ;
+        if (oldE != null) world.removeEntity(oldE);
+        world.spawnEntity(newE);
     }
 
 }

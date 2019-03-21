@@ -48,4 +48,14 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
      * Called every tick
      */
     void onUpdate();
+
+    /**
+     * the bite attacker should get poisoned on bite
+     */
+    boolean hasPoisonousBlood();
+
+    /**
+     * set if the bite attacker should get poisoned on bite
+     */
+    void setPoisonousBlood(boolean poisonous);
 }
