@@ -51,7 +51,6 @@ import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -266,9 +265,11 @@ public class TileTotem extends TileEntity implements ITickable {
             this.capture_abort_timer = compound.getInteger("abort_timer");
             this.capture_remainingEnemies_cache = compound.getInteger("rem_enem");
             this.capture_phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
-            this.defenderMax = compound.getInteger("defender_max");
         }
         force_village_update=true;
+        if (capture_phase == CAPTURE_PHASE.PHASE_2) {
+
+        }
     }
 
     @Nullable
@@ -572,7 +573,6 @@ public class TileTotem extends TileEntity implements ITickable {
             compound.setInteger("abort_timer", capture_abort_timer);
             compound.setString("phase", capture_phase.name());
             compound.setInteger("rem_enem", capture_remainingEnemies_cache);
-            compound.setInteger("defender_max", defenderMax);
         }
         return super.writeToNBT(compound);
     }
