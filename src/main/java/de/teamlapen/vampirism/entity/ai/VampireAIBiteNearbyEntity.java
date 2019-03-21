@@ -66,7 +66,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
                     }
                 }
                 creature = ExtendedCreature.get(o);
-                if (creature.canBeBitten(vampire)) {
+                if (creature.canBeBitten(vampire) && !creature.hasPoisonousBlood()) {
                     return true;
                 }
 

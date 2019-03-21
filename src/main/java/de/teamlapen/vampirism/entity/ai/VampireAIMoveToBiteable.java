@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import net.minecraft.entity.EntityCreature;
@@ -49,7 +50,8 @@ public class VampireAIMoveToBiteable extends EntityAIBase {
         if (!vampire.wantsBlood()) return false;
         List list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, vampireEntity.getEntityBoundingBox().grow(10, 3, 10));
         for (Object o : list) {
-            if (ExtendedCreature.get((EntityCreature) o).canBeBitten(vampire) && !((EntityCreature) o).hasCustomName()) {
+            IExtendedCreatureVampirism creature = ExtendedCreature.get((EntityCreature)o);
+            if (creature.canBeBitten(vampire) && !((EntityCreature) o).hasCustomName() && !creature.hasPoisonousBlood()) {
                 target = (EntityCreature) o;
                 return true;
             }
