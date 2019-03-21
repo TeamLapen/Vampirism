@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterFactionVillager;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireFactionVillager;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -25,7 +26,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -86,6 +86,15 @@ public class TileTotem extends TileEntity implements ITickable {
      */
     @Nullable
     private IPlayableFaction forced_faction;
+    /**
+     * If true, check for an hunter trainer when forcing a faction and default to hunter faction if found
+     */
+    private boolean forced_faction_check_trainer;
+    /**
+     * Count down timer for forced faction update.
+     * Required for factions set in world gen, so the village is properly created beforehand
+     */
+    private int forced_faction_timer = 0;
 
     @Nullable
     private IPlayableFaction capturingFaction;
@@ -282,10 +291,14 @@ public class TileTotem extends TileEntity implements ITickable {
      * Any ongoing capture is canceled
      *
      * @param newFaction
+     * @param checkForHunterTrainer if set, we will default to hunter faction if there is a hunter trainer in the village
      */
-    public void forceFactionChange(IPlayableFaction newFaction) {
+    public void forceChangeFaction(IPlayableFaction newFaction, boolean checkForHunterTrainer) {
         this.forced_faction = newFaction;
+        this.forced_faction_check_trainer = checkForHunterTrainer;
+        this.forced_faction_timer = 2;
     }
+
 
     @Override
     public NBTTagCompound getUpdateTag() {
@@ -299,6 +312,21 @@ public class TileTotem extends TileEntity implements ITickable {
     @Override
     public void update() {
         int time = (int) this.world.getTotalWorldTime();
+        if (forced_faction != null) {
+            if (forced_faction_timer > 0) {
+                forced_faction_timer--;
+            } else {
+                if (forced_faction != VReference.HUNTER_FACTION && forced_faction_check_trainer) {
+                    List<EntityHunterTrainer> t = world.getEntitiesWithinAABB(EntityHunterTrainer.class, getAffectedArea());
+                    if (t.size() > 0) {
+                        forced_faction = VReference.HUNTER_FACTION;
+                    }
+                }
+                this.capturingFaction = forced_faction;
+                completeCapture(false);
+                forced_faction = null;
+            }
+        }
 
         if (this.world.isRemote) {
             if (this.capturingFaction != null && time % 40 == 9) {
@@ -355,7 +383,7 @@ public class TileTotem extends TileEntity implements ITickable {
             }
 
             if (this.capture_abort_timer > 7) {
-                this.abortCapture();
+                this.abortCapture(true);
             }
 
             switch (capture_phase) {
@@ -387,7 +415,7 @@ public class TileTotem extends TileEntity implements ITickable {
                     if (defender == 0) {
                         capture_timer++;
                         if (capture_timer > 4) {
-                            this.completeCapture();
+                            this.completeCapture(true);
                         }
                     } else {
                         capture_timer = 1;
@@ -526,17 +554,18 @@ public class TileTotem extends TileEntity implements ITickable {
         return super.writeToNBT(compound);
     }
 
-    private void abortCapture() {
+    private void abortCapture(boolean notifyPlayer) {
         this.setCapturingFaction(null);
         force_village_update = true;
         this.markDirty();
         VampirismMod.log.t("Abort capture");
         informEntitiesAboutCaptureStop();
-        notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_capture_aborted"));
+        if (notifyPlayer)
+            notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_capture_aborted"));
         removePlayerFromBossInfo();
     }
 
-    private void completeCapture() {
+    private void completeCapture(boolean notifyPlayer) {
         this.entityCapture();
         this.setControllingFaction(capturingFaction);
         this.setCapturingFaction(null);
@@ -544,7 +573,8 @@ public class TileTotem extends TileEntity implements ITickable {
         this.markDirty();
         VampirismMod.log.t("Completed capture");
         informEntitiesAboutCaptureStop();
-        notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_captured_by", new TextComponentTranslation(controllingFaction.getUnlocalizedNamePlural())));
+        if (notifyPlayer)
+            notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_captured_by", new TextComponentTranslation(controllingFaction.getUnlocalizedNamePlural())));
         removePlayerFromBossInfo();
     }
 
@@ -741,9 +771,9 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     private void entityCapture() {
-        List<EntityVillager> villager = this.world.<EntityVillager>getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
+        List<EntityVillager> villager = this.world.getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
         if (capturingFaction == VReference.HUNTER_FACTION) {
-            List<EntityHunterBase> hunter = this.world.<EntityHunterBase>getEntitiesWithinAABB(EntityHunterBase.class, getAffectedArea());
+            List<EntityHunterBase> hunter = this.world.getEntitiesWithinAABB(EntityHunterBase.class, getAffectedArea());
             if (controllingFaction == VReference.VAMPIRE_FACTION) {
                 int i = Math.max(2, hunter.size() / 2);
                 if (hunter.size() > 0) {
@@ -765,7 +795,6 @@ public class TileTotem extends TileEntity implements ITickable {
         } else if (capturingFaction == VReference.VAMPIRE_FACTION) {
             for (EntityVillager e : villager) {
                 e.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(false);
-                ;
                 PotionSanguinare.addRandom(e, false);
             }
             newVillager(new EntityVampireFactionVillager(this.world), null, false);
@@ -780,9 +809,8 @@ public class TileTotem extends TileEntity implements ITickable {
             newE.setPosition(vec.x, vec.y, vec.z);
         }
         newE.setLookingForHome();
-        newE.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(newE)), (IEntityLivingData) null);
+        newE.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(newE)), null);
         newE.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(isPoisonous);
-        ;
         if (oldE != null) world.removeEntity(oldE);
         world.spawnEntity(newE);
     }
