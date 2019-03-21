@@ -318,6 +318,56 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        NBTTagCompound nbt = pkt.getNbtCompound();
+        readFromNBT(nbt);
+        if (nbt.hasKey("village_bb")) {
+            if (controllingFaction == VReference.VAMPIRE_FACTION) {
+                StructureBoundingBox bb = new StructureBoundingBox(nbt.getIntArray("village_bb"));
+                registerVampireArea(bb);
+            } else {
+                unregisterVampireArea();
+            }
+        }
+        world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public double getMaxRenderDistanceSquared() {
+        return 65536.0D;
+    }
+
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return INFINITE_EXTENT_AABB;
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        unregisterVampireArea();
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+        if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
+            registerVampireArea(new StructureBoundingBox(UtilLib.bbToInt(getAffectedArea())));
+        } else {
+            unregisterVampireArea();
+        }
+    }
+
     @Override
     public void update() {
         int time = (int) this.world.getTotalWorldTime();
@@ -331,8 +381,12 @@ public class TileTotem extends TileEntity implements ITickable {
                         forced_faction = VReference.HUNTER_FACTION;
                     }
                 }
-                this.capturingFaction = forced_faction;
-                completeCapture(false);
+                if (this.getVillage() == null) {
+                    VampirismMod.log.w(TAG, "Freshly generated totem cannot find village");
+                } else {
+                    this.capturingFaction = forced_faction;
+                    completeCapture(false);
+                }
                 forced_faction = null;
             }
         }
@@ -457,79 +511,6 @@ public class TileTotem extends TileEntity implements ITickable {
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public double getMaxRenderDistanceSquared() {
-        return 65536.0D;
-    }
-
-    @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
-    }
-
-    @Nullable
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
-    }
-
-    @Override
-    public void invalidate() {
-        super.invalidate();
-        unregisterVampireArea();
-    }
-
-    @Override
-    public void markDirty() {
-        super.markDirty();
-        world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
-        if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
-            registerVampireArea(new StructureBoundingBox(UtilLib.bbToInt(getAffectedArea())));
-        } else {
-            unregisterVampireArea();
-        }
-    }
-
-    public void updateTotem() {
-        if (this.world.isRemote)return;
-        boolean complete = this.world.getBlockState(this.pos.down()).getBlock().equals(ModBlocks.totem_base);
-        if (complete != isComplete) {
-            //TODO
-        }
-        isComplete = complete;
-        if (isComplete) {
-            @Nullable VampirismVillage village = getVillage();
-            boolean insideVillageNew = village != null;
-            if (insideVillageNew != insideVillage) {
-                //TODO
-            }
-
-            insideVillage = insideVillageNew;
-            if (insideVillage) {
-                if (!updateVillage(village)) {
-                    //There is another totem. Destroy this one
-                    this.world.destroyBlock(this.getPos(), true);
-                    return;//Totem has been destroyed
-                }
-
-                //Destroy all (breakable) blocks above
-                int x = pos.getX();
-                int y = pos.getY()+1;
-                int z = pos.getZ();
-                BlockPos.MutableBlockPos pos1 = new BlockPos.MutableBlockPos();
-                for (int i = y; i < 256; i++) {
-                    IBlockState blockState = this.world.getBlockState(pos1.setPos(x, i, z));
-                    if (!blockState.getBlock().isAir(blockState, world, pos1) && blockState.getMaterial() != Material.GLASS) {
-                        if (blockState.getBlockHardness(world, pos1) != -1F) {//Don't destroy unbreakable blocks like bedrock
-                            this.world.destroyBlock(pos1, false);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * Client side update if rendering has to be changed
      */
@@ -616,17 +597,47 @@ public class TileTotem extends TileEntity implements ITickable {
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        NBTTagCompound nbt = pkt.getNbtCompound();
-        readFromNBT(nbt);
-        if (nbt.hasKey("village_bb")) {
-            if (controllingFaction == VReference.VAMPIRE_FACTION) {
-                StructureBoundingBox bb = new StructureBoundingBox(nbt.getIntArray("village_bb"));
-                registerVampireArea(bb);
-            } else {
-                unregisterVampireArea();
+    public void updateTotem() {
+        if (this.world.isRemote) return;
+        boolean complete = this.world.getBlockState(this.pos.down()).getBlock().equals(ModBlocks.totem_base);
+        if (complete != isComplete) {
+            //TODO
+        }
+        isComplete = complete;
+        if (isComplete) {
+            @Nullable VampirismVillage village = getVillage();
+            boolean insideVillageNew = village != null;
+            if (insideVillageNew != insideVillage) {
+                //TODO
+                if (!insideVillageNew) {
+                    this.capturingFaction = null;
+                    this.controllingFaction = null;
+                    this.capture_timer = 0;
+                    this.markDirty();
+                }
+            }
+
+            insideVillage = insideVillageNew;
+            if (insideVillage) {
+                if (!updateVillage(village)) {
+                    //There is another totem. Destroy this one
+                    this.world.destroyBlock(this.getPos(), true);
+                    return;//Totem has been destroyed
+                }
+
+                //Destroy all (breakable) blocks above
+                int x = pos.getX();
+                int y = pos.getY() + 1;
+                int z = pos.getZ();
+                BlockPos.MutableBlockPos pos1 = new BlockPos.MutableBlockPos();
+                for (int i = y; i < 256; i++) {
+                    IBlockState blockState = this.world.getBlockState(pos1.setPos(x, i, z));
+                    if (!blockState.getBlock().isAir(blockState, world, pos1) && blockState.getMaterial() != Material.GLASS) {
+                        if (blockState.getBlockHardness(world, pos1) != -1F) {//Don't destroy unbreakable blocks like bedrock
+                            this.world.destroyBlock(pos1, false);
+                        }
+                    }
+                }
             }
         }
     }
@@ -644,7 +655,7 @@ public class TileTotem extends TileEntity implements ITickable {
 
     @Nullable
     private VampirismVillage getVillage() {
-        return this.world.isRemote ? null : VampirismVillageHelper.getNearestVillageNew(this.world, this.pos, 5);
+        return this.world.isRemote ? null : VampirismVillageHelper.getNearestVillageNew(this.world, this.pos, 10);
     }
 
     private void notifyNearbyPlayers(ITextComponent msg) {
@@ -766,7 +777,7 @@ public class TileTotem extends TileEntity implements ITickable {
         AxisAlignedBB box;
         BlockPos b = v == null ? this.pos : v.getVillage().getCenter();
         int r = v == null ? 30 : v.getVillage().getVillageRadius() + 20;
-        box = new AxisAlignedBB(b).grow(r, 1, r);
+        box = new AxisAlignedBB(b.getX() - r, b.getY() - 10, b.getZ() - r, b.getX() + r, b.getY() + 30, b.getZ() + r);
 
         if (!box.contains(new Vec3d(this.pos))) {
             VampirismMod.log.w(TAG, "Totem outside of calculated village bb %s %s", box, this.pos);
@@ -784,7 +795,7 @@ public class TileTotem extends TileEntity implements ITickable {
         } else if (zLength < 20) {
             cZ = 20 - zLength;
         }
-        affectedArea = new AxisAlignedBB(box.minX - cX / 2d, box.minY - 5, box.minZ - cZ / 2d, box.maxX + cX / 2d, box.maxY + 30, box.maxZ + cZ / 2d); //Ensure a maximum and minimum size of the village area. Also set y limits to +-10
+        affectedArea = box.grow(cX / 2d, 0, cZ / 2d); //Ensure a maximum and minimum size of the village area. Also set y limits to +-10
         affectedAreaReduced = affectedArea.grow(-10, 0, -10);
         if (!world.isRemote) {
             this.markDirty();

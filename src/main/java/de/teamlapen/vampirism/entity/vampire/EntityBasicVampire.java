@@ -269,14 +269,14 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     public void attackVillage(AxisAlignedBB area) {
         this.tasks.removeTask(tasks_avoidHunter);
         village_attack_area = area;
-        this.setCustomNameTag("Attacking Village");//Debug
+        this.setCustomNameTag("Attacking Village");//TODO Debug
     }
 
     @Override
     public void defendVillage(AxisAlignedBB area) {
         this.tasks.removeTask(tasks_avoidHunter);
         village_defense_area = area;
-        this.setCustomNameTag("Defending Village"); //Debug
+        this.setCustomNameTag("Defending Village"); //TODO Debug
     }
 
     @Nullable

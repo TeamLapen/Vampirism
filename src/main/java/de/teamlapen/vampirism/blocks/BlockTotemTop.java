@@ -22,6 +22,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import javax.annotation.Nullable;
 
 /**
@@ -130,6 +131,7 @@ public class BlockTotemTop extends VampirismBlockContainer {
         TileTotem t = getTile(worldIn, pos);
         if (f != null && t != null && worldIn.getBlockState(pos.down()).getBlock().equals(ModBlocks.totem_base)) {
             t.initiateCapture(f, playerIn);
+            return true;
         }
         return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
     }
