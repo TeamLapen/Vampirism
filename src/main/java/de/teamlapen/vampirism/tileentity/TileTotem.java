@@ -747,7 +747,6 @@ public class TileTotem extends TileEntity implements ITickable {
         } else if (capturingFaction == VReference.VAMPIRE_FACTION) {
             for (EntityVillager e : villager) {
                 e.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(false);
-                ;
                 PotionSanguinare.addRandom(e, false);
             }
             newVillager(new EntityVampireFactionVillager(this.world), null, false);
@@ -758,7 +757,9 @@ public class TileTotem extends TileEntity implements ITickable {
         if (oldE != null) {
             newE.copyLocationAndAnglesFrom(oldE);
         } else {
-            Vec3d vec = this.getVillage().getVillage().findRandomSpawnPos(this.getVillage().getVillage().getCenter(), 1, 2, 1);
+            Vec3d vec = new Vec3d(this.pos.up());
+            if(this.getVillage() != null)
+                vec = this.getVillage().getVillage().findRandomSpawnPos(this.getVillage().getVillage().getCenter(), 1, 2, 1);
             newE.setPosition(vec.x, vec.y, vec.z);
         }
         newE.setLookingForHome();
