@@ -40,6 +40,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     private static final String TAG = "ExtendedCreature";
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "maxBlood";
+    private final static String POISONOUS_BLOOD = "poisonousBlood";
 
 
     public static IExtendedCreatureVampirism get(EntityCreature mob) {
@@ -182,6 +183,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         if (nbt.hasKey(KEY_MAX_BLOOD)) {
             setBlood(nbt.getInteger(KEY_MAX_BLOOD));
         }
+        if (nbt.hasKey(POISONOUS_BLOOD)) {
+            setPoisonousBlood(nbt.getBoolean(POISONOUS_BLOOD));
+        }
     }
 
     @Override
@@ -278,6 +282,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
         nbt.setInteger(KEY_BLOOD, getBlood());
         nbt.setInteger(KEY_MAX_BLOOD, getBlood());
+        nbt.setBoolean(POISONOUS_BLOOD, hasPoisonousBlood());
     }
 
     private void loadNBTData(NBTTagCompound compound) {
@@ -287,11 +292,15 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         if (compound.hasKey(KEY_BLOOD)) {
             setBlood(compound.getInteger(KEY_BLOOD));
         }
+        if (compound.hasKey(POISONOUS_BLOOD)) {
+            setPoisonousBlood(compound.getBoolean(POISONOUS_BLOOD));
+        }
     }
 
     private void saveNBTData(NBTTagCompound compound) {
         compound.setInteger(KEY_BLOOD, blood);
         compound.setInteger(KEY_MAX_BLOOD, maxBlood);
+        compound.setBoolean(POISONOUS_BLOOD, poisonousBlood);
     }
 
     private void sync() {
