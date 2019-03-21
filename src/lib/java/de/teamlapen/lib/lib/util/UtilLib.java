@@ -31,6 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -198,21 +199,42 @@ public class UtilLib {
         return new BlockPos(x, p.posY, z);
     }
 
-    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry) {
+    /**
+     * @param world           World
+     * @param box             Area where the creature should spawn
+     * @param e               Entity
+     * @param maxTry          Max position tried
+     * @param avoidedEntities Avoid being to close or seen by these entities. If no valid spawn location is found, this is ignored
+     * @return Successful spawn
+     */
+    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<EntityLivingBase> avoidedEntities) {
         if (!world.isAreaLoaded((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ, true)) {
             return false;
         }
         boolean flag = false;
         int i = 0;
+        BlockPos backupPos=null; //
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
             if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementForEntity(e.getClass()), world, c)) {
                 e.setPosition(c.getX(), c.getY() + 0.2, c.getZ());
                 if (!(e instanceof EntityLiving) || (((EntityLiving) e).getCanSpawnHere() && ((EntityLiving) e).isNotColliding())) {
-                    flag = true;
+                    backupPos = c; //Store the location in case we do not find a better one
+                    for (EntityLivingBase p : avoidedEntities) {
+
+                        if (!(p.getDistanceSq(e) < 500 && p.canEntityBeSeen(e))) {
+                            flag = true;
+                        }
+                    }
                 }
             }
         }
+        if (!flag && backupPos != null) {
+            //If we did not find a "hidden" position, use the last valid position (if available)
+            e.setPosition(backupPos.getX(), backupPos.getY() + 0.2, backupPos.getZ());
+            flag=true;
+        }
+
         if (flag) {
             world.spawnEntity(e);
             onInitialSpawn(e);
@@ -221,9 +243,18 @@ public class UtilLib {
         return false;
     }
 
-    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, ResourceLocation id, int maxTry) {
+    /**
+     * @param world           World
+     * @param box             Area where the creature should spawn
+     * @param id              ID of entity to be created
+     * @param maxTry          Max position tried
+     * @param avoidedEntities Avoid being to close or seen by these entities. If no valid spawn location is found, this is ignored
+     * @return The spawned creature or null if not successful
+     */
+    @Nullable
+    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, ResourceLocation id, int maxTry, @Nonnull List<EntityLivingBase> avoidedEntities) {
         Entity e = EntityList.createEntityByIDFromName(id, world);
-        if (spawnEntityInWorld(world, box, e, maxTry)) {
+        if (spawnEntityInWorld(world, box, e, maxTry,avoidedEntities)) {
             return e;
         } else {
             if (e != null) {

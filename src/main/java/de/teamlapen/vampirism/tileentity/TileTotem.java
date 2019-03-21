@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
+import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterFactionVillager;
@@ -34,6 +35,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.IntHashMap;
 import net.minecraft.util.ResourceLocation;
@@ -75,7 +77,14 @@ public class TileTotem extends TileEntity implements ITickable {
     private long beamRenderCounter;
     @SideOnly(Side.CLIENT)
     private float beamRenderScale;
+    /**
+     * The area covered by this totem
+     */
     private AxisAlignedBB affectedArea = null;
+    /**
+     * Slightly smaller than {@link #affectedArea}
+     */
+    private AxisAlignedBB affectedAreaReduced = null;
     @Nullable
     private IPlayableFaction controllingFaction;
     private float[] baseColors = EnumDyeColor.WHITE.getColorComponentValues();
@@ -351,13 +360,14 @@ public class TileTotem extends TileEntity implements ITickable {
             int defender = 0;//Includes player
             int defenderPlayer = 0;
             int neutral = 0;
-            float attackStrength = 1;
-            float defenseStrength = 1;
+            float attackStrength = 0;
+            float defenseStrength = 0;
             for (Entity e : entities) {
                 IFaction f = VampirismAPI.factionRegistry().getFaction(e);
                 if (f == null) continue;
                 if (this.capturingFaction.equals(f)) {
                     attacker++;
+                    attackStrength++;
                     if (e instanceof EntityPlayer) {
                         attackerPlayer++;
                         attackStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
@@ -370,11 +380,16 @@ public class TileTotem extends TileEntity implements ITickable {
                         defenseStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
                         captureInfo.addPlayer((EntityPlayerMP) e);
                     }
+                    if (e instanceof EntityConvertedVillager) {
+                        defenseStrength += 0.5f; //Converted villagers are useless
+                    } else {
+                        defenseStrength++;
+                    }
                 } else {
                     neutral++;
                 }
             }
-            VampirismMod.log.t("Capture progress update: Timer %d [%s], Abort Timer %s. Attacker %d(%d) - %s. Defender %d(%d) - %s. Neutral %d", capture_timer, capture_phase, capture_abort_timer, attacker, attackerPlayer, attacker * attackStrength, defender, defenderPlayer, defender * defenseStrength, neutral);
+            VampirismMod.log.t("Capture progress update: Timer %d [%s], Abort Timer %s. Attacker %d(%d) - %s. Defender %d(%d) - %s. Neutral %d", capture_timer, capture_phase, capture_abort_timer, attacker, attackerPlayer, attackStrength, defender, defenderPlayer, defenseStrength, neutral);
             if (attackerPlayer == 0) {
                 this.capture_abort_timer++;
             } else {
@@ -402,9 +417,9 @@ public class TileTotem extends TileEntity implements ITickable {
                         notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.almost_captured", defender));
                     } else {
                         if (capture_timer % 2 == 0) {
-                            if (attacker * attackStrength * 1.1f > defender * defenseStrength) {
+                            if (attackStrength * 1.1f > defenseStrength) {
                                 spawnCreature(false);
-                            } else if (attacker * attackStrength < defender * defenseStrength * 1.1f) {
+                            } else if (attackStrength < defenseStrength * 1.1f) {
                                 spawnCreature(true);
                             }
                         }
@@ -630,6 +645,14 @@ public class TileTotem extends TileEntity implements ITickable {
         this.capturingColors = faction != null ? UtilLib.getColorComponents(faction.getColor()) : EnumDyeColor.WHITE.getColorComponentValues();
     }
 
+    @Nonnull
+    private AxisAlignedBB getAffectedAreaReduced() {
+        if (this.affectedAreaReduced == null) {
+            updateAffectedArea();
+        }
+        return affectedAreaReduced;
+    }
+
     /**
      * Try to spawn an appropriate creature and set AI tasks
      *
@@ -652,7 +675,7 @@ public class TileTotem extends TileEntity implements ITickable {
         if (e instanceof EntityVampireBase) {
             ((EntityVampireBase) e).setSpawnRestriction(EntityVampireBase.SpawnRestriction.SIMPLE);
         }
-        if (e != null && !UtilLib.spawnEntityInWorld(world, this.getAffectedArea(), e, 50)) {
+        if (e != null && !UtilLib.spawnEntityInWorld(world, this.getAffectedAreaReduced(), e, 50, world.getPlayers(EntityPlayer.class, EntitySelectors.NOT_SPECTATING))) {
             e.setDead();
             e = null;
         }
@@ -669,32 +692,6 @@ public class TileTotem extends TileEntity implements ITickable {
             VampirismMod.log.t("Failed to spawn creature");
         }
 
-    }
-
-    private void updateAffectedArea() {
-        @Nullable VampirismVillage v = getVillage();
-        AxisAlignedBB box;
-        BlockPos b = v == null ? this.pos : v.getVillage().getCenter();
-        int r = v == null ? 15 : v.getVillage().getVillageRadius() + 5;
-        box = new AxisAlignedBB(b).grow(r, 1, r);
-
-        if (!box.contains(new Vec3d(this.pos))) {
-            VampirismMod.log.w(TAG, "Totem outside of calculated village bb %s %s", box, this.pos);
-        }
-        double xLength = box.maxX - box.minX;
-        double zLength = box.maxZ - box.minZ;
-        double cX = 0, cZ = 0;
-        if (xLength > 100) {
-            cX = 100 - xLength;
-        } else if (xLength < 15) {
-            cX = 15 - xLength;
-        }
-        if (zLength > 100) {
-            cZ = 100 - zLength;
-        } else if (zLength < 15) {
-            cZ = 15 - zLength;
-        }
-        affectedArea = new AxisAlignedBB(box.minX - cX / 2d, box.minY - 5, box.minZ - cZ / 2d, box.maxX + cX / 2d, box.maxY + 30, box.maxZ + cZ / 2d); //Ensure a maximum and minimum size of the village area. Also set y limits to +-10
     }
 
     /**
@@ -746,11 +743,38 @@ public class TileTotem extends TileEntity implements ITickable {
     private AxisAlignedBB getAffectedArea() {
         if (affectedArea == null) {
             updateAffectedArea();
-            if (!this.world.isRemote) {
-                this.markDirty();
-            }
         }
         return affectedArea;
+    }
+
+    private void updateAffectedArea() {
+        @Nullable VampirismVillage v = getVillage();
+        AxisAlignedBB box;
+        BlockPos b = v == null ? this.pos : v.getVillage().getCenter();
+        int r = v == null ? 30 : v.getVillage().getVillageRadius() + 20;
+        box = new AxisAlignedBB(b).grow(r, 1, r);
+
+        if (!box.contains(new Vec3d(this.pos))) {
+            VampirismMod.log.w(TAG, "Totem outside of calculated village bb %s %s", box, this.pos);
+        }
+        double xLength = box.maxX - box.minX;
+        double zLength = box.maxZ - box.minZ;
+        double cX = 0, cZ = 0;
+        if (xLength > 100) {
+            cX = 100 - xLength;
+        } else if (xLength < 20) {
+            cX = 20 - xLength;
+        }
+        if (zLength > 100) {
+            cZ = 100 - zLength;
+        } else if (zLength < 20) {
+            cZ = 20 - zLength;
+        }
+        affectedArea = new AxisAlignedBB(box.minX - cX / 2d, box.minY - 5, box.minZ - cZ / 2d, box.maxX + cX / 2d, box.maxY + 30, box.maxZ + cZ / 2d); //Ensure a maximum and minimum size of the village area. Also set y limits to +-10
+        affectedAreaReduced = affectedArea.grow(-10, 0, -10);
+        if (!world.isRemote) {
+            this.markDirty();
+        }
     }
 
     private void registerVampireArea(StructureBoundingBox box) {

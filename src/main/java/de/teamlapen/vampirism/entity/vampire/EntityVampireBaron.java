@@ -36,6 +36,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -230,7 +231,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME));
             }
             if (m == null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getEntityBoundingBox().grow(19, 4, 19), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME), 3);
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getEntityBoundingBox().grow(19, 4, 19), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME), 3, Collections.emptyList()); //Do not avoid player here. Already using spawnBehind sometimes
             }
             if (m != null) {
                 m.setLord(this);
@@ -348,9 +349,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             if (count < getLevel() + 1) {
                 return true;
             }
-            if (recentlyHit > 0 && count < 2 + getLevel()) {
-                return true;
-            }
+            return recentlyHit > 0 && count < 2 + getLevel();
         }
         return false;
     }
