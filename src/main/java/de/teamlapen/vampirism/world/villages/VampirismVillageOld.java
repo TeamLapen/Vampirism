@@ -3,15 +3,11 @@ package de.teamlapen.vampirism.world.villages;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
-import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.api.world.IVampirismVillageOLD;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
-import de.teamlapen.vampirism.entity.ExtendedCreature;
-import de.teamlapen.vampirism.entity.hunter.EntityAggressiveVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import net.minecraft.entity.Entity;
@@ -25,10 +21,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.Village;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.*;
-import net.minecraftforge.fml.common.eventhandler.Event;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -94,20 +87,7 @@ public class VampirismVillageOld implements IVampirismVillageOLD {
      */
     public static @Nullable
     IAggressiveVillager makeAggressive(EntityVillager villager, @Nullable VampirismVillageOld v) {
-        VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(v, villager);
-        if (MinecraftForge.EVENT_BUS.post(event)) {
-            IAggressiveVillager aggressive = event.getAggressiveVillager();
-            if (aggressive != null) {
-                villager.getEntityWorld().spawnEntity((Entity) aggressive);
-                villager.setDead();
-            }
-            return aggressive;
-        } else {
-            EntityAggressiveVillager hunter = EntityAggressiveVillager.makeHunter(villager);
-            villager.getEntityWorld().spawnEntity(hunter);
-            villager.setDead();
-            return hunter;
-        }
+        return null;
     }
 
     private final String TAG = "VampirismVillage";
@@ -513,41 +493,41 @@ public class VampirismVillageOld implements IVampirismVillageOLD {
 
     private void spawnVillager() {
         //VampirismMod.log.t("Spawning villager at village %s", village.getCenter());
-        List<EntityVillager> l = village.world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox());
-        if (l.size() > 0) {
-            EntityVillager ev = l.get(village.world.rand.nextInt(l.size()));
-            boolean willBeVampire = overtaken;
-            boolean willBeAggressive = !overtaken && agressive && ev.getRNG().nextInt(Balance.village.VILLAGER_HUNTER_CHANCE) == 0;
-            VampirismVillageEvent.SpawnNewVillager event = new VampirismVillageEvent.SpawnNewVillager(this, ev, willBeAggressive, willBeVampire);
-            MinecraftForge.EVENT_BUS.post(event);
-            if (event.getResult() == Event.Result.DENY) return;
-            EntityVillager newVillager;
-            willBeVampire = event.isWillBeVampire();
-            willBeAggressive = event.isWillBeAggressive();
-            if (event.getResult() == Event.Result.ALLOW && event.getNewVillager() != null) {
-                newVillager = event.getNewVillager();
-            } else {
-                newVillager = new EntityVillager(ev.getEntityWorld());
-                newVillager.setLocationAndAngles(ev.posX, ev.posY, ev.posZ, 0.0F, 0.0F);
-                if (!willBeAggressive) {
-                    newVillager.setGrowingAge(-24000);
-                    ev.setGrowingAge(6000);
-                }
-            }
-            if (willBeVampire) {
-                IConvertedCreature converted = ExtendedCreature.get(newVillager).makeVampire();
-                if (converted != null) {
-                    village.world.spawnEntity(converted.getRepresentingEntity());
-                }
-            } else if (willBeAggressive) {
-                VampirismVillageOld.makeAggressive(newVillager, this);
-            } else {
-                village.world.spawnEntity(newVillager);
-                village.world.setEntityState(newVillager, (byte) 12);
-
-            }
-
-        }
+        //        List<EntityVillager> l = village.world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox());
+        //        if (l.size() > 0) {
+        //            EntityVillager ev = l.get(village.world.rand.nextInt(l.size()));
+        //            boolean willBeVampire = overtaken;
+        //            boolean willBeAggressive = !overtaken && agressive && ev.getRNG().nextInt(Balance.village.VILLAGER_HUNTER_CHANCE) == 0;
+        //            VampirismVillageEvent.SpawnNewVillager event = new VampirismVillageEvent.SpawnNewVillager(this, ev, willBeAggressive, willBeVampire);
+        //            MinecraftForge.EVENT_BUS.post(event);
+        //            if (event.getResult() == Event.Result.DENY) return;
+        //            EntityVillager newVillager;
+        //            willBeVampire = event.isWillBeVampire();
+        //            willBeAggressive = event.isWillBeAggressive();
+        //            if (event.getResult() == Event.Result.ALLOW && event.getNewVillager() != null) {
+        //                newVillager = event.getNewVillager();
+        //            } else {
+        //                newVillager = new EntityVillager(ev.getEntityWorld());
+        //                newVillager.setLocationAndAngles(ev.posX, ev.posY, ev.posZ, 0.0F, 0.0F);
+        //                if (!willBeAggressive) {
+        //                    newVillager.setGrowingAge(-24000);
+        //                    ev.setGrowingAge(6000);
+        //                }
+        //            }
+        //            if (willBeVampire) {
+        //                IConvertedCreature converted = ExtendedCreature.get(newVillager).makeVampire();
+        //                if (converted != null) {
+        //                    village.world.spawnEntity(converted.getRepresentingEntity());
+        //                }
+        //            } else if (willBeAggressive) {
+        //                VampirismVillageOld.makeAggressive(newVillager, this);
+        //            } else {
+        //                village.world.spawnEntity(newVillager);
+        //                village.world.setEntityState(newVillager, (byte) 12);
+        //
+        //            }
+        //
+        //        }
     }
 
     private static class Storage implements Capability.IStorage<IVampirismVillageOLD> {

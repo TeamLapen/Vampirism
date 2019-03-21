@@ -8,12 +8,14 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.entity.EntityVampirism;
+import de.teamlapen.vampirism.entity.EntityFactionVillager;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.hunter.EntityAggressiveVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterFactionVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
@@ -25,6 +27,7 @@ import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityVillager;
@@ -47,9 +50,9 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -198,6 +201,11 @@ public class TileTotem extends TileEntity implements ITickable {
         this.capture_timer = 0;
         force_village_update = true;
         this.markDirty();
+        List<EntityVillager> villager = this.world.getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
+        for (int i = 0; i < villager.size() / 3; i++) {
+            if (villager instanceof EntityFactionVillager) continue;
+            makeAggressive(villager.get(i), this.getVillage());
+        }
     }
 
     public static boolean insideVampireAreaCached(int dimension, BlockPos pos) {
@@ -266,9 +274,11 @@ public class TileTotem extends TileEntity implements ITickable {
             this.capture_abort_timer = compound.getInteger("abort_timer");
             this.capture_remainingEnemies_cache = compound.getInteger("rem_enem");
             this.capture_phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
-            this.defenderMax = compound.getInteger("defender_max");
         }
         force_village_update=true;
+        if (capture_phase == CAPTURE_PHASE.PHASE_2) {
+
+        }
     }
 
     @Nullable
@@ -559,7 +569,6 @@ public class TileTotem extends TileEntity implements ITickable {
             compound.setInteger("abort_timer", capture_abort_timer);
             compound.setString("phase", capture_phase.name());
             compound.setInteger("rem_enem", capture_remainingEnemies_cache);
-            compound.setInteger("defender_max", defenderMax);
         }
         return super.writeToNBT(compound);
     }
@@ -573,6 +582,7 @@ public class TileTotem extends TileEntity implements ITickable {
         if (notifyPlayer)
             notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_capture_aborted"));
         removePlayerFromBossInfo();
+        defenderMax = 0;
     }
 
     private void completeCapture(boolean notifyPlayer) {
@@ -589,8 +599,8 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     private void informEntitiesAboutCaptureStop() {
-        List<EntityVampirism> list = this.world.getEntitiesWithinAABB(EntityVampirism.class, getAffectedArea());
-        for (EntityVampirism e : list) {
+        List<EntityCreature> list = this.world.getEntitiesWithinAABB(EntityCreature.class, getAffectedArea());
+        for (EntityCreature e : list) {
             if (e instanceof IVillageCaptureEntity) {
                 ((IVillageCaptureEntity) e).stopVillageAttackDefense();
             }
@@ -866,6 +876,23 @@ public class TileTotem extends TileEntity implements ITickable {
         newE.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(isPoisonous);
         if (oldE != null) world.removeEntity(oldE);
         world.spawnEntity(newE);
+    }
+
+    public static @Nullable IVillageCaptureEntity makeAggressive(EntityVillager villager, @Nullable VampirismVillage v) {
+        VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(v, villager);
+        if (MinecraftForge.EVENT_BUS.post(event)) {
+            IVillageCaptureEntity aggressive = event.getAggressiveVillager();
+            if (aggressive != null) {
+                villager.getEntityWorld().spawnEntity((Entity) aggressive);
+                villager.setDead();
+            }
+            return aggressive;
+        } else {
+            EntityAggressiveVillager hunter = EntityAggressiveVillager.makeHunter(villager);
+            villager.getEntityWorld().spawnEntity(hunter);
+            villager.setDead();
+            return hunter;
+        }
     }
 
 }
