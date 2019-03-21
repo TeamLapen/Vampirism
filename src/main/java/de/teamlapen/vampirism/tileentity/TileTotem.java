@@ -426,6 +426,20 @@ public class TileTotem extends TileEntity implements ITickable {
             }
             handleBossBar(capture_phase, defender);
         }
+        if (time % 1000 == 0 && capturingFaction == null && controllingFaction != null) {
+            VampirismVillage village = this.getVillage();
+            if (village != null) {
+                int max = Math.min(village.getVillage().getNumVillageDoors(), 30);
+                if (village.getVillage().getNumVillagers() < max) {
+                    EntityVillager villager = new EntityVillager(this.world);
+                    if (Math.random() * 15 == 0) {
+                        if (controllingFaction.equals(VReference.HUNTER_FACTION)) villager = new EntityHunterFactionVillager(this.world);
+                        else if (controllingFaction.equals(VReference.VAMPIRE_FACTION)) villager = new EntityVampireFactionVillager(this.world);
+                    }
+                    newVillager(villager, null, controllingFaction.equals(VReference.HUNTER_FACTION));
+                }
+            }
+        }
     }
 
     @SideOnly(Side.CLIENT)
