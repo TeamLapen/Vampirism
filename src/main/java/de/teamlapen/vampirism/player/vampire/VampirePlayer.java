@@ -228,7 +228,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (e != null && e instanceof EntityLivingBase) {
             if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
                 feed_victim_bite_type = determineBiteType((EntityLivingBase) e);
-                if (feed_victim_bite_type == BITE_TYPE.ATTACK || feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER) {
+                VampirismMod.log.t("bitetype: %s", feed_victim_bite_type.name());
+                if (feed_victim_bite_type == BITE_TYPE.ATTACK || feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER || feed_victim_bite_type == BITE_TYPE.HUNTER_CREATURE) {
                     biteAttack((EntityLivingBase) e, feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER);
                 } else if (feed_victim_bite_type == BITE_TYPE.NONE) {
                     return;
@@ -278,6 +279,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if (entity instanceof EntityCreature) {
             if (ExtendedCreature.get((EntityCreature) entity).canBeBitten(this)) {
+                if (ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) {
+                    return BITE_TYPE.HUNTER_CREATURE;
+                }
                 return BITE_TYPE.SUCK_BLOOD_CREATURE;
             }
         } else if (entity instanceof EntityPlayer) {
@@ -1107,7 +1111,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         checkAttributes(VReference.biteDamage);
         float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
-        if (entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) {
+        if ((entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) || entity.getCapability(ExtendedCreature.CAP, null).hasPoisonousBlood()) {
             player.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
         } else if (hunter) {
             if (entity instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) entity)) {
