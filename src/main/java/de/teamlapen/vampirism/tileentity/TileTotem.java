@@ -757,9 +757,11 @@ public class TileTotem extends TileEntity implements ITickable {
         if (oldE != null) {
             newE.copyLocationAndAnglesFrom(oldE);
         } else {
+            VampirismVillage village = this.getVillage();
             Vec3d vec = new Vec3d(this.pos.up());
-            if(this.getVillage() != null)
-                vec = this.getVillage().getVillage().findRandomSpawnPos(this.getVillage().getVillage().getCenter(), 1, 2, 1);
+            if (village != null) vec = village.getVillage().findRandomSpawnPos(village.getVillage().getCenter(), 2, 3, 2);
+            if (vec == null) return;
+            if (!world.isAirBlock(new BlockPos(vec))) vec = vec.addVector(0, 1, 0);
             newE.setPosition(vec.x, vec.y, vec.z);
         }
         newE.setLookingForHome();
