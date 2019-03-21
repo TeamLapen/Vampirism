@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.entity.ai.HunterAILookAtTrainee;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
@@ -24,12 +25,12 @@ import net.minecraft.world.World;
 /**
  * Hunter Trainer which allows Hunter players to level up
  */
-public class EntityHunterTrainer extends EntityHunterBase implements HunterAILookAtTrainee.ITrainer {
+public class EntityHunterTrainer extends EntityVampirism implements HunterAILookAtTrainee.ITrainer {
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private EntityPlayer trainee;
 
     public EntityHunterTrainer(World world) {
-        super(world, false);
+        super(world);
         saveHome = true;
         hasArms = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
@@ -82,6 +83,7 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
+        this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
         this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0, false));
         this.tasks.addTask(5, new HunterAILookAtTrainee(this));
@@ -92,8 +94,8 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, true, false, false, false, null)));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(VReference.HUNTER_FACTION, false, true, false, false, null)));
     }
 
 
