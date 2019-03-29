@@ -16,10 +16,12 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.EntityAggressiveVillager;
+import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterFactionVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainerDummy;
+import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireFactionVillager;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -30,6 +32,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -57,6 +60,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.google.common.collect.Lists;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -203,10 +209,13 @@ public class TileTotem extends TileEntity implements ITickable {
         this.capture_timer = 0;
         force_village_update = true;
         this.markDirty();
+        if(!world.isRemote && controllingFaction != VReference.VAMPIRE_FACTION) {
         List<EntityVillager> villager = this.world.getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
-        for (int i = 0; i < villager.size() / 3; i++) {
-            if (villager instanceof EntityFactionVillager) continue;
-            makeAggressive(villager.get(i), this.getVillage());
+        	for (int i = 0; i < villager.size() / 3; i++) {
+        		if (villager instanceof EntityFactionVillager) continue;
+        		
+        		makeAggressive(villager.get(i), this.getVillage());
+        	}
         }
     }
 
@@ -507,7 +516,8 @@ public class TileTotem extends TileEntity implements ITickable {
             }
             handleBossBar(capture_phase, defender);
         }
-        if (time % 1000 == 0 && capturingFaction == null && controllingFaction != null) {
+        
+        if (!world.isRemote && time % 1000 == 0 && capturingFaction == null && controllingFaction != null) {
             VampirismVillage village = this.getVillage();
             if (village != null) {
                 int max = Math.min(village.getVillage().getNumVillageDoors(), 30);
@@ -516,8 +526,22 @@ public class TileTotem extends TileEntity implements ITickable {
                     if (Math.random() * 15 == 0) {
                         if (controllingFaction.equals(VReference.HUNTER_FACTION)) villager = new EntityHunterFactionVillager(this.world);
                         else if (controllingFaction.equals(VReference.VAMPIRE_FACTION)) villager = new EntityVampireFactionVillager(this.world);
+                    }else {
+                    	newVillager(villager, null, controllingFaction.equals(VReference.HUNTER_FACTION));
                     }
-                    newVillager(villager, null, controllingFaction.equals(VReference.HUNTER_FACTION));
+                }
+                int defenderNumMax = Math.min(6, village.getVillage().getNumVillageDoors()/5);
+                List<EntityLiving> defender = Lists.newArrayList();
+                EntityLiving entity = null;
+                if(this.controllingFaction.equals(VReference.HUNTER_FACTION)) {
+                	defender = this.world.getEntitiesWithinAABB(EntityHunterBase.class, getAffectedArea());
+                	entity = new EntityBasicHunter(this.world);
+                }else if(this.controllingFaction.equals(VReference.VAMPIRE_FACTION)) {
+                	defender = this.world.getEntitiesWithinAABB(EntityVampireBase.class, getAffectedArea());
+                	entity = new EntityBasicVampire(this.world);
+                }
+                if(defenderNumMax > defender.size()) {
+                	newEntity(entity, null);
                 }
             }
         }
@@ -588,7 +612,8 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     private void completeCapture(boolean notifyPlayer) {
-        this.entityCapture();
+    	if(!this.world.isRemote)
+    		this.entityCapture();
         this.setControllingFaction(capturingFaction);
         this.setCapturingFaction(null);
         force_village_update = true;
@@ -864,6 +889,7 @@ public class TileTotem extends TileEntity implements ITickable {
             newVillager(new EntityHunterFactionVillager(this.world), null, false);
         } else if (capturingFaction == VReference.VAMPIRE_FACTION) {
             for (EntityVillager e : villager) {
+            	if(e.getRNG().nextInt(2) == 1) continue;
                 e.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(false);
                 PotionSanguinare.addRandom(e, false);
             }
@@ -879,21 +905,26 @@ public class TileTotem extends TileEntity implements ITickable {
         }
     }
 
-    private void newVillager(EntityVillager newE, Entity oldE, boolean isPoisonous) {
-        if (oldE != null) {
-            newE.copyLocationAndAnglesFrom(oldE);
-        } else {
-            VampirismVillage village = this.getVillage();
+    private void newVillager(EntityVillager newE, @Nullable Entity oldE, boolean isPoisonous) {
+        newEntity(newE,oldE);
+        newE.setLookingForHome();
+        newE.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(newE)), null);
+        newE.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(isPoisonous);
+    }
+    
+    private void newEntity(@Nullable Entity newE, @Nullable Entity oldE) {
+    	if(newE == null)return;
+    	if(oldE != null) {
+    		newE.copyLocationAndAnglesFrom(oldE);
+    	}else {
+    		VampirismVillage village = this.getVillage();
             Vec3d vec = new Vec3d(this.pos.up());
             if (village != null) vec = village.getVillage().findRandomSpawnPos(village.getVillage().getCenter(), 2, 3, 2);
             if (vec == null) return;
             if (!world.isAirBlock(new BlockPos(vec))) vec = vec.addVector(0, 1, 0);
             newE.setPosition(vec.x, vec.y, vec.z);
-        }
-        newE.setLookingForHome();
-        newE.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(newE)), null);
-        newE.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(isPoisonous);
-        if (oldE != null) world.removeEntity(oldE);
+    	}
+    	if (oldE != null) world.removeEntity(oldE);
         world.spawnEntity(newE);
     }
 
@@ -913,5 +944,4 @@ public class TileTotem extends TileEntity implements ITickable {
             return hunter;
         }
     }
-
 }
