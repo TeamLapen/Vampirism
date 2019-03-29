@@ -18,19 +18,7 @@ public class VampirismVillageHelper {
      * Do not call on remote worlds
      */
     public static @Nullable
-    VampirismVillageOld getNearestVillage(World w, BlockPos pos, int r) {
-        Village v = w.villageCollection.getNearestVillage(pos, r);
-        if (v != null) {
-            return VampirismVillageOld.get(v);
-        }
-        return null;
-    }
-
-    /**
-     * Do not call on remote worlds
-     */
-    public static @Nullable
-    VampirismVillage getNearestVillageNew(World w, BlockPos pos, int r) {
+    VampirismVillage getNearestVillage(World w, BlockPos pos, int r) {
         Village v = w.villageCollection.getNearestVillage(pos, r);
         if (v != null) {
             return VampirismVillage.get(v);
@@ -38,9 +26,10 @@ public class VampirismVillageHelper {
         return null;
     }
 
+
     public static @Nullable
     TileTotem getNearestVillageTotem(World w, BlockPos pos, int r) {
-        VampirismVillage v = getNearestVillageNew(w, pos, r);
+        VampirismVillage v = getNearestVillage(w, pos, r);
         if (v != null && v.getTotemLocation() != null) {
             TileEntity t = w.getTileEntity(v.getTotemLocation());
             if (t instanceof TileTotem) {
@@ -56,7 +45,7 @@ public class VampirismVillageHelper {
      * Do not call on remote worlds
      */
     public static @Nullable
-    VampirismVillageOld getNearestVillage(Entity e) {
+    VampirismVillage getNearestVillage(Entity e) {
         return getNearestVillage(e.getEntityWorld(), e.getPosition(), 10);
     }
 
@@ -66,7 +55,7 @@ public class VampirismVillageHelper {
     public static void tick(World w) {
         if (w.villageCollection != null) { //Shouldn't be null, but https://github.com/TeamLapen/Vampirism/issues/372
             for (Village v : w.villageCollection.getVillageList()) {
-                VampirismVillageOld.get(v).tick(w.getTotalWorldTime());
+                VampirismVillage.get(v).tick(w.getTotalWorldTime());
             }
         }
     }

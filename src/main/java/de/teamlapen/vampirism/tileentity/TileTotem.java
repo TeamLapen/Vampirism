@@ -53,6 +53,7 @@ import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -665,7 +666,7 @@ public class TileTotem extends TileEntity implements ITickable {
 
     @Nullable
     private VampirismVillage getVillage() {
-        return this.world.isRemote ? null : VampirismVillageHelper.getNearestVillageNew(this.world, this.pos, 10);
+        return this.world.isRemote ? null : VampirismVillageHelper.getNearestVillage(this.world, this.pos, 10);
     }
 
     private void notifyNearbyPlayers(ITextComponent msg) {
@@ -786,7 +787,7 @@ public class TileTotem extends TileEntity implements ITickable {
         @Nullable VampirismVillage v = getVillage();
         AxisAlignedBB box;
         BlockPos b = v == null ? this.pos : v.getVillage().getCenter();
-        int r = v == null ? 30 : v.getVillage().getVillageRadius() + 20;
+        int r = v == null ? 30 : v.getVillage().getVillageRadius() + 15;
         box = new AxisAlignedBB(b.getX() - r, b.getY() - 10, b.getZ() - r, b.getX() + r, b.getY() + 30, b.getZ() + r);
 
         if (!box.contains(new Vec3d(this.pos))) {

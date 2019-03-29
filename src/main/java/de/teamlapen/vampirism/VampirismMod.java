@@ -51,7 +51,6 @@ import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
-import de.teamlapen.vampirism.world.villages.VampirismVillageOld;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -225,7 +224,6 @@ public class VampirismMod {
         VampirePlayer.registerCapability();
         FactionPlayerHandler.registerCapability();
         ExtendedCreature.registerCapability();
-        VampirismVillageOld.registerCapability();
         VampirismVillage.registerCapability();
 
         setupAPI2();

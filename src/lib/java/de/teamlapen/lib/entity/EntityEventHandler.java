@@ -57,7 +57,7 @@ public class EntityEventHandler {
         }
         
         if (event.getEntity() instanceof EntityVillager && !event.getWorld().isRemote) {
-            VampirismVillage village = VampirismVillageHelper.getNearestVillageNew(event.getWorld(), event.getEntity().getPosition(), 5);
+            VampirismVillage village = VampirismVillageHelper.getNearestVillage(event.getWorld(), event.getEntity().getPosition(), 5);
             if (village != null && village.getControllingFaction() != null && village.getControllingFaction().equals(VReference.HUNTER_FACTION)) {
                 event.getEntity().getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(true);
             }

@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import de.teamlapen.vampirism.api.items.IHunterWeaponCraftingManager;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
-import de.teamlapen.vampirism.api.world.IVampirismVillageOLD;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.village.Village;
@@ -180,7 +179,7 @@ public class VampirismAPI {
     }
 
     /**
-     * Get the {@link IVampirismVillageOLD} instance for the given village
+     * Get the {@link IVampirismVillage} instance for the given village
      */
     public static IVampirismVillage getVampirismVillage(Village village) {
         return village.getCapability(CAP_VILLAGE, null);

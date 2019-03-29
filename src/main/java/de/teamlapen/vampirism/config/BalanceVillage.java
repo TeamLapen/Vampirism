@@ -5,12 +5,12 @@ import de.teamlapen.lib.lib.config.DefaultBoolean;
 import de.teamlapen.lib.lib.config.DefaultDouble;
 import de.teamlapen.lib.lib.config.DefaultInt;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.world.villages.VampirismVillageOld;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
 
 import java.io.File;
 
 /**
- * Balance values for villages and {@link VampirismVillageOld}
+ * Balance values for villages and {@link VampirismVillage}
  */
 public class BalanceVillage extends BalanceValues {
 

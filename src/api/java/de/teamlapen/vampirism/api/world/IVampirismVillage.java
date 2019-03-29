@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.api.world;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.village.Village;
 
 import javax.annotation.Nonnull;
@@ -15,4 +18,8 @@ public interface IVampirismVillage {
     @Nonnull
     Village getVillage();
 
+    void addOrRenewAggressor(@Nullable Entity entity);
+
+    @Nullable
+    IFactionEntity findNearestVillageAggressor(@Nonnull EntityLivingBase entity);
 }

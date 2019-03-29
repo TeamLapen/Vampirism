@@ -5,12 +5,15 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
+import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
 import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.world.loot.LootHandler;
+import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -50,6 +53,22 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     private EntityAIBase tasks_avoidHunter;
 
+    /**
+     * Cached village. Serverside
+     */
+    @Nullable
+    private IVampirismVillage cachedVillage;
+
+    @Override
+    public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
+        boolean flag = super.attackEntityFrom(damageSource, p_70097_2_);
+        if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
+        IVampirismVillage v = getCurrentFriendlyVillage();
+        if (v != null) {
+            v.addOrRenewAggressor(damageSource.getTrueSource());
+        }
+        return flag;
+    }
 
     /**
      * If this is non-null we are currently attacking a village center
@@ -71,11 +90,10 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     }
 
+    @Nullable
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
-        boolean flag = super.attackEntityFrom(damageSource, p_70097_2_);
-        if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
-        return flag;
+    public IVampirismVillage getCurrentFriendlyVillage() {
+        return cachedVillage != null ? cachedVillage.getControllingFaction() == VReference.VAMPIRE_FACTION ? cachedVillage : null : null;
     }
 
     @Override
@@ -166,6 +184,9 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         super.onUpdate();
         if (advancedLeader != null && !advancedLeader.isEntityAlive()) {
             advancedLeader = null;
+        }
+        if (!this.world.isRemote && this.ticksExisted % 40 == 8) {
+            cachedVillage = VampirismVillageHelper.getNearestVillage(this);
         }
     }
 
@@ -327,6 +348,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
         this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false));
         this.targetTasks.addTask(4, new EntityAIAttackVillage<>(this));
+        this.targetTasks.addTask(4, new EntityAIDefendVillage<>(this));//Should automatically be mutually exclusive with  attack village
         this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
         this.targetTasks.addTask(6, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
 

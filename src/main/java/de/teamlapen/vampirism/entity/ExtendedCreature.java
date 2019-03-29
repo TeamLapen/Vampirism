@@ -8,17 +8,14 @@ import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.api.world.IVampirismVillageOLD;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,6 +24,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
+
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
@@ -238,18 +236,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
         }
         this.sync();
-        if (amt > 0 && entity instanceof EntityVillager) {
-            IVampirismVillageOLD vv = VampirismVillageHelper.getNearestVillage(entity);
-            if (vv != null) {
-                vv.onVillagerBitten(biter);
-                if (converted) {
-                    vv.onVillagerConverted(biter);
-                }
-                if (killed) {
-                    vv.onVillagerBittenToDeath(biter);
-                }
-            }
-        }
         return amt;
     }
 
