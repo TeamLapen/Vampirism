@@ -52,7 +52,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -230,7 +234,7 @@ public class TileTotem extends TileEntity implements ITickable {
         if (v != null) {
             v.removeTotemAndReset(this.pos);
         }
-        removePlayerFromBossInfo();
+        removePlayerFromBossInfo(null);
     }
 
     @SideOnly(Side.CLIENT)
@@ -422,8 +426,8 @@ public class TileTotem extends TileEntity implements ITickable {
         }
         //Handle capture
         if (this.capturingFaction != null && time % 40 == 9) {
-            removePlayerFromBossInfo();
             List<Entity> entities = this.world.getEntitiesWithinAABB(EntityLivingBase.class, getAffectedArea());
+            removePlayerFromBossInfo(entities);
             int attacker = 0; //Includes players
             int attackerPlayer = 0;
             int defender = 0;//Includes player
@@ -601,7 +605,7 @@ public class TileTotem extends TileEntity implements ITickable {
         informEntitiesAboutCaptureStop();
         if (notifyPlayer)
             notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_capture_aborted"));
-        removePlayerFromBossInfo();
+        removePlayerFromBossInfo(null);
         defenderMax = 0;
     }
 
@@ -616,7 +620,7 @@ public class TileTotem extends TileEntity implements ITickable {
         informEntitiesAboutCaptureStop();
         if (notifyPlayer)
             notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_captured_by", new TextComponentTranslation(controllingFaction.getUnlocalizedNamePlural())));
-        removePlayerFromBossInfo();
+        removePlayerFromBossInfo(null);
     }
 
     private void informEntitiesAboutCaptureStop() {
@@ -773,8 +777,18 @@ public class TileTotem extends TileEntity implements ITickable {
         PHASE_1_NEUTRAL, PHASE_1_OPPOSITE, PHASE_2
     }
 
-    private void removePlayerFromBossInfo() {
-        for (EntityPlayerMP p : captureInfo.getPlayers()) {
+    private void removePlayerFromBossInfo(List<Entity> entities) {
+    	Collection<EntityPlayerMP> bossbar = new HashSet<>(captureInfo.getPlayers());
+    	if(entities != null) {
+    		for (Entity e: entities) {
+    			if(e instanceof EntityPlayerMP) {
+    		    	if(!bossbar.remove((EntityPlayerMP)e)) {
+    		    		captureInfo.addPlayer((EntityPlayerMP)e);
+    		    	}
+    			}
+    		}
+    	}
+        for (EntityPlayerMP p : bossbar) {
             captureInfo.removePlayer(p);
         }
     }
