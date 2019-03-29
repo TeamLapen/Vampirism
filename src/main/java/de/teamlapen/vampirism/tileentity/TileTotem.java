@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.entity.hunter.EntityAggressiveVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterFactionVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainerDummy;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireFactionVillager;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -845,16 +846,33 @@ public class TileTotem extends TileEntity implements ITickable {
                 for (int o = i; o > 0; o--) {
                     newVillager(new EntityVillager(this.world), null, true);
                 }
+                
             } else {
                 for (EntityVillager e : villager) {
                     e.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(true);
                 }
+            }
+            List<EntityHunterTrainerDummy> huntertrainerdummy = this.world.getEntitiesWithinAABB(EntityHunterTrainerDummy.class, getAffectedArea());
+            for(EntityHunterTrainerDummy e : huntertrainerdummy) {
+            	EntityHunterTrainer trainer = new EntityHunterTrainer(this.world);
+            	trainer.copyLocationAndAnglesFrom(e);
+            	trainer.setHome(e.getHome());
+            	world.removeEntity(e);
+            	world.spawnEntity(trainer);
             }
             newVillager(new EntityHunterFactionVillager(this.world), null, false);
         } else if (capturingFaction == VReference.VAMPIRE_FACTION) {
             for (EntityVillager e : villager) {
                 e.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(false);
                 PotionSanguinare.addRandom(e, false);
+            }
+            List<EntityHunterTrainer> huntertrainer = this.world.getEntitiesWithinAABB(EntityHunterTrainer.class, getAffectedArea());
+            for(EntityHunterTrainer e : huntertrainer) {
+            	EntityHunterTrainerDummy dummy = new EntityHunterTrainerDummy(this.world);
+            	dummy.copyLocationAndAnglesFrom(e);
+            	dummy.setHome(e.getHome());
+            	world.removeEntity(e);
+            	world.spawnEntity(dummy);
             }
             newVillager(new EntityVampireFactionVillager(this.world), null, false);
         }

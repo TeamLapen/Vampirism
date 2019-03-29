@@ -126,6 +126,7 @@ text.vampirism.blood_potion.category.special_other=Special other effects
 
 #ENTITIES
 entity.vampirism.hunter_trainer.name=Vampire Hunter Trainer
+entity.vampirism.hunter_trainer_dummy.name=Undercover Hunter Trainer
 entity.vampirism.advanced_vampire.name=Advanced Vampire
 entity.vampirism.advanced_hunter.name=Advanced Hunter
 entity.vampirism.hunter_villager.name=Angry Villager
@@ -511,6 +512,8 @@ text.vampirism.sword_trained=Trained:
 text.vampirism.integrations_available.first=There is an integrations mod for Vampirism that adds enhanced compatibility for the following installed mods:
 text.vampirism.integrations_available.second=["Please consider downloading this mod for an improved experience [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod page","color":"green"}},"clickEvent":{"action":"open_url","value":"@download@"}},"]"]
 text.vampirism.basic_hunter.levelup=I hope you have learned something
+text.vampirism.trainer_disabled=Here is no Hunter Trainer
+text.vampirism.trainer_disabled_hunter=It is not safe enought to trade
 
 
 #MINION COMMANDS
