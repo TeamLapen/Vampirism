@@ -889,8 +889,8 @@ public class TileTotem extends TileEntity implements ITickable {
             newVillager(new EntityHunterFactionVillager(this.world), null, false);
         } else if (capturingFaction == VReference.VAMPIRE_FACTION) {
             for (EntityVillager e : villager) {
-            	if(e.getRNG().nextInt(2) == 1) continue;
                 e.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(false);
+                if(e.getRNG().nextInt(2) == 1) continue;
                 PotionSanguinare.addRandom(e, false);
             }
             List<EntityHunterTrainer> huntertrainer = this.world.getEntitiesWithinAABB(EntityHunterTrainer.class, getAffectedArea());
