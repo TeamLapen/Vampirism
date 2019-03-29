@@ -69,6 +69,7 @@ public class ModEntities {
     public static final String VILLAGER_VAMPIRE_FACTION = "villager_vampire_faction";
     public static final String VILLAGER_ANGRY = "villager_angry";
     public static final String VILLAGER_CONVERTED = "villager_converted";
+    public static final String HUNTER_TRAINER_DUMMY = "hunter_trainer_dummy";
 
 
     /**
@@ -134,7 +135,7 @@ public class ModEntities {
         registry.register(prepareEntityEntry(EntityDarkBloodProjectile.class, DARK_BLOOD_PROJECTILE, null, EntityLiving.SpawnPlacementType.IN_AIR, false).build());
         registry.register(prepareEntityEntry(EntitySoulOrb.class, SOUL_ORB, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
         registry.register(prepareEntityEntry(EntityHunterFactionVillager.class, VILLAGER_HUNTER_FACTION, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
-        registry.register(prepareEntityEntry(EntityVampireFactionVillager.class, VILLAGER_VAMPIRE_FACTION, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
+        registry.register(prepareEntityEntry(EntityHunterTrainerDummy.class, HUNTER_TRAINER_DUMMY, "hunter_trainer_dummy", EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
     }
 
     static Biome[] getZombieBiomes() {
