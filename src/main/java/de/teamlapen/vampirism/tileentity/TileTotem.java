@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.tileentity;
 
+import com.google.common.collect.Lists;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
@@ -15,12 +16,7 @@ import de.teamlapen.vampirism.entity.EntityFactionVillager;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.hunter.EntityAggressiveVillager;
-import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterFactionVillager;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainerDummy;
+import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireFactionVillager;
@@ -29,11 +25,7 @@ import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -60,9 +52,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.google.common.collect.Lists;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -339,20 +328,25 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        NBTTagCompound nbt = pkt.getNbtCompound();
-        readFromNBT(nbt);
-        if (nbt.hasKey("village_bb")) {
+    public void handleUpdateTag(NBTTagCompound tag) {
+        readFromNBT(tag);
+        if (tag.hasKey("village_bb")) {
             if (controllingFaction == VReference.VAMPIRE_FACTION) {
-                StructureBoundingBox bb = new StructureBoundingBox(nbt.getIntArray("village_bb"));
+                StructureBoundingBox bb = new StructureBoundingBox(tag.getIntArray("village_bb"));
                 registerVampireArea(bb);
             } else {
                 unregisterVampireArea();
             }
         }
         world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        handleUpdateTag(pkt.getNbtCompound());
+
     }
 
     @SideOnly(Side.CLIENT)

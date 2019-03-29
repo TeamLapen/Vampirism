@@ -139,7 +139,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 }
                 if (biteable != null && biteable.canBeBitten(player)) {
                     int color = 0xFF0000;
-                    if (entity instanceof EntityHunterBase || entity.getCapability(ExtendedCreature.CAP, null).hasPoisonousBlood()) color = 0x099022;
+                    if (entity instanceof EntityHunterBase || (entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()))
+                        color = 0x099022;
                     renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                     event.setCanceled(true);
                 }
