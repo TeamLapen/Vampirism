@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -156,8 +155,14 @@ public class TileTent extends TileEntity implements ITickable {
         }
         if (spawn) {
             spawnerLogic.updateSpawner();
+            if (!this.world.isRemote && this.world.getWorldTime() % 64 == 0) {
+                if (this.world.villageCollection.getNearestVillage(this.pos, 5) != null) {
+                    this.spawn = false; //Disable spawning inside villages
+                }
+            }
         }
     }
+
 
     @Nonnull
     @Override

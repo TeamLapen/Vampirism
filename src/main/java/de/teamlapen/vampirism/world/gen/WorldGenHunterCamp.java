@@ -115,12 +115,9 @@ public class WorldGenHunterCamp extends WorldGenerator {
         k = k + random.nextInt(distance - 2);
         l = l + random.nextInt(distance - 2);
 
-        if (i == k && j == l) {
-            return world.getVillageCollection().getNearestVillage(world.getHeight(new BlockPos(i << 4, 0, j << 4)), 25) == null;
+        //return world.getVillageCollection().getNearestVillage(world.getHeight(new BlockPos(i << 4, 0, j << 4)), 25) == null; //Useless as village collection is not updated on world gen
+        return i == k && j == l;
 
-        }
-
-        return false;
     }
 
     private boolean checkGroundAndPos(World worldIn, BlockPos position, IBlockState ground) {
