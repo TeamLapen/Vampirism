@@ -319,7 +319,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     @Override
     public void setPoisonousBlood(boolean poisonous) {
-        if (poisonous = !poisonousBlood) {
+        if (poisonous == !poisonousBlood) {
             poisonousBlood = poisonous;
             sync();
         }
