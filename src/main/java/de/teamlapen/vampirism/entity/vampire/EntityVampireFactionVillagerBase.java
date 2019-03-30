@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.EntityFactionVillager;
+import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
+import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.init.MobEffects;
@@ -100,5 +102,12 @@ public class EntityVampireFactionVillagerBase extends EntityFactionVillager impl
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+    }
+    
+    @Override
+    protected void initEntityAI() {
+    	this.tasks.addTask(1, new VampireAIRestrictSun(this));
+        this.tasks.addTask(1, new VampireAIFleeSun(this, 0.9, false));
+    	super.initEntityAI();
     }
 }

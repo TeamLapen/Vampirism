@@ -915,7 +915,11 @@ public class TileTotem extends TileEntity implements ITickable {
 
     private void newVillager(EntityVillager newE, @Nullable Entity oldE, boolean isPoisonous) {
         newEntity(newE,oldE);
-        newE.setLookingForHome();
+    	if(oldE instanceof EntityVillager) {
+    		newE.setHomePosAndDistance(((EntityVillager)oldE).getHomePosition(),(int) ((EntityVillager)oldE).getMaximumHomeDistance());
+    	}else {
+    		newE.setHomePosAndDistance(this.getVillage().getVillage().getCenter(),this.getVillage().getVillage().getVillageRadius());
+    	}
         newE.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(newE)), null);
         newE.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(isPoisonous);
     }
