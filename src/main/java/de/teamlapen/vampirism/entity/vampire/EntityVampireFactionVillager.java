@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModVillages;
 import de.teamlapen.vampirism.util.Helper;
@@ -9,7 +8,6 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -26,30 +24,26 @@ import java.util.Random;
 
 public class EntityVampireFactionVillager extends EntityVampireFactionVillagerBase implements IVampire {
 
-    //TODO create realistic trades
     private final static EntityVillager.ITradeList[][] TRADES = {
             {
                     new ItemsForHeart(new PriceInfo(10, 15), new ItemStack(ModItems.pure_blood, 1, 0), new PriceInfo(1, 1)),
                     new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.pure_blood, 1, 2), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(30, 40), ModItems.item_coffin, new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(20, 30), new ItemStack(ModItems.pure_blood, 1, 1), new PriceInfo(1, 1))
+                    new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood, 1, 1), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(20, 30), ModItems.item_coffin, new PriceInfo(1, 1))
             }, {
-                    new ItemsForHeart(new PriceInfo(10, 15), new ItemStack(ModItems.blood_bottle, 3, 4), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.pure_blood, 1, 3), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(10, 15), new ItemStack(ModItems.blood_bottle, 1, 4), new PriceInfo(1, 4)),
+                    new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.blood_bottle, 1, 9), new PriceInfo(1, 1)),
                     new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood, 1, 4), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(20, 30), new ItemStack(ModItems.blood_bottle, 3, 9), new PriceInfo(1, 1))
+                    new ItemsForHeart(new PriceInfo(20, 30), new ItemStack(ModItems.pure_blood, 1, 3), new PriceInfo(1, 4))
             }, {
-                    new ItemsForHeart(new PriceInfo(100, 200), ModItems.vampire_cloak, new PriceInfo(1, 1))
+                    new ItemsForHeart(new PriceInfo(100, 200), new ItemStack[] {
+                            new ItemStack(ModItems.vampire_cloak, 1, 0),
+                            new ItemStack(ModItems.vampire_cloak, 1, 1),
+                            new ItemStack(ModItems.vampire_cloak, 1, 2),
+                            new ItemStack(ModItems.vampire_cloak, 1, 3),
+                            new ItemStack(ModItems.vampire_cloak, 1, 4)}, new PriceInfo(1, 1))
             }
     };
-
-    private static ItemStack[] createTiers(IItemWithTier.TIER tier, IItemWithTier... items) {
-        ItemStack[] stacks = new ItemStack[items.length];
-        for (int i = 0; i < items.length; i++) {
-            stacks[i] = items[i].setTier(new ItemStack((Item) items[i]), tier);
-        }
-        return stacks;
-    }
 
     public EntityVampireFactionVillager(World worldIn) {
         super(worldIn);
