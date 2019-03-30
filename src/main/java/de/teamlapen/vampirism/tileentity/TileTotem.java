@@ -202,7 +202,7 @@ public class TileTotem extends TileEntity implements ITickable {
         this.capture_timer = 0;
         force_village_update = true;
         this.markDirty();
-        if(!world.isRemote && controllingFaction != VReference.VAMPIRE_FACTION) {
+        if(!world.isRemote && capturingFaction == VReference.VAMPIRE_FACTION) {
         List<EntityVillager> villager = this.world.getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
         	for (int i = 0; i < villager.size() / 3; i++) {
         		if (villager instanceof EntityFactionVillager) continue;
@@ -864,6 +864,9 @@ public class TileTotem extends TileEntity implements ITickable {
         }
     }
 
+    /**
+     * handles entities at the end of a complete capture
+     */
     private void entityCapture() {
         List<EntityVillager> villager = this.world.getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
         if (capturingFaction == VReference.HUNTER_FACTION) {
@@ -913,31 +916,48 @@ public class TileTotem extends TileEntity implements ITickable {
         }
     }
 
-    private void newVillager(EntityVillager newE, @Nullable Entity oldE, boolean isPoisonous) {
-        newEntity(newE,oldE);
+    /**
+     * by using {@link TileTotem#newEntity()} spawning new Villager
+     * @param newE new Entity to spawn
+     * @param oldE old Entity to bew replaced
+     * @param isPoisonous if the villager should have poisonous blood
+     * @returns false if spawn is not possible
+     */
+    private boolean newVillager(@Nonnull EntityVillager newE, @Nullable Entity oldE, boolean isPoisonous) {
+        if(!newEntity(newE,oldE))return false;
     	if(oldE instanceof EntityVillager) {
     		newE.setHomePosAndDistance(((EntityVillager)oldE).getHomePosition(),(int) ((EntityVillager)oldE).getMaximumHomeDistance());
     	}else {
-    		newE.setHomePosAndDistance(this.getVillage().getVillage().getCenter(),this.getVillage().getVillage().getVillageRadius());
+    		VampirismVillage village = this.getVillage();
+    		if(village == null)return false;
+    		newE.setHomePosAndDistance(village.getVillage().getCenter(),village.getVillage().getVillageRadius());
     	}
         newE.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(newE)), null);
         newE.getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(isPoisonous);
+        return true;
     }
     
-    private void newEntity(@Nullable Entity newE, @Nullable Entity oldE) {
-    	if(newE == null)return;
+    /**
+     * if oldE == null the Entity newE is spawned at a random position around the village center otherwise the new newE copies the location and angles from oldE
+     * @param newE new Entity to spawn
+     * @param oldE old Entity to be replaced
+     * @returns false if spawn is not possible
+     */
+    private boolean newEntity(@Nonnull Entity newE, @Nullable Entity oldE) {
     	if(oldE != null) {
     		newE.copyLocationAndAnglesFrom(oldE);
     	}else {
     		VampirismVillage village = this.getVillage();
+    		if(village == null)return false;
             Vec3d vec = new Vec3d(this.pos.up());
             if (village != null) vec = village.getVillage().findRandomSpawnPos(village.getVillage().getCenter(), 2, 3, 2);
-            if (vec == null) return;
+            if (vec == null) return false;
             if (!world.isAirBlock(new BlockPos(vec))) vec = vec.addVector(0, 1, 0);
             newE.setPosition(vec.x, vec.y, vec.z);
     	}
     	if (oldE != null) world.removeEntity(oldE);
         world.spawnEntity(newE);
+        return true;
     }
 
     public static @Nullable IVillageCaptureEntity makeAggressive(EntityVillager villager, @Nullable VampirismVillage v) {
