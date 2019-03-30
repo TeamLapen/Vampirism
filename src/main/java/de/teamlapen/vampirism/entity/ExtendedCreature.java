@@ -206,12 +206,19 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Override
     public int onBite(IVampire biter) {
         if (getBlood() <= 0) return 0;
-        int amt = Math.min(blood, Math.max(1, (getMaxBlood() / (biter instanceof VampirePlayer ? 6 : 2))));
+        int amt = Math.max(1, (getMaxBlood() / (biter instanceof VampirePlayer ? 6 : 2)));
+        if (amt > blood) {
+            if (blood > 1 && biter.isAdvancedBiter()) {
+                amt = blood - 1;
+            } else {
+                amt = blood;
+            }
+        }
         blood -= amt;
         boolean killed = false;
         boolean converted = false;
         if (blood < getMaxBlood() / 2) {
-            if (blood == 0 || entity.getRNG().nextInt(blood + 1) == 0) {
+            if (blood == 0) {
 
                 if (canBecomeVampire && entity.getRNG().nextBoolean()) {
                     if (VampirismMod.isRealism()) {
@@ -236,6 +243,12 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
         }
         this.sync();
+        //If advanced biter, sometimes return twice the blood amount
+        if (biter.isAdvancedBiter()) {
+            if (entity.getRNG().nextInt(4) == 0) {
+                return 2 * amt;
+            }
+        }
         return amt;
     }
 

@@ -75,4 +75,9 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
         ((HunterPlayer) player).getSpecialAttributes().increaseDisguiseTicks();
         return false;
     }
+
+    @Override
+    public boolean canBeUsedBy(IHunterPlayer player) {
+        return !player.getActionHandler().isActionActive(HunterActions.awareness_hunter);
+    }
 }

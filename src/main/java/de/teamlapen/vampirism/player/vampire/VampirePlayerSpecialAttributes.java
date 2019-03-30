@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
  * One attribute should only be modified by ONE skill/action.
  */
 public class VampirePlayerSpecialAttributes {
-    public boolean poisonous_bite = false;
     public boolean disguised = false;
     public IFaction disguisedAs = null;
     public boolean avoided_by_creepers = false;
@@ -16,6 +15,7 @@ public class VampirePlayerSpecialAttributes {
     public boolean half_invulnerable = false;
     public boolean increasedVampireFogDistance;
     public boolean waterResistance;
+    public boolean advanced_biter = false;
     private int jump_boost = 0;
 
     public int getJumpBoost() {

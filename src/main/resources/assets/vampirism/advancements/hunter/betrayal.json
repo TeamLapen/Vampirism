@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "item": "vampirism:human_heart"
+    },
+    "title": {
+      "translate": "advancement.vampirism.betrayal"
+    },
+    "description": {
+      "translate": "advancement.vampirism.betrayal.desc"
+    }
+  },
+  "parent": "vampirism:hunter/become_hunter",
+  "criteria": {
+    "baron": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "vampirism:vampire_hunter"
+        }
+      }
+    }
+  }
+}

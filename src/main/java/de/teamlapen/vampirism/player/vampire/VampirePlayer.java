@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -34,10 +35,7 @@ import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -225,7 +223,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             VampirismMod.log.w(TAG, "Cannot bite in bat mode");
             return;
         }
-        if (e != null && e instanceof EntityLivingBase) {
+        if (e instanceof EntityLivingBase) {
             if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
                 feed_victim_bite_type = determineBiteType((EntityLivingBase) e);
                 VampirismMod.log.t("bitetype: %s", feed_victim_bite_type.name());
@@ -466,6 +464,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
+    public boolean isAdvancedBiter() {
+        return specialAttributes.advanced_biter;
+    }
+
+    @Override
     public boolean isIgnoringSundamage() {
         return false;
     }
@@ -519,6 +522,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onDeath(DamageSource src) {
+        if (actionHandler.isActionActive(VampireActions.bat) && src.getImmediateSource() instanceof IProjectile) {
+            if (player instanceof EntityPlayerMP) {
+                ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.SNIPED_IN_BAT);
+            }
+        }
         actionHandler.deactivateAllActions();
         wasDead = true;
     }
@@ -1113,13 +1121,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
         if ((entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) || entity.getCapability(ExtendedCreature.CAP, null).hasPoisonousBlood()) {
             player.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
+            if (player instanceof EntityPlayerMP) {
+                ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.POISONOUS_BITE);
+            }
         } else if (hunter) {
             if (entity instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) entity)) {
                 player.attackEntityFrom(DamageSource.causeThornsDamage(entity), damage);
             }
-        }
-        if (specialAttributes.poisonous_bite) {
-            entity.addPotionEffect(new PotionEffect(MobEffects.POISON, (int) (Balance.vps.POISONOUS_BITE_DURATION * 20 * (getSpecialAttributes().bat ? 0.2F : 1F)), 1));
         }
 
     }
@@ -1160,15 +1168,21 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Does NOT check reach distance
      *
      * @param entity the entity to feed on
+     * @return If feeding can continue
      */
-    private void biteFeed(EntityLivingBase entity) {
-        if (isRemote()) return;
-        if (getLevel() == 0) return;
+    private boolean biteFeed(EntityLivingBase entity) {
+        if (isRemote()) return true;
+        if (getLevel() == 0) return false;
         int blood = 0;
         float saturationMod = IBloodStats.HIGH_SATURATION;
+        boolean continue_feeding = true;
         if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_CREATURE) {
-            blood = ExtendedCreature.get((EntityCreature) entity).onBite(this);
-            saturationMod = ExtendedCreature.get((EntityCreature) entity).getBloodSaturation();
+            IExtendedCreatureVampirism extendedCreature = ExtendedCreature.get((EntityCreature) entity);
+            blood = extendedCreature.onBite(this);
+            saturationMod = extendedCreature.getBloodSaturation();
+            if (isAdvancedBiter() && extendedCreature.getBlood() == 1) {
+                continue_feeding = false;
+            }
         } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_PLAYER || feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
             blood = VampirePlayer.get((EntityPlayer) entity).onBite(this);
             saturationMod = VampirePlayer.get((EntityPlayer) entity).getBloodSaturation();
@@ -1187,7 +1201,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (player instanceof EntityPlayerMP) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.SUCK_BLOOD);
             }
+            return continue_feeding;
         }
+        return false;
     }
 
     /**
@@ -1268,7 +1284,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         VampLib.proxy.getParticleHandler().spawnParticles(player.world, ModParticles.FLYING_BLOOD_ENTITY, e.posX + 0.5, e.posY + 0.5, e.posZ + 0.5, 10, 0.1F, player.getRNG(), player, true);
 
-        biteFeed(e);
+        if (!biteFeed(e)) {
+            endFeeding(true);
+        }
 
         if (!(e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || e.getHealth() == 0f)
             endFeeding(true);

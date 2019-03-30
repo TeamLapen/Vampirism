@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:arrow"
+    },
+    "title": {
+      "translate": "advancement.vampirism.sniped"
+    },
+    "description": {
+      "translate": "advancement.vampirism.sniped"
+    },
+    "hidden": true
+  },
+  "parent": "vampirism:vampire/bat",
+  "criteria": {
+    "flower": {
+      "trigger": "vampirism:vampire_action",
+      "conditions": {
+        "action": "sniped_in_bat"
+      }
+    }
+  }
+}

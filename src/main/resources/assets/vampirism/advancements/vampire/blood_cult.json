@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "item": "vampirism:altar_infusion"
+    },
+    "title": {
+      "translate": "advancement.vampirism.blood_cult"
+    },
+    "description": {
+      "translate": "advancement.vampirism.blood_cult.desc"
+    }
+  },
+  "parent": "vampirism:vampire/become_vampire",
+  "criteria": {
+    "flower": {
+      "trigger": "vampirism:vampire_action",
+      "conditions": {
+        "action": "perform_ritual_infusion"
+      }
+    }
+  }
+}

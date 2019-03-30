@@ -6,20 +6,27 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
 import de.teamlapen.vampirism.blocks.BlockBloodContainer;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
+import de.teamlapen.vampirism.client.gui.GuiSkills;
 import de.teamlapen.vampirism.client.gui.GuiSleepCoffin;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiButtonImage;
 import net.minecraft.client.gui.GuiSleepMP;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.RegistrySimple;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.IModel;
@@ -32,6 +39,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -40,6 +48,11 @@ import java.util.function.Function;
  */
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler {
+
+    private final static int SKILLBUTTONID = 27496;
+    private final static ResourceLocation INVENTORY_SKILLS = new ResourceLocation("vampirism", "textures/gui/inventory_skills.png");
+
+
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
@@ -58,6 +71,34 @@ public class ClientEventHandler {
         }
     }
 
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onActionPerformedPre(GuiScreenEvent.ActionPerformedEvent.Post event) {
+        if (Configs.gui_skill_button_enable && event.getGui() instanceof GuiInventory) {
+            if (event.getButton().id == SKILLBUTTONID) {
+                event.getGui().mc.displayGuiScreen(new GuiSkills());
+            } else if (event.getButton().id == 10) {
+                for (GuiButton e : event.getButtonList()) {
+                    if (e.id == SKILLBUTTONID) {
+                        ((GuiButtonImage) e).setPosition(((GuiInventory) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onInitGuiEventPost(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (Configs.gui_skill_button_enable && event.getGui() instanceof GuiInventory && FactionPlayerHandler.get(event.getGui().mc.player).getCurrentFactionPlayer() != null) {
+            List<GuiButton> buttonList = event.getButtonList();
+            GuiButton button = new GuiButtonImage(SKILLBUTTONID, ((GuiInventory) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22, 20, 18, 178, 0, 19, INVENTORY_SKILLS);
+            buttonList.add(button);
+            event.setButtonList(buttonList);
+        }
+    }
+
     @SubscribeEvent
     public void onModelBakeEvent(ModelBakeEvent event) {
         IModel[] containerFluidModels = new IModel[BakedBloodContainerModel.FLUID_LEVELS];
@@ -65,7 +106,7 @@ public class ClientEventHandler {
             // load the fluid models for the different levels from the .json files
 
             for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
-                containerFluidModels[x] = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/blood_container/fluid_" + String.valueOf(x + 1)));
+                containerFluidModels[x] = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/blood_container/fluid_" + (x + 1)));
             }
 
             Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
@@ -120,7 +161,7 @@ public class ClientEventHandler {
         try {
             Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
             for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
-                IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/altar_inspiration/blood" + String.valueOf(x + 1)));
+                IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/altar_inspiration/blood" + (x + 1)));
                 BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
             }
             RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple<ModelResourceLocation, IBakedModel>) event.getModelRegistry();
@@ -151,7 +192,7 @@ public class ClientEventHandler {
         try {
             Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
             for (int x = 0; x < BakedWeaponTableModel.FLUID_LEVELS; x++) {
-                IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/weapon_table/weapon_table_lava" + String.valueOf(x + 1)));
+                IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/weapon_table/weapon_table_lava" + (x + 1)));
                 BakedWeaponTableModel.FLUID_MODELS[x] = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
             }
             RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple<ModelResourceLocation, IBakedModel>) event.getModelRegistry();

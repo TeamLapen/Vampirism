@@ -13,12 +13,12 @@
       },
       "enhanced": {
         "textures": {
-          "layer0": "vampirism:items/holy_water_splash"
+          "layer0": "vampirism:items/holy_water_splash_enhanced"
         }
       },
       "ultimate": {
         "textures": {
-          "layer0": "vampirism:items/holy_water_splash"
+          "layer0": "vampirism:items/holy_water_splash_ultimate"
         }
       }
     }

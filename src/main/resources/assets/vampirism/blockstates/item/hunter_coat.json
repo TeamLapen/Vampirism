@@ -13,12 +13,12 @@
       },
       "feet_enhanced": {
         "textures": {
-          "layer0": "vampirism:items/hunter_coat_boots"
+          "layer0": "vampirism:items/hunter_coat_boots_enhanced"
         }
       },
       "feet_ultimate": {
         "textures": {
-          "layer0": "vampirism:items/hunter_coat_boots"
+          "layer0": "vampirism:items/hunter_coat_boots_ultimate"
         }
       },
       "chest_normal": {
@@ -28,12 +28,12 @@
       },
       "chest_enhanced": {
         "textures": {
-          "layer0": "vampirism:items/hunter_coat_chestplate"
+          "layer0": "vampirism:items/hunter_coat_chestplate_enhanced"
         }
       },
       "chest_ultimate": {
         "textures": {
-          "layer0": "vampirism:items/hunter_coat_chestplate"
+          "layer0": "vampirism:items/hunter_coat_chestplate_ultimate"
         }
       },
       "legs_normal": {
@@ -58,12 +58,12 @@
       },
       "head_enhanced": {
         "textures": {
-          "layer0": "vampirism:items/hunter_coat_helmet"
+          "layer0": "vampirism:items/hunter_coat_helmet_enhanced"
         }
       },
       "head_ultimate": {
         "textures": {
-          "layer0": "vampirism:items/hunter_coat_helmet"
+          "layer0": "vampirism:items/hunter_coat_helmet_ultimate"
         }
       }
     }

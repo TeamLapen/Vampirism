@@ -6,18 +6,17 @@ import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
 import de.teamlapen.lib.lib.util.ValuedObject;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.blocks.BlockAltarPillar;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -290,6 +289,9 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 }
                 handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
                 VampirePlayer.get(player).drinkBlood(Integer.MAX_VALUE, 0, false);
+                if (player instanceof EntityPlayerMP) {
+                    ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);
+                }
             } else {
                 this.world.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
                 this.world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);

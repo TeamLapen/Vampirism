@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:potion",
+      "nbt": "{Potion: \"minecraft:poison\"}"
+    },
+    "title": {
+      "translate": "advancement.vampirism.yuck"
+    },
+    "description": {
+      "translate": "advancement.vampirism.yuck"
+    },
+    "hidden": true
+  },
+  "parent": "vampirism:vampire/first_blood",
+  "criteria": {
+    "flower": {
+      "trigger": "vampirism:vampire_action",
+      "conditions": {
+        "action": "poisonous_bite"
+      }
+    }
+  }
+}
