@@ -112,7 +112,7 @@ public class BlockTotemTop extends VampirismBlockContainer {
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileTotem tile = getTile(worldIn, pos);
         if (tile != null) {
-            tile.onRemoved();
+            tile.onTileRemoved();
         }
         super.breakBlock(worldIn, pos, state);
     }

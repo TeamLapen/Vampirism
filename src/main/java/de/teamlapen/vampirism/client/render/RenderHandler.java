@@ -125,7 +125,7 @@ public class RenderHandler {
             }
         }
         if (mc.player.ticksExisted % 10 == 0) {
-            if (Configs.renderVampireForestFog && (Helper.isEntityInVampireBiome(mc.player) || TileTotem.insideVampireAreaCached(mc.world.provider.getDimension(), mc.player.getPosition()))) {
+            if (Configs.renderVampireForestFog && (Helper.isEntityInVampireBiome(mc.player) || TileTotem.isInsideVampireAreaCached(mc.world.provider.getDimension(), mc.player.getPosition()))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getSpecialAttributes().increasedVampireFogDistance ? 2 : 1;
             } else {
