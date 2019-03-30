@@ -125,10 +125,13 @@ public class VampirismVillage implements IVampirismVillage {
      *
      * @param pos Position of the removed totem
      */
-    public void removeTotemAndReset(BlockPos pos) {
-        this.totemLocation = null;
-        this.controllingFaction = null;
-        this.underAttack = false;
+    public void removeTotemAndReset(@Nonnull BlockPos pos) {
+        if (pos.equals(totemLocation)) {
+            this.totemLocation = null;
+            this.controllingFaction = null;
+            this.underAttack = false;
+        }
+
     }
 
     private int tickCounter;

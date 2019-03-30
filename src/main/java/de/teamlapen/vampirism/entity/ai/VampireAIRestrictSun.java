@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.tileentity.TileTotem;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathNavigateGround;
@@ -25,7 +26,7 @@ public class VampireAIRestrictSun<T extends EntityCreature & IVampire> extends E
     public boolean shouldExecute() {
         if (vampire.ticksExisted % 10 == 3) {
             Biome biome = vampire.getEntityWorld().getBiome(vampire.getPosition());
-            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(vampire.getEntityWorld().provider.getDimension()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome);
+            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(vampire.getEntityWorld().provider.getDimension()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome) && !TileTotem.insideVampireAreaCached(vampire.getEntityWorld().provider.getDimension(), vampire.getPosition());
         }
         return cache && vampire.getEntityWorld().isDaytime() && !vampire.isIgnoringSundamage();
     }
