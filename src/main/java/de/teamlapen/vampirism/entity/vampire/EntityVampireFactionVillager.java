@@ -29,19 +29,17 @@ public class EntityVampireFactionVillager extends EntityVampireFactionVillagerBa
     //TODO create realistic trades
     private final static EntityVillager.ITradeList[][] TRADES = {
             {
-                    new ItemsForHeart(new PriceInfo(10, 15), createTiers(IItemWithTier.TIER.NORMAL, ModItems.hunter_coat_feet, ModItems.obsidian_armor_feet, ModItems.armor_of_swiftness_feet), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(25, 35), createTiers(IItemWithTier.TIER.NORMAL, ModItems.hunter_coat_legs, ModItems.obsidian_armor_legs, ModItems.armor_of_swiftness_legs), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(30, 40), createTiers(IItemWithTier.TIER.NORMAL, ModItems.hunter_coat_chest, ModItems.obsidian_armor_chest, ModItems.armor_of_swiftness_chest), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(20, 30), createTiers(IItemWithTier.TIER.NORMAL, ModItems.hunter_coat_head, ModItems.obsidian_armor_head, ModItems.armor_of_swiftness_head), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(10, 20), ModItems.item_garlic, new PriceInfo(2, 5)), new ItemsForHeart(new PriceInfo(50, 100), Items.DIAMOND, new PriceInfo(1, 1))
+                    new ItemsForHeart(new PriceInfo(10, 15), new ItemStack(ModItems.pure_blood, 1, 0), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.pure_blood, 1, 2), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(30, 40), ModItems.item_coffin, new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(20, 30), new ItemStack(ModItems.pure_blood, 1, 1), new PriceInfo(1, 1))
             }, {
-                    new ItemsForHeart(new PriceInfo(10, 15), createTiers(IItemWithTier.TIER.ENHANCED, ModItems.hunter_coat_feet, ModItems.obsidian_armor_feet, ModItems.armor_of_swiftness_feet), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(25, 35), createTiers(IItemWithTier.TIER.ENHANCED, ModItems.hunter_coat_legs, ModItems.obsidian_armor_legs, ModItems.armor_of_swiftness_legs), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(30, 40), createTiers(IItemWithTier.TIER.ENHANCED, ModItems.hunter_coat_chest, ModItems.obsidian_armor_chest, ModItems.armor_of_swiftness_chest), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(20, 30), createTiers(IItemWithTier.TIER.ENHANCED, ModItems.hunter_coat_head, ModItems.obsidian_armor_head, ModItems.armor_of_swiftness_head), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(40, 90), Items.DIAMOND, new PriceInfo(1, 2))
+                    new ItemsForHeart(new PriceInfo(10, 15), new ItemStack(ModItems.blood_bottle, 3, 4), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.pure_blood, 1, 3), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood, 1, 4), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(20, 30), new ItemStack(ModItems.blood_bottle, 3, 9), new PriceInfo(1, 1))
             }, {
-                    new ItemsForHeart(new PriceInfo(100, 200), createTiers(IItemWithTier.TIER.ULTIMATE, ModItems.hunter_coat_feet, ModItems.obsidian_armor_feet, ModItems.armor_of_swiftness_feet, ModItems.hunter_coat_legs, ModItems.obsidian_armor_legs, ModItems.armor_of_swiftness_legs, ModItems.hunter_coat_chest, ModItems.obsidian_armor_chest, ModItems.armor_of_swiftness_chest, ModItems.hunter_coat_head, ModItems.obsidian_armor_head, ModItems.armor_of_swiftness_head), new PriceInfo(1, 1))
+                    new ItemsForHeart(new PriceInfo(100, 200), ModItems.vampire_cloak, new PriceInfo(1, 1))
             }
     };
 
