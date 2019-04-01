@@ -61,7 +61,7 @@ import java.util.*;
  * It displays the current status and allows players to capture the village.
  */
 public class TileTotem extends TileEntity implements ITickable {
-    private final static int NOTIFY_DISTANCE_SQ = 10000;
+    private final static int NOTIFY_DISTANCE_SQ = 40000;
     private final static String TAG = "TileTotem";
     private final static int DURATION_PHASE_1 = 60;
     private boolean force_village_update = true;
@@ -374,6 +374,16 @@ public class TileTotem extends TileEntity implements ITickable {
             }
         }
         world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+    }
+
+    /**
+     * Remove all cached areas for the given map/dimension
+     */
+    public static void clearCacheForDimension(int i) {
+        Map m = vampireVillages.lookup(i);
+        if (m != null) {
+            m.clear();
+        }
     }
 
     @Nullable
