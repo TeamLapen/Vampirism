@@ -41,7 +41,7 @@ public class BlockTotemTop extends VampirismBlockContainer {
 
     public BlockTotemTop() {
         super(regName, Material.ROCK);
-        this.setHardness(50.0F);
+        this.setHardness(40.0F);
         this.setResistance(2000.0F);
         setSoundType(SoundType.STONE);
     }

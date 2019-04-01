@@ -15,7 +15,7 @@ public class BlockTotemBase extends VampirismBlock {
 
     public BlockTotemBase() {
         super(regName, Material.ROCK);
-        this.setHardness(50.0F);
+        this.setHardness(40.0F);
         this.setResistance(2000.0F);
         setSoundType(SoundType.STONE);
     }
@@ -37,6 +37,7 @@ public class BlockTotemBase extends VampirismBlock {
             if (!up.getBlock().removedByPlayer(up, world, pos.up(), player, willHarvest)) {
                 return false;
             }
+            ModBlocks.totem_top.dropBlockAsItem(world, pos, state, 0); //Manually drop top, because block is only destroyed not harvested by #removedByPlayer
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest);
     }
