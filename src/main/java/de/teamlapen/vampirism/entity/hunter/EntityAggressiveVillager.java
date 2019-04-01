@@ -1,13 +1,16 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
+import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
+import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
-import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityVillager;
@@ -16,14 +19,18 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 /**
  * Villager that is equipped with a fork and hunts vampires
  */
-public class EntityAggressiveVillager extends EntityVillagerVampirism implements IHunterMob, IAggressiveVillager, HunterAIDefendVillage.IVillageHunterCreature {
+public class EntityAggressiveVillager extends EntityVillagerVampirism implements IHunterMob, IAggressiveVillager, IVillageCaptureEntity {
+    private AxisAlignedBB area;
     /**
      * Creates a hunter villager as an copy to the given villager
      *
@@ -46,10 +53,7 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
         ((PathNavigateGround) getNavigator()).setEnterDoors(true);
     }
 
-    @Override
-    public EntityCreature getRepresentingCreature() {
-        return this;
-    }
+
 
     @Override
     public EntityLivingBase getRepresentingEntity() {
@@ -86,6 +90,43 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_MAX_HEALTH);
     }
 
+    @Nullable
+    @Override
+    public IVampirismVillage getCurrentFriendlyVillage() {
+        return this.cachedVillage != null ? this.cachedVillage.getControllingFaction() == VReference.HUNTER_FACTION ? this.cachedVillage : null : null;
+    }
+
+    @Override
+    public void attackVillage(AxisAlignedBB area) {
+        this.area = area;
+    }
+
+    @Override
+    public void defendVillage(AxisAlignedBB area) {
+        this.area = area;
+    }
+
+    @Override
+    public AxisAlignedBB getTargetVillageArea() {
+        return area;
+    }
+
+    @Override
+    public boolean isAttackingVillage() {
+        return false;
+    }
+
+    @Override
+    public void stopVillageAttackDefense() {
+        EntityVillager villager = new EntityVillager(this.world);
+        NBTTagCompound nbt = new NBTTagCompound();
+        this.writeToNBT(nbt);
+        villager.readFromNBT(nbt);
+        villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
+        world.spawnEntity(villager);
+        this.setDead();
+    }
+
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
@@ -96,7 +137,7 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetTasks.addTask(3, new HunterAIDefendVillage(this));
+        this.targetTasks.addTask(3, new EntityAIDefendVillage<>(this));
         this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<EntityCreature>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
 
             @Override

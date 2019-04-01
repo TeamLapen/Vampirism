@@ -1,15 +1,14 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.InventoryRenderHelper;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.render.tiles.AltarInfusionTESR;
 import de.teamlapen.vampirism.client.render.tiles.CoffinTESR;
 import de.teamlapen.vampirism.client.render.tiles.PedestalTESR;
+import de.teamlapen.vampirism.client.render.tiles.TotemTESR;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
-import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
-import de.teamlapen.vampirism.tileentity.TileCoffin;
-import de.teamlapen.vampirism.tileentity.TilePedestal;
+import de.teamlapen.vampirism.tileentity.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -54,6 +53,16 @@ public class ModBlocksRender {
             }
             return 0xFFFFFF;
         }, ModBlocks.alchemical_cauldron);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((state, worldIn, pos, tintIndex) -> {
+            if (tintIndex == 255) {
+                TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
+                if (tile instanceof TileTotem) {
+                    IPlayableFaction f = ((TileTotem) tile).getControllingFaction();
+                    if (f != null) return f.getColor();
+                }
+            }
+            return 0xFFFFFF;
+        }, ModBlocks.totem_top);
     }
 
     private static void registerRenderer() {
@@ -80,6 +89,8 @@ public class ModBlocksRender {
         renderHelper.registerRender(ModBlocks.blood_pedestal);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.blood_grinder), EnumFacing.HORIZONTALS);
         renderHelper.registerRender(ModBlocks.blood_sieve);
+        renderHelper.registerRender(ModBlocks.totem_base);
+        renderHelper.registerRender(ModBlocks.totem_top);
 
 
         for (EnumFacing f : EnumFacing.HORIZONTALS) {
@@ -135,6 +146,7 @@ public class ModBlocksRender {
         ClientRegistry.bindTileEntitySpecialRenderer(TileCoffin.class, new CoffinTESR());
         ClientRegistry.bindTileEntitySpecialRenderer(TileAltarInfusion.class, new AltarInfusionTESR());
         ClientRegistry.bindTileEntitySpecialRenderer(TilePedestal.class, new PedestalTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileTotem.class, new TotemTESR());
     }
 
 

@@ -6,8 +6,13 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.network.RequestPlayerUpdatePacket;
 import de.teamlapen.lib.network.UpdateEntityPacket;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.entity.ExtendedCreature;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
+import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.capabilities.Capability;
@@ -48,6 +53,13 @@ public class EntityEventHandler {
         if (event.getEntity() instanceof EntityPlayer) {
             for (Capability listener : listeners) {
                 ((IPlayerEventListener) event.getEntity().getCapability(listener, null)).onJoinWorld();
+            }
+        }
+        
+        if (event.getEntity() instanceof EntityVillager && !event.getWorld().isRemote) {
+            VampirismVillage village = VampirismVillageHelper.getNearestVillage(event.getWorld(), event.getEntity().getPosition(), 5);
+            if (village != null && village.getControllingFaction() != null && village.getControllingFaction().equals(VReference.HUNTER_FACTION)) {
+                event.getEntity().getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(true);
             }
         }
     }

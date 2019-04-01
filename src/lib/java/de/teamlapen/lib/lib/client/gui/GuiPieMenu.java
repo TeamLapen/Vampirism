@@ -216,6 +216,7 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
     protected abstract ResourceLocation getIconLoc(T item);
 
     /**
+
      * @return the menu key binding set in the game settings
      */
     protected abstract KeyBinding getMenuKeyBinding();

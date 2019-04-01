@@ -51,6 +51,11 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
+    public float getCurrentLevelRelative() {
+        return 0;
+    }
+
+    @Override
     public EntityPlayer getPlayer() {
         return null;
     }

@@ -56,6 +56,13 @@ public interface IFactionPlayerHandler {
     int getCurrentLevel(IPlayableFaction f);
 
     /**
+     * If not in faction returns 0f
+     *
+     * @return Level/MaxLevel. Between 0f and 1f.
+     */
+    float getCurrentLevelRelative();
+
+    /**
      * @return The player represented by this handler
      */
     EntityPlayer getPlayer();

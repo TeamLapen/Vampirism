@@ -22,7 +22,7 @@ public class EntityVillagerVampirism extends EntityVillager {
     protected boolean peaceful = false;
     protected
     @Nullable
-    IVampirismVillage IVampirismVillageObj;
+    IVampirismVillage cachedVillage;
     /**
      * A timer which reaches 0 every 70 to 120 ticks
      */
@@ -77,6 +77,9 @@ public class EntityVillagerVampirism extends EntityVillager {
             if (entity instanceof EntityLivingBase) {
                 this.setAttackTarget((EntityLivingBase) entity);
             }
+            if (cachedVillage != null) {
+                cachedVillage.addOrRenewAggressor(entity);
+            }
             return true;
         }
         return false;
@@ -89,7 +92,7 @@ public class EntityVillagerVampirism extends EntityVillager {
 
     @Nullable
     public IVampirismVillage getVampirismVillage() {
-        return IVampirismVillageObj;
+        return cachedVillage;
     }
 
     @Override
@@ -118,7 +121,7 @@ public class EntityVillagerVampirism extends EntityVillager {
         super.updateAITasks();
         if (--this.randomTickDivider <= 0) {
             this.randomTickDivider = 70 + rand.nextInt(50);
-            this.IVampirismVillageObj = VampirismVillageHelper.getNearestVillage(world, getPosition(), 32);
+            this.cachedVillage = VampirismVillageHelper.getNearestVillage(world, getPosition(), 32);
         }
 
     }

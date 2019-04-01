@@ -149,6 +149,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
+    public float getCurrentLevelRelative() {
+        return currentFaction == null ? 0 : currentLevel / (float) currentFaction.getHighestReachableLevel();
+    }
+
+    @Override
     public EntityPlayer getPlayer() {
         return player;
     }
@@ -201,9 +206,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (Configs.pvp_only_between_factions && src instanceof EntityDamageSource) {
             if (src.getTrueSource() instanceof EntityPlayer) {
                 FactionPlayerHandler other = get((EntityPlayer) src.getTrueSource());
-                if (this.currentFaction != null && this.currentFaction.equals(other.currentFaction)) {
-                    return false;
-                }
+                return this.currentFaction == null || !this.currentFaction.equals(other.currentFaction);
             }
         }
         return true;

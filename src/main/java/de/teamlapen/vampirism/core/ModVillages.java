@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceModChurch;
+import de.teamlapen.vampirism.world.gen.village.VillagePieceTotem;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceTrainer;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
@@ -25,6 +26,8 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  * Handles Village related stuff
  */
 public class ModVillages {
+    @GameRegistry.ObjectHolder("vampirism:hunter_expert")
+    public static final VillagerRegistry.VillagerProfession profession_hunter_expert = getNull();
     @GameRegistry.ObjectHolder("vampirism:vampire_expert")
     public static final VillagerRegistry.VillagerProfession profession_vampire_expert = getNull();
     private final static String TAG = "ModVillages";
@@ -38,12 +41,14 @@ public class ModVillages {
     private static void registerPieces() {
         MapGenStructureIO.registerStructureComponent(VillagePieceTrainer.class, "Vampirism-TR");
         MapGenStructureIO.registerStructureComponent(VillagePieceModChurch.class, "Vampirism-MC");
+        MapGenStructureIO.registerStructureComponent(VillagePieceTotem.class, "Vampirism-To");
     }
 
     private static void registerCreationHandlers() {
         if (!Configs.disable_all_worldgen) {
             VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceTrainer.CreationHandler());
             VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceModChurch.CreationHandler());
+            VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceTotem.CreationHandler());
         }
     }
 
@@ -89,13 +94,17 @@ public class ModVillages {
         } else {
             VampirismMod.log.w(TAG, "Did not find vanilla priest profession");
         }
+        VillagerRegistry.VillagerCareer normal_hunter_expert = new VillagerRegistry.VillagerCareer(profession_hunter_expert, "vampirism.hunter_expert");
+        normal_hunter_expert.addTrade(1, new EntityVillager.EmeraldForItems(ModItems.vampire_fang, new EntityVillager.PriceInfo(20, 30)));
+        normal_hunter_expert.addTrade(2, new EntityVillager.EmeraldForItems(ModItems.vampire_book, new EntityVillager.PriceInfo(1, 1)));
+        //TODO modify recipes
         VillagerRegistry.VillagerCareer normal_vampire_expert = new VillagerRegistry.VillagerCareer(profession_vampire_expert, "vampirism.vampire_expert");
         normal_vampire_expert.addTrade(1, new EntityVillager.EmeraldForItems(ModItems.vampire_fang, new EntityVillager.PriceInfo(20, 30)));
         normal_vampire_expert.addTrade(2, new EntityVillager.EmeraldForItems(ModItems.vampire_book, new EntityVillager.PriceInfo(1, 1)));
     }
 
     static void registerProfessions(IForgeRegistry<VillagerRegistry.VillagerProfession> registry) {
-        registry.register(new VillagerRegistry.VillagerProfession("vampirism:vampire_expert", "vampirism:textures/entity/villager_vampire_expert.png",
-                "minecraft:textures/entity/zombie_villager/zombie_farmer.png"));
+        registry.register(new VillagerRegistry.VillagerProfession("vampirism:hunter_expert", "vampirism:textures/entity/villager_hunter_expert.png", "vampirism:textures/entity/villager_hunter_expert_zombie.png"));
+        registry.register(new VillagerRegistry.VillagerProfession("vampirism:vampire_expert", "vampirism:textures/entity/villager_vampire_expert.png", "vampirism:textures/entity/villager_vampire_expert_zombie.png"));
     }
 }

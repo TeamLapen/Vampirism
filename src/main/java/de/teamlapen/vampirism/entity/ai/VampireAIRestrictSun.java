@@ -2,39 +2,36 @@ package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.tileentity.TileTotem;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.world.biome.Biome;
 
 
-public class VampireAIRestrictSun extends EntityAIBase {
-    private final IVampire vampire;
-    private final EntityCreature creature;
+public class VampireAIRestrictSun<T extends EntityCreature & IVampire> extends EntityAIBase {
+    private final T vampire;
     private boolean cache = false;
 
-    /**
-     * @param creature Has to implement {@link IVampire}
-     */
-    public VampireAIRestrictSun(EntityCreature creature) {
-        this.vampire = (IVampire) creature;
-        this.creature = creature;
+
+    public VampireAIRestrictSun(T creature) {
+        this.vampire = creature;
     }
 
     public void resetTask() {
-        ((PathNavigateGround) this.creature.getNavigator()).setAvoidSun(false);
+        ((PathNavigateGround) this.vampire.getNavigator()).setAvoidSun(false);
     }
 
     @Override
     public boolean shouldExecute() {
-        if (creature.ticksExisted % 10 == 3) {
-            Biome biome = creature.getEntityWorld().getBiome(creature.getPosition());
-            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(creature.getEntityWorld().provider.getDimension()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome);
+        if (vampire.ticksExisted % 10 == 3) {
+            Biome biome = vampire.getEntityWorld().getBiome(vampire.getPosition());
+            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(vampire.getEntityWorld().provider.getDimension()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome) && !TileTotem.isInsideVampireAreaCached(vampire.getEntityWorld().provider.getDimension(), vampire.getPosition());
         }
-        return cache && creature.getEntityWorld().isDaytime() && !vampire.isIgnoringSundamage();
+        return cache && vampire.getEntityWorld().isDaytime() && !vampire.isIgnoringSundamage();
     }
 
     public void startExecuting() {
-        ((PathNavigateGround) this.creature.getNavigator()).setAvoidSun(true);
+        ((PathNavigateGround) this.vampire.getNavigator()).setAvoidSun(true);
     }
 }

@@ -15,6 +15,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import java.util.Collections;
+
 /**
  * Simple mob spawning logic. More configurable than {@link MobSpawnerBaseLogic} but less functional.
  */
@@ -165,7 +167,7 @@ public abstract class SimpleSpawnerLogic {
                         }
                     }
 
-                    if (UtilLib.spawnEntityInWorld(getSpawnerWorld(), getSpawningBox(), entity, 1)) {
+                    if (UtilLib.spawnEntityInWorld(getSpawnerWorld(), getSpawningBox(), entity, 1, Collections.emptyList())) {
                         onSpawned(entity);
                         flag1 = true;
                     }

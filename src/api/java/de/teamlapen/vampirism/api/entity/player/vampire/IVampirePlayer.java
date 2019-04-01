@@ -110,6 +110,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn);
 
     enum BITE_TYPE {
-        ATTACK, ATTACK_HUNTER, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD_HUNTER_PLAYER, SUCK_BLOOD, NONE
+        ATTACK, ATTACK_HUNTER, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD_HUNTER_PLAYER, SUCK_BLOOD, NONE, HUNTER_CREATURE;
     }
 }

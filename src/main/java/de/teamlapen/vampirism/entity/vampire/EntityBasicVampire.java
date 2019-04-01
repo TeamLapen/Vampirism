@@ -1,18 +1,22 @@
 package de.teamlapen.vampirism.entity.vampire;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
+import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.world.loot.LootHandler;
+import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -30,6 +34,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -48,21 +53,50 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     private EntityAdvancedVampire advancedLeader = null;
     private int angryTimer = 0;
 
-    public EntityBasicVampire(World world) {
-        super(world, true);
-        this.canSuckBloodFromPlayer = true;
-        hasArms = true;
-        this.restrictedSpawn = true;
-        this.setSize(0.6F, 1.95F);
-        this.entitytier = EntityActionTier.Medium;
-        this.entityActionHandler = new EntityActionHandler<>(this);
-    }
+    private EntityAIBase tasks_avoidHunter;
+
+    /**
+     * Cached village. Serverside
+     */
+    @Nullable
+    private IVampirismVillage cachedVillage;
 
     @Override
     public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
         boolean flag = super.attackEntityFrom(damageSource, p_70097_2_);
         if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
+        IVampirismVillage v = getCurrentFriendlyVillage();
+        if (v != null) {
+            v.addOrRenewAggressor(damageSource.getTrueSource());
+        }
         return flag;
+    }
+
+    /**
+     * If this is non-null we are currently attacking a village center
+     */
+    @Nullable
+    private AxisAlignedBB village_attack_area;
+    /**
+     * If this is non-null we are currently defending a village center
+     */
+    @Nullable
+    private AxisAlignedBB village_defense_area;
+
+    public EntityBasicVampire(World world) {
+        super(world, true);
+        this.canSuckBloodFromPlayer = true;
+        hasArms = true;
+        this.setSpawnRestriction(SpawnRestriction.SPECIAL);
+        this.setSize(0.6F, 1.95F);
+        this.entitytier = EntityActionTier.Medium;
+        this.entityActionHandler = new EntityActionHandler<>(this);
+    }
+
+    @Nullable
+    @Override
+    public IVampirismVillage getCurrentFriendlyVillage() {
+        return cachedVillage != null ? cachedVillage.getControllingFaction() == VReference.VAMPIRE_FACTION ? cachedVillage : null : null;
     }
 
     @Override
@@ -154,6 +188,9 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         if (advancedLeader != null && !advancedLeader.isEntityAlive()) {
             advancedLeader = null;
         }
+        if (!this.world.isRemote && this.ticksExisted % 40 == 8) {
+            cachedVillage = VampirismVillageHelper.getNearestVillage(this);
+        }
     }
 
     @Override
@@ -161,6 +198,11 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         super.readFromNBT(tagCompund);
         if (tagCompund.hasKey("level")) {
             setLevel(tagCompund.getInteger("level"));
+        }
+        if (tagCompund.hasKey("village_attack_area")) {
+            this.attackVillage(UtilLib.intToBB(tagCompund.getIntArray("village_attack_area")));
+        } else if (tagCompund.hasKey("village_defense_area")) {
+            this.defendVillage(UtilLib.intToBB(tagCompund.getIntArray("village_defense_area")));
         }
 
     }
@@ -196,6 +238,11 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         nbt.setInteger("level", getLevel());
+        if (village_attack_area != null) {
+            nbt.setIntArray("village_attack_area", UtilLib.bbToInt(village_attack_area));
+        } else if (village_defense_area != null) {
+            nbt.setIntArray("village_defense_area", UtilLib.bbToInt(village_defense_area));
+        }
     }
 
     @Override
@@ -243,6 +290,43 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
+    public void attackVillage(AxisAlignedBB area) {
+        this.tasks.removeTask(tasks_avoidHunter);
+        village_attack_area = area;
+        this.setCustomNameTag("Attacking Village");//TODO Debug
+    }
+
+    @Override
+    public void defendVillage(AxisAlignedBB area) {
+        this.tasks.removeTask(tasks_avoidHunter);
+        village_defense_area = area;
+        this.setCustomNameTag("Defending Village"); //TODO Debug
+    }
+
+    @Nullable
+    @Override
+    public AxisAlignedBB getTargetVillageArea() {
+        return village_attack_area == null ? village_defense_area : village_attack_area;
+    }
+
+    @Override
+    public boolean isAttackingVillage() {
+        return village_attack_area != null;
+    }
+
+    @Override
+    public void stopVillageAttackDefense() {
+        this.setCustomNameTag("");
+        if (village_defense_area != null) {
+            this.tasks.addTask(2, this.tasks_avoidHunter);
+            village_defense_area = null;
+        } else if (village_attack_area != null) {
+            this.tasks.addTask(2, this.tasks_avoidHunter);
+            village_attack_area = null;
+        }
+    }
+
+    @Override
     protected void initEntityAI() {
         super.initEntityAI();
         if (world.getDifficulty() == EnumDifficulty.HARD) {
@@ -250,7 +334,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
             this.tasks.addTask(1, new EntityAIBreakDoor(this));
             ((PathNavigateGround) this.getNavigator()).setBreakDoors(true);
         }
-        this.tasks.addTask(2, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1));
+        this.tasks_avoidHunter = new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1);
+        this.tasks.addTask(2, this.tasks_avoidHunter);
         this.tasks.addTask(2, new VampireAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
@@ -265,11 +350,12 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.tasks.addTask(10, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
+        this.targetTasks.addTask(4, new EntityAIAttackVillage<>(this));
+        this.targetTasks.addTask(4, new EntityAIDefendVillage<>(this));//Should automatically be mutually exclusive with  attack village
+        this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetTasks.addTask(6, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
 
     }
-
 
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);

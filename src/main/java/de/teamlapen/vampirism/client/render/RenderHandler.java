@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.render;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -14,6 +13,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.tileentity.TileTotem;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -60,7 +60,17 @@ public class RenderHandler {
     private final List<EntityLivingBase> renderedEntitiesWithBlood = Lists.newLinkedList();
     private final List<EntityLivingBase> renderedEntitiesWithoutBlood = Lists.newLinkedList();
     private EntityBat entityBat;
+    /**
+     * Fog fade counter
+     * Between 0 and {@link #BLOOD_VISION_FADE_TICKS}
+     * Updated every tick if {@link #insideFog}
+     */
     private int vampireBiomeTicks = 0;
+    /**
+     * If inside a foggy area.
+     * Only updated every n ticks
+     */
+    private boolean insideFog = false;
     private int bloodVisionTicks = 0;
     private int lastBloodVisionTicks = 0;
     private float vampireBiomeFogDistanceMultiplier = 1;
@@ -114,12 +124,18 @@ public class RenderHandler {
                 disableBloodVision();
             }
         }
-
-        if (Configs.renderVampireForestFog && VReference.castleDimId != mc.world.provider.getDimension() && Helper.isEntityInVampireBiome(mc.player)) {
+        if (mc.player.ticksExisted % 10 == 0) {
+            if (Configs.renderVampireForestFog && (Helper.isEntityInVampireBiome(mc.player) || TileTotem.isInsideVampireAreaCached(mc.world.provider.getDimension(), mc.player.getPosition()))) {
+                insideFog = true;
+                vampireBiomeFogDistanceMultiplier = vampire.getSpecialAttributes().increasedVampireFogDistance ? 2 : 1;
+            } else {
+                insideFog = false;
+            }
+        }
+        if (insideFog) {
             if (vampireBiomeTicks < VAMPIRE_BIOME_FADE_TICKS) {
                 vampireBiomeTicks++;
             }
-            vampireBiomeFogDistanceMultiplier = vampire.getSpecialAttributes().increasedVampireFogDistance ? 2 : 1;
         } else {
             if (vampireBiomeTicks > 0) {
                 vampireBiomeTicks--;

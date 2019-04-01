@@ -1,64 +1,37 @@
 package de.teamlapen.vampirism.world.villages;
 
-import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.Village;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * DO NOT USE.
- * Default implementation for vampirism village
- */
-@Deprecated
-class VampirismVillageDefaultImpl implements IVampirismVillage {
+
+public class VampirismVillageDefaultImpl implements IVampirismVillage {
     @Nullable
     @Override
-    public IVampire findNearestVillageAggressor(@Nonnull EntityLivingBase entityCenter) {
+    public IFaction getControllingFaction() {
         return null;
     }
 
-    @Override
-    public AxisAlignedBB getBoundingBox() {
-        return null;
-    }
-
-    @Override
-    public BlockPos getCenter() {
-        return null;
-    }
-
+    @Nonnull
     @Override
     public Village getVillage() {
         return null;
     }
 
     @Override
-    public boolean isOvertaken() {
-        return false;
-    }
-
-    @Override
-    public void onVillagerBitten(IVampire vampire) {
+    public void addOrRenewAggressor(@Nullable Entity entity) {
 
     }
 
+    @Nullable
     @Override
-    public void onVillagerBittenToDeath(IVampire vampire) {
-
-    }
-
-    @Override
-    public void onVillagerConverted(@Nullable IVampire vampire) {
-
-    }
-
-    @Override
-    public void setIsOvertaken(boolean overtaken) {
-
+    public IFactionEntity findNearestVillageAggressor(@Nonnull EntityLivingBase entity) {
+        return null;
     }
 }

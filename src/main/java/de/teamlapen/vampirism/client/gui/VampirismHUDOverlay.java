@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
@@ -92,9 +93,9 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.phase == TickEvent.Phase.END)
             return;
         IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer();
-        if (player != null && player instanceof VampirePlayer) {
+        if (player instanceof VampirePlayer) {
             handleScreenColorVampire((VampirePlayer) player);
-        } else if (player != null && player instanceof HunterPlayer) {
+        } else if (player instanceof HunterPlayer) {
             handleScreenColorHunter((HunterPlayer) player);
         } else {
             screenPercentage = 0;
@@ -137,8 +138,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     biteable = VampirePlayer.get((EntityPlayer) entity);
                 }
                 if (biteable != null && biteable.canBeBitten(player)) {
-                    renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(),
-                            MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F));
+                    int color = 0xFF0000;
+                    if (entity instanceof EntityHunterBase || (entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()))
+                        color = 0x099022;
+                    renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                     event.setCanceled(true);
                 }
             }
@@ -149,11 +152,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 if (player.wantsBlood()) {
                     TileEntity tile = Minecraft.getMinecraft().world.getTileEntity(p.getBlockPos());
                     if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-                        if (FluidLib.getFluidAmount(
-                                tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null),
-                                ModFluids.blood) > 0) {
-                            renderBloodFangs(event.getResolution().getScaledWidth(),
-                                    event.getResolution().getScaledHeight(), 1);
+                        if (FluidLib.getFluidAmount(tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), ModFluids.blood) > 0) {
+                            renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), 1, 0xFF0000);
                             event.setCanceled(true);
                         }
                     }
@@ -372,15 +372,18 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    private void renderBloodFangs(int width, int height, float perc) {
+    private void renderBloodFangs(int width, int height, float perc, int color) {
 
+        float r = ((color & 0xFF0000) >> 16) / 256f;
+        float g = ((color & 0xFF00) >> 8) / 256f;
+        float b = (color & 0xFF) / 256f;
         this.mc.getTextureManager().bindTexture(icons);
         int left = width / 2 - 8;
         int top = height / 2 - 4;
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glColor4f(1F, 1F, 1F, 0.7F);
+        GL11.glColor4f(r, g, b, 0.7F);
         drawTexturedModalRect(left, top, 27, 0, 16, 10);
-        GL11.glColor4f(1F, 0F, 0F, 0.8F);
+        GL11.glColor4f(r, g, b, 0.8F);
         int percHeight = (int) (10 * perc);
         drawTexturedModalRect(left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
         GL11.glColor4f(1F, 1F, 1F, 1F);

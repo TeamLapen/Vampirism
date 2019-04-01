@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.event;
 
-import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
+import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
@@ -120,7 +120,7 @@ public abstract class VampirismVillageEvent extends Event {
 
         private final EntityVillager oldVillager;
         private @Nullable
-        IAggressiveVillager aggressiveVillager;
+        IVillageCaptureEntity captureVillager;
 
         public MakeAggressive(@Nullable IVampirismVillage village, @Nonnull EntityVillager villager) {
             super(village);
@@ -128,8 +128,8 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         @Nullable
-        public IAggressiveVillager getAggressiveVillager() {
-            return aggressiveVillager;
+        public IVillageCaptureEntity getAggressiveVillager() {
+            return captureVillager;
         }
 
         /**
@@ -145,11 +145,11 @@ public abstract class VampirismVillageEvent extends Event {
          *
          * @param aggressiveVillager Must extend EntityVillager
          */
-        public void setAgressiveVillager(@Nullable IAggressiveVillager aggressiveVillager) {
-            if (!(aggressiveVillager instanceof EntityVillager)) {
+        public void setAgressiveVillager(@Nullable IVillageCaptureEntity captureVillager) {
+            if (!(captureVillager instanceof EntityVillager)) {
                 throw new IllegalArgumentException("Aggressive villager must be a instanceof EntityVillager");
             }
-            this.aggressiveVillager = aggressiveVillager;
+            this.captureVillager = captureVillager;
         }
     }
 }

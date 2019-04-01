@@ -8,17 +8,14 @@ import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,6 +38,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     private static final String TAG = "ExtendedCreature";
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "maxBlood";
+    private final static String POISONOUS_BLOOD = "poisonousBlood";
 
 
     public static IExtendedCreatureVampirism get(EntityCreature mob) {
@@ -84,6 +82,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     private final EntityCreature entity;
     private final boolean canBecomeVampire;
+    private boolean poisonousBlood;
     /**
      * If the blood value of this creatures should be calculated
      */
@@ -109,6 +108,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             canBecomeVampire = false;
         }
         blood = maxBlood;
+        poisonousBlood = false;
     }
 
     @Override
@@ -181,6 +181,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         if (nbt.hasKey(KEY_MAX_BLOOD)) {
             setBlood(nbt.getInteger(KEY_MAX_BLOOD));
         }
+        if (nbt.hasKey(POISONOUS_BLOOD)) {
+            setPoisonousBlood(nbt.getBoolean(POISONOUS_BLOOD));
+        }
     }
 
     @Override
@@ -240,18 +243,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
         }
         this.sync();
-        if (amt > 0 && entity instanceof EntityVillager) {
-            IVampirismVillage vv = VampirismVillageHelper.getNearestVillage(entity);
-            if (vv != null) {
-                vv.onVillagerBitten(biter);
-                if (converted) {
-                    vv.onVillagerConverted(biter);
-                }
-                if (killed) {
-                    vv.onVillagerBittenToDeath(biter);
-                }
-            }
-        }
         //If advanced biter, sometimes return twice the blood amount
         if (biter.isAdvancedBiter()) {
             if (entity.getRNG().nextInt(4) == 0) {
@@ -290,6 +281,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
         nbt.setInteger(KEY_BLOOD, getBlood());
         nbt.setInteger(KEY_MAX_BLOOD, getBlood());
+        nbt.setBoolean(POISONOUS_BLOOD, hasPoisonousBlood());
     }
 
     private void loadNBTData(NBTTagCompound compound) {
@@ -299,11 +291,15 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         if (compound.hasKey(KEY_BLOOD)) {
             setBlood(compound.getInteger(KEY_BLOOD));
         }
+        if (compound.hasKey(POISONOUS_BLOOD)) {
+            setPoisonousBlood(compound.getBoolean(POISONOUS_BLOOD));
+        }
     }
 
     private void saveNBTData(NBTTagCompound compound) {
         compound.setInteger(KEY_BLOOD, blood);
         compound.setInteger(KEY_MAX_BLOOD, maxBlood);
+        compound.setBoolean(POISONOUS_BLOOD, poisonousBlood);
     }
 
     private void sync() {
@@ -326,6 +322,19 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             NBTTagCompound nbt = new NBTTagCompound();
             ((ExtendedCreature) instance).saveNBTData(nbt);
             return nbt;
+        }
+    }
+
+    @Override
+    public boolean hasPoisonousBlood() {
+        return poisonousBlood;
+    }
+
+    @Override
+    public void setPoisonousBlood(boolean poisonous) {
+        if (poisonous == !poisonousBlood) {
+            poisonousBlood = poisonous;
+            sync();
         }
     }
 

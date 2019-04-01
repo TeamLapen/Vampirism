@@ -19,14 +19,13 @@ import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
+import de.teamlapen.vampirism.tileentity.TileTotem;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
 import de.teamlapen.vampirism.world.gen.structure.VampirismTemplate;
-import de.teamlapen.vampirism.world.villages.VampirismVillage;
-import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -72,25 +71,7 @@ public class TestCommand extends BasicCommand {
         if (VampirismMod.inDev) {
             aliases.add("vtest");
         }
-        addSubcommand(new SubCommand() {
-            @Override
-            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-                EntityPlayer player = getCommandSenderAsPlayer(sender);
-                VampirismVillage v = VampirismVillageHelper.getNearestVillage(player);
-                if (v == null) {
-                    sender.sendMessage(new TextComponentString("No village found"));
-                } else {
-                    sender.sendMessage(new TextComponentString(v.makeDebugString(player.getPosition())));
 
-                }
-            }
-
-            @Override
-            public String getName() {
-                return "info-village";
-            }
-
-        });
         addSubcommand(new SubCommand() {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
@@ -340,7 +321,7 @@ public class TestCommand extends BasicCommand {
                 List<EntityVillager> l = player.getEntityWorld().getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().grow(3, 2, 3));
                 for (EntityVillager v : l) {
                     if (v instanceof IHunter || v instanceof IVampire) continue;
-                    VampirismVillage.makeAggressive(v, null);
+                    TileTotem.makeAggressive(v, null);
 
                 }
             }
@@ -531,24 +512,7 @@ public class TestCommand extends BasicCommand {
             }
         });
 
-        addSubcommand(new SubCommand() {
-            @Override
-            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-                EntityPlayer p = getCommandSenderAsPlayer(sender);
-                VampirismVillage v = VampirismVillageHelper.getNearestVillage(p);
-                if (v == null) {
-                    sender.sendMessage(new TextComponentString("Could not find any village near you"));
-                } else {
-                    v.forcefullyOvertake();
-                    sender.sendMessage(new TextComponentString("Forcefully overtook village"));
-                }
-            }
 
-            @Override
-            public String getName() {
-                return "overtakeVillage";
-            }
-        });
         addSubcommand(new SubCommand() {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {

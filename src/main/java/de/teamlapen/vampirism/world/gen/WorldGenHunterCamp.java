@@ -18,6 +18,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fluids.IFluidBlock;
 
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -62,7 +63,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
                 placeTent(worldIn, rand, pos4, EnumFacing.SOUTH);
                 EntityAdvancedHunter hunter = new EntityAdvancedHunter(worldIn);
                 AxisAlignedBB box = new AxisAlignedBB(center.add(-7, 0, -10), center.add(7, 1, 7));
-                UtilLib.spawnEntityInWorld(worldIn, box, hunter, 8);
+                UtilLib.spawnEntityInWorld(worldIn, box, hunter, 8, Collections.emptyList());
                 hunter.setCampArea(box.grow(4, 5, 4));
                 if (VampirismWorldGen.debug)
                     VampirismMod.log.i("HunterCamp", "Generated advanced hunter camp at %s", center);
@@ -114,12 +115,9 @@ public class WorldGenHunterCamp extends WorldGenerator {
         k = k + random.nextInt(distance - 2);
         l = l + random.nextInt(distance - 2);
 
-        if (i == k && j == l) {
-            return world.getVillageCollection().getNearestVillage(world.getHeight(new BlockPos(i << 4, 0, j << 4)), 20) == null;
+        //return world.getVillageCollection().getNearestVillage(world.getHeight(new BlockPos(i << 4, 0, j << 4)), 25) == null; //Useless as village collection is not updated on world gen
+        return i == k && j == l;
 
-        }
-
-        return false;
     }
 
     private boolean checkGroundAndPos(World worldIn, BlockPos position, IBlockState ground) {

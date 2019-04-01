@@ -71,8 +71,6 @@ public class ModEntityEventHandler {
                 }
             }
         }
-
-
     }
 
     @SubscribeEvent

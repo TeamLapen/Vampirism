@@ -1,58 +1,25 @@
 package de.teamlapen.vampirism.api.world;
 
-import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.Village;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * Interfaces for Vampirism counterpart to vanilla Village class
- */
+
 public interface IVampirismVillage {
-    /**
-     * Finds the nearest aggressor to the given entity
-     */
+
     @Nullable
-    IVampire findNearestVillageAggressor(@Nonnull EntityLivingBase entityCenter);
+    IFaction getControllingFaction();
 
-    AxisAlignedBB getBoundingBox();
-
-    BlockPos getCenter();
-
+    @Nonnull
     Village getVillage();
 
-    /**
-     * @return If the village is overtaken by vampires
-     */
-    boolean isOvertaken();
+    void addOrRenewAggressor(@Nullable Entity entity);
 
-    /**
-     * Call this if a villager in this village has been bitten
-     *
-     * @param vampire The biter
-     */
-    void onVillagerBitten(IVampire vampire);
-
-    /**
-     * Call this if a villager in this village has been killed by a bite
-     *
-     * @param vampire The biter
-     */
-    void onVillagerBittenToDeath(IVampire vampire);
-
-    /**
-     * Call this if a villager in this village is converted by a vampire
-     *
-     * @param vampire The biter or null if unknown
-     */
-    void onVillagerConverted(@Nullable IVampire vampire);
-
-    /**
-     * Set if the village is overtaken by vampires
-     */
-    void setIsOvertaken(boolean overtaken);
+    @Nullable
+    IFactionEntity findNearestVillageAggressor(@Nonnull EntityLivingBase entity);
 }

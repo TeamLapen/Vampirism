@@ -234,7 +234,7 @@ public class GuideBook implements IGuideBook {
         HunterLevelingConf levelingConf = HunterLevelingConf.instance();
         List<IPage> levelingPages = new ArrayList<>();
         levelingPages.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "leveling.intro")));
-        String train1 = "§l" + UtilLib.translateFormatted(base + "leveling.toReach", "2-4") + "§r\n";
+        String train1 = "§l" + UtilLib.translateFormatted(base + "leveling.to_reach", "2-4") + "§r\n";
         train1 += UtilLib.translateFormatted(base + "leveling.train1.text", levelingConf.getVampireBloodCountForBasicHunter(2), levelingConf.getVampireBloodCountForBasicHunter(3), levelingConf.getVampireBloodCountForBasicHunter(4));
         levelingPages.addAll(GuideHelper.addLinks(GuideHelper.pagesForLongText(train1), new ResourceLocation("guide.vampirism.items.stake"), new ResourceLocation("guide.vampirism.items.vampire_blood_bottle")));
 
