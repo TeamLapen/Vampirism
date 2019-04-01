@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "vampirism:totem_base"
+  },
+  "pattern": [
+    "XYX",
+    "XYX",
+    "ZZZ"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "#PLANKS"
+    },
+    "Y": {
+      "item": "minecraft:obsidian"
+    },
+    "Z": {
+      "item": "#IRON"
+    }
+  }
+}

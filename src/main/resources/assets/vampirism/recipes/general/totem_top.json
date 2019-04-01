@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "vampirism:totem_top"
+  },
+  "pattern": [
+    "YXY",
+    "XZX",
+    "Y Y"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "minecraft:glass"
+    },
+    "Y": {
+      "item": "minecraft:obsidian"
+    },
+    "Z": {
+      "item": "#IRONBLOCK"
+    }
+  }
+}
