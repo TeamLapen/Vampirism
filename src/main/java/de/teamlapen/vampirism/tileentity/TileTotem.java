@@ -222,12 +222,13 @@ public class TileTotem extends TileEntity implements ITickable {
         force_village_update = true;
         this.markDirty();
         if(!world.isRemote && capturingFaction == VReference.VAMPIRE_FACTION) {
-        List<EntityVillager> villager = this.world.getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
-        	for (int i = 0; i < villager.size() / 3; i++) {
-        		if (villager instanceof EntityFactionVillager) continue;
-        		
-        		makeAggressive(villager.get(i), this.getVillage());
-        	}
+            List<EntityVillager> villager = this.world.getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
+            for (EntityVillager v : villager) {
+                if (v instanceof EntityFactionVillager) continue;
+                if (v.getRNG().nextInt(3) == 0) {
+                    makeAggressive(v, this.getVillage());
+                }
+            }
         }
     }
 
@@ -536,6 +537,7 @@ public class TileTotem extends TileEntity implements ITickable {
                 for (Entity e : entities) {
                     IFaction f = VampirismAPI.factionRegistry().getFaction(e);
                     if (f == null) continue;
+                    if (e instanceof EntityHunterTrainer) continue;
                     if (this.capturingFaction.equals(f)) {
                         attacker++;
                         attackStrength++;
