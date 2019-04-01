@@ -247,7 +247,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
          */
         @Override
         public StructureVillagePieces.PieceWeight getVillagePieceWeight(Random random, int terrainType) {
-            return new StructureVillagePieces.PieceWeight(VillagePieceTrainer.class, 20, MathHelper.getInt(random, 0, 1 + terrainType));
+            return new StructureVillagePieces.PieceWeight(VillagePieceTrainer.class, 15, MathHelper.getInt(random, 0, 1 + terrainType));
         }
     }
 

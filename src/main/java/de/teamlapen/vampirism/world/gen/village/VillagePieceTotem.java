@@ -130,7 +130,7 @@ public class VillagePieceTotem extends StructureVillagePieces.Village {
 
         @Override
         public StructureVillagePieces.PieceWeight getVillagePieceWeight(Random random, int i) {
-            return new StructureVillagePieces.PieceWeight(VillagePieceTotem.class, 20, 1);
+            return new StructureVillagePieces.PieceWeight(VillagePieceTotem.class, 20, random.nextInt(2) == 1 ? 1 : 0);
         }
     }
 }
