@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TotemTESR extends VampirismTESR<TileTotem> {
 
-    public static final ResourceLocation TEXTURE_BEACON_BEAM = new ResourceLocation(REFERENCE.MODID, "textures/entity/totem_beam.png");
+    private static final ResourceLocation TEXTURE_BEACON_BEAM = new ResourceLocation(REFERENCE.MODID, "textures/entity/totem_beam.png");
     private final static int HEIGHT = 100;
 
     @Override
@@ -25,7 +25,7 @@ public class TotemTESR extends VampirismTESR<TileTotem> {
         GlStateManager.alphaFunc(516, 0.1F);
         this.bindTexture(TEXTURE_BEACON_BEAM);
 
-        double textureScale = 1;//te.shouldRenderBeam();
+        double textureScale = te.shouldBeamRender();
 
 
         if (textureScale > 0.0D) {

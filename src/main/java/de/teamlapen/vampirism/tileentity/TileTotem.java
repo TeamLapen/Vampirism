@@ -177,6 +177,20 @@ public class TileTotem extends TileEntity implements ITickable {
         return false;
     }
 
+    @Override
+    public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
+        readFromNBT(tag);
+        if (tag.hasKey("village_bb")) {
+            if (controllingFaction == VReference.VAMPIRE_FACTION) {
+                StructureBoundingBox bb = new StructureBoundingBox(tag.getIntArray("village_bb"));
+                registerVampireArea(bb); //Replaces old area if different
+            } else {
+                unregisterVampireArea();
+            }
+        }
+        world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+    }
+
     /**
      * Initiate and prepare capture procedure. Should only be called if there isn't a capture in progress already.
      *
@@ -362,18 +376,30 @@ public class TileTotem extends TileEntity implements ITickable {
         return 65536.0D;
     }
 
-    @Override
-    public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
-        readFromNBT(tag);
-        if (tag.hasKey("village_bb")) {
-            if (controllingFaction == VReference.VAMPIRE_FACTION) {
-                StructureBoundingBox bb = new StructureBoundingBox(tag.getIntArray("village_bb"));
-                registerVampireArea(bb);
-            } else {
-                unregisterVampireArea();
+    @SideOnly(Side.CLIENT)
+    public float shouldBeamRender() {
+        if (!this.isComplete) {
+            return 0.0F;
+        } else {
+            int i = (int) (this.world.getTotalWorldTime() - this.beamRenderCounter);
+            this.beamRenderCounter = this.world.getTotalWorldTime();
+
+            if (i > 1) {
+                this.beamRenderScale -= (float) i / 40.0F;
+
+                if (this.beamRenderScale < 0.0F) {
+                    this.beamRenderScale = 0.0F;
+                }
             }
+
+            this.beamRenderScale += 0.025F;
+
+            if (this.beamRenderScale > 1.0F) {
+                this.beamRenderScale = 1.0F;
+            }
+
+            return this.beamRenderScale;
         }
-        world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
     }
 
     /**
@@ -454,6 +480,9 @@ public class TileTotem extends TileEntity implements ITickable {
 
         //Remote ----------------------------------
         if (this.world.isRemote) {
+            if (time % 10 == 4) {
+                this.updateTotem();
+            }
             if (this.capturingFaction != null && time % 40 == 9) {
                 this.capture_timer++;
             }
@@ -486,10 +515,12 @@ public class TileTotem extends TileEntity implements ITickable {
             }
 
             //Update  totem
-
             if (force_village_update || time % 80 == 0L) {
                 this.updateTotem();
                 force_village_update = false;
+            }
+            if (time % 1000 == 0) {
+                this.updateAffectedArea(); //In case village size has changed
             }
             //Handle capture
             if (this.capturingFaction != null && time % 40 == 9) {
@@ -624,14 +655,15 @@ public class TileTotem extends TileEntity implements ITickable {
 
     /**
      * Check if the totem is complete and allowed to exist in this village.
+     * On client side this only updates is complete
      */
     public void updateTotem() {
-        if (this.world.isRemote) return;
         boolean complete = this.world.getBlockState(this.pos.down()).getBlock().equals(ModBlocks.totem_base);
         if (complete != isComplete) {
             //TODO
         }
         isComplete = complete;
+        if (this.world.isRemote) return;
         if (isComplete) {
             @Nullable VampirismVillage village = getVillage();
             boolean insideVillageNew = village != null;
@@ -905,7 +937,7 @@ public class TileTotem extends TileEntity implements ITickable {
      * @param newVillager new Entity to spawn
      * @param entityToReplace old Entity to bew replaced
      * @param poisonousBlood if the villager should have poisonous blood
-     * @returns false if spawn is not possible
+     * @return false if spawn is not possible
      */
     private boolean spawnVillagerInVillage(@Nonnull EntityVillager newVillager, @Nullable Entity entityToReplace, boolean poisonousBlood) {
         if (!spawnEntityInVillage(newVillager, entityToReplace)) return false;
