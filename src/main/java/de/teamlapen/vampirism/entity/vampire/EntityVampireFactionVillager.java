@@ -17,6 +17,7 @@ import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.ArrayUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -27,16 +28,15 @@ public class EntityVampireFactionVillager extends EntityVampireFactionVillagerBa
     private final static EntityVillager.ITradeList[][] TRADES = {
             {
                     new ItemsForHeart(new PriceInfo(10, 15), new ItemStack(ModItems.pure_blood, 1, 0), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.pure_blood, 1, 2), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood, 1, 1), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(20, 30), ModItems.item_coffin, new PriceInfo(1, 1))
+                    new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.pure_blood, 1, 1), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood, 1, 2), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(1, 5), ModItems.item_coffin, new PriceInfo(1, 1))
             }, {
-                    new ItemsForHeart(new PriceInfo(10, 15), new ItemStack(ModItems.blood_bottle, 1, 4), new PriceInfo(1, 4)),
-                    new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.blood_bottle, 1, 9), new PriceInfo(1, 1)),
+            new ItemsForHeart(new PriceInfo(3, 12), new ItemStack(ModItems.blood_bottle, 1, 9), new PriceInfo(1, 15)),
                     new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood, 1, 4), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(20, 30), new ItemStack(ModItems.pure_blood, 1, 3), new PriceInfo(1, 4))
+            new ItemsForHeart(new PriceInfo(20, 30), new ItemStack(ModItems.pure_blood, 1, 3), new PriceInfo(1, 1))
             }, {
-                    new ItemsForHeart(new PriceInfo(100, 200), new ItemStack[] {
+            new ItemsForHeart(new PriceInfo(10, 30), new ItemStack[]{
                             new ItemStack(ModItems.vampire_cloak, 1, 0),
                             new ItemStack(ModItems.vampire_cloak, 1, 1),
                             new ItemStack(ModItems.vampire_cloak, 1, 2),
