@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.render;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -203,7 +202,7 @@ public class RenderHandler {
                 if (entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).getBlood() > 0 && !ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) {
                     renderedEntitiesWithBlood.add(event.getEntity());
 
-                } else if (entity instanceof EntityCreature && (ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood() || entity instanceof IHunter)) {
+                } else if ((entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) || Helper.isHunter(entity)) {
                     renderedEntitiesWithGarlicInfused.add(event.getEntity());
 
                 } else {
