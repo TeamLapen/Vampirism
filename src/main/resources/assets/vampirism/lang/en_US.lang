@@ -39,6 +39,8 @@ text.vampirism.skill.freeze.desc=Temporarily freeze all nearby creatures
 text.vampirism.skill.vampire_rage.desc=Action that gives you a speed and damage boost on cost of increased blood usage
 text.vampirism.skill.summon_bats.desc=Summon a lot of bats around you while in bat mode to distract enemies
 text.vampirism.skill.sunscreen.desc=Grants temporary immunity from direct sundamage. Has a long cooldown.
+text.vampirism.skill.garlic_blood_vision=Garlic blood vision
+text.vampirism.skill.garlic_blood_vision.desc=Allows you to additionally detect entities with poisonous blood
 
 #HUNTER SKILLS
 text.vampirism.skill.ihunterplayer=Becoming an hunter

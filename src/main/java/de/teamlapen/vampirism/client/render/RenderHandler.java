@@ -42,7 +42,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -202,7 +201,7 @@ public class RenderHandler {
                 if (entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).getBlood() > 0 && !ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) {
                     renderedEntitiesWithBlood.add(event.getEntity());
 
-                } else if ((entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) || Helper.isHunter(entity)) {
+                } else if (VampirePlayer.get(mc.player).getSpecialAttributes().garlic_blood_vision && ((entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) || Helper.isHunter(entity))) {
                     renderedEntitiesWithGarlicInfused.add(event.getEntity());
 
                 } else {
