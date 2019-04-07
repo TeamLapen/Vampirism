@@ -11,7 +11,10 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
 import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
-import net.minecraft.entity.*;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -58,16 +61,6 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
     @Override
     public EntityLivingBase getRepresentingEntity() {
         return this;
-    }
-
-    @Override
-    public Entity makeCalm() {
-        EntityVillager villager = new EntityVillager(world);
-        NBTTagCompound nbt = new NBTTagCompound();
-        this.writeToNBT(nbt);
-        villager.readFromNBT(nbt);
-        villager.setUniqueId(MathHelper.getRandomUUID(villager.getRNG()));
-        return villager;
     }
 
     @Override

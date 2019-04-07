@@ -15,6 +15,9 @@ public interface IVillageCaptureEntity extends IFactionEntity {
 
     void defendVillage(AxisAlignedBB area);
 
+    /**
+     * @return The village area that is target of the capture
+     */
     @Nullable
     AxisAlignedBB getTargetVillageArea();
 

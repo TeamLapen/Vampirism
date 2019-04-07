@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
+import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
@@ -46,6 +47,7 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -510,131 +512,156 @@ public class TileTotem extends TileEntity implements ITickable {
                 this.updateAffectedArea(); //In case village size has changed
             }
             //Handle capture
-            if (this.capturingFaction != null && time % 40 == 9) {
-                List<Entity> entities = this.world.getEntitiesWithinAABB(EntityLivingBase.class, getAffectedArea());
-                updateBossinfoPlayers(entities);
-                int attacker = 0; //Includes players
-                int attackerPlayer = 0;
-                int defender = 0;//Includes player
-                int defenderPlayer = 0;
-                int neutral = 0;
-                float attackStrength = 0;
-                float defenseStrength = 0;
-                for (Entity e : entities) {
-                    IFaction f = VampirismAPI.factionRegistry().getFaction(e);
-                    if (f == null) continue;
-                    if (e instanceof EntityHunterTrainer) continue;
-                    if (this.capturingFaction.equals(f)) {
-                        attacker++;
-                        attackStrength++;
-                        if (e instanceof EntityPlayer) {
-                            attackerPlayer++;
-                            attackStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
-                        }
-                    } else if (controllingFaction != null && controllingFaction.equals(f)) {
-                        defender++;
-                        if (e instanceof EntityPlayer) {
-                            defenderPlayer++;
-                            defenseStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
-                        }
-                        if (e instanceof EntityConvertedVillager) {
-                            defenseStrength += 0.5f; //Converted villagers are useless
-                        } else if (e instanceof IAggressiveVillager) {
-                            defenseStrength += 0.7f;
-                        } else if (e instanceof EntityVillager) {
-                            defenseStrength += 0.4f;
-                        } else {
-                            defenseStrength++;
-                        }
-                    } else {
-                        neutral++;
-                    }
-                }
-                //VampirismMod.log.t("Capture progress update: Timer %d [%s], Abort Timer %s. Attacker %d(%d) - %s. Defender %d(%d) - %s. Neutral %d", capture_timer, capture_phase, capture_abort_timer, attacker, attackerPlayer, attackStrength, defender, defenderPlayer, defenseStrength, neutral);
-                if (attackerPlayer == 0) {
-                    this.capture_abort_timer++;
-                } else {
-                    capture_abort_timer = 0;
-                    capture_timer++;
-                }
-
-                if (this.capture_abort_timer > 7) {
-                    this.abortCapture(true);
-                } else {
-                    switch (capture_phase) {
-                        case PHASE_1_NEUTRAL:
-                            if (capture_timer >= DURATION_PHASE_1) {
-                                capture_timer = 1;
-                                this.capture_phase = CAPTURE_PHASE.PHASE_2;
-                                this.markDirty();
+            if (this.capturingFaction != null) {
+                if (time % 40 == 9) {
+                    List<Entity> entities = this.world.getEntitiesWithinAABB(EntityLivingBase.class, getAffectedArea());
+                    updateBossinfoPlayers(entities);
+                    int attacker = 0; //Includes players
+                    int attackerPlayer = 0;
+                    int defender = 0;//Includes player
+                    int defenderPlayer = 0;
+                    int neutral = 0;
+                    float attackStrength = 0;
+                    float defenseStrength = 0;
+                    for (Entity e : entities) {
+                        IFaction f = VampirismAPI.factionRegistry().getFaction(e);
+                        if (f == null) continue;
+                        if (e instanceof EntityHunterTrainer) continue;
+                        if (this.capturingFaction.equals(f)) {
+                            attacker++;
+                            attackStrength++;
+                            if (e instanceof EntityPlayer) {
+                                attackerPlayer++;
+                                attackStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
                             }
-                            break;
-                        case PHASE_1_OPPOSITE:
-                            if (capture_timer >= DURATION_PHASE_1) {
-                                capture_timer = 1;
-                                this.capture_phase = CAPTURE_PHASE.PHASE_2;
-                                this.markDirty();
-                                notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.almost_captured", defender));
+                        } else if (controllingFaction != null && controllingFaction.equals(f)) {
+                            defender++;
+                            if (e instanceof EntityPlayer) {
+                                defenderPlayer++;
+                                defenseStrength += FactionPlayerHandler.get((EntityPlayer) e).getCurrentLevelRelative();
+                            }
+                            if (e instanceof EntityConvertedVillager) {
+                                defenseStrength += 0.5f; //Converted villagers are useless
+                            } else if (e instanceof IAggressiveVillager) {
+                                defenseStrength += 0.7f;
+                            } else if (e instanceof EntityVillager) {
+                                defenseStrength += 0.4f;
                             } else {
-                                if (capture_timer % 2 == 0) {
-                                    if (attackStrength * 1.1f > defenseStrength) {
-                                        spawnCaptureCreature(false);
-                                    } else if (attackStrength < defenseStrength * 1.1f) {
-                                        spawnCaptureCreature(true);
+                                defenseStrength++;
+                            }
+                        } else {
+                            neutral++;
+                        }
+                    }
+                    //VampirismMod.log.t("Capture progress update: Timer %d [%s], Abort Timer %s. Attacker %d(%d) - %s. Defender %d(%d) - %s. Neutral %d", capture_timer, capture_phase, capture_abort_timer, attacker, attackerPlayer, attackStrength, defender, defenderPlayer, defenseStrength, neutral);
+                    if (attackerPlayer == 0) {
+                        this.capture_abort_timer++;
+                    } else {
+                        capture_abort_timer = 0;
+                        capture_timer++;
+                    }
+
+                    if (this.capture_abort_timer > 7) {
+                        this.abortCapture(true);
+                    } else {
+                        switch (capture_phase) {
+                            case PHASE_1_NEUTRAL:
+                                if (capture_timer >= DURATION_PHASE_1) {
+                                    capture_timer = 1;
+                                    this.capture_phase = CAPTURE_PHASE.PHASE_2;
+                                    this.markDirty();
+                                }
+                                break;
+                            case PHASE_1_OPPOSITE:
+                                if (capture_timer >= DURATION_PHASE_1) {
+                                    capture_timer = 1;
+                                    this.capture_phase = CAPTURE_PHASE.PHASE_2;
+                                    this.markDirty();
+                                    notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.almost_captured", defender));
+                                } else {
+                                    if (capture_timer % 2 == 0) {
+                                        if (attackStrength * 1.1f > defenseStrength) {
+                                            spawnCaptureCreature(false);
+                                        } else if (attackStrength < defenseStrength * 1.1f) {
+                                            spawnCaptureCreature(true);
+                                        }
                                     }
                                 }
-                            }
-                            break;
-                        case PHASE_2:
-                            if (defender == 0) {
-                                capture_timer++;
-                                if (capture_timer > 4) {
-                                    this.completeCapture(true);
+                                break;
+                            case PHASE_2:
+                                if (defender == 0) {
+                                    capture_timer++;
+                                    if (capture_timer > 4) {
+                                        this.completeCapture(true);
+                                    }
+                                } else {
+                                    capture_timer = 1;
                                 }
-                            } else {
-                                capture_timer = 1;
-                            }
-                            break;
-                        default:
-                            break;
+                                break;
+                            default:
+                                break;
+                        }
+                        handleBossBar(capture_phase, defender);
                     }
-                    handleBossBar(capture_phase, defender);
                 }
-
-
             } else {
                 //Normal village live
-                if (this.controllingFaction != null && time % 1024 == 0) {
+                if (this.controllingFaction != null && time % 512 == 0) {
                     VampirismVillage village = this.getVillage();
                     if (village != null) {
-                        int max = Math.min(village.getVillage().getNumVillageDoors(), 30);
-                        if (village.getVillage().getNumVillagers() < max) {
-                            EntityVillager villager = new EntityVillager(this.world);
-                            if (villager.getRNG().nextInt(15) == 0) {
-                                if (controllingFaction.equals(VReference.HUNTER_FACTION))
-                                    villager = new EntityHunterFactionVillager(this.world);
-                                else if (controllingFaction.equals(VReference.VAMPIRE_FACTION))
-                                    villager = new EntityVampireFactionVillager(this.world);
-                            }
-                            spawnVillagerInVillage(villager, null, controllingFaction.equals(VReference.HUNTER_FACTION));
+                        List<EntityVillager> l = this.world.getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
+                        if (l.size() > 0) {
+                            EntityVillager seed = l.get(l.get(0).getRNG().nextInt(l.size()));
+                            int max = (int) Math.min(village.getVillage().getNumVillageDoors() * 1.5f, 30);
+                            if (l.size() < max) {
+                                if (seed.getRNG().nextInt(15) == 0) {
+                                    if (controllingFaction.equals(VReference.HUNTER_FACTION)) {
+                                        spawnVillagerInVillage(new EntityHunterFactionVillager(this.world), seed, true);
+                                    } else if (controllingFaction.equals(VReference.VAMPIRE_FACTION)) {
+                                        spawnVillagerInVillage(new EntityVampireFactionVillager(this.world), seed, false);
+                                    }
+                                } else {
+                                    boolean isVampire = this.controllingFaction == VReference.VAMPIRE_FACTION && seed.getRNG().nextBoolean();
+                                    VampirismVillageEvent.SpawnNewVillager event = new VampirismVillageEvent.SpawnNewVillager(village, seed, isVampire);
+                                    MinecraftForge.EVENT_BUS.post(event);
+                                    if (event.getResult() != Event.Result.DENY) {
+                                        EntityVillager newVillager;
+                                        if (event.getResult() == Event.Result.ALLOW && event.getNewVillager() != null) {
+                                            newVillager = event.getNewVillager();
+                                        } else {
+                                            newVillager = new EntityVillager(this.world);
+                                            newVillager.copyLocationAndAnglesFrom(seed);
+                                            newVillager.setGrowingAge(-24000);
+                                            seed.setGrowingAge(6000);
+                                        }
+                                        if (event.isWillBeVampire()) {
+                                            IConvertedCreature converted = ExtendedCreature.get(newVillager).makeVampire(); //Already spawns the creature in the world
+                                        } else {
+                                            this.spawnVillagerInVillage(newVillager, seed, this.controllingFaction == VReference.HUNTER_FACTION);
+                                        }
+                                    }
 
-                        }
-                        int defenderNumMax = Math.min(6, village.getVillage().getNumVillageDoors() / 5);
-                        List<EntityLiving> guards = new ArrayList<>();
-                        ResourceLocation entityId = null;
-                        if (this.controllingFaction.equals(VReference.HUNTER_FACTION)) {
-                            guards = this.world.getEntitiesWithinAABB(EntityHunterBase.class, getAffectedArea());
-                            entityId = getEntityForFaction(this.controllingFaction);
-                        } else if (this.controllingFaction.equals(VReference.VAMPIRE_FACTION)) {
-                            guards = this.world.getEntitiesWithinAABB(EntityVampireBase.class, getAffectedArea());
-                            entityId = getEntityForFaction(this.controllingFaction);
-                        }
-                        if (entityId != null && defenderNumMax > guards.size()) {
-                            Entity e = EntityList.createEntityByIDFromName(entityId, world);
-                            if (e != null && !spawnEntityInVillage(e, null)) {
-                                e.setDead();
+                                }
+
+                            }
+                            int defenderNumMax = Math.min(6, village.getVillage().getNumVillageDoors() / 5);
+                            List<EntityLiving> guards = new ArrayList<>();
+                            ResourceLocation entityId = null;
+                            if (this.controllingFaction.equals(VReference.HUNTER_FACTION)) {
+                                guards = this.world.getEntitiesWithinAABB(EntityHunterBase.class, getAffectedArea());
+                                entityId = getEntityForFaction(this.controllingFaction);
+                            } else if (this.controllingFaction.equals(VReference.VAMPIRE_FACTION)) {
+                                guards = this.world.getEntitiesWithinAABB(EntityVampireBase.class, getAffectedArea());
+                                entityId = getEntityForFaction(this.controllingFaction);
+                            }
+                            if (entityId != null && defenderNumMax > guards.size()) {
+                                Entity e = EntityList.createEntityByIDFromName(entityId, world);
+                                if (e != null && !spawnEntityInVillage(e, null)) {
+                                    e.setDead();
+                                }
                             }
                         }
+
                     }
                 }
             }
@@ -841,7 +868,6 @@ public class TileTotem extends TileEntity implements ITickable {
             } else {
                 ((IVillageCaptureEntity) e).defendVillage(this.getAffectedArea());
             }
-            VampirismMod.log.t("Spawned %s", e.getName());
         } else if (e != null) {
             VampirismMod.log.w(TAG, "Creature registered for village capture does not implement IVillageCaptureEntity");
         } else {

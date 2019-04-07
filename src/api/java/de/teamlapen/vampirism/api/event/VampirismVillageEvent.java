@@ -45,13 +45,11 @@ public abstract class VampirismVillageEvent extends Event {
         EntityVillager seedVillager;
         private @Nullable
         EntityVillager newVillager;
-        private boolean willBeAggressive;
         private boolean willBeVampire;
 
-        public SpawnNewVillager(@Nonnull IVampirismVillage village, @Nonnull EntityVillager seedVillager, boolean willBeAggressive, boolean willBeVampire) {
+        public SpawnNewVillager(@Nonnull IVampirismVillage village, @Nonnull EntityVillager seedVillager, boolean willBeVampire) {
             super(village);
             this.seedVillager = seedVillager;
-            this.willBeAggressive = willBeAggressive;
             this.willBeVampire = willBeVampire;
         }
 
@@ -80,23 +78,8 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         /**
-         * If the villager will be converted to a aggressive version afterwards
-         * <p>
-         * Default: Is true if the village is angry. Can be overriden by {@link #setWillBeAggressive(boolean)}
-         * <p>
-         * If villager becomes vampire this is ignored
-         */
-        public boolean isWillBeAggressive() {
-            return willBeAggressive;
-        }
-
-        public void setWillBeAggressive(boolean willBeAggressive) {
-            this.willBeAggressive = willBeAggressive;
-        }
-
-        /**
          * If the villager will be converted to a vampire version afterwards.
-         * Default: Is true when the village is overtaken. Can be overridden by {@link #setWillBeVampire}
+         * Default: Is sometimes true if the village is controlled by vampires. Can be overridden by {@link #setWillBeVampire}
          */
         public boolean isWillBeVampire() {
             return willBeVampire;
@@ -146,7 +129,7 @@ public abstract class VampirismVillageEvent extends Event {
          * @param aggressiveVillager Must extend EntityVillager
          */
         public void setAgressiveVillager(@Nullable IVillageCaptureEntity captureVillager) {
-            if (!(captureVillager instanceof EntityVillager)) {
+            if (captureVillager != null && !(captureVillager instanceof EntityVillager)) {
                 throw new IllegalArgumentException("Aggressive villager must be a instanceof EntityVillager");
             }
             this.captureVillager = captureVillager;
