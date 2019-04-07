@@ -49,19 +49,19 @@ uploadArchives {
     repositories.mavenDeployer {
         configuration = configurations.deployerJars
 
-        if (project.hasProperty("filesmaven_url")) {
+        if (!project.hasProperty("local")&& project.hasProperty("filesmaven_url")) {
             logger.info('Publishing to files server')
             repository(url: project.filesmaven_url) {
                 authentication(userName: project.filesmaven_username, password: project.filesmaven_key)
             }
-        } else if (System.getenv().MAVEN_URL) {
+        } else if (!project.hasProperty("local")&&System.getenv().MAVEN_URL) {
             logger.info('Publishing to files server')
             repository(url: System.getenv().MAVEN_URL) {
                 authentication(userName: System.getenv().MAVEN_USERNAME, password: System.getenv().MAVEN_KEY)
             }
         } else {
             logger.info('Publishing to repo folder')
-            repository(url: 'file://localhost/' + project.file('~/.m2/repository').getAbsolutePath())
+            repository(url: 'file://localhost/' + project.file('../../../.m2/repository').getAbsolutePath())
         }
 
         pom {
