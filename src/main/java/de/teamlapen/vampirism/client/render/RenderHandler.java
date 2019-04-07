@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.render;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -42,6 +43,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -198,10 +200,11 @@ public class RenderHandler {
                 flag = false;
             }
             if (flag) {
-                if (entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).getBlood() > 0 && !ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) {
+                IExtendedCreatureVampirism creature = entity instanceof EntityCreature ? ExtendedCreature.get((EntityCreature) entity) : null;
+                if (creature != null && creature.getBlood() > 0 && !creature.hasPoisonousBlood()) {
                     renderedEntitiesWithBlood.add(event.getEntity());
 
-                } else if (VampirePlayer.get(mc.player).getSpecialAttributes().garlic_blood_vision && ((entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) || Helper.isHunter(entity))) {
+                } else if (VampirePlayer.get(mc.player).getSpecialAttributes().garlic_blood_vision && ((creature != null && creature.hasPoisonousBlood()) || Helper.isHunter(entity))) {
                     renderedEntitiesWithGarlicInfused.add(event.getEntity());
 
                 } else {
