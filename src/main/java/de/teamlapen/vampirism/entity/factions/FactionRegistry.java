@@ -91,13 +91,13 @@ public class FactionRegistry implements IFactionRegistry {
     public Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction) {
         int key = 0;
         if (otherFaction != null) {
-            int id = ((Faction) thisFaction).getId();
+            int id = ((Faction) otherFaction).getId();
             if (id > 63) {
                 VampirismMod.log.w(TAG, "Faction id over 64, predicates won't work");
             }
             key |= ((id & 63) << 10);
         }
-        if (neutralPlayer) {
+        if (player) {
             key |= (1 << 9);
         }
         if (mob) {
