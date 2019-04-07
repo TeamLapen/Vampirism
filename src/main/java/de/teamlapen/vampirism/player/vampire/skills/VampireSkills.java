@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -48,6 +49,7 @@ public class VampireSkills {
     public static final ISkill dark_blood_projectile = UtilLib.getNull();
     public static final ISkill half_invulnerable = UtilLib.getNull();
     public static final ISkill advanced_biter = UtilLib.getNull();
+    public static final ISkill garlic_blood_vision = UtilLib.getNull();
 
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
         registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getKey(), 32, 0, false));
@@ -199,7 +201,17 @@ public class VampireSkills {
         });
         registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile));
         registry.register(new ActionSkill<>("half_invulnerable", VampireActions.half_invulnerable, true));
+        registry.register(new VampirismSkill.SimpleVampireSkill(new ResourceLocation("vampirism", "garlic_blood_vision"), 16, 16, true) {
+            @Override
+            protected void onDisabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().garlic_blood_vision = false;
+            }
 
+            @Override
+            protected void onEnabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().garlic_blood_vision = true;
+            }
+        });
 
     }
 
@@ -249,7 +261,7 @@ public class VampireSkills {
         SkillNode skill3 = skillManager.createSkillNode(skill2, blood_vision);
         SkillNode skill4 = skillManager.createSkillNode(skill3, creeper_avoided);
 
-        SkillNode skill5 = skillManager.createSkillNode(skill4, vampire_forest_fog);
+        SkillNode skill5 = skillManager.createSkillNode(skill4, vampire_forest_fog, garlic_blood_vision);
         SkillNode skill6 = skillManager.createSkillNode(skill5, teleport);
 
 

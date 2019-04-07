@@ -17,6 +17,7 @@ public class VampirePlayerSpecialAttributes {
     public boolean waterResistance;
     public boolean advanced_biter = false;
     private int jump_boost = 0;
+    public boolean garlic_blood_vision;
 
     public int getJumpBoost() {
         return jump_boost;

@@ -42,7 +42,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -59,6 +58,7 @@ public class RenderHandler {
     private final String TAG = "RenderHandler";
     private final List<EntityLivingBase> renderedEntitiesWithBlood = Lists.newLinkedList();
     private final List<EntityLivingBase> renderedEntitiesWithoutBlood = Lists.newLinkedList();
+    private final List<EntityLivingBase> renderedEntitiesWithGarlicInfused = Lists.newLinkedList();
     private EntityBat entityBat;
     /**
      * Fog fade counter
@@ -76,18 +76,21 @@ public class RenderHandler {
     private float vampireBiomeFogDistanceMultiplier = 1;
     private Framebuffer bloodVisionFrameBuffer1;
     private Framebuffer bloodVisionFrameBuffer2;
+    private Framebuffer bloodVisionFrameBuffer3;
     private ShaderGroup bloodVisionShader1;
     private ShaderGroup bloodVisionShader2;
+    private ShaderGroup bloodVisionShader3;
     private ShaderGroup blurShader;
     private boolean bloodVisionShaderInit = false;
     private boolean bloodVision1Rendered = false;
     private boolean bloodVision2Rendered = false;
+    private boolean bloodVision3Rendered = false;
     private boolean shaderWarning = false;
     private boolean showedShaderWarning = false;
     private boolean doSaturationShader = true;
     private int displayHeight, displayWidth;
     private boolean renderingBloodVision = false;
-    private Shader blur1, blur2, blit0, blit1, blit2;
+    private Shader blur1, blur2, blit0, blit1, blit2, blit3;
     /**
      * Temporarily stores if the hunter disguise blend profile has been enabled. (From RenderPlayer.Pre to RenderPlayer.Post)
      */
@@ -195,8 +198,11 @@ public class RenderHandler {
                 flag = false;
             }
             if (flag) {
-                if (entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).getBlood() > 0) {
+                if (entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).getBlood() > 0 && !ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) {
                     renderedEntitiesWithBlood.add(event.getEntity());
+
+                } else if (VampirePlayer.get(mc.player).getSpecialAttributes().garlic_blood_vision && ((entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) || Helper.isHunter(entity))) {
+                    renderedEntitiesWithGarlicInfused.add(event.getEntity());
 
                 } else {
                     renderedEntitiesWithoutBlood.add(event.getEntity());
@@ -295,6 +301,7 @@ public class RenderHandler {
                 blurShader.createBindFramebuffers(displayWidth, displayHeight);
                 bloodVisionShader1.createBindFramebuffers(displayWidth, displayHeight);
                 bloodVisionShader2.createBindFramebuffers(displayWidth, displayHeight);
+                bloodVisionShader3.createBindFramebuffers(displayWidth, displayHeight);
 
 
             }
@@ -311,12 +318,14 @@ public class RenderHandler {
         blur2.getShaderManager().getShaderUniform("Radius").set(Math.round(10 * progress) / 1F);
         blit1.getShaderManager().getShaderUniform("ColorModulate").set(1F, 0.1F, 0.1F, (1F * progress));
         blit2.getShaderManager().getShaderUniform("ColorModulate").set(0.1F, 0.1F, 0.2F, (0.7F * progress));
+        blit3.getShaderManager().getShaderUniform("ColorModulate").set(0.1F, 0.1F, 1F, (1F * progress));
 
     }
 
     private void disableBloodVision() {
         renderedEntitiesWithoutBlood.clear();
         renderedEntitiesWithBlood.clear();
+        renderedEntitiesWithGarlicInfused.clear();
     }
 
     private void disableProfile(Profile profile) {
@@ -333,7 +342,7 @@ public class RenderHandler {
     }
 
     private boolean isRenderEntityOutlines() {
-        return this.bloodVisionFrameBuffer1 != null && this.bloodVisionShader1 != null && this.bloodVisionFrameBuffer2 != null && this.bloodVisionShader2 != null && this.mc.player != null;
+        return this.bloodVisionFrameBuffer1 != null && this.bloodVisionShader1 != null && this.bloodVisionFrameBuffer2 != null && this.bloodVisionShader2 != null && this.bloodVisionFrameBuffer3 != null && this.bloodVisionShader3 != null && this.mc.player != null;
     }
 
 
@@ -388,10 +397,17 @@ public class RenderHandler {
 
                 blit2 = bloodVisionShader2.addShader("blit", swap, bloodVisionFrameBuffer2);
 
+                this.bloodVisionShader3 = new ShaderGroup(this.mc.getTextureManager(), this.mc.getResourceManager(), this.mc.getFramebuffer(), resourcelocationOutline);
+                swap = this.bloodVisionShader3.getFramebufferRaw("swap");
+                this.bloodVisionFrameBuffer3 = this.bloodVisionShader3.getFramebufferRaw("final");
+
+                blit3 = bloodVisionShader3.addShader("blit", swap, bloodVisionFrameBuffer3);
+
 
                 this.blurShader.createBindFramebuffers(this.mc.displayWidth, this.mc.displayHeight);
                 this.bloodVisionShader1.createBindFramebuffers(this.mc.displayWidth, this.mc.displayHeight);
                 this.bloodVisionShader2.createBindFramebuffers(this.mc.displayWidth, this.mc.displayHeight);
+                this.bloodVisionShader3.createBindFramebuffers(this.mc.displayWidth, this.mc.displayHeight);
 
             } catch (IOException | JsonSyntaxException ioexception) {
 
@@ -400,12 +416,16 @@ public class RenderHandler {
                 this.bloodVisionFrameBuffer1 = null;
                 this.bloodVisionShader2 = null;
                 this.bloodVisionFrameBuffer2 = null;
+                this.bloodVisionShader3 = null;
+                this.bloodVisionFrameBuffer3 = null;
             }
         } else {
             this.bloodVisionShader1 = null;
             this.bloodVisionFrameBuffer1 = null;
             this.bloodVisionShader2 = null;
             this.bloodVisionFrameBuffer2 = null;
+            this.bloodVisionShader3 = null;
+            this.bloodVisionFrameBuffer3 = null;
         }
     }
 
@@ -437,7 +457,12 @@ public class RenderHandler {
         }
 
         renderedEntitiesWithoutBlood.clear();
+        
+        if (!renderedEntitiesWithGarlicInfused.isEmpty() || this.bloodVision3Rendered) {
+            bloodVision3Rendered = renderEntityOutlines(renderedEntitiesWithGarlicInfused, bloodVisionShader3, bloodVisionFrameBuffer3, partialTicks);
+        }
 
+        renderedEntitiesWithGarlicInfused.clear();
 
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
@@ -446,6 +471,7 @@ public class RenderHandler {
         this.bloodVisionFrameBuffer1.framebufferRenderExt(this.mc.displayWidth, this.mc.displayHeight, false);
         //this.mc.getFramebuffer().bindFramebuffer(false);
         this.bloodVisionFrameBuffer2.framebufferRenderExt(this.mc.displayWidth, this.mc.displayHeight, false);
+        this.bloodVisionFrameBuffer3.framebufferRenderExt(this.mc.displayWidth, this.mc.displayHeight, false);
 
         this.mc.getFramebuffer().bindFramebuffer(false);
 
