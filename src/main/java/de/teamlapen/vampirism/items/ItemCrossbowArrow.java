@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbowArror;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * Ammo for the crossbows. Has different subtypes with different base damage/names/special effects.
  */
-public class ItemCrossbowArrow extends VampirismItem {
+public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossbowArror {
 
     private static final String regName = "crossbow_arrow";
 
@@ -85,6 +86,7 @@ public class ItemCrossbowArrow extends VampirismItem {
      * @param heightOffset An height offset for the position the entity is created
      * @return An arrow entity at the players position using the given itemstack
      */
+    @Override
     public EntityCrossbowArrow createEntity(ItemStack stack, World world, EntityPlayer player, double heightOffset, double centerOffset, boolean rightHand) {
         EntityCrossbowArrow entity = EntityCrossbowArrow.createWithShooter(world, player, heightOffset, centerOffset, rightHand, stack);
         EnumArrowType type = getType(stack);
@@ -126,6 +128,7 @@ public class ItemCrossbowArrow extends VampirismItem {
      * @param arrow Arrow stack
      * @return If the arrow entity that belongs to this arrow should be burning
      */
+    @Override
     public boolean isBurning(ItemStack arrow) {
         EnumArrowType type = getType(arrow);
         return type == EnumArrowType.SPITFIRE;
@@ -134,6 +137,7 @@ public class ItemCrossbowArrow extends VampirismItem {
     /**
      * @return If an arrow of this type can be used in an infinite crossbow
      */
+    @Override
     public boolean isCanBeInfinite(ItemStack stack) {
         EnumArrowType type = getType(stack);
         return type != EnumArrowType.VAMPIRE_KILLER && type != EnumArrowType.SPITFIRE;
@@ -147,6 +151,7 @@ public class ItemCrossbowArrow extends VampirismItem {
      * @param arrowEntity    The arrow entity
      * @param shootingEntity The shooting entity. Can be the arrow entity itself
      */
+    @Override
     public void onHitBlock(ItemStack arrow, BlockPos blockPos, EntityCrossbowArrow arrowEntity, Entity shootingEntity) {
         EnumArrowType type = getType(arrow);
         if (type == EnumArrowType.SPITFIRE) {
@@ -171,6 +176,7 @@ public class ItemCrossbowArrow extends VampirismItem {
      * @param arrowEntity    The arrow entity
      * @param shootingEntity The shooting entity. Can be the arrow entity itself
      */
+    @Override
     public void onHitEntity(ItemStack arrow, EntityLivingBase entity, EntityCrossbowArrow arrowEntity, Entity shootingEntity) {
         EnumArrowType type = getType(arrow);
         if (type == EnumArrowType.VAMPIRE_KILLER) {
