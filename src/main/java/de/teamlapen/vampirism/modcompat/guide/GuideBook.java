@@ -299,8 +299,7 @@ public class GuideBook implements IGuideBook {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.entity.";
 
-        ArrayList<IPage> generalPages = new ArrayList<>();
-        generalPages.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "general.text")));
+        ArrayList<IPage> generalPages = new ArrayList<>(GuideHelper.pagesForLongText(UtilLib.translate(base + "general.text") + "\n" + UtilLib.translate(base + "general.text2")));
         entries.put(new ResourceLocation(base + "general"), new EntryText(generalPages, base + "general"));
 
         ArrayList<IPage> hunterPages = new ArrayList<>();
@@ -347,13 +346,13 @@ public class GuideBook implements IGuideBook {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.world.";
 
-        List<IPage> vampireForestPages = new ArrayList<>();
-        vampireForestPages.addAll(GuideHelper.pagesForLongText(base + "vampire_forest.text"));
+        List<IPage> vampireForestPages = new ArrayList<>(GuideHelper.pagesForLongText(UtilLib.translate(base + "vampire_forest.text")));
         entries.put(new ResourceLocation(base + "vampire_forest"), new EntryText(vampireForestPages, base + "vampire_forest"));
 
-        List<IPage> wipPages = new ArrayList<>();
-        wipPages.addAll(GuideHelper.pagesForLongText(base + "wip.text"));
-        entries.put(new ResourceLocation(base + "wip"), new EntryText(wipPages, base + "wip"));
+        List<IPage> villagePages = new ArrayList<>(GuideHelper.addLinks(GuideHelper.pagesForLongText(UtilLib.translate(base + "villages.text")), new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.blocks.totem_top")));
+        entries.put(new ResourceLocation(base + "villages"), new EntryText(villagePages, base + "villages"));
+
+
 
         links.putAll(entries);
         return entries;
@@ -422,6 +421,8 @@ public class GuideBook implements IGuideBook {
         new ItemInfoBuilder(ModBlocks.blood_pedestal).craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.blood_grinder).craftable(WORKBENCH).setFormats(ModItems.human_heart.getLocalizedName(), UtilLib.translate(Items.BEEF.getUnlocalizedName() + ".name"), ModBlocks.blood_sieve.getLocalizedName()).build(entries);
         new ItemInfoBuilder(ModBlocks.blood_sieve).craftable(WORKBENCH).setFormats(UtilLib.translate(ModFluids.impure_blood.getUnlocalizedName()), ModBlocks.blood_grinder.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_grinder")).build(entries);
+        new ItemInfoBuilder(ModBlocks.totem_top).craftable(WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
+        new ItemInfoBuilder(ModBlocks.totem_base).craftable(WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.totem_top"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         links.putAll(entries);
         return entries;
     }
