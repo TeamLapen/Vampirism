@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.api.items.IVampirismCrossbowArror;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.ItemCrossbowArrow;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-
 import javax.annotation.Nonnull;
 import java.util.Random;
 
@@ -87,11 +86,11 @@ public class EntityCrossbowArrow extends EntityArrow {
     protected void arrowHit(EntityLivingBase living) {
         super.arrowHit(living);
         Item item = arrowStack.getItem();
-        if (item instanceof ItemCrossbowArrow) {
+        if (item instanceof IVampirismCrossbowArror) {
             if (ignoreHurtTimer && living.hurtResistantTime > 0) {
                 living.hurtResistantTime = 0;
             }
-            ((ItemCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.shootingEntity);
+            ((IVampirismCrossbowArror) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.shootingEntity);
         }
     }
 
@@ -104,8 +103,8 @@ public class EntityCrossbowArrow extends EntityArrow {
     protected void onHit(RayTraceResult raytraceResultIn) {
         if (raytraceResultIn.entityHit == null) {
             Item item = arrowStack.getItem();
-            if (item instanceof ItemCrossbowArrow) {
-                ((ItemCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.shootingEntity);
+            if (item instanceof IVampirismCrossbowArror) {
+                ((IVampirismCrossbowArror) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.shootingEntity);
             }
         }
         super.onHit(raytraceResultIn);

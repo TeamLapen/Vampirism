@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbowArror;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
@@ -131,7 +132,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * Can be overridden to use other items as arrows. Could cause problems though.
      */
     protected boolean isArrow(@Nonnull ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem() instanceof ItemCrossbowArrow;
+        return !stack.isEmpty() && stack.getItem() instanceof IVampirismCrossbowArror;
     }
 
     /**
@@ -183,7 +184,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
                 if (!world.isRemote) {
                     boolean rightHand = player.getPrimaryHand() == EnumHandSide.RIGHT && hand == EnumHand.MAIN_HAND || player.getPrimaryHand() == EnumHandSide.LEFT && hand == EnumHand.OFF_HAND;
-                    ItemCrossbowArrow itemarrow = itemstack.getItem() instanceof ItemCrossbowArrow ? (ItemCrossbowArrow) itemstack.getItem() : ModItems.crossbow_arrow;
+                    IVampirismCrossbowArror itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArror ? (IVampirismCrossbowArror) itemstack.getItem() : ModItems.crossbow_arrow;
                     EntityCrossbowArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
                     entityarrow.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 
@@ -254,7 +255,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If the given arrow type can be used in an infinite crossbow
      */
     private boolean canArrowBeInfinite(ItemStack arrowStack) {
-        return !(arrowStack.getItem() instanceof ItemCrossbowArrow) || ((ItemCrossbowArrow) arrowStack.getItem()).isCanBeInfinite(arrowStack);
+        return !(arrowStack.getItem() instanceof IVampirismCrossbowArror) || ((IVampirismCrossbowArror) arrowStack.getItem()).isCanBeInfinite(arrowStack);
     }
 
 
