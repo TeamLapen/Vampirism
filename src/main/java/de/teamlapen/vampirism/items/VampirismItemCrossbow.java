@@ -5,13 +5,13 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArror;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -185,7 +185,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                 if (!world.isRemote) {
                     boolean rightHand = player.getPrimaryHand() == EnumHandSide.RIGHT && hand == EnumHand.MAIN_HAND || player.getPrimaryHand() == EnumHandSide.LEFT && hand == EnumHand.OFF_HAND;
                     IVampirismCrossbowArror itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArror ? (IVampirismCrossbowArror) itemstack.getItem() : ModItems.crossbow_arrow;
-                    EntityCrossbowArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
+                    IEntityCrossbowArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
                     entityarrow.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 
                     if (isCritical(player.getRNG())) {
@@ -215,10 +215,10 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     stack.damageItem(1, player);
 
                     if (!consumeArrow) {
-                        entityarrow.pickupStatus = EntityArrow.PickupStatus.CREATIVE_ONLY;
+                        ((EntityArrow) entityarrow).pickupStatus = EntityArrow.PickupStatus.CREATIVE_ONLY;
                     }
 
-                    world.spawnEntity(entityarrow);
+                    world.spawnEntity((EntityArrow) entityarrow);
                     world.playSound(null, player.posX, player.posY + 0.5, player.posZ, ModSounds.crossbow, SoundCategory.PLAYERS, 1F, world.rand.nextFloat() * 0.1F + 0.9F);
 
                 }

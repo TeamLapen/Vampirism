@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArror;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,7 +15,7 @@ import javax.annotation.Nonnull;
 import java.util.Random;
 
 
-public class EntityCrossbowArrow extends EntityArrow {
+public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowArrow {
 
     /**
      * Create a entity arrow for a shooting entity (with offset)
@@ -108,5 +109,11 @@ public class EntityCrossbowArrow extends EntityArrow {
             }
         }
         super.onHit(raytraceResultIn);
+    }
+
+    @Override
+    public void shoot(EntityPlayer player, float rotationPitch, float rotationYaw, float f, float g, float h) {
+        super.shoot(player, rotationPitch, rotationYaw, f, g, h);
+
     }
 }
