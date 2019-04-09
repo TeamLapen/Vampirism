@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbowArror;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModItems;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -90,11 +90,11 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
     protected void arrowHit(EntityLivingBase living) {
         super.arrowHit(living);
         Item item = arrowStack.getItem();
-        if (item instanceof IVampirismCrossbowArror) {
+        if (item instanceof IVampirismCrossbowArrow) {
             if (ignoreHurtTimer && living.hurtResistantTime > 0) {
                 living.hurtResistantTime = 0;
             }
-            ((IVampirismCrossbowArror) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.shootingEntity);
+            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.shootingEntity);
         }
     }
 
@@ -107,8 +107,8 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
     protected void onHit(RayTraceResult raytraceResultIn) {
         if (raytraceResultIn.entityHit == null) {
             Item item = arrowStack.getItem();
-            if (item instanceof IVampirismCrossbowArror) {
-                ((IVampirismCrossbowArror) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.shootingEntity);
+            if (item instanceof IVampirismCrossbowArrow) {
+                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.shootingEntity);
             }
         }
         super.onHit(raytraceResultIn);

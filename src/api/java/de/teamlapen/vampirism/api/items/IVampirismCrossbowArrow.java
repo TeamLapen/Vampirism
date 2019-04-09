@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public interface IVampirismCrossbowArror<T extends EntityArrow & IEntityCrossbowArrow> {
+public interface IVampirismCrossbowArrow<T extends EntityArrow & IEntityCrossbowArrow> {
 
     public T createEntity(ItemStack stack, World world, EntityPlayer player, double heightOffset, double centerOffset, boolean rightHand);
 

@@ -4,7 +4,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbowArror;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Ammo for the crossbows. Has different subtypes with different base damage/names/special effects.
  */
-public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossbowArror<EntityCrossbowArrow> {
+public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossbowArrow<EntityCrossbowArrow> {
 
     private static final String regName = "crossbow_arrow";
 
