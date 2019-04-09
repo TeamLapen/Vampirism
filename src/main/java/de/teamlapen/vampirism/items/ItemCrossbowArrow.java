@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArror;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,12 +27,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * Ammo for the crossbows. Has different subtypes with different base damage/names/special effects.
  */
-public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossbowArror {
+public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossbowArror<EntityCrossbowArrow> {
 
     private static final String regName = "crossbow_arrow";
 
