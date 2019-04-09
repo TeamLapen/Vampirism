@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArror;
 import de.teamlapen.vampirism.core.ModItems;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -11,7 +12,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+
 import javax.annotation.Nonnull;
+
 import java.util.Random;
 
 
@@ -109,11 +112,5 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
             }
         }
         super.onHit(raytraceResultIn);
-    }
-
-    @Override
-    public void shoot(EntityPlayer player, float rotationPitch, float rotationYaw, float f, float g, float h) {
-        super.shoot(player, rotationPitch, rotationYaw, f, g, h);
-
     }
 }
