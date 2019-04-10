@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.api.items.IVampirismCrossbowArror;
+import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModItems;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -10,11 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+
 import javax.annotation.Nonnull;
+
 import java.util.Random;
 
 
-public class EntityCrossbowArrow extends EntityArrow {
+public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowArrow {
 
     /**
      * Create a entity arrow for a shooting entity (with offset)
@@ -86,11 +90,11 @@ public class EntityCrossbowArrow extends EntityArrow {
     protected void arrowHit(EntityLivingBase living) {
         super.arrowHit(living);
         Item item = arrowStack.getItem();
-        if (item instanceof IVampirismCrossbowArror) {
+        if (item instanceof IVampirismCrossbowArrow) {
             if (ignoreHurtTimer && living.hurtResistantTime > 0) {
                 living.hurtResistantTime = 0;
             }
-            ((IVampirismCrossbowArror) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.shootingEntity);
+            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.shootingEntity);
         }
     }
 
@@ -103,8 +107,8 @@ public class EntityCrossbowArrow extends EntityArrow {
     protected void onHit(RayTraceResult raytraceResultIn) {
         if (raytraceResultIn.entityHit == null) {
             Item item = arrowStack.getItem();
-            if (item instanceof IVampirismCrossbowArror) {
-                ((IVampirismCrossbowArror) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.shootingEntity);
+            if (item instanceof IVampirismCrossbowArrow) {
+                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.shootingEntity);
             }
         }
         super.onHit(raytraceResultIn);

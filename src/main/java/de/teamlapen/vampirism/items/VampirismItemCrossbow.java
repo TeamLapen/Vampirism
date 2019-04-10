@@ -5,13 +5,14 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
-import de.teamlapen.vampirism.api.items.IVampirismCrossbowArror;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
+
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -23,6 +24,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.Random;
 
 /**
@@ -132,7 +134,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * Can be overridden to use other items as arrows. Could cause problems though.
      */
     protected boolean isArrow(@Nonnull ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem() instanceof IVampirismCrossbowArror;
+        return !stack.isEmpty() && stack.getItem() instanceof IVampirismCrossbowArrow;
     }
 
     /**
@@ -184,8 +186,8 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
                 if (!world.isRemote) {
                     boolean rightHand = player.getPrimaryHand() == EnumHandSide.RIGHT && hand == EnumHand.MAIN_HAND || player.getPrimaryHand() == EnumHandSide.LEFT && hand == EnumHand.OFF_HAND;
-                    IVampirismCrossbowArror itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArror ? (IVampirismCrossbowArror) itemstack.getItem() : ModItems.crossbow_arrow;
-                    EntityCrossbowArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
+                    IVampirismCrossbowArrow itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow) itemstack.getItem() : ModItems.crossbow_arrow;
+                    EntityArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
                     entityarrow.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 
                     if (isCritical(player.getRNG())) {
@@ -193,7 +195,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     }
 
                     if (isIgnoreHurtTime(stack)) {
-                        entityarrow.setIgnoreHurtTimer();
+                        ((IEntityCrossbowArrow) entityarrow).setIgnoreHurtTimer();
                     }
 
                     int j = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, stack);
@@ -255,7 +257,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If the given arrow type can be used in an infinite crossbow
      */
     private boolean canArrowBeInfinite(ItemStack arrowStack) {
-        return !(arrowStack.getItem() instanceof IVampirismCrossbowArror) || ((IVampirismCrossbowArror) arrowStack.getItem()).isCanBeInfinite(arrowStack);
+        return !(arrowStack.getItem() instanceof IVampirismCrossbowArrow) || ((IVampirismCrossbowArrow) arrowStack.getItem()).isCanBeInfinite(arrowStack);
     }
 
 
