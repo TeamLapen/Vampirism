@@ -381,7 +381,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         int left = width / 2 - 8;
         int top = height / 2 - 4;
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glColor4f(r, g, b, 0.7F);
+        GL11.glColor4f(1f, 1f, 1f, 0.7F);
         drawTexturedModalRect(left, top, 27, 0, 16, 10);
         GL11.glColor4f(r, g, b, 0.8F);
         int percHeight = (int) (10 * perc);

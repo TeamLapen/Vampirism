@@ -236,17 +236,18 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
         }
 
+        this.sync();
+
         // If entity is a child only give 1/3 blood
         if (entity instanceof EntityAgeable) {
             if (((EntityAgeable) entity).getGrowingAge() < 0) {
-                return Math.round((float) amt / 3);
+                amt = Math.round((float) amt / 3f);
             }
         }
-        this.sync();
         //If advanced biter, sometimes return twice the blood amount
         if (biter.isAdvancedBiter()) {
             if (entity.getRNG().nextInt(4) == 0) {
-                return 2 * amt;
+                amt = 2 * amt;
             }
         }
         return amt;
