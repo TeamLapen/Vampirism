@@ -479,6 +479,7 @@ text.vampirism.ritual_requirements_not_met=Not all requirements for this ritual 
 text.vampirism.purity=Purity
 text.vampirism.ritual_no_vampire=You need to be a vampire for this ritual
 text.vampirism.cant_fly_day=You cannot fly at daytime
+text.vampirism.cant_fly_garlic=You cannot fly under the effect of garlic
 text.vampirism.cant_fly_end=You are not able to transfrom into a bat in the End
 text.vampirism.no_more_minions=You are not able to control any more minions
 text.vampirism.coffin.no_sleep=You can only sleep at day

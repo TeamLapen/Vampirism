@@ -153,6 +153,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         if (vampire.isGettingSundamage() && !vampire.isRemote()) {
             vampire.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_day"));
             return true;
+        } else if (vampire.isGettingGarlicDamage() != EnumStrength.NONE && !vampire.isRemote()) {
+            vampire.getRepresentingEntity().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_garlic"));
+            return true;
         } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd) {
             vampire.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_end"));
             return true;
