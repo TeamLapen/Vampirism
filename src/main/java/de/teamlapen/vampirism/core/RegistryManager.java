@@ -28,6 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.ObjectHolderRegistry;
 
+
 /**
  * Handles registrations of all registrable things as well as a few additional
  * dependent things
@@ -87,10 +88,9 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onMissinMappingsPotion(RegistryEvent.MissingMappings<SoundEvent> event) {
-
-        for (RegistryEvent.MissingMappings.Mapping<SoundEvent> m : event.getMappings()) {
-            m.ignore();
+    public void onMissingMappingsEntity(RegistryEvent.MissingMappings<EntityEntry> event) {
+        for (RegistryEvent.MissingMappings.Mapping<EntityEntry> m : event.getMappings()) {
+            ModEntities.fixMapping(m);
         }
     }
 
@@ -117,6 +117,21 @@ public class RegistryManager implements IInitListener {
 
         for (RegistryEvent.MissingMappings.Mapping<Potion> m : event.getMappings()) {
             ModPotions.fixMapping(m);
+        }
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsSkill(RegistryEvent.MissingMappings<ISkill> event) {
+        for (RegistryEvent.MissingMappings.Mapping<ISkill> m : event.getMappings()) {
+            VampireSkills.fixMapping(m);
+        }
+    }
+
+    @SubscribeEvent
+    public void onMissingMappingsSoundEvent(RegistryEvent.MissingMappings<SoundEvent> event) {
+
+        for (RegistryEvent.MissingMappings.Mapping<SoundEvent> m : event.getMappings()) {
+            m.ignore();
         }
     }
 

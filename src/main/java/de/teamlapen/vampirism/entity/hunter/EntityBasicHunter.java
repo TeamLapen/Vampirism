@@ -359,7 +359,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     @Override
     public void attackVillage(AxisAlignedBB area) {
-        this.setCustomNameTag("Attacking Village");
         this.village_attack_area = area;
     }
 
@@ -416,7 +415,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     @Override
     public void defendVillage(AxisAlignedBB area) {
-        this.setCustomNameTag("Defending Village");
         this.village_defense_area = area;
     }
 

@@ -11,8 +11,8 @@ import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
+import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
 import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.world.loot.LootHandler;
@@ -38,6 +38,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+
 import javax.annotation.Nullable;
 
 /**
@@ -293,14 +294,12 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     public void attackVillage(AxisAlignedBB area) {
         this.tasks.removeTask(tasks_avoidHunter);
         village_attack_area = area;
-        this.setCustomNameTag("Attacking Village");//TODO Debug
     }
 
     @Override
     public void defendVillage(AxisAlignedBB area) {
         this.tasks.removeTask(tasks_avoidHunter);
         village_defense_area = area;
-        this.setCustomNameTag("Defending Village"); //TODO Debug
     }
 
     @Nullable

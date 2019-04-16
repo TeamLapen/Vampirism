@@ -226,7 +226,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (e instanceof EntityLivingBase) {
             if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
                 feed_victim_bite_type = determineBiteType((EntityLivingBase) e);
-                VampirismMod.log.t("bitetype: %s", feed_victim_bite_type.name());
                 if (feed_victim_bite_type == BITE_TYPE.ATTACK || feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER || feed_victim_bite_type == BITE_TYPE.HUNTER_CREATURE) {
                     biteAttack((EntityLivingBase) e, feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER);
                 } else if (feed_victim_bite_type == BITE_TYPE.NONE) {

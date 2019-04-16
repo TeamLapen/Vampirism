@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -265,5 +266,11 @@ public class VampireSkills {
         SkillNode skill6 = skillManager.createSkillNode(skill5, teleport);
 
 
+    }
+
+    public static void fixMapping(RegistryEvent.MissingMappings.Mapping<ISkill> m) {
+        if (new ResourceLocation("vampirism:bite1").equals(m.key) || new ResourceLocation("vampirism:bite2").equals(m.key)) {
+            m.ignore();
+        }
     }
 }

@@ -27,6 +27,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.IFixableData;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -283,4 +284,11 @@ public class ModEntities {
     }
 
 
+    static void fixMapping(RegistryEvent.MissingMappings.Mapping<EntityEntry> m) {
+        if (new ResourceLocation("vampirism", "hunter_villager").equals(m.key)) {
+            m.ignore(); //No need to replace
+        } else if (new ResourceLocation("vampirism", "converted_villager").equals(m.key)) {
+            m.ignore();
+        }
+    }
 }
