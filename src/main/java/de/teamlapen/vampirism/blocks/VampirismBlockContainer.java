@@ -23,7 +23,7 @@ public abstract class VampirismBlockContainer extends BlockContainer {
         super(materialIn);
         setCreativeTab(VampirismMod.creativeTab);
         setRegistryName(REFERENCE.MODID, regName);
-        this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
+        this.setTranslationKey(REFERENCE.MODID + "." + regName);
         this.registeredName = regName;
     }
 

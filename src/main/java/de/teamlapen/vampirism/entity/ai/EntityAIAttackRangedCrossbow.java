@@ -129,7 +129,7 @@ public class EntityAIAttackRangedCrossbow extends EntityAIBase {
         double sy = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - entityArrow.posY;
         double sz = target.posZ - entityArrow.posZ;
         double dist = MathHelper.sqrt(sx * sx + sz * sz);
-        entityArrow.shoot(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getEntityWorld().getDifficulty().getDifficultyId() * 4));
+        entityArrow.shoot(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getEntityWorld().getDifficulty().getId() * 4));
         this.entity.playSound(ModSounds.crossbow, 0.5F, 1);
         this.entity.getEntityWorld().spawnEntity(entityArrow);
     }

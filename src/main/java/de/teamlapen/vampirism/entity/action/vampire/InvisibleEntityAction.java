@@ -54,7 +54,7 @@ public class InvisibleEntityAction<T extends EntityCreature & IEntityActionUser>
 
     @Override
     public int getWeight(T entity) {
-        double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).lengthVector();
+        double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).length();
         if (distanceToTarget > 4) {
             return 3;
         } else {

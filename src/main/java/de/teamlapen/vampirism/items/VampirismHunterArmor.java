@@ -33,7 +33,7 @@ public abstract class VampirismHunterArmor extends ItemArmor implements ISpecial
         setCreativeTab(VampirismMod.creativeTab);
         String regName = baseRegName + "_" + equipmentSlotIn.getName();
         setRegistryName(REFERENCE.MODID, regName);
-        this.setUnlocalizedName(REFERENCE.MODID + "." + baseRegName + "." + equipmentSlotIn.getName());
+        this.setTranslationKey(REFERENCE.MODID + "." + baseRegName + "." + equipmentSlotIn.getName());
         registeredName = regName;
         oldRegisteredName = baseRegName.replaceAll("_", "") + "_" + equipmentSlotIn.getName();
     }

@@ -42,9 +42,9 @@ public class BlockCastleBlock extends VampirismBlock {
         super.addInformation(stack, player, tooltip, advanced);
         int meta = stack.getMetadata();
         if (meta < EnumType.META_LOOKUP.length) {
-            tooltip.add(UtilLib.translate(getUnlocalizedName() + "." + EnumType.META_LOOKUP[meta].getUnlocalizedName()));
+            tooltip.add(UtilLib.translate(getTranslationKey() + "." + EnumType.META_LOOKUP[meta].getUnlocalizedName()));
         }
-        tooltip.add("§o" + UtilLib.translate(getUnlocalizedName() + (meta == EnumType.DARK_STONE.getMetadata() ? ".no_spawn" : ".vampire_spawn")) + "§r");
+        tooltip.add("§o" + UtilLib.translate(getTranslationKey() + (meta == EnumType.DARK_STONE.getMetadata() ? ".no_spawn" : ".vampire_spawn")) + "§r");
     }
 
 

@@ -47,14 +47,14 @@ public class ItemInjection extends VampirismItem {
 
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
+    public String getTranslationKey(ItemStack stack) {
         switch (stack.getMetadata()) {
             case META_GARLIC:
-                return super.getUnlocalizedName(stack) + ".garlic";
+                return super.getTranslationKey(stack) + ".garlic";
             case META_SANGUINARE:
-                return super.getUnlocalizedName(stack) + ".sanguinare";
+                return super.getTranslationKey(stack) + ".sanguinare";
             default:
-                return super.getUnlocalizedName(stack);
+                return super.getTranslationKey(stack);
         }
     }
 

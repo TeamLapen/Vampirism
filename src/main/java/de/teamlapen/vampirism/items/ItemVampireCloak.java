@@ -39,7 +39,7 @@ public class ItemVampireCloak extends ItemArmor {
         this.setMaxDamage(0);
         this.setCreativeTab(VampirismMod.creativeTab);
         this.setRegistryName(REFERENCE.MODID, registeredName);
-        this.setUnlocalizedName(REFERENCE.MODID + "." + registeredName);
+        this.setTranslationKey(REFERENCE.MODID + "." + registeredName);
     }
 
     @SideOnly(Side.CLIENT)
@@ -69,7 +69,7 @@ public class ItemVampireCloak extends ItemArmor {
 
     public String getUnlocalizedName(ItemStack stack) {
         int i = stack.getMetadata();
-        return super.getUnlocalizedName() + "." + EnumCloakColor.byMetadata(i).getUnlocalizedName();
+        return super.getTranslationKey() + "." + EnumCloakColor.byMetadata(i).getUnlocalizedName();
     }
 
     @Override

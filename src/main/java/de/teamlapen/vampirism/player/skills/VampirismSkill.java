@@ -35,14 +35,14 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
 
     @Override
     public String getUnlocalizedName() {
-        return "text.vampirism.skill." + getRegistryName().getResourcePath();
+        return "text.vampirism.skill." + getRegistryName().getPath();
     }
 
     /**
      * Enable description using "text.vampirism.skill."+getID()+".desc" as unloc key
      */
     public void setHasDefaultDescription() {
-        description = "text.vampirism.skill." + getRegistryName().getResourcePath() + ".desc";
+        description = "text.vampirism.skill." + getRegistryName().getPath() + ".desc";
     }
 
     /**

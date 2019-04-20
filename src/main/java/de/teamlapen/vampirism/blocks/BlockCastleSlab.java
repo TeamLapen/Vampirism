@@ -46,7 +46,7 @@ public abstract class BlockCastleSlab extends BlockSlab {
         this.setDefaultState(iblockstate.withProperty(VARIANT, BlockCastleSlab.EnumType.DARK_BRICK));
         this.setCreativeTab(VampirismMod.creativeTab);
         this.setRegistryName(REFERENCE.MODID, regName + (isDouble() ? "_double" : ""));
-        this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
+        this.setTranslationKey(REFERENCE.MODID + "." + regName);
 
     }
 
@@ -109,8 +109,8 @@ public abstract class BlockCastleSlab extends BlockSlab {
     }
 
     @Override
-    public String getUnlocalizedName(int meta) {
-        return super.getUnlocalizedName() + "." + BlockCastleSlab.EnumType.byMetadata(meta).getUnlocalizedName();
+    public String getTranslationKey(int meta) {
+        return super.getTranslationKey() + "." + BlockCastleSlab.EnumType.byMetadata(meta).getUnlocalizedName();
     }
 
     @Override

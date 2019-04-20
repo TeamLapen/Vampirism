@@ -13,7 +13,7 @@ public class BlockFluidBlood extends BlockFluidFinite {
         super(blood, Material.WATER);
         this.name = name;
         blood.setBlock(this);
-        setUnlocalizedName(blood.getUnlocalizedName());
+        setTranslationKey(blood.getUnlocalizedName());
         setRegistryName(REFERENCE.MODID, name);
     }
 

@@ -252,7 +252,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
 
     @SideOnly(Side.CLIENT)
     private void spawnChargedParticle() {
-        Vec3d pos = new Vec3d(this.getPos()).addVector(0.5, 0.8, 0.5);
+        Vec3d pos = new Vec3d(this.getPos()).add(0.5, 0.8, 0.5);
         VampLib.proxy.getParticleHandler().spawnParticle(this.getWorld(), ModParticles.FLYING_BLOOD, this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177);
         VampLib.proxy.getParticleHandler().spawnParticle(this.getWorld(), ModParticles.FLYING_BLOOD, this.pos.getX() + 0.80, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177);
         VampLib.proxy.getParticleHandler().spawnParticle(this.getWorld(), ModParticles.FLYING_BLOOD, this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.80, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177);

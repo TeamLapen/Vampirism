@@ -22,7 +22,7 @@ public class BlockCastleStairs extends BlockStairs {
         super(block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, type));
         this.setCreativeTab(VampirismMod.creativeTab);
         setRegistryName(REFERENCE.MODID, REGNAME_BASE + name);
-        this.setUnlocalizedName(REFERENCE.MODID + "." + REGNAME_BASE + name);
+        this.setTranslationKey(REFERENCE.MODID + "." + REGNAME_BASE + name);
         setHardness(2.0F);
         setResistance(10.0F);
         setSoundType(SoundType.STONE);
@@ -33,7 +33,7 @@ public class BlockCastleStairs extends BlockStairs {
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add("§o" + UtilLib.translate(ModBlocks.castle_block.getUnlocalizedName() + (this.equals(ModBlocks.castle_stairs_dark_stone) ? ".no_spawn" : ".vampire_spawn")) + "§r");
+        tooltip.add("§o" + UtilLib.translate(ModBlocks.castle_block.getTranslationKey() + (this.equals(ModBlocks.castle_stairs_dark_stone) ? ".no_spawn" : ".vampire_spawn")) + "§r");
 
     }
 

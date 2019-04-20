@@ -37,7 +37,7 @@ public class ItemInfoBuilder {
         assert !stack.isEmpty();
         this.stack = stack;
         this.block = block;
-        name = stack.getItem().getRegistryName().getResourcePath();
+        name = stack.getItem().getRegistryName().getPath();
     }
 
     public ItemInfoBuilder(Item item) {
@@ -68,7 +68,7 @@ public class ItemInfoBuilder {
             }
         }
         if (links != null) GuideHelper.addLinks(pages, links);
-        entries.put(new ResourceLocation(base), new EntryItemStack(pages, customName ? base : stack.getUnlocalizedName() + ".name", stack, true));
+        entries.put(new ResourceLocation(base), new EntryItemStack(pages, customName ? base : stack.getTranslationKey() + ".name", stack, true));
     }
 
     /**

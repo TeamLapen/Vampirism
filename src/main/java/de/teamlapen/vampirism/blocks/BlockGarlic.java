@@ -34,7 +34,7 @@ public class BlockGarlic extends BlockCrops {
     public BlockGarlic() {
         this.setCreativeTab(null);
         setRegistryName(REFERENCE.MODID, regName);
-        this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
+        this.setTranslationKey(REFERENCE.MODID + "." + regName);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class BlockGarlic extends BlockCrops {
     }
 
     @Override
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+    public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
         if (state.getValue(AGE) > 5 && Helper.isVampire(entityIn)) {
             DamageHandler.affectVampireGarlicDirect(entityIn instanceof EntityPlayer ? VReference.VAMPIRE_FACTION.getPlayerCapability((EntityPlayer) entityIn) : (IVampire) entityIn, EnumStrength.WEAK);
         }

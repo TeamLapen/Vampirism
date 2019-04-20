@@ -38,7 +38,7 @@ public class ItemPureBlood extends VampirismItem {
 
 
     public ITextComponent getDisplayName(ItemStack stack) {
-        ITextComponent t = new TextComponentTranslation(getUnlocalizedName() + ".name");
+        ITextComponent t = new TextComponentTranslation(getTranslationKey() + ".name");
         if (stack.getMetadata() != OreDictionary.WILDCARD_VALUE) {
             t.appendSibling(new TextComponentString(" ")).appendSibling(new TextComponentTranslation("text.vampirism.purity")).appendSibling(new TextComponentString(" " + (stack.getItemDamage() + 1)));
         }

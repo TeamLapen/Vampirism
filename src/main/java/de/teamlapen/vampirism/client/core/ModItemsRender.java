@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.items.ItemVampireCloak.EnumCloakColor;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -132,7 +131,7 @@ public class ModItemsRender {
 	 */
 	private static void registerSimpleItemWithTier(IItemWithTier itemWithTier) {
 		Item item = (Item) itemWithTier;
-		ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "item/" + item.getRegistryName().getResourcePath());
+		ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "item/" + item.getRegistryName().getPath());
 		ModelLoader.setCustomMeshDefinition(item, new IItemWithTier.SimpleMeshDefinition(loc));
 		for (IStringSerializable s : IItemWithTier.TIER.values()) {
 			ModelLoader.registerItemVariants(item, new ModelResourceLocation(loc, "tier=" + s.getName()));

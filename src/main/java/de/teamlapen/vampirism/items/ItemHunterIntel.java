@@ -38,7 +38,7 @@ public class ItemHunterIntel extends VampirismItem {
 
 
     public ITextComponent getDisplayName(ItemStack stack) {
-        return new TextComponentTranslation(getUnlocalizedName() + ".name").appendSibling(new TextComponentString(" ")).appendSibling(new TextComponentTranslation("text.vampirism.for_level")).appendSibling(new TextComponentString(" " + HunterLevelingConf.instance().getLevelForHunterIntelMeta(stack.getMetadata())));
+        return new TextComponentTranslation(getTranslationKey() + ".name").appendSibling(new TextComponentString(" ")).appendSibling(new TextComponentTranslation("text.vampirism.for_level")).appendSibling(new TextComponentString(" " + HunterLevelingConf.instance().getLevelForHunterIntelMeta(stack.getMetadata())));
     }
 
 

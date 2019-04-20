@@ -23,7 +23,7 @@ public class VampirismFlower extends BlockBush implements ItemMetaBlock.IMetaIte
         this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, EnumFlowerType.ORCHID));
         setCreativeTab(VampirismMod.creativeTab);
         setRegistryName(REFERENCE.MODID, regName);
-        this.setUnlocalizedName(REFERENCE.MODID);
+        this.setTranslationKey(REFERENCE.MODID);
     }
 
     @Override

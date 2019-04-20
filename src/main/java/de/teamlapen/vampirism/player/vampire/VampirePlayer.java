@@ -1258,7 +1258,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             Vec3d vec31 = new Vec3d(((double) player.getRNG().nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
             vec31 = vec31.rotatePitch(-player.rotationPitch * (float) Math.PI / 180.0F);
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
-            vec31 = vec31.addVector(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
+            vec31 = vec31.add(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
 
             player.world.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z, Item.getIdFromItem(Items.APPLE));
         }

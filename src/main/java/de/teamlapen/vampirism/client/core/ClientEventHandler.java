@@ -134,8 +134,8 @@ public class ClientEventHandler {
             ArrayList<ModelResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ModelResourceLocation modelLoc : registry.getKeys()) {
-                if (modelLoc.getResourceDomain().equals(REFERENCE.MODID)
-                        && modelLoc.getResourcePath().equals(BlockBloodContainer.regName)
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID)
+                        && modelLoc.getPath().equals(BlockBloodContainer.regName)
                         ) {
                     modelLocations.add(modelLoc);
                 }
@@ -168,8 +168,8 @@ public class ClientEventHandler {
             ArrayList<ModelResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ModelResourceLocation modelLoc : registry.getKeys()) {
-                if (modelLoc.getResourceDomain().equals(REFERENCE.MODID)
-                        && modelLoc.getResourcePath().equals(BlockAltarInspiration.regName)
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID)
+                        && modelLoc.getPath().equals(BlockAltarInspiration.regName)
                         && !modelLoc.getVariant().equals("inventory")) {
                     modelLocations.add(modelLoc);
                 }
@@ -199,8 +199,8 @@ public class ClientEventHandler {
             ArrayList<ModelResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ModelResourceLocation modelLoc : registry.getKeys()) {
-                if (modelLoc.getResourceDomain().equals(REFERENCE.MODID)
-                        && modelLoc.getResourcePath().equals(BlockWeaponTable.regName)
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID)
+                        && modelLoc.getPath().equals(BlockWeaponTable.regName)
                         && !modelLoc.getVariant().equals("inventory")) {
                     modelLocations.add(modelLoc);
                 }

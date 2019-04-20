@@ -44,7 +44,7 @@ public class ItemCoffin extends VampirismItem {
 
         // Direction the player is facing
         int direction = MathHelper.floor((player.rotationYaw * 4F) / 360F + 0.5D) & 3;
-        EnumFacing facing = EnumFacing.getHorizontal(direction);
+        EnumFacing facing = EnumFacing.byHorizontalIndex(direction);
         BlockPos other = pos.offset(facing);
         boolean other_replaceable = block.isReplaceable(world, other);
         boolean flag1 = world.isAirBlock(pos) || replaceable;

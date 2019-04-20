@@ -64,7 +64,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
@@ -92,7 +92,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        EnumFacing face = EnumFacing.getHorizontal(meta);
+        EnumFacing face = EnumFacing.byHorizontalIndex(meta);
         return this.getDefaultState().withProperty(FACING, face);
     }
 

@@ -54,7 +54,7 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
 
     @Override
     public String getLocalizedDescription() {
-        return UtilLib.translate(customDescription ? "text.vampirism.skill." + this.getRegistryName().getResourcePath() + ".desc" : "text.vampirism.skill.unlocks_action");
+        return UtilLib.translate(customDescription ? "text.vampirism.skill." + this.getRegistryName().getPath() + ".desc" : "text.vampirism.skill.unlocks_action");
     }
 
     @SideOnly(Side.CLIENT)

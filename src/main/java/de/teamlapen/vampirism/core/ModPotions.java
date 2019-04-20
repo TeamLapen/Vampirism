@@ -84,7 +84,7 @@ public class ModPotions {
 
 
     static void fixMapping(RegistryEvent.MissingMappings.Mapping<Potion> m) {
-        if ("night_vision".equals(m.key.getResourcePath())) {
+        if ("night_vision".equals(m.key.getPath())) {
             m.ignore();
         }
     }

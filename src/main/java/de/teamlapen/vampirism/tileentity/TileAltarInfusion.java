@@ -324,7 +324,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         ItemStack missing = InventoryHelper.checkItems(this, items, new int[]{requirements.blood, requirements.heart, requirements.vampireBook}, new int[]{requirements.getBloodMetaForCheck(), OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE});
         if (!missing.isEmpty()) {
             if (messagePlayer) {
-                ITextComponent item = missing.getItem().equals(ModItems.pure_blood) ? ModItems.pure_blood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
+                ITextComponent item = missing.getItem().equals(ModItems.pure_blood) ? ModItems.pure_blood.getDisplayName(missing) : new TextComponentTranslation(missing.getTranslationKey() + ".name");
                 ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", missing.getCount(), item);
                 player.sendMessage(main);
             }

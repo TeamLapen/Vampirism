@@ -32,7 +32,7 @@ public class BlockFirePlace extends VampirismBlock {
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 

@@ -217,7 +217,7 @@ public class ModBlocks {
      */
     static boolean fixMapping(RegistryEvent.MissingMappings.Mapping<Block> mapping) {
         //Check for mappings changed for 1.11 CamelCase to lower underscore
-        return checkMapping(mapping, mapping.key.getResourcePath(), false, alchemical_cauldron, alchemical_fire, altar_infusion, altar_inspiration, altar_pillar, altar_tip, blood_container, blood_potion_table, castle_block, church_altar, block_coffin, cursed_earth, fire_place, block_blood_fluid, garlic_beacon, hunter_table, med_chair, sunscreen_beacon, tent_main, vampirism_flower, weapon_table);
+        return checkMapping(mapping, mapping.key.getPath(), false, alchemical_cauldron, alchemical_fire, altar_infusion, altar_inspiration, altar_pillar, altar_tip, blood_container, blood_potion_table, castle_block, church_altar, block_coffin, cursed_earth, fire_place, block_blood_fluid, garlic_beacon, hunter_table, med_chair, sunscreen_beacon, tent_main, vampirism_flower, weapon_table);
     }
 
     private static boolean checkMapping(RegistryEvent.MissingMappings.Mapping mapping, String name, boolean itemBlock, Block... blocks) {
@@ -248,7 +248,7 @@ public class ModBlocks {
      */
     static boolean fixMappingItemBlock(RegistryEvent.MissingMappings.Mapping<Item> mapping) {
         //Check for mappings changed for 1.11 CamelCase to lower underscore
-        String converted = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, mapping.key.getResourcePath());
+        String converted = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, mapping.key.getPath());
         return checkMapping(mapping, converted, true, alchemical_cauldron, altar_infusion, altar_inspiration, altar_pillar, altar_tip, blood_container, blood_potion_table, castle_block, church_altar, cursed_earth, fire_place, block_blood_fluid, garlic_beacon, hunter_table, sunscreen_beacon, vampirism_flower, weapon_table);
     }
 

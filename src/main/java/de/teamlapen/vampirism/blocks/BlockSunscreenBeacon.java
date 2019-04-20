@@ -40,8 +40,8 @@ public class BlockSunscreenBeacon extends VampirismBlockContainer {
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(UtilLib.translate(getUnlocalizedName() + ".tooltip1"));
-        tooltip.add(UtilLib.translateFormatted(getUnlocalizedName() + ".tooltip2", Configs.sunscreen_beacon_distance));
+        tooltip.add(UtilLib.translate(getTranslationKey() + ".tooltip1"));
+        tooltip.add(UtilLib.translateFormatted(getTranslationKey() + ".tooltip2", Configs.sunscreen_beacon_distance));
     }
 
 

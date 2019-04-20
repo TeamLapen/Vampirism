@@ -114,7 +114,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
                 DamageSource dmg = DamageSource.causePlayerDamage((EntityPlayer) attacker);
                 target.attackEntityFrom(dmg, 10000F);
                 Vec3d center = new Vec3d(target.getPosition());
-                center.addVector(0, target.height / 2d, 0);
+                center.add(0, target.height / 2d, 0);
                 VampLib.proxy.getParticleHandler().spawnParticles(target.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 15, 0.5, target.getRNG(), 132, 12, 0xE02020);
             }
         }
@@ -297,7 +297,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     private void spawnChargedParticle(EntityLivingBase player, boolean mainHand) {
         Vec3d mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
-            Vec3d pos = mainPos.addVector((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
+            Vec3d pos = mainPos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
             VampLib.proxy.getParticleHandler().spawnParticle(player.getEntityWorld(), ModParticles.FLYING_BLOOD, pos.x, pos.y, pos.z, pos.x + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.y + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.z + (player.getRNG().nextFloat() - 0.5D) * 0.2D, (int) (4.0F / (player.getRNG().nextFloat() * 0.9F + 0.1F)), 177);
         }
     }
@@ -306,7 +306,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     private void spawnChargingParticle(EntityLivingBase player, boolean mainHand) {
         Vec3d pos = UtilLib.getItemPosition(player, mainHand);
         if (player.getSwingProgress(1f) > 0f) return;
-        pos = pos.addVector((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
+        pos = pos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
         Vec3d playerPos = new Vec3d((player).posX, (player).posY + player.getEyeHeight() - 0.2f, (player).posZ);
         VampLib.proxy.getParticleHandler().spawnParticle(player.getEntityWorld(), ModParticles.FLYING_BLOOD, playerPos.x, playerPos.y, playerPos.z, pos.x, pos.y, pos.z, (int) (4.0F / (player.getRNG().nextFloat() * 0.6F + 0.1F)));
 

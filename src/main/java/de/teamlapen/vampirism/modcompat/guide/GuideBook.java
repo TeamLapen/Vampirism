@@ -152,7 +152,7 @@ public class GuideBook implements IGuideBook {
         entries.put(new ResourceLocation(base + "getting_started"), new EntryText(gettingStarted, UtilLib.translate(base + "getting_started")));
 
         List<IPage> bloodPages = new ArrayList<>();
-        bloodPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "blood.text", UtilLib.translate(ModItems.blood_bottle.getUnlocalizedName() + ".name"), UtilLib.translate(Items.GLASS_BOTTLE.getUnlocalizedName() + ".name"))));
+        bloodPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "blood.text", UtilLib.translate(ModItems.blood_bottle.getTranslationKey() + ".name"), UtilLib.translate(Items.GLASS_BOTTLE.getTranslationKey() + ".name"))));
         bloodPages.addAll(GuideHelper.addLinks(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "blood.storage", ModBlocks.blood_container.getLocalizedName())), new ResourceLocation("guide.vampirism.blocks.blood_container")));
         bloodPages.addAll(GuideHelper.addLinks(GuideHelper.pagesForLongText(UtilLib.translate(base + "blood.biteable_creatures")), new PageHolderWithLinks.URLLink("Biteable Creatures", URI.create("https://github.com/TeamLapen/Vampirism/wiki/Biteable-Creatures"))));
         entries.put(new ResourceLocation(base + "blood"), new EntryText(bloodPages, UtilLib.translate(base + "blood")));
@@ -174,10 +174,10 @@ public class GuideBook implements IGuideBook {
             blocks.append(t.fillerBlock.getLocalizedName()).append("(").append(t.getValue()).append("),");
         }
         levelingPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "leveling.infusion.structure", blocks.toString())));
-        String items = UtilLib.translate(ModItems.human_heart.getUnlocalizedName() + ".name") + ", " + UtilLib.translate(ModItems.pure_blood.getUnlocalizedName() + ".name") + ", " + UtilLib.translate(ModItems.vampire_book.getUnlocalizedName() + ".name");
+        String items = UtilLib.translate(ModItems.human_heart.getTranslationKey() + ".name") + ", " + UtilLib.translate(ModItems.pure_blood.getTranslationKey() + ".name") + ", " + UtilLib.translate(ModItems.vampire_book.getTranslationKey() + ".name");
         levelingPages.addAll(GuideHelper.addLinks(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "leveling.infusion.items", items)), new ResourceLocation("guide.vampirism.items.human_heart"), new ResourceLocation("guide.vampirism.items.pure_blood"), new ResourceLocation("guide.vampirism.items.vampire_book")));
         PageTable.Builder requirementsBuilder = new PageTable.Builder(5);
-        requirementsBuilder.addUnlocLine("text.vampirism.level", base + "leveling.infusion.req.structure_points", ModItems.pure_blood.getUnlocalizedName() + ".name", base + "leveling.infusion.req.heart", base + "leveling.infusion.req.book");
+        requirementsBuilder.addUnlocLine("text.vampirism.level", base + "leveling.infusion.req.structure_points", ModItems.pure_blood.getTranslationKey() + ".name", base + "leveling.infusion.req.heart", base + "leveling.infusion.req.book");
         requirementsBuilder.addLine("5", VampireLevelingConf.getInstance().getRequiredStructureLevelAltarInfusion(5), "0", "5", "1");
         requirementsBuilder.addLine("6", VampireLevelingConf.getInstance().getRequiredStructureLevelAltarInfusion(6), "1 Purity(1)", "5", "1");
         requirementsBuilder.addLine("7", VampireLevelingConf.getInstance().getRequiredStructureLevelAltarInfusion(7), "1 Purity(1)", "10", "1");
@@ -419,7 +419,7 @@ public class GuideBook implements IGuideBook {
         int ce = Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE * 2 + 1;
         new ItemInfoBuilder(ModBlocks.garlic_beacon).setFormats(cn, cn, ce, ce, ModItems.purified_garlic.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.item_garlic"), new ResourceLocation("guide.vampirism.items.purified_garlic"), new ResourceLocation("guide.vampirism.items.holy_water_bottle")).craftableStacks(ModBlocks.garlic_beacon, WORKBENCH, new ItemStack(ModBlocks.garlic_beacon, 1, BlockGarlicBeacon.Type.IMPROVED.getId()), WORKBENCH, ModItems.garlic_beacon_core, ALCHEMICAL_CAULDRON, ModItems.garlic_beacon_core_improved, ALCHEMICAL_CAULDRON).build(entries);
         new ItemInfoBuilder(ModBlocks.blood_pedestal).craftable(WORKBENCH).build(entries);
-        new ItemInfoBuilder(ModBlocks.blood_grinder).craftable(WORKBENCH).setFormats(ModItems.human_heart.getLocalizedName(), UtilLib.translate(Items.BEEF.getUnlocalizedName() + ".name"), ModBlocks.blood_sieve.getLocalizedName()).build(entries);
+        new ItemInfoBuilder(ModBlocks.blood_grinder).craftable(WORKBENCH).setFormats(ModItems.human_heart.getLocalizedName(), UtilLib.translate(Items.BEEF.getTranslationKey() + ".name"), ModBlocks.blood_sieve.getLocalizedName()).build(entries);
         new ItemInfoBuilder(ModBlocks.blood_sieve).craftable(WORKBENCH).setFormats(UtilLib.translate(ModFluids.impure_blood.getUnlocalizedName()), ModBlocks.blood_grinder.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_grinder")).build(entries);
         new ItemInfoBuilder(ModBlocks.totem_top).craftable(WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.totem_base"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);
         new ItemInfoBuilder(ModBlocks.totem_base).craftable(WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.totem_top"), new ResourceLocation("guide.vampirism.world.villages")).build(entries);

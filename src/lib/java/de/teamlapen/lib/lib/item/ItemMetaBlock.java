@@ -41,12 +41,12 @@ public class ItemMetaBlock extends ItemBlock {
 
     @Nonnull
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
+    public String getTranslationKey(ItemStack stack) {
         if (customName) {
             String name = ((IMetaItemName) this.block).getItemstackName(stack);
-            return super.getUnlocalizedName(stack) + "." + name;
+            return super.getTranslationKey(stack) + "." + name;
         }
-        return super.getUnlocalizedName(stack);
+        return super.getTranslationKey(stack);
     }
 
     public interface IMetaItemName {

@@ -92,7 +92,7 @@ public class UtilLib {
             distance = restriction;
         }
 
-        Vec3d vector2 = vector1.addVector(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
+        Vec3d vector2 = vector1.add(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
         return player.getEntityWorld().rayTraceBlocks(vector1, vector2);
     }
 
@@ -152,9 +152,9 @@ public class UtilLib {
     Vec3d getItemPosition(EntityLivingBase entity, boolean mainHand) {
         boolean left = (mainHand ? entity.getPrimaryHand() : entity.getPrimaryHand().opposite()) == EnumHandSide.LEFT;
         boolean firstPerson = entity instanceof EntityPlayer && ((EntityPlayer) entity).isUser() && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
-        Vec3d dir = firstPerson ? entity.getForward() : Vec3d.fromPitchYawVector(new Vec2f(entity.rotationPitch, entity.renderYawOffset));
+        Vec3d dir = firstPerson ? entity.getForward() : Vec3d.fromPitchYaw(new Vec2f(entity.rotationPitch, entity.renderYawOffset));
         dir = dir.rotateYaw((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
-        return dir.addVector(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
+        return dir.add(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
 
     }
 

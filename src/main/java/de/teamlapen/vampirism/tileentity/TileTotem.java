@@ -892,7 +892,7 @@ public class TileTotem extends TileEntity implements ITickable {
             if (village == null) return false;
             Vec3d vec = village.getVillage().findRandomSpawnPos(village.getVillage().getCenter(), 2, 3, 2);
             if (vec == null) return false;
-            if (!world.isAirBlock(new BlockPos(vec))) vec = vec.addVector(0, 1, 0);
+            if (!world.isAirBlock(new BlockPos(vec))) vec = vec.add(0, 1, 0);
             newEntity.setPosition(vec.x, vec.y, vec.z);
         }
         if (entityToReplace != null) world.removeEntity(entityToReplace);

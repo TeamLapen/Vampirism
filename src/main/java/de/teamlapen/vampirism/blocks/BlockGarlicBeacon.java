@@ -62,11 +62,11 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
         if ((stack.getMetadata()) > 0) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translate(getUnlocalizedName() + "." + Type.fromId(stack.getMetadata()).getName()));
+            tooltip.add(TextFormatting.AQUA + UtilLib.translate(getTranslationKey() + "." + Type.fromId(stack.getMetadata()).getName()));
         }
-        tooltip.add(UtilLib.translateFormatted(getUnlocalizedName() + ".tooltip1"));
+        tooltip.add(UtilLib.translateFormatted(getTranslationKey() + ".tooltip1"));
         int c = 1 + 2 * (stack.getMetadata() == Type.IMPROVED.getId() ? Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE : (stack.getMetadata() == Type.WEAK.getId() ? Balance.hps.GARLIC_DIFFUSOR_WEAK_DISTANCE : Balance.hps.GARLIC_DIFFUSOR_NORMAL_DISTANCE));
-        tooltip.add(UtilLib.translateFormatted(getUnlocalizedName() + ".tooltip2", c, c));
+        tooltip.add(UtilLib.translateFormatted(getTranslationKey() + ".tooltip2", c, c));
     }
 
 
@@ -83,7 +83,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
@@ -115,7 +115,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        EnumFacing face = EnumFacing.getHorizontal(meta);
+        EnumFacing face = EnumFacing.byHorizontalIndex(meta);
         Type t = Type.fromId(meta >> 2);
         return this.getDefaultState().withProperty(FACING, face).withProperty(TYPE, t);
     }

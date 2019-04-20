@@ -44,7 +44,7 @@ public class ItemMedChair extends VampirismItem {
 
         // Direction the player is facing
         int direction = MathHelper.floor((player.rotationYaw * 4F) / 360F + 0.5D) & 3;
-        EnumFacing facing = EnumFacing.getHorizontal(direction);
+        EnumFacing facing = EnumFacing.byHorizontalIndex(direction);
         BlockPos otherPos = pos.offset(facing);
         Block otherBlock = world.getBlockState(otherPos).getBlock();
         boolean other_replaceable = otherBlock.isReplaceable(world, otherPos);

@@ -65,7 +65,7 @@ public class BlockMedChair extends VampirismBlock {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(PART, EnumPart.fromMeta(meta >> 2)).withProperty(FACING, EnumFacing.getHorizontal(meta));
+        return this.getDefaultState().withProperty(PART, EnumPart.fromMeta(meta >> 2)).withProperty(FACING, EnumFacing.byHorizontalIndex(meta));
     }
 
     @Override
@@ -104,7 +104,7 @@ public class BlockMedChair extends VampirismBlock {
             }
         } else {
             if (worldIn.isRemote)
-                playerIn.sendMessage(new TextComponentTranslation("text.vampirism.need_item_to_use", new TextComponentTranslation((new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC)).getUnlocalizedName() + ".name")));
+                playerIn.sendMessage(new TextComponentTranslation("text.vampirism.need_item_to_use", new TextComponentTranslation((new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC)).getTranslationKey() + ".name")));
         }
 
         return true;

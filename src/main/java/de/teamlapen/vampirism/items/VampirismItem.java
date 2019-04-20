@@ -20,12 +20,12 @@ public class VampirismItem extends Item {
         this.regName = regName;
         setCreativeTab(VampirismMod.creativeTab);
         setRegistryName(REFERENCE.MODID, regName);
-        this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
+        this.setTranslationKey(REFERENCE.MODID + "." + regName);
     }
 
 
     public String getLocalizedName() {
-        return UtilLib.translate(getUnlocalizedName() + ".name");
+        return UtilLib.translate(getTranslationKey() + ".name");
     }
 
     /**

@@ -402,12 +402,12 @@ public class ModItems {
     static boolean fixMapping(RegistryEvent.MissingMappings.Mapping<Item> mapping) {
 
         // Removed battle Axe
-        if ("battleaxe".equals(mapping.key.getResourcePath())) {
+        if ("battleaxe".equals(mapping.key.getPath())) {
             mapping.ignore();
             return true;
         }
         // Check for mappings changed for 1.11 CamelCase to lower underscore
-        String old = mapping.key.getResourcePath();
+        String old = mapping.key.getPath();
         boolean r = checkMapping(mapping, old, armor_of_swiftness_feet, armor_of_swiftness_chest,
                 armor_of_swiftness_head, armor_of_swiftness_legs, basic_crossbow, basic_double_crossbow,
                 basic_tech_crossbow, blood_bottle, blood_potion, crossbow_arrow, enhanced_crossbow,

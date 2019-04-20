@@ -64,7 +64,7 @@ public class BlockTentMain extends BlockTent implements ITileEntityProvider {
         //Fix related to #210
         //Tents with no tileentity set, create a new one and enable spawn
         //TODO remove sometime
-        if (worldIn.getChunkFromBlockCoords(pos).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) == null) {
+        if (worldIn.getChunk(pos).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) == null) {
             TileEntity tile = worldIn.getTileEntity(pos);
             if (tile instanceof TileTent) {
                 ((TileTent) tile).setSpawn(true);

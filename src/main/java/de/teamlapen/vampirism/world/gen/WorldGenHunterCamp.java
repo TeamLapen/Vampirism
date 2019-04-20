@@ -72,7 +72,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
             return false;
         } else {
             BlockPos pos = position.add(rand.nextInt(16), 0, rand.nextInt(16));
-            boolean flag = placeTent(worldIn, rand, findSolidPos(worldIn, pos), EnumFacing.getHorizontal(rand.nextInt(EnumFacing.HORIZONTALS.length)));
+            boolean flag = placeTent(worldIn, rand, findSolidPos(worldIn, pos), EnumFacing.byHorizontalIndex(rand.nextInt(EnumFacing.HORIZONTALS.length)));
             if (flag && VampirismWorldGen.debug)
                 VampirismMod.log.i("HunterCamp", "Generated normal hunter camp at %s", pos);
             return flag;

@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.math.Vec3d;
+
 import java.util.UUID;
 
 public class SpeedEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
@@ -55,7 +56,7 @@ public class SpeedEntityAction<T extends EntityCreature & IEntityActionUser> ext
 
     @Override
     public int getWeight(T entity) {
-        double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).lengthVector();
+        double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).length();
         if (distanceToTarget > 10) {
             return 3;
         } else if (distanceToTarget > 5) {

@@ -53,8 +53,10 @@ public class BlockTent extends VampirismBlock {
 
     }
 
+
+
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
@@ -69,7 +71,7 @@ public class BlockTent extends VampirismBlock {
     public IBlockState getStateFromMeta(int meta) {
         int dir = meta & 3;
         int pos = (meta >> 2);
-        return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(dir)).withProperty(POSITION, pos);
+        return getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(dir)).withProperty(POSITION, pos);
     }
 
     @Override
