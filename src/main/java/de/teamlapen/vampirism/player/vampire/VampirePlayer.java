@@ -1118,7 +1118,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         checkAttributes(VReference.biteDamage);
         float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
-        if ((entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) || entity.getCapability(ExtendedCreature.CAP, null).hasPoisonousBlood()) {
+        if ((entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) || entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) {
             player.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
             if (player instanceof EntityPlayerMP) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.POISONOUS_BITE);
