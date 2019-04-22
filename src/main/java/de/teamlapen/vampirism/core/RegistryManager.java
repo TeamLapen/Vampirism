@@ -18,14 +18,14 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.ObjectHolderRegistry;
 
 
@@ -38,17 +38,17 @@ public class RegistryManager implements IInitListener {
     /**
      * Delegate for some client side registrations
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private static de.teamlapen.vampirism.client.core.RegistryManagerClient registryManagerClient;
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static void setupClientRegistryManager() {
 
         registryManagerClient = new de.teamlapen.vampirism.client.core.RegistryManagerClient();
         MinecraftForge.EVENT_BUS.register(registryManagerClient);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static de.teamlapen.vampirism.client.core.RegistryManagerClient getRegistryManagerClient() {
 
         return registryManagerClient;

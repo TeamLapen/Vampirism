@@ -4,10 +4,10 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -60,7 +60,7 @@ public class ItemBloodBottle extends VampirismItem {
 
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
         if (isInCreativeTab(tab)) {
             items.add(new ItemStack(this, 1));
             items.add(new ItemStack(this, 1, AMOUNT));

@@ -6,11 +6,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Makes Message Handling a little more comfortable.
@@ -24,7 +23,7 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
      * @param player Client player. If NOT handled on main Thread this can be null when the game starts
      * @return a message to send back to the Server, or null if no reply is necessary
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public abstract IMessage handleClientMessage(EntityPlayer player, T message, MessageContext ctx);
 
     /**
@@ -47,7 +46,7 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
 
             if (handleOnMainThread()) {
                 final AbstractPacketDispatcher dispatcher = getDispatcher();
-                IThreadListener mainThread = Minecraft.getMinecraft();
+                IThreadListener mainThread = Minecraft.getInstance();
                 mainThread.addScheduledTask(() -> {
                     EntityPlayer player = getPlayerEntityByProxy(ctx);
                     IMessage response = handleClientMessage(player, message, ctx);

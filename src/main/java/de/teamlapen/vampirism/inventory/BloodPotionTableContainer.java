@@ -14,8 +14,8 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -99,7 +99,7 @@ public class BloodPotionTableContainer extends Container {
         return craftingTimer == 0 ? 0 : (1F - craftingTimer / (float) max_crafting_time);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public
     @Nullable
     List<String> getLocalizedCraftingHint() {
@@ -200,7 +200,7 @@ public class BloodPotionTableContainer extends Container {
         return itemstack;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void updateProgressBar(int id, int data) {
         if (id == 0 && data >= 0 && data <= max_crafting_time) {

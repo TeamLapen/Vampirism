@@ -20,15 +20,15 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Handles all block render registration including TileEntities
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ModBlocksRender {
 
 
@@ -38,13 +38,13 @@ public class ModBlocksRender {
     }
 
     static void registerColors() {
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((state, worldIn, pos, tintIndex) -> {
+        Minecraft.getInstance().getBlockColors().registerBlockColorHandler((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 1) {
                 return 0x9966FF;
             }
             return 0x8855FF;
         }, ModBlocks.alchemical_fire);
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((state, worldIn, pos, tintIndex) -> {
+        Minecraft.getInstance().getBlockColors().registerBlockColorHandler((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
                 if (tile != null && tile instanceof TileAlchemicalCauldron) {
@@ -53,7 +53,7 @@ public class ModBlocksRender {
             }
             return 0xFFFFFF;
         }, ModBlocks.alchemical_cauldron);
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((state, worldIn, pos, tintIndex) -> {
+        Minecraft.getInstance().getBlockColors().registerBlockColorHandler((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
                 if (tile instanceof TileTotem) {

@@ -7,7 +7,10 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
 import de.teamlapen.vampirism.world.loot.LootHandler;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockFenceGate;
+import net.minecraft.block.BlockStairs;
+import net.minecraft.block.BlockTorch;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItemFrame;
@@ -17,8 +20,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
@@ -35,13 +38,13 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
     }
 
 
-    public VillagePieceTrainer(StructureVillagePieces.Start start, int type, StructureBoundingBox boundingBox, EnumFacing facing) {
+    public VillagePieceTrainer(StructureVillagePieces.Start start, int type, MutableBoundingBox boundingBox, EnumFacing facing) {
         super(start, type);
         this.setCoordBaseMode(facing);//Set facing
         this.boundingBox = boundingBox;
     }
 
-    public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
+    public boolean addComponentParts(World worldIn, Random randomIn, MutableBoundingBox structureBoundingBoxIn) {
         if (this.averageGroundLvl < 0) {
             this.averageGroundLvl = this.getAverageGroundLevel(worldIn, structureBoundingBoxIn);
 
@@ -210,7 +213,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
     }
 
 
-    private void spawnHunterTrainer(World worldIn, StructureBoundingBox structureBoundingBoxIn, int x, int y, int z) {
+    private void spawnHunterTrainer(World worldIn, MutableBoundingBox structureBoundingBoxIn, int x, int y, int z) {
 
         int j = this.getXWithOffset(x, z);
         int k = this.getYWithOffset(y);
@@ -231,7 +234,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
 
         @Override
         public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
-            StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 9, 7, 12, facing);
+            MutableBoundingBox structureboundingbox = MutableBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 9, 7, 12, facing);
             return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(pieces, structureboundingbox) == null ? new VillagePieceTrainer(startPiece, p5, structureboundingbox, facing) : null;
         }
 

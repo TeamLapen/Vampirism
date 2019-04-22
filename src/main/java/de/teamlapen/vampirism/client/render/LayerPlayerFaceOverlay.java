@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Renders an overlay over the entities face
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @param <T> Has to be the same as Q
  * @param <Q> Has to be the same as T
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class LayerPlayerFaceOverlay<T extends EntityCreature, Q extends IPlayerFace> implements LayerRenderer<T> {
 
     private final RenderBiped<T> renderBiped;

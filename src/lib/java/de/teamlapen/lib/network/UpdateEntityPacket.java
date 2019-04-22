@@ -12,12 +12,12 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -218,7 +218,7 @@ public class UpdateEntityPacket implements IMessage {
 
     public static class Handler extends AbstractClientMessageHandler<UpdateEntityPacket> {
 
-        @SideOnly(Side.CLIENT)
+        @OnlyIn(Dist.CLIENT)
         @Override
         public IMessage handleClientMessage(EntityPlayer player, UpdateEntityPacket message, MessageContext ctx) {
 //            if (player.getRNG().nextInt(10) == 0)
@@ -267,7 +267,7 @@ public class UpdateEntityPacket implements IMessage {
             return true;
         }
 
-        @SideOnly(Side.CLIENT)
+        @OnlyIn(Dist.CLIENT)
         private void handleCapability(Entity e, ResourceLocation key, NBTTagCompound data) {
             ISyncable syncable;
             Capability cap = HelperRegistry.getSyncableEntityCaps().get(key);

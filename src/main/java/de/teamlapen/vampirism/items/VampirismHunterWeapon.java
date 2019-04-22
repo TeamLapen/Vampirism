@@ -19,8 +19,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,11 +44,11 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     }
 
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         if (getUsingFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
-            TextFormatting color = Minecraft.getMinecraft().player != null && Helper.canUseFactionItem(stack, this, FactionPlayerHandler.get(Minecraft.getMinecraft().player)) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
+            TextFormatting color = Minecraft.getInstance().player != null && Helper.canUseFactionItem(stack, this, FactionPlayerHandler.get(Minecraft.getInstance().player)) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
             tooltip.add(color + UtilLib.translateFormatted(getUsingFaction(stack) == null ? "text.vampirism.all" : getUsingFaction(stack).getUnlocalizedNamePlural()) + ": " + getMinLevel(stack) + "+");
             ISkill reqSkill = this.getRequiredSkill(stack);
             if (reqSkill != null) {

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -24,7 +23,6 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
@@ -214,7 +212,7 @@ public class ModPlayerEventHandler {
 
         if (state.getBlock() == ModBlocks.alchemical_fire) {
             world.playEvent(null, 1009, pos, 0);
-            world.setBlockToAir(pos);
+            world.removeBlock(pos);
             event.setCanceled(true);
         } else if (ModBlocks.garlic_beacon.equals(state.getBlock()) && Helper.isVampire(event.getEntityPlayer())) {
             event.getEntityPlayer().addPotionEffect(new PotionEffect(ModPotions.garlic));

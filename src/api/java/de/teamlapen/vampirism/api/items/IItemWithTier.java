@@ -6,8 +6,8 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
@@ -47,7 +47,7 @@ public interface IItemWithTier {
      * ONLY for IItemWithTier items
      * Variant: "tier=<tier>"
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     class SimpleMeshDefinition implements ItemMeshDefinition {
 
         private final ResourceLocation base;
@@ -68,7 +68,7 @@ public interface IItemWithTier {
      * ONLY for IItemWithTier items that extend ItemArmor
      * Variant: "tier=<tier>,part=<part>"
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     class ArmorMeshDefinition implements ItemMeshDefinition {
         private final ResourceLocation base;
 

@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.EntityCreature;
+
 import javax.annotation.Nullable;
 
 /**
@@ -66,7 +67,7 @@ class ExtendedCreatureDefaultImpl implements IExtendedCreatureVampirism {
     }
 
     @Override
-    public void onUpdate() {
+    public void tick() {
 
     }
 

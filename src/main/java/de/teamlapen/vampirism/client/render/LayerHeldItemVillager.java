@@ -5,18 +5,18 @@ import de.teamlapen.vampirism.client.render.entities.RenderHunterVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityAggressiveVillager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Same as {@link LayerHeldItem} but for {@link ModelVillagerWithArms} model
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class LayerHeldItemVillager implements LayerRenderer<EntityAggressiveVillager> {
 
     private final RenderHunterVillager renderer;
@@ -63,7 +63,7 @@ public class LayerHeldItemVillager implements LayerRenderer<EntityAggressiveVill
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             boolean flag = p_188358_4_ == EnumHandSide.LEFT;
             GlStateManager.translate(flag ? -0.0925F : 0.0925F, 0.125F, -0.525F);
-            Minecraft.getMinecraft().getItemRenderer().renderItemSide(p_188358_1_, stack, p_188358_3_, flag);
+            Minecraft.getInstance().getItemRenderer().renderItemSide(p_188358_1_, stack, p_188358_3_, flag);
             GlStateManager.popMatrix();
         }
     }

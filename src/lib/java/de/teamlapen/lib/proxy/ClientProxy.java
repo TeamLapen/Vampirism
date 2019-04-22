@@ -11,16 +11,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
 
     private final ParticleHandler clientParticleHandler = new ParticleHandlerClient();
@@ -39,7 +39,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public String getActiveLanguage() {
-        return Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().toString();
+        return Minecraft.getInstance().getLanguageManager().getCurrentLanguage().toString();
     }
 
     @Override
@@ -51,12 +51,12 @@ public class ClientProxy extends CommonProxy {
     public EntityPlayer getPlayerEntity(MessageContext ctx) {
 
         //Need to double check the side for some reason
-        return (ctx.side.isClient() ? Minecraft.getMinecraft().player : super.getPlayerEntity(ctx));
+        return (ctx.side.isClient() ? Minecraft.getInstance().player : super.getPlayerEntity(ctx));
     }
 
     @Override
     public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
         str = StringEscapeUtils.unescapeJava(str);
-        return Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(str, wrapWidth);
+        return Minecraft.getInstance().fontRenderer.listFormattedStringToWidth(str, wrapWidth);
     }
 }

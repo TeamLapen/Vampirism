@@ -15,7 +15,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.fluids.IFluidBlock;
 
 import java.util.Collections;
@@ -24,12 +24,12 @@ import java.util.Random;
 /**
  * Generate hunter camps
  */
-public class WorldGenHunterCamp extends WorldGenerator {
+public class FeatureHunterCamp extends Feature {
 
     private IBlockState campfire_blockstate;
 
 
-    WorldGenHunterCamp() {
+    FeatureHunterCamp() {
         super();
         campfire_blockstate = ModBlocks.fire_place.getDefaultState();
     }
@@ -168,8 +168,8 @@ public class WorldGenHunterCamp extends WorldGenerator {
                 ItemTent.placeAt(worldIn, position, facing, true, true);
                 BlockPos entrance1 = position.offset(facing.getOpposite());
                 BlockPos entrance2 = position.offset(facing.getOpposite()).offset(facing.rotateYCCW());
-                worldIn.setBlockToAir(entrance1);
-                worldIn.setBlockToAir(entrance2);
+                worldIn.removeBlock(entrance1);
+                worldIn.removeBlock(entrance2);
                 if (rand.nextInt(3) == 0) {
                     this.setBlockAndNotifyAdequately(worldIn, worldIn.getHeight(entrance1.offset(facing.getOpposite())), Blocks.CRAFTING_TABLE.getDefaultState());
                 }

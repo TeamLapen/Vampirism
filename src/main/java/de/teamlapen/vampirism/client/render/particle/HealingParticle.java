@@ -15,7 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class HealingParticle extends Particle {
-    private final TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
+    private final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
     private static final ResourceLocation HEART_TEXTURE = new ResourceLocation("vampirism", "textures/particle/particles.png");
     private static final VertexFormat VERTEX_FORMAT = (new VertexFormat()).addElement(DefaultVertexFormats.POSITION_3F).addElement(DefaultVertexFormats.TEX_2F).addElement(DefaultVertexFormats.COLOR_4UB).addElement(DefaultVertexFormats.TEX_2S).addElement(DefaultVertexFormats.NORMAL_3B).addElement(DefaultVertexFormats.PADDING_1B);
 

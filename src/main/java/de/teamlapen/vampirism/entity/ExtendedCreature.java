@@ -195,7 +195,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             IConvertedCreature c = VampirismAPI.entityRegistry().convert(entity);
             if (c != null) {
                 Entity e = (Entity) c;
-                entity.setDead();
+                entity.remove();
                 entity.getEntityWorld().spawnEntity(e);
             }
             return c;
@@ -254,7 +254,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public void onUpdate() {
+    public void tick() {
         if (!entity.getEntityWorld().isRemote) {
             if (blood > 0 && blood < getMaxBlood() && entity.ticksExisted % 40 == 8) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 41));

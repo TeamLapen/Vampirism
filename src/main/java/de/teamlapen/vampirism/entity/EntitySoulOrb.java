@@ -17,8 +17,8 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,7 +63,7 @@ public class EntitySoulOrb extends Entity {
         return false;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public int getBrightnessForRender() {
         float f = 0.5F;
         f = MathHelper.clamp(f, 0.0F, 1.0F);
@@ -109,7 +109,7 @@ public class EntitySoulOrb extends Entity {
                 if (Helper.isHunter(entityIn)) {
                     if (entityIn.inventory.addItemStackToInventory(getSoulItemStack())) {
                         entityIn.onItemPickup(this, 1);
-                        this.setDead();
+                        this.remove();
                     }
                 }
             }
@@ -117,8 +117,8 @@ public class EntitySoulOrb extends Entity {
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
+    public void tick() {
+        super.tick();
         if (delayBeforePickup > 0) {
             delayBeforePickup--;
         }
@@ -180,7 +180,7 @@ public class EntitySoulOrb extends Entity {
         this.age++;
 
         if (this.age >= 6000) {
-            this.setDead();
+            this.remove();
         }
     }
 

@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.client.render.particle;
 
 import net.minecraft.client.particle.Particle;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GenericParticle extends Particle {
     public GenericParticle(World worldIn, double posXIn, double posYIn, double posZIn, int particleId, int maxAge, int color) {
         super(worldIn, posXIn, posYIn, posZIn, 0, 0, 0);

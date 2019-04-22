@@ -8,9 +8,9 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
@@ -36,7 +36,7 @@ public class ItemInjection extends VampirismItem {
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
         if (isInCreativeTab(tab)) {
             for (int i = 0; i < META_COUNT; i++) {
                 items.add(new ItemStack(this, 1, i));

@@ -51,7 +51,7 @@ public class EntityDummyBittenAnimal extends EntityLiving {
             }
 
 
-            this.setDead();
+            this.remove();
 
         }
     }

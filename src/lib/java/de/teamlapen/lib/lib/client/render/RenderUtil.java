@@ -7,10 +7,10 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class RenderUtil {
 
     /**
@@ -54,11 +54,11 @@ public class RenderUtil {
 
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightness, 0);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getMinecraft().entityRenderer.setupFogColor(true);
+        Minecraft.getInstance().entityRenderer.setupFogColor(true);
     }
 
     private static void endGlowing(int brightnessForRender){
-        Minecraft.getMinecraft().entityRenderer.setupFogColor(false);
+        Minecraft.getInstance().entityRenderer.setupFogColor(false);
         int i = brightnessForRender;
         int j = i % 65536;
         int k = i / 65536;

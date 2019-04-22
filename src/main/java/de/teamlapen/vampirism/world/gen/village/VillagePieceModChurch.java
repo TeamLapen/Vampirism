@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.blocks.BlockChurchAltar;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
@@ -23,12 +23,12 @@ public class VillagePieceModChurch extends StructureVillagePieces.Church {
 
     }
 
-    public VillagePieceModChurch(StructureVillagePieces.Start start, int p_i45564_2_, Random rand, StructureBoundingBox p_i45564_4_, EnumFacing facing) {
+    public VillagePieceModChurch(StructureVillagePieces.Start start, int p_i45564_2_, Random rand, MutableBoundingBox p_i45564_4_, EnumFacing facing) {
         super(start, p_i45564_2_, rand, p_i45564_4_, facing);
     }
 
     @Override
-    public boolean addComponentParts(@Nonnull World worldIn, @Nonnull Random random, @Nonnull StructureBoundingBox structureBoundingBoxIn) {
+    public boolean addComponentParts(@Nonnull World worldIn, @Nonnull Random random, @Nonnull MutableBoundingBox structureBoundingBoxIn) {
         super.addComponentParts(worldIn, random, structureBoundingBoxIn);
         this.setBlockState(worldIn, ModBlocks.church_altar.getDefaultState().withProperty(BlockChurchAltar.FACING, EnumFacing.SOUTH), 2, 2, 7, structureBoundingBoxIn);
         return true;
@@ -38,7 +38,7 @@ public class VillagePieceModChurch extends StructureVillagePieces.Church {
 
         @Override
         public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
-            StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 12, 9, facing);
+            MutableBoundingBox structureboundingbox = MutableBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 12, 9, facing);
             return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(pieces, structureboundingbox) == null ? new VillagePieceModChurch(startPiece, p5, random, structureboundingbox, facing) : null;
         }
 

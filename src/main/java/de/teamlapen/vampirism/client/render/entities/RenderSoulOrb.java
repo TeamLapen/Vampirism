@@ -5,15 +5,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderSnowball;
+import net.minecraft.client.renderer.entity.RenderSprite;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 
-@SideOnly(Side.CLIENT)
-public class RenderSoulOrb extends RenderSnowball<EntitySoulOrb> {
+@OnlyIn(Dist.CLIENT)
+public class RenderSoulOrb extends RenderSprite<EntitySoulOrb> {
 
     public RenderSoulOrb(RenderManager renderManager, RenderItem renderItem) {
         super(renderManager, Items.SNOWBALL, renderItem);
@@ -29,8 +29,8 @@ public class RenderSoulOrb extends RenderSnowball<EntitySoulOrb> {
     @Override
     public boolean shouldRender(EntitySoulOrb livingEntity, ICamera camera, double camX, double camY, double camZ) {
         boolean flag = true;
-        if (Minecraft.getMinecraft().player != null) {
-            flag = !livingEntity.isInvisibleToPlayer(Minecraft.getMinecraft().player);
+        if (Minecraft.getInstance().player != null) {
+            flag = !livingEntity.isInvisibleToPlayer(Minecraft.getInstance().player);
         }
         return flag && super.shouldRender(livingEntity, camera, camX, camY, camZ);
     }

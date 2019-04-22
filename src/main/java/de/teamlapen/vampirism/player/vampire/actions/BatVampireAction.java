@@ -19,7 +19,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.WorldProviderEnd;
+import net.minecraft.world.dimension.EndDimension;
 
 import java.util.UUID;
 
@@ -156,7 +156,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (vampire.isGettingGarlicDamage() != EnumStrength.NONE && !vampire.isRemote()) {
             vampire.getRepresentingEntity().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_garlic"));
             return true;
-        } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd) {
+        } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().getEntityWorld().provider instanceof EndDimension) {
             vampire.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_end"));
             return true;
         } else return vampire.getRepresentingPlayer().isInWater();

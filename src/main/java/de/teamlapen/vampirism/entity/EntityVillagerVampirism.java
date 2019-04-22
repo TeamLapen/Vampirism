@@ -102,11 +102,11 @@ public class EntityVillagerVampirism extends EntityVillager {
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
+    public void tick() {
+        super.tick();
 
         if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == EnumDifficulty.PEACEFUL) {
-            this.setDead();
+            this.remove();
         }
     }
 

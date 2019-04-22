@@ -24,8 +24,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -93,7 +93,7 @@ public class BlockCoffin extends VampirismBlockContainer {
     }
 
     @Nonnull
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
@@ -165,10 +165,10 @@ public class BlockCoffin extends VampirismBlockContainer {
 
         if (state.getValue(PART) == EnumPartType.HEAD) {
             if (worldIn.getBlockState(pos.offset(enumfacing.getOpposite())).getBlock() != this) {
-                worldIn.setBlockToAir(pos);
+                worldIn.removeBlock(pos);
             }
         } else if (worldIn.getBlockState(pos.offset(enumfacing)).getBlock() != this) {
-            worldIn.setBlockToAir(pos);
+            worldIn.removeBlock(pos);
 
             if (!worldIn.isRemote) {
                 this.dropBlockAsItem(worldIn, pos, state, 0);
@@ -253,7 +253,7 @@ public class BlockCoffin extends VampirismBlockContainer {
             BlockPos blockpos = pos.offset(state.getValue(FACING).getOpposite());
 
             if (worldIn.getBlockState(blockpos).getBlock() == this) {
-                worldIn.setBlockToAir(blockpos);
+                worldIn.removeBlock(blockpos);
             }
         }
     }

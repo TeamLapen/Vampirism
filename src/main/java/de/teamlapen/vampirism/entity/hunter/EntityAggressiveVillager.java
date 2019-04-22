@@ -117,7 +117,7 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
         villager.readFromNBT(nbt);
         villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
         world.spawnEntity(villager);
-        this.setDead();
+        this.remove();
     }
 
     @Override

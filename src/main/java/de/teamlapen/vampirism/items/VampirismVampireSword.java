@@ -27,8 +27,8 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,15 +60,15 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         super(regName, material, attackSpeedModifier, attackDamage);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         float charged = getCharged(stack);
-        float trained = getTrained(stack, Minecraft.getMinecraft().player);
+        float trained = getTrained(stack, Minecraft.getInstance().player);
         tooltip.add(UtilLib.translate("text.vampirism.sword_charged") + " " + ((int) (charged * 100f)) + "%");
         tooltip.add(UtilLib.translate("text.vampirism.sword_trained") + " " + ((int) (trained * 100f)) + "%");
-        if (Minecraft.getMinecraft().player != null && !VReference.VAMPIRE_FACTION.equals(FactionPlayerHandler.get(Minecraft.getMinecraft().player).getCurrentFaction())) {
+        if (Minecraft.getInstance().player != null && !VReference.VAMPIRE_FACTION.equals(FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction())) {
             tooltip.add(UtilLib.translateFormatted("text.vampirism.can_only_be_used_by", UtilLib.translate(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural())));
         }
     }
@@ -293,7 +293,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         return 0.0f;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private void spawnChargedParticle(EntityLivingBase player, boolean mainHand) {
         Vec3d mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
@@ -302,7 +302,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private void spawnChargingParticle(EntityLivingBase player, boolean mainHand) {
         Vec3d pos = UtilLib.getItemPosition(player, mainHand);
         if (player.getSwingProgress(1f) > 0f) return;

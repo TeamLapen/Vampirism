@@ -6,10 +6,11 @@ import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
 import javax.annotation.Nonnull;
 import java.io.File;
 
@@ -188,7 +189,7 @@ public class Configs {
     }
 
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static void onDisconnectedFromServer() {
         if (overriddenByServer) {
             VampirismMod.log.d(TAG, "Disconnected from server -> Reloading config");
@@ -205,7 +206,7 @@ public class Configs {
         nbt.setBoolean("pvp_only_between_factions", pvp_only_between_factions);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static void readFromNBTClient(NBTTagCompound nbt) {
         overriddenByServer = true;
         if (nbt.hasKey("vampire_forest_fog")) {

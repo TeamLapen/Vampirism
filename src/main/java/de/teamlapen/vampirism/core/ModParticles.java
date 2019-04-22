@@ -11,8 +11,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 import javax.annotation.Nonnull;
 
 public class ModParticles {
@@ -33,7 +34,7 @@ public class ModParticles {
     
     public static void init() {
         ParticleHandler.registerParticle(GENERIC_PARTICLE, new ParticleHandler.ICustomParticleFactory() {
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Dist.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
                 GenericParticle particle = new GenericParticle(world, posX, posY, posZ, (int) param[0], (int) param[1], (int) param[2]);
@@ -70,7 +71,7 @@ public class ModParticles {
             }
         });
         ParticleHandler.registerParticle(FLYING_BLOOD, new ParticleHandler.ICustomParticleFactory() {
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Dist.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
                 if (param.length > 4) {
@@ -95,7 +96,7 @@ public class ModParticles {
             }
 
             @Nonnull
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Dist.CLIENT)
             @Override
             public Object[] readParticleInfo(NBTTagCompound nbt) {
                 Object[] data = new Object[nbt.hasKey("4") ? 5 : 4];
@@ -110,7 +111,7 @@ public class ModParticles {
             }
         });
         ParticleHandler.registerParticle(FLYING_BLOOD_ENTITY, new ParticleHandler.ICustomParticleFactory() {
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Dist.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
                 return new FlyingBloodEntityParticle(world, posX, posY, posZ, (Entity) param[0], (Boolean) param[1]);
@@ -126,11 +127,11 @@ public class ModParticles {
             }
 
             @Nonnull
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Dist.CLIENT)
             @Override
             public Object[] readParticleInfo(NBTTagCompound nbt) {
                 int i = nbt.getInteger("0");
-                World world = Minecraft.getMinecraft().world;
+                World world = Minecraft.getInstance().world;
                 if (world == null) return null;
                 Entity e = world.getEntityByID(i);
                 if (e == null) return null;
@@ -142,7 +143,7 @@ public class ModParticles {
         });
 
         ParticleHandler.registerParticle(HALLOWEEN, new ParticleHandler.ICustomParticleFactory() {
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Dist.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
                 return new HalloweenParticle(world, posX, posY, posZ);
@@ -162,10 +163,10 @@ public class ModParticles {
         });
 
         ParticleHandler.registerParticle(HEAL, new ParticleHandler.ICustomParticleFactory() {
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Dist.CLIENT)
             @Override
-            public Object[] readParticleInfo(NBTTagCompound nbt) {
-                return new Object[0];
+            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
+                return new HealingParticle(world, posX, posY, posZ);
             }
 
             @Override
@@ -173,24 +174,19 @@ public class ModParticles {
                 return new NBTTagCompound();
             }
 
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Dist.CLIENT)
             @Override
-            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new HealingParticle(world, posX, posY, posZ);
+            public Object[] readParticleInfo(NBTTagCompound nbt) {
+                return new Object[0];
             }
         });
 
         ParticleHandler.registerParticle(CLOUD, new ParticleHandler.ICustomParticleFactory() {
 
-            @SideOnly(Side.CLIENT)
-            @Nonnull
+            @OnlyIn(Dist.CLIENT)
             @Override
-            public Object[] readParticleInfo(NBTTagCompound nbt) {
-                Object[] data = new Object[3];
-                data[0] = nbt.getDouble("0");
-                data[1] = nbt.getDouble("1");
-                data[2] = nbt.getDouble("2");
-                return data;
+            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
+                return new ParticleCloud.Factory().createParticle(EnumParticleTypes.CLOUD.getParticleID(), world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
             }
 
             @Nonnull
@@ -203,10 +199,15 @@ public class ModParticles {
                 return nbt;
             }
 
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Dist.CLIENT)
+            @Nonnull
             @Override
-            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new ParticleCloud.Factory().createParticle(EnumParticleTypes.CLOUD.getParticleID(), world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
+            public Object[] readParticleInfo(NBTTagCompound nbt) {
+                Object[] data = new Object[3];
+                data[0] = nbt.getDouble("0");
+                data[1] = nbt.getDouble("1");
+                data[2] = nbt.getDouble("2");
+                return data;
             }
         });
     }

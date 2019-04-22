@@ -26,6 +26,8 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.RegistrySimple;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.Attributes;
@@ -35,8 +37,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,32 +46,14 @@ import java.util.function.Function;
 /**
  * Handle general client side events
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
 
     private final static int SKILLBUTTONID = 27496;
     private final static ResourceLocation INVENTORY_SKILLS = new ResourceLocation("vampirism", "textures/gui/inventory_skills.png");
 
 
-    @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            Minecraft mc = Minecraft.getMinecraft();
-            if (mc.world != null && mc.world != null) {
-                if ((mc.currentScreen == null || mc.currentScreen instanceof GuiSleepMP) && mc.player.isPlayerSleeping()) {
-                    IBlockState state = mc.player.getEntityWorld().getBlockState(mc.player.bedLocation);
-                    if (state.getBlock().equals(ModBlocks.block_coffin)) {
-                        mc.displayGuiScreen(new GuiSleepCoffin());
-                    }
-                } else if (mc.currentScreen != null && mc.currentScreen instanceof GuiSleepCoffin && !mc.player.isPlayerSleeping()) {
-                    mc.displayGuiScreen(null);
-                }
-            }
-
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onActionPerformedPre(GuiScreenEvent.ActionPerformedEvent.Post event) {
         if (Configs.gui_skill_button_enable && event.getGui() instanceof GuiInventory) {
@@ -88,7 +70,25 @@ public class ClientEventHandler {
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.world != null && mc.world != null) {
+                if ((mc.currentScreen == null || mc.currentScreen instanceof GuiSleepMP) && mc.player.isPlayerSleeping()) {
+                    IBlockState state = mc.player.getEntityWorld().getBlockState(mc.player.bedLocation);
+                    if (state.getBlock().equals(ModBlocks.block_coffin)) {
+                        mc.displayGuiScreen(new GuiSleepCoffin());
+                    }
+                } else if (mc.currentScreen != null && mc.currentScreen instanceof GuiSleepCoffin && !mc.player.isPlayerSleeping()) {
+                    mc.displayGuiScreen(null);
+                }
+            }
+
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onInitGuiEventPost(GuiScreenEvent.InitGuiEvent.Post event) {
         if (Configs.gui_skill_button_enable && event.getGui() instanceof GuiInventory && FactionPlayerHandler.get(event.getGui().mc.player).getCurrentFactionPlayer() != null) {
@@ -109,7 +109,7 @@ public class ClientEventHandler {
                 containerFluidModels[x] = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/blood_container/fluid_" + (x + 1)));
             }
 
-            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
+            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getInstance().getTextureMapBlocks().getAtlasSprite(location.toString());
 
             IModel retexturedModel;
 
@@ -159,7 +159,7 @@ public class ClientEventHandler {
 
 
         try {
-            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
+            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getInstance().getTextureMapBlocks().getAtlasSprite(location.toString());
             for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
                 IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/altar_inspiration/blood" + (x + 1)));
                 BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
@@ -190,7 +190,7 @@ public class ClientEventHandler {
         }
 
         try {
-            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
+            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getInstance().getTextureMapBlocks().getAtlasSprite(location.toString());
             for (int x = 0; x < BakedWeaponTableModel.FLUID_LEVELS; x++) {
                 IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/weapon_table/weapon_table_lava" + (x + 1)));
                 BakedWeaponTableModel.FLUID_MODELS[x] = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);

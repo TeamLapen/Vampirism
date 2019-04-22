@@ -56,8 +56,8 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public void onEntityUpdate() {
-        super.onEntityUpdate();
+    public void baseTick() {
+        super.baseTick();
         if (!nil()) {
             entityCreature.copyLocationAndAnglesFrom(this);
             entityCreature.prevPosZ = this.prevPosZ;
@@ -99,11 +99,11 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
+    public void tick() {
+        super.tick();
         if (!world.isRemote && entityCreature == null) {
             VampirismMod.log.d(TAG, "Setting dead, since creature is null");
-            this.setDead();
+            this.remove();
         }
     }
 

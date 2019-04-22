@@ -12,14 +12,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 /**
  * Renders the beams for the altar of infusion
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
 
 
@@ -53,8 +53,8 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
                         /*
                          * Work around for other players seeing the ritual
                          */
-                        if (!p.equals(Minecraft.getMinecraft().player)) {
-                            Entity e = Minecraft.getMinecraft().player;
+                        if (!p.equals(Minecraft.getInstance().player)) {
+                            Entity e = Minecraft.getInstance().player;
                             rX += p.posX - e.posX;
                             rY += p.posY - e.posY;
                             rZ += p.posZ - e.posZ;

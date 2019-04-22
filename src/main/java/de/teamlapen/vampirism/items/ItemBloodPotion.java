@@ -15,8 +15,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -35,11 +35,11 @@ public class ItemBloodPotion extends VampirismItem {
     }
 
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        if (Minecraft.getMinecraft().player != null) {
-            BloodPotions.addTooltip(stack, tooltip, HunterPlayer.get(Minecraft.getMinecraft().player));
+        if (Minecraft.getInstance().player != null) {
+            BloodPotions.addTooltip(stack, tooltip, HunterPlayer.get(Minecraft.getInstance().player));
         }
     }
 
@@ -53,7 +53,7 @@ public class ItemBloodPotion extends VampirismItem {
         return 32;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public boolean hasEffect(ItemStack stack) {
         return true;

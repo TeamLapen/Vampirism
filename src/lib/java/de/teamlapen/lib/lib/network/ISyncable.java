@@ -2,9 +2,9 @@ package de.teamlapen.lib.lib.network;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Provides an interface to sync entities (Subclasses of EntityLiving)
@@ -13,7 +13,7 @@ public interface ISyncable {
     /**
      * This method should load all included information. It might contain some or all syncable information.
      **/
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     void loadUpdateFromNBT(NBTTagCompound nbt);
 
     /**

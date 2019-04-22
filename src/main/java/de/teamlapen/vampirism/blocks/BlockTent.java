@@ -45,10 +45,10 @@ public class BlockTent extends VampirismBlock {
             pos = pos.offset(dir);
             dir = dir.getOpposite();
         }
-        worldIn.setBlockToAir(pos);
-        worldIn.setBlockToAir(pos.offset(dir));
-        worldIn.setBlockToAir(pos.offset(dir.rotateYCCW()));
-        worldIn.setBlockToAir(pos.offset(dir).offset(dir.rotateYCCW()));
+        worldIn.removeBlock(pos);
+        worldIn.removeBlock(pos.offset(dir));
+        worldIn.removeBlock(pos.offset(dir.rotateYCCW()));
+        worldIn.removeBlock(pos.offset(dir).offset(dir.rotateYCCW()));
 
 
     }

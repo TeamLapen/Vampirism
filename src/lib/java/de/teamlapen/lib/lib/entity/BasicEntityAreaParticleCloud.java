@@ -155,7 +155,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
             }
         } else {
             if (this.ticksExisted >= this.waitTime + this.duration) {
-                this.setDead();
+                this.remove();
                 return;
             }
 
@@ -164,7 +164,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
                 radius += this.radiusPerTick;
 
                 if (radius < 0.3F) {
-                    this.setDead();
+                    this.remove();
                     return;
                 }
 

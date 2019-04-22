@@ -57,8 +57,8 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
     }
 
     @Override
-    public void onEntityUpdate() {
-        super.onEntityUpdate();
+    public void baseTick() {
+        super.baseTick();
         boolean t = getSheared();
         if (!nil() && (lastSheared == null || lastSheared != t)) {
             lastSheared = t;

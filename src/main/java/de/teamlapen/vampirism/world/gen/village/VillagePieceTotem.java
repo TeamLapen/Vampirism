@@ -11,8 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraft.world.gen.structure.template.TemplateManager;
@@ -29,7 +29,7 @@ public class VillagePieceTotem extends StructureVillagePieces.Village {
     public VillagePieceTotem() {
     }
 
-    public VillagePieceTotem(StructureVillagePieces.Start start, int type, StructureBoundingBox boundingBox, EnumFacing facing, boolean forceHunter) {
+    public VillagePieceTotem(StructureVillagePieces.Start start, int type, MutableBoundingBox boundingBox, EnumFacing facing, boolean forceHunter) {
         super(start, type);
         this.setCoordBaseMode(facing);//Set facing
         this.boundingBox = boundingBox;
@@ -37,7 +37,7 @@ public class VillagePieceTotem extends StructureVillagePieces.Village {
     }
 
     @Override
-    public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
+    public boolean addComponentParts(World worldIn, Random randomIn, MutableBoundingBox structureBoundingBoxIn) {
         if (this.averageGroundLvl < 0) {
             this.averageGroundLvl = this.getAverageGroundLevel(worldIn, structureBoundingBoxIn);
 
@@ -112,7 +112,7 @@ public class VillagePieceTotem extends StructureVillagePieces.Village {
 
         @Override
         public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
-            StructureBoundingBox structureBoundingBox = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 2, 4, 2, facing);
+            MutableBoundingBox structureBoundingBox = MutableBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 2, 4, 2, facing);
             boolean forceHunter = false;
             for (StructureComponent c : pieces) {
                 if (c instanceof VillagePieceTrainer) {

@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.client.model;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ModelHunterHat extends ModelBiped {
     public static final ModelHunterHat hat0 = new ModelHunterHat(0);
     public static final ModelHunterHat hat1 = new ModelHunterHat(1);

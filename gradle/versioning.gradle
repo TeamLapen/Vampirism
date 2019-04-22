@@ -1,19 +1,19 @@
-project.mod_version = "${config.main_version}.${config.major_version}.${config.minor_version}"
+project.mod_version = "${project.main_version}.${project.major_version}.${project.minor_version}"
 if (hasProperty("beta")) {
     project.mod_version = project.mod_version + "-beta." + beta
-    config.type = "beta"
+    project.type = "beta"
 } else if (hasProperty("release")) {
-    config.type = "release"
+    project.type = "release"
 } else if (System.getenv().CI) {
     project.mod_version = project.mod_version + "-test+" + System.getenv().GIT_BRANCH + "." + System.getenv().GIT_COMMIT
     writeVersion()
-    config.type = "test"
+    project.type = "test"
 } else {
     project.mod_version = project.mod_version + "-alpha+" + getDate()
-    config.type = "alpha"
+    project.type = "alpha"
 }
 
-version = config.minecraft_version + "-" + project.mod_version
+version = project.minecraft_version + "-" + project.mod_version
 
 logger.lifecycle "Version " + project.mod_version
 
@@ -25,6 +25,6 @@ def writeVersion() {
 
 def getDate() {
     def date = new Date()
-    def formattedDate = date.format('MM-dd-HH-mm')
+    def formattedDate = date.format('YYYYMMdd-HHmm')
     return formattedDate
 }

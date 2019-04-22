@@ -58,7 +58,7 @@ public class EntityThrowableItem extends EntityThrowable {
         super.readEntityFromNBT(compound);
         ItemStack stack = new ItemStack(compound.getCompoundTag("thrownItem"));
         if (stack.isEmpty()) {
-            this.setDead();
+            this.remove();
         } else {
             this.setItem(stack);
         }
@@ -94,7 +94,7 @@ public class EntityThrowableItem extends EntityThrowable {
                 VampirismMod.log.w("EntityThrowableItem", "Saved item (%s) is not an instance of IVampirismThrowableItem. This should not be able to happen", stack);
             }
         }
-        if (!this.world.isRemote) this.setDead();
+        if (!this.world.isRemote) this.remove();
     }
 
     /**

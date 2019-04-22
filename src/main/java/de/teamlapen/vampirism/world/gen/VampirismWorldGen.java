@@ -26,11 +26,12 @@ public class VampirismWorldGen implements IWorldGenerator {
         }
         return instance;
     }
-    public final WorldGenHunterCamp hunterCamp;
+
+    public final FeatureHunterCamp hunterCamp;
     public final WorldGenVampireDungeon vampireDungeon;
 
     private VampirismWorldGen() {
-        this.hunterCamp = new WorldGenHunterCamp();
+        this.hunterCamp = new FeatureHunterCamp();
         this.vampireDungeon = new WorldGenVampireDungeon();
     }
 

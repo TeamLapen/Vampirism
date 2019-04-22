@@ -12,8 +12,8 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
@@ -95,7 +95,7 @@ public abstract class BlockCastleSlab extends BlockSlab {
     }
 
     @Override
-    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
+    public void getSubBlocks(ItemGroup itemIn, NonNullList<ItemStack> items) {
         for (BlockCastleSlab.EnumType blockstoneslab$enumtype : BlockCastleSlab.EnumType.values()) {
 
             items.add(new ItemStack(this, 1, blockstoneslab$enumtype.getMetadata()));

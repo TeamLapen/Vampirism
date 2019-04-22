@@ -50,7 +50,7 @@ public class BlockMedChair extends VampirismBlock {
         } else {
             other = pos.offset(dir.getOpposite());
         }
-        worldIn.setBlockToAir(other);
+        worldIn.removeBlock(other);
     }
 
     @Override

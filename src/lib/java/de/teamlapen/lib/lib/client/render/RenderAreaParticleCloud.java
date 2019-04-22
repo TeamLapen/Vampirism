@@ -4,13 +4,13 @@ import de.teamlapen.lib.lib.entity.BasicEntityAreaParticleCloud;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class RenderAreaParticleCloud extends Render<BasicEntityAreaParticleCloud> {
     public RenderAreaParticleCloud(RenderManager renderManager) {
         super(renderManager);

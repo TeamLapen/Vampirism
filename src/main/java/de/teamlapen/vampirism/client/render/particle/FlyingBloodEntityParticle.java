@@ -3,15 +3,15 @@ package de.teamlapen.vampirism.client.render.particle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.Validate;
 
 /**
  * Flying blood particle for rituals.
  * Follows an entity
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class FlyingBloodEntityParticle extends Particle {
     private final int MAX_AGE = 60;
     private final String TAG = "FlyingBloodParticle";
@@ -43,11 +43,11 @@ public class FlyingBloodEntityParticle extends Particle {
             this.motionZ = (this.world.rand.nextDouble() - 0.5);
         }
 
-        this.onUpdate();
+        this.tick();
     }
 
     @Override
-    public void onUpdate() {
+    public void tick() {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;

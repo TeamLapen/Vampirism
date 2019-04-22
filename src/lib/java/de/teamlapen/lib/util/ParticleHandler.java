@@ -5,8 +5,8 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.Validate;
 
 import javax.annotation.Nonnull;
@@ -64,7 +64,7 @@ public abstract class ParticleHandler {
          * @param param
          * @return
          */
-        @SideOnly(Side.CLIENT)
+        @OnlyIn(Dist.CLIENT)
         Particle createParticle(World world, double posX, double posY, double posZ, Object... param);
 
         @Nonnull
@@ -78,7 +78,7 @@ public abstract class ParticleHandler {
          * @param nbt
          * @return
          */
-        @SideOnly(Side.CLIENT)
+        @OnlyIn(Dist.CLIENT)
         @Nonnull
         Object[] readParticleInfo(NBTTagCompound nbt);
     }

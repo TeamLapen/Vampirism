@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
+import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.storage.WorldSavedData;
 
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ public class VampirismWorldData extends WorldSavedData {
         return data;
     }
 
-    private static String fileNameForProvider(WorldProvider provider) {
+    private static String fileNameForProvider(Dimension provider) {
         return IDENTIFIER + provider.getDimensionType().getSuffix();
     }
 

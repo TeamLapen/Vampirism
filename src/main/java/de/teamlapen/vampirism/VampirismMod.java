@@ -53,9 +53,9 @@ import de.teamlapen.vampirism.world.gen.structure.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.datafix.FixTypes;
@@ -81,7 +81,7 @@ public class VampirismMod {
 
     public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
-    public static final CreativeTabs creativeTab = new CreativeTabs(REFERENCE.MODID) {
+    public static final ItemGroup creativeTab = new ItemGroup(REFERENCE.MODID) {
 
         @Override
         public ItemStack createIcon() {

@@ -111,7 +111,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
         for (T m : minions) {
             EntityLivingBase e = MinionHelper.entity(m);
             if (instant) {
-                e.setDead();
+                e.remove();
             } else {
                 e.attackEntityFrom(DamageSource.MAGIC, 100);
             }

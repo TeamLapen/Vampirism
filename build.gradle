@@ -7,14 +7,28 @@ buildscript {
             url = "http://files.minecraftforge.net/maven"
         }
     }
+
+    // This is only here while FG is under active development
+    configurations.classpath {
+        resolutionStrategy {
+            cacheDynamicVersionsFor 10, "seconds"
+            cacheChangingModulesFor 0, "seconds"
+        }
+    }
+    
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
+
+
 plugins {
-    id 'com.matthewprenger.cursegradle' version '1.1.0'
+    id 'com.matthewprenger.cursegradle' version '1.2.0'
 }
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'idea'
 
 
 configurations {
@@ -22,56 +36,44 @@ configurations {
     runtime.extendsFrom optionalRuntime // optionalRuntime dependencies are downloaded but not exported to POM
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
-
-loadProperties()
-
 group = "de.teamlapen.vampirism"
 archivesBaseName = "Vampirism"
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+ext.mod_version="Test"
+ext.type="test"
 
-def loadProperties() {
-    ext.configFile = file "build.properties"
 
-    configFile.withReader {
-        def prop = new Properties()
-        prop.load(it)
-        project.ext.config = new ConfigSlurper().parse prop
+sourceSets {
+    api
+    lib
+    main {
+        compileClasspath += sourceSets.lib.output
+        runtimeClasspath += sourceSets.lib.output
+        compileClasspath += sourceSets.api.output
+        runtimeClasspath += sourceSets.api.output
     }
-
-    ext.mod_version = "Test"
+    test {
+        compileClasspath += sourceSets.api.output
+        runtimeClasspath += sourceSets.api.output
+    }
 }
+
 
 apply from: 'gradle/versioning.gradle'
 apply from: 'gradle/forge.gradle'
 apply from: 'gradle/dev.gradle'
 apply from: 'gradle/deploy.gradle'
 
-sourceSets
-        {
-            main {
-                java {
-                        srcDirs = ["$projectDir/src/main/java", "$projectDir/src/lib/java"] }
-                resources {
-                        srcDirs = ["$projectDir/src/main/resources", "$projectDir/src/lib/resources"]
-                    }
-            }
-            api {
-                java {
-                    srcDir "$projectDir/src/api/java"
-                }
-                resources {
-                    srcDir "$projectDir/src/api/resources"
-                }
-            }
-            test {
-                java {
-                    srcDir "$projectDir/src/test/java"
-                }
-                resources {
-                    srcDir "$projectDir/src/test/resources"
-                }
-            }
 
+configurations {
+    apiCompile.extendsFrom(compile)
+}
+
+idea {
+    module {
+        for (String excludeDirName in ["run", "out", "logs", "gradle"]) {
+            File excludeDir = new File(projectDir, excludeDirName)
+            excludeDirs.add(excludeDir)
+        }
+    }
 }

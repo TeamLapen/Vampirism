@@ -19,10 +19,10 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * Clientside Proxy
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
     private final static String TAG = "ClientProxy";
 
@@ -40,19 +40,22 @@ public class ClientProxy extends CommonProxy {
         RegistryManager.setupClientRegistryManager();
     }
 
+    @Nullable
+    @Override
+    public Entity getMouseOverEntity() {
+        RayTraceResult r = Minecraft.getInstance().objectMouseOver;
+        if (r == null) return null;
+        return r.entityHit;
+    }
+
     @Override
     public float getRenderPartialTick() {
-        return Minecraft.getMinecraft().getRenderPartialTicks();
+        return Minecraft.getInstance().getRenderPartialTicks();
     }
 
     @Override
     public boolean isClientPlayerNull() {
-        return Minecraft.getMinecraft().player == null;
-    }
-
-    @Override
-    public boolean isPlayerThePlayer(EntityPlayer player) {
-        return Minecraft.getMinecraft().player.equals(player);
+        return Minecraft.getInstance().player == null;
     }
 
     @Override
@@ -78,18 +81,15 @@ public class ClientProxy extends CommonProxy {
         if (overlay != null) overlay.makeRenderFullColor(ticksOn, ticksOff, color);
     }
 
-    @Nullable
     @Override
-    public Entity getMouseOverEntity() {
-        RayTraceResult r = Minecraft.getMinecraft().objectMouseOver;
-        if (r == null) return null;
-        return r.entityHit;
+    public boolean isPlayerThePlayer(EntityPlayer player) {
+        return Minecraft.getInstance().player.equals(player);
     }
 
     private void registerSubscriptions() {
-        overlay = new VampirismHUDOverlay(Minecraft.getMinecraft());
+        overlay = new VampirismHUDOverlay(Minecraft.getInstance());
         MinecraftForge.EVENT_BUS.register(overlay);
-        MinecraftForge.EVENT_BUS.register(new RenderHandler(Minecraft.getMinecraft()));
+        MinecraftForge.EVENT_BUS.register(new RenderHandler(Minecraft.getInstance()));
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
     }
 
@@ -108,7 +108,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     private void registerVampireEntityOverlays() {
-        RenderManager manager = Minecraft.getMinecraft().getRenderManager();
+        RenderManager manager = Minecraft.getInstance().getRenderManager();
         registerVampirePlayerHead(manager);
         for (Map.Entry<Class<? extends EntityCreature>, String> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
             registerVampireEntityOverlay(manager, entry.getKey(), new ResourceLocation(entry.getValue()));

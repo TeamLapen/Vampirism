@@ -2,15 +2,15 @@ package de.teamlapen.vampirism.client.render.particle;
 
 import net.minecraft.client.particle.Particle;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Flying Blood Particle for rituals
  *
  * @author maxanier
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class FlyingBloodParticle extends Particle {
     private final String TAG = "FlyingBloodParticle";
     private final double destX, destY, destZ;
@@ -39,7 +39,7 @@ public class FlyingBloodParticle extends Particle {
         this.motionX = (this.world.rand.nextDouble() / 10 - 0.05) + wayX / particleMaxAge;
         this.motionY = (this.world.rand.nextDouble() / 10 - 0.01) + wayY / particleMaxAge;
         this.motionZ = (this.world.rand.nextDouble() / 10 - 0.05) + wayZ / particleMaxAge;
-        this.onUpdate();
+        this.tick();
     }
 
     public FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double
@@ -49,7 +49,7 @@ public class FlyingBloodParticle extends Particle {
 
 
     @Override
-    public void onUpdate() {
+    public void tick() {
 
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;

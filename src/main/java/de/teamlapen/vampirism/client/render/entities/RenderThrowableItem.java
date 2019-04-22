@@ -3,17 +3,17 @@ package de.teamlapen.vampirism.client.render.entities;
 import de.teamlapen.vampirism.entity.EntityThrowableItem;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderSnowball;
+import net.minecraft.client.renderer.entity.RenderSprite;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Renders the vampirism throwable entity item
  */
-@SideOnly(Side.CLIENT)
-public class RenderThrowableItem extends RenderSnowball<EntityThrowableItem> {
+@OnlyIn(Dist.CLIENT)
+public class RenderThrowableItem extends RenderSprite<EntityThrowableItem> {
     public RenderThrowableItem(RenderManager renderManagerIn, RenderItem itemRendererIn) {
         super(renderManagerIn, Items.SNOWBALL, itemRendererIn);
     }

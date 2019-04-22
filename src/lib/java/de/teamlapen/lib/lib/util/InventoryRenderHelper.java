@@ -5,9 +5,9 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Helper for item/block model registration.
@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * For blocks that only have the "normal" type, you can use the block methods to declare the item properties in the same file as the block one using "inventory".
  * For blocks that have multiple types, you have to use the item methods using Item.getItemForBlock and specifiy the item models in blockstates/item
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class InventoryRenderHelper {
     private final String domain;
 

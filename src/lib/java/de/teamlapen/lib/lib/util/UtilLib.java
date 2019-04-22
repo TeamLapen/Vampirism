@@ -17,7 +17,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.translation.I18n;
@@ -25,10 +28,10 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,7 +53,7 @@ public class UtilLib {
     }
 
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static void drawTexturedModalRect(float zLevel, int x, int y, int textureX, int textureY, int width, int height, int texWidth, int texHeight) {
         float f = 1 / (float) texWidth;
         float f1 = 1 / (float) texHeight;
@@ -151,7 +154,7 @@ public class UtilLib {
     public static @Nonnull
     Vec3d getItemPosition(EntityLivingBase entity, boolean mainHand) {
         boolean left = (mainHand ? entity.getPrimaryHand() : entity.getPrimaryHand().opposite()) == EnumHandSide.LEFT;
-        boolean firstPerson = entity instanceof EntityPlayer && ((EntityPlayer) entity).isUser() && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
+        boolean firstPerson = entity instanceof EntityPlayer && ((EntityPlayer) entity).isUser() && Minecraft.getInstance().gameSettings.thirdPersonView == 0;
         Vec3d dir = firstPerson ? entity.getForward() : Vec3d.fromPitchYaw(new Vec2f(entity.rotationPitch, entity.renderYawOffset));
         dir = dir.rotateYaw((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
         return dir.add(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
@@ -177,7 +180,7 @@ public class UtilLib {
                 return e;
             }
         }
-        e.setDead();
+        e.remove();
         return null;
     }
 
@@ -258,7 +261,7 @@ public class UtilLib {
             return e;
         } else {
             if (e != null) {
-                e.setDead();
+                e.remove();
             }
             return null;
         }

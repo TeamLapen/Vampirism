@@ -64,8 +64,8 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
+    public void tick() {
+        super.tick();
         if (this.world.isRemote) {
             Vec3d center = this.getPositionVector();
             //VampLib.proxy.getParticleHandler().spawnParticle(this.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z,  148, 4, 0xA01010,0.0);
@@ -81,7 +81,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
 
         } else {
             if (this.ticksExisted > 300) {
-                this.setDead();
+                this.remove();
             }
         }
     }
@@ -187,7 +187,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
             VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 15, 2, this.rand, 150, 10, 0x700505, 0.0);
 
 
-            this.setDead();
+            this.remove();
         }
     }
 }

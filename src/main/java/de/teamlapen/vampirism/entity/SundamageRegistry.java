@@ -7,8 +7,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -84,7 +84,7 @@ public class SundamageRegistry implements ISundamageRegistry {
         return Helper.gettingSundamge(entity);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void readFromNBTClient(NBTTagCompound nbt) {
         if (nbt.hasKey("sundamage")) {
             NBTTagCompound sundamage = nbt.getCompoundTag("sundamage");

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.util;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
@@ -13,7 +13,7 @@ public interface IPlayerFace {
     /**
      * @return Name of the player who's face should be overlayed. Null if none
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Nullable
     String getPlayerFaceName();
 }

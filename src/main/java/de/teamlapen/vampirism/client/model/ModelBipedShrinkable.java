@@ -4,15 +4,15 @@ package de.teamlapen.vampirism.client.model;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * ModelBiped which can grow/shrink between mature and child size
  *
  * @author Maxanier
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ModelBipedShrinkable extends ModelBiped {
 
     private float size = 1F;

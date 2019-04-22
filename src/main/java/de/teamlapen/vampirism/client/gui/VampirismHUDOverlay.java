@@ -36,6 +36,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -43,14 +45,12 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 /**
  * Handles general Overlay thingies TODO change batmode color
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class VampirismHUDOverlay extends ExtendedGui {
 
     private final Minecraft mc;
@@ -123,7 +123,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             return;
         }
 
-        RayTraceResult p = Minecraft.getMinecraft().objectMouseOver;
+        RayTraceResult p = Minecraft.getInstance().objectMouseOver;
 
         if (p != null && p.typeOfHit == RayTraceResult.Type.ENTITY && p.entityHit != null) {
             IVampirePlayer player = VampirePlayer.get(mc.player);
@@ -146,11 +146,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 }
             }
         } else if (p != null && p.typeOfHit == RayTraceResult.Type.BLOCK) {
-            IBlockState block = Minecraft.getMinecraft().world.getBlockState(p.getBlockPos());
+            IBlockState block = Minecraft.getInstance().world.getBlockState(p.getBlockPos());
             if (ModBlocks.blood_container.equals(block.getBlock())) {
                 IVampirePlayer player = VampirePlayer.get(mc.player);
                 if (player.wantsBlood()) {
-                    TileEntity tile = Minecraft.getMinecraft().world.getTileEntity(p.getBlockPos());
+                    TileEntity tile = Minecraft.getInstance().world.getTileEntity(p.getBlockPos());
                     if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                         if (FluidLib.getFluidAmount(tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), ModFluids.blood) > 0) {
                             renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), 1, 0xFF0000);
@@ -404,9 +404,9 @@ public class VampirismHUDOverlay extends ExtendedGui {
         int w = (scaledresolution.getScaledWidth());
         int h = (scaledresolution.getScaledHeight());
 
-        Minecraft.getMinecraft().entityRenderer.setupOverlayRendering();
+        Minecraft.getInstance().entityRenderer.setupOverlayRendering();
 
-        Minecraft.getMinecraft().renderEngine
+        Minecraft.getInstance().renderEngine
                 .bindTexture(new ResourceLocation(REFERENCE.MODID, "textures/gui/special_halloween.png"));
 
         int width = 507;

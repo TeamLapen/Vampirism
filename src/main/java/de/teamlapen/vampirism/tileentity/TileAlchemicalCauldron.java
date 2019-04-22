@@ -29,14 +29,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -104,7 +104,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     private boolean cookingClient;
     private boolean burningClient;
     private int liquidColor;
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private ISoundReference boilingSound;
     /**
      * Can contain a recipe which can be cooked by the owner.
@@ -177,7 +177,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return 4;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public int getLiquidColorClient() {
         return liquidColor;
     }
@@ -241,7 +241,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return nbt;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void handleUpdateTag(@Nonnull NBTTagCompound nbt) {
         super.handleUpdateTag(nbt);
@@ -308,7 +308,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         NBTTagCompound nbt = pkt.getNbtCompound();

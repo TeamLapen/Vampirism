@@ -6,8 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Base class for Vampirism's potions
@@ -15,9 +15,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class VampirismPotion extends Potion {
 
     private static final ResourceLocation ICONS = new ResourceLocation(REFERENCE.MODID, "textures/gui/potions.png");
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private static final int ICON_TEXTURE_WIDTH = 144;
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private static final int ICON_TEXTURE_HEIGHT = 36;
 
     public VampirismPotion(String name, boolean badEffect, int potionColor) {
@@ -32,7 +32,7 @@ public class VampirismPotion extends Potion {
         return false;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void renderHUDEffect(int k, int l, PotionEffect effect, Minecraft mc, float alpha) {
         int index = getStatusIconIndex();
@@ -44,7 +44,7 @@ public class VampirismPotion extends Potion {
 
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void renderInventoryEffect(int x, int y, PotionEffect effect, Minecraft mc) {
         int index = getStatusIconIndex();

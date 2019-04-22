@@ -25,7 +25,10 @@ import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -40,16 +43,16 @@ import net.minecraft.util.IntHashMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
-import net.minecraft.world.gen.structure.StructureBoundingBox;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,15 +75,15 @@ public class TileTotem extends TileEntity implements ITickable {
      * This is originally intended to store the area on clientside, but also used on server side to create a matching experience.
      * On integrated servers this is updated from both client and server (so twice), but values should just override each other
      */
-    private final static IntHashMap<HashMap<BlockPos, StructureBoundingBox>> vampireVillages = new IntHashMap<>();
+    private final static IntHashMap<HashMap<BlockPos, MutableBoundingBox>> vampireVillages = new IntHashMap<>();
 
     /**
      * Check if the given position is inside a (statically) cached list of vampire village BBs
      */
     public static boolean isInsideVampireAreaCached(int dimension, BlockPos pos) {
-        HashMap<BlockPos, StructureBoundingBox> map = vampireVillages.lookup(dimension);
+        HashMap<BlockPos, MutableBoundingBox> map = vampireVillages.lookup(dimension);
         if (map != null) {
-            for (StructureBoundingBox bb : map.values()) {
+            for (MutableBoundingBox bb : map.values()) {
                 if (bb.isVecInside(pos)) {
                     return true;
                 }
@@ -101,13 +104,13 @@ public class TileTotem extends TileEntity implements ITickable {
             IVillageCaptureEntity aggressive = event.getAggressiveVillager();
             if (aggressive != null) {
                 villager.getEntityWorld().spawnEntity((Entity) aggressive);
-                villager.setDead();
+                villager.remove();
             }
             return aggressive;
         } else {
             EntityAggressiveVillager hunter = EntityAggressiveVillager.makeHunter(villager);
             villager.getEntityWorld().spawnEntity(hunter);
-            villager.setDead();
+            villager.remove();
             return hunter;
         }
     }
@@ -127,9 +130,9 @@ public class TileTotem extends TileEntity implements ITickable {
     private boolean isComplete;
     private int defenderMax = 0;
     private boolean insideVillage;
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private long beamRenderCounter;
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private float beamRenderScale;
     /**
      * The area covered by this totem
@@ -221,7 +224,7 @@ public class TileTotem extends TileEntity implements ITickable {
         this.forced_faction_timer = 20;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public float[] getBaseColors() {
         return baseColors;
     }
@@ -233,7 +236,7 @@ public class TileTotem extends TileEntity implements ITickable {
         return this.capturingFaction == null ? 0 : this.capture_phase == CAPTURE_PHASE.PHASE_2 ? 80 : (int) (this.capture_timer / (float) DURATION_PHASE_1 * 80f);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public float[] getCapturingColors() {
         return capturingColors;
     }
@@ -271,7 +274,7 @@ public class TileTotem extends TileEntity implements ITickable {
 
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public double getMaxRenderDistanceSquared() {
         return 65536.0D;
@@ -303,7 +306,7 @@ public class TileTotem extends TileEntity implements ITickable {
         readFromNBT(tag);
         if (tag.hasKey("village_bb")) {
             if (controllingFaction == VReference.VAMPIRE_FACTION) {
-                StructureBoundingBox bb = new StructureBoundingBox(tag.getIntArray("village_bb"));
+                MutableBoundingBox bb = new MutableBoundingBox(tag.getIntArray("village_bb"));
                 registerVampireArea(bb); //Replaces old area if different
             } else {
                 unregisterVampireArea();
@@ -364,13 +367,13 @@ public class TileTotem extends TileEntity implements ITickable {
         super.markDirty();
         world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
         if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
-            registerVampireArea(new StructureBoundingBox(UtilLib.bbToInt(getAffectedArea())));
+            registerVampireArea(new MutableBoundingBox(UtilLib.bbToInt(getAffectedArea())));
         } else {
             unregisterVampireArea();
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         handleUpdateTag(pkt.getNbtCompound());
@@ -437,7 +440,7 @@ public class TileTotem extends TileEntity implements ITickable {
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public float shouldBeamRender() {
         if (!this.isComplete) {
             return 0.0F;
@@ -657,7 +660,7 @@ public class TileTotem extends TileEntity implements ITickable {
                             if (entityId != null && defenderNumMax > guards.size()) {
                                 Entity e = EntityList.createEntityByIDFromName(entityId, world);
                                 if (e != null && !spawnEntityInVillage(e, null)) {
-                                    e.setDead();
+                                    e.remove();
                                 }
                             }
                         }
@@ -826,8 +829,8 @@ public class TileTotem extends TileEntity implements ITickable {
         }
     }
 
-    private void registerVampireArea(StructureBoundingBox box) {
-        HashMap<BlockPos, StructureBoundingBox> map = vampireVillages.lookup(this.world.provider.getDimension());
+    private void registerVampireArea(MutableBoundingBox box) {
+        HashMap<BlockPos, MutableBoundingBox> map = vampireVillages.lookup(this.world.provider.getDimension());
         if (map == null) {
             map = new HashMap<>();
             vampireVillages.addKey(this.world.provider.getDimension(), map);
@@ -859,7 +862,7 @@ public class TileTotem extends TileEntity implements ITickable {
             ((EntityVampireBase) e).setSpawnRestriction(EntityVampireBase.SpawnRestriction.SIMPLE);
         }
         if (e != null && !UtilLib.spawnEntityInWorld(world, this.getAffectedAreaReduced(), e, 50, world.getPlayers(EntityPlayer.class, EntitySelectors.NOT_SPECTATING))) {
-            e.setDead();
+            e.remove();
             e = null;
         }
         if (e instanceof IVillageCaptureEntity) {
@@ -924,7 +927,7 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     private void unregisterVampireArea() {
-        HashMap<BlockPos, StructureBoundingBox> map = vampireVillages.lookup(this.world.provider.getDimension());
+        HashMap<BlockPos, MutableBoundingBox> map = vampireVillages.lookup(this.world.provider.getDimension());
         if (map != null) {
             map.remove(this.getPos());
         }

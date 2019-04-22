@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -37,7 +37,7 @@ public interface IItemWithTierNBTImpl extends IItemWithTier {
         return stack;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     default void addTierInformation(ItemStack stack, List<String> tooltip) {
         TIER t = getTier(stack);
         if (t != TIER.NORMAL) {

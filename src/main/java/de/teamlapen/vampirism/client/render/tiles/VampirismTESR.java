@@ -5,15 +5,15 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
 /**
  * TESR with a few util methods
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 abstract class VampirismTESR<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
 
     /**

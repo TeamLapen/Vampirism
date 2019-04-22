@@ -8,12 +8,12 @@ import de.teamlapen.vampirism.entity.SundamageRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Packet that syncs selected config values
@@ -43,7 +43,7 @@ public class SyncConfigPacket implements IMessage {
         ByteBufUtils.writeTag(buf, nbt);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private void applyConfig() {
         if (UtilLib.isSameInstanceAsServer()) {
             VampirismMod.log.d("SyncConfigPacket", "Not applying as same instance as server");

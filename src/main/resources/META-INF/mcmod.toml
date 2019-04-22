@@ -1,0 +1,38 @@
+modLoader="javafml"
+loaderVersion="[24,)"
+issueTrackerURL="https://github.com/TeamLapen/Vampirism/issues"
+
+[[mods]]
+    modId="vampirism"
+    namespace="vampirism"
+    version="${version}"
+    displayName="Vampirism"
+    authors="Maxanier"
+    description="Allows you to become a vampire"
+    displayURL="https://minecraft.curseforge.com/projects/vampirism-become-a-vampire"
+    [[dependencies.vampirism]]
+        modId="forge"
+        mandatory=true
+        versionRange="[${forge_version},)"
+        ordering="NONE"
+        side="BOTH"
+    [[dependencies.vampirism]]
+        modId="teamlapen-lib"
+        mandatory=true
+        versionRange="[${version},)"
+        ordering="NONE"
+        side="BOTH"
+[[mods]]
+    modId="teamlapen-lib"
+    namespace="teamlapen-lib"
+    version="${version}"
+    displayName="Teamlapen Library"
+    authors="Maxanier"
+    description="Required by Vampirism"
+    displayURL="https://minecraft.curseforge.com/projects/vampirism-become-a-vampire"
+    [[dependencies.teamlapen-lib]]
+        modId="forge"
+        mandatory=true
+        versionRange="[${forge_version},)"
+        ordering="NONE"
+        side="BOTH"

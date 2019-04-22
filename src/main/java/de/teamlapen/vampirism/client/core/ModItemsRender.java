@@ -17,14 +17,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Handles item render registration
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ModItemsRender {
 
 	public static void register() {
@@ -34,7 +34,7 @@ public class ModItemsRender {
 	static void registerColors() {
 
 		// Swiftness armor
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+        Minecraft.getInstance().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
 			if (tintIndex == 0) {
 				return ((ItemArmor) stack.getItem()).getColor(stack);
 			} else {
@@ -48,7 +48,7 @@ public class ModItemsRender {
 				}
 			}
 		}, ModItems.armor_of_swiftness_feet, ModItems.armor_of_swiftness_chest, ModItems.armor_of_swiftness_head, ModItems.armor_of_swiftness_legs);
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+        Minecraft.getInstance().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
 			if (tintIndex == 1) {
 				return ItemCrossbowArrow.getType(stack).color;
 			}

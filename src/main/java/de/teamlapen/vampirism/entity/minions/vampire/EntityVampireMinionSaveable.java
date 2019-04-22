@@ -68,7 +68,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
 //
 //        }
 //        world.spawnEntityInWorld(remote);
-//        this.setDead();
+//        this.remove();
 //    }
 
     @Override

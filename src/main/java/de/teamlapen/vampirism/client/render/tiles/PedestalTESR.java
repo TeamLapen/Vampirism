@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.tileentity.TilePedestal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 
 public class PedestalTESR extends VampirismTESR<TilePedestal> {
@@ -19,7 +19,7 @@ public class PedestalTESR extends VampirismTESR<TilePedestal> {
             GlStateManager.rotate(rotation * 360f, 0, 1, 0);
             GlStateManager.pushAttrib();
             RenderHelper.enableStandardItemLighting();
-            Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.GROUND);
+            Minecraft.getInstance().getItemRenderer().renderItem(stack, ItemCameraTransforms.TransformType.GROUND);
             RenderHelper.disableStandardItemLighting();
             GlStateManager.popAttrib();
             GlStateManager.popMatrix();

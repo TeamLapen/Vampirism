@@ -25,76 +25,75 @@ repositories {
     mavenCentral()
 }
 
-task crowdin(type: CrowdinDownload) {
-    outputs.upToDateWhen { false }
-    output = "build/crowdin.zip"
-    projectId = 'vampirism'
-    extract = true
-
-    // task auomatically skips if this is null
-    if (project.hasProperty('CROWDIN_KEY'))
-        apiKey = project.CROWDIN_KEY
-}
-
 
 dependencies {
-    deobfCompile "mezz.jei:jei_" + config.jei_version + ":api"
-    optionalRuntime "mezz.jei:jei_" +  config.jei_version
+    minecraft([
+            group: "net.minecraftforge",
+            name: "forge",
+            version: "${project.minecraft_version}-${project.forge_version}"
+    ])
+    compileOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}:api") //API for compile
+    runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}") //Full for runtime
+    
     //deobfCompile 'mcp.mobius.waila:Waila:' + config.waila_version
     //deobfCompile 'Waila:Waila:1.7.1_1.11.2' //Backup Waila on curseforge
-    deobfCompile 'info.amerifrance.guideapi:Guide-API:' + config.guide_api_version
+    //deobf 'info.amerifrance.guideapi:Guide-API:${guide_api_version}'
 
 
 }
 
 minecraft {
-    version = config.minecraft_version + "-" + config.forge_version
-    mappings = config.mappings
-    runDir = "run"
-    replaceIn "util/REFERENCE.java"
-    replace "@VERSION@", "${project.mod_version}"
-    replace "@MVERSION@", "${config.minecraft_version}"
-    replace "@FVERSION@", "${config.forge_version}"
-    makeObfSourceJar = false // an Srg named sources jar is made if enabled
-    useDepAts = true
+    mappings channel: "snapshot", version: "${project.mcp_mappings}".toString()
+    accessTransformer = file('/src/main/resources/vampirism_at.cfg')
+
+    runs {
+        client = {
+            property 'forge.logging.console.level', 'debug'
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+            source sourceSets.lib
+            source sourceSets.api
+        }
+        server = {
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+            source sourceSets.lib
+            source sourceSets.api
+        }
+    }
+
 }
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "m_version", project.mod_version
-    inputs.property "mc_version", project.config.minecraft_version
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include '*.info', "*.mcmeta", "META_INF/**"
-        // replace version and mcversion
-        expand 'm_version': project.mod_version, 'mc_version': project.config.minecraft_version
-    }
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.info'
+        include 'META-INF/mods.toml'
+
+        expand 'version': project.version, 'mcversion': minecraft_version, 'forge_version': forge_version
     }
 
-    rename '(.+_at.cfg)', 'META-INF/$1'
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'META-INF/mods.toml'
+    }
 
     exclude '**/Thumbs.db'
 }
 
-task renameLanguageFiles(type: Copy){
-    mustRunAfter 'crowdin'
-    from crowdin.output
-    into 'build/translations'
-}
 
 jar {
     //Keep the jar as clean as possible
     includeEmptyDirs = false
 
-    from sourceSets.main.output
-    from sourceSets.api.output
+    from sourceSets.main.output.classesDirs
+    from sourceSets.api.output.classesDirs
+    from sourceSets.lib.output.classesDirs
+    from sourceSets.main.output.resourcesDir
+    from sourceSets.api.output.resourcesDir
+    from sourceSets.lib.output.resourcesDir
 
-    dependsOn 'crowdin'
-    dependsOn 'renameLanguageFiles'
     from{
         fileTree('build/translations').matching{
             exclude "**/en_US.lang"

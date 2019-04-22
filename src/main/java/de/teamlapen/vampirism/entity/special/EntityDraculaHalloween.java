@@ -86,7 +86,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
         super.onLivingUpdate();
 
         if (!HalloweenSpecial.isEnabled()) {
-            this.setDead();
+            this.remove();
         }
         if (this.world.isRemote) {
             EntityLivingBase owner = getOwner();
@@ -98,7 +98,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
         }
         EntityLivingBase owner = getOwner();
         if (owner == null) {
-            this.setDead();
+            this.remove();
             return;
         }
         if (this.getEntityWorld().isDaytime()) {
@@ -134,7 +134,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
                     teleportBehind(owner);
                 } else {
                     if (this.getRNG().nextInt(3) == 0) {
-                        this.setDead();
+                        this.remove();
                     } else {
                         makeHide(this.getRNG().nextInt(3000));
                     }
@@ -158,7 +158,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
      */
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
-        this.setDead();
+        this.remove();
     }
 
     @Override

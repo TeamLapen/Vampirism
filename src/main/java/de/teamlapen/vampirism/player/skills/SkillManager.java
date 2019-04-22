@@ -12,9 +12,9 @@ import de.teamlapen.vampirism.core.VampirismRegistries;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -63,7 +63,7 @@ public class SkillManager implements ISkillManager {
      * @param faction
      * @return
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public Integer[] getDisplayInfo(IPlayableFaction faction) {
         if (!skillNodeSizeMap.containsKey(faction.getKey())) {
             skillNodeSizeMap.put(faction.getKey(), createDisplayInfo(getRootSkillNode(faction)));

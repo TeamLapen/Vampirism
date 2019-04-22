@@ -27,8 +27,8 @@ public class EntityBlindingBat extends EntityBat {
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
+    public void tick() {
+        super.tick();
         if (restrictLiveSpan && this.ticksExisted > Balance.mobProps.BLINDING_BAT_LIVE_SPAWN) {
             this.attackEntityFrom(DamageSource.MAGIC, 10F);
         }

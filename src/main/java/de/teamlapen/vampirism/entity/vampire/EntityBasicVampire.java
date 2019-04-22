@@ -184,13 +184,10 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
-        if (advancedLeader != null && !advancedLeader.isEntityAlive()) {
-            advancedLeader = null;
-        }
-        if (!this.world.isRemote && this.ticksExisted % 40 == 8) {
-            cachedVillage = VampirismVillageHelper.getNearestVillage(this);
+    public void remove() {
+        super.remove();
+        if (advancedLeader != null) {
+            advancedLeader.decreaseFollowerCount();
         }
     }
 
@@ -209,10 +206,13 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
-    public void setDead() {
-        super.setDead();
-        if (advancedLeader != null) {
-            advancedLeader.decreaseFollowerCount();
+    public void tick() {
+        super.tick();
+        if (advancedLeader != null && !advancedLeader.isEntityAlive()) {
+            advancedLeader = null;
+        }
+        if (!this.world.isRemote && this.ticksExisted % 40 == 8) {
+            cachedVillage = VampirismVillageHelper.getNearestVillage(this);
         }
     }
 

@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api.entity.minions;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +25,7 @@ public interface IMinionCommand {
      *
      * @return null to use vampirism's default one
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Nullable
     ResourceLocation getIconLoc();
 
@@ -39,7 +39,7 @@ public interface IMinionCommand {
      *
      * @return
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     int getMinU();
 
     /**
@@ -47,7 +47,7 @@ public interface IMinionCommand {
      *
      * @return
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     int getMinV();
 
     String getUnlocalizedName();

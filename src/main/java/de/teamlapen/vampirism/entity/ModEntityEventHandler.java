@@ -136,7 +136,7 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
+    public void baseTick(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() instanceof EntityCreature) {
             event.getEntity().getEntityWorld().profiler.startSection("vampirism_extended_creature");
             ExtendedCreature.get((EntityCreature) event.getEntity()).onUpdate();

@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -26,26 +26,26 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
      *
      * @return null to use vampirism's default one
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Nullable
     ResourceLocation getIconLoc();
 
     /**
      * The description for this skill. Can be null
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     String getLocalizedDescription();
 
     /**
      * Should return the min U texture coordinate within the icon map
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     int getMinU();
 
     /**
      * Should return the min V texture coordinate within the icon map
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     int getMinV();
 
     /**
@@ -57,10 +57,10 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
     @Override
     ResourceLocation getRegistryName();
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     int getRenderColumn();
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     int getRenderRow();
 
     String getUnlocalizedName();

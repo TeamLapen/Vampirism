@@ -9,13 +9,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,16 +72,16 @@ public class HalloweenSpecial {
     private List<UUID> blacklist = new ArrayList<>();
     private int tickTimer = 0;
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) return;
         if (render_overlay > 0) {
             render_overlay--;
-        } else if (Minecraft.getMinecraft().world != null) {
-            int time = (int) Minecraft.getMinecraft().world.getWorldTime();
+        } else if (Minecraft.getInstance().world != null) {
+            int time = (int) Minecraft.getInstance().world.getWorldTime();
             if (time > 13000 && time < 13100) {
-                triggerOverlay(Minecraft.getMinecraft().player);
+                triggerOverlay(Minecraft.getInstance().player);
             }
         }
     }

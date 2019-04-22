@@ -6,21 +6,21 @@ import de.teamlapen.vampirism.client.model.ModelCloak;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class ItemVampireCloak extends ItemArmor {
         this.setTranslationKey(REFERENCE.MODID + "." + registeredName);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default) {
         return new ModelCloak();
@@ -54,10 +54,10 @@ public class ItemVampireCloak extends ItemArmor {
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab))
             subItems.add(new ItemStack(this, 1, 0));
-        if (tab.equals(CreativeTabs.SEARCH)) {
+        if (tab.equals(ItemGroup.SEARCH)) {
             for (EnumCloakColor s : EnumCloakColor.values()) {
                 if (s.getMetadata() == 0)
                     continue;
@@ -82,7 +82,7 @@ public class ItemVampireCloak extends ItemArmor {
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     protected void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         if (Helper.isHunter(playerIn)) {
             tooltip.add(TextFormatting.RED + UtilLib.translate("text.vampirism.poisonous_to_hunter"));

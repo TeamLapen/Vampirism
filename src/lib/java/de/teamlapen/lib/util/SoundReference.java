@@ -2,15 +2,15 @@ package de.teamlapen.lib.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Reference to a ISound
  *
  * @author maxanier
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class SoundReference implements ISoundReference {
 
     private final ISound sound;
@@ -21,16 +21,16 @@ public class SoundReference implements ISoundReference {
 
     @Override
     public boolean isPlaying() {
-        return Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(sound);
+        return Minecraft.getInstance().getSoundHandler().isSoundPlaying(sound);
     }
 
     @Override
     public void startPlaying() {
-        Minecraft.getMinecraft().getSoundHandler().playSound(sound);
+        Minecraft.getInstance().getSoundHandler().playSound(sound);
     }
 
     @Override
     public void stopPlaying() {
-        Minecraft.getMinecraft().getSoundHandler().stopSound(sound);
+        Minecraft.getInstance().getSoundHandler().stopSound(sound);
     }
 }

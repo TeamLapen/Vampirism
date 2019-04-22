@@ -73,10 +73,10 @@ public class WorldGenVampireDungeon extends WorldGenerator {
 
                         if (ax != lx && ay != -1 && az != lz && ax != hx && ay != 4 && az != hz) {
                             if (worldIn.getBlockState(blockpos1).getBlock() != Blocks.CHEST) {
-                                worldIn.setBlockToAir(blockpos1);
+                                worldIn.removeBlock(blockpos1);
                             }
                         } else if (blockpos1.getY() >= 0 && !worldIn.getBlockState(blockpos1.down()).getMaterial().isSolid()) {
-                            worldIn.setBlockToAir(blockpos1);
+                            worldIn.removeBlock(blockpos1);
                         } else if (worldIn.getBlockState(blockpos1).getMaterial().isSolid() && worldIn.getBlockState(blockpos1).getBlock() != Blocks.CHEST) {
                             if (ay == -1 || ay == 4) {
                                 if (rand.nextInt(40) == 0) {
@@ -165,7 +165,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                             worldIn.spawnEntity(vampire);
                             break;
                         } else {
-                            vampire.setDead();
+                            vampire.remove();
                         }
                     }
                 }

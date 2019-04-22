@@ -16,8 +16,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -46,7 +46,7 @@ public class BlockAlchemicalFire extends VampirismBlock {
         return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
@@ -89,7 +89,7 @@ public class BlockAlchemicalFire extends VampirismBlock {
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!canPlaceBlockAt(worldIn, pos)) {
-            worldIn.setBlockToAir(pos);
+            worldIn.removeBlock(pos);
         }
     }
 
@@ -97,7 +97,7 @@ public class BlockAlchemicalFire extends VampirismBlock {
         return 0;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (rand.nextInt(24) == 0) {
             worldIn.playSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F), (double) ((float) pos.getZ() + 0.5F), SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
@@ -135,7 +135,7 @@ public class BlockAlchemicalFire extends VampirismBlock {
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 
         if (!this.canPlaceBlockAt(worldIn, pos)) {
-            worldIn.setBlockToAir(pos);
+            worldIn.removeBlock(pos);
         }
 
 
@@ -146,7 +146,7 @@ public class BlockAlchemicalFire extends VampirismBlock {
             state = state.withProperty(AGE, age + 1);
             worldIn.setBlockState(pos, state, 4);
         } else if (age == 14) {
-            worldIn.setBlockToAir(pos);
+            worldIn.removeBlock(pos);
         }
 
         worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn) + rand.nextInt(10));

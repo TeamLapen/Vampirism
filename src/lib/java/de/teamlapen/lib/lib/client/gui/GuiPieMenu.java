@@ -8,9 +8,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.GuiIngameForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
  *
  * @author maxanier
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public abstract class GuiPieMenu<T> extends GuiScreen {
     private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie_menu_bg.png");
     private final static ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie_menu_center.png");

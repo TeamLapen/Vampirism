@@ -18,7 +18,7 @@ import de.teamlapen.vampirism.tileentity.TileTotem;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -37,11 +37,11 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * Handle most general rendering related stuff
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class RenderHandler {
     private static final ResourceLocation saturation1 = new ResourceLocation(REFERENCE.MODID + ":shaders/saturation1.json");
     private final Minecraft mc;
@@ -151,7 +151,7 @@ public class RenderHandler {
             if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
                 PotionEffect pe = mc.player.getActivePotionEffect(ModPotions.saturation);
                 boolean active = pe != null && pe.getAmplifier() >= 2;
-                EntityRenderer renderer = mc.entityRenderer;
+                GameRenderer renderer = mc.entityRenderer;
                 if (active && !renderer.isShaderActive()) {
                     renderer.loadShader(saturation1);
                 } else if (!active && renderer.isShaderActive() && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {

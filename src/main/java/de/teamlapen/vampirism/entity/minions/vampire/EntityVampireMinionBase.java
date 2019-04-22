@@ -143,7 +143,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
                             this.entityDropItem(stack1, 0.0F);
                         }
                         this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, itemstack);
-                        entityitem.setDead();
+                        entityitem.remove();
                     }
 
                 }

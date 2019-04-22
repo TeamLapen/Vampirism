@@ -126,7 +126,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
                 if (stack2.isEmpty()) {
                     stack2 = itemHandler.insertItem(i, stack, false);
                     if (stack2.getCount() < stack.getCount()) {
-                        entityItem.setDead();
+                        entityItem.remove();
                     } else {
                         entityItem.setItem(stack2);
                     }

@@ -38,7 +38,7 @@ public class VersionChecker implements Runnable {
         this.currentVersion = currentVersion;
         versionInfo = new VersionInfo(currentVersion);
         if (stats) {
-            this.stats = FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getMinecraft().isSnooperEnabled() : FMLCommonHandler.instance().getMinecraftServerInstance().isSnooperEnabled();
+            this.stats = FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getInstance().isSnooperEnabled() : FMLCommonHandler.instance().getMinecraftServerInstance().isSnooperEnabled();
         } else {
             this.stats = false;
         }

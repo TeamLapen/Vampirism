@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -37,19 +37,19 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
      *
      * @return
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     ResourceLocation getIconLoc();
 
     /**
      * @return the min U texture coordinate within the icon map
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     int getMinU();
 
     /**
      * @return the min V texture coordinate within the icon map
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     int getMinV();
 
     String getUnlocalizedName();

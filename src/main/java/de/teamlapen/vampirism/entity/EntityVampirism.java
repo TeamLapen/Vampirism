@@ -28,6 +28,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -162,11 +163,11 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
+    public void tick() {
+        super.tick();
 
         if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == EnumDifficulty.PEACEFUL) {
-            this.setDead();
+            this.remove();
         }
     }
 
@@ -343,7 +344,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, this.posX, this.posY + this.height / 2, this.posZ, 20, 1, this.rand, 134, 10, 0x0A0A0A, 0.6);
         this.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1, 1);
 
-        this.setDead();
+        this.remove();
     }
 
     @Override
