@@ -29,6 +29,7 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
+apply plugin: 'eclipse'
 
 
 configurations {
