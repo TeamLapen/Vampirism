@@ -1,13 +1,12 @@
 package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.lib.lib.network.AbstractMessageHandler;
-import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.network.ISyncable;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 /**
  * Request a update packet for the players {@link ISyncable.ISyncableEntityCapabilityInst} (e.g. on World join)
@@ -15,36 +14,27 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class RequestPlayerUpdatePacket implements IMessage {
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
+    static void encode(RequestPlayerUpdatePacket msg, PacketBuffer buf) {
 
     }
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-
+    static RequestPlayerUpdatePacket decode(PacketBuffer buf) {
+        return new RequestPlayerUpdatePacket();
     }
 
-    public static class Handler extends AbstractMessageHandler<RequestPlayerUpdatePacket> {
 
-        @Override
-        public IMessage handleClientMessage(EntityPlayer player, RequestPlayerUpdatePacket message, MessageContext ctx) {
-            return null;
-        }
-
-        @Override
-        public IMessage handleServerMessage(EntityPlayer player, RequestPlayerUpdatePacket message, MessageContext ctx) {
-            return UpdateEntityPacket.createJoinWorldPacket(player).markAsPlayerItself();
-        }
-
-        @Override
-        protected AbstractPacketDispatcher getDispatcher() {
-            return VampLib.dispatcher;
-        }
-
-        @Override
-        protected boolean handleOnMainThread() {
-            return true;
-        }
+    public static void handle(final RequestPlayerUpdatePacket pkt, Supplier<NetworkEvent.Context> contextSupplier) {
+        NetworkEvent.Context ctx = contextSupplier.get();
+        ctx.enqueueWork(() -> { //Execute on main thread
+            EntityPlayerMP player = ctx.getSender();
+            if (player != null) {
+                UpdateEntityPacket update = UpdateEntityPacket.createJoinWorldPacket(player);
+                if (update != null) {
+                    update.markAsPlayerItself();
+                    VampLib.dispatcher.sendTo(update, player);
+                }
+            }
+        });
+        ctx.setPacketHandled(true);
     }
 }

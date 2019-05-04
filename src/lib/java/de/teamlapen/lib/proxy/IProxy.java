@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -38,7 +38,7 @@ public interface IProxy {
 
     ParticleHandler getParticleHandler();
 
-    EntityPlayer getPlayerEntity(MessageContext context);
+    EntityPlayer getPlayerEntity(NetworkEvent.Context context);
 
     /**
      * Uses font rendere on client side to wrap the given string to the given width

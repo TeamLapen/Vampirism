@@ -1,11 +1,11 @@
 package de.teamlapen.lib;
 
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.lib.network.UpdateEntityPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
  * General Helper library

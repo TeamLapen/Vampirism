@@ -3,25 +3,26 @@ package de.teamlapen.lib;
 import com.google.common.collect.ImmutableMap;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.util.ThreadSafeAPI;
+import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Register things that should be handled by the library here
  */
 public class HelperRegistry {
     private final static String TAG = "HelperRegistry";
-    private static Map<ResourceLocation, Capability> syncablePlayerCaps = new HashMap<>();
-    private static Map<ResourceLocation, Capability> syncableEntityCaps = new HashMap<>();
-    private static List<Capability> playerEventListenerCaps = new ArrayList<>();
+    private static Map<ResourceLocation, Capability> syncablePlayerCaps = new ConcurrentHashMap<>();
+    private static Map<ResourceLocation, Capability> syncableEntityCaps = new ConcurrentHashMap<>();
+    private static Set<Capability> playerEventListenerCaps = new ConcurrentSet<>();
     private static Capability[] playerEventListenerCapsFinal;
     /**
      * Stores syncable capabilities for {@link EntityPlayer}
@@ -36,7 +37,7 @@ public class HelperRegistry {
      * Return all player capabilities that should receive events
      * FOR INTERNAL USAGE ONLY
      */
-    public static Capability[] getEventListenerCaps() {
+    static Capability[] getEventListenerCaps() {
         return playerEventListenerCapsFinal;
     }
 
@@ -64,9 +65,10 @@ public class HelperRegistry {
      * @param key Unique key for the capability. Preferably the key the cap was registered with.
      *            Has to be called before post init.
      */
+    @ThreadSafeAPI
     public static void registerSyncableEntityCapability(Capability capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
         if (syncableEntityCaps == null) {
-            VampLib.log.e(TAG, "You have to register the syncable property %s (%s) before post init", clz, capability);
+            VampLib.log.e(TAG, "You have to register the syncable property %s (%s) during InterModEnqueueEvent", clz, capability);
             return;
         }
         syncableEntityCaps.put(key, capability);
@@ -79,6 +81,7 @@ public class HelperRegistry {
      * @param clz Class of the object returned, when {@link EntityPlayer#getCapability(Capability, EnumFacing)} is called on the player with the given capability
      *            Has to be called before post init.
      */
+    @ThreadSafeAPI
     public static void registerSyncablePlayerCapability(Capability capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
         if (syncablePlayerCaps == null) {
             VampLib.log.e(TAG, "You have to register the syncable property %s (%s) before post init", clz, capability);
@@ -94,6 +97,7 @@ public class HelperRegistry {
      * @param capability
      * @param clz        Class of the object returned, when {@link EntityPlayer#getCapability(Capability, EnumFacing)} is called on the player with the given capability
      */
+    @ThreadSafeAPI
     public static void registerPlayerEventReceivingCapability(Capability capability, Class<? extends IPlayerEventListener> clz) {
         if (playerEventListenerCaps == null) {
             VampLib.log.e(TAG, "You have to register PlayerEventReceiver BEFORE post init. (" + capability + ")");

@@ -21,7 +21,7 @@ import java.util.Random;
 public abstract class ParticleHandler {
 
     protected final static String TAG = "ParticleHandler";
-    public static Map<ResourceLocation, ICustomParticleFactory> factories = new HashMap<>();
+    static Map<ResourceLocation, ICustomParticleFactory> factories = new HashMap<>();
 
     /**
      * Register a particle, to allow it to be created by this handler

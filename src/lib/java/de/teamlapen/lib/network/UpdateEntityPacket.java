@@ -2,27 +2,25 @@ package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.network.ISyncable;
-import de.teamlapen.vampirism.network.AbstractClientMessageHandler;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
+import org.apache.commons.lang3.Validate;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Does Entity or Entity capability updates.
@@ -31,6 +29,99 @@ import java.util.List;
 public class UpdateEntityPacket implements IMessage {
 
     private final static String TAG = "UpdateEntityPacket";
+
+
+    static void encode(UpdateEntityPacket msg, PacketBuffer buf) {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setInt("id", msg.id);
+        if (msg.data != null) {
+            tag.setTag("data", msg.data);
+        }
+        if (msg.caps != null) {
+            tag.setTag("caps", msg.caps);
+        }
+        if (msg.playerItself) {
+            tag.setBoolean("itself", true);
+        }
+        buf.writeCompoundTag(tag);
+    }
+
+    static UpdateEntityPacket decode(PacketBuffer buf) {
+        NBTTagCompound tag = buf.readCompoundTag();
+        UpdateEntityPacket pkt = new UpdateEntityPacket();
+        pkt.id = tag.getInt("id");
+        if (tag.hasKey("data")) {
+            pkt.data = tag.getCompound("data");
+        }
+        if (tag.hasKey("caps")) {
+            pkt.caps = tag.getCompound("caps");
+        }
+        if (tag.hasKey("itself")) {
+            pkt.playerItself = tag.getBoolean("itself");
+        }
+        return new UpdateEntityPacket();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static void handleCapability(Entity e, ResourceLocation key, NBTTagCompound data) {
+        ISyncable syncable;
+        Capability cap = HelperRegistry.getSyncableEntityCaps().get(key);
+        if (cap == null && e instanceof EntityPlayer) {
+            cap = HelperRegistry.getSyncablePlayerCaps().get(key);
+        }
+        if (cap == null) {
+            VampLib.log.w(TAG, "Capability with key %s is not registered in the HelperRegistry", key);
+        }
+        try {
+            syncable = (ISyncable) e.getCapability(cap, null);
+        } catch (ClassCastException ex) {
+            VampLib.log.w(TAG, "Target entity's capability %s (%s)does not implement ISyncable (%s)", e.getCapability(cap, null), cap, ex);
+            return;
+        }
+        if (syncable == null) {
+            VampLib.log.w(TAG, "Target entity %s does not have capability %s", e, cap);
+        } else {
+            syncable.loadUpdateFromNBT(data);
+        }
+    }
+
+    public static void handle(final UpdateEntityPacket message, Supplier<NetworkEvent.Context> contextSupplier) {
+        final NetworkEvent.Context ctx = contextSupplier.get();
+        EntityPlayer player = ctx.getSender();
+        Validate.notNull(player);
+        ctx.enqueueWork(() -> { //Execute on main thread
+            Entity e = player.getEntityWorld().getEntityByID(message.id);
+            if (e == null) {
+                VampLib.log.e(TAG, "Did not find entity %s", message.id);
+                if (message.playerItself) {
+                    VampLib.log.e(TAG, "Message is meant for player itself, but id mismatch %s %s. Loading anyway.", player.getEntityId(), message.id);
+                    e = player;
+                }
+            }
+            if (e != null) {
+                if (message.data != null) {
+                    ISyncable syncable;
+                    try {
+                        syncable = (ISyncable) e;
+                        syncable.loadUpdateFromNBT(message.data);
+
+                    } catch (ClassCastException ex) {
+                        VampLib.log.w(TAG, "Target entity %s does not implement ISyncable (%s)", e, ex);
+                    }
+                }
+                if (message.caps != null) {
+
+                    for (String key : message.caps.keySet()) {
+                        handleCapability(e, new ResourceLocation(key), message.caps.getCompound(key));
+                    }
+
+
+                }
+            }
+
+        });
+        ctx.setPacketHandled(true);
+    }
 
     /**
      * Create a sync packet for the given capability instance.
@@ -180,115 +271,10 @@ public class UpdateEntityPacket implements IMessage {
 
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        NBTTagCompound tag = ByteBufUtils.readTag(buf);
-        id = tag.getInteger("id");
-        if (tag.hasKey("data")) {
-            data = tag.getCompoundTag("data");
-        }
-        if (tag.hasKey("caps")) {
-            caps = tag.getCompoundTag("caps");
-        }
-        if (tag.hasKey("itself")) {
-            playerItself = tag.getBoolean("itself");
-        }
-    }
-
     public UpdateEntityPacket markAsPlayerItself() {
         playerItself = true;
         return this;
     }
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger("id", id);
-        if (data != null) {
-            tag.setTag("data", data);
-        }
-        if (caps != null) {
-            tag.setTag("caps", caps);
-        }
-        if (playerItself) {
-            tag.setBoolean("itself", true);
-        }
-        ByteBufUtils.writeTag(buf, tag);
-    }
 
-    public static class Handler extends AbstractClientMessageHandler<UpdateEntityPacket> {
-
-        @OnlyIn(Dist.CLIENT)
-        @Override
-        public IMessage handleClientMessage(EntityPlayer player, UpdateEntityPacket message, MessageContext ctx) {
-//            if (player.getRNG().nextInt(10) == 0)
-//                VampLib.log.t("Received %s %s %s", message.id, message.data, message.caps);//Log a few random message, just to see if everything is alright.
-
-            Entity e = player.getEntityWorld().getEntityByID(message.id);
-            if (e == null) {
-                VampLib.log.e(TAG, "Did not find entity %s", message.id);
-                if (message.playerItself) {
-                    VampLib.log.e(TAG, "Message is meant for player itself, but id mismatch %s %s. Loading anyway.", player.getEntityId(), message.id);
-                    e = player;
-                } else {
-                    return null;
-                }
-            }
-
-            if (message.data != null) {
-                ISyncable syncable;
-                try {
-                    syncable = (ISyncable) e;
-
-                } catch (ClassCastException ex) {
-                    VampLib.log.w(TAG, "Target entity %s does not implement ISyncable (%s)", e, ex);
-                    return null;
-                }
-                syncable.loadUpdateFromNBT(message.data);
-            }
-            if (message.caps != null) {
-
-                for (String key : message.caps.getKeySet()) {
-                    handleCapability(e, new ResourceLocation(key), message.caps.getCompoundTag(key));
-                }
-
-
-            }
-            return null;
-        }
-
-        @Override
-        protected AbstractPacketDispatcher getDispatcher() {
-            return VampLib.dispatcher;
-        }
-
-        @Override
-        protected boolean handleOnMainThread() {
-            return true;
-        }
-
-        @OnlyIn(Dist.CLIENT)
-        private void handleCapability(Entity e, ResourceLocation key, NBTTagCompound data) {
-            ISyncable syncable;
-            Capability cap = HelperRegistry.getSyncableEntityCaps().get(key);
-            if (cap == null && e instanceof EntityPlayer) {
-                cap = HelperRegistry.getSyncablePlayerCaps().get(key);
-            }
-            if (cap == null) {
-                VampLib.log.w(TAG, "Capability with key %s is not registered in the HelperRegistry", key);
-            }
-            try {
-                syncable = (ISyncable) e.getCapability(cap, null);
-            } catch (ClassCastException ex) {
-                VampLib.log.w(TAG, "Target entity's capability %s (%s)does not implement ISyncable (%s)", e.getCapability(cap, null), cap, ex);
-                return;
-            }
-            if (syncable == null) {
-                VampLib.log.w(TAG, "Target entity %s does not have capability %s", e, cap);
-            } else {
-                syncable.loadUpdateFromNBT(data);
-            }
-        }
-
-    }
 }

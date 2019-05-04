@@ -56,7 +56,7 @@ public class ParticleHandlerClient extends ParticleHandler {
     }
 
     private void addParticleToWorld(Particle particle) {
-        Minecraft.getInstance().effectRenderer.addEffect(particle);
+        Minecraft.getInstance().particles.addEffect(particle);
     }
 
     private

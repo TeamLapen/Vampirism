@@ -28,10 +28,6 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
-import de.teamlapen.vampirism.modcompat.IMCHandler;
-import de.teamlapen.vampirism.modcompat.SpongeModCompat;
-import de.teamlapen.vampirism.modcompat.guide.GuideAPICompat;
-import de.teamlapen.vampirism.modcompat.jei.JEIModCompat;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
@@ -43,7 +39,9 @@ import de.teamlapen.vampirism.player.vampire.NightVision;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.potion.blood.BloodPotionRegistry;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
+import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
+import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
 import de.teamlapen.vampirism.util.*;
@@ -63,9 +61,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.common.util.ModFixs;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -76,7 +74,7 @@ import java.io.File;
 /**
  * Main class for Vampirism TODO readd "required-after:teamlapen-lib;"
  */
-@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.12,)", dependencies = "required-after:forge@[" + REFERENCE.FORGE_VERSION_MIN + ",);after:guideapi", guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory", updateJSON = REFERENCE.VERSION_UPDATE_FILE_FORGE)
+@Mod(value = REFERENCE.MODID)
 public class VampirismMod {
 
     public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
@@ -107,10 +105,10 @@ public class VampirismMod {
      * only here to init it as early as possible
      */
     private static final EnumCreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = EnumHelper.addCreatureAttribute("VAMPIRISM_VAMPIRE");
-    @Mod.Instance(value = REFERENCE.MODID)
+
     public static VampirismMod instance;
-    @SidedProxy(clientSide = "de.teamlapen.vampirism.proxy.ClientProxy", serverSide = "de.teamlapen.vampirism.proxy.ServerProxy")
-    public static IProxy proxy;
+    @SuppressWarnings("Convert2MethodRef")
+    public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
     public static boolean inDev = false;
 
     public static boolean isRealism() {
@@ -122,6 +120,7 @@ public class VampirismMod {
     private VersionChecker.VersionInfo versionInfo;
 
     public VampirismMod() {
+        instance = this;
 
         addModCompats();
         registryManager = new RegistryManager();

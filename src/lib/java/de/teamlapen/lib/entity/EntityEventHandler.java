@@ -21,7 +21,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
@@ -38,7 +38,7 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onChangedDimension(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent event) {
         for (Capability listener : listeners) {
-            ((IPlayerEventListener) event.player.getCapability(listener, null)).onChangedDimension(event.fromDim, event.toDim);
+            ((IPlayerEventListener) event.getPlayer().getCapability(listener, null)).onChangedDimension(event.getFrom(), event.getTo());
         }
     }
 
@@ -59,7 +59,7 @@ public class EntityEventHandler {
         if (event.getEntity() instanceof EntityVillager && !event.getWorld().isRemote) {
             VampirismVillage village = VampirismVillageHelper.getNearestVillage(event.getWorld(), event.getEntity().getPosition(), 5);
             if (village != null && village.getControllingFaction() != null && village.getControllingFaction().equals(VReference.HUNTER_FACTION)) {
-                event.getEntity().getCapability(ExtendedCreature.CAP, null).setPoisonousBlood(true);
+                ExtendedCreature.get((EntityCreature) event.getEntity()).setPoisonousBlood(true);
             }
         }
     }
@@ -105,14 +105,14 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
         for (Capability listener : listeners) {
-            ((IPlayerEventListener) event.player.getCapability(listener, null)).onPlayerLoggedIn();
+            ((IPlayerEventListener) event.getPlayer().getCapability(listener, null)).onPlayerLoggedIn();
         }
     }
 
     @SubscribeEvent
     public void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event) {
         for (Capability listener : listeners) {
-            ((IPlayerEventListener) event.player.getCapability(listener, null)).onPlayerLoggedOut();
+            ((IPlayerEventListener) event.getPlayer().getCapability(listener, null)).onPlayerLoggedOut();
         }
     }
 

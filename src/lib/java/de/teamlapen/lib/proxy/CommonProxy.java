@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
 import org.apache.commons.lang3.text.WordUtils;
 
 import javax.annotation.Nonnull;
@@ -45,8 +45,8 @@ public class CommonProxy implements IProxy {
     }
 
     @Override
-    public EntityPlayer getPlayerEntity(MessageContext ctx) {
-        return ctx.getServerHandler().player;
+    public EntityPlayer getPlayerEntity(NetworkEvent.Context ctx) {
+        return ctx.getSender();
     }
 
     @Override

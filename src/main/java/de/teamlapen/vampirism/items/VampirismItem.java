@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.Item;
 
@@ -16,16 +14,10 @@ public class VampirismItem extends Item {
      *
      * @param regName
      */
-    public VampirismItem(String regName) {
+    public VampirismItem(String regName, Item.Properties properties) {
+        super(properties);
         this.regName = regName;
-        setCreativeTab(VampirismMod.creativeTab);
         setRegistryName(REFERENCE.MODID, regName);
-        this.setTranslationKey(REFERENCE.MODID + "." + regName);
-    }
-
-
-    public String getLocalizedName() {
-        return UtilLib.translate(getTranslationKey() + ".name");
     }
 
     /**

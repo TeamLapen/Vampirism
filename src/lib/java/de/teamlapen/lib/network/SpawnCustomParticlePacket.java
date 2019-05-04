@@ -1,29 +1,60 @@
 package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.vampirism.network.AbstractClientMessageHandler;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
+import org.apache.commons.lang3.Validate;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 
 public class SpawnCustomParticlePacket implements IMessage {
 
+    static void encode(SpawnCustomParticlePacket msg, PacketBuffer buf) {
+        buf.writeCompoundTag(msg.nbt);
+    }
+
+    static SpawnCustomParticlePacket decode(PacketBuffer buf) {
+        return new SpawnCustomParticlePacket(buf.readCompoundTag());
+    }
+
+
+    public static void handle(final SpawnCustomParticlePacket pkt, Supplier<NetworkEvent.Context> contextSupplier) {
+        final NetworkEvent.Context ctx = contextSupplier.get();
+        NBTTagCompound nbt = pkt.nbt;
+        double posX = nbt.getDouble("x");
+        double posY = nbt.getDouble("y");
+        double posZ = nbt.getDouble("z");
+        ResourceLocation particle = new ResourceLocation(nbt.getString("id"));
+        NBTTagCompound data = nbt.getCompound("data");
+        int count = nbt.getInt("count"); //Defaults to 0
+        double maxDist = nbt.getDouble("maxdist"); //Defaults to 0
+        Validate.notNull(ctx.getSender());
+        ctx.enqueueWork(() -> { //Execute on main thread
+            if (count > 0) {
+                Random random = ctx.getSender().getRNG();
+                VampLib.proxy.getParticleHandler().spawnParticles(ctx.getSender().getEntityWorld(), particle, posX, posY, posZ, count, maxDist, random, data);
+
+            } else {
+                VampLib.proxy.getParticleHandler().spawnParticle(ctx.getSender().getEntityWorld(), particle, posX, posY, posZ, data);
+            }
+        });
+        ctx.setPacketHandled(true);
+    }
+
+
     private NBTTagCompound nbt;
 
-    public SpawnCustomParticlePacket() {
-
+    private SpawnCustomParticlePacket(NBTTagCompound tag) {
+        this.nbt = tag;
     }
 
     public SpawnCustomParticlePacket(ResourceLocation particle, double posX, double posY, double posZ, NBTTagCompound param, int count, double maxdist) {
         this(particle, posX, posY, posZ, param);
-        nbt.setInteger("count", count);
+        nbt.setInt("count", count);
         nbt.setDouble("maxdist", maxdist);
     }
 
@@ -34,44 +65,5 @@ public class SpawnCustomParticlePacket implements IMessage {
         nbt.setDouble("z", posZ);
         nbt.setString("id", particle.toString());
         nbt.setTag("data", param);
-    }
-
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        nbt = ByteBufUtils.readTag(buf);
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeTag(buf, nbt);
-    }
-
-    public static class Handler extends AbstractClientMessageHandler<SpawnCustomParticlePacket> {
-
-        @Override
-        public IMessage handleClientMessage(EntityPlayer player, SpawnCustomParticlePacket message, MessageContext ctx) {
-            NBTTagCompound nbt = message.nbt;
-            double posX = nbt.getDouble("x");
-            double posY = nbt.getDouble("y");
-            double posZ = nbt.getDouble("z");
-            ResourceLocation particle = new ResourceLocation(nbt.getString("id"));
-
-            NBTTagCompound data = nbt.getCompoundTag("data");
-            if (nbt.hasKey("count")) {
-                int count = nbt.getInteger("count");
-                double maxDist = nbt.getDouble("maxdist");
-                Random random = player.getRNG();
-                VampLib.proxy.getParticleHandler().spawnParticles(player.getEntityWorld(), particle, posX, posY, posZ, count, maxDist, random, data);
-
-            } else {
-                VampLib.proxy.getParticleHandler().spawnParticle(player.getEntityWorld(), particle, posX, posY, posZ, data);
-            }
-            return null;
-        }
-
-        @Override
-        protected boolean handleOnMainThread() {
-            return true;
-        }
     }
 }

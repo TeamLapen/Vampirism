@@ -20,7 +20,7 @@ public class ParticleHandlerServer extends ParticleHandler {
             return;
         }
         SpawnCustomParticlePacket packet = new SpawnCustomParticlePacket(particle, posX, posY, posZ, factory.createParticleInfo(param));
-        VampLib.dispatcher.sendToAllAround(packet, world.provider.getDimension(), posX, posY, posZ, 48);
+        VampLib.dispatcher.sendToAllAround(packet, world.getDimension(), posX, posY, posZ, 48);
 
     }
 
@@ -32,7 +32,7 @@ public class ParticleHandlerServer extends ParticleHandler {
             return;
         }
         SpawnCustomParticlePacket packet = new SpawnCustomParticlePacket(particle, posX, posY, posZ, factory.createParticleInfo(param), count, maxDist);
-        VampLib.dispatcher.sendToAllAround(packet, world.provider.getDimension(), posX, posY, posZ, 48);
+        VampLib.dispatcher.sendToAllAround(packet, world.getDimension(), posX, posY, posZ, 48);
     }
 
 

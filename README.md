@@ -1,6 +1,9 @@
-Vampirism for Minecraft 1.12 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.12)](https://travis-ci.org/TeamLapen/Vampirism) 
+Vampirism for Minecraft 1.13 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.12)](https://travis-ci.org/TeamLapen/Vampirism) 
 ============================================
-[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de) 
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de)  
+
+Don't even try to build it.  
+
 ## Mod Description
 
 Vampires are fast, strong and blood-thirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!

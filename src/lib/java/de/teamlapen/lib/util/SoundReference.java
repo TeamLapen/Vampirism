@@ -21,16 +21,16 @@ public class SoundReference implements ISoundReference {
 
     @Override
     public boolean isPlaying() {
-        return Minecraft.getInstance().getSoundHandler().isSoundPlaying(sound);
+        return Minecraft.getInstance().getSoundHandler().isPlaying(sound);
     }
 
     @Override
     public void startPlaying() {
-        Minecraft.getInstance().getSoundHandler().playSound(sound);
+        Minecraft.getInstance().getSoundHandler().play(sound);
     }
 
     @Override
     public void stopPlaying() {
-        Minecraft.getInstance().getSoundHandler().stopSound(sound);
+        Minecraft.getInstance().getSoundHandler().stop(sound);
     }
 }

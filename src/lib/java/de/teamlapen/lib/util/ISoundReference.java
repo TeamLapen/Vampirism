@@ -1,10 +1,5 @@
 package de.teamlapen.lib.util;
 
-/**
- * 1.10
- *
- * @author maxanier
- */
 public interface ISoundReference {
     boolean isPlaying();
 

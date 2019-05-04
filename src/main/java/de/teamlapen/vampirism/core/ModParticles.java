@@ -169,11 +169,13 @@ public class ModParticles {
                 return new HealingParticle(world, posX, posY, posZ);
             }
 
+            @Nonnull
             @Override
             public NBTTagCompound createParticleInfo(Object... param) {
                 return new NBTTagCompound();
             }
 
+            @Nonnull
             @OnlyIn(Dist.CLIENT)
             @Override
             public Object[] readParticleInfo(NBTTagCompound nbt) {
