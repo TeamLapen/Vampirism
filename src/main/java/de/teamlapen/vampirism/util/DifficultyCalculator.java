@@ -80,7 +80,7 @@ public class DifficultyCalculator {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             throw new IllegalStateException("You can only use this method on server side");
         }
-        return calculateDifficulty(FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers());
+        return calculateDifficulty(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers());
     }
 
     /**

@@ -18,7 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -55,7 +55,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+    public IBlockState getActualState(IBlockState state, IBlockReader worldIn, BlockPos pos) {
         TileAlchemicalCauldron t = getTile(worldIn, pos);
         if (t != null) {
             state = state.withProperty(LIQUID, !t.isFilled() ? 0 : t.isCooking() ? 2 : 1).withProperty(BURNING, t.isBurning());
@@ -69,7 +69,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockReader source, BlockPos pos) {
 
         return BOUNDING_BOX;
     }
@@ -134,7 +134,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
     }
 
     @Nullable
-    private TileAlchemicalCauldron getTile(IBlockAccess world, BlockPos pos) {
+    private TileAlchemicalCauldron getTile(IBlockReader world, BlockPos pos) {
         TileEntity t = world.getTileEntity(pos);
         if (t instanceof TileAlchemicalCauldron) return (TileAlchemicalCauldron) t;
         return null;

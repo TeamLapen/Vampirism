@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.render;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
@@ -414,7 +413,7 @@ public class RenderHandler {
 
             } catch (IOException | JsonSyntaxException ioexception) {
 
-                VampirismMod.log.e(TAG, ioexception, "Failed to load shader: {%s}", resourcelocationOutline);
+                LOGGER.error(ioexception, "Failed to load shader: {%s}", resourcelocationOutline);
                 this.bloodVisionShader1 = null;
                 this.bloodVisionFrameBuffer1 = null;
                 this.bloodVisionShader2 = null;

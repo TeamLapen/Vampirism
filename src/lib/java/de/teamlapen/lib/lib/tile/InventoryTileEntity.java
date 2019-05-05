@@ -11,11 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-
-import javax.annotation.Nonnull;
 
 
 /**
@@ -54,10 +49,6 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         return ItemStackUtil.decrIInventoryStackSize(this, slot, amt);
     }
 
-    @Nonnull
-    public ITextComponent getDisplayName() {
-        return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName());
-    }
 
     @Override
     public int getField(int id) {
@@ -128,17 +119,17 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tagCompound) {
-        super.readFromNBT(tagCompound);
+    public void read(NBTTagCompound tagCompound) {
+        super.read(tagCompound);
         for (InventorySlot slot1 : slots) {
             slot1.stack = ItemStack.EMPTY;
         }
-        NBTTagList tagList = tagCompound.getTagList("Inventory", 10);
-        for (int i = 0; i < tagList.tagCount(); i++) {
-            NBTTagCompound tag = tagList.getCompoundTagAt(i);
+        NBTTagList tagList = tagCompound.getList("Inventory", 10);
+        for (int i = 0; i < tagList.size(); i++) {
+            NBTTagCompound tag = tagList.getCompound(i);
             byte slot = tag.getByte("Slot");
             if (slot >= 0 && slot < slots.length) {
-                slots[slot].stack = new ItemStack(tag);
+                slots[slot].stack = ItemStack.read(tag);
             }
         }
     }
@@ -170,8 +161,8 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        NBTTagCompound nbt = super.writeToNBT(compound);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        NBTTagCompound nbt = super.write(compound);
 
         NBTTagList itemList = new NBTTagList();
         for (int i = 0; i < slots.length; i++) {
@@ -179,8 +170,8 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
             if (!stack.isEmpty()) {
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setByte("Slot", (byte) i);
-                stack.writeToNBT(tag);
-                itemList.appendTag(tag);
+                stack.write(tag);
+                itemList.add(tag);
             }
         }
         nbt.setTag("Inventory", itemList);

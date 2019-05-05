@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.vampire;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.Balance;
@@ -181,7 +180,7 @@ public class BloodStats implements IBloodStats {
         } else {
             if (attribute == null) {
                 //Probably not needed anymore TODO remove
-                VampirismMod.log.w(TAG, "Blood exhaustion attribute is null for player %s (%s)", player, player == null ? null : player.getAttributeMap());
+                LOGGER.warn("Blood exhaustion attribute is null for player %s (%s)", player, player == null ? null : player.getAttributeMap());
                 mult = (float) VReference.bloodExhaustion.getDefaultValue();
             } else {
                 mult = (float) attribute.getAttributeValue();

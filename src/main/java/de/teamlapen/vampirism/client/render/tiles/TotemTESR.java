@@ -29,7 +29,7 @@ public class TotemTESR extends VampirismTESR<TileTotem> {
 
 
         if (textureScale > 0.0D) {
-            double totalWorldTime = te.getWorld().getTotalWorldTime();
+            double totalWorldTime = te.getWorld().getGameTime();
             int captureProgress = te.getCaptureProgress();
             float[] baseColors = te.getBaseColors();
             GlStateManager.disableFog();

@@ -10,6 +10,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Register things that should be handled by the library here
  */
 public class HelperRegistry {
+    private final static Logger LOGGER = LogManager.getLogger();
+
     private final static String TAG = "HelperRegistry";
     private static Map<ResourceLocation, Capability> syncablePlayerCaps = new ConcurrentHashMap<>();
     private static Map<ResourceLocation, Capability> syncableEntityCaps = new ConcurrentHashMap<>();
@@ -68,7 +72,7 @@ public class HelperRegistry {
     @ThreadSafeAPI
     public static void registerSyncableEntityCapability(Capability capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
         if (syncableEntityCaps == null) {
-            VampLib.log.e(TAG, "You have to register the syncable property %s (%s) during InterModEnqueueEvent", clz, capability);
+            LOGGER.error("You have to register the syncable property {} ({}) during InterModEnqueueEvent", clz, capability);
             return;
         }
         syncableEntityCaps.put(key, capability);
@@ -84,7 +88,7 @@ public class HelperRegistry {
     @ThreadSafeAPI
     public static void registerSyncablePlayerCapability(Capability capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
         if (syncablePlayerCaps == null) {
-            VampLib.log.e(TAG, "You have to register the syncable property %s (%s) before post init", clz, capability);
+            LOGGER.error("You have to register the syncable property {} ({}) before post init", clz, capability);
             return;
         }
         syncablePlayerCaps.put(key, capability);
@@ -100,7 +104,7 @@ public class HelperRegistry {
     @ThreadSafeAPI
     public static void registerPlayerEventReceivingCapability(Capability capability, Class<? extends IPlayerEventListener> clz) {
         if (playerEventListenerCaps == null) {
-            VampLib.log.e(TAG, "You have to register PlayerEventReceiver BEFORE post init. (" + capability + ")");
+            LOGGER.error("You have to register PlayerEventReceiver BEFORE post init. (" + capability + ")");
         } else {
             playerEventListenerCaps.add(capability);
         }
@@ -115,7 +119,7 @@ public class HelperRegistry {
         syncableEntityCaps = null;
         syncablePlayerCapsFinal = ImmutableMap.copyOf(syncablePlayerCaps);
         syncablePlayerCaps = null;
-        playerEventListenerCapsFinal = playerEventListenerCaps.toArray(new Capability[playerEventListenerCaps.size()]);
+        playerEventListenerCapsFinal = playerEventListenerCaps.toArray(new Capability[0]);
         playerEventListenerCaps = null;
     }
 }

@@ -14,7 +14,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 
 /**
@@ -70,14 +69,14 @@ public abstract class SimpleSpawnerLogic {
             String s = nbt.getString("id");
             entityName = StringUtils.isNullOrEmpty(s) ? null : new ResourceLocation(s);
         }
-        minSpawnDelay = nbt.getInteger("min_delay");
-        maxSpawnDelay = nbt.getInteger("max_delay");
-        maxNearbyEntities = nbt.getInteger("max_nearby");
-        spawnDelay = nbt.getInteger("delay");
-        activateRange = nbt.getInteger("activate_range");
-        spawnRange = nbt.getInteger("spawn_range");
-        spawnCount = nbt.getInteger("spawn_count");
-        spawnedToday = nbt.getInteger("spawned_today");
+        minSpawnDelay = nbt.getInt("min_delay");
+        maxSpawnDelay = nbt.getInt("max_delay");
+        maxNearbyEntities = nbt.getInt("max_nearby");
+        spawnDelay = nbt.getInt("delay");
+        activateRange = nbt.getInt("activate_range");
+        spawnRange = nbt.getInt("spawn_range");
+        spawnCount = nbt.getInt("spawn_count");
+        spawnedToday = nbt.getInt("spawned_today");
         spawnedLast = nbt.getLong("spawned_last");
         flag = nbt.getBoolean("spawner_flag");
     }
@@ -135,7 +134,7 @@ public abstract class SimpleSpawnerLogic {
                     return;
                 }
 
-                if ((getSpawnerWorld().getTotalWorldTime()) % 24000 < this.spawnedLast) {
+                if ((getSpawnerWorld().getGameTime()) % 24000 < this.spawnedLast) {
                     this.spawnedToday = 0;
                     this.flag = true;
                 }
@@ -175,7 +174,7 @@ public abstract class SimpleSpawnerLogic {
                 if (flag1) {
                     this.resetTimer();
                     this.spawnedToday++;
-                    this.spawnedLast = getSpawnerWorld().getTotalWorldTime() % 24000;
+                    this.spawnedLast = getSpawnerWorld().getGameTime() % 24000;
                 }
             }
         }
@@ -183,14 +182,14 @@ public abstract class SimpleSpawnerLogic {
 
     public void writeToNbt(NBTTagCompound nbt) {
         if (entityName != null) nbt.setString("id", entityName.toString());
-        nbt.setInteger("min_delay", minSpawnDelay);
-        nbt.setInteger("max_delay", maxSpawnDelay);
-        nbt.setInteger("max_nearby", maxNearbyEntities);
-        nbt.setInteger("delay", spawnDelay);
-        nbt.setInteger("activate_range", activateRange);
-        nbt.setInteger("spawn_range", spawnRange);
-        nbt.setInteger("spawn_count", spawnCount);
-        nbt.setInteger("spawned_today", spawnedToday);
+        nbt.setInt("min_delay", minSpawnDelay);
+        nbt.setInt("max_delay", maxSpawnDelay);
+        nbt.setInt("max_nearby", maxNearbyEntities);
+        nbt.setInt("delay", spawnDelay);
+        nbt.setInt("activate_range", activateRange);
+        nbt.setInt("spawn_range", spawnRange);
+        nbt.setInt("spawn_count", spawnCount);
+        nbt.setInt("spawned_today", spawnedToday);
         nbt.setLong("spawned_last", spawnedLast);
         nbt.setBoolean("spawner_flag", flag);
     }

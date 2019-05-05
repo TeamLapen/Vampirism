@@ -87,8 +87,8 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
+    public void readAdditional(NBTTagCompound compound) {
+        super.readAdditional(compound);
         this.directDamage = compound.getFloat("direct_damage");
         this.indirecDamage = compound.getFloat("indirect_damage");
     }
@@ -111,8 +111,8 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
+    public void writeAdditional(NBTTagCompound compound) {
+        super.writeAdditional(compound);
         compound.setFloat("direct_damage", directDamage);
         compound.setFloat("indirect_damage", indirecDamage);
     }

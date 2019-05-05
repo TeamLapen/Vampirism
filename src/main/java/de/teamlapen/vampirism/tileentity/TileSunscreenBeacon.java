@@ -19,7 +19,7 @@ public class TileSunscreenBeacon extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        if (this.world.getTotalWorldTime() % 80L == 0L) {
+        if (this.world.getGameTime() % 80L == 0L) {
             this.updateBeacon();
         }
     }

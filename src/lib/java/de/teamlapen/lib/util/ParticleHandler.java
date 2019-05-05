@@ -17,6 +17,7 @@ import java.util.Random;
 /**
  * Handle Particles
  * Client or Server Side
+ * //TODO 1.13 Do we still need this
  */
 public abstract class ParticleHandler {
 

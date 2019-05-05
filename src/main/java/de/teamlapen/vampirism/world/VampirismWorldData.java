@@ -78,7 +78,7 @@ public class VampirismWorldData extends WorldSavedData {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void read(NBTTagCompound nbt) {
         if (nbt.hasKey("vampire_dungeons")) {
             vampireDungeons.clear();
             NBTTagList dungeons = nbt.getTagList("vampire_dungeons", 10);
@@ -90,7 +90,7 @@ public class VampirismWorldData extends WorldSavedData {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound write(NBTTagCompound compound) {
         NBTTagList dungeons = new NBTTagList();
         for (BlockPos pos : vampireDungeons) {
             dungeons.appendTag(NBTUtil.createPosTag(pos));

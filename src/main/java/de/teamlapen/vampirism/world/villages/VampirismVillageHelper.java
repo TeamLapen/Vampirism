@@ -55,7 +55,7 @@ public class VampirismVillageHelper {
     public static void tick(World w) {
         if (w.villageCollection != null) { //Shouldn't be null, but https://github.com/TeamLapen/Vampirism/issues/372
             for (Village v : w.villageCollection.getVillageList()) {
-                VampirismVillage.get(v).tick(w.getTotalWorldTime());
+                VampirismVillage.get(v).tick(w.getGameTime());
             }
         }
     }

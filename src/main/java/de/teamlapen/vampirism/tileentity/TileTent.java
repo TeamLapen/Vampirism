@@ -119,7 +119,7 @@ public class TileTent extends TileEntity implements ITickable {
     @Nonnull
     @Override
     public NBTTagCompound getUpdateTag() {
-        return this.writeToNBT(new NBTTagCompound());
+        return this.write(new NBTTagCompound());
     }
 
     @Override
@@ -132,8 +132,8 @@ public class TileTent extends TileEntity implements ITickable {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
         if (nbt.hasKey("spawner_logic")) {
             spawnerLogic.readFromNbt(nbt.getCompoundTag("spawner_logic"));
         }
@@ -166,8 +166,8 @@ public class TileTent extends TileEntity implements ITickable {
 
     @Nonnull
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        NBTTagCompound nbt = super.writeToNBT(compound);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        NBTTagCompound nbt = super.write(compound);
         NBTTagCompound logic = new NBTTagCompound();
         spawnerLogic.writeToNbt(logic);
         nbt.setTag("spawner_logic", logic);

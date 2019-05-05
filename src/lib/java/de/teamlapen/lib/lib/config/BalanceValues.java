@@ -1,9 +1,11 @@
 package de.teamlapen.lib.lib.config;
 
-import de.teamlapen.lib.VampLib;
+import de.teamlapen.lib.lib.config.forge.ConfigCategory;
+import de.teamlapen.lib.lib.config.forge.Configuration;
+import de.teamlapen.lib.lib.util.LogUtil;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -15,7 +17,8 @@ import java.lang.reflect.Field;
  * @author Maxanier
  */
 public abstract class BalanceValues {
-    private final static String TAG = "Balance";
+    private static final Logger LOGGER = LogManager.getLogger("TestLogger");
+
 
     /**
      * Resets the configuration by simply clearing the config file
@@ -24,14 +27,14 @@ public abstract class BalanceValues {
      * @return
      */
     private static void reset(File f) {
-        VampLib.log.i("Configs", "Resetting config file " + f.getName());
+        LOGGER.info(LogUtil.CONFIG, "Resetting config file " + f.getName());
         try {
             PrintWriter writer = new PrintWriter(f);
             writer.write("");
             writer.flush();
             writer.close();
         } catch (Exception e) {
-            VampLib.log.e("Configs", "Failed to reset config file");
+            LOGGER.error(LogUtil.CONFIG, "Failed to reset config file");
         }
     }
 
@@ -83,10 +86,10 @@ public abstract class BalanceValues {
                     f.set(this, configuration.get(cat.getQualifiedName(), chooseName(name, a.name()), value, a.comment()).getBoolean());
                 }
             } catch (NullPointerException e1) {
-                VampLib.log.e(TAG, "Author probably forgot to specify a default annotation for " + name + " in " + this.name, e1);
+                LOGGER.error(LogUtil.CONFIG, "Author probably forgot to specify a default annotation for " + name + " in " + this.name, e1);
                 throw new Error("Please check you default values in " + this.name);
             } catch (Exception e) {
-                VampLib.log.e(TAG, "Cant set " + this.name + " values", e);
+                LOGGER.error(LogUtil.CONFIG, "Cant set " + this.name + " values", e);
                 throw new Error("Please check your " + configuration.getConfigFile().getAbsolutePath() + " config file");
             }
         }

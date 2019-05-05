@@ -34,7 +34,6 @@ import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -75,7 +74,7 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onConfigurationChanged(ConfigChangedEvent.OnConfigChangedEvent e) {
         if (e.getModID().equalsIgnoreCase(REFERENCE.MODID)) {
-            VampirismMod.log.i(TAG, "Configuration (%s) changed", e.getConfigID());
+            LOGGER.info("Configuration (%s) changed", e.getConfigID());
             Configs.onConfigurationChanged();
             Balance.onConfigurationChanged();
         }
@@ -95,9 +94,9 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
-        if (!versionInfo.isChecked()) VampirismMod.log.w(TAG, "Version check is not finished yet");
+        if (!versionInfo.isChecked()) LOGGER.warn("Version check is not finished yet");
 
-        boolean isAdminLikePlayer = !FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || UtilLib.isPlayerOp(event.player);
+        boolean isAdminLikePlayer = !ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.player);
 
         if (!Configs.disable_versionCheck && versionInfo.isNewVersionAvailable()) {
             if (isAdminLikePlayer || event.player.getRNG().nextInt(5) == 0) {
@@ -125,7 +124,7 @@ public class ModEventHandler {
 
         }
         if (Configs.updated_vampirism) {
-            if (!FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || UtilLib.isPlayerOp(event.player)) {
+            if (!ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.player)) {
 
 
                 event.player.sendMessage(new TextComponentString("It looks like you have updated Vampirism"));

@@ -2,45 +2,52 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
-import de.teamlapen.lib.VampLib;
-import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.command.ICommandSource;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Particles;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
 /**
  * General Utility Class
  */
 public class UtilLib {
+
+    private final static Logger LOGGER = LogManager.getLogger();
     public static String entityToString(Entity e) {
         if (e == null) {
             return "Entity is null";
@@ -49,7 +56,7 @@ public class UtilLib {
     }
 
     public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos).isSideSolid(worldIn, pos, EnumFacing.UP);
+        return worldIn.getBlockState(pos).isTopSolid(worldIn, pos);
     }
 
 
@@ -90,7 +97,7 @@ public class UtilLib {
         float pitchAdjustedCosYaw = cosYaw * cosPitch;
         double distance = 500D;
         if (restriction == 0 && player instanceof EntityPlayerMP) {
-            distance = ((EntityPlayerMP) player).interactionManager.getBlockReachDistance();
+            distance = player.getAttribute(EntityPlayer.REACH_DISTANCE).getValue();
         } else if (restriction > 0) {
             distance = restriction;
         }
@@ -102,7 +109,7 @@ public class UtilLib {
     public static BlockPos getRandomPosInBox(World w, AxisAlignedBB box) {
         int x = (int) box.minX + w.rand.nextInt((int) (box.maxX - box.minX) + 1);
         int z = (int) box.minZ + w.rand.nextInt((int) (box.maxZ - box.minZ) + 1);
-        int y = w.getHeight(x, z) + 5;
+        int y = w.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z) + 5;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, y, z);
         while (y > box.minY && !w.getBlockState(pos).isNormalCube()) {
             pos.setPos(x, --y, z);
@@ -168,13 +175,13 @@ public class UtilLib {
 
         e.setPosition(behind.getX(), p.posY, behind.getZ());
 
-        if (e.getCanSpawnHere() && e.isNotColliding()) {
+        if (e.canSpawn(p.getEntityWorld(), false) && e.isNotColliding()) {
             p.getEntityWorld().spawnEntity(e);
             return e;
         } else {
-            int y = p.getEntityWorld().getHeight(behind).getY();
+            int y = p.getEntityWorld().getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, behind).getY();
             e.setPosition(behind.getX(), y, behind.getZ());
-            if (e.getCanSpawnHere() && e.isNotColliding()) {
+            if (e.canSpawn(p.getEntityWorld(), false) && e.isNotColliding()) {
                 p.getEntityWorld().spawnEntity(e);
                 onInitialSpawn(e);
                 return e;
@@ -185,11 +192,11 @@ public class UtilLib {
     }
 
     /**
-     * Call {@link EntityLiving#onInitialSpawn(DifficultyInstance, IEntityLivingData)} if applicable
+     * Call {@link EntityLiving#onInitialSpawn(DifficultyInstance, IEntityLivingData, NBTTagCompound)} if applicable
      */
     private static void onInitialSpawn(Entity e) {
         if (e instanceof EntityLiving) {
-            ((EntityLiving) e).onInitialSpawn(e.getEntityWorld().getDifficultyForLocation(e.getPosition()), null);
+            ((EntityLiving) e).onInitialSpawn(e.getEntityWorld().getDifficultyForLocation(e.getPosition()), null, null);
         }
     }
 
@@ -219,9 +226,9 @@ public class UtilLib {
         BlockPos backupPos=null; //
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
-            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementForEntity(e.getClass()), world, c)) {
+            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(e.getClass()), world, c)) {
                 e.setPosition(c.getX(), c.getY() + 0.2, c.getZ());
-                if (!(e instanceof EntityLiving) || (((EntityLiving) e).getCanSpawnHere() && ((EntityLiving) e).isNotColliding())) {
+                if (!(e instanceof EntityLiving) || (((EntityLiving) e).canSpawn(world, false) && ((EntityLiving) e).isNotColliding())) {
                     backupPos = c; //Store the location in case we do not find a better one
                     for (EntityLivingBase p : avoidedEntities) {
 
@@ -304,7 +311,7 @@ public class UtilLib {
             if (flag1) {
                 entity.setPosition(entity.posX, entity.posY, entity.posZ);
 
-                if (entity.getEntityWorld().collidesWithAnyBlock(entity.getEntityBoundingBox()) && !entity.getEntityWorld().containsAnyLiquid(entity.getEntityBoundingBox()))
+                if (entity.getEntityWorld().checkBlockCollision(entity.getBoundingBox()) && !entity.getEntityWorld().containsAnyLiquid(entity.getBoundingBox()))
                     flag = true;
             }
         }
@@ -323,12 +330,12 @@ public class UtilLib {
                 double d7 = d3 + (entity.posX - d3) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
                 double d8 = d4 + (entity.posY - d4) * d6 + entity.getRNG().nextDouble() * entity.height;
                 double d9 = d5 + (entity.posZ - d5) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
-                entity.getEntityWorld().spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
+                entity.getEntityWorld().spawnParticle(Particles.PORTAL, d7, d8, d9, f, f1, f2);
             }
 
             if (sound) {
-                entity.getEntityWorld().playSound(d3, d4, d5, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.NEUTRAL, 1F, 1F, false);
-                entity.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1F, 1F);
+                entity.getEntityWorld().playSound(d3, d4, d5, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1F, 1F, false);
+                entity.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1F, 1F);
             }
 
             return true;
@@ -338,12 +345,12 @@ public class UtilLib {
     /**
      * Spawn multiple particles, with a small offset between
      */
-    public static void spawnParticles(World world, EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, double xSpeed, double ySpeed, double zSpeed, int amount, float maxOffset, int... extra) {
+    public static void spawnParticles(World world, IParticleData particle, double xCoord, double yCoord, double zCoord, double xSpeed, double ySpeed, double zSpeed, int amount, float maxOffset) {
         double x = xCoord;
         double y = yCoord;
         double z = zCoord;
         for (int i = 0; i < amount; i++) {
-            world.spawnParticle(particleType, x, y, z, xSpeed, ySpeed, zSpeed, extra);
+            world.spawnParticle(particle, x, y, z, xSpeed, ySpeed, zSpeed);
             Random ran = world.rand;
             x = xCoord + (ran.nextGaussian() * maxOffset);
             y = yCoord + (ran.nextGaussian() * maxOffset);
@@ -351,7 +358,7 @@ public class UtilLib {
         }
     }
 
-    public static void spawnParticlesAroundEntity(EntityLivingBase e, EnumParticleTypes particleType, double maxDistance, int amount) {
+    public static void spawnParticlesAroundEntity(EntityLivingBase e, IParticleData particle, double maxDistance, int amount) {
 
 
         short short1 = (short) amount;
@@ -363,7 +370,7 @@ public class UtilLib {
             double d7 = e.posX + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
             double d8 = e.posY + (maxDistance / 2) * d6 + e.getRNG().nextDouble() * e.height;
             double d9 = e.posZ + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
-            e.getEntityWorld().spawnParticle(particleType, d7, d8, d9, f, f1, f2);
+            e.getEntityWorld().spawnParticle(particle, d7, d8, d9, f, f1, f2);
         }
     }
 
@@ -375,7 +382,7 @@ public class UtilLib {
      * @param message
      */
     public static void sendMessageToAllExcept(EntityPlayer player, ITextComponent message) {
-        for (Object o : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
+        for (Object o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
             if (!o.equals(player)) {
                 ((EntityPlayer) o).sendMessage(message);
             }
@@ -434,9 +441,9 @@ public class UtilLib {
      * @param pos
      */
     public static void write(NBTTagCompound nbt, String base, BlockPos pos) {
-        nbt.setInteger(base + "_x", pos.getX());
-        nbt.setInteger(base + "_y", pos.getY());
-        nbt.setInteger(base + "_z", pos.getZ());
+        nbt.setInt(base + "_x", pos.getX());
+        nbt.setInt(base + "_y", pos.getY());
+        nbt.setInt(base + "_z", pos.getZ());
     }
 
     /**
@@ -447,7 +454,7 @@ public class UtilLib {
      * @return
      */
     public static BlockPos readPos(NBTTagCompound nbt, String base) {
-        return new BlockPos(nbt.getInteger(base + "_x"), nbt.getInteger(base + "_y"), nbt.getInteger(base + "_z"));
+        return new BlockPos(nbt.getInt(base + "_x"), nbt.getInt(base + "_y"), nbt.getInt(base + "_z"));
     }
 
     /**
@@ -495,7 +502,7 @@ public class UtilLib {
     }
 
     private static ChunkPos isBiomeAt(World world, int x, int z, List<Biome> biomes) {
-        BlockPos pos = world.getBiomeProvider().findBiomePosition(x, z, 32, biomes, new Random());
+        BlockPos pos = world.getChunkProvider().getChunkGenerator().getBiomeProvider().findBiomePosition(x, z, 32, biomes, new Random());
         if (pos != null) {
             return new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4);
         }
@@ -511,7 +518,7 @@ public class UtilLib {
      * @param listener Will be notified about status updates. Can be null
      * @return
      */
-    public static ChunkPos findNearBiome(World world, BlockPos center, int maxDist, List<Biome> biomes, ICommandSender listener) {
+    public static ChunkPos findNearBiome(World world, BlockPos center, int maxDist, List<Biome> biomes, ICommandSource listener) {
         long start = System.currentTimeMillis();
         maxDist = (maxDist / 20) * 20;//Round it
         long maxop = (((long) maxDist) * maxDist + maxDist) / 2;
@@ -522,7 +529,7 @@ public class UtilLib {
                 if (cz % 4 != 0) continue;
                 loc = isBiomeAt(world, center.getX() + (cx << 4), center.getZ() + (cz << 4), biomes);
                 if (loc != null) {
-                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome %d %d", (int) (System.currentTimeMillis() - start), loc.x, loc.z);
+                    LOGGER.trace("Took {} ms to find a vampire biome {} {}", (int) (System.currentTimeMillis() - start), loc.x, loc.z);
                     return loc;
                 }
                 if (cz == i && cx < 0) {
@@ -535,7 +542,7 @@ public class UtilLib {
                 if (cx2 % 4 != 0) continue;
                 loc = isBiomeAt(world, center.getX() + (cx2 << 4), center.getZ() + (cz << 4), biomes);
                 if (loc != null) {
-                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome %d %d", (int) (System.currentTimeMillis() - start), loc.x, loc.z);
+                    LOGGER.trace("Took {} ms to find a vampire biome {} {}", (int) (System.currentTimeMillis() - start), loc.x, loc.z);
                     return loc;
                 }
                 if (cx == i - 1 && cz < 0) {
@@ -546,43 +553,35 @@ public class UtilLib {
             if (listener != null && (i * 10) % maxDist == 0) {
                 long op = (((long) i) * i + i) / 2;
                 double perc = ((double) op / maxop) * 100;
-                VampirismMod.log.i("UtilLib", "Search %s percent finished", (int) perc);
+                LOGGER.trace("Search {} percent finished", (int) perc);
                 //listener.addChatMessage(new TextComponentString(((int) perc) + "% finished")); //TODO maybe add back async
             }
 
         }
-        VampLib.log.d("UtilLib", "Took %d ms to not find a vampire biome", (int) (System.currentTimeMillis() - start));
+        LOGGER.trace("Took {} ms to not find a vampire biome", (int) (System.currentTimeMillis() - start));
         return null;
     }
 
     public static boolean isPlayerOp(EntityPlayer player) {
-        return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
+        return ServerLifecycleHooks.getCurrentServer().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
     }
 
     public static boolean isSameInstanceAsServer() {
-        return FMLCommonHandler.instance().getMinecraftServerInstance() != null;
+        return ServerLifecycleHooks.getCurrentServer() != null;
     }
 
-    public static String translate(String key) {
-        if (I18n.canTranslate(key)) {
-            return I18n.translateToLocal(key);
+    public static String translate(String key, Object... format) {
+        if (I18n.hasKey(key)) {
+            return I18n.format(key, format);
         } else {
-            return I18n.translateToFallback(key);
+            return key;
         }
     }
 
-    public static String translateFormatted(String key, Object... format) {
-        String s = translate(key);
-        try {
-            return String.format(s, format);
-        } catch (IllegalFormatException e) {
-            VampLib.log.e("Translate", e, "Formatting Error for %s and arguments(%s)", key, format);
-            return "Formatting Error: " + e.getMessage();
-        }
-    }
+
 
     public static String aiTaskListToStringDebug(EntityAITasks tasks) {
-        Collection c = ReflectionHelper.getPrivateValue(EntityAITasks.class, tasks, "executingTaskEntries");
+        Collection c = ObfuscationReflectionHelper.getPrivateValue(EntityAITasks.class, tasks, "executingTaskEntries");
         Iterator var1 = c.iterator();
         if (!var1.hasNext()) {
             return "[]";
@@ -609,10 +608,10 @@ public class UtilLib {
      * @return The stacks NBT Tag
      */
     public static NBTTagCompound checkNBT(ItemStack stack) {
-        if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+        if (!stack.hasTag()) {
+            stack.setTag(new NBTTagCompound());
         }
-        return stack.getTagCompound();
+        return stack.getTag();
     }
 
     public static float[] getColorComponents(int color) {

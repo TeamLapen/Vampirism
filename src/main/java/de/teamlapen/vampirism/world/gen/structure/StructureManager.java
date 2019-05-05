@@ -28,7 +28,7 @@ public class StructureManager {
     private static void loadTemplate(Structure structure) {
         InputStream input = StructureManager.class.getResourceAsStream("/structures/" + structure.name + ".nbt");
         if (input == null) {
-            VampirismMod.log.e(TAG, "Failed to locate structure file %s", structure.name);
+            LOGGER.error("Failed to locate structure file %s", structure.name);
             return;
         }
         try {
@@ -39,7 +39,7 @@ public class StructureManager {
             if (structure.loot) template.setLootTable(LootHandler.addStructureLootTable(structure.name));
 
         } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "Failed to load structure file %s", structure.name);
+            LOGGER.error(e, "Failed to load structure file %s", structure.name);
         }
 
     }

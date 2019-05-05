@@ -12,7 +12,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -54,7 +54,7 @@ public class BlockPedestal extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return face == EnumFacing.DOWN ? BlockFaceShape.CENTER_BIG : BlockFaceShape.UNDEFINED;
     }
 
@@ -97,7 +97,7 @@ public class BlockPedestal extends VampirismBlockContainer {
     }
 
     @Nullable
-    private TilePedestal getTileEntity(IBlockAccess world, BlockPos pos) {
+    private TilePedestal getTileEntity(IBlockReader world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof TilePedestal) {
             return (TilePedestal) tile;

@@ -76,8 +76,8 @@ public class Configs {
         File mainConfigFile = new File(configDir, REFERENCE.MODID + ".cfg");
         main_config = new Configuration(mainConfigFile, REFERENCE.VERSION);
         loadConfiguration(false);
-        if (updated_vampirism) VampirismMod.log.i(TAG, "Vampirism seems to have been updated");
-        VampirismMod.log.i(TAG, "Loaded configuration");
+        if (updated_vampirism) LOGGER.info("Vampirism seems to have been updated");
+        LOGGER.info("Loaded configuration");
     }
 
     private static void loadConfiguration(boolean dontSave) {
@@ -103,7 +103,7 @@ public class Configs {
             if (s.isEmpty()) continue;
             String[] t = s.split(":");
             if (t.length != 2) {
-                VampirismMod.log.w(TAG, "Cannot understand sundamage dimension line '%s'. Missing separator", s);
+                LOGGER.warn("Cannot understand sundamage dimension line '%s'. Missing separator", s);
                 continue;
             }
             try {
@@ -111,7 +111,7 @@ public class Configs {
                 boolean type = Integer.valueOf(t[1]) != 0;
                 ((SundamageRegistry) VampirismAPI.sundamageRegistry()).specifyConfiguredSundamageForDim(dim, type);
             } catch (NumberFormatException e) {
-                VampirismMod.log.w(TAG, "Cannot understand sundamage dimension line '%s'. Failed to convert numbers", s);
+                LOGGER.warn("Cannot understand sundamage dimension line '%s'. Failed to convert numbers", s);
                 continue;
             }
         }
@@ -122,7 +122,7 @@ public class Configs {
                 ResourceLocation res = new ResourceLocation(s);
                 ((SundamageRegistry) VampirismAPI.sundamageRegistry()).addNoSundamageBiomeConfigured(res);
             } catch (Exception e) {
-                VampirismMod.log.e(TAG, e, "Failed to parse no sundamage biome id %s", s);
+                LOGGER.error(e, "Failed to parse no sundamage biome id %s", s);
             }
 
         }
@@ -180,7 +180,7 @@ public class Configs {
     }
 
     public static void onConfigurationChanged() {
-        VampirismMod.log.i(TAG, "Reloading changed configuration");
+        LOGGER.info("Reloading changed configuration");
         loadConfiguration(false);
     }
 

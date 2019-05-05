@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModItems;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -14,7 +13,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-
 import java.util.Random;
 
 
@@ -68,8 +66,8 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
+    public void readAdditional(NBTTagCompound compound) {
+        super.readAdditional(compound);
         arrowStack.deserializeNBT(compound.getCompoundTag("arrowStack"));
     }
 
@@ -81,9 +79,9 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
-        compound.setTag("arrowStack", arrowStack.writeToNBT(new NBTTagCompound()));
+    public void writeAdditional(NBTTagCompound compound) {
+        super.writeAdditional(compound);
+        compound.setTag("arrowStack", arrowStack.write(new NBTTagCompound()));
     }
 
     @Override

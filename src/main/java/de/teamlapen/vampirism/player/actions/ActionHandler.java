@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.actions;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -179,7 +178,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
                 ResourceLocation id = new ResourceLocation(key);
                 ILastingAction<T> action = (ILastingAction<T>) VampirismRegistries.ACTIONS.getValue(id);
                 if (action == null) {
-                    VampirismMod.log.e(TAG, "Action %s is not available client side", key);
+                    LOGGER.error("Action %s is not available client side", key);
                 } else {
                     action.onActivatedClient(player);
                     activeTimers.put(id, active.getInteger(key));
@@ -336,7 +335,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             ResourceLocation id = new ResourceLocation(key);
             IAction action = VampirismRegistries.ACTIONS.getValue(id);
             if (action == null) {
-                VampirismMod.log.w(TAG, "Did not find action with key %s", key);
+                LOGGER.warn("Did not find action with key %s", key);
             } else {
                 map.put(id, nbt.getInteger(key));
             }

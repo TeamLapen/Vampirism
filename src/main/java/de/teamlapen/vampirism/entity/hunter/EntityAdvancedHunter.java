@@ -27,6 +27,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+
 import javax.annotation.Nullable;
 
 /**
@@ -120,8 +121,8 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tagCompund) {
-        super.readFromNBT(tagCompund);
+    public void read(NBTTagCompound tagCompund) {
+        super.read(tagCompund);
         if (tagCompund.hasKey("level")) {
             setLevel(tagCompund.getInteger("level"));
         }
@@ -149,8 +150,8 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
+    public void writeAdditional(NBTTagCompound nbt) {
+        super.writeAdditional(nbt);
         nbt.setInteger("level", getLevel());
         nbt.setInteger("type", getHunterType());
         nbt.setString("texture", getDataManager().get(TEXTURE));
@@ -170,8 +171,8 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    protected void entityInit() {
-        super.entityInit();
+    protected void registerData() {
+        super.registerData();
         SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomHunter(rand);
         this.getDataManager().register(LEVEL, -1);
         this.getDataManager().register(TYPE, supporter.typeId);

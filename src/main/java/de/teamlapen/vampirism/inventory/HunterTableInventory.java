@@ -4,6 +4,8 @@ import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.inventory.SimpleInventory;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.item.Item;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Inventory for the hunter table. Simply sets the inventory slots up and handles item (temporary) storage
@@ -19,8 +21,8 @@ public class HunterTableInventory extends SimpleInventory {
 
 
     @Override
-    public String getName() {
-        return ModBlocks.hunter_table.getTranslationKey() + ".name";
+    public ITextComponent getName() {
+        return new TextComponentTranslation(ModBlocks.hunter_table.getTranslationKey());
     }
 
 

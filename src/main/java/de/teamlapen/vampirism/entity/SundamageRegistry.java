@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityLivingBase;
@@ -85,7 +84,7 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void readFromNBTClient(NBTTagCompound nbt) {
+    public void readClient(NBTTagCompound nbt) {
         if (nbt.hasKey("sundamage")) {
             NBTTagCompound sundamage = nbt.getCompoundTag("sundamage");
             defaultSundamage = sundamage.getBoolean("default");
@@ -97,7 +96,7 @@ public class SundamageRegistry implements ISundamageRegistry {
                     boolean value = sundamage.getBoolean(s);
                     specifyConfiguredSundamageForDim(dim, value);
                 } catch (NumberFormatException e) {
-                    VampirismMod.log.e(TAG, "Failed to parse dimension id (%s) in update packet ", s);
+                    LOGGER.error("Failed to parse dimension id (%s) in update packet ", s);
                 }
             }
             noSundamageConfiguredBiomesIDs.clear();
@@ -141,7 +140,7 @@ public class SundamageRegistry implements ISundamageRegistry {
         sundamageDims.put(dimensionId, sundamage);
     }
 
-    public void writeToNBTServer(NBTTagCompound nbt) {
+    public void writeServer(NBTTagCompound nbt) {
         NBTTagCompound sundamage = new NBTTagCompound();
         NBTTagCompound dimensions = new NBTTagCompound();
         for (Map.Entry<Integer, Boolean> entry : sundamageConfiguredDims.entrySet()) {

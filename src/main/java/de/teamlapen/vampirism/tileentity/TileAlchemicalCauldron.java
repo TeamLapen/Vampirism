@@ -36,7 +36,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -230,13 +229,13 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     @Nonnull
     @Override
     public NBTTagCompound getUpdateTag() {
-        NBTTagCompound nbt = super.writeToNBT(new NBTTagCompound());
+        NBTTagCompound nbt = super.write(new NBTTagCompound());
         nbt.setBoolean("cooking", cookTime > 0 && isBurning());
         nbt.setBoolean("burning", burnTime > 0);
         nbt.setString("username", getOwnerName());
         ItemStack liquidItem = getStackInSlot(SLOT_LIQUID);
         if (liquidItem != null) {
-            nbt.setTag("liquidItem", liquidItem.writeToNBT(new NBTTagCompound()));
+            nbt.setTag("liquidItem", liquidItem.write(new NBTTagCompound()));
         }
         return nbt;
     }
@@ -317,8 +316,8 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tagCompound) {
-        super.readFromNBT(tagCompound);
+    public void read(NBTTagCompound tagCompound) {
+        super.read(tagCompound);
         if (tagCompound.hasKey("burntime")) {
             this.burnTime = tagCompound.getInteger("burntime");
             this.cookTime = tagCompound.getInteger("cooktime");
@@ -426,8 +425,8 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        super.write(compound);
         compound.setInteger("burntime", this.burnTime);
         compound.setInteger("cooktime", this.cookTime);
         compound.setInteger("cooktime_total", this.totalCookTime);
@@ -511,7 +510,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     @Nullable
     EntityPlayer getOwner() {
         if (ownerID != null && !world.isRemote) {
-            return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(ownerID);
+            return ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByUUID(ownerID);
         }
         return null;
     }

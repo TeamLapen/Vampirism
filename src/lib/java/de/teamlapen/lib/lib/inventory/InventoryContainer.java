@@ -22,17 +22,17 @@ public class InventoryContainer extends Container {
         tile = te;
         InventorySlot[] slots = tile.getSlots();
         for (int i = 0; i < slots.length; i++) {
-            this.addSlotToContainer(new FilterSlot(tile, i, slots[i].xDisplay, slots[i].yDisplay, slots[i].itemSelector));
+            this.addSlot(new FilterSlot(tile, i, slots[i].xDisplay, slots[i].yDisplay, slots[i].itemSelector));
         }
 
         int i;
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlotToContainer(new net.minecraft.inventory.Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new net.minecraft.inventory.Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
         for (i = 0; i < 9; ++i) {
-            this.addSlotToContainer(new net.minecraft.inventory.Slot(invPlayer, i, 8 + i * 18, 142));
+            this.addSlot(new net.minecraft.inventory.Slot(invPlayer, i, 8 + i * 18, 142));
         }
 
         onInventoryChanged();

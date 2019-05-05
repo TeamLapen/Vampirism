@@ -1,7 +1,8 @@
 package de.teamlapen.lib.lib.util;
 
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
+
+import de.teamlapen.lib.lib.config.forge.ConfigCategory;
+import de.teamlapen.lib.lib.config.forge.Configuration;
 
 /**
  * Handles compatibility for a single mod.

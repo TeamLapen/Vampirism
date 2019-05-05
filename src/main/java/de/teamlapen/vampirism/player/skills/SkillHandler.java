@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.skills;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -49,7 +48,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
                 return Result.PARENT_NOT_ENABLED;
             }
         } else {
-            VampirismMod.log.w(TAG, "Node for skill %s could not be found", skill);
+            LOGGER.warn("Node for skill %s could not be found", skill);
             return Result.NOT_FOUND;
         }
     }
@@ -146,7 +145,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         for (String id : nbt.getCompoundTag("skills").getKeySet()) {
             ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(id));
             if (skill == null) {
-                VampirismMod.log.w(TAG, "Skill %s does not exist anymore", id);
+                LOGGER.warn("Skill %s does not exist anymore", id);
                 continue;
             }
             enableSkill(skill);
@@ -161,7 +160,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         for (String id : nbt.getCompoundTag("skills").getKeySet()) {
             ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(id));
             if (skill == null) {
-                VampirismMod.log.e(TAG, "Skill %s does not exist on client!!!", id);
+                LOGGER.error("Skill %s does not exist on client!!!", id);
                 continue;
             }
             if (old.contains(skill)) {

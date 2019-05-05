@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.config;
 
 import de.teamlapen.lib.lib.config.BalanceValues;
-import de.teamlapen.vampirism.VampirismMod;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -45,7 +44,7 @@ public class Balance {
             loadConfiguration();
         }
 
-        VampirismMod.log.i(TAG, "Loaded balance configuration");
+        LOGGER.info("Loaded balance configuration");
     }
 
     private static <T extends BalanceValues> T addBalance(T cat) {
@@ -60,7 +59,7 @@ public class Balance {
     }
 
     public static void onConfigurationChanged() {
-        VampirismMod.log.i(TAG, "Reloading changed balance configuration");
+        LOGGER.info("Reloading changed balance configuration");
         loadConfiguration();
     }
 

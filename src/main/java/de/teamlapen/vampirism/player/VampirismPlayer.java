@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.player;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -84,7 +83,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
     @Override
     public boolean isRemote() {
         if (player.getEntityWorld() == null) {
-            VampirismMod.log.e(TAG, new Throwable("World not loaded").fillInStackTrace(), "Trying to check if remote, but world is not set yet");
+            LOGGER.error(new Throwable("World not loaded").fillInStackTrace(), "Trying to check if remote, but world is not set yet");
             return false;
         }
         return player.getEntityWorld().isRemote;

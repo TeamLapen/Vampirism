@@ -50,14 +50,14 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
     @Nonnull
     @Override
     public NBTTagCompound getUpdateTag() {
-        return writeToNBT(new NBTTagCompound());
+        return write(new NBTTagCompound());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         FluidStack old = tank.getFluid();
-        this.readFromNBT(pkt.getNbtCompound());
+        this.read(pkt.getNbtCompound());
         if (old != null && !old.isFluidStackIdentical(tank.getFluid()) || old == null && tank.getFluid() != null) {
             this.world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
         }

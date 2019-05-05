@@ -59,18 +59,18 @@ public class ModVillages {
             try {
                 ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_size, "size", SRGNAMES.MapGenVillage_size);
             } catch (ReflectionHelper.UnableToAccessFieldException e) {
-                VampirismMod.log.e(TAG, e, "Could not modify field 'terrainType' in MapGenVillage");
+                LOGGER.error(e, "Could not modify field 'terrainType' in MapGenVillage");
             }
 
             try {
                 ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_density, "distance", SRGNAMES.MapGenVillage_distance);
             } catch (ReflectionHelper.UnableToAccessFieldException e) {
-                VampirismMod.log.e(TAG, e, "Could not modify field for village density in MapGenVillage");
+                LOGGER.error(e, "Could not modify field for village density in MapGenVillage");
             }
             try {
                 ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_min_dist, "minTownSeparation", SRGNAMES.MapGenVillage_minTownSeperation);
             } catch (ReflectionHelper.UnableToAccessFieldException e) {
-                VampirismMod.log.e(TAG, e, "Could not modify field for village min dist in MapGenVillage");
+                LOGGER.error(e, "Could not modify field for village min dist in MapGenVillage");
             }
 
 
@@ -78,7 +78,7 @@ public class ModVillages {
 
         } else {
             //Should not be possible
-            VampirismMod.log.e(TAG, "VillageGen (%s) is not an instance of MapGenVillage, can't modify gen", mapGenVillage);
+            LOGGER.error("VillageGen (%s) is not an instance of MapGenVillage, can't modify gen", mapGenVillage);
         }
     }
 
@@ -92,7 +92,7 @@ public class ModVillages {
             hunterPriest.addTrade(3, new EntityVillager.ListItemForEmeralds(ModItems.holy_salt, new EntityVillager.PriceInfo(-10, -3)));
             hunterPriest.addTrade(4, new EntityVillager.ListItemForEmeralds(Items.EXPERIENCE_BOTTLE, new EntityVillager.PriceInfo(3, 11)));
         } else {
-            VampirismMod.log.w(TAG, "Did not find vanilla priest profession");
+            LOGGER.warn("Did not find vanilla priest profession");
         }
         VillagerRegistry.VillagerCareer normal_hunter_expert = new VillagerRegistry.VillagerCareer(profession_hunter_expert, "vampirism.hunter_expert");
         normal_hunter_expert.addTrade(1, new EntityVillager.EmeraldForItems(ModItems.vampire_fang, new EntityVillager.PriceInfo(20, 30)));

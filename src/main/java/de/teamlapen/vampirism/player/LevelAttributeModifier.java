@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -53,7 +52,7 @@ public class LevelAttributeModifier {
     public static void applyModifier(EntityPlayer player, IAttribute attribute, String name, int level, int lcap, double max, double type, int operation, boolean evenIntOnly) {
         UUID mod = modifiers.get(attribute);
         if (mod == null) {
-            VampirismMod.log.w(TAG, "Cannot modify %s, no modifier is registered", attribute);
+            LOGGER.warn("Cannot modify %s, no modifier is registered", attribute);
             return;
         }
         double m = calculateModifierValue(level, lcap, max, type);

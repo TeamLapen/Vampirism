@@ -1,10 +1,10 @@
 package de.teamlapen.lib.lib.client.render;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.model.ModelRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,7 +42,7 @@ public class RenderUtil {
 
     private static void startGlowing(boolean entityInvisible, float brightness){
         GlStateManager.enableBlend();
-        GlStateManager.enableAlpha();
+        GlStateManager.enableAlphaTest();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
 
         if (entityInvisible) {
@@ -50,19 +50,16 @@ public class RenderUtil {
         } else {
             GlStateManager.depthMask(true);
         }
-
-
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightness, 0);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, brightness, 0.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getInstance().entityRenderer.setupFogColor(true);
     }
 
     private static void endGlowing(int brightnessForRender){
         Minecraft.getInstance().entityRenderer.setupFogColor(false);
-        int i = brightnessForRender;
-        int j = i % 65536;
-        int k = i / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
+        int j = brightnessForRender % 65536;
+        int k = brightnessForRender / 65536;
+        OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, j, k);
         GlStateManager.disableBlend();
     }
 

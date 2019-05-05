@@ -54,8 +54,8 @@ public class EntityThrowableItem extends EntityThrowable {
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
+    public void readAdditional(NBTTagCompound compound) {
+        super.readAdditional(compound);
         ItemStack stack = new ItemStack(compound.getCompoundTag("thrownItem"));
         if (stack.isEmpty()) {
             this.remove();
@@ -65,17 +65,17 @@ public class EntityThrowableItem extends EntityThrowable {
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
+    public void writeAdditional(NBTTagCompound compound) {
+        super.writeAdditional(compound);
         ItemStack stack = getItem();
         if (!stack.isEmpty()) {
-            compound.setTag("thrownItem", stack.writeToNBT(new NBTTagCompound()));
+            compound.setTag("thrownItem", stack.write(new NBTTagCompound()));
         }
     }
 
     @Override
-    protected void entityInit() {
-        super.entityInit();
+    protected void registerData() {
+        super.registerData();
         this.getDataManager().register(ITEM, ItemStack.EMPTY);
     }
 

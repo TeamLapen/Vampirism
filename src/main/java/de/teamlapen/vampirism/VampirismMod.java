@@ -3,7 +3,6 @@ package de.teamlapen.vampirism;
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.lib.lib.util.Logger;
 import de.teamlapen.lib.lib.util.ModCompatLoader;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.VReference;
@@ -67,6 +66,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.io.File;
@@ -77,7 +78,7 @@ import java.io.File;
 @Mod(value = REFERENCE.MODID)
 public class VampirismMod {
 
-    public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
+    private final static Logger log = LogManager.getLogger();
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
     public static final ItemGroup creativeTab = new ItemGroup(REFERENCE.MODID) {
 

@@ -37,7 +37,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
 
@@ -103,7 +102,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     @Override
     public void drinkBlood(int amt, float saturationMod) {
         super.drinkBlood(amt, saturationMod);
-        boolean dedicated = FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer();
+        boolean dedicated = ServerLifecycleHooks.getCurrentServer().isDedicatedServer();
         bloodtimer += amt * 40 + this.getRNG().nextInt(1000) * (dedicated ? 2 : 1);
     }
 
@@ -192,8 +191,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tagCompund) {
-        super.readFromNBT(tagCompund);
+    public void read(NBTTagCompound tagCompund) {
+        super.read(tagCompund);
         if (tagCompund.hasKey("level")) {
             setLevel(tagCompund.getInteger("level"));
         }
@@ -236,8 +235,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
+    public void writeAdditional(NBTTagCompound nbt) {
+        super.writeAdditional(nbt);
         nbt.setInteger("level", getLevel());
         if (village_attack_area != null) {
             nbt.setIntArray("village_attack_area", UtilLib.bbToInt(village_attack_area));
@@ -269,8 +268,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
-    protected void entityInit() {
-        super.entityInit();
+    protected void registerData() {
+        super.registerData();
         getDataManager().register(LEVEL, -1);
     }
 

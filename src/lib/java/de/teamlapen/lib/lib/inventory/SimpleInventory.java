@@ -3,9 +3,6 @@ package de.teamlapen.lib.lib.inventory;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Simple Inventory
@@ -39,11 +36,6 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
             onContentChanged();
         }
         return removed;
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName());
     }
 
     @Override

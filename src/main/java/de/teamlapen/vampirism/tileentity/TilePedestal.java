@@ -102,7 +102,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     @Nonnull
     @Override
     public NBTTagCompound getUpdateTag() {
-        return writeToNBT(new NBTTagCompound());
+        return write(new NBTTagCompound());
     }
 
     @Override
@@ -144,7 +144,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
+    public void read(NBTTagCompound compound) {
         if (compound.hasKey("item")) {
             this.internalStack = new ItemStack(compound.getCompoundTag("item"));
         } else {
@@ -204,13 +204,13 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
 
     @Nonnull
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound write(NBTTagCompound compound) {
         if (hasStack()) {
             compound.setTag("item", this.internalStack.serializeNBT());
         }
         compound.setInteger("blood_stored", bloodStored);
         compound.setInteger("charging_ticks", chargingTicks);
-        return super.writeToNBT(compound);
+        return super.write(compound);
     }
 
     private void drainBlood() {

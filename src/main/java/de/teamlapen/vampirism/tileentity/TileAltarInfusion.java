@@ -180,18 +180,18 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     @Override
     public NBTTagCompound getUpdateTag() {
-        return writeToNBT(new NBTTagCompound());
+        return write(new NBTTagCompound());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        this.readFromNBT(pkt.getNbtCompound());
+        this.read(pkt.getNbtCompound());
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tagCompound) {
-        super.readFromNBT(tagCompound);
+    public void read(NBTTagCompound tagCompound) {
+        super.read(tagCompound);
         int tick = tagCompound.getInteger("tick");
         if (tick > 0 && player == null) {
             try {
@@ -199,7 +199,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 this.runningTick = tick;
                 this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
             } catch (NullPointerException e) {
-                VampirismMod.log.w(TAG, "Failed to find player %d", tagCompound.getInteger("playerUUID"));
+                LOGGER.warn("Failed to find player %d", tagCompound.getInteger("playerUUID"));
             }
         }
         if (player == null) {
@@ -284,7 +284,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             if (!world.isRemote) {
                 IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
                 if (handler.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1) {
-                    VampirismMod.log.w(TAG, "Player %s changed level while the ritual was running. Cannot levelup.", player);
+                    LOGGER.warn("Player %s changed level while the ritual was running. Cannot levelup.", player);
                     return;
                 }
                 handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
@@ -304,8 +304,8 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        NBTTagCompound nbt = super.writeToNBT(compound);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        NBTTagCompound nbt = super.write(compound);
         nbt.setInteger("tick", runningTick);
         if (player != null) {
             nbt.setString("playerUUID", player.getUniqueID().toString());

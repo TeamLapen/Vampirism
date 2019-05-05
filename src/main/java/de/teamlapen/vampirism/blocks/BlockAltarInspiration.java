@@ -17,7 +17,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -62,7 +62,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
     }
 
     @Override
-    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public IBlockState getExtendedState(IBlockState state, IBlockReader world, BlockPos pos) {
         IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
         TileAltarInspiration tile = (TileAltarInspiration) world.getTileEntity(pos);
         if (tile != null) {
@@ -119,7 +119,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockReader blockAccess, BlockPos pos, EnumFacing side) {
         return Block.shouldSideBeRendered(blockState, blockAccess, pos, side);
     }
 

@@ -296,14 +296,14 @@ public class TileTotem extends TileEntity implements ITickable {
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound nbt = new NBTTagCompound();
-        writeToNBT(nbt);
+        write(nbt);
         nbt.setIntArray("village_bb", UtilLib.bbToInt(getAffectedArea()));
         return nbt;
     }
 
     @Override
     public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
-        readFromNBT(tag);
+        read(tag);
         if (tag.hasKey("village_bb")) {
             if (controllingFaction == VReference.VAMPIRE_FACTION) {
                 MutableBoundingBox bb = new MutableBoundingBox(tag.getIntArray("village_bb"));
@@ -393,8 +393,8 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
+    public void read(NBTTagCompound compound) {
+        super.read(compound);
 
         String controlling = compound.getString("controlling");
         String capturing = compound.getString("capturing");
@@ -445,8 +445,8 @@ public class TileTotem extends TileEntity implements ITickable {
         if (!this.isComplete) {
             return 0.0F;
         } else {
-            int i = (int) (this.world.getTotalWorldTime() - this.beamRenderCounter);
-            this.beamRenderCounter = this.world.getTotalWorldTime();
+            int i = (int) (this.world.getGameTime() - this.beamRenderCounter);
+            this.beamRenderCounter = this.world.getGameTime();
 
             if (i > 1) {
                 this.beamRenderScale -= (float) i / 40.0F;
@@ -468,7 +468,7 @@ public class TileTotem extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        int time = (int) this.world.getTotalWorldTime();
+        int time = (int) this.world.getGameTime();
 
         //Remote ----------------------------------
         if (this.world.isRemote) {
@@ -497,7 +497,7 @@ public class TileTotem extends TileEntity implements ITickable {
                         }
                     }
                     if (this.getVillage() == null) {
-                        VampirismMod.log.w(TAG, "Freshly generated totem cannot find village");
+                        LOGGER.warn("Freshly generated totem cannot find village");
                     } else {
                         this.capturingFaction = forced_faction;
                         completeCapture(false);
@@ -724,7 +724,7 @@ public class TileTotem extends TileEntity implements ITickable {
 
     @Nonnull
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound write(NBTTagCompound compound) {
         compound.setString("controlling", controllingFaction == null ? "" : controllingFaction.name());
         compound.setString("capturing", capturingFaction == null ? "" : capturingFaction.name());
         if (capturingFaction != null) {
@@ -733,7 +733,7 @@ public class TileTotem extends TileEntity implements ITickable {
             compound.setString("phase", capture_phase.name());
             compound.setInteger("rem_enem", capture_remainingEnemies_cache);
         }
-        return super.writeToNBT(compound);
+        return super.write(compound);
     }
 
     private void abortCapture(boolean notifyPlayer) {
@@ -752,7 +752,7 @@ public class TileTotem extends TileEntity implements ITickable {
         if (!this.world.isRemote)
             this.updateCreaturesOnCapture();
         if (capturingFaction == null) {
-            VampirismMod.log.w(TAG, "Completing null capture. That should not happen");
+            LOGGER.warn("Completing null capture. That should not happen");
             return;
         }
         this.setControllingFaction(capturingFaction);
@@ -854,7 +854,7 @@ public class TileTotem extends TileEntity implements ITickable {
             id = getEntityForFaction(this.controllingFaction);
         }
         if (id == null) {
-            VampirismMod.log.w(TAG, "No village capture entity registered for %s", attack ? this.capturingFaction : this.controllingFaction);
+            LOGGER.warn("No village capture entity registered for %s", attack ? this.capturingFaction : this.controllingFaction);
             return;
         }
         Entity e = EntityList.createEntityByIDFromName(id, world);
@@ -872,7 +872,7 @@ public class TileTotem extends TileEntity implements ITickable {
                 ((IVillageCaptureEntity) e).defendVillage(this.getAffectedArea());
             }
         } else if (e != null) {
-            VampirismMod.log.w(TAG, "Creature registered for village capture does not implement IVillageCaptureEntity");
+            LOGGER.warn("Creature registered for village capture does not implement IVillageCaptureEntity");
         } else {
             VampirismMod.log.t("Failed to spawn creature");
         }
@@ -941,7 +941,7 @@ public class TileTotem extends TileEntity implements ITickable {
         box = new AxisAlignedBB(b.getX() - r, b.getY() - 10, b.getZ() - r, b.getX() + r, b.getY() + 30, b.getZ() + r);
 
         if (!box.contains(new Vec3d(this.pos))) {
-            VampirismMod.log.w(TAG, "Totem outside of calculated village bb %s %s", box, this.pos);
+            LOGGER.warn("Totem outside of calculated village bb %s %s", box, this.pos);
         }
         double xLength = box.maxX - box.minX;
         double zLength = box.maxZ - box.minZ;

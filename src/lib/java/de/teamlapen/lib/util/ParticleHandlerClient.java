@@ -1,6 +1,5 @@
 package de.teamlapen.lib.util;
 
-import de.teamlapen.lib.VampLib;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,6 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -19,11 +20,14 @@ import java.util.Random;
  */
 @OnlyIn(Dist.CLIENT)
 public class ParticleHandlerClient extends ParticleHandler {
+
+    private final static Logger LOGGER = LogManager.getLogger();
+
     @Override
     public void spawnParticle(World world, ResourceLocation particle, double posX, double posY, double posZ, Object... param) {
         ICustomParticleFactory factory = factories.get(particle);
         if (factory == null) {
-            VampLib.log.w(TAG, "Particle %s is not registered", particle);
+            LOGGER.warn("Particle {} is not registered", particle);
             return;
         }
         Particle fx = factory.createParticle(world, posX, posY, posZ, param);
@@ -64,7 +68,7 @@ public class ParticleHandlerClient extends ParticleHandler {
     Object[] getParticleParam(ResourceLocation particle, NBTTagCompound data) {
         ICustomParticleFactory factory = factories.get(particle);
         if (factory == null) {
-            VampLib.log.w(TAG, "Particle %s is not registered", particle);
+            LOGGER.warn("Particle {} is not registered", particle);
             return null;
         }
         return factory.readParticleInfo(data);

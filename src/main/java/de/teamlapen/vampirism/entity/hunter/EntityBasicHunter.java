@@ -252,8 +252,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tagCompund) {
-        super.readFromNBT(tagCompund);
+    public void read(NBTTagCompound tagCompund) {
+        super.read(tagCompund);
         if (tagCompund.hasKey("level")) {
             setLevel(tagCompund.getInteger("level"));
         }
@@ -314,8 +314,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
+    public void writeAdditional(NBTTagCompound nbt) {
+        super.writeAdditional(nbt);
         nbt.setInteger("level", getLevel());
         nbt.setBoolean("crossbow", isCrossbowInMainhand());
         if (village_attack_area != null) {
@@ -339,8 +339,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
 
     @Override
-    protected void entityInit() {
-        super.entityInit();
+    protected void registerData() {
+        super.registerData();
         this.getDataManager().register(LEVEL, -1);
         this.getDataManager().register(SWINGING_ARMS, false);
         this.getDataManager().register(WATCHED_ID, 0);

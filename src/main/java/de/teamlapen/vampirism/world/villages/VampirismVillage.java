@@ -140,7 +140,7 @@ public class VampirismVillage implements IVampirismVillage {
         this.underAttack = attack;
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void read(NBTTagCompound nbt) {
 
     }
 
@@ -190,7 +190,7 @@ public class VampirismVillage implements IVampirismVillage {
     public void tick(long worldTime) {
         this.tickCounter = (int) worldTime;
 
-        if (totemLocation != null && village.world.getTotalWorldTime() % 1024 == 0) {
+        if (totemLocation != null && village.world.getGameTime() % 1024 == 0) {
             IBlockState state = village.world.getBlockState(totemLocation);
             if (!state.getBlock().equals(ModBlocks.totem_top)) {
                 removeTotemAndReset(totemLocation);
@@ -206,7 +206,7 @@ public class VampirismVillage implements IVampirismVillage {
 
     }
 
-    public void writeToNBT(NBTTagCompound nbt) {
+    public void write(NBTTagCompound nbt) {
 
     }
 
@@ -214,13 +214,13 @@ public class VampirismVillage implements IVampirismVillage {
 
         @Override
         public void readNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, EnumFacing side, NBTBase nbt) {
-            ((VampirismVillage) instance).readFromNBT((NBTTagCompound) nbt);
+            ((VampirismVillage) instance).read((NBTTagCompound) nbt);
         }
 
         @Override
         public NBTBase writeNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, EnumFacing side) {
             NBTTagCompound nbt = new NBTTagCompound();
-            ((VampirismVillage) instance).writeToNBT(nbt);
+            ((VampirismVillage) instance).write(nbt);
             return nbt;
         }
     }

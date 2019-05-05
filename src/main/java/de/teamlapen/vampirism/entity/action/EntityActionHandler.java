@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
+
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -185,14 +186,14 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         return isPlayerTarget;
     }
 
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void read(NBTTagCompound nbt) {
         if (nbt.hasKey("activeAction")) {
             deactivateAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation(nbt.getString("activeAction"))));
             isPlayerTarget = true;
         }
     }
 
-    public void writeToNBT(NBTTagCompound nbt) {
+    public void write(NBTTagCompound nbt) {
         if (isPlayerTarget() && getAction() != null) {
             nbt.setString("activeAction", action.getRegistryName().toString());
         }

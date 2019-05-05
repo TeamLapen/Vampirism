@@ -46,7 +46,7 @@ public class TileCoffin extends TileEntity implements ITickable {
 
     @Override
     public NBTTagCompound getUpdateTag() {
-        return writeToNBT(new NBTTagCompound());
+        return write(new NBTTagCompound());
     }
 
     @Override
@@ -59,12 +59,12 @@ public class TileCoffin extends TileEntity implements ITickable {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-        readFromNBT(packet.getNbtCompound());
+        read(packet.getNbtCompound());
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-        super.readFromNBT(par1NBTTagCompound);
+    public void read(NBTTagCompound par1NBTTagCompound) {
+        super.read(par1NBTTagCompound);
 
         this.color = par1NBTTagCompound.getInteger("color");
 
@@ -93,8 +93,8 @@ public class TileCoffin extends TileEntity implements ITickable {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        NBTTagCompound nbt = super.writeToNBT(compound);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        NBTTagCompound nbt = super.write(compound);
         nbt.setInteger("color", color);
         return nbt;
     }

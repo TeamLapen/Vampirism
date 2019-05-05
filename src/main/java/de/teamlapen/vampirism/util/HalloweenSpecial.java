@@ -13,7 +13,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -93,7 +92,7 @@ public class HalloweenSpecial {
         if (enabled) {
             tickTimer++;
             if (tickTimer % 200 == 99) {
-                for (EntityPlayerMP p : FMLCommonHandler.instance().getMinecraftServerInstance().getServer().getPlayerList().getPlayers()) {
+                for (EntityPlayerMP p : ServerLifecycleHooks.getCurrentServer().getServer().getPlayerList().getPlayers()) {
                     UUID u = p.getUniqueID();
                     if (!blacklist.contains(u)) {
                         EntityDraculaHalloween draculaHalloween = new EntityDraculaHalloween(p.getEntityWorld());

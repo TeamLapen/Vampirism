@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -24,7 +24,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.server.command.CommandTreeHelp;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -123,7 +122,7 @@ public class VampirismCommand extends BasicCommand {
                         }
                         if (handler.setFactionAndLevel(newFaction, level)) {
                             ITextComponent msg = player.getDisplayName().appendSibling(new TextComponentString(" is now a " + pfaction_names[i] + " level " + level));
-                            FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendMessage(msg);
+                            ServerLifecycleHooks.getCurrentServer().getPlayerList().sendMessage(msg);
                         } else {
                             throw new CommandException("commands.vampirism.failed_to_execute");
                         }
@@ -171,7 +170,7 @@ public class VampirismCommand extends BasicCommand {
                 } else {
                     if (handler.setFactionLevel(handler.getCurrentFaction(), currentLevel + 1)) {
                         ITextComponent msg = player.getDisplayName().appendSibling(new TextComponentString(" is now a " + handler.getCurrentFaction().name() + " level " + (currentLevel + 1)));
-                        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendMessage(msg);
+                        ServerLifecycleHooks.getCurrentServer().getPlayerList().sendMessage(msg);
                     } else {
                         throw new CommandException("commands.vampirism.failed_to_execute");
                     }

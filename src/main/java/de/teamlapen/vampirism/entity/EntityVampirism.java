@@ -172,8 +172,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt) {
-        super.readEntityFromNBT(nbt);
+    public void readAdditional(NBTTagCompound nbt) {
+        super.readAdditional(nbt);
         if (nbt.hasKey("home")) {
             saveHome = true;
             int[] h = nbt.getIntArray("home");
@@ -183,7 +183,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             }
         }
         if (entityActionHandler != null) {
-            entityActionHandler.readFromNBT(nbt);
+            entityActionHandler.read(nbt);
         }
         if (nbt.hasKey("entityclasstype")) {
             EntityClassType type = EntityClassType.getEntityClassType(nbt.getInteger("entityclasstype"));
@@ -203,8 +203,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
+    public void writeAdditional(NBTTagCompound nbt) {
+        super.writeAdditional(nbt);
         if (saveHome && hasHome()) {
             int[] h = { (int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ };
             nbt.setIntArray("home", h);
@@ -213,7 +213,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             }
         }
         if (entityActionHandler != null) {
-            entityActionHandler.writeToNBT(nbt);
+            entityActionHandler.write(nbt);
         }
         nbt.setInteger("entityclasstype", EntityClassType.getID(entityclass));
     }

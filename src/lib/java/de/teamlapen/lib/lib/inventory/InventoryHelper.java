@@ -6,11 +6,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -64,18 +67,17 @@ public class InventoryHelper {
     }
 
 
-    @Nullable
-    public static IItemHandler tryGetItemHandler(IBlockAccess world, BlockPos pos, @Nullable EnumFacing side) {
+    @Nonnull
+    public static LazyOptional<Pair<IItemHandler, Object>> tryGetItemHandler(IBlockReader world, BlockPos pos, @Nullable EnumFacing side) {
         IBlockState state = world.getBlockState(pos);
         if (state.getBlock().hasTileEntity(state)) {
             TileEntity tile = world.getTileEntity(pos);
             if (tile != null) {
-                if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
-                    return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
-                }
+                return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).map(capability -> ImmutablePair.of(capability, tile));
+
             }
         }
-        return null;
+        return LazyOptional.empty();
     }
 
 

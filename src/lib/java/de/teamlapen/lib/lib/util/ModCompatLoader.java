@@ -1,12 +1,13 @@
 package de.teamlapen.lib.lib.util;
 
 import com.google.common.collect.ImmutableList;
-import de.teamlapen.lib.VampLib;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
+import de.teamlapen.lib.lib.config.forge.ConfigCategory;
+import de.teamlapen.lib.lib.config.forge.Configuration;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
+import net.minecraftforge.fml.loading.FMLPaths;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class ModCompatLoader implements IInitListener {
 
-    private final static String TAG = "ModCompat";
+    private final static Logger LOGGER = LogManager.getLogger();
     private final String configName;
     private
     @Nullable
@@ -63,9 +64,9 @@ public class ModCompatLoader implements IInitListener {
     }
 
     @Override
-    public void onInitStep(Step step, FMLStateEvent event) {
-        if (step == Step.PRE_INIT) {
-            prepareModCompats(((FMLPreInitializationEvent) event).getModConfigurationDirectory());
+    public void onInitStep(Step step, ModLifecycleEvent event) {
+        if (step == Step.COMMON_SETUP) {
+            prepareModCompats(FMLPaths.CONFIGDIR.get().toFile());
         }
         Iterator<IModCompat> it = loadedModCompats.iterator();
         while (it.hasNext()) {
@@ -73,21 +74,22 @@ public class ModCompatLoader implements IInitListener {
             try {
                 next.onInitStep(step, event);
             } catch (Exception e) {
-                VampLib.log.e(TAG, "---------------------------------------------------------");
-                VampLib.log.e(TAG, e, "Mod Compat %s threw an exception during %s. Unloading.", next.getModID(), step);
-                VampLib.log.e(TAG, "---------------------------------------------------------");
+                LOGGER.error(LogUtil.COMPAT, "---------------------------------------------------------");
+                LOGGER.error(LogUtil.COMPAT, "Mod Compat {} threw an exception during {}. Unloading.", next.getModID(), step);
+                LOGGER.error(LogUtil.COMPAT, "Issue", e);
+                LOGGER.error(LogUtil.COMPAT, "---------------------------------------------------------");
                 it.remove();
             }
         }
     }
 
     private boolean isModLoaded(IModCompat modCompat) {
-        return Loader.isModLoaded(modCompat.getModID());
+        return ModList.get().isLoaded(modCompat.getModID());
     }
 
     private void prepareModCompats(File configDir) {
         if (availableModCompats == null) {
-            VampLib.log.w(TAG, "Trying to load mod compat twice");
+            LOGGER.warn("Trying to load mod compat twice");
             return;
         }
         config = new Configuration(new File(configDir, configName));
@@ -100,7 +102,7 @@ public class ModCompatLoader implements IInitListener {
                 if (config.getBoolean("enable_compat_" + modCompat.getModID(), compatCat.getName(), true, "If the compatibility for this mod should be loaded")) {
                     modCompat.loadConfigs(config, compatCat);
                     loaded.add(modCompat);
-                    VampLib.log.d(TAG, "Prepared %s compatibility", modCompat.getModID());
+                    LOGGER.trace(LogUtil.COMPAT, "Prepared {} compatibility", modCompat.getModID());
                 }
             }
         }

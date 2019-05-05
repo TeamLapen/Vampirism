@@ -23,7 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -88,7 +88,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockReader source, BlockPos pos) {
 
         return BOUNDING_BOX;
     }
@@ -181,7 +181,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     @Nullable
-    private TileGarlicBeacon getTile(IBlockAccess world, BlockPos pos) {
+    private TileGarlicBeacon getTile(IBlockReader world, BlockPos pos) {
         TileEntity t = world.getTileEntity(pos);
         if (t instanceof TileGarlicBeacon) {
             return (TileGarlicBeacon) t;

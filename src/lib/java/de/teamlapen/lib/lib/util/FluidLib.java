@@ -1,10 +1,12 @@
 package de.teamlapen.lib.lib.util;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,11 +39,8 @@ public class FluidLib {
         return stackA == null && stackB == null || ((stackA != null && stackB != null) && stackA.isFluidStackIdentical(stackB));
     }
 
-    public static boolean hasFluidItemCap(@Nonnull ItemStack stack) {
-        return stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
-    }
 
-    public static IFluidHandler getFluidItemCap(@Nonnull ItemStack stack) {
+    public static LazyOptional<IFluidHandlerItem> getFluidItemCap(@Nonnull ItemStack stack) {
         return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
     }
 

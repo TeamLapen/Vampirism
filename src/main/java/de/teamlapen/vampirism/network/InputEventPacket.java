@@ -100,7 +100,7 @@ public class InputEventPacket implements IMessage {
                 try {
                     id = Integer.parseInt(message.param);
                 } catch (NumberFormatException e) {
-                    VampirismMod.log.e(TAG, e, "Receiving invalid param for %s", message.action);
+                    LOGGER.error(e, "Receiving invalid param for %s", message.action);
                 }
                 if (id != 0) {
                     VampirePlayer.get(player).biteEntity(id);
@@ -127,10 +127,10 @@ public class InputEventPacket implements IMessage {
                                 default://Everything alright
                             }
                         } else {
-                            VampirismMod.log.e(TAG, "Failed to find action with id %d", id);
+                            LOGGER.error("Failed to find action with id %d", id);
                         }
                     } else {
-                        VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot use action %d", player, id);
+                    LOGGER.error("Player %s is in no faction, so he cannot use action %d", player, id);
                     }
 
 
@@ -140,7 +140,7 @@ public class InputEventPacket implements IMessage {
                     BlockPos pos = new BlockPos(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
                     VampirePlayer.get(player).biteBlock(pos);
                 } else {
-                    VampirismMod.log.w(TAG, "Received invalid %s parameter", DRINK_BLOOD_BLOCK);
+                    LOGGER.warn("Received invalid %s parameter", DRINK_BLOOD_BLOCK);
                 }
             } else if (message.action.equals(UNLOCKSKILL)) {
                 if (factionPlayer != null) {
@@ -158,13 +158,13 @@ public class InputEventPacket implements IMessage {
                             }
 
                         } else {
-                            VampirismMod.log.w(TAG, "Skill %s cannot be activated for %s (%s)", skill, player, result);
+                            LOGGER.warn("Skill %s cannot be activated for %s (%s)", skill, player, result);
                         }
                     } else {
-                        VampirismMod.log.w(TAG, "Skill %s was not found so %s cannot activate it", message.param, player);
+                        LOGGER.warn("Skill %s was not found so %s cannot activate it", message.param, player);
                     }
                 } else {
-                    VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot unlock skills");
+                    LOGGER.error("Player %s is in no faction, so he cannot unlock skills");
                 }
 
 
@@ -186,7 +186,7 @@ public class InputEventPacket implements IMessage {
                     }
                     player.sendMessage(new TextComponentTranslation("text.vampirism.skill.skills_reset"));
                 } else {
-                    VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot reset skills");
+                    LOGGER.error("Player %s is in no faction, so he cannot reset skills");
                 }
             } else if (message.action.equals(TRAINERLEVELUP)) {
                 if (player.openContainer instanceof HunterTrainerContainer) {

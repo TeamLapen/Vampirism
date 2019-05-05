@@ -22,7 +22,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -42,7 +42,7 @@ public class BlockCoffin extends VampirismBlockContainer {
     public static final PropertyBool OCCUPIED = PropertyBool.create("occupied");
     private final static String TAG = "BlockCoffin";
 
-    public static boolean isOccupied(IBlockAccess world, BlockPos pos) {
+    public static boolean isOccupied(IBlockReader world, BlockPos pos) {
         return world.getBlockState(pos).getValue(OCCUPIED);
     }
 
@@ -51,7 +51,7 @@ public class BlockCoffin extends VampirismBlockContainer {
         world.setBlockState(pos, state.withProperty(OCCUPIED, value), 4);
     }
 
-    public static boolean isHead(IBlockAccess world, BlockPos pos) {
+    public static boolean isHead(IBlockReader world, BlockPos pos) {
         return world.getBlockState(pos).getValue(PART) == EnumPartType.HEAD;
     }
 
@@ -74,7 +74,7 @@ public class BlockCoffin extends VampirismBlockContainer {
         }
     }
 
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+    public IBlockState getActualState(IBlockState state, IBlockReader worldIn, BlockPos pos) {
         if (state.getValue(PART) == EnumPartType.FOOT) {
             IBlockState iblockstate = worldIn.getBlockState(pos.offset(state.getValue(FACING)));
 
@@ -88,7 +88,7 @@ public class BlockCoffin extends VampirismBlockContainer {
 
     @Nonnull
     @Override
-    public EnumFacing getBedDirection(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
+    public EnumFacing getBedDirection(@Nonnull IBlockState state, @Nonnull IBlockReader world, @Nonnull BlockPos pos) {
         return getActualState(state, world, pos).getValue(FACING);
     }
 
@@ -141,12 +141,12 @@ public class BlockCoffin extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player) {
+    public boolean isBed(IBlockState state, IBlockReader world, BlockPos pos, Entity player) {
         return true;
     }
 
     @Override
-    public boolean isBedFoot(IBlockAccess world, @Nonnull BlockPos pos) {
+    public boolean isBedFoot(IBlockReader world, @Nonnull BlockPos pos) {
         return getActualState(world.getBlockState(pos), world, pos).getValue(PART) == EnumPartType.FOOT;
     }
 
@@ -259,7 +259,7 @@ public class BlockCoffin extends VampirismBlockContainer {
     }
 
     @Override
-    public void setBedOccupied(IBlockAccess world, BlockPos pos, EntityPlayer player, boolean occupied) {
+    public void setBedOccupied(IBlockReader world, BlockPos pos, EntityPlayer player, boolean occupied) {
         if (world instanceof World) {
             IBlockState state = world.getBlockState(pos);
             state = state.getBlock().getActualState(state, world, pos);

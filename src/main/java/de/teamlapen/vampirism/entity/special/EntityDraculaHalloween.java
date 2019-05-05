@@ -156,14 +156,14 @@ public class EntityDraculaHalloween extends EntityVampirism {
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
+    public void readAdditional(NBTTagCompound compound) {
+        super.readAdditional(compound);
         this.remove();
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        return super.writeToNBT(compound);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        return super.write(compound);
     }
 
     @Override
@@ -171,8 +171,8 @@ public class EntityDraculaHalloween extends EntityVampirism {
         return false;
     }
 
-    protected void entityInit() {
-        super.entityInit();
+    protected void registerData() {
+        super.registerData();
         this.dataManager.register(OWNER_UNIQUE_ID, Optional.absent());
     }
 

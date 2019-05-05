@@ -43,8 +43,8 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
     public static EntityAggressiveVillager makeHunter(EntityVillager villager) {
         EntityAggressiveVillager hunter = new EntityAggressiveVillager(villager.world);
         NBTTagCompound nbt = new NBTTagCompound();
-        villager.writeToNBT(nbt);
-        hunter.readFromNBT(nbt);
+        villager.write(nbt);
+        hunter.read(nbt);
         hunter.setUniqueId(MathHelper.getRandomUUID(hunter.rand));
         hunter.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.pitchfork));
         return hunter;
@@ -113,8 +113,8 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
     public void stopVillageAttackDefense() {
         EntityVillager villager = new EntityVillager(this.world);
         NBTTagCompound nbt = new NBTTagCompound();
-        this.writeToNBT(nbt);
-        villager.readFromNBT(nbt);
+        this.write(nbt);
+        villager.read(nbt);
         villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
         world.spawnEntity(villager);
         this.remove();

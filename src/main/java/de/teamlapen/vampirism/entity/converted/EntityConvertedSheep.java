@@ -12,7 +12,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
 
@@ -52,7 +52,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
     }
 
     @Override
-    public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos) {
+    public boolean isShearable(ItemStack item, IBlockReader world, BlockPos pos) {
         return !getSheared();
     }
 
@@ -68,7 +68,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
     }
 
     @Override
-    public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune) {
+    public List<ItemStack> onSheared(ItemStack item, IBlockReader world, BlockPos pos, int fortune) {
 
         this.setSheared(true);
         int i = 1 + this.rand.nextInt(3);
@@ -82,20 +82,20 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt) {
-        super.readEntityFromNBT(nbt);
+    public void readAdditional(NBTTagCompound nbt) {
+        super.readAdditional(nbt);
         this.setSheared(nbt.getBoolean("Sheared"));
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
+    public void writeAdditional(NBTTagCompound nbt) {
+        super.writeAdditional(nbt);
         nbt.setBoolean("Sheared", this.getSheared());
     }
 
     @Override
-    protected void entityInit() {
-        super.entityInit();
+    protected void registerData() {
+        super.registerData();
 
         this.dataManager.register(COAT, (byte) 0);
     }

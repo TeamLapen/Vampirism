@@ -8,7 +8,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
@@ -24,12 +24,12 @@ public class ItemGarlic extends VampirismItem implements IPlantable {
     }
 
     @Override
-    public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
+    public IBlockState getPlant(IBlockReader world, BlockPos pos) {
         return ModBlocks.garlic.getDefaultState();
     }
 
     @Override
-    public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
+    public EnumPlantType getPlantType(IBlockReader world, BlockPos pos) {
         return EnumPlantType.Crop;
     }
 

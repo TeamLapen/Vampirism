@@ -70,16 +70,16 @@ public class UpdateEntityPacket implements IMessage {
             cap = HelperRegistry.getSyncablePlayerCaps().get(key);
         }
         if (cap == null) {
-            VampLib.log.w(TAG, "Capability with key %s is not registered in the HelperRegistry", key);
+            LOGGER.warn("Capability with key %s is not registered in the HelperRegistry", key);
         }
         try {
             syncable = (ISyncable) e.getCapability(cap, null);
         } catch (ClassCastException ex) {
-            VampLib.log.w(TAG, "Target entity's capability %s (%s)does not implement ISyncable (%s)", e.getCapability(cap, null), cap, ex);
+            LOGGER.warn("Target entity's capability %s (%s)does not implement ISyncable (%s)", e.getCapability(cap, null), cap, ex);
             return;
         }
         if (syncable == null) {
-            VampLib.log.w(TAG, "Target entity %s does not have capability %s", e, cap);
+            LOGGER.warn("Target entity %s does not have capability %s", e, cap);
         } else {
             syncable.loadUpdateFromNBT(data);
         }
@@ -92,9 +92,9 @@ public class UpdateEntityPacket implements IMessage {
         ctx.enqueueWork(() -> { //Execute on main thread
             Entity e = player.getEntityWorld().getEntityByID(message.id);
             if (e == null) {
-                VampLib.log.e(TAG, "Did not find entity %s", message.id);
+                LOGGER.error("Did not find entity %s", message.id);
                 if (message.playerItself) {
-                    VampLib.log.e(TAG, "Message is meant for player itself, but id mismatch %s %s. Loading anyway.", player.getEntityId(), message.id);
+                    LOGGER.error("Message is meant for player itself, but id mismatch %s %s. Loading anyway.", player.getEntityId(), message.id);
                     e = player;
                 }
             }
@@ -106,7 +106,7 @@ public class UpdateEntityPacket implements IMessage {
                         syncable.loadUpdateFromNBT(message.data);
 
                     } catch (ClassCastException ex) {
-                        VampLib.log.w(TAG, "Target entity %s does not implement ISyncable (%s)", e, ex);
+                        LOGGER.warn("Target entity %s does not implement ISyncable (%s)", e, ex);
                     }
                 }
                 if (message.caps != null) {

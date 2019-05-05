@@ -41,16 +41,16 @@ public class BloodValueLoader {
             VampirismAPI.entityRegistry().addBloodValues(defaultValues);
         } catch (IOException e) {
             VampirismMod.log.bigWarning(TAG, "Could not read default blood values, this should not happen and destroys the mod experience");
-            VampirismMod.log.e(TAG, e, "Exception");
+            LOGGER.error(e, "Exception");
         }
 
         if (bloodConfigFile.exists()) {
             try {
                 Map<ResourceLocation, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
                 VampirismAPI.entityRegistry().overrideBloodValues(override);
-                VampirismMod.log.i(TAG, "Successfully loaded additional blood value file");
+                LOGGER.info("Successfully loaded additional blood value file");
             } catch (IOException e) {
-                VampirismMod.log.e(TAG, "Could not read blood values from config file %s", bloodConfigFile.getName());
+                LOGGER.error("Could not read blood values from config file %s", bloodConfigFile.getName());
             }
         }
 
@@ -114,7 +114,7 @@ public class BloodValueLoader {
             bw.flush();
             return true;
         } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "Failed to write blood values (%s)", comment);
+            LOGGER.error(e, "Failed to write blood values (%s)", comment);
         } finally {
             if (bw != null) {
                 bw.close();
@@ -133,9 +133,9 @@ public class BloodValueLoader {
             Map<ResourceLocation, Integer> defaultValues = BloodValueLoader.loadBloodValuesFromReader(new InputStreamReader(BloodValueLoader.class.getResourceAsStream("/blood_values/" + modid + ".txt")), modid + ".txt");
             VampirismAPI.entityRegistry().addBloodValues(defaultValues);
         } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "[ModCompat]Could not read default blood values for mod %s, this should not happen", modid);
+            LOGGER.error(e, "[ModCompat]Could not read default blood values for mod %s, this should not happen", modid);
         } catch (NullPointerException e) {
-            VampirismMod.log.e(TAG, e, "[ModCompat]Could not find packed (in JAR) blood value file for mod %s", modid);
+            LOGGER.error(e, "[ModCompat]Could not find packed (in JAR) blood value file for mod %s", modid);
         }
     }
 
@@ -147,7 +147,7 @@ public class BloodValueLoader {
             Map<ResourceLocation, Integer> saved = BloodValueLoader.loadBloodValuesFromReader(new InputStreamReader(new FileInputStream(f)), f.getName());
             VampirismEntityRegistry.getBiteableEntryManager().addDynamic(saved);
         } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "[ModCompat]Could not read saved blood values from world from file  %s", f);
+            LOGGER.error(e, "[ModCompat]Could not read saved blood values from world from file  %s", f);
         }
     }
 
@@ -162,10 +162,10 @@ public class BloodValueLoader {
         }
         try {
             if (!writeBloodValues(new FileWriter(f), values, "Dynamically calculated blood values - DON'T EDIT")) {
-                VampirismMod.log.w(TAG, "Could not write dynamic values to file");
+                LOGGER.warn("Could not write dynamic values to file");
             }
         } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "Failed to write dynamic values to file");
+            LOGGER.error(e, "Failed to write dynamic values to file");
         }
     }
 
@@ -182,7 +182,7 @@ public class BloodValueLoader {
             saveDynamicBloodValues(bloodValueWorldFile);
             VampirismEntityRegistry.getBiteableEntryManager().resetDynamic();
         } else {
-            VampirismMod.log.w(TAG, "Can't save blood values. File does not exist");
+            LOGGER.warn("Can't save blood values. File does not exist");
         }
 
     }

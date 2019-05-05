@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -101,7 +100,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         if (b != null && b.convertingHandler != null) {
             return b.convertingHandler.createFrom(entity);
         }
-        VampirismMod.log.w(TAG, "Failed to find convertible entry for %s", entity);
+        LOGGER.warn("Failed to find convertible entry for %s", entity);
         return null;
     }
 
@@ -123,16 +122,16 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         for (Map.Entry<Class<? extends EntityCreature>, IConvertingHandler> entry : convertibles.entrySet()) {
             ResourceLocation id = EntityList.getKey(entry.getKey());
             if (id == null) {
-                VampirismMod.log.w(TAG, "Cannot register convertible %s since there is no EntityString for it", entry.getKey());
+                LOGGER.warn("Cannot register convertible %s since there is no EntityString for it", entry.getKey());
                 continue;
             }
             Integer blood = bloodValues.remove(id);
             if (blood == null) {
-                VampirismMod.log.w(TAG, "Missing blood value for convertible creature %s (%s)", entry.getKey().getName(), id);
+                LOGGER.warn("Missing blood value for convertible creature %s (%s)", entry.getKey().getName(), id);
                 continue;
             }
             blood = Math.round(blood * bloodValueMultiplier);
-            VampirismMod.log.i(TAG, " Registering convertible %s with blood %d and handler %s", entry.getKey().getName(), blood, entry.getValue());
+            LOGGER.info(" Registering convertible %s with blood %d and handler %s", entry.getKey().getName(), blood, entry.getValue());
             BiteableEntry biteEntry = new BiteableEntry(blood, (entry.getValue() == null ? defaultHandler : entry.getValue()));
             biteables.put(id, biteEntry);
         }

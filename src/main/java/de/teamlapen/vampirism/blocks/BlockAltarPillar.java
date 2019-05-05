@@ -14,7 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+    public List<ItemStack> getDrops(IBlockReader world, BlockPos pos, IBlockState state, int fortune) {
         List<ItemStack> list = new ArrayList<>();
         list.add(new ItemStack(Item.getItemFromBlock(this), 1));
         EnumPillarType type = state.getValue(typeProperty);

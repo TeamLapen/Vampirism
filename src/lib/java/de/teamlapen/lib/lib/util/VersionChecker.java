@@ -5,9 +5,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import de.teamlapen.lib.VampLib;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.versions.mcp.MCPVersion;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +33,7 @@ import java.util.Map;
  * Requires a versioning system, which is like Vampirism's
  */
 public class VersionChecker implements Runnable {
-    private final static String TAG = "VersionChecker";
+    private final static Logger LOGGER = LogManager.getLogger();
 
     private final boolean stats;
 
@@ -38,7 +42,7 @@ public class VersionChecker implements Runnable {
         this.currentVersion = currentVersion;
         versionInfo = new VersionInfo(currentVersion);
         if (stats) {
-            this.stats = FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getInstance().isSnooperEnabled() : FMLCommonHandler.instance().getMinecraftServerInstance().isSnooperEnabled();
+            this.stats = EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().isSnooperEnabled() : ServerLifecycleHooks.getCurrentServer().isSnooperEnabled();
         } else {
             this.stats = false;
         }
@@ -74,43 +78,23 @@ public class VersionChecker implements Runnable {
 
     @Override
     public void run() {
-        VampLib.log.i(TAG, "Starting version check at %s", UPDATE_FILE_URL);
+        LOGGER.info("Starting version check at {}", UPDATE_FILE_URL);
         String fullUrl = stats ? UPDATE_FILE_URL + getStatsString() : UPDATE_FILE_URL;
         try {
             URL url = new URL(fullUrl);
             check(url);
         } catch (MalformedURLException e) {
-            VampLib.log.e(TAG, e, "Failed to parse update file url (%s)", fullUrl);
+            LOGGER.error("Failed to parse update file url ({})", fullUrl);
         } catch (IOException e) {
             if (e instanceof ConnectException) {
-                VampLib.log.e(TAG, "Failed to connect to version check url %s", UPDATE_FILE_URL);
+                LOGGER.error("Failed to connect to version check url {}", UPDATE_FILE_URL);
             } else {
-                VampLib.log.e(TAG, e, "Failed to perform version check");
+                LOGGER.error("Failed to perform version check", e);
             }
         } catch (JsonSyntaxException e) {
-            VampLib.log.e(TAG, e, "Failed to parse update file. It seems not well formatted");
+            LOGGER.error("Failed to parse update file. It seems not well formatted", e);
         }
         versionInfo.checked = true;
-    }
-
-    private String getStatsString() {
-        try {
-            String b = "?" +
-                    "current=" +
-                    URLEncoder.encode(currentVersion.trim(), "UTF-8") +
-                    '&' +
-                    "mc=" +
-                    URLEncoder.encode(Loader.MC_VERSION, "UTF-8") +
-                    '&' +
-                    "count=" +
-                    URLEncoder.encode("" + Loader.instance().getActiveModList().size(), "UTF-8") +
-                    '&' +
-                    "side=" +
-                    (FMLCommonHandler.instance().getEffectiveSide().isClient() ? "client" : "server");
-            return b;
-        } catch (UnsupportedEncodingException e) {
-            return "";
-        }
     }
 
     private void check(URL url) throws IOException, JsonSyntaxException {
@@ -124,12 +108,12 @@ public class VersionChecker implements Runnable {
         Map<String, Object> json = new Gson().fromJson(data, Map.class);
         Map<String, String> promos = (Map<String, String>) json.get("promos");
         versionInfo.homePage = (String) json.get("homepage");
-        String rec = promos.get(MinecraftForge.MC_VERSION + "-recommended");
-        String lat = promos.get(MinecraftForge.MC_VERSION + "-latest");
+        String rec = promos.get(MCPVersion.getMCVersion() + "-recommended");
+        String lat = promos.get(MCPVersion.getMCVersion() + "-latest");
 
         Version current = Version.parse(currentVersion);
         if (current == null) {
-            VampLib.log.w(TAG, "Failed to parse current version (%s), aborting version check", currentVersion);
+            LOGGER.warn("Failed to parse current version ({}), aborting version check", currentVersion);
             return;
         }
         versionInfo.currentVersion = current;
@@ -140,7 +124,7 @@ public class VersionChecker implements Runnable {
             if (lat != null) possibleTarget = Version.parse(lat);
         }
         if (possibleTarget == null) {
-            VampLib.log.i(TAG, "Did not find a version of type %s for %s (%s)", current.type, MinecraftForge.MC_VERSION, current.type == Version.TYPE.RELEASE ? rec : lat);
+            LOGGER.info("Did not find a version of type {} for {} ({})", current.type, MCPVersion.getMCVersion(), current.type == Version.TYPE.RELEASE ? rec : lat);
             return;
         }
         int res = possibleTarget.compareTo(current);
@@ -150,7 +134,7 @@ public class VersionChecker implements Runnable {
 
         List<String> changes = new ArrayList<>();
         @SuppressWarnings("unchecked")
-        Map<String, String> tmp = (Map<String, String>) json.get(MinecraftForge.MC_VERSION);
+        Map<String, String> tmp = (Map<String, String>) json.get(MCPVersion.getMCVersion());
         if (tmp != null) {
             List<Version> ordered = new ArrayList<>();
             for (String key : tmp.keySet()) {
@@ -169,12 +153,12 @@ public class VersionChecker implements Runnable {
             }
 
         } else {
-            VampLib.log.i(TAG, "No changelog provided for new version %s", possibleTarget.name);
+            LOGGER.info("No changelog provided for new version {}", possibleTarget.name);
         }
         possibleTarget.setChanges(changes);
         Map<String, Object> downloads = (Map<String, Object>) json.get("downloads");
         if (downloads != null) {
-            Map<String, String> tmp2 = (Map<String, String>) downloads.get(MinecraftForge.MC_VERSION);
+            Map<String, String> tmp2 = (Map<String, String>) downloads.get(MCPVersion.getMCVersion());
             if (tmp2 != null) {
                 String download = tmp2.get(possibleTarget.name);
                 if (download != null) {
@@ -183,16 +167,35 @@ public class VersionChecker implements Runnable {
             }
         }
         if (possibleTarget.getUrl() == null) {
-            VampLib.log.i(TAG, "No download link provided for new version %s", possibleTarget.name);
+            LOGGER.info("No download link provided for new version {}", possibleTarget.name);
         }
         if (VampLib.inDev) {
-            VampLib.log.d(TAG, "Found new version %s, but in dev", possibleTarget);
+            LOGGER.trace("Found new version {}, but in dev", possibleTarget);
         } else {
-            VampLib.log.i(TAG, "Found new version %s", possibleTarget);
+            LOGGER.info("Found new version {}", possibleTarget);
             versionInfo.newVersion = possibleTarget;
         }
 
 
+    }
+
+    private String getStatsString() {
+        try {
+            return "?" +
+                    "current=" +
+                    URLEncoder.encode(currentVersion.trim(), "UTF-8") +
+                    '&' +
+                    "mc=" +
+                    URLEncoder.encode(MCPVersion.getMCVersion(), "UTF-8") +
+                    '&' +
+                    "count=" +
+                    URLEncoder.encode("" + ModList.get().size(), "UTF-8") +
+                    '&' +
+                    "side=" +
+                    (EffectiveSide.get() == LogicalSide.CLIENT ? "client" : "server");
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
     }
 
     /**
@@ -278,7 +281,7 @@ public class VersionChecker implements Runnable {
                 }
                 return new Version(name, main, major, minor, type, extra);
             } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                VampLib.log.e(TAG, e, "Failed to parse version %s", name);
+                LOGGER.error("Failed to parse version {} {}", name, e);
                 return null;
             }
         }
@@ -324,7 +327,7 @@ public class VersionChecker implements Runnable {
                     if (nb > cb) return -1;
                     if (nb < cb) return 1;
                 } catch (NumberFormatException e) {
-                    VampLib.log.e(TAG, e, "Failed to parse beta number (%s)", extra);
+                    LOGGER.error("Failed to parse beta number ({}) {}", extra, e);
                 }
                 return 0;
             } else if (type == TYPE.ALPHA) {
@@ -386,7 +389,7 @@ public class VersionChecker implements Runnable {
                     if (t < o) return 1;
                 }
             } catch (Exception e) {
-                VampLib.log.e(TAG, e, "Failed to parse date %s/%s", one, two);
+                LOGGER.error("Failed to parse date {}/{} {}", one, two, e);
             }
             return 0;
         }

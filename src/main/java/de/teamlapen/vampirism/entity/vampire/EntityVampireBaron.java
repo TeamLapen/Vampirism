@@ -260,8 +260,8 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt) {
-        super.readEntityFromNBT(nbt);
+    public void readAdditional(NBTTagCompound nbt) {
+        super.readAdditional(nbt);
         setLevel(MathHelper.clamp(nbt.getInteger("level"), 0, MAX_LEVEL));
         minionHandler.loadMinions(nbt.getTagList("minions", 10));
     }
@@ -290,8 +290,8 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
+    public void writeAdditional(NBTTagCompound nbt) {
+        super.writeAdditional(nbt);
         nbt.setInteger("level", getLevel());
         nbt.setTag("minions", minionHandler.getMinionsToSave());
     }
@@ -308,8 +308,8 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    protected void entityInit() {
-        super.entityInit();
+    protected void registerData() {
+        super.registerData();
         getDataManager().register(LEVEL, -1);
     }
 

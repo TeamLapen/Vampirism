@@ -70,8 +70,8 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tagCompound) {
-        super.readFromNBT(tagCompound);
+    public void read(NBTTagCompound tagCompound) {
+        super.read(tagCompound);
         cooldownPull = tagCompound.getInteger("cooldown_pull");
         cooldownProcess = tagCompound.getInteger("cooldown_process");
     }
@@ -95,10 +95,10 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound write(NBTTagCompound compound) {
         compound.setInteger("cooldown_pull", cooldownPull);
         compound.setInteger("cooldown_process", cooldownProcess);
-        return super.writeToNBT(compound);
+        return super.write(compound);
     }
 
     private boolean pullItems() {

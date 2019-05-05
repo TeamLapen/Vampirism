@@ -156,8 +156,8 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt) {
-        super.readEntityFromNBT(nbt);
+    public void readAdditional(NBTTagCompound nbt) {
+        super.readAdditional(nbt);
         IMinionCommand command = this.getCommand(nbt.getInteger("command_id"));
         if (command != null) {
             this.activateMinionCommand(command);
@@ -200,17 +200,17 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
+    public void writeAdditional(NBTTagCompound nbt) {
+        super.writeAdditional(nbt);
         nbt.setInteger("command_id", getActiveCommand().getId());
     }
 
     @Override
-    public boolean writeToNBTOptional(NBTTagCompound nbt) {
+    public boolean writeUnlessPassenger(NBTTagCompound nbt) {
         if (this instanceof ISaveableMinion) {
             return false;
         }
-        return super.writeToNBTOptional(nbt);
+        return super.writeUnlessPassenger(nbt);
     }
 
     @Override
@@ -243,8 +243,8 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     IMinionCommand createDefaultCommand();
 
     @Override
-    protected void entityInit() {
-        super.entityInit();
+    protected void registerData() {
+        super.registerData();
         getDataManager().register(TEXTURE, -1);
     }
 

@@ -14,7 +14,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -69,7 +69,7 @@ public class BlockAlchemicalFire extends VampirismBlock {
     }
 
     @Override
-    public boolean isBurning(IBlockAccess world, BlockPos pos) {
+    public boolean isBurning(IBlockReader world, BlockPos pos) {
         return true;
     }
 

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.minions.vampire;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minions.IMinionCommand;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
@@ -98,7 +97,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
                 this.lord = (IMinionLordWithSaveable) lord;
             }
         } else {
-            VampirismMod.log.w(TAG, "Cannot set lord %s since it is not a IMinionLordWithSaveable", lord);
+            LOGGER.warn("Cannot set lord %s since it is not a IMinionLordWithSaveable", lord);
         }
 
     }

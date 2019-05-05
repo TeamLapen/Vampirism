@@ -115,15 +115,15 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt) {
-        super.readEntityFromNBT(nbt);
+    public void readAdditional(NBTTagCompound nbt) {
+        super.readAdditional(nbt);
         if (nbt.hasKey("entity_old")) {
             setEntityCreature((T) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity_old"), world));
             if (nil()) {
-                VampirismMod.log.w(TAG, "Failed to create old entity %s. Maybe the entity does not exist anymore", nbt.getCompoundTag("entity_old"));
+                LOGGER.warn("Failed to create old entity %s. Maybe the entity does not exist anymore", nbt.getCompoundTag("entity_old"));
             }
         } else {
-            VampirismMod.log.w(TAG, "Saved entity did not have a old entity");
+            LOGGER.warn("Saved entity did not have a old entity");
         }
         if (nbt.hasKey("converted_canDespawn")) {
             canDespawn = nbt.getBoolean("converted_canDespawn");
@@ -155,7 +155,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
         }
         if (entityCreature != null && getConvertedHelper() == null) {
             entityCreature = null;
-            VampirismMod.log.w(TAG, "Cannot find converting handler for converted creature %s (%s)", this, entityCreature);
+            LOGGER.warn("Cannot find converting handler for converted creature %s (%s)", this, entityCreature);
         }
     }
 
@@ -165,8 +165,8 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
+    public void writeAdditional(NBTTagCompound nbt) {
+        super.writeAdditional(nbt);
         writeOldEntityToNBT(nbt);
         nbt.setBoolean("converter_canDespawn", canDespawn);
 
@@ -252,11 +252,11 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
             try {
                 NBTTagCompound entity = new NBTTagCompound();
                 entityCreature.isDead = false;
-                entityCreature.writeToNBTOptional(entity);
+                entityCreature.writeUnlessPassenger(entity);
                 entityCreature.isDead = true;
                 nbt.setTag("entity_old", entity);
             } catch (Exception e) {
-                VampirismMod.log.e(TAG, e, "Failed to write old entity (%s) to NBT. If this happens more often please report this to the mod author.", entityCreature);
+                LOGGER.error(e, "Failed to write old entity (%s) to NBT. If this happens more often please report this to the mod author.", entityCreature);
                 this.setEntityCreature(null);
             }
         }

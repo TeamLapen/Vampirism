@@ -92,7 +92,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
             boolean dead = e.isDead;
             e.isDead = false;
             NBTTagCompound nbt = new NBTTagCompound();
-            e.writeToNBTAtomically(nbt);
+            e.writeUnlessRemoved(nbt);
             list.appendTag(nbt);
             if (dead)
                 e.isDead = true;

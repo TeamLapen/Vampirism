@@ -92,9 +92,9 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        super.readFromNBT(tag);
-        tank.readFromNBT(tag);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
+        tank.read(tag);
         cooldownProcess = tag.getInteger("cooldown_process");
         cooldownPull = tag.getInteger("cooldown_pull");
     }
@@ -131,9 +131,9 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        tag = super.writeToNBT(tag);
-        tank.writeToNBT(tag);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        tag = super.write(tag);
+        tank.write(tag);
         cooldownProcess = tag.getInteger("cooldown_process");
         cooldownPull = tag.getInteger("cooldown_pull");
         return tag;

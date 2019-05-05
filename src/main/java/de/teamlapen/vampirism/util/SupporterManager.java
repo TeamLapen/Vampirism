@@ -79,9 +79,9 @@ public class SupporterManager {
             supporters = retrieveSupporter(data);
         } catch (IOException e) {
             if (e instanceof ConnectException) {
-                VampirismMod.log.e(TAG, "Failed to connect to supporter url %s", REFERENCE.SUPPORTER_FILE);
+                LOGGER.error("Failed to connect to supporter url %s", REFERENCE.SUPPORTER_FILE);
             } else {
-                VampirismMod.log.e(TAG, e, "Failed to retrieve supporters from url");
+                LOGGER.error(e, "Failed to retrieve supporters from url");
             }
         }
         if (supporters == null || VampirismMod.inDev) {
@@ -92,7 +92,7 @@ public class SupporterManager {
                 inputStream.close();
                 supporters = retrieveSupporter(data);
             } catch (IOException e) {
-                VampirismMod.log.e(TAG, e, "Failed to retrieve supporters from resources");
+                LOGGER.error(e, "Failed to retrieve supporters from resources");
             }
         }
         if (supporters != null) {
@@ -137,7 +137,7 @@ public class SupporterManager {
             }
             return supporters;
         } catch (JsonSyntaxException e) {
-            VampirismMod.log.e(TAG, e, "Failed to parse supporter list");
+            LOGGER.error(e, "Failed to parse supporter list");
         }
         return null;
 

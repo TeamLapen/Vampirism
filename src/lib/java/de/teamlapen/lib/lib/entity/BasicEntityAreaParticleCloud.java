@@ -2,11 +2,12 @@ package de.teamlapen.lib.lib.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
+import net.minecraft.init.Particles;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -17,11 +18,9 @@ public class BasicEntityAreaParticleCloud extends Entity {
 
     private static final DataParameter<Float> RADIUS = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> HEIGHT = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
-    private static final DataParameter<Integer> PARTICLE = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.VARINT);
+    private static final DataParameter<IParticleData> PARTICLE = EntityDataManager.createKey(EntityAreaEffectCloud.class, DataSerializers.PARTICLE_DATA);
     private static final DataParameter<Float> SPAWN_RATE = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
 
-    private static final DataParameter<Integer> PARTICLE_ARGUMENT_ONE = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> PARTICLE_ARGUMENT_TWO = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> COLOR = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.VARINT);
     private int duration;
     private int waitTime;
@@ -69,25 +68,15 @@ public class BasicEntityAreaParticleCloud extends Entity {
         }
     }
 
-    public EnumParticleTypes getParticle() {
-        return EnumParticleTypes.getParticleFromId(this.getDataManager().get(PARTICLE));
+    public IParticleData getParticle() {
+        return this.getDataManager().get(PARTICLE);
     }
 
-    public void setParticle(EnumParticleTypes particleIn) {
-        this.getDataManager().set(PARTICLE, particleIn.getParticleID());
+    public void setParticle(IParticleData p_195059_1_) {
+        this.getDataManager().set(PARTICLE, p_195059_1_);
     }
 
-    public int getParticleArgumentOne() {
-        return this.getDataManager().get(PARTICLE_ARGUMENT_ONE);
-    }
 
-    public void setParticleArgumentOne(int value) {
-        this.getDataManager().set(PARTICLE_ARGUMENT_ONE, value);
-    }
-
-    public int getParticleArgumentTwo() {
-        return this.getDataManager().get(PARTICLE_ARGUMENT_TWO);
-    }
 
     public float getRadius() {
         return this.getDataManager().get(RADIUS);
@@ -122,18 +111,11 @@ public class BasicEntityAreaParticleCloud extends Entity {
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
+    public void tick() {
+        super.tick();
         float radius = this.getRadius();
         if (this.world.isRemote) {
-            EnumParticleTypes enumParticleTypes = getParticle();
-            int[] aint = new int[enumParticleTypes.getArgumentCount()];
-            if (aint.length > 0) {
-                aint[0] = getParticleArgumentOne();
-            }
-            if (aint.length > 1) {
-                aint[1] = getParticleArgumentTwo();
-            }
+            IParticleData particle = getParticle();
             float amount = (float) (Math.PI * radius * radius) * getSpawnRate();
             for (int i = 0; i < amount; i++) {
                 float phi = this.rand.nextFloat() * (float) Math.PI * 2;
@@ -143,14 +125,14 @@ public class BasicEntityAreaParticleCloud extends Entity {
                 float dy = this.rand.nextFloat() * getHeight();
 
 
-                if (enumParticleTypes == EnumParticleTypes.SPELL_MOB) {
+                if (particle.getType() == Particles.ENTITY_EFFECT) {
                     int rgb = this.getColor();
                     int cr = rgb >> 16 & 255;
                     int cg = rgb >> 8 & 255;
                     int cb = rgb & 255;
-                    this.world.spawnParticle(EnumParticleTypes.SPELL_MOB, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (double) ((float) cr / 255.0F), (double) ((float) cg / 255.0F), (double) ((float) cb / 255.0F));
+                    this.world.spawnParticle(particle, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (double) ((float) cr / 255.0F), (double) ((float) cg / 255.0F), (double) ((float) cb / 255.0F));
                 } else {
-                    this.world.spawnParticle(enumParticleTypes, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (0.5D - this.rand.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.rand.nextDouble()) * 0.15D, aint);
+                    this.world.spawnParticle(particle, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (0.5D - this.rand.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.rand.nextDouble()) * 0.15D);
                 }
             }
         } else {
@@ -173,43 +155,38 @@ public class BasicEntityAreaParticleCloud extends Entity {
         }
     }
 
-    public void setGetParticleArgumentTwo(int value) {
-        this.getDataManager().set(PARTICLE_ARGUMENT_TWO, value);
-    }
 
     public void setRadiusPerTick(float radiusPerTick) {
         this.radiusPerTick = radiusPerTick;
     }
 
     @Override
-    public boolean writeToNBTAtomically(NBTTagCompound compound) {
+    public boolean writeUnlessPassenger(NBTTagCompound compound) {
         return false;
     }
 
     @Override
-    public boolean writeToNBTOptional(NBTTagCompound compound) {
+    public boolean writeUnlessRemoved(NBTTagCompound compound) {
         return false;
     }
 
     @Override
-    protected void entityInit() {
+    protected void readAdditional(NBTTagCompound compound) {
+
+    }
+
+    @Override
+    protected void registerData() {
         this.getDataManager().register(COLOR, 0);
         this.getDataManager().register(RADIUS, 0.5F);
         this.getDataManager().register(HEIGHT, 0.5F);
-        this.getDataManager().register(PARTICLE, EnumParticleTypes.SPELL_MOB.getParticleID());
-        this.getDataManager().register(PARTICLE_ARGUMENT_ONE, 0);
-        this.getDataManager().register(PARTICLE_ARGUMENT_TWO, 0);
+        this.getDataManager().register(PARTICLE, Particles.ENTITY_EFFECT);
         this.getDataManager().register(SPAWN_RATE, 1F);
 
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound compound) {
-
-    }
-
-    @Override
-    protected void writeEntityToNBT(NBTTagCompound compound) {
+    protected void writeAdditional(NBTTagCompound compound) {
 
     }
 }

@@ -2,7 +2,6 @@ package de.teamlapen.lib;
 
 import de.teamlapen.lib.entity.EntityEventHandler;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
-import de.teamlapen.lib.lib.util.Logger;
 import de.teamlapen.lib.network.LibraryPacketDispatcher;
 import de.teamlapen.lib.proxy.ClientProxy;
 import de.teamlapen.lib.proxy.CommonProxy;
@@ -14,7 +13,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 
 
 /**
@@ -22,7 +20,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
  */
 @Mod(value = LIBREFERENCE.MODID)
 public class VampLib {
-    public final static Logger log = new Logger(LIBREFERENCE.MODID, "de.teamlapen.lib");
+
     public static final AbstractPacketDispatcher dispatcher = new LibraryPacketDispatcher();
     public static boolean inDev = false;
     @SuppressWarnings("Convert2MethodRef")
@@ -39,10 +37,6 @@ public class VampLib {
         String launchTarget = System.getenv().get("target");
         if (launchTarget != null && launchTarget.contains("dev")) {
             inDev = true;
-            log.setDebug(true);
-            if (FMLEnvironment.dist.isClient()) {
-                log.displayModID();
-            }
         }
     }
 

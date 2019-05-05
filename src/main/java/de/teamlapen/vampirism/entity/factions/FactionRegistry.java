@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.factions;
 
 import com.google.common.base.Predicate;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
@@ -93,7 +92,7 @@ public class FactionRegistry implements IFactionRegistry {
         if (otherFaction != null) {
             int id = ((Faction) otherFaction).getId();
             if (id > 63) {
-                VampirismMod.log.w(TAG, "Faction id over 64, predicates won't work");
+                LOGGER.warn("Faction id over 64, predicates won't work");
             }
             key |= ((id & 63) << 10);
         }
@@ -111,7 +110,7 @@ public class FactionRegistry implements IFactionRegistry {
         }
         int id = ((Faction) thisFaction).getId();
         if (id > 64) {
-            VampirismMod.log.w(TAG, "Faction id over 64, predicates won't work");
+            LOGGER.warn("Faction id over 64, predicates won't work");
         }
         key |= id & 63;
         Predicate<Entity> predicate;

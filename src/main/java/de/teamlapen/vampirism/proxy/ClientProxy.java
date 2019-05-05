@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.proxy;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.client.core.ModKeys;
@@ -96,11 +95,11 @@ public class ClientProxy extends CommonProxy {
     private void registerVampireEntityOverlay(RenderManager manager, Class<? extends EntityCreature> clazz, ResourceLocation loc) {
         Render render = manager.getEntityClassRenderObject(clazz);
         if (render == null) {
-            VampirismMod.log.e(TAG, "Did not find renderer for %s", clazz);
+            LOGGER.error("Did not find renderer for %s", clazz);
             return;
         }
         if (!(render instanceof RenderLivingBase)) {
-            VampirismMod.log.e(TAG, "Renderer (%s) for %s does not extend RenderLivingEntity", clazz, render);
+            LOGGER.error("Renderer (%s) for %s does not extend RenderLivingEntity", clazz, render);
             return;
         }
         RenderLivingBase rendererLiving = (RenderLivingBase) render;

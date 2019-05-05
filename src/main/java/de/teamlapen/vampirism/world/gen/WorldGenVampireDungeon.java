@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.gen;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -115,7 +114,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                             if (tileentity1 instanceof TileEntityChest) {
                                 ((TileEntityChest) tileentity1).setLootTable(LootHandler.STRUCTURE_VAMPIRE_DUNGEON, rand.nextLong());
                             } else {
-                                VampirismMod.log.w(TAG, "Failed to generate dungeon chest at (%s)", VampirismWorldGen.debug ? blockpos2 : "hidden");
+                                LOGGER.warn("Failed to generate dungeon chest at (%s)", VampirismWorldGen.debug ? blockpos2 : "hidden");
                             }
 
                             break;
@@ -145,7 +144,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                             if (tileentity1 instanceof TileBloodContainer) {
                                 ((TileBloodContainer) tileentity1).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (TileBloodContainer.CAPACITY * rand.nextFloat()))));
                             } else {
-                                VampirismMod.log.w(TAG, "Failed to generate blood container in dungeon at (%s)", VampirismWorldGen.debug ? blockpos2 : "hidden");
+                                LOGGER.warn("Failed to generate blood container in dungeon at (%s)", VampirismWorldGen.debug ? blockpos2 : "hidden");
                             }
 
                             break;
@@ -177,10 +176,10 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                 tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(new FluidStack(ModFluids.blood, (int) (TileAltarInspiration.CAPACITY * rand.nextFloat())), true);
                 VampirismWorldData.get(worldIn).addNewVampireDungeon(position);
             } else {
-                VampirismMod.log.w(TAG, "Failed to generate altar of inspiration in dungeon at (%s)", VampirismWorldGen.debug ? position : "hidden");
+                LOGGER.warn("Failed to generate altar of inspiration in dungeon at (%s)", VampirismWorldGen.debug ? position : "hidden");
             }
 
-            if (VampirismWorldGen.debug) VampirismMod.log.i(TAG, "Generated vampire dungeon at %s", position);
+            if (VampirismWorldGen.debug) LOGGER.info("Generated vampire dungeon at %s", position);
             return true;
         } else {
             return false;

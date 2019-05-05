@@ -131,8 +131,8 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
+    public void readAdditional(NBTTagCompound compound) {
+        super.readAdditional(compound);
         if (compound.hasKey("addedAdditionalRecipes")) {
             addedAdditionalRecipes = compound.getBoolean("addedAdditionalRecipes");
         }
@@ -151,8 +151,8 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
+    public void writeAdditional(NBTTagCompound compound) {
+        super.writeAdditional(compound);
         compound.setBoolean("addedAdditionalRecipes", addedAdditionalRecipes);
     }
 
@@ -207,9 +207,9 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         @Override
         public IConvertedCreature<EntityVillager> createFrom(EntityVillager entity) {
             NBTTagCompound nbt = new NBTTagCompound();
-            entity.writeToNBT(nbt);
+            entity.write(nbt);
             EntityConvertedVillager converted = new EntityConvertedVillager(entity.world);
-            converted.readFromNBT(nbt);
+            converted.read(nbt);
             converted.setUniqueId(MathHelper.getRandomUUID(converted.rand));
             return converted;
         }

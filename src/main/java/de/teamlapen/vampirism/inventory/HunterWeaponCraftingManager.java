@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.inventory;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -71,7 +70,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
             } else if (recipeComponents[i + 1] instanceof ItemStack) {
                 itemstack = (ItemStack) recipeComponents[i + 1];
             } else {
-                VampirismMod.log.e(TAG, "Cannot add %s to recipe as %s since it is not supported", recipeComponents[i + 1], character);
+                LOGGER.error("Cannot add %s to recipe as %s since it is not supported", recipeComponents[i + 1], character);
             }
 
             map.put(character, itemstack);

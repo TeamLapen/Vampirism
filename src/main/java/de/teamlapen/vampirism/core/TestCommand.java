@@ -54,7 +54,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapDecoration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.server.command.CommandTreeHelp;
 
 import javax.annotation.Nullable;
@@ -148,7 +147,7 @@ public class TestCommand extends BasicCommand {
 
 
             private void print(ICommandSender var1, String id) {
-                List<Profiler.Result> l = FMLCommonHandler.instance().getMinecraftServerInstance().profiler.getProfilingData(id);
+                List<Profiler.Result> l = ServerLifecycleHooks.getCurrentServer().profiler.getProfilingData(id);
                 for (Profiler.Result r : l) {
                     var1.sendMessage(new TextComponentString("" + r.profilerName + ": " + r.usePercentage + "|" + r.totalUsePercentage));
                 }
@@ -282,7 +281,7 @@ public class TestCommand extends BasicCommand {
                 List<Entity> l = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().grow(3, 2, 3));
                 for (Entity o : l) {
                     NBTTagCompound nbt = new NBTTagCompound();
-                    o.writeToNBT(nbt);
+                    o.write(nbt);
                     VampirismMod.log.i("InfoEntity", "Data %s", nbt);
                 }
                 sender.sendMessage(new TextComponentString("Printed info to log"));

@@ -57,17 +57,17 @@ public class VampireBookManager {
 
             parseBooks(data);
         } catch (NBTException e) {
-            VampirismMod.log.w(TAG, "----------------------------------------");
-            VampirismMod.log.e(TAG, e, "Failed to convert vampire books to NBT");
-            VampirismMod.log.w(TAG, "----------------------------------------");
+            LOGGER.warn("----------------------------------------");
+            LOGGER.error(e, "Failed to convert vampire books to NBT");
+            LOGGER.warn("----------------------------------------");
         } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "Failed to read vampire books from resources");
+            LOGGER.error(e, "Failed to read vampire books from resources");
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    VampirismMod.log.e(TAG, e, "Failed to close InputStream");
+                    LOGGER.error(e, "Failed to close InputStream");
                 }
             }
         }

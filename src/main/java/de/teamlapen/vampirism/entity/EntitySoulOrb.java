@@ -190,19 +190,19 @@ public class EntitySoulOrb extends Entity {
     }
 
     @Override
-    protected void entityInit() {
-        this.getDataManager().register(TYPE_PARAMETER, TYPE.NONE.name());
-    }
-
-    @Override
-    protected void readEntityFromNBT(NBTTagCompound compound) {
+    protected void readAdditional(NBTTagCompound compound) {
         this.setType(TYPE.valueOf(compound.getString("type")));
         this.age = compound.getInteger("age");
         soulItemStack = null;//Reset item just in case a item of a different type has been created beforehand
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound compound) {
+    protected void registerData() {
+        this.getDataManager().register(TYPE_PARAMETER, TYPE.NONE.name());
+    }
+
+    @Override
+    protected void writeAdditional(NBTTagCompound compound) {
         compound.setString("type", this.getType().name());
         compound.setInteger("age", age);
     }

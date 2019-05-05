@@ -9,7 +9,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,7 +37,7 @@ public class BlockFirePlace extends VampirismBlock {
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockReader source, BlockPos pos) {
         return BBOX;
     }
 
@@ -51,7 +51,7 @@ public class BlockFirePlace extends VampirismBlock {
 
 
     @Override
-    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+    public void onNeighborChange(IBlockReader world, BlockPos pos, BlockPos neighbor) {
         if (!world.getBlockState(pos.down()).isSideSolid(world, pos, EnumFacing.UP)) {
             if (world instanceof World) {
                 ((World) world).destroyBlock(pos, true);

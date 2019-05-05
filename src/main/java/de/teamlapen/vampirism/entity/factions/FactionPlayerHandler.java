@@ -186,7 +186,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         } else {
             currentFaction = getFactionFromKey(new ResourceLocation(f));
             if (currentFaction == null) {
-                VampirismMod.log.e(TAG, "Cannot find faction %s on client. You have to register factions on both sides!", f);
+                LOGGER.error("Cannot find faction %s on client. You have to register factions on both sides!", f);
                 currentLevel = 0;
             } else {
                 currentLevel = nbt.getInteger("level");
@@ -229,12 +229,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         int oldLevel = currentLevel;
         if (currentFaction != null && (!currentFaction.equals(faction) || level == 0)) {
             if (!currentFaction.getPlayerCapability(player).canLeaveFaction()) {
-                VampirismMod.log.i(TAG, "You cannot leave faction %s, it is prevented by respective mod", currentFaction.getKey());
+                LOGGER.info("You cannot leave faction %s, it is prevented by respective mod", currentFaction.getKey());
                 return false;
             }
         }
         if (faction != null && (level < 0 || level > faction.getHighestReachableLevel())) {
-            VampirismMod.log.w(TAG, "Level %d in faction %s cannot be reached", level, faction.getKey());
+            LOGGER.warn("Level %d in faction %s cannot be reached", level, faction.getKey());
             return false;
         }
         FactionEvent.ChangeLevelOrFaction event = new FactionEvent.ChangeLevelOrFaction(this, old, oldLevel, faction, faction == null ? 0 : level);
@@ -286,7 +286,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (nbt.hasKey("faction")) {
             currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
             if (currentFaction == null) {
-                VampirismMod.log.w(TAG, "Could not find faction %s. Did mods change?", nbt.getString("faction"));
+                LOGGER.warn("Could not find faction %s. Did mods change?", nbt.getString("faction"));
             } else {
                 currentLevel = nbt.getInteger("level");
                 notifyFaction(null, 0);

@@ -39,16 +39,16 @@ public class BloodGrinderValueLoader {
         } catch (IOException e) {
             VampirismMod.log.bigWarning(TAG,
                     "Could not read default blood grinder values, this should not happen and destroys the mod experience");
-            VampirismMod.log.e(TAG, e, "Exception");
+            LOGGER.error(e, "Exception");
         }
 
         if (bloodConfigFile.exists()) {
             try {
                 bloodValues.putAll(
                         (loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName())));
-                VampirismMod.log.i(TAG, "Successfully loaded additional blood grinder value file");
+                LOGGER.info("Successfully loaded additional blood grinder value file");
             } catch (IOException e) {
-                VampirismMod.log.e(TAG, "Could not read blood grinder values from config file %s",
+                LOGGER.error("Could not read blood grinder values from config file %s",
                         bloodConfigFile.getName());
             }
         }
@@ -109,10 +109,10 @@ public class BloodGrinderValueLoader {
                     BloodGrinderValueLoader.class.getResourceAsStream("/blood_values_grinder/" + modid + ".txt")),
                     modid + ".txt"));
         } catch (IOException e) {
-            VampirismMod.log.e(TAG, e,
+            LOGGER.error(e,
                     "[ModCompat]Could not read default blood values for mod %s, this should not happen", modid);
         } catch (NullPointerException e) {
-            VampirismMod.log.e(TAG, e, "[ModCompat]Could not find packed (in JAR) blood value file for mod %s", modid);
+            LOGGER.error(e, "[ModCompat]Could not find packed (in JAR) blood value file for mod %s", modid);
         }
     }
 

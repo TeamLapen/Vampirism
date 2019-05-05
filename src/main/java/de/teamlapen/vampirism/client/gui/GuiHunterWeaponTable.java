@@ -48,7 +48,7 @@ public class GuiHunterWeaponTable extends GuiContainer {
         IBlockState blockState = this.world.getBlockState(pos);
         if (blockState.getBlock() instanceof BlockWeaponTable) {
             lava = blockState.getValue(BlockWeaponTable.LAVA);
-            if (world.getTotalWorldTime() % 10 == 4) {
+            if (world.getGameTime() % 10 == 4) {
                 isMissingLava = ((HunterWeaponTableContainer) this.inventorySlots).isMissingLava();
             }
         } else {

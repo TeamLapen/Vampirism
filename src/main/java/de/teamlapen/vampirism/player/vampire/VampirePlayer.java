@@ -50,7 +50,10 @@ import net.minecraft.network.play.server.SPacketAnimation;
 import net.minecraft.network.play.server.SPacketUseBed;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -196,12 +199,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     public void biteBlock(BlockPos pos) {
         if (player.isSpectator()) {
-            VampirismMod.log.w(TAG, "Player can't bite in spectator mode");
+            LOGGER.warn("Player can't bite in spectator mode");
             return;
         }
         double dist = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1;
         if (player.getDistanceSq(pos) > dist * dist) {
-            VampirismMod.log.w(TAG, "Block sent by client is not in reach" + pos);
+            LOGGER.warn("Block sent by client is not in reach" + pos);
         } else {
             biteBlock(pos, player.world.getBlockState(pos), player.world.getTileEntity(pos));
         }
@@ -216,11 +219,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void biteEntity(int entityId) {
         Entity e = player.getEntityWorld().getEntityByID(entityId);
         if (player.isSpectator()) {
-            VampirismMod.log.w(TAG, "Player can't bite in spectator mode");
+            LOGGER.warn("Player can't bite in spectator mode");
             return;
         }
         if (getActionHandler().isActionActive(VampireActions.bat)) {
-            VampirismMod.log.w(TAG, "Cannot bite in bat mode");
+            LOGGER.warn("Cannot bite in bat mode");
             return;
         }
         if (e instanceof EntityLivingBase) {
@@ -244,7 +247,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
                 }
             } else {
-                VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
+                LOGGER.warn("Entity sent by client is not in reach " + entityId);
             }
         }
     }
@@ -825,7 +828,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             reflectionMethodSetSize.invoke(player, width, height);
             return true;
         } catch (Exception e) {
-            VampirismMod.log.e(TAG, e, "Could not change players size! ");
+            LOGGER.error(e, "Could not change players size! ");
             return false;
         }
     }
@@ -1073,7 +1076,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             } else {
                 vision = ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getVisionOfId(id);
                 if (vision == null) {
-                    VampirismMod.log.w(TAG, "Failed to find vision with id %d", id);
+                    LOGGER.warn("Failed to find vision with id %d", id);
                 }
             }
             activateVision(vision);

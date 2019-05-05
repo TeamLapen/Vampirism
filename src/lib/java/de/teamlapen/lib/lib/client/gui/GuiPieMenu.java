@@ -2,19 +2,14 @@ package de.teamlapen.lib.lib.client.gui;
 
 
 import de.teamlapen.lib.LIBREFERENCE;
-import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.GuiIngameForge;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Cursor;
-import org.lwjgl.input.Mouse;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -79,8 +74,55 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
         return false;
     }
 
+
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void initGui() {
+        this.onGuiInit();
+        this.elementCount = elements.size();
+        radDiff = 2D * Math.PI / elementCount;// gap in rad
+        // Disable cursor
+        /*
+        //TODO 1.13
+        try {
+            GLFW.glfwSetCursor();
+            Mouse.setNativeCursor(new Cursor(1, 1, 0, 0, 1, BufferUtils.createIntBuffer(1), null));
+        } catch (LWJGLException e) {
+            VampLib.log.e("GuiPieMenu", "Failed to set empty cursor", e);
+        }
+        */
+
+        GuiIngameForge.renderCrosshairs = false;
+    }
+
+    @Override
+    public boolean keyReleased(int key, int scancode, int modifiers) {
+        if (getMenuKeyBinding().matchesKey(key, scancode)) {
+            //Menu key released
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseScrolled(double p_mouseScrolled_1_) {
+        return false;
+    }
+
+    @Override
+    public void onGuiClosed() {
+        GuiIngameForge.renderCrosshairs = true;
+        // Enable cursor
+        /*
+        //TODO 1.13
+        try {
+            Mouse.setNativeCursor(null);
+        } catch (LWJGLException e) {
+            VampLib.log.e("GuiPieMenu", "Could not reset cursor", e);
+        }
+         */
+    }
+
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
         // Calculate center and radius of the skill cycle
         int cX = this.width / 2;
         int cY = this.height / 2;
@@ -137,39 +179,15 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
             int ty = this.height / 7;
             mc.fontRenderer.drawStringWithShadow(name, tx, ty, 16777215);
         }
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        super.render(mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public void initGui() {
-        this.onGuiInit();
-        this.elementCount = elements.size();
-        radDiff = 2D * Math.PI / elementCount;// gap in rad
-        // Disable cursor
-        try {
-            Mouse.setNativeCursor(new Cursor(1, 1, 0, 0, 1, BufferUtils.createIntBuffer(1), null));
-        } catch (LWJGLException e) {
-            VampLib.log.e("GuiPieMenu", "Failed to set empty cursor", e);
-        }
-        GuiIngameForge.renderCrosshairs = false;
-    }
-
-    @Override
-    public void onGuiClosed() {
-        GuiIngameForge.renderCrosshairs = true;
-        // Enable cursor
-        try {
-            Mouse.setNativeCursor(null);
-        } catch (LWJGLException e) {
-            VampLib.log.e("GuiPieMenu", "Could not reset cursor", e);
-        }
-    }
-
-    @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public void tick() {
+        super.tick();
         this.mc.player.movementInput.updatePlayerMoveState();
-        if (!GameSettings.isKeyDown(getMenuKeyBinding())) {
+
+        if (!getMenuKeyBinding().isKeyDown()) { //TODO 1.13 if this does not work, move to #keyReleased
             if (selectedElement >= 0) {
                 this.onElementSelected(elements.get(selectedElement));
             }
@@ -350,9 +368,9 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
      * @param y
      */
     private void setAbsoluteMouse(double x, double y) {
-        x = x * this.mc.displayWidth / this.width;
-        y = -(y + 1 - height) * this.mc.displayHeight / height;
-        Mouse.setCursorPosition((int) x, (int) y);
+        x = x * this.mc.mainWindow.getFramebufferWidth() / this.width;
+        y = -(y + 1 - height) * this.mc.mainWindow.getFramebufferHeight() / height;
+        GLFW.glfwSetCursorPos(this.mc.mainWindow.getHandle(), x, y);
     }
 
     /**
