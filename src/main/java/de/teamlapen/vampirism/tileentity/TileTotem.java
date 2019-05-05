@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.EntityFactionVillager;
@@ -29,6 +30,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -66,6 +68,7 @@ public class TileTotem extends TileEntity implements ITickable {
     private final static int NOTIFY_DISTANCE_SQ = 40000;
     private final static String TAG = "TileTotem";
     private final static int DURATION_PHASE_1 = 60;
+    private final Random rng = new Random();
     /**
      * Store a dimension -> blockpos -> BoundingBox map of villages controlled by vampires. Added/Updated on update package. Removed on invalidate.
      * <p>
@@ -662,6 +665,22 @@ public class TileTotem extends TileEntity implements ITickable {
                             }
                         }
 
+                    }
+                }
+                //Replace blocks
+                if (controllingFaction != null && Balance.village.REPLACE_BLOCKS && time % 20 == 0) {
+                    getAffectedArea();//Make sure the affected area is calculated
+                    int x = (int) (affectedArea.minX + rng.nextInt((int) (affectedArea.maxX - affectedArea.minX)));
+                    int z = (int) (affectedArea.minZ + rng.nextInt((int) (affectedArea.maxZ - affectedArea.minZ)));
+                    BlockPos pos = new BlockPos(x, world.getHeight(x, z) - 1, z);
+                    IBlockState b = world.getBlockState(pos);
+                    if (b.getBlock() == world.getBiome(pos).topBlock.getBlock() && b.getBlock() != Blocks.SAND && controllingFaction == VReference.VAMPIRE_FACTION) {
+                        world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
+                        if (world.getBlockState(pos.up()).getBlock() == Blocks.TALLGRASS) {
+                            world.setBlockToAir(pos.up());
+                        }
+                    } else if (b.getBlock() == ModBlocks.cursed_earth && controllingFaction == VReference.HUNTER_FACTION) {
+                        world.setBlockState(pos, world.getBiome(pos).topBlock);
                     }
                 }
             }
