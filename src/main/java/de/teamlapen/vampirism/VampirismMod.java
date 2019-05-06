@@ -15,7 +15,13 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.BloodGrinderValueLoader;
 import de.teamlapen.vampirism.config.BloodValueLoader;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModEventHandler;
+import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.RegistryManager;
+import de.teamlapen.vampirism.core.TestCommand;
+import de.teamlapen.vampirism.core.VampirismCommand;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -27,6 +33,10 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
+import de.teamlapen.vampirism.modcompat.IMCHandler;
+import de.teamlapen.vampirism.modcompat.SpongeModCompat;
+import de.teamlapen.vampirism.modcompat.guide.GuideAPICompat;
+import de.teamlapen.vampirism.modcompat.jei.JEIModCompat;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
@@ -43,12 +53,17 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
-import de.teamlapen.vampirism.util.*;
+import de.teamlapen.vampirism.util.GeneralRegistryImpl;
+import de.teamlapen.vampirism.util.HalloweenSpecial;
+import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.SupporterManager;
+import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
@@ -64,12 +79,16 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
+import net.minecraftforge.fml.network.NetworkRegistry;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 
 /**
@@ -185,10 +204,14 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void onServerStart(FMLServerStartingEvent event) {
-        event.registerServerCommand(new VampirismCommand());
+        // event.registerServerCommand(new VampirismCommand()); already moved
         event.registerServerCommand(new TestCommand());
         VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
         BloodValueLoader.onServerStarting(event.getServer());
+    }
+
+    public void serverStarting(FMLServerStartingEvent event) {
+        new VampirismCommand(event.getCommandDispatcher());
     }
 
     @Mod.EventHandler
