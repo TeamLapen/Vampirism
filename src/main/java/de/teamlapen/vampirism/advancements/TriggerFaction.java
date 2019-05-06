@@ -3,20 +3,23 @@ package de.teamlapen.vampirism.advancements;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.advancements.critereon.AbstractCriterionInstance;
+import net.minecraft.advancements.criterion.AbstractCriterionInstance;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Instance> {
+
+    private final static Logger LOGGER = LogManager.getLogger();
 
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "faction");
 
@@ -33,7 +36,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
             if (!"any".equals(name)) {
                 IFaction faction1 = VampirismAPI.factionRegistry().getFactionByName(name);
                 if (faction1 == null || !(faction1 instanceof IPlayableFaction)) {
-                    VampirismMod.log.w("TriggerFaction", "Given faction name does not exist or is not a playable faction: %s", name);
+                    LOGGER.warn("Given faction name does not exist or is not a playable faction: {}", name);
                 } else {
                     faction = (IPlayableFaction) faction1;
                 }

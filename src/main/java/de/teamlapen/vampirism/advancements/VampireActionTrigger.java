@@ -3,13 +3,14 @@ package de.teamlapen.vampirism.advancements;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.advancements.critereon.AbstractCriterionInstance;
+import net.minecraft.advancements.criterion.AbstractCriterionInstance;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -18,6 +19,9 @@ import java.util.List;
  * Collection of several vampire related triggers
  */
 public class VampireActionTrigger extends AbstractCriterionTrigger<VampireActionTrigger.Instance> {
+
+    private final static Logger LOGGER = LogManager.getLogger();
+
 
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "vampire_action");
 
@@ -35,10 +39,10 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
             try {
                 action = Action.valueOf(name.toUpperCase());
             } catch (IllegalArgumentException e) {
-                VampirismMod.log.w("VampireActionTrigger", "Action %s does not exist", name);
+                LOGGER.warn("Action {} does not exist", name);
             }
         } else {
-            VampirismMod.log.w("VampireActionTrigger", "Action not specified");
+            LOGGER.warn("Action not specified");
         }
         return new Instance(action);
     }

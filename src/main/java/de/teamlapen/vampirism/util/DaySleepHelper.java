@@ -14,7 +14,7 @@ import java.util.Map;
  * Handle coffin sleep during the day.
  * This works in the following way:
  * The player is set to sleep by {@link VampirePlayer#trySleep(BlockPos)} which is similar to {@link EntityPlayer#trySleep(BlockPos)}, but works during the day.
- * It uses reflection to modify size and more. It does not set  {@link EntityPlayer#sleeping} but {@link VampirePlayer#sleepingInCoffin}.
+ * It uses reflection to modify size and more.
  * This method also sends a sleep packet to the client, which uses the vanilla methods to sleep. Only the sleep gui is replaced by a custom one in the client event handler, when the vanilla gui is open and the player is in a coffin.
  * That GUI sends a  {@link InputEventPacket#WAKEUP} packet to the server.
  * The player should be waked by {@link VampirePlayer#wakeUpPlayer(boolean, boolean, boolean)}, which uses the vanilla wakeup method, but also sets the vampire player variables and updates this class.
@@ -54,7 +54,7 @@ public class DaySleepHelper {
                 }
             }
             boolean enough = sleeping > 0 && sleeping / ((float) all - spectators - ignorePlayers) * 100 >= Configs.coffin_sleep_percentage;
-            enoughPlayersAsleep.put(world.provider.getDimension(), enough);
+            enoughPlayersAsleep.put(world.getDimension().getType().getId(), enough);
         }
     }
 
@@ -64,7 +64,7 @@ public class DaySleepHelper {
      * @param world
      */
     public static void checkSleepWorld(World world) {
-        if (enoughPlayersAsleep.get(world.provider.getDimension()) == Boolean.TRUE) {
+        if (enoughPlayersAsleep.get(world.getDimension().getType().getId()) == Boolean.TRUE) {
             int sleeping = 0;
             int total = 0;
             for (EntityPlayer entityplayer : world.playerEntities) {
@@ -77,8 +77,8 @@ public class DaySleepHelper {
             }
             if (sleeping / (float) total * 100 < Configs.coffin_sleep_percentage) return;
             if (world.getGameRules().getBoolean("doDaylightCycle")) {
-                long i = world.getWorldInfo().getWorldTime() + 24000L;
-                world.getWorldInfo().setWorldTime(i - i % 24000L + 12700L);
+                long i = world.getWorldInfo().getDayTime() + 24000L;
+                world.getWorldInfo().setDayTime(i - i % 24000L + 12700L);
             }
 
             wakeAllPlayers(world);
@@ -91,7 +91,7 @@ public class DaySleepHelper {
      * @param world
      */
     public static void wakeAllPlayers(World world) {
-        enoughPlayersAsleep.put(world.provider.getDimension(), Boolean.FALSE);
+        enoughPlayersAsleep.put(world.getDimension().getType().getId(), Boolean.FALSE);
 
         for (EntityPlayer entityplayer : world.playerEntities) {
             VampirePlayer vampirePlayer = VampirePlayer.get(entityplayer);
@@ -101,7 +101,7 @@ public class DaySleepHelper {
         }
 
         if (!world.isRemote) {
-            world.provider.resetRainAndThunder();
+            world.getDimension().resetRainAndThunder();
         }
     }
 }

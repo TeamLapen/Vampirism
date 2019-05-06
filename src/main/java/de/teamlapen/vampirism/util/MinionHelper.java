@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.util;
 
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -10,6 +9,8 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,6 +19,8 @@ import javax.annotation.Nullable;
  * Provides several static util methods for minion related things
  */
 public class MinionHelper {
+    private final static Logger LOGGER = LogManager.getLogger();
+
 
 //    /**
 //     * Returns a new IEntitySelector for minion AI target tasks
@@ -131,7 +134,7 @@ public class MinionHelper {
             EntityLivingBase entity = entity(m);
             ITextComponent c1;
             if (entity.hasCustomName()) {
-                c1 = new TextComponentString(entity.getCustomNameTag());
+                c1 = entity.getCustomName();
             } else {
                 c1 = new TextComponentTranslation("text.vampirism.minion");
             }
@@ -169,7 +172,7 @@ public class MinionHelper {
         try {
             return (EntityCreature) minion;
         } catch (ClassCastException e) {
-            VampirismMod.log.e("Minion", "All classes that implement IMinion have to extend EntityCreature. %s does not. This is a implementation fault.", minion.getClass());
+            LOGGER.error("All classes that implement IMinion have to extend EntityCreature. {} does not. This is a implementation fault.", minion.getClass());
             throw e;
         }
 

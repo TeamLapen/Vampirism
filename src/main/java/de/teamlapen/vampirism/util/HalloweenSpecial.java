@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
@@ -13,8 +12,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +29,7 @@ import java.util.UUID;
  */
 public class HalloweenSpecial {
 
+    private final static Logger LOGGER = LogManager.getLogger();
     private static boolean enabled = false;
     private static int render_overlay;
 
@@ -45,7 +48,7 @@ public class HalloweenSpecial {
 
     public static void enable() {
         enabled = true;
-        VampirismMod.log.i("Halloween", "It's Halloween");
+        LOGGER.info("It's Halloween");
     }
 
     /**
@@ -78,7 +81,7 @@ public class HalloweenSpecial {
         if (render_overlay > 0) {
             render_overlay--;
         } else if (Minecraft.getInstance().world != null) {
-            int time = (int) Minecraft.getInstance().world.getWorldTime();
+            int time = (int) Minecraft.getInstance().world.getDayTime();
             if (time > 13000 && time < 13100) {
                 triggerOverlay(Minecraft.getInstance().player);
             }
@@ -92,7 +95,7 @@ public class HalloweenSpecial {
         if (enabled) {
             tickTimer++;
             if (tickTimer % 200 == 99) {
-                for (EntityPlayerMP p : ServerLifecycleHooks.getCurrentServer().getServer().getPlayerList().getPlayers()) {
+                for (EntityPlayerMP p : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
                     UUID u = p.getUniqueID();
                     if (!blacklist.contains(u)) {
                         EntityDraculaHalloween draculaHalloween = new EntityDraculaHalloween(p.getEntityWorld());

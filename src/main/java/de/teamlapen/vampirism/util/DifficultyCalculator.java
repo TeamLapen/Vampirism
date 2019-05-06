@@ -7,7 +7,9 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,7 +79,7 @@ public class DifficultyCalculator {
      * @return A difficulty level based on the server's player's faction levels
      */
     public static Difficulty getGlobalDifficulty() {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+        if (EffectiveSide.get() == LogicalSide.CLIENT) {
             throw new IllegalStateException("You can only use this method on server side");
         }
         return calculateDifficulty(ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers());

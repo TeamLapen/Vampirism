@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.config.Configs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 /**
  * TODO integrate with e.g. ForgeEssentials

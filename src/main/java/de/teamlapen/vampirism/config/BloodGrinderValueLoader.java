@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.config;
 
 import com.google.common.collect.ImmutableMap;
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.HashMap;
@@ -16,7 +18,8 @@ import java.util.Map;
  */
 public class BloodGrinderValueLoader {
 
-    private static final String TAG = "BloodValueGrinderLoader";
+    private static final Logger LOGGER = LogManager.getLogger();
+
 
     private static final Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
 
@@ -37,18 +40,20 @@ public class BloodGrinderValueLoader {
                             .getResourceAsStream("/blood_values_grinder/default_blood_values.txt")),
                     "default_blood_values.txt"));
         } catch (IOException e) {
-            VampirismMod.log.bigWarning(TAG,
-                    "Could not read default blood grinder values, this should not happen and destroys the mod experience");
-            LOGGER.error(e, "Exception");
+            LOGGER.error(LogUtil.CONFIG, "----------------------------------------------------------------------------------------------------");
+            LOGGER.error(LogUtil.CONFIG, "Could not read default blood grinder values, this should not happen and destroys the mod experience");
+            LOGGER.error(LogUtil.CONFIG, "Exception", e);
+            LOGGER.error(LogUtil.CONFIG, "----------------------------------------------------------------------------------------------------");
+
         }
 
         if (bloodConfigFile.exists()) {
             try {
                 bloodValues.putAll(
                         (loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName())));
-                LOGGER.info("Successfully loaded additional blood grinder value file");
+                LOGGER.info(LogUtil.CONFIG, "Successfully loaded additional blood grinder value file");
             } catch (IOException e) {
-                LOGGER.error("Could not read blood grinder values from config file %s",
+                LOGGER.error(LogUtil.CONFIG, "Could not read blood grinder values from config file {}",
                         bloodConfigFile.getName());
             }
         }
@@ -75,14 +80,14 @@ public class BloodGrinderValueLoader {
                     continue;
                 String[] p = line.split("=");
                 if (p.length != 2) {
-                    VampirismMod.log.w("ReadBlood", "Line %s  in %s is not formatted properly", line, file);
+                    LOGGER.warn(LogUtil.CONFIG, "Line {}  in {} is not formatted properly", line, file);
                     continue;
                 }
                 int val;
                 try {
                     val = Integer.parseInt(p[1]);
                 } catch (NumberFormatException e) {
-                    VampirismMod.log.w("ReadBlood", "Line %s  in %s is not formatted properly", line, file);
+                    LOGGER.warn(LogUtil.CONFIG, "Line {}  in {} is not formatted properly", line, file);
                     continue;
                 }
                 bloodValues.put(new ResourceLocation(p[0]), val);
@@ -102,17 +107,17 @@ public class BloodGrinderValueLoader {
      */
     public static void loadBloodValuesModCompat(String modid) {
 
-        if (!Loader.isModLoaded(modid))
+        if (!ModList.get().isLoaded(modid))
             return;
         try {
             bloodValues.putAll(BloodGrinderValueLoader.loadBloodValuesFromReader(new InputStreamReader(
                     BloodGrinderValueLoader.class.getResourceAsStream("/blood_values_grinder/" + modid + ".txt")),
                     modid + ".txt"));
         } catch (IOException e) {
-            LOGGER.error(e,
-                    "[ModCompat]Could not read default blood values for mod %s, this should not happen", modid);
+            LOGGER.error(LogUtil.CONFIG,
+                    "[ModCompat]Could not read default blood values for mod " + modid + ", this should not happen", e);
         } catch (NullPointerException e) {
-            LOGGER.error(e, "[ModCompat]Could not find packed (in JAR) blood value file for mod %s", modid);
+            LOGGER.error(LogUtil.CONFIG, "[ModCompat]Could not find packed (in JAR) blood value file for mod " + modid, e);
         }
     }
 

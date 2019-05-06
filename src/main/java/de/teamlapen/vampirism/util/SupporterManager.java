@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.util;
 import com.google.common.io.ByteStreams;
 import com.google.gson.*;
 import de.teamlapen.vampirism.VampirismMod;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -19,7 +21,8 @@ import java.util.Random;
  * http://skins.minecraft.net/MinecraftSkins/%s.png
  */
 public class SupporterManager {
-    private final static String TAG = "SupporterManager";
+    private final static Logger LOGGER = LogManager.getLogger();
+
     private static SupporterManager instance = new SupporterManager();
 
     public static SupporterManager getInstance() {
@@ -54,7 +57,7 @@ public class SupporterManager {
     }
 
     public void initAsync() {
-        Thread thread = new Thread(REFERENCE.MODID + ":" + TAG) {
+        Thread thread = new Thread(REFERENCE.MODID + ":" + "SupporterManager") {
 
             public void run() {
                 init();
@@ -79,9 +82,9 @@ public class SupporterManager {
             supporters = retrieveSupporter(data);
         } catch (IOException e) {
             if (e instanceof ConnectException) {
-                LOGGER.error("Failed to connect to supporter url %s", REFERENCE.SUPPORTER_FILE);
+                LOGGER.error("Failed to connect to supporter url {}", REFERENCE.SUPPORTER_FILE);
             } else {
-                LOGGER.error(e, "Failed to retrieve supporters from url");
+                LOGGER.error("Failed to retrieve supporters from url", e);
             }
         }
         if (supporters == null || VampirismMod.inDev) {
@@ -92,12 +95,12 @@ public class SupporterManager {
                 inputStream.close();
                 supporters = retrieveSupporter(data);
             } catch (IOException e) {
-                LOGGER.error(e, "Failed to retrieve supporters from resources");
+                LOGGER.error("Failed to retrieve supporters from resources", e);
             }
         }
         if (supporters != null) {
             this.supporters = supporters;
-            VampirismMod.log.d(TAG, "Supporters %s", getDebugString());
+            LOGGER.trace("Supporters {}", getDebugString());
         }
     }
 
@@ -137,7 +140,7 @@ public class SupporterManager {
             }
             return supporters;
         } catch (JsonSyntaxException e) {
-            LOGGER.error(e, "Failed to parse supporter list");
+            LOGGER.error("Failed to parse supporter list", e);
         }
         return null;
 

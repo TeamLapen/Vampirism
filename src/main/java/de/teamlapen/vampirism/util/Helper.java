@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -26,7 +25,9 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,6 +35,9 @@ import java.lang.reflect.Method;
 
 
 public class Helper {
+
+
+    private final static Logger LOGGER = LogManager.getLogger();
 
     private static Method reflectionMethodExperiencePoints;
 
@@ -47,7 +51,7 @@ public class Helper {
     public static boolean gettingSundamge(EntityLivingBase entity) {
         entity.getEntityWorld().profiler.startSection("vampirism_checkSundamage");
         if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator()) return false;
-        if (VampirismAPI.sundamageRegistry().getSundamageInDim(entity.getEntityWorld().provider.getDimension())) {
+        if (VampirismAPI.sundamageRegistry().getSundamageInDim(entity.getEntityWorld().getDimension().getType())) {
             if (!entity.getEntityWorld().isRaining()) {
                 float angle = entity.getEntityWorld().getCelestialAngle(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
@@ -58,7 +62,7 @@ public class Helper {
                         try {
                             Biome biome = entity.getEntityWorld().getBiome(pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (!TileTotem.isInsideVampireAreaCached(entity.getEntityWorld().provider.getDimension(), new BlockPos(entity.posX, entity.posY + 1, entity.posZ))) { //For some reason client returns different value for #getPosition than server
+                                if (!TileTotem.isInsideVampireAreaCached(entity.getEntityWorld().getDimension().getType().getId(), new BlockPos(entity.posX, entity.posY + 1, entity.posZ))) { //For some reason client returns different value for #getPosition than server
                                     entity.getEntityWorld().profiler.endSection();
                                     return true;
                                 }
@@ -92,7 +96,7 @@ public class Helper {
                 int liquidBlocks = 0;
                 for (blockpos = blockpos.down(); blockpos.getY() > pos.getY(); blockpos = blockpos.down()) {
                     IBlockState iblockstate = world.getBlockState(blockpos);
-                    if (iblockstate.getBlock().getLightOpacity(iblockstate, world, blockpos) > 0) {
+                    if (iblockstate.getBlock().getOpacity(iblockstate, world, blockpos) > 0) {
                         if (iblockstate.getMaterial().isLiquid()) {
                             liquidBlocks++;
                             if (liquidBlocks >= Balance.vp.SUNDAMAGE_WATER_BLOCKS) {
@@ -163,7 +167,7 @@ public class Helper {
             return ModBiomes.vampireForest.getRegistryName().equals(e.getEntityWorld().getBiome(e.getPosition()).getRegistryName());
         } catch (NullPointerException e1) {
             //http://openeye.openmods.info/crashes/8cef4d710e41adf9be8362e57ad70d28
-            VampirismMod.log.e("Helper", e1, "Nullpointer when checking biome. This is strange and should not happen");
+            LOGGER.error("Nullpointer when checking biome. This is strange and should not happen", e1);
             return false;
         }
     }
@@ -183,11 +187,11 @@ public class Helper {
     public static int getExperiencePoints(EntityLivingBase entity, EntityPlayer player) {
         try {
             if (reflectionMethodExperiencePoints == null) {
-                reflectionMethodExperiencePoints = ReflectionHelper.findMethod(EntityLivingBase.class, "getExperiencePoints", SRGNAMES.EntityLivingBase_getExperiencePoints, EntityPlayer.class);
+                reflectionMethodExperiencePoints = ObfuscationReflectionHelper.findMethod(EntityLivingBase.class, SRGNAMES.EntityLivingBase_getExperiencePoints, EntityPlayer.class);
             }
             return (int) reflectionMethodExperiencePoints.invoke(entity, player);
         } catch (Exception e) {
-            VampirismMod.log.e("Helper", e, "Failed to get experience points");
+            LOGGER.error("Failed to get experience points", e);
         }
         return 0;
     }

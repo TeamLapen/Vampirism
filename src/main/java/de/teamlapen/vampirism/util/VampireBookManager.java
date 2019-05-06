@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.util;
 
 import com.google.common.io.ByteStreams;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +19,7 @@ import java.util.Random;
  * Handles loading of texts for ancient vampire books
  */
 public class VampireBookManager {
-    private static final String TAG = "VampireBookManager";
+    private final static Logger LOGGER = LogManager.getLogger();
     private static VampireBookManager ourInstance = new VampireBookManager();
 
     public static VampireBookManager getInstance() {
@@ -31,7 +33,7 @@ public class VampireBookManager {
 
     public void applyRandomBook(ItemStack stack, Random rnd) {
         NBTTagCompound nbt = (bookTags == null || bookTags.length == 0) ? new NBTTagCompound() : bookTags[rnd.nextInt(bookTags.length)];
-        stack.setTagCompound(nbt);
+        stack.setTag(nbt);
     }
 
     /**
@@ -56,24 +58,24 @@ public class VampireBookManager {
             String data = new String(ByteStreams.toByteArray(inputStream));
 
             parseBooks(data);
-        } catch (NBTException e) {
+        } catch (CommandSyntaxException e) {
             LOGGER.warn("----------------------------------------");
-            LOGGER.error(e, "Failed to convert vampire books to NBT");
+            LOGGER.error("Failed to convert vampire books to NBT", e);
             LOGGER.warn("----------------------------------------");
         } catch (IOException e) {
-            LOGGER.error(e, "Failed to read vampire books from resources");
+            LOGGER.error("Failed to read vampire books from resources", e);
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    LOGGER.error(e, "Failed to close InputStream");
+                    LOGGER.error("Failed to close InputStream", e);
                 }
             }
         }
     }
 
-    private void parseBooks(String data) throws NBTException {
+    private void parseBooks(String data) throws CommandSyntaxException {
 
         ArrayList<NBTTagCompound> books = new ArrayList<>();
         String[] lines = data.split("\n");

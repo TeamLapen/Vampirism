@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.config;
 
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.lib.lib.config.forge.ConfigCategory;
+import de.teamlapen.lib.lib.config.forge.Configuration;
+import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -8,8 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -19,13 +21,13 @@ import java.io.File;
  */
 public class Configs {
 
+    private static final Logger LOGGER = LogManager.getLogger();
     public static final String CATEGORY_GENERAL = Configuration.CATEGORY_GENERAL;
     public static final String CATEGORY_GUI = "gui";
     public static final String CATEGORY_VILLAGE = "village_settings";
     public static final String CATEGORY_BALANCE = "balance";
     public static final String CATEGORY_DISABLE = "disabled";
     public static final String CATEGORY_WORLDGEN = "world_gen";
-    private final static String TAG = "Configs";
     public static boolean realism_mode;
     public static boolean resetConfigurationInDev;
     public static int gui_level_offset_x;
@@ -76,7 +78,7 @@ public class Configs {
         File mainConfigFile = new File(configDir, REFERENCE.MODID + ".cfg");
         main_config = new Configuration(mainConfigFile, REFERENCE.VERSION);
         loadConfiguration(false);
-        if (updated_vampirism) LOGGER.info("Vampirism seems to have been updated");
+        if (updated_vampirism) LOGGER.info(LogUtil.CONFIG, "Vampirism seems to have been updated");
         LOGGER.info("Loaded configuration");
     }
 
@@ -103,7 +105,7 @@ public class Configs {
             if (s.isEmpty()) continue;
             String[] t = s.split(":");
             if (t.length != 2) {
-                LOGGER.warn("Cannot understand sundamage dimension line '%s'. Missing separator", s);
+                LOGGER.warn(LogUtil.CONFIG, "Cannot understand sundamage dimension line '{}'. Missing separator", s);
                 continue;
             }
             try {
@@ -111,7 +113,7 @@ public class Configs {
                 boolean type = Integer.valueOf(t[1]) != 0;
                 ((SundamageRegistry) VampirismAPI.sundamageRegistry()).specifyConfiguredSundamageForDim(dim, type);
             } catch (NumberFormatException e) {
-                LOGGER.warn("Cannot understand sundamage dimension line '%s'. Failed to convert numbers", s);
+                LOGGER.warn(LogUtil.CONFIG, "Cannot understand sundamage dimension line '{}'. Failed to convert numbers", s);
                 continue;
             }
         }
@@ -122,7 +124,7 @@ public class Configs {
                 ResourceLocation res = new ResourceLocation(s);
                 ((SundamageRegistry) VampirismAPI.sundamageRegistry()).addNoSundamageBiomeConfigured(res);
             } catch (Exception e) {
-                LOGGER.error(e, "Failed to parse no sundamage biome id %s", s);
+                LOGGER.error(LogUtil.CONFIG, "Failed to parse no sundamage biome id " + s, e);
             }
 
         }
@@ -180,7 +182,7 @@ public class Configs {
     }
 
     public static void onConfigurationChanged() {
-        LOGGER.info("Reloading changed configuration");
+        LOGGER.info(LogUtil.CONFIG, "Reloading changed configuration");
         loadConfiguration(false);
     }
 
@@ -192,7 +194,7 @@ public class Configs {
     @OnlyIn(Dist.CLIENT)
     public static void onDisconnectedFromServer() {
         if (overriddenByServer) {
-            VampirismMod.log.d(TAG, "Disconnected from server -> Reloading config");
+            LOGGER.trace(LogUtil.CONFIG, "Disconnected from server -> Reloading config");
             loadConfiguration(true);
             overriddenByServer = false;
         }

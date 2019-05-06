@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.config;
 
 import de.teamlapen.lib.lib.config.BalanceValues;
+import de.teamlapen.lib.lib.util.LogUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -11,7 +14,8 @@ import java.util.Map;
  * Main balance configuration handler
  */
 public class Balance {
-    private final static String TAG = "Balance";
+    private final static Logger LOGGER = LogManager.getLogger();
+
     private final static Map<String, BalanceValues> categories = new HashMap<>();
     public static BalanceLeveling leveling;
     public static BalanceMobProps mobProps;
@@ -44,7 +48,7 @@ public class Balance {
             loadConfiguration();
         }
 
-        LOGGER.info("Loaded balance configuration");
+        LOGGER.info(LogUtil.CONFIG, "Loaded balance configuration");
     }
 
     private static <T extends BalanceValues> T addBalance(T cat) {
@@ -59,7 +63,7 @@ public class Balance {
     }
 
     public static void onConfigurationChanged() {
-        LOGGER.info("Reloading changed balance configuration");
+        LOGGER.info(LogUtil.CONFIG, "Reloading changed balance configuration");
         loadConfiguration();
     }
 

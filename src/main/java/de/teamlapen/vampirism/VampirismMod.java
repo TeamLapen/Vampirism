@@ -248,7 +248,6 @@ public class VampirismMod {
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new ModGuiHandler());
         registryManager.onInitStep(IInitListener.Step.PRE_INIT, event);
         proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
-        ScoreboardUtil.init();
 
     }
 
