@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.util;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -11,9 +12,9 @@ import javax.annotation.Nullable;
 public interface IPlayerFace {
 
     /**
-     * @return Name of the player who's face should be overlayed. Null if none
+     * @return Game profile of the player who's face should be overlayed. Null if none
      */
     @OnlyIn(Dist.CLIENT)
     @Nullable
-    String getPlayerFaceName();
+    GameProfile getPlayerFaceProfile();
 }

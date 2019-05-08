@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import com.mojang.authlib.GameProfile;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -11,8 +12,10 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerFace;
+import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.util.SupporterManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -32,6 +35,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,6 +52,12 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     private final int MAX_LEVEL = 1;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
+
+    @OnlyIn(Dist.CLIENT)
+    @Nullable
+    private GameProfile facePlayerProfile;
+
+
     /**
      * available actions for AI task & task
      */
@@ -131,10 +142,17 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Nullable
     @Override
-    public String getPlayerFaceName() {
-        return getTextureName();
+    public GameProfile getPlayerFaceProfile() {
+        if (this.facePlayerProfile == null) {
+            String name = getTextureName();
+            if (name == null) return null;
+            facePlayerProfile = new GameProfile(null, name);
+            PlayerSkinHelper.updateGameProfileAsync(facePlayerProfile, (profile) -> Minecraft.getInstance().execute(() -> AdvancedHunterEntity.this.facePlayerProfile = profile));
+        }
+        return facePlayerProfile;
     }
 
     @Nullable

@@ -20,9 +20,9 @@ public class AdvancedVampireRenderer extends BipedRenderer<AdvancedVampireEntity
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png");
 
     public AdvancedVampireRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new BipedModel(0F, 0F, 64, 64), 0.5F);
+        super(renderManagerIn, new BipedModel<>(0F, 0F, 64, 64), 0.5F);
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
-            this.addLayer(new LayerPlayerFaceOverlay<AdvancedVampireEntity>(this));
+            this.addLayer(new LayerPlayerFaceOverlay<>(this));
             this.addLayer(new LayerAdvancedVampireEye(this));
 
         }

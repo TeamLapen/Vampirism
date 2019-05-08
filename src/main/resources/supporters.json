@@ -14,10 +14,10 @@
       "status": 1
     },
     {
-      "name": "Dangerous Invadertex",
-      "texture": "Invadertex",
-      "status": 2,
-      "type": 4
+      "name": "Adrian DraxWind",
+      "texture": "bronzeshadow",
+      "type": 2,
+      "status": 1
     }
   ],
   "hunters": [
@@ -34,9 +34,15 @@
       "status": 1
     },
     {
-      "name": "Evernife",
-      "texture": "evernife",
-      "type": 2,
+      "name": "Pyromaniac Pik",
+      "texture": "piklach",
+      "type": 0,
+      "status": 1
+    },
+    {
+      "name": "Zerelth",
+      "texture": "1LiterZinalco",
+      "type": 0,
       "status": 1
     }
   ]

@@ -22,9 +22,9 @@ public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity, 
 
 
     public AdvancedHunterRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new BasicHunterModel(), 0.5F);
+        super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
-            this.addLayer(new LayerPlayerFaceOverlay(this));
+            this.addLayer(new LayerPlayerFaceOverlay<>(this));
 
         }
     }
