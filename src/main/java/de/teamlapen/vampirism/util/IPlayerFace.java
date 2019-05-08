@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.util;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -10,10 +11,11 @@ import javax.annotation.Nullable;
  */
 public interface IPlayerFace {
 
+
     /**
-     * @return Name of the player who's face should be overlayed. Null if none
+     * @return Game profile of the player who's face should be overlayed.
      */
     @SideOnly(Side.CLIENT)
     @Nullable
-    String getPlayerFaceName();
+    GameProfile getPlayerFaceProfile();
 }

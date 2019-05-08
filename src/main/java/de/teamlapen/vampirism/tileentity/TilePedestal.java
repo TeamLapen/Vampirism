@@ -132,7 +132,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
         return stack;
     }
 
-    public void markDirtyAndUpdateClient() {
+    private void markDirtyAndUpdateClient() {
         super.markDirty();
         IBlockState block = this.world.getBlockState(this.pos);
         world.notifyBlockUpdate(pos, block, block, 3);

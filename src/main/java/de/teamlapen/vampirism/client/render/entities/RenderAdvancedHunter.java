@@ -24,7 +24,7 @@ public class RenderAdvancedHunter extends RenderBiped<EntityAdvancedHunter> {
     public RenderAdvancedHunter(RenderManager renderManagerIn) {
         super(renderManagerIn, new ModelBasicHunter(), 0.5F);
         if (!Configs.disable_advancedMobPlayerFaces) {
-            this.addLayer(new LayerPlayerFaceOverlay<EntityAdvancedHunter, EntityAdvancedHunter>(this));
+            this.addLayer(new LayerPlayerFaceOverlay<>(this));
 
         }
     }

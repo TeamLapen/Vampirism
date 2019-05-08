@@ -22,7 +22,7 @@ public class RenderAdvancedVampire extends RenderBiped<EntityAdvancedVampire> {
     public RenderAdvancedVampire(RenderManager renderManagerIn) {
         super(renderManagerIn, new ModelBiped(0F, 0F, 64, 64), 0.5F);
         if (!Configs.disable_advancedMobPlayerFaces) {
-            this.addLayer(new LayerPlayerFaceOverlay<EntityAdvancedVampire, EntityAdvancedVampire>(this));
+            this.addLayer(new LayerPlayerFaceOverlay<>(this));
             this.addLayer(new LayerAdvancedVampireEye(this));
 
         }

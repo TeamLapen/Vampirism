@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
+import com.mojang.authlib.GameProfile;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
@@ -14,8 +15,10 @@ import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.util.IPlayerFace;
+import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.util.SupporterManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -31,6 +34,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import javax.annotation.Nullable;
 
 /**
@@ -48,6 +54,10 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
      * Not guaranteed to be exact and not saved to nbt
      */
     private int followingEntities = 0;
+
+    @SideOnly(Side.CLIENT)
+    @Nullable
+    private GameProfile facePlayerProfile;
 
     public EntityAdvancedVampire(World world) {
         super(world, true);
@@ -121,11 +131,20 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         return "none".equals(senderName) ? super.getName() : senderName;
     }
 
+
+    @SideOnly(Side.CLIENT)
     @Nullable
     @Override
-    public String getPlayerFaceName() {
-        return getTextureName();
+    public GameProfile getPlayerFaceProfile() {
+        if (this.facePlayerProfile == null) {
+            String name = getTextureName();
+            if (name == null) return null;
+            facePlayerProfile = new GameProfile(null, name);
+            PlayerSkinHelper.updateGameProfileAsync(facePlayerProfile, (profile) -> Minecraft.getMinecraft().addScheduledTask(() -> EntityAdvancedVampire.this.facePlayerProfile = profile));
+        }
+        return facePlayerProfile;
     }
+
 
     @Nullable
     public String getTextureName() {
