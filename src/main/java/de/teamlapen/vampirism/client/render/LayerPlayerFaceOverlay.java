@@ -34,14 +34,6 @@ public class LayerPlayerFaceOverlay<T extends EntityCreature & IPlayerFace> impl
         this.renderBiped = renderBiped;
     }
 
-    private static NetworkPlayerInfo getPlayerInfo(GameProfile p) {
-        NetworkPlayerInfo i = playerInfoMap.get(p.getId());
-        if (i == null) {
-            i = new NetworkPlayerInfo(p);
-            playerInfoMap.put(p.getId(), i);
-        }
-        return i;
-    }
 
     @Override
     public void doRenderLayer(T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
@@ -55,16 +47,15 @@ public class LayerPlayerFaceOverlay<T extends EntityCreature & IPlayerFace> impl
             }
 
         }
-
-            renderBiped.bindTexture(loc);
-            GlStateManager.pushMatrix();
-            if (entitylivingbaseIn.isSneaking()) {
-                GlStateManager.translate(0.0F, 0.2F, 0.0F);
-            }
+        renderBiped.bindTexture(loc);
+        GlStateManager.pushMatrix();
+        if (entitylivingbaseIn.isSneaking()) {
+            GlStateManager.translate(0.0F, 0.2F, 0.0F);
+        }
         GlStateManager.enableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
 
         ((ModelBiped) this.renderBiped.getMainModel()).bipedHead.render(scale);
-            GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
 
 
     }
