@@ -50,7 +50,7 @@ public class BalanceVampirePlayer extends BalanceValues {
 //    public boolean BLOOD_INCREASE_EXHAUSTION;
     @DefaultBoolean(value = false, comment = "If the player should consume blood while in peaceful mode")
     public boolean BLOOD_USAGE_PEACEFUL;
-    @DefaultInt(value = 6, name = "bite_damage", minValue = 0)
+    @DefaultInt(value = 4, name = "bite_damage", minValue = 0)
     public int BITE_DMG;
     @DefaultInt(value = 15, name = "bite_cooldown", minValue = 1, comment = "Cooldown for vampire player bites in ticks")
     public int BITE_COOLDOWN;

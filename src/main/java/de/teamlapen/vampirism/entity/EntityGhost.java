@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.block.Block;
@@ -72,7 +74,7 @@ public class EntityGhost extends EntityVampirism implements IMob {
         this.tasks.addTask(7, new EntityAIWander(this, 0.9F));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 16));
 
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, null));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true, false, true, false, null)));
         this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, true));
     }
 
