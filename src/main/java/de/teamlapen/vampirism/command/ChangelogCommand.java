@@ -16,6 +16,10 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
+/**
+ * 
+ * @authors Cheaterpaul, Maxanier
+ */
 public class ChangelogCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

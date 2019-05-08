@@ -2,19 +2,21 @@ package de.teamlapen.vampirism.world.gen.structure;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.SRGNAMES;
+
 import net.minecraft.block.BlockChest;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.structure.template.ITemplateProcessor;
-import net.minecraft.world.gen.structure.template.PlacementSettings;
-import net.minecraft.world.gen.structure.template.Template;
+import net.minecraft.world.gen.feature.template.ITemplateProcessor;
+import net.minecraft.world.gen.feature.template.PlacementSettings;
+import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-import javax.annotation.Nullable;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class VampirismTemplate extends Template {
 

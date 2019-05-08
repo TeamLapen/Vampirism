@@ -1,16 +1,21 @@
 package de.teamlapen.vampirism.world.gen.structure;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.world.loot.LootHandler;
+
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class StructureManager {
 
@@ -58,6 +63,15 @@ public class StructureManager {
         Structure(String name, boolean loot) {
             this.name = name;
             this.loot = loot;
+        }
+
+        public static Set<String> getNames() {
+            Set<String> names = Sets.newHashSet();
+            for (Structure e : values()) {
+                names.add(e.name);
+            }
+            return names;
+            
         }
     }
 }

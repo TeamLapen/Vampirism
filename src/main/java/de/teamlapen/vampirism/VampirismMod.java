@@ -204,14 +204,10 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void onServerStart(FMLServerStartingEvent event) {
-        // event.registerServerCommand(new VampirismCommand()); already moved
-        event.registerServerCommand(new TestCommand());
+        new VampirismCommands(event.getCommandDispatcher());
+        new TestCommands(event.getCommandDispatcher());
         VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
         BloodValueLoader.onServerStarting(event.getServer());
-    }
-
-    public void serverStarting(FMLServerStartingEvent event) {
-        new VampirismCommand(event.getCommandDispatcher());
     }
 
     @Mod.EventHandler

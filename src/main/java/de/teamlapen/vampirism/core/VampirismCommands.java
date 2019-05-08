@@ -5,16 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.command.BindActionCommand;
-import de.teamlapen.vampirism.command.ChangelogCommand;
-import de.teamlapen.vampirism.command.CheckForVampireBiomeCommand;
-import de.teamlapen.vampirism.command.CurrentDimensionCommand;
-import de.teamlapen.vampirism.command.EyeCommand;
-import de.teamlapen.vampirism.command.FangCommand;
-import de.teamlapen.vampirism.command.GlowingEyeCommand;
-import de.teamlapen.vampirism.command.LevelCommand;
-import de.teamlapen.vampirism.command.LevelUpCommand;
-import de.teamlapen.vampirism.command.ResetBalanceCommand;
+import de.teamlapen.vampirism.command.*;
 
 import net.minecraft.command.CommandSource;
 
@@ -22,12 +13,14 @@ import java.util.List;
 
 /**
  * Central command for this mod
+ * 
+ * @author Cheaterpaul
  */
-public class VampirismCommand {
+public class VampirismCommands {
 
     private final List<String> aliases = Lists.newArrayList();
 
-    public VampirismCommand(CommandDispatcher<CommandSource> dispatcher) {
+    public VampirismCommands(CommandDispatcher<CommandSource> dispatcher) {
         aliases.add("vampirism");
         if (VampirismMod.inDev)
             aliases.add("v");

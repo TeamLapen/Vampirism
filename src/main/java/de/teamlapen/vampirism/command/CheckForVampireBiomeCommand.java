@@ -18,6 +18,10 @@ import net.minecraft.world.biome.Biome;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @authors Cheaterpaul, Maxanier
+ */
 public class CheckForVampireBiomeCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {

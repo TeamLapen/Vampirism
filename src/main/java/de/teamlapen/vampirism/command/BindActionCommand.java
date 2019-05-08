@@ -17,6 +17,10 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
 
+/**
+ * 
+ * @authors Cheaterpaul, Maxanier
+ */
 public class BindActionCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
@@ -43,7 +47,7 @@ public class BindActionCommand extends BasicCommand {
             }
             context.getSource().sendFeedback(new TextComponentTranslation("command.vampirism.base.bind_action.success", actionID, number), true);
         } else {
-            context.getSource().sendErrorMessage(new TextComponentTranslation("ccommand.vampirism.base.bind_action.not_existing"));
+            context.getSource().sendErrorMessage(new TextComponentTranslation("command.vampirism.base.bind_action.not_existing"));
         }
         return 0;
     }

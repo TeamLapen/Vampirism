@@ -1,18 +1,21 @@
 package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Maps;
+
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
-import net.minecraft.command.ICommandSender;
+
+import net.minecraft.command.CommandSource;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 /**
  * Implements {@link IGarlicChunkHandler} using maps to store
@@ -35,12 +38,12 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         return s == null ? EnumStrength.NONE : s;
     }
 
-    public void printDebug(ICommandSender sender) {
+    public void printDebug(CommandSource sender) {
         for (Emitter e : emitterHashMap.values()) {
-            sender.sendMessage(new TextComponentString("E: " + e.toString()));
+            sender.sendFeedback(new TextComponentString("E: " + e.toString()), true);
         }
         for (Map.Entry e : strengthHashMap.entrySet()) {
-            sender.sendMessage(new TextComponentString("S: " + e.toString()));
+            sender.sendFeedback(new TextComponentString("S: " + e.toString()), true);
         }
     }
 
