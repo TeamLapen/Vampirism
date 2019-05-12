@@ -29,7 +29,7 @@ public class EntityAIAttackVillage<T extends EntityVampirism & IVillageCaptureEn
         if (!attacker.isAttackingVillage()) {
             return false;
         }
-        List<EntityLivingBase> list = this.attacker.world.getEntitiesWithinAABB(EntityLivingBase.class, attacker.getTargetVillageArea(), Predicates.and(VampirismAPI.factionRegistry().getPredicate(attacker.getFaction(), false), (entity -> {
+        List<EntityLivingBase> list = this.attacker.world.getEntitiesWithinAABB(EntityLivingBase.class, attacker.getTargetVillageArea(), Predicates.and(VampirismAPI.factionRegistry().getPredicate(attacker.getFaction(), false)::apply, (entity -> {
             return isSuitableTarget(entity, false);
         })));
         if (list.isEmpty()) {

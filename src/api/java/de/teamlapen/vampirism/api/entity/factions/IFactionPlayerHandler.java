@@ -16,7 +16,6 @@ public interface IFactionPlayerHandler {
     /**
      * Players can only join a faction if they are in no other.
      *
-     * @param faction
      * @return If the player can join the given faction
      */
     boolean canJoin(IPlayableFaction faction);
@@ -50,7 +49,6 @@ public interface IFactionPlayerHandler {
      * Makes some things easier.
      * Prefer using {@link IFactionPlayer#getLevel()} unless you are checking your own faction, since other factions might handle things differently
      *
-     * @param f
      * @return If the faction is active: The faction level, otherwise 0
      */
     int getCurrentLevel(IPlayableFaction f);
@@ -68,7 +66,6 @@ public interface IFactionPlayerHandler {
     EntityPlayer getPlayer();
 
     /**
-     * @param f
      * @return If the given faction is equal to the current one
      */
     boolean isInFaction(IPlayableFaction f);
@@ -85,9 +82,7 @@ public interface IFactionPlayerHandler {
      * Should be called if the entity attacked.
      * If this returns false the attack should be canceled
      *
-     * @param src
-     * @param amt
-     * @return
+     * @return If false the attack should be canceled
      */
     boolean onEntityAttacked(DamageSource src, float amt);
 

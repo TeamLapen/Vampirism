@@ -3,7 +3,7 @@ package de.teamlapen.lib;
 import com.google.common.collect.ImmutableMap;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
-import de.teamlapen.lib.util.ThreadSafeAPI;
+import de.teamlapen.lib.util.ThreadSafeLibAPI;
 import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -69,7 +69,7 @@ public class HelperRegistry {
      * @param key Unique key for the capability. Preferably the key the cap was registered with.
      *            Has to be called before post init.
      */
-    @ThreadSafeAPI
+    @ThreadSafeLibAPI
     public static void registerSyncableEntityCapability(Capability capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
         if (syncableEntityCaps == null) {
             LOGGER.error("You have to register the syncable property {} ({}) during InterModEnqueueEvent", clz, capability);
@@ -85,7 +85,7 @@ public class HelperRegistry {
      * @param clz Class of the object returned, when {@link EntityPlayer#getCapability(Capability, EnumFacing)} is called on the player with the given capability
      *            Has to be called before post init.
      */
-    @ThreadSafeAPI
+    @ThreadSafeLibAPI
     public static void registerSyncablePlayerCapability(Capability capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
         if (syncablePlayerCaps == null) {
             LOGGER.error("You have to register the syncable property {} ({}) before post init", clz, capability);
@@ -101,7 +101,7 @@ public class HelperRegistry {
      * @param capability
      * @param clz        Class of the object returned, when {@link EntityPlayer#getCapability(Capability, EnumFacing)} is called on the player with the given capability
      */
-    @ThreadSafeAPI
+    @ThreadSafeLibAPI
     public static void registerPlayerEventReceivingCapability(Capability capability, Class<? extends IPlayerEventListener> clz) {
         if (playerEventListenerCaps == null) {
             LOGGER.error("You have to register PlayerEventReceiver BEFORE post init. (" + capability + ")");

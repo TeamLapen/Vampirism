@@ -42,5 +42,5 @@ public interface IBloodPotionCategory {
      */
     List<IBloodPotionRegistry.WeightedEffect> getEffectsCopy();
 
-    String getUnlocDescription();
+    String getDescTranslationKey();
 }

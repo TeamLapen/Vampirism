@@ -490,8 +490,8 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
             int m2MouseX = mouseX + 12;
             int m2MouseY = mouseY - 4;
 
-            String name = I18n.format(selected.getUnlocalizedName());
-            String desc = selected.getLocalizedDescription();
+            String name = I18n.format(selected.getTranslationKey());
+            String desc = selected.getDescription();
             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
             int width_name = Math.max(this.fontRenderer.getStringWidth(name), 110);

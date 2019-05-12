@@ -37,11 +37,7 @@ public class DarkProjectileEntityAction<T extends EntityCreature & IEntityAction
     }
 
     @Override
-    public void updatePreAction(T entity, int duration) {
-    }
-
-    @Override
-    public int getWeight(T entity) {
+    public int getWeight(EntityCreature entity) {
         double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).length();
         if (distanceToTarget > 20) {
             return 3;

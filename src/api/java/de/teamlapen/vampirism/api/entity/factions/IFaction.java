@@ -33,12 +33,12 @@ public interface IFaction<T extends IFactionEntity> {
     /**
      * If set returns unlocalized name. Otherwise returns {@link IFaction#name()}
      */
-    String getUnlocalizedName();
+    String getTranslationKey();
 
     /**
      * If set returns unlocalized name in the plural form. Otherwise returns {@link IFaction#name()}
      */
-    String getUnlocalizedNamePlural();
+    String getTranslationKeyPlural();
 
     boolean isEntityOfFaction(EntityCreature creature);
 
@@ -50,5 +50,5 @@ public interface IFaction<T extends IFactionEntity> {
      * @param name
      * @return The same instance
      */
-    IFaction<T> setUnlocalizedName(String name, String plural);
+    IFaction<T> setTranslationKeys(String name, String plural);
 }

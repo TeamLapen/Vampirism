@@ -98,7 +98,7 @@ public class BlockMedChair extends VampirismBlock {
                 }
             } else if (faction != null) {
                 if (!worldIn.isRemote) {
-                    playerIn.sendMessage(new TextComponentTranslation("text.vampirism.med_chair_other_faction", new TextComponentTranslation(faction.getUnlocalizedName())));
+                    playerIn.sendMessage(new TextComponentTranslation("text.vampirism.med_chair_other_faction", new TextComponentTranslation(faction.getTranslationKey())));
                 }
 
             }

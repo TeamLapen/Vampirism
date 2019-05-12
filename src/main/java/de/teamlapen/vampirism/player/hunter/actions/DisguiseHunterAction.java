@@ -43,7 +43,7 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "action.vampirism.hunter.disguise";
     }
 

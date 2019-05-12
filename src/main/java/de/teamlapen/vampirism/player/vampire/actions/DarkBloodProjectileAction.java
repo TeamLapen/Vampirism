@@ -30,7 +30,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "action.vampirism.vampire.dark_blood_projectile";
     }
 

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity;
 
 import com.google.common.collect.Maps;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Random;
@@ -13,8 +14,8 @@ public enum EntityClassType {
     Caster(0, 0.1, 0),
     Assassin(0, 0, 0.08);
 
-    public static final Map<EntityClassType, Integer> ENTITYCLASSTYPES = Maps.<EntityClassType, Integer>newHashMap();
-    public static final Map<Integer, EntityClassType> ID = Maps.<Integer, EntityClassType>newHashMap();
+    public static final Map<EntityClassType, Integer> ENTITYCLASSTYPES = Maps.newHashMap();
+    public static final Map<Integer, EntityClassType> ID = Maps.newHashMap();
 
     private AttributeModifier healthModifier;
     private AttributeModifier damageModifier;
@@ -47,8 +48,8 @@ public enum EntityClassType {
     }
 
     /**
-     * @returns {@link EntityClassType} for the given id
-     *          if id < 0 or >= {@link ID#size()} return null
+     * @return {@link EntityClassType} for the given id
+     *          if id < 0 or >= {@link #ID#size}return null
      */
     @Nullable
     public static EntityClassType getEntityClassType(int id) {

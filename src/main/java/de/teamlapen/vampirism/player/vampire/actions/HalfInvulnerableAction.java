@@ -44,7 +44,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
 
         return "action.vampirism.vampire.halfinvulnerable_skill";
     }

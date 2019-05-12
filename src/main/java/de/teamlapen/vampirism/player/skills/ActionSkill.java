@@ -53,7 +53,7 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     }
 
     @Override
-    public String getLocalizedDescription() {
+    public String getDescription() {
         return UtilLib.translate(customDescription ? "text.vampirism.skill." + this.getRegistryName().getPath() + ".desc" : "text.vampirism.skill.unlocks_action");
     }
 
@@ -70,8 +70,8 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     }
 
     @Override
-    public String getUnlocalizedName() {
-        return action.getUnlocalizedName();
+    public String getTranslationKey() {
+        return action.getTranslationKey();
     }
 
     @Override

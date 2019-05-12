@@ -2,34 +2,39 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class VampirismEntityRegistry implements IVampirismEntityRegistry {
+
+
+    private static final Logger LOGGER = LogManager.getLogger();
     /**
-     * Only available after post init
+     * Only available after InterModProcessEvent
      * Stores biteable entries
      */
     private static @Nullable
     BiteableEntryManager biteableEntryManager;
 
     /**
-     * Only available after post init
+     * Only available after InterModProcessEvent
      * <p>
      * Biteable entries are stored here
      */
@@ -40,54 +45,63 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
      * Used to store blood values during init
      */
-    private final Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
+    private final Map<ResourceLocation, Integer> bloodValues = new ConcurrentHashMap<>();
     /**
      * Used to store overriding values during init. Will override entries in {@link #bloodValues} after init
      */
-    private final Map<ResourceLocation, Integer> overridingValues = new HashMap<>();
+    private final Map<ResourceLocation, Integer> overridingValues = new ConcurrentHashMap<>();
     /**
      * Used to store convertible handlers during init
      */
-    private final Map<Class<? extends EntityCreature>, IConvertingHandler> convertibles = new HashMap<>();
-    private final Map<Class<? extends EntityCreature>, String> convertibleOverlay = new HashMap<>();
+    private final Map<Class<? extends EntityCreature>, IConvertingHandler> convertibles = new ConcurrentHashMap<>();
+    private final Map<Class<? extends EntityCreature>, String> convertibleOverlay = new ConcurrentHashMap<>();
     /**
      * Stores custom extended creature constructors
      */
-    private final Map<Class<? extends EntityCreature>, Function> extendedCreatureConstructors = new HashMap<>();
-    private final String TAG = "VampirismEntityRegistry";
+    private final Map<Class<? extends EntityCreature>, Function> extendedCreatureConstructors = new ConcurrentHashMap<>();
     private boolean finished = false;
-    private ICreateDefaultConvertingHandler defaultConvertingHandlerCreator;
+    private Function<IConvertingHandler.IDefaultHelper, IConvertingHandler> defaultConvertingHandlerCreator;
 
     @Override
+    @ThreadSafeAPI
     public void addBloodValue(ResourceLocation entityId, int value) {
+        if (finished) throw new IllegalStateException("Register blood values during InterModEnqueueEvent");
         bloodValues.put(entityId, value);
     }
 
     @Override
+    @ThreadSafeAPI
     public void addBloodValues(Map<ResourceLocation, Integer> values) {
+        if (finished) throw new IllegalStateException("Register blood values during InterModEnqueueEvent");
         bloodValues.putAll(values);
     }
 
     @Override
+    @ThreadSafeAPI
     public void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc) {
         addConvertible(clazz, overlay_loc, (IConvertingHandler) null);
     }
 
     @Override
+    @ThreadSafeAPI
     public void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, IConvertingHandler.IDefaultHelper helper) {
-        addConvertible(clazz, overlay_loc, defaultConvertingHandlerCreator.create(helper));
+        addConvertible(clazz, overlay_loc, defaultConvertingHandlerCreator.apply(helper));
     }
 
     @Override
+    @ThreadSafeAPI
     public void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, IConvertingHandler handler) {
+        if (finished) throw new IllegalStateException("Register convertibles during InterModEnqueueEvent");
         convertibles.put(clazz, handler);
-        if (FMLCommonHandler.instance().getSide().isClient() && overlay_loc != null) {
+        if (FMLEnvironment.dist.isClient() && overlay_loc != null) {
             convertibleOverlay.put(clazz, overlay_loc);
         }
     }
 
     @Override
+    @ThreadSafeAPI
     public <T extends EntityCreature> void addCustomExtendedCreature(Class<? extends T> clazz, Function<T, IExtendedCreatureVampirism> constructor) {
+        if (finished) throw new IllegalStateException("Register extended creatures during InterModEnqueueEvent");
         extendedCreatureConstructors.put(clazz, constructor);
     }
 
@@ -100,7 +114,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         if (b != null && b.convertingHandler != null) {
             return b.convertingHandler.createFrom(entity);
         }
-        LOGGER.warn("Failed to find convertible entry for %s", entity);
+        LOGGER.warn("Failed to find convertible entry for {}", entity);
         return null;
     }
 
@@ -122,16 +136,16 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         for (Map.Entry<Class<? extends EntityCreature>, IConvertingHandler> entry : convertibles.entrySet()) {
             ResourceLocation id = EntityList.getKey(entry.getKey());
             if (id == null) {
-                LOGGER.warn("Cannot register convertible %s since there is no EntityString for it", entry.getKey());
+                LOGGER.warn("Cannot register convertible {} since there is no EntityString for it", entry.getKey());
                 continue;
             }
             Integer blood = bloodValues.remove(id);
             if (blood == null) {
-                LOGGER.warn("Missing blood value for convertible creature %s (%s)", entry.getKey().getName(), id);
+                LOGGER.warn("Missing blood value for convertible creature {} ({})", entry.getKey().getName(), id);
                 continue;
             }
             blood = Math.round(blood * bloodValueMultiplier);
-            LOGGER.info(" Registering convertible %s with blood %d and handler %s", entry.getKey().getName(), blood, entry.getValue());
+            LOGGER.info(" Registering convertible {} with blood {} and handler {}", entry.getKey().getName(), blood, entry.getValue());
             BiteableEntry biteEntry = new BiteableEntry(blood, (entry.getValue() == null ? defaultHandler : entry.getValue()));
             biteables.put(id, biteEntry);
         }
@@ -175,6 +189,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     }
 
     @Override
+    @ThreadSafeAPI
     public void overrideBloodValues(Map<ResourceLocation, Integer> values) {
         overridingValues.putAll(values);
     }
@@ -185,7 +200,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      *
      * @param
      */
-    public void setDefaultConvertingHandlerCreator(ICreateDefaultConvertingHandler creator) {
+    public void setDefaultConvertingHandlerCreator(Function<IConvertingHandler.IDefaultHelper, IConvertingHandler> creator) {
         defaultConvertingHandlerCreator = creator;
     }
 }

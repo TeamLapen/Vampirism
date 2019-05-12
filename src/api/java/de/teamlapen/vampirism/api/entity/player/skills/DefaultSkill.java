@@ -7,7 +7,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * Default implementation of ISkill. Handles entity modifiers and actions
  */
-public abstract class DefaultSkill<T extends IFactionPlayer> extends IForgeRegistryEntry.Impl<ISkill> implements ISkill {
+public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegistryEntry<ISkill> implements ISkill {
 
     private final Map<IAttribute, AttributeModifier> attributeModifierMap = new HashMap<>();
     private final IPlayableFaction<T> faction;
@@ -83,6 +83,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends IForgeRegis
     public String toString() {
         return getRegistryName() + "(" + getClass().getSimpleName() + ")";
     }
+
 
     /**
      * Add actions that should be added to the list

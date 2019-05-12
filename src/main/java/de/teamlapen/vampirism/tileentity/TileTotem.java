@@ -265,9 +265,9 @@ public class TileTotem extends TileEntity implements ITickable {
     @Override
     public ITextComponent getDisplayName() {
         if (capturingFaction != null) {
-            return new TextComponentTranslation("text.vampirism.village.faction_capturing", new TextComponentTranslation(capturingFaction.getUnlocalizedNamePlural()));
+            return new TextComponentTranslation("text.vampirism.village.faction_capturing", new TextComponentTranslation(capturingFaction.getTranslationKeyPlural()));
         } else if (controllingFaction != null) {
-            return new TextComponentTranslation("text.vampirism.village.faction_controlling", new TextComponentTranslation(controllingFaction.getUnlocalizedNamePlural()));
+            return new TextComponentTranslation("text.vampirism.village.faction_controlling", new TextComponentTranslation(controllingFaction.getTranslationKeyPlural()));
         } else {
             return new TextComponentTranslation("text.vampirism.village.neutral");
         }
@@ -337,10 +337,10 @@ public class TileTotem extends TileEntity implements ITickable {
 
         if (this.controllingFaction == null) {
             this.capture_phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
-            notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.neutral_village_under_attack", new TextComponentTranslation(faction.getUnlocalizedNamePlural())));
+            notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.neutral_village_under_attack", new TextComponentTranslation(faction.getTranslationKeyPlural())));
         } else {
             this.capture_phase = CAPTURE_PHASE.PHASE_1_OPPOSITE;
-            notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.faction_village_under_attack", new TextComponentTranslation(this.controllingFaction.getUnlocalizedName()), new TextComponentTranslation(faction.getUnlocalizedNamePlural())));
+            notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.faction_village_under_attack", new TextComponentTranslation(this.controllingFaction.getTranslationKey()), new TextComponentTranslation(faction.getTranslationKeyPlural())));
         }
         this.capture_timer = 0;
         force_village_update = true;
@@ -762,7 +762,7 @@ public class TileTotem extends TileEntity implements ITickable {
         //VampirismMod.log.t("Completed capture");
         informEntitiesAboutCaptureStop();
         if (notifyPlayer)
-            notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_captured_by", new TextComponentTranslation(controllingFaction.getUnlocalizedNamePlural())));
+            notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_captured_by", new TextComponentTranslation(controllingFaction.getTranslationKeyPlural())));
         updateBossinfoPlayers(null);
     }
 

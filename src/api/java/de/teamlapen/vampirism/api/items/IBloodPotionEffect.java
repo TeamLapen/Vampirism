@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.items;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
@@ -24,7 +25,7 @@ public interface IBloodPotionEffect {
     /**
      * @return The localized name
      */
-    String getLocName(NBTTagCompound properties);
+    ITextComponent getLocName(NBTTagCompound properties);
 
     /**
      * Randomly selects duration and amplifier etc

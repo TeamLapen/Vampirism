@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.ResourceLocation;
+
 import java.util.Random;
 
 public class RegenerationEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
@@ -44,11 +45,7 @@ public class RegenerationEntityAction<T extends EntityCreature & IEntityActionUs
     }
 
     @Override
-    public void updatePreAction(T entity, int duration) {
-    }
-
-    @Override
-    public int getWeight(T entity) {
+    public int getWeight(EntityCreature entity) {
         double healthPercent = entity.getHealth() / entity.getMaxHealth();
         if (healthPercent < 0.1) {
             return 3;

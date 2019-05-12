@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Cancelable;
+import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

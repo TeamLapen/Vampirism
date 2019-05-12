@@ -108,7 +108,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "action.vampirism.vampire.bat_skill";
     }
 

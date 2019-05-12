@@ -12,6 +12,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
+
 import java.util.List;
 
 public class GarlicAOFEntityAction<T extends EntityCreature & IEntityActionUser> extends HunterEntityAction<T> implements ILastingAction<T> {
@@ -48,10 +49,6 @@ public class GarlicAOFEntityAction<T extends EntityCreature & IEntityActionUser>
 
     @Override
     public void activate(T entity) {
-    }
-
-    @Override
-    public void updatePreAction(T entity, int duration) {
     }
 
 }

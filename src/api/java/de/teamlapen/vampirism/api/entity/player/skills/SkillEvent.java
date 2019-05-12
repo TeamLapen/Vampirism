@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 import java.util.List;
 

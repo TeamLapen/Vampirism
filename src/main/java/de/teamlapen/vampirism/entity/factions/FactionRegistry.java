@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.factions;
 
-import com.google.common.base.Predicate;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
@@ -12,28 +12,29 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.LoaderState;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Predicate;
+
+import static net.minecraft.world.biome.Biome.LOGGER;
 
 
 public class FactionRegistry implements IFactionRegistry {
-    private final static String TAG = "FactionRegistry";
-    private List<Faction> temp = new ArrayList<>();
+    private List<Faction> temp = new CopyOnWriteArrayList<>(); //Copy on write is costly, but we only expect very few elements anyway
     private Faction[] allFactions;
     private PlayableFaction[] playableFactions;
     private Map<Integer, Predicate<Entity>> predicateMap = new HashMap<Integer, Predicate<Entity>>();
 
     /**
-     * Finishes registrations during post init.
+     * Finishes registrations during InterModProcessEvent
      */
     public void finish() {
-        allFactions = temp.toArray(new Faction[temp.size()]);
+        allFactions = temp.toArray(new Faction[0]);
         temp = null;
         List<PlayableFaction> temp2 = new ArrayList<>();
         for (Faction allFaction : allFactions) {
@@ -41,7 +42,7 @@ public class FactionRegistry implements IFactionRegistry {
                 temp2.add((PlayableFaction) allFaction);
             }
         }
-        playableFactions = temp2.toArray(new PlayableFaction[temp2.size()]);
+        playableFactions = temp2.toArray(new PlayableFaction[0]);
     }
 
     @Override
@@ -81,13 +82,13 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise) {
+    public java.util.function.Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise) {
 
         return getPredicate(thisFaction, true, true, true, ignoreDisguise, null);
     }
 
     @Override
-    public Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction) {
+    public java.util.function.Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction) {
         int key = 0;
         if (otherFaction != null) {
             int id = ((Faction) otherFaction).getId();
@@ -131,9 +132,6 @@ public class FactionRegistry implements IFactionRegistry {
         if (!UtilLib.isNonNull(name, entityInterface)) {
             throw new IllegalArgumentException("[Vampirism]Parameter for faction cannot be null");
         }
-        if (!Loader.instance().isInState(LoaderState.PREINITIALIZATION)) {
-            throw new IllegalStateException("Factions have to be registered during PRE-INIT");
-        }
         Faction<T> f = new Faction<>(name, entityInterface, color);
         addFaction(f);
         return f;
@@ -144,17 +142,16 @@ public class FactionRegistry implements IFactionRegistry {
         if (!UtilLib.isNonNull(name, entityInterface, playerCapabiltiy)) {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
-        if (!Loader.instance().isInState(LoaderState.PREINITIALIZATION)) {
-            throw new IllegalStateException("Factions have to be registered during PRE-INIT");
-        }
+
         PlayableFaction<T> f = new PlayableFaction<>(name, entityInterface, color, key, playerCapabiltiy, highestLevel);
         addFaction(f);
         return f;
     }
 
+    @ThreadSafeAPI
     private void addFaction(Faction faction) {
         if (temp == null) {
-            throw new IllegalStateException(String.format("[Vampirism]You have to register factions BEFORE post init. (%s)", faction.name));
+            throw new IllegalStateException(String.format("[Vampirism]You have to register factions during InterModEnqueueEvent. (%s)", faction.name));
         } else {
             temp.add(faction);
         }

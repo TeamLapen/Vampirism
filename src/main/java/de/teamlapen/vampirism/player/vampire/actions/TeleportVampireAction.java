@@ -88,7 +88,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "action.vampirism.vampire.teleport";
     }
 

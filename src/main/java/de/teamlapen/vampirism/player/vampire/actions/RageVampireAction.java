@@ -46,7 +46,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "action.vampirism.vampire.vampire_rage";
     }
 

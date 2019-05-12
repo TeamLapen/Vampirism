@@ -95,7 +95,7 @@ class BloodPotionCategory implements IBloodPotionCategory {
     }
 
     @Override
-    public String getUnlocDescription() {
+    public String getDescTranslationKey() {
         return unlocDesc == null ? "" : unlocDesc;
     }
 

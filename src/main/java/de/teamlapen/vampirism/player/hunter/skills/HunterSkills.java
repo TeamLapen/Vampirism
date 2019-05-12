@@ -61,7 +61,7 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("tech_weapons", 240, 32, true));
         registry.register(new VampirismSkill.SimpleHunterSkill("stake1", 16, 32, false) {
             @Override
-            public String getLocalizedDescription() {
+            public String getDescription() {
                 String desc = UtilLib.translateFormatted("text.vampirism.skill.stake1.desc", (int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100));
                 if (Balance.hps.INSTANT_KILL_SKILL_1_FROM_BEHIND) {
                     desc += " " + UtilLib.translate("text.vampirism.from_behind");
@@ -72,7 +72,7 @@ public class HunterSkills {
 
         registry.register(new VampirismSkill.SimpleHunterSkill("stake2", 224, 32, false) {
             @Override
-            public String getLocalizedDescription() {
+            public String getDescription() {
                 String desc = null;
                 if (Balance.hps.INSTANT_KILL_SKILL_2_ONLY_NPC) {
                     desc = UtilLib.translateFormatted("text.vampirism.skill.stake2.desc_npc", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
@@ -90,12 +90,12 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_category_hint", 128, 32, true));
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", 80, 32, true) {
             @Override
-            public String getLocalizedDescription() {
+            public String getDescription() {
                 return UtilLib.translate("text.vampirism.skill.blood_potion_less_bad.desc");
             }
 
             @Override
-            public String getUnlocalizedName() {
+            public String getTranslationKey() {
                 return "text.vampirism.skill.blood_potion_less_bad";
             }
         });
@@ -113,7 +113,7 @@ public class HunterSkills {
         registry.register(attackSpeed);
         registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter) {
             @Override
-            public String getLocalizedDescription() {
+            public String getDescription() {
                 return UtilLib.translate("text.vampirism.skill.disguise_hunter.desc");
             }
         });

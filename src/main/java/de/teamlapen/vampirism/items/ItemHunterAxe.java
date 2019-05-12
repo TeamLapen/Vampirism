@@ -40,7 +40,7 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
             tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + tier.name().toLowerCase()));
 
         }
-        tooltip.add(UtilLib.translateFormatted("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100)) + " " + UtilLib.translate(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural()));
+        tooltip.add(UtilLib.translateFormatted("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100)) + " " + UtilLib.translate(VReference.VAMPIRE_FACTION.getTranslationKeyPlural()));
     }
 
 

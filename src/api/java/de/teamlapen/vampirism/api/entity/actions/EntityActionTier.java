@@ -9,7 +9,7 @@ public enum EntityActionTier {
 
     private final int id;
 
-    private EntityActionTier(int id) {
+    EntityActionTier(int id) {
         this.id = id;
     }
 

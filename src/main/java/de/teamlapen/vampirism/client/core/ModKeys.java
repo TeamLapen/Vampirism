@@ -179,7 +179,7 @@ public class ModKeys {
                 if (action == null) {
                     VampirismMod.log.i("ModKeys", "Bound action %s not found", key);
                 } else if (!action.getFaction().equals(player.getFaction())) {
-                    player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.only_faction", UtilLib.translate(action.getFaction().getUnlocalizedName())), true);
+                    player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.only_faction", UtilLib.translate(action.getFaction().getTranslationKey())), true);
                 } else {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + key));
                 }

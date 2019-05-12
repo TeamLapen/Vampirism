@@ -50,7 +50,7 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
         }
 
         @Override
-        public String getUnlocalizedName() {
+        public String getTranslationKey() {
             return "action.vampirism.cancel";
         }
 
@@ -104,7 +104,7 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
 
     @Override
     protected String getUnlocalizedName(IAction item) {
-        return item.getUnlocalizedName();
+        return item.getTranslationKey();
     }
 
     @Override

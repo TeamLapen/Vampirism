@@ -40,7 +40,7 @@ public class RegenVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "action.vampirism.vampire.regen";
     }
 

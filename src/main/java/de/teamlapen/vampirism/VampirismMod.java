@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
+import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.BloodGrinderValueLoader;
 import de.teamlapen.vampirism.config.BloodValueLoader;
@@ -291,6 +292,7 @@ public class VampirismMod {
      */
     private void finishAPI1() {
         ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
+        BloodConversionRegistry.finish();
         ((SkillManager) VampirismAPI.skillManager()).buildSkillTrees();
     }
 
@@ -324,9 +326,9 @@ public class VampirismMod {
      */
     private void setupAPI2() {
         VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
-        VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");
+        VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setTranslationKeys("text.vampirism.vampire", "text.vampirism.vampires");
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);
-        VReference.HUNTER_FACTION.setChatColor(TextFormatting.DARK_BLUE).setUnlocalizedName("text.vampirism.hunter", "text.vampirism.hunters");
+        VReference.HUNTER_FACTION.setChatColor(TextFormatting.DARK_BLUE).setTranslationKeys("text.vampirism.hunter", "text.vampirism.hunters");
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_ATTRIBUTE = VAMPIRE_CREATURE_ATTRIBUTE;

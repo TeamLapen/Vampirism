@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+
 import java.util.List;
 import java.util.Random;
 
@@ -53,11 +54,7 @@ public class RegenerationAOFEntityAction<T extends EntityCreature & IEntityActio
     }
 
     @Override
-    public void updatePreAction(T entity, int duration) {
-    }
-
-    @Override
-    public int getWeight(T entity) {
+    public int getWeight(EntityCreature entity) {
         double healthPercent = entity.getHealth() / entity.getMaxHealth();
         if (healthPercent < 0.1) {
             return 3;

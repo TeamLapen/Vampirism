@@ -38,7 +38,7 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "action.vampirism.vampire.invisibility";
     }
 

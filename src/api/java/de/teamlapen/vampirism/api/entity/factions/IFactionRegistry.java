@@ -1,12 +1,13 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
-import com.google.common.base.Predicate;
+import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * Faction registry.
@@ -66,7 +67,7 @@ public interface IFactionRegistry {
     Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction);
 
     /**
-     * Create and registerAdvancements a non playable faction. Has to be called before post-init
+     * Create and registerAdvancements a non playable faction. Has to be called during InterModEnqueueEvent
      *
      * @param name            Faction name e.g. for level command
      * @param entityInterface Interface all entities implement
@@ -74,10 +75,11 @@ public interface IFactionRegistry {
      * @param <T>             Interface all entities implement
      * @return The created faction
      */
+    @ThreadSafeAPI
     <T extends IFactionEntity> IFaction registerFaction(String name, Class<T> entityInterface, int color);
 
     /**
-     * Create and registerAdvancements a playable faction. Has to be called before post-init
+     * Create and registerAdvancements a playable faction. Has to be called during InterModEnqueueEvent
      *
      * @param name             Faction name e.g. for level command
      * @param entityInterface  Interface all entities or (the given capability for players) implement
@@ -88,5 +90,6 @@ public interface IFactionRegistry {
      * @param <T>              nterface all entities or (the given capability for players)  implement
      * @return The created faction
      */
+    @ThreadSafeAPI
     <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, Capability<T> playerCapability, int highestLevel);
 }

@@ -57,7 +57,7 @@ public class VampireSkills {
         registry.register(new VampirismSkill.SimpleVampireSkill("night_vision", 48, 0, false) {
 
             @Override
-            public String getUnlocalizedName() {
+            public String getTranslationKey() {
                 return "text.vampirism.skill.night_vision";
             }
 
@@ -117,7 +117,7 @@ public class VampireSkills {
         DefaultSkill<IVampirePlayer> jump = new VampirismSkill.SimpleVampireSkill("vampire_jump", 160, 0, false) {
 
             @Override
-            public String getUnlocalizedName() {
+            public String getTranslationKey() {
                 return "effect.jump";
             }
 
@@ -135,7 +135,7 @@ public class VampireSkills {
         DefaultSkill<IVampirePlayer> speed = new VampirismSkill.SimpleVampireSkill("vampire_speed", 144, 0, false) {
 
             @Override
-            public String getUnlocalizedName() {
+            public String getTranslationKey() {
                 return "effect.moveSpeed";
             }
         };
@@ -158,16 +158,16 @@ public class VampireSkills {
 
 
             @Override
-            public String getLocalizedDescription() {
+            public String getDescription() {
                 if (Balance.vps.DISABLE_AVOIDED_BY_CREEPERS) {
                     return TextFormatting.RED + "Disabled by admin" + TextFormatting.RESET;
                 }
-                return super.getLocalizedDescription();
+                return super.getDescription();
             }
 
 
             @Override
-            public String getUnlocalizedName() {
+            public String getTranslationKey() {
                 return "text.vampirism.skill.avoided_by_creepers";
             }
 
@@ -196,7 +196,7 @@ public class VampireSkills {
         registry.register(new ActionSkill<>("teleport", VampireActions.teleport));
         registry.register(new VampirismSkill.SimpleVampireSkill("sword_finisher", 0, 16, true) {
             @Override
-            public String getLocalizedDescription() {
+            public String getDescription() {
                 return UtilLib.translateFormatted("text.vampirism.skill.sword_finisher.desc", (int) (Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC * 100));
             }
         });

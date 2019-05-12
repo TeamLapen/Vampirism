@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -34,7 +35,7 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
      * The description for this skill. Can be null
      */
     @OnlyIn(Dist.CLIENT)
-    String getLocalizedDescription();
+    ITextComponent getDescription();
 
     /**
      * Should return the min U texture coordinate within the icon map
@@ -50,8 +51,6 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
 
     /**
      * Can return null if not registered, but since this has to be registered, we don't want annoying null warnings everywhere
-     *
-     * @return
      */
     @Nonnull
     @Override
@@ -63,7 +62,7 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
     @OnlyIn(Dist.CLIENT)
     int getRenderRow();
 
-    String getUnlocalizedName();
+    String getTranslationKey();
 
     /**
      * Called when the skill is disenabled (Server: on load from nbt/on disabling all skills e.g. via the gui. Client: on update from server)

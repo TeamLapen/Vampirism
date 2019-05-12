@@ -5,7 +5,7 @@ package de.teamlapen.vampirism.api.entity.player.vampire;
  */
 public interface IVampireVision {
 
-    String getUnlocName();
+    String getTranslationKey();
 
     void onActivated(IVampirePlayer player);
 

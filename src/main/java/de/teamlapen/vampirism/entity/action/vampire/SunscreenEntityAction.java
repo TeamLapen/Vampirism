@@ -41,11 +41,7 @@ public class SunscreenEntityAction<T extends EntityCreature & IEntityActionUser>
     }
 
     @Override
-    public void updatePreAction(T entity, int duration) {
-    }
-
-    @Override
-    public int getWeight(T entity) {
+    public int getWeight(EntityCreature entity) {
         if (!entity.getEntityWorld().isDaytime() || entity.getEntityWorld().isRaining()) {//Not perfectly accurate (the actual sundamage checks for celestial angle and also might exclude certain dimensions and biomes
             return 0;
         }

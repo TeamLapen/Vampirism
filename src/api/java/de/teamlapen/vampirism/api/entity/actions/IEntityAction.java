@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.api.entity.actions;
 
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import net.minecraft.entity.EntityCreature;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
- * all actions must extend {@link DefaultEntityAction}
+ * Actions that can be executed by some of vampirism's entities. Similar to the actions available to the player.
+ * DON'T use this interface directly. Use either {@link IInstantAction} or {@link ILastingAction}
  */
 public interface IEntityAction extends IForgeRegistryEntry<IEntityAction> {
     /**
@@ -14,22 +16,35 @@ public interface IEntityAction extends IForgeRegistryEntry<IEntityAction> {
     int getCooldown(int level);
 
     /**
-     * @return activation time before the action is activated, but ready to start
+     * @return needed {@link EntityClassType} for usage
      */
-    int getPreActivationTime();
+    EntityClassType[] getClassTypes();
 
     /**
-     * @returns actions minimum {@link EntityActionTier} for usage
+     * @return needed {@link IPlayableFaction} for usage
      */
-    public EntityActionTier getTier();
+    IPlayableFaction getFaction();
 
     /**
-     * @returns needed {@link EntityClassType} for usage
+     * @return activation time in ticks before the action is activated once ready to start
      */
-    public EntityClassType[] getClassTypes();
+    default int getPreActivationTime() {
+        return 10;
+    }
 
     /**
-     * @returns needed {@link IPlayableFaction} for usage
+     * @return actions minimum {@link EntityActionTier} for usage
      */
-    public IPlayableFaction getFaction();
+    EntityActionTier getTier();
+
+    /**
+     * The higher the weight, the more likely the action is chosen,
+     * Can be varied depending on the given entities situtation.
+     * Should be in the range 1-10, but could be higher
+     *
+     * @return weight of this action
+     */
+    default int getWeight(EntityCreature entity) {
+        return 1;
+    }
 }

@@ -33,8 +33,4 @@ public class BatsSpawnEntityAction<T extends EntityCreature & IEntityActionUser>
         entity.getEntityWorld().playSound(null, entity.posX, entity.posY, entity.posZ, ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entity.getEntityWorld().rand.nextFloat() * 0.2F + 1.3F);
         return true;
     }
-
-    @Override
-    public void updatePreAction(T entity, int duration) {
-    }
 }

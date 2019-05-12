@@ -3,14 +3,14 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 
 /**
  * Default implementation for an action
  */
-public abstract class DefaultAction<T extends IFactionPlayer> extends IForgeRegistryEntry.Impl<IAction> implements IAction {
+public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegistryEntry<IAction> implements IAction {
     private final ResourceLocation icons;
     private final IPlayableFaction<T> faction;
 
@@ -24,9 +24,8 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends IForgeRegi
     }
 
     /**
-     * Can be overriden to check addidional requirements
+     * Can be overridden to check additional requirements
      *
-     * @return
      */
     public boolean canBeUsedBy(T player) {
         return true;

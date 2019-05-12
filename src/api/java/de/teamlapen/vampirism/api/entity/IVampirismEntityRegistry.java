@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity;
 
+import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import net.minecraft.entity.EntityCreature;
@@ -23,11 +24,13 @@ public interface IVampirismEntityRegistry {
      * @param entityId Entity id
      * @param value    blood value
      */
+    @ThreadSafeAPI
     void addBloodValue(ResourceLocation entityId, int value);
 
     /**
      * Add a set of entity id -> blood value pairs
      */
+    @ThreadSafeAPI
     void addBloodValues(Map<ResourceLocation, Integer> values);
 
     /**
@@ -37,6 +40,7 @@ public interface IVampirismEntityRegistry {
      * @param clazz
      * @param overlay_loc Location of the overlay texture file
      */
+    @ThreadSafeAPI
     void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc);
 
     /**
@@ -47,6 +51,7 @@ public interface IVampirismEntityRegistry {
      * @param helper      Helper instance for the DefaultHandler to specify some values for the converted creature
      * @param overlay_loc Location of the overlay texture file
      */
+    @ThreadSafeAPI
     void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, IConvertingHandler.IDefaultHelper helper);
 
     /**
@@ -57,6 +62,7 @@ public interface IVampirismEntityRegistry {
      * @param overlay_loc Location of the overlay texture file. Only required if Vampirism's default Converted Creature renderer is used, if you handle that stuff yourself, null is just fine.
      * @param handler     Handles the conversion
      */
+    @ThreadSafeAPI
     void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, IConvertingHandler handler);
 
     /**
@@ -66,6 +72,7 @@ public interface IVampirismEntityRegistry {
      * @param constructor A 'constructor' that can be used to create the {@link IExtendedCreatureVampirism} object from the entity's object
      * @param <T>         The base class type
      */
+    @ThreadSafeAPI
     <T extends EntityCreature> void addCustomExtendedCreature(Class<? extends T> clazz, Function<T, IExtendedCreatureVampirism> constructor);
 
     @Nullable
@@ -102,10 +109,6 @@ public interface IVampirismEntityRegistry {
      *
      * @param values
      */
+    @ThreadSafeAPI
     void overrideBloodValues(Map<ResourceLocation, Integer> values);
-
-
-    interface ICreateDefaultConvertingHandler {
-        IConvertingHandler create(IConvertingHandler.IDefaultHelper helper);
-    }
 }

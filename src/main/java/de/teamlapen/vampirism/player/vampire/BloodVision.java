@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
  */
 public class BloodVision implements IVampireVision {
     @Override
-    public String getUnlocName() {
+    public String getTranslationKey() {
         return "text.vampirism.skill.blood_vision";
     }
 

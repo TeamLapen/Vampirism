@@ -11,7 +11,7 @@ import java.util.List;
 public interface IActionManager {
 
     /**
-     * A mutable copied list of all actions registered for this faction
+     * A copied mutable list of all actions registered for this faction
      *
      * @param faction
      * @return

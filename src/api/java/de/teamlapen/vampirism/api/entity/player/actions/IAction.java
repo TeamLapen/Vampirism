@@ -35,7 +35,7 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
      * Should return the location of the icon map where the icon is in
      * Texture has to be 256x80
      *
-     * @return
+     * @return Texture resource location
      */
     @OnlyIn(Dist.CLIENT)
     ResourceLocation getIconLoc();
@@ -52,7 +52,7 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
     @OnlyIn(Dist.CLIENT)
     int getMinV();
 
-    String getUnlocalizedName();
+    String getTranslationKey();
 
     /**
      * Called when the action is activated. Only called server side

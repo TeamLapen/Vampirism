@@ -257,17 +257,17 @@ public class ModPlayerEventHandler {
             if (usingFaction != null && !handler.isInFaction(usingFaction)) {
 
                 if (message)
-                    player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(usingFaction.getUnlocalizedNamePlural())));
+                    player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(usingFaction.getTranslationKeyPlural())));
                 return false;
             } else if (handler.getCurrentLevel() < item.getMinLevel(stack)) {
                 if (message)
-                    player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by_level", new TextComponentTranslation(usingFaction == null ? "text.vampirism.all" : usingFaction.getUnlocalizedNamePlural()), item.getMinLevel(stack)));
+                    player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by_level", new TextComponentTranslation(usingFaction == null ? "text.vampirism.all" : usingFaction.getTranslationKeyPlural()), item.getMinLevel(stack)));
                 return false;
             } else if (requiredSkill != null) {
                 IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer();
                 if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                     if (message)
-                        player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(requiredSkill.getUnlocalizedName())));
+                        player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(requiredSkill.getTranslationKey())));
                     return false;
                 }
             }

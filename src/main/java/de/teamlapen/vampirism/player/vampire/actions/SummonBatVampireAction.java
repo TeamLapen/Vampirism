@@ -52,7 +52,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "action.vampirism.vampire.summon_bats";
     }
 

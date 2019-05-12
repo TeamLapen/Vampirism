@@ -13,7 +13,7 @@ public class NightVision implements IVampireVision {
 
 
     @Override
-    public String getUnlocName() {
+    public String getTranslationKey() {
         return "text.vampirism.skill.night_vision";
     }
 

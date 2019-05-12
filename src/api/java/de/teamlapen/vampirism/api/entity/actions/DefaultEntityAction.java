@@ -1,41 +1,33 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
 import de.teamlapen.vampirism.api.entity.EntityClassType;
-import net.minecraft.entity.EntityCreature;
-import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class DefaultEntityAction<T extends EntityCreature & IEntityActionUser> extends IForgeRegistryEntry.Impl<IEntityAction> implements IEntityAction {
-    protected EntityClassType[] entityClassTypes;
-    protected EntityActionTier entityActionTier;
+/**
+ * Default implementation of {@link IEntityAction}
+ */
+public abstract class DefaultEntityAction extends ForgeRegistryEntry<IEntityAction> implements IEntityAction {
+    private EntityClassType[] entityClassTypes;
+    private EntityActionTier entityActionTier;
 
     public DefaultEntityAction(EntityActionTier tier, EntityClassType... param) {
         entityActionTier = tier;
         entityClassTypes = param;
     }
 
+    /**
+     * @return the actions {@link EntityClassType}
+     */
     @Override
-    public int getPreActivationTime() {
-        return 10; //0.5 sec
-    }
-    
-    /**
-     * @returns the actions {@link EntityActionTier}
-     */
-    public EntityActionTier getTier() {
-        return entityActionTier;
-    }
-
-    /**
-     * @returns the actions {@link EntityClassType}
-     */
     public EntityClassType[] getClassTypes() {
         return entityClassTypes;
     }
 
     /**
-     * @return weight of this action
+     * @return the actions {@link EntityActionTier}
      */
-    public int getWeight(T entity) {
-        return 1;
+    @Override
+    public EntityActionTier getTier() {
+        return entityActionTier;
     }
 }

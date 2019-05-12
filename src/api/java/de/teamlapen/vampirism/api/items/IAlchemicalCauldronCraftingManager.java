@@ -8,11 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * 1.10
- *
- * @author maxanier
- */
+
 public interface IAlchemicalCauldronCraftingManager {
 
     void addRecipe(IAlchemicalCauldronRecipe recipe);

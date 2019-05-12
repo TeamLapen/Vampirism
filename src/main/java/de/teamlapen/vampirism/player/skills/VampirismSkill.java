@@ -29,12 +29,12 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
     }
 
     @Override
-    public String getLocalizedDescription() {
+    public String getDescription() {
         return description == null ? null : UtilLib.translate(description);
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "text.vampirism.skill." + getRegistryName().getPath();
     }
 

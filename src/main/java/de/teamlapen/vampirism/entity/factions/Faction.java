@@ -11,10 +11,10 @@ import net.minecraft.util.text.TextFormatting;
 public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private static int nextId = 0;
     protected final String name;
-    protected final Class<T> entityInterface;
+    private final Class<T> entityInterface;
     private final int color;
-    protected String unlocalizedName;
-    protected String unlocalizedNamePlural;
+    private String translationKey;
+    private String translationKeyPlural;
     /**
      * Id used for hashing
      */
@@ -54,13 +54,13 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public String getUnlocalizedName() {
-        return unlocalizedName == null ? name : unlocalizedName;
+    public String getTranslationKey() {
+        return translationKey == null ? name : translationKey;
     }
 
     @Override
-    public String getUnlocalizedNamePlural() {
-        return unlocalizedNamePlural == null ? name : unlocalizedNamePlural;
+    public String getTranslationKeyPlural() {
+        return translationKeyPlural == null ? name : translationKeyPlural;
     }
 
     @Override
@@ -78,9 +78,9 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         return name;
     }
 
-    public Faction<T> setUnlocalizedName(String unlocalizedName, String unlocalizedNamePlural) {
-        this.unlocalizedName = unlocalizedName;
-        this.unlocalizedNamePlural = unlocalizedNamePlural;
+    public Faction<T> setTranslationKeys(String unlocalizedName, String unlocalizedNamePlural) {
+        this.translationKey = unlocalizedName;
+        this.translationKeyPlural = unlocalizedNamePlural;
         return this;
     }
 

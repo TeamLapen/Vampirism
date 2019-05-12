@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.general;
 
+import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -8,6 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -18,9 +20,29 @@ import java.util.function.Function;
  * Liquids -> blood
  */
 public class BloodConversionRegistry {
-    private static final Map<ResourceLocation, Integer> blood_items = new HashMap<>();
-    private static final Map<ResourceLocation, Function<ItemStack, Integer>> blood_item_special = new HashMap<>();
-    private static final Map<String, Float> fluids = new HashMap<>();
+
+    //Temporary maps during InterModEnqueueEvent
+    private static final Map<ResourceLocation, Integer> blood_items_temp = new HashMap<>();
+    private static final Map<ResourceLocation, Function<ItemStack, Integer>> blood_item_special_temp = new HashMap<>();
+    private static final Map<String, Float> fluids_temp = new HashMap<>();
+
+    //Unmodifiable maps after InterModProcessEvent
+    private static Map<ResourceLocation, Integer> blood_items;
+    private static Map<ResourceLocation, Function<ItemStack, Integer>> blood_item_special;
+    private static Map<String, Float> fluids;
+
+
+    /**
+     * INTERNAL
+     */
+    public static void finish() {
+        blood_items = Collections.unmodifiableMap(new HashMap<>(blood_items_temp));
+        blood_item_special = Collections.unmodifiableMap(new HashMap<>(blood_item_special_temp));
+        fluids = Collections.unmodifiableMap(new HashMap<>(fluids_temp));
+        blood_items_temp.clear();
+        blood_item_special_temp.clear();
+        fluids_temp.clear();
+    }
 
     /**
      * Get the amount of impure blood the given item is worth.
@@ -74,8 +96,9 @@ public class BloodConversionRegistry {
      * @param fluidname The registered fluid name
      * @param ratio
      */
+    @ThreadSafeAPI
     public static void registerFluidConversionRatio(String fluidname, float ratio) {
-        fluids.put(fluidname, ratio);
+        fluids_temp.put(fluidname, ratio);
     }
 
     /**
@@ -85,8 +108,9 @@ public class BloodConversionRegistry {
      *
      * @param amount Impure blood amount in mB
      */
+    @ThreadSafeAPI
     public static void registerItem(ResourceLocation itemId, int amount) {
-        blood_items.put(itemId, amount);
+        blood_items_temp.put(itemId, amount);
     }
 
     /**
@@ -95,7 +119,8 @@ public class BloodConversionRegistry {
      *
      * @param function Function that returns the appropriate amount of blood. Can return 0
      */
+    @ThreadSafeAPI
     public static void registerItem(ResourceLocation itemId, Function<ItemStack, Integer> function) {
-        blood_item_special.put(itemId, function);
+        blood_item_special_temp.put(itemId, function);
     }
 }

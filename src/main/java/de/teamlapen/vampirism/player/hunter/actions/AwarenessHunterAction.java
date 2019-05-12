@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
+
 import java.util.List;
 
 public class AwarenessHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
@@ -38,7 +39,7 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "action.vampirism.hunter.awareness";
     }
 

@@ -3,6 +3,9 @@ package de.teamlapen.vampirism.api.entity.actions;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 
+/**
+ * {@link IEntityAction} that takes several ticks to execute.
+ */
 public interface ILastingAction<T extends EntityCreature & IEntityActionUser> extends IEntityAction {
 
     /**
@@ -14,7 +17,7 @@ public interface ILastingAction<T extends EntityCreature & IEntityActionUser> ex
 
     /**
      * called when the duration of the action is over
-     * 
+     *
      * @param entity
      *            entity which action should be deactivated
      */
@@ -22,7 +25,7 @@ public interface ILastingAction<T extends EntityCreature & IEntityActionUser> ex
 
     /**
      * (should be) called every LivingUpdate of {@link EntityLiving}
-     * 
+     *
      * @param entity
      *            entity whose action is to be updated
      * @param duration
@@ -32,7 +35,7 @@ public interface ILastingAction<T extends EntityCreature & IEntityActionUser> ex
 
     /**
      * called to activate the action
-     * 
+     *
      * @param entity
      *            for which the action should be activated
      */
@@ -40,9 +43,11 @@ public interface ILastingAction<T extends EntityCreature & IEntityActionUser> ex
 
     /**
      * called before action will be activated
-     * 
+     *
      * @param entity
      *            for which the action should be activated
      */
-    void updatePreAction(T entity, int duration);
+    default void updatePreAction(T entity, int duration) {
+
+    }
 }
