@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "vampirism:basic_crossbow"
+  },
+  "lava": "1",
+  "pattern": [
+    "YXXY",
+    " ZZ ",
+    " ZZ "
+  ],
+  "type": "vampirism:shaped_weapon_table_recipe",
+  "key": {
+    "X": {
+      "item": "#IRON"
+    },
+    "Y": {
+      "item": "minecraft:string"
+    },
+    "Z": {
+      "item": "#PLANKS"
+    }
+  }
+}

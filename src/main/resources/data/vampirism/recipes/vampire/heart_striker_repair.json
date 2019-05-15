@@ -1,0 +1,24 @@
+{
+  "result": {
+    "item": "vampirism:heart_striker",
+    "nbt": {
+      "tier": "NORMAL"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "XYX"
+  ],
+  "type": "vampirism:shaped_item_with_tier_repair",
+  "key": {
+    "X": {
+      "item": "vampirism:blood_infused_iron_ingot"
+    },
+    "Y": {
+      "item": "vampirism:heart_striker",
+      "nbt": {
+        "tier": "NORMAL"
+      }
+    }
+  }
+}

@@ -1,48 +1,24 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.recipes.RecipeVampireSword;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
+import de.teamlapen.vampirism.recipes.ShapedItemWithTierRepair;
+import de.teamlapen.vampirism.recipes.ShapedWeaponTableRecipe;
+import de.teamlapen.vampirism.recipes.ShapelessWeaponTableRecipe;
+import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.RecipeSerializers;
+import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.RecipeType;
 
 /**
  * Handles all recipe registrations and reference.
  */
 public class ModRecipes {
+    public static final RecipeType<IRecipe> WEAPONTABLE_CRAFTING_TYPE = RecipeType.get(new ResourceLocation(REFERENCE.MODID, "weapontable_crafting"), IRecipe.class);
+    public static final IRecipeSerializer<ShapedWeaponTableRecipe> SHAPED_CRAFTING_WEAPONTABLE = RecipeSerializers.register(new ShapedWeaponTableRecipe.Serializer());
+    public static final IRecipeSerializer<ShapelessWeaponTableRecipe> SHAPELESS_CRAFTING_WEAPONTABLE = RecipeSerializers.register(new ShapelessWeaponTableRecipe.Serializer());
+    public static final IRecipeSerializer<ShapedRecipe> REPAIR_IITEMWITHTIER = RecipeSerializers.register(new ShapedItemWithTierRepair.Serializer());
 
-    /**
-     * _X_ <br>
-     * XYX
-     * <p>
-     * X = type(blood_iron)
-     * Y = HeartSeeker
-     */
-    private static final RecipeVampireSword recipeHeartSeeker = new RecipeVampireSword("heartseeker", ModItems.heart_seeker) {
-    };
-
-    /**
-     * XXX <br>
-     * XYX
-     * <p>
-     * X = type(blood_iron)
-     * Y = HeartStriker
-     */
-    private static final RecipeVampireSword recipeHeartStriker = new RecipeVampireSword("heartstriker", ModItems.heart_striker) {
-
-        protected boolean check(InventoryCrafting inv, Item item, int i, int j) {
-
-            if (inv.getStackInRowAndColumn(i, j - 1).getItem() == item && inv.getStackInRowAndColumn(i - 1, j).getItem() == item && inv.getStackInRowAndColumn(i + 1, j).getItem() == item && inv.getStackInRowAndColumn(i - 1, j - 1).getItem() == item && inv.getStackInRowAndColumn(i + 1, j - 1).getItem() == item) {
-                resultItem = getCraftingResult(inv);
-                return true;
-            }
-            return false;
-        }
-    };
-
-    static void registerRecipes(IForgeRegistry<IRecipe> registry) {
-
-        registry.register(recipeHeartSeeker);
-        registry.register(recipeHeartStriker);
-    }
 }

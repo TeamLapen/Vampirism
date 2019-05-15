@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "vampirism:crossbow_arrow",
+    "nbt": {
+      "type": "spitfire"
+    }
+  },
+  "level": "1",
+  "lava": "2",
+  "type": "vampirism:shapeless_weapon_table_recipe",
+  "ingredients": [
+    {
+      "item": "vampirism:crossbow_arrow"
+    },
+    {
+      "item": "vampirism:alchemical_fire"
+    },
+    {
+      "item": "vampirism:crossbow_arrow"
+    }
+  ]
+}

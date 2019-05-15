@@ -1,8 +1,12 @@
 package de.teamlapen.vampirism.inventory;
 
-import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
+import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.util.Helper;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -57,14 +61,14 @@ public class HunterWeaponTableCraftingSlot extends Slot {
             lava = blockState.getValue(BlockWeaponTable.LAVA);
         }
         HunterPlayer hunterPlayer = HunterPlayer.get(playerIn);
-        IHunterWeaponRecipe recipe = HunterWeaponCraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, playerIn.getEntityWorld(), hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava);
+        IWeaponTableRecipe recipe = findMatchingRecipe(playerIn, hunterPlayer, lava);
         if (recipe != null && recipe.getRequiredLavaUnits() > 0) {
             lava = Math.max(0, lava - recipe.getRequiredLavaUnits());
             if (blockState.getBlock() instanceof BlockWeaponTable) {
                 world.setBlockState(pos, blockState.withProperty(BlockWeaponTable.LAVA, lava));
             }
         }
-        NonNullList<ItemStack> remaining = recipe == null ? HunterWeaponCraftingManager.getInstance().getRemainingItems(this.craftMatrix, playerIn.getEntityWorld(), hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava) : recipe.getRemainingItems(this.craftMatrix);
+        NonNullList<ItemStack> remaining = recipe == null ? playerIn.world.getRecipeManager().getRemainingItems(this.craftMatrix, playerIn.world, ModRecipes.WEAPONTABLE_CRAFTING_TYPE) : recipe.getRemainingItems(this.craftMatrix);
 
         for (int i = 0; i < remaining.size(); ++i) {
             ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
@@ -92,6 +96,14 @@ public class HunterWeaponTableCraftingSlot extends Slot {
         }
         //TODO playerIn.addStat(Achievements.weaponTable);
         return stack;
+    }
+
+    protected IWeaponTableRecipe findMatchingRecipe(EntityPlayer playerIn, IFactionPlayer<?> factionPlayer, int lava) {
+        IWeaponTableRecipe recipe = (IWeaponTableRecipe) playerIn.getEntityWorld().getServer().getRecipeManager().getRecipe(this.craftMatrix, playerIn.getEntityWorld(), ModRecipes.WEAPONTABLE_CRAFTING_TYPE);
+        if (factionPlayer.getLevel() >= recipe.getRequiredLevel() && lava >= recipe.getRequiredLavaUnits() && Helper.areSkillsEnabled(factionPlayer.getSkillHandler(), recipe.getRequiredSkills())) {
+            return recipe;
+        }
+        return null;
     }
 
     @Override

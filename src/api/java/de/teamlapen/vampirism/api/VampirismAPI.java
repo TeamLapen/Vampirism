@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api;
 
 import com.google.common.collect.Sets;
+
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -12,16 +13,18 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
-import de.teamlapen.vampirism.api.items.IHunterWeaponCraftingManager;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
+
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+
 import java.util.Set;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -41,7 +44,6 @@ public class VampirismAPI {
     private static ISundamageRegistry sundamageRegistry;
     private static IVampirismEntityRegistry entityRegistry;
     private static IVampireVisionRegistry vampireVisionRegistry;
-    private static IHunterWeaponCraftingManager weaponCraftingManager;
     private static IBloodPotionRegistry bloodPotionRegistry;
     private static IGarlicChunkHandler.Provider garlicHandlerProvider;
     private static IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingManager;
@@ -101,13 +103,6 @@ public class VampirismAPI {
     }
 
     /**
-     * @return The crafting manager for the hunter weapon crafting table
-     */
-    public static IHunterWeaponCraftingManager weaponCraftingManager() {
-        return weaponCraftingManager;
-    }
-
-    /**
      * @return The blood potion registry
      */
     public static IBloodPotionRegistry bloodPotionRegistry() {
@@ -163,8 +158,7 @@ public class VampirismAPI {
      * Setup the API accessors
      * FOR INTERNAL USAGE ONLY
      */
-    public static void setUpAccessors(IHunterWeaponCraftingManager weaponCraftingMan, IGarlicChunkHandler.Provider garlicChunkHandlerProv, IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingMan) {
-        weaponCraftingManager = weaponCraftingMan;
+    public static void setUpAccessors(IGarlicChunkHandler.Provider garlicChunkHandlerProv, IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingMan) {
         garlicHandlerProvider = garlicChunkHandlerProv;
         alchemicalCauldronCraftingManager = alchemicalCauldronCraftingMan;
     }

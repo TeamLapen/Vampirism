@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.modcompat.jei;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
+import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
@@ -25,9 +25,9 @@ public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
 
     private
     @Nonnull
-    final IHunterWeaponRecipe recipe;
+    final IWeaponTableRecipe recipe;
 
-    protected HunterWeaponRecipeWrapper(@Nonnull IHunterWeaponRecipe recipe) {
+    protected HunterWeaponRecipeWrapper(@Nonnull IWeaponTableRecipe recipe) {
         this.recipe = recipe;
     }
 

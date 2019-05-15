@@ -1,0 +1,31 @@
+{
+  "result": {
+    "item": "vampirism:hunter_coat_chest",
+    "nbt": {
+      "type": "enhanced"
+    }
+  },
+  "lava": "5",
+  "skill": ["vampirism_enhanced_armor"],
+  "pattern": [
+    "XWWX",
+    "XZZX",
+    "XZZX",
+    "XYYX"
+  ],
+  "type": "vampirism:shaped_weapon_table_recipe",
+  "key": {
+    "X": {
+      "item": "#IRON"
+    },
+    "Y": {
+      "item": "minecraft:leather"
+    },
+    "Z": {
+      "item": "vampirism:item_garlic"
+    },
+    "W": {
+      "item": "vampirism:vampire_fang"
+    }
+  }
+}

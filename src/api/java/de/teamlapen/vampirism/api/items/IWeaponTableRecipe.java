@@ -1,18 +1,19 @@
 package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Recipe that can be used in the hunter weapon crafting table
  */
-public interface IHunterWeaponRecipe {
+public interface IWeaponTableRecipe extends IRecipe {
 
 
     /**
@@ -29,13 +30,7 @@ public interface IHunterWeaponRecipe {
     /**
      * @return The hunter level required to craft this
      */
-    int getMinHunterLevel();
-
-    ItemStack getRecipeOutput();
-
-    default NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-        return net.minecraftforge.common.ForgeHooks.defaultRecipeGetRemainingItems(inv);
-    }
+    int getRequiredLevel();
 
     /**
      * Measured in 1/5 buckets. Min value=0
@@ -47,16 +42,6 @@ public interface IHunterWeaponRecipe {
     /**
      * @return The skills that have to be unlocked to craft this. Can be empty
      */
-    @Nonnull
+    @Nullable
     ISkill[] getRequiredSkills();
-
-    default boolean isHidden() {
-        return false;
-    }
-
-    /**
-     * Used to check if a recipe matches current crafting inventory
-     */
-    boolean matches(InventoryCrafting inv, World worldIn);
-
 }

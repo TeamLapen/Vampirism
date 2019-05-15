@@ -1,0 +1,30 @@
+{
+  "result": {
+    "item": "vampirism:crossbow_arrow",
+    "nbt": {
+      "type": "vampire_killer"
+    }
+  },
+  "lava": "1",
+  "type": "vampirism:shaped_weapon_table_recipe",
+  "pattern": [
+    " X  ",
+    "XYX ",
+    " Z  ",
+    " W  "
+  ],
+  "key": {
+    "X": {
+      "item": "vampirism_item_garlic"
+    },
+    "Y": {
+      "item": "#GOLD"
+    },
+    "Z": {
+      "item": "#STICK"
+    },
+    "W": {
+      "item": "minecraft:feather"
+    }
+  }
+}

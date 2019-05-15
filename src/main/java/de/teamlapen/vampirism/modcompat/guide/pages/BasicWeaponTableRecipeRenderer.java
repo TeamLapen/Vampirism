@@ -9,7 +9,7 @@ import amerifrance.guideapi.gui.GuiBase;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
+import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -30,7 +30,7 @@ import java.util.Random;
  *
  * @param <T>
  */
-public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponRecipe> implements IRecipeRenderer {
+public abstract class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> implements IRecipeRenderer {
     private final Random rand = new Random();
     protected T recipe;
     protected java.util.List<String> tooltips = Lists.newArrayList();

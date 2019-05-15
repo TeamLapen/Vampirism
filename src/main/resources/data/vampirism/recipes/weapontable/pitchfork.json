@@ -1,0 +1,20 @@
+{
+  "result": {
+    "item": "vampirism:pitchfork"
+  },
+  "pattern": [
+    "X X ",
+    "YYY ",
+    " Y  ",
+    " Y  "
+  ],
+  "type": "vampirism:shaped_weapon_table_recipe",
+  "key": {
+    "X": {
+      "item": "#IRON"
+    },
+    "Y": {
+      "item": "#STICK"
+    }
+  }
+}

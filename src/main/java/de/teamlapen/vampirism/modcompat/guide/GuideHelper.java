@@ -9,7 +9,7 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
-import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
+import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
@@ -100,8 +100,8 @@ public class GuideHelper {
         return null;
     }
 
-    public static IHunterWeaponRecipe getWeaponTableRecipeForOutput(ItemStack stack) {
-        for (IHunterWeaponRecipe recipe : HunterWeaponCraftingManager.getInstance().getRecipes()) {
+    public static IWeaponTableRecipe getWeaponTableRecipeForOutput(ItemStack stack) {
+        for (IWeaponTableRecipe recipe : HunterWeaponCraftingManager.getInstance().getRecipes()) {
             if (checkRecipeOutput(recipe, stack, true)) return recipe;
         }
         return null;
@@ -128,7 +128,7 @@ public class GuideHelper {
         return false;
     }
 
-    private static boolean checkRecipeOutput(IHunterWeaponRecipe recipe, ItemStack stack, boolean checkNBT) {
+    private static boolean checkRecipeOutput(IWeaponTableRecipe recipe, ItemStack stack, boolean checkNBT) {
         if (recipe != null) {
             ItemStack resultStack = recipe.getRecipeOutput();
             return checkOutput(resultStack, stack, checkNBT);
@@ -162,7 +162,7 @@ public class GuideHelper {
                     BrewingRecipe b = checkNotNull(getBrewingRecipe(stack));
                     return new PageBrewingRecipe(b);
                 case WEAPON_TABLE:
-                    IHunterWeaponRecipe r2 = checkNotNull(getWeaponTableRecipeForOutput(stack));
+                    IWeaponTableRecipe r2 = checkNotNull(getWeaponTableRecipeForOutput(stack));
                     IRecipeRenderer renderer = null;
                     if (r2 instanceof ShapedHunterWeaponRecipe) {
                         renderer = new ShapedWeaponTableRecipeRenderer((ShapedHunterWeaponRecipe) r2);

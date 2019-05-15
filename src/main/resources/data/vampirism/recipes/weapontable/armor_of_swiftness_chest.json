@@ -1,0 +1,30 @@
+{
+  "result": {
+    "item": "vampirism:armor_of_swiftness_chest",
+    "nbt": {
+      "type": "normal"
+    }
+  },
+  "pattern": [
+    "XZZX",
+    "XXXX",
+    "XYYX",
+    "XXXX"
+  ],
+  "type": "vampirism:shaped_weapon_table_recipe",
+  "key": {
+    "X": {
+      "item": "minecraft:leather"
+    },
+    "Y": {
+      "item": "vampirism:item_garlic"
+    },
+    "Z": {
+      "type": "minecraft:item_nbt",
+      "item": "minecraft:potion",
+      "nbt": {
+        "Potion": "minecraft:swiftness"
+      }
+    }
+  }
+}

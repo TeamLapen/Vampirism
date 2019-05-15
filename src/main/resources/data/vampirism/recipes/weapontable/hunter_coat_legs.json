@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "vampirism:hunter_coat_legs",
+    "nbt": {
+      "type": "normal"
+    }
+  },
+  "lava": "2",
+  "pattern": [
+    "XXXX",
+    "XZZX",
+    "XZZX",
+    "X  X"
+  ],
+  "type": "vampirism:shaped_weapon_table_recipe",
+  "key": {
+    "X": {
+      "item": "#IRON"
+    },
+    "Y": {
+      "item": "minecraft:leather"
+    },
+    "Z": {
+      "item": "vampirism:item_garlic"
+    }
+  }
+}

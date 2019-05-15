@@ -1,0 +1,31 @@
+{
+  "result": {
+    "item": "vampirism:obsidian_armor_chest",
+    "nbt": {
+      "type": "enhanced"
+    }
+  },
+  "lava": "5",
+  "skill": ["vampirism:enhanced_armor"],
+  "pattern": [
+    "ZXXZ",
+    "DYYD",
+    "XYYX",
+    "DYYD"
+  ],
+  "type": "vampirism:shaped_weapon_table_recipe",
+  "key": {
+    "X": {
+      "item": "#IRON"
+    },
+    "Y": {
+      "item": "minecraft:obsidian"
+    },
+    "Z": {
+      "item": "minecraft_leather"
+    },
+    "D": {
+      "item": "#DIAMOND"
+    }
+  }
+}

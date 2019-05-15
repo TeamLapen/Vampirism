@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
+import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.util.REFERENCE;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.ICraftingGridHelper;
@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Recipe category for {@link IHunterWeaponRecipe}
+ * Recipe category for {@link IWeaponTableRecipe}
  */
 public class HunterWeaponRecipeCategory extends BlankRecipeCategory {
 

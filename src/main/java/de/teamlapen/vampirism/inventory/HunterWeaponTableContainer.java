@@ -1,13 +1,18 @@
 package de.teamlapen.vampirism.inventory;
 
-import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
+import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
+import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import net.minecraft.block.state.IBlockState;
+import de.teamlapen.vampirism.util.Helper;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -21,28 +26,29 @@ public class HunterWeaponTableContainer extends Container {
     private final BlockPos pos;
     private final HunterPlayer hunterPlayer;
     private InventoryCrafting craftMatrix = new InventoryCrafting(this, 4, 4);
-    private IInventory craftResult = new InventoryCraftResult();
+    private InventoryCraftResult craftResult = new InventoryCraftResult();
+    private boolean missingLava = false;
 
     public HunterWeaponTableContainer(InventoryPlayer playerInventory, World world, BlockPos pos) {
         this.world = world;
         this.pos = pos;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
-        this.addSlotToContainer(new HunterWeaponTableCraftingSlot(playerInventory.player, world, pos, craftMatrix, craftResult, 0, 144, 46));
+        this.addSlot(new HunterWeaponTableCraftingSlot(playerInventory.player, world, pos, craftMatrix, craftResult, 0, 144, 46));
 
         for (int i = 0; i < 4; ++i) {
             for (int j = 0; j < 4; ++j) {
-                this.addSlotToContainer(new Slot(this.craftMatrix, j + i * 4, 34 + j * 19, 16 + i * 19));
+                this.addSlot(new Slot(this.craftMatrix, j + i * 4, 34 + j * 19, 16 + i * 19));
             }
         }
 
         for (int k = 0; k < 3; ++k) {
             for (int i1 = 0; i1 < 9; ++i1) {
-                this.addSlotToContainer(new Slot(playerInventory, i1 + k * 9 + 9, 18 + i1 * 18, 107 + k * 18));
+                this.addSlot(new Slot(playerInventory, i1 + k * 9 + 9, 18 + i1 * 18, 107 + k * 18));
             }
         }
 
         for (int l = 0; l < 9; ++l) {
-            this.addSlotToContainer(new Slot(playerInventory, l, 18 + l * 18, 165));
+            this.addSlot(new Slot(playerInventory, l, 18 + l * 18, 165));
         }
 
         this.onCraftMatrixChanged(this.craftMatrix);
@@ -67,17 +73,11 @@ public class HunterWeaponTableContainer extends Container {
      * @return
      */
     public boolean isMissingLava() {
-        IHunterWeaponRecipe recipe = HunterWeaponCraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), 100);
-        if (recipe != null) {
-            IBlockState blockState = world.getBlockState(pos);
-            if (blockState.getBlock() instanceof BlockWeaponTable) {
-                return blockState.getValue(BlockWeaponTable.LAVA) < recipe.getRequiredLavaUnits();
-            }
-        }
-        return false;
+        return missingLava;
 
     }
 
+    @Override
     public void onContainerClosed(EntityPlayer playerIn) {
         super.onContainerClosed(playerIn);
 
@@ -90,16 +90,38 @@ public class HunterWeaponTableContainer extends Container {
                 }
             }
         }
+        
+        missingLava = false;
     }
 
-
+    @Override
     public void onCraftMatrixChanged(IInventory inventoryIn) {
-        int lava = 0;
-        IBlockState blockState = world.getBlockState(pos);
-        if (blockState.getBlock() instanceof BlockWeaponTable) {
-            lava = blockState.getValue(BlockWeaponTable.LAVA);
-        }
-        this.craftResult.setInventorySlotContents(0, HunterWeaponCraftingManager.getInstance().findMatchingRecipeResult(this.craftMatrix, this.world, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava));
+        slotChangedCraftingGrid(this.world, this.hunterPlayer.getRepresentingPlayer(), this.craftMatrix, this.craftResult);
+    }
+    
+    @Override
+    protected void slotChangedCraftingGrid(World worldIn, EntityPlayer playerIn, IInventory craftMatrixIn, InventoryCraftResult craftResultIn) {
+        if (!worldIn.isRemote) {
+            EntityPlayerMP entityplayermp = (EntityPlayerMP)playerIn;
+            HunterPlayer hunter = HunterPlayer.get(playerIn);
+            ItemStack itemstack = ItemStack.EMPTY;
+            IRecipe irecipe = worldIn.getServer().getRecipeManager().getRecipe(craftMatrixIn, worldIn, ModRecipes.WEAPONTABLE_CRAFTING_TYPE);
+            boolean working = true;
+            missingLava = false;
+            if (irecipe instanceof IWeaponTableRecipe && craftResultIn.canUseRecipe(worldIn, entityplayermp, irecipe)) {
+                IWeaponTableRecipe recipe = (IWeaponTableRecipe) irecipe;
+                if (recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunterPlayer.getSkillHandler(), recipe.getRequiredSkills())) {
+                    if (recipe.getRequiredLavaUnits() >= worldIn.getBlockState(pos).getValue(BlockWeaponTable.LAVA)) { //TODO LAVA at BlockPos, BlockWeaponTable.Propert
+                        itemstack = irecipe.getCraftingResult(craftMatrixIn);
+
+                    } else {
+                        missingLava = true;
+                    }
+                }
+            }
+            craftResultIn.setInventorySlotContents(0, itemstack);
+            entityplayermp.connection.sendPacket(new SPacketSetSlot(this.windowId, 0, itemstack));
+         }
     }
 
     @Nonnull

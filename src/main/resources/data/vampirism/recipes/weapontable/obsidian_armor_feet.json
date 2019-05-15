@@ -1,0 +1,24 @@
+{
+  "result": {
+    "item": "vampirism:obsidian_armor_feet",
+    "nbt": {
+      "type": "normal"
+    }
+  },
+  "lava": "5",
+  "pattern": [
+    "    ",
+    "X  X",
+    "XYYX",
+    "XYYX"
+  ],
+  "type": "vampirism:shaped_weapon_table_recipe",
+  "key": {
+    "X": {
+      "item": "#IRON"
+    },
+    "Y": {
+      "item": "minecraft:obsidian"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "result": {
+    "item": "vampirism:heart_seeker",
+    "nbt": {
+      "tier": "ENHANCED"
+    }
+  },
+  "pattern": [
+    " X ",
+    "XYX"
+  ],
+  "type": "vampirism:shaped_item_with_tier_repair",
+  "key": {
+    "X": {
+      "item": "vampirism:blood_infused_enhanced_iron_ingot"
+    },
+    "Y": {
+      "item": "vampirism:heart_seeker",
+      "nbt": {
+        "type": "ENHANCED"
+      }
+    }
+  }
+}

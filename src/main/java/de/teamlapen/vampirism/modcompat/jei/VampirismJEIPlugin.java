@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronContainer;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
-import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponTableContainer;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
@@ -38,7 +37,7 @@ public class VampirismJEIPlugin extends BlankModPlugin {
         registry.addRecipeHandlers(new ShapelessHunterWeaponRecipeHandler());
         registry.addRecipeClickArea(GuiHunterWeaponTable.class, 113, 46, 28, 23, HUNTER_WEAPON_RECIPE_UID);
         registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.weapon_table), HUNTER_WEAPON_RECIPE_UID);
-        registry.addRecipes(HunterWeaponCraftingManager.getInstance().getRecipes());
+        //TODO registry.addRecipes(HunterWeaponCraftingManager.getInstance().getRecipes()); Recipes stored in forge recipe registry {@link ForgeRecipeManager#sortedRecipes}
         recipeTransferRegistry.addRecipeTransferHandler(HunterWeaponTableContainer.class, HUNTER_WEAPON_RECIPE_UID, 1, 16, 17, 36);
         //Alchemical cauldron
         registry.addRecipeCategories(new AlchemicalCauldronRecipeCategory(guiHelper));

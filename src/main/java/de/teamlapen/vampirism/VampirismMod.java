@@ -16,13 +16,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.BloodGrinderValueLoader;
 import de.teamlapen.vampirism.config.BloodValueLoader;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModEventHandler;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.RegistryManager;
-import de.teamlapen.vampirism.core.TestCommand;
-import de.teamlapen.vampirism.core.VampirismCommand;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -33,7 +27,6 @@ import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
-import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.modcompat.SpongeModCompat;
 import de.teamlapen.vampirism.modcompat.guide.GuideAPICompat;
@@ -54,11 +47,7 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
-import de.teamlapen.vampirism.util.GeneralRegistryImpl;
-import de.teamlapen.vampirism.util.HalloweenSpecial;
-import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.util.SupporterManager;
-import de.teamlapen.vampirism.util.VampireBookManager;
+import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
@@ -318,7 +307,7 @@ public class VampirismMod {
         biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
         BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
         VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, bloodPotionRegistry, entityActionManager);
-        VampirismAPI.setUpAccessors(HunterWeaponCraftingManager.getInstance(), new GarlicChunkHandler.Provider(), AlchemicalCauldronCraftingManager.getInstance());
+        VampirismAPI.setUpAccessors(new GarlicChunkHandler.Provider(), AlchemicalCauldronCraftingManager.getInstance());
     }
 
     /**
