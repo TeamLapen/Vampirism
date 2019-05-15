@@ -1,15 +1,12 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:totem_base"
+    "model": "vampirism:block/totem_base"
   },
   "variants": {
     "normal": [
       {
       }
-    ],
-    "inventory": {
-      "transform": "forge:default-block"
-    }
+    ]
   }
 }

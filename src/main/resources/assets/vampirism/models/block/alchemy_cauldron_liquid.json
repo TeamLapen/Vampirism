@@ -1,7 +1,7 @@
 {
   "__comment": "Designed by Maxanier with Cubik Studio - https://cubik.studio",
   "textures": {
-    "liquid": "vampirism:blocks/blank_liquid_still"
+    "liquid": "vampirism:block/blank_liquid_still"
   },
   "elements": [
     {

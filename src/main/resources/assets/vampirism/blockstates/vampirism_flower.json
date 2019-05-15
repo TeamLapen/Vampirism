@@ -5,7 +5,7 @@
       "vampire_orchid": {
         "model": "cross",
         "textures": {
-          "cross": "vampirism:blocks/vampire_orchid"
+          "cross": "vampirism:block/vampire_orchid"
         }
       }
     }

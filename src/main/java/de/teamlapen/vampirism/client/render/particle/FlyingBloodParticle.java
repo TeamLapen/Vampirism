@@ -26,7 +26,7 @@ public class FlyingBloodParticle extends Particle {
     public FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double
             destZ, int maxage, int particleId) {
         super(world, posX, posY, posZ, 0D, 0D, 0D);
-        this.particleMaxAge = maxage;
+        this.maxAge = maxage;
         this.destX = destX;
         this.destY = destY;
         this.destZ = destZ;
@@ -36,9 +36,9 @@ public class FlyingBloodParticle extends Particle {
         double wayX = destX - this.posX;
         double wayZ = destZ - this.posZ;
         double wayY = destY - this.posY;
-        this.motionX = (this.world.rand.nextDouble() / 10 - 0.05) + wayX / particleMaxAge;
-        this.motionY = (this.world.rand.nextDouble() / 10 - 0.01) + wayY / particleMaxAge;
-        this.motionZ = (this.world.rand.nextDouble() / 10 - 0.05) + wayZ / particleMaxAge;
+        this.motionX = (this.world.rand.nextDouble() / 10 - 0.05) + wayX / maxAge;
+        this.motionY = (this.world.rand.nextDouble() / 10 - 0.01) + wayY / maxAge;
+        this.motionZ = (this.world.rand.nextDouble() / 10 - 0.05) + wayZ / maxAge;
         this.tick();
     }
 
@@ -59,15 +59,15 @@ public class FlyingBloodParticle extends Particle {
         double wayY = destY - this.posY;
         double wayZ = destZ - this.posZ;
 
-        int tleft = this.particleMaxAge - this.particleAge;
-        if (tleft < this.particleMaxAge / 1.2) {
+        int tleft = this.maxAge - this.age;
+        if (tleft < this.maxAge / 1.2) {
             this.motionX = wayX / tleft;
             this.motionY = wayY / tleft;
             this.motionZ = wayZ / tleft;
         }
         this.move(this.motionX, this.motionY, this.motionZ);
 
-        if (++this.particleAge >= this.particleMaxAge) {
+        if (++this.age >= this.maxAge) {
             this.setExpired();
         }
     }

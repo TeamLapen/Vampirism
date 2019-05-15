@@ -1,31 +1,31 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:altar_pillar_filled"
+    "model": "vampirism:block/altar_pillar_filled"
   },
   "variants": {
     "type": {
       "iron": {
         "textures": {
-          "filler": "blocks/iron_block"
+          "filler": "block/iron_block"
         }
       },
       "gold": {
         "textures": {
-          "filler": "blocks/gold_block"
+          "filler": "block/gold_block"
         }
       },
       "none": {
-        "model": "vampirism:altar_pillar"
+        "model": "vampirism:block/altar_pillar"
       },
       "stone": {
         "textures": {
-          "filler": "blocks/stonebrick"
+          "filler": "block/stonebrick"
         }
       },
       "bone": {
         "textures": {
-          "filler": "blocks/bone_block_side"
+          "filler": "block/bone_block_side"
         }
       }
     }

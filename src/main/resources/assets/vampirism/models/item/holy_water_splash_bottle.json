@@ -1,0 +1,11 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "vampirism:item/holy_water_splash"
+	},
+	"overrides": [
+		{ "predicate": { "tier": "normal" }, "model": "item/holy_water_splash_bottle" },
+		{ "predicate": { "tier": "enhanced" }, "model": "item/holy_water_splash_bottle_enhanced" },
+		{ "predicate": { "tier": "ultimate" }, "model": "item/holy_water_splash_bottle_ultimate" }
+	]
+}

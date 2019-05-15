@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.client.model.ModelBipedShrinkable;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -55,7 +56,7 @@ public class RenderVampireMinion extends RenderBiped<EntityVampireMinionBase> {
             this.bindEntityTexture(entity);
             this.mainModel.render(entity, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
             GlStateManager.enableBlend();
-            GlStateManager.color(1F, 1F, 1F, size);
+            GlStateManager.color4f(1F, 1F, 1F, size);
 
             this.bindTexture(this.getVampireTexture(entity.getOldVampireTexture()));
             this.mainModel.render(entity, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);

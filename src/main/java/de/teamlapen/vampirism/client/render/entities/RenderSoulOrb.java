@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.EntitySoulOrb;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSprite;
@@ -15,7 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class RenderSoulOrb extends RenderSprite<EntitySoulOrb> {
 
-    public RenderSoulOrb(RenderManager renderManager, RenderItem renderItem) {
+    public RenderSoulOrb(RenderManager renderManager, ItemRenderer renderItem) {
         super(renderManager, Items.SNOWBALL, renderItem);
     }
 

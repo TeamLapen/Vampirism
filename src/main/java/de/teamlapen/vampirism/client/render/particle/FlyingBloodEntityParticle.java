@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -27,9 +28,9 @@ public class FlyingBloodEntityParticle extends Particle {
         this.particleRed = 0.95F;
         this.particleBlue = this.particleGreen = 0.05F;
         if (direct) {
-            this.particleMaxAge = MAX_AGE / 2;
+            this.maxAge = MAX_AGE / 2;
         } else {
-            this.particleMaxAge = MAX_AGE;
+            this.maxAge = MAX_AGE;
         }
 
         this.setParticleTextureIndex(65);
@@ -56,8 +57,8 @@ public class FlyingBloodEntityParticle extends Particle {
         double wayY = entity.posY + entity.getEyeHeight() - this.posY;
         double wayZ = entity.posZ - this.posZ;
 
-        int tleft = this.particleMaxAge - this.particleAge;
-        if (tleft < this.particleMaxAge / 2) {
+        int tleft = this.maxAge - this.age;
+        if (tleft < this.maxAge / 2) {
             this.motionX = wayX / tleft;
             this.motionY = wayY / tleft;
             this.motionZ = wayZ / tleft;
@@ -65,7 +66,7 @@ public class FlyingBloodEntityParticle extends Particle {
 
         this.move(this.motionX, this.motionY, this.motionZ);
 
-        if (++this.particleAge >= this.particleMaxAge) {
+        if (++this.age >= this.maxAge) {
             this.setExpired();
         }
     }

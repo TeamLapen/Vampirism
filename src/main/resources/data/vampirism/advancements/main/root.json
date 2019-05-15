@@ -9,7 +9,7 @@
     "description": {
       "translate": "advancement.vampirism.desc"
     },
-    "background": "vampirism:textures/blocks/castle_block_dark_brick.png",
+    "background": "vampirism:textures/block/castle_block_dark_brick.png",
     "show_toast": false,
     "announce_to_chat": false
   },

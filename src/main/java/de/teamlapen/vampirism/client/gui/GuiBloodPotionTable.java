@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
@@ -19,7 +20,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.io.IOException;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
@@ -36,8 +36,8 @@ public class GuiBloodPotionTable extends GuiContainer {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
 
     }
@@ -45,7 +45,12 @@ public class GuiBloodPotionTable extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        this.buttonList.add(this.craftBtn = new GuiButton(0, this.width / 2 - 77, this.height / 2 - 78, 80, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create")));
+        this.buttons.add(this.craftBtn = new GuiButton(0, this.width / 2 - 77, this.height / 2 - 78, 80, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create")) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.CRAFT_BLOOD_POTION, ""));
+            }
+        });
         craftBtn.enabled = false;
     }
 
@@ -57,8 +62,8 @@ public class GuiBloodPotionTable extends GuiContainer {
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public void tick() {
+        super.tick();
         this.craftBtn.enabled = container.canCurrentlyStartCrafting();
         if (container.getCraftingPercentage() == 0 || container.getCraftingPercentage() == 1) {
             stopSound();
@@ -67,18 +72,10 @@ public class GuiBloodPotionTable extends GuiContainer {
         }
     }
 
-    @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        if (button.enabled) {
-            if (button.id == 0) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.CRAFT_BLOOD_POTION, ""));
-            }
-        }
-    }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;

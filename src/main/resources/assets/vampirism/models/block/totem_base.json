@@ -1,10 +1,10 @@
 {
   "__comment": "Designed by Maxanier with Cubik Studio - https://cubik.studio",
   "textures": {
-    "particle": "blocks/obsidian",
-    "iron": "blocks/iron_block",
-    "obsidian": "blocks/obsidian",
-    "wood": "blocks/planks_oak"
+    "particle": "block/obsidian",
+    "iron": "block/iron_block",
+    "obsidian": "block/obsidian",
+    "wood": "block/planks_oak"
   },
   "elements": [
     {

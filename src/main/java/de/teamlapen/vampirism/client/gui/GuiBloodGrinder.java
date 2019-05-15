@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -23,7 +24,7 @@ public class GuiBloodGrinder extends GuiContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(background);
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;

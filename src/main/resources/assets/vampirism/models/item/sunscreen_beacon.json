@@ -1,0 +1,6 @@
+{
+  "parent": "beacon",
+  "textures": {
+    "beacon": "block/cursed_earth"
+  }
+}

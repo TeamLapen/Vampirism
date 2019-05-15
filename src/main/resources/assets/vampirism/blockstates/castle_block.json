@@ -8,27 +8,27 @@
     "variant": {
       "dark_brick": {
         "textures": {
-          "all": "vampirism:blocks/castle_block_dark_brick"
+          "all": "vampirism:block/castle_block_dark_brick"
         }
       },
       "dark_brick_bloody": {
         "textures": {
-          "all": "vampirism:blocks/castle_block_dark_brick_bloody"
+          "all": "vampirism:block/castle_block_dark_brick_bloody"
         }
       },
       "purple_brick": {
         "textures": {
-          "all": "vampirism:blocks/castle_block_purple_brick"
+          "all": "vampirism:block/castle_block_purple_brick"
         }
       },
       "normal_brick": {
         "textures": {
-          "all": "vampirism:blocks/castle_block_normal_brick"
+          "all": "vampirism:block/castle_block_normal_brick"
         }
       },
       "dark_stone": {
         "textures": {
-          "all": "vampirism:blocks/castle_block_dark_stone"
+          "all": "vampirism:block/castle_block_dark_stone"
         }
       }
     }

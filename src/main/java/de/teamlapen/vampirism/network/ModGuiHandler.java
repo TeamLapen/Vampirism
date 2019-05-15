@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.items.ItemVampireBook;
 import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import de.teamlapen.vampirism.tileentity.TileGrinder;
+
 import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -60,7 +61,7 @@ public class ModGuiHandler implements IGuiHandler {
             case ID_VAMPIRE_BOOK:
                 ItemStack itemStack = player.getHeldItem(EnumHand.MAIN_HAND);
                 if (!itemStack.isEmpty() && itemStack.getItem() instanceof ItemVampireBook) {
-                    return new GuiScreenBook(player, itemStack, false);
+                    return new GuiScreenBook(player, itemStack, false, EnumHand.MAIN_HAND);
                 }
                 return null;
             case ID_ALCHEMICAL_CAULDRON:

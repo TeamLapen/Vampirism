@@ -1,7 +1,7 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "tent_back": "vampirism:blocks/tent_back"
+    "tent_back": "vampirism:block/tent_back"
   },
   "elements": [
     {

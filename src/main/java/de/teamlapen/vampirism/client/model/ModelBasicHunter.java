@@ -2,7 +2,8 @@ package de.teamlapen.vampirism.client.model;
 
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
-import net.minecraft.client.model.ModelRenderer;
+
+import net.minecraft.client.renderer.entity.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;

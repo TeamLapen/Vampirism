@@ -1,7 +1,7 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "texture": "blocks/log_spruce"
+    "texture": "block/log_spruce"
   },
   "elements": [
     {

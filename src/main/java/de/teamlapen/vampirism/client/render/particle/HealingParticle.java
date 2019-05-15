@@ -21,7 +21,7 @@ public class HealingParticle extends Particle {
 
     public HealingParticle(World worldIn, double posX, double posY, double posZ) {
         super(worldIn, posX, posY, posZ, 0, 0, 0);
-        this.particleMaxAge = 14;
+        this.maxAge = 14;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class HealingParticle extends Particle {
                 new Vec3d((double) (rotationX * f4 + rotationXY * f4), (double) (rotationZ * f4), (double) (rotationYZ * f4 + rotationXZ * f4)),
                 new Vec3d((double) (rotationX * f4 - rotationXY * f4), (double) (-rotationZ * f4), (double) (rotationYZ * f4 - rotationXZ * f4)) };
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
         RenderHelper.disableStandardItemLighting();
         buffer.begin(7, VERTEX_FORMAT);

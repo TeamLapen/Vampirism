@@ -3,16 +3,13 @@
   "defaults": {
     "model": "cube_all",
     "textures": {
-      "all": "vampirism:blocks/cursed_earth"
+      "all": "vampirism:block/cursed_earth"
     }
   },
   "variants": {
     "normal": [
       {
       }
-    ],
-    "inventory": {
-      "transform": "forge:default-block"
-    }
+    ]
   }
 }

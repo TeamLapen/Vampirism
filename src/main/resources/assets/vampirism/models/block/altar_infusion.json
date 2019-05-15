@@ -1,10 +1,10 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "particle": "blocks/obsidian",
-    "obsidian": "blocks/obsidian",
-    "gold_block": "blocks/gold_block",
-    "extra": "vampirism:blocks/altar_infusion_extra"
+    "particle": "block/obsidian",
+    "obsidian": "block/obsidian",
+    "gold_block": "block/gold_block",
+    "extra": "vampirism:block/altar_infusion_extra"
   },
   "elements": [
     {

@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.client.model;
 
-
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -31,13 +30,13 @@ public class ModelBipedShrinkable extends ModelBiped {
 
         float f6 = 2.0F - size;
         GlStateManager.pushMatrix();
-        GlStateManager.scale(1.5F / (1.5F + (1F - size) * 0.5F), 1.5F / (1.5F + (1F - size) * 0.5F), 1.5F / (1.5F + (1F - size) * 0.5F));
-        GlStateManager.translate(0.0F, 16.0F * p_78088_7_ * (-(size) * (size - 1F) - size + 1), 0.0F);
+        GlStateManager.scalef(1.5F / (1.5F + (1F - size) * 0.5F), 1.5F / (1.5F + (1F - size) * 0.5F), 1.5F / (1.5F + (1F - size) * 0.5F));
+        GlStateManager.translatef(0.0F, 16.0F * p_78088_7_ * (-(size) * (size - 1F) - size + 1), 0.0F);
         this.bipedHead.render(p_78088_7_);
         GlStateManager.popMatrix();
         GlStateManager.pushMatrix();
-        GlStateManager.scale(1.0F / f6, 1.0F / f6, 1.0F / f6);
-        GlStateManager.translate(0.0F, 24.0F * p_78088_7_ * (1F - size), 0.0F);
+        GlStateManager.scalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+        GlStateManager.translatef(0.0F, 24.0F * p_78088_7_ * (1F - size), 0.0F);
         this.bipedBody.render(p_78088_7_);
         this.bipedRightArm.render(p_78088_7_);
         this.bipedLeftArm.render(p_78088_7_);

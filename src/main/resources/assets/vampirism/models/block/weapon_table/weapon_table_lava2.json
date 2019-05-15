@@ -1,7 +1,7 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "lava": "blocks/lava_still"
+    "lava": "block/lava_still"
   },
   "elements": [
     {

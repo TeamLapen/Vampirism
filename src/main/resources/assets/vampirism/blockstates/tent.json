@@ -1,7 +1,7 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:tent"
+    "model": "vampirism:block/tent"
   },
   "variants": {
     "facing": {
@@ -20,32 +20,32 @@
     "position": {
       "0": {
         "textures": {
-          "floor": "vampirism:blocks/tent/floor_br"
+          "floor": "vampirism:block/tent/floor_br"
         }
       },
       "1": {
         "textures": {
-          "floor": "vampirism:blocks/tent/floor_bl"
+          "floor": "vampirism:block/tent/floor_bl"
         }
       },
       "2": {
         "textures": {
-          "floor": "vampirism:blocks/tent/floor_tl"
+          "floor": "vampirism:block/tent/floor_tl"
         },
         "submodel": {
           "back": {
-            "model": "vampirism:tentback",
+            "model": "vampirism:block/tentback",
             "y": 180
           }
         }
       },
       "3": {
         "textures": {
-          "floor": "vampirism:blocks/tent/floor_tr"
+          "floor": "vampirism:block/tent/floor_tr"
         },
         "submodel": {
           "back": {
-            "model": "vampirism:tentback_flipped"
+            "model": "vampirism:block/tentback_flipped"
           }
         }
       }

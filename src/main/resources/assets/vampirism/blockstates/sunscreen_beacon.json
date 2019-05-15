@@ -3,16 +3,13 @@
   "defaults": {
     "model": "beacon",
     "textures": {
-      "beacon": "vampirism:blocks/cursed_earth"
+      "beacon": "vampirism:block/cursed_earth"
     }
   },
   "variants": {
     "normal": [
       {
       }
-    ],
-    "inventory": {
-      "transform": "forge:default-block"
-    }
+    ]
   }
 }

@@ -2,13 +2,14 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.InputEventPacket;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.io.IOException;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Very similar to GuiSleepMP, but for coffin sleep
@@ -16,27 +17,25 @@ import java.io.IOException;
 @OnlyIn(Dist.CLIENT)
 public class GuiSleepCoffin extends GuiChat {
 
+    @Override
     public void initGui() {
         super.initGui();
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height - 40, I18n.format("multiplayer.stopSleeping")));
+        this.buttons.add(new GuiButton(1, this.width / 2 - 100, this.height - 40, I18n.format("multiplayer.stopSleeping")) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                GuiSleepCoffin.this.wakeFromSleep();
+            }
+        });
     }
 
-    /**
-     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
-     */
-    protected void actionPerformed(GuiButton button) throws IOException {
-        if (button.id == 1) {
+    @Override
+    public boolean keyPressed(int key1, int key2, int key3) {
+        if (key1 == GLFW.GLFW_KEY_ESCAPE) {
             this.wakeFromSleep();
-        } else {
-            super.actionPerformed(button);
-        }
-    }
-
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (keyCode == 1) {
-            this.wakeFromSleep();
-        } else if (keyCode != 28 && keyCode != 156) {
-            super.keyTyped(typedChar, keyCode);
+            return true;
+        } else if (key1 != GLFW.GLFW_KEY_ENTER && key1 != GLFW.GLFW_KEY_KP_ENTER) {
+            super.keyPressed(key1, key2, key3);
+            return false;
         } else {
             String s = this.inputField.getText().trim();
 
@@ -46,6 +45,7 @@ public class GuiSleepCoffin extends GuiChat {
 
             this.inputField.setText("");
             this.mc.ingameGUI.getChatGUI().resetScroll();
+            return true;
         }
     }
 

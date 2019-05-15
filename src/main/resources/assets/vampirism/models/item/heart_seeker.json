@@ -1,0 +1,9 @@
+{
+	"parent": "vampirism:item/heart_seeker_model",
+	"texture": "vampirism:item/heart_seeker",
+	"overrides": [
+		{ "predicate": { "tier": "normal" }, "model": "vampirism:item/heart_seeker" },
+		{ "predicate": { "tier": "enhanced" }, "model": "vampirism:item/heart_seeker_enhanced" },
+		{ "predicate": { "tier": "ultimate" }, "model": "vampirism:item/heart_seeker_ultimate" }
+	]
+}

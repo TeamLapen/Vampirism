@@ -1,10 +1,10 @@
 {
   "__comment": "Designed by Maxanier ",
   "textures": {
-    "texture": "blocks/glass_gray",
-    "iron": "blocks/iron_block",
-    "obsidian": "blocks/obsidian",
-    "particle": "blocks/iron_block"
+    "texture": "block/glass_gray",
+    "iron": "block/iron_block",
+    "obsidian": "block/obsidian",
+    "particle": "block/iron_block"
   },
   "elements": [
     {

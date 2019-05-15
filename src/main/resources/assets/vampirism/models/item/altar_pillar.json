@@ -1,0 +1,10 @@
+{
+	"parent": "vampirism:block/altar_pillar",
+	"overrides": [
+		{ "predicate": { "type": "none" }, "model": "vampirism:block/altar_pillar" },
+		{ "predicate": { "tier": "gold" }, "model": "vampirism:block/altar_pillar" },
+		{ "predicate": { "tier": "iron" }, "model": "vampirism:block/altar_pillar" },
+		{ "predicate": { "tier": "stone" }, "model": "vampirism:block/altar_pillar" },
+		{ "predicate": { "tier": "bone" }, "model": "vampirism:block/altar_pillar" }
+	]
+}

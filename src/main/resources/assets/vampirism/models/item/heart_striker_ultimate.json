@@ -1,0 +1,4 @@
+{
+	"parent": "vampirism:item/heart_striker_model",
+	"texture": "vampirism:item/heart_striker_ultimate"
+}

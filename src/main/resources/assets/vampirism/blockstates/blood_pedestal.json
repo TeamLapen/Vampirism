@@ -1,15 +1,12 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:pedestal"
+    "model": "vampirism:block/pedestal"
   },
   "variants": {
     "normal": [
       {
       }
-    ],
-    "inventory": {
-      "transform": "forge:default-block"
-    }
+    ]
   }
 }

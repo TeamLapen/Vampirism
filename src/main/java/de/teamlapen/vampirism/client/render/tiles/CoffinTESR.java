@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockCoffin;
 import de.teamlapen.vampirism.client.model.ModelCoffin;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -12,11 +12,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Render the coffin with it's different colors and the lid opening animation
  */
 @OnlyIn(Dist.CLIENT)
 public class CoffinTESR extends VampirismTESR<TileCoffin> {
+    private Logger LOGGER = LogManager.getLogger();
 
     public static final String[] colors = new String[]{"black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange",
             "white"};
@@ -33,7 +37,7 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
 
 
     @Override
-    public void render(TileCoffin te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(TileCoffin te, double x, double y, double z, float partialTicks, int destroyStage) {
         TileCoffin tile = te;
         if (!isHeadSafe(te.getWorld(), te.getPos())) return;
 
@@ -45,12 +49,12 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
             tile.lidPos++;
         // Logger.i("RendererCoffin", String.format("Rendering at x=%s, y=%s, z=%s, occupied=%s, lidpos=%s", te.xCoord, te.yCoord, te.zCoord, occupied, tile.lidPos));
         GlStateManager.pushMatrix();
-        GlStateManager.translate((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
+        GlStateManager.translatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
         int color = Math.min(tile.color, 15);
         bindTexture(textures[color]);
         GlStateManager.pushMatrix();
         adjustRotatePivotViaState(te);
-        GlStateManager.rotate(180F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotatef(180F, 0.0F, 0.0F, 1.0F);
         model.rotateLid(calcLidAngle(tile.lidPos));
         model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
         GlStateManager.popMatrix();
@@ -72,9 +76,9 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
         try {
             return BlockCoffin.isHead(world, pos);
         } catch (IllegalArgumentException e) {
-            VampirismMod.log.e("CoffinTESR", "Failed to check coffin head at %s caused by wrong blockstate. Block at that pos: %s", pos, world.getBlockState(pos));
+            LOGGER.error("CoffinTESR", "Failed to check coffin head at %s caused by wrong blockstate. Block at that pos: %s", pos, world.getBlockState(pos));
         } catch (Exception e) {
-            VampirismMod.log.e("CoffinTESR", e, "Failed to check coffin head at %s.", pos);
+            LOGGER.error("CoffinTESR", e, "Failed to check coffin head at %s.", pos);
         }
         return false;
     }

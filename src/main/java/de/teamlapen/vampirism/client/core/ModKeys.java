@@ -11,9 +11,11 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
+
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -21,13 +23,14 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import org.lwjgl.input.Keyboard;
+
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,13 +51,13 @@ public class ModKeys {
     private static final String ACTIVATE_ACTION1 = "keys.vampirism.action1";
     private static final String ACTIVATE_ACTION2 = "keys.vampirism.action2";
 
-    private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, KeyConflictContext.IN_GAME, Keyboard.KEY_V, CATEGORY);
-    private static KeyBinding ACTION = new KeyBinding(TOGGLE_ACTIONS, Keyboard.KEY_R, CATEGORY);//Middle Mouse -98
-    private static KeyBinding SKILL = new KeyBinding(SELECT_SKILLS, Keyboard.KEY_P, CATEGORY);
-    private static KeyBinding VISION = new KeyBinding(SWITCH_VISION, KeyConflictContext.IN_GAME, Keyboard.KEY_N, CATEGORY);
-    private static KeyBinding BLOOD_POTION = new KeyBinding(BLOOD_POTION_CRAFTING, KeyConflictContext.IN_GAME, KeyModifier.CONTROL, Keyboard.KEY_B, CATEGORY);
-    private static KeyBinding ACTION1 = new KeyBinding(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_1, CATEGORY);
-    private static KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_2, CATEGORY);
+    private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
+    private static KeyBinding ACTION = new KeyBinding(TOGGLE_ACTIONS, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);//Middle Mouse -98
+    private static KeyBinding SKILL = new KeyBinding(SELECT_SKILLS, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
+    private static KeyBinding VISION = new KeyBinding(SWITCH_VISION, KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
+    private static KeyBinding BLOOD_POTION = new KeyBinding(BLOOD_POTION_CRAFTING, KeyConflictContext.IN_GAME, KeyModifier.CONTROL, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_B, CATEGORY);
+    private static KeyBinding ACTION1 = new KeyBinding(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
+    private static KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
 
 
     @Nonnull
@@ -107,9 +110,9 @@ public class ModKeys {
             suckKeyDown = true;
             EntityPlayer player = Minecraft.getInstance().player;
             if (mouseOver != null && !player.isSpectator() && FactionPlayerHandler.get(player).isInFaction(VReference.VAMPIRE_FACTION) && !VampirePlayer.get(player).getActionHandler().isActionActive(VampireActions.bat)) {
-                if (mouseOver.entityHit != null) {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
-                } else if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
+                if (mouseOver.entity != null) {
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entity.getEntityId()));
+                } else if (mouseOver.type == RayTraceResult.Type.BLOCK) {
                     BlockPos pos = mouseOver.getBlockPos();
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DRINK_BLOOD_BLOCK, "" + pos.getX() + ":" + pos.getY() + ":" + pos.getZ()));
                 } else {
@@ -124,7 +127,8 @@ public class ModKeys {
         } else if (keyPressed == KEY.SKILL) {
             EntityPlayer player = Minecraft.getInstance().player;
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
-                player.openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                player.displayGui(guiOwner);
+                openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
             }
         } else if (keyPressed == KEY.VISION) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));

@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.EntityThrowableItem;
-import net.minecraft.client.renderer.RenderItem;
+
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSprite;
 import net.minecraft.init.Items;
@@ -14,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class RenderThrowableItem extends RenderSprite<EntityThrowableItem> {
-    public RenderThrowableItem(RenderManager renderManagerIn, RenderItem itemRendererIn) {
+    public RenderThrowableItem(RenderManager renderManagerIn, ItemRenderer itemRendererIn) {
         super(renderManagerIn, Items.SNOWBALL, itemRendererIn);
     }
 

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render.particle;
 
 import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -32,19 +33,21 @@ public class HalloweenParticle extends Particle {
         this.motionY = 0.0D;
         this.motionZ = 0.0D;
         this.particleGravity = 0.0F;
-        this.particleMaxAge = 150;
+        this.maxAge = 150;
     }
 
     /**
      * Retrieve what effect layer (what texture) the particle should be rendered with. 0 for the particle sprite sheet,
      * 1 for the main Texture atlas, and 3 for a custom texture
      */
+    @Override
     public int getFXLayer() {
         return 3;
     }
 
-    public void onUpdate() {
-        super.onUpdate();
+    @Override
+    public void tick() {
+        super.tick();
 
         if (this.entity == null) {
             EntityDraculaHalloween entityelderguardian = new EntityDraculaHalloween(this.world);
@@ -56,29 +59,30 @@ public class HalloweenParticle extends Particle {
     /**
      * Renders the particle
      */
+    @Override
     public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         if (this.entity != null) {
             RenderManager rendermanager = Minecraft.getInstance().getRenderManager();
             rendermanager.setRenderPosition(Particle.interpPosX, Particle.interpPosY, Particle.interpPosZ);
             float f = 0.42553192F;
-            float f1 = ((float) this.particleAge + partialTicks) / (float) this.particleMaxAge;
+            float f1 = ((float) this.age + partialTicks) / (float) this.maxAge;
             GlStateManager.depthMask(true);
             GlStateManager.enableBlend();
-            GlStateManager.enableDepth();
+            GlStateManager.enableDepthTest();
             entity.rotationPitch = 60F;
             entity.prevRotationPitch = 60F;
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             float f2 = 240.0F;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
+            OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, 240.0F, 240.0F);
             GlStateManager.pushMatrix();
             float f3 = 0.05F + 0.5F * MathHelper.sin(f1 * (float) Math.PI);
-            GlStateManager.color(1.0F, 1.0F, 1.0F, f3);
-            GlStateManager.translate(0.0F, 1.8F, 0.0F);
-            GlStateManager.rotate(180.0F - entityIn.rotationYaw, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(10.0F - 150.0F * f1 - entityIn.rotationPitch, 1.0F, 0.0F, 0.0F);
-            GlStateManager.translate(0.0F, -0.4F, -1.5F);
+            GlStateManager.color4f(1.0F, 1.0F, 1.0F, f3);
+            GlStateManager.translatef(0.0F, 1.8F, 0.0F);
+            GlStateManager.rotatef(180.0F - entityIn.rotationYaw, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotatef(10.0F - 150.0F * f1 - entityIn.rotationPitch, 1.0F, 0.0F, 0.0F);
+            GlStateManager.translatef(0.0F, -0.4F, -1.5F);
             //GlStateManager.scale(0.42553192F, 0.42553192F, 0.42553192F);
-            GlStateManager.scale(2F, 2F, 2F);
+            GlStateManager.scalef(2F, 2F, 2F);
             GlStateManager.pushMatrix();
             this.entity.rotationYaw = 0.0F;
             this.entity.rotationYawHead = 0.0F;

@@ -1,9 +1,9 @@
 {
   "__comment": "Designed by Maxanier ",
   "textures": {
-    "particle": "blocks/planks_big_oak",
-    "texture": "blocks/planks_big_oak",
-    "glass": "vampirism:blocks/glass"
+    "particle": "block/planks_big_oak",
+    "texture": "block/planks_big_oak",
+    "glass": "vampirism:block/glass"
   },
   "elements": [
     {

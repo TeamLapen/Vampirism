@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.render.tiles;
 
 import de.teamlapen.vampirism.tileentity.TileTotem;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -20,8 +21,8 @@ public class TotemTESR extends VampirismTESR<TileTotem> {
     }
 
     @Override
-    public void render(TileTotem te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        super.render(te, x, y, z, partialTicks, destroyStage, alpha);
+    public void render(TileTotem te, double x, double y, double z, float partialTicks, int destroyStage) {
+        super.render(te, x, y, z, partialTicks, destroyStage);
         GlStateManager.alphaFunc(516, 0.1F);
         this.bindTexture(TEXTURE_BEACON_BEAM);
 
@@ -29,7 +30,7 @@ public class TotemTESR extends VampirismTESR<TileTotem> {
 
 
         if (textureScale > 0.0D) {
-            double totalWorldTime = te.getWorld().getGameTime();
+            long totalWorldTime = te.getWorld().getGameTime();
             int captureProgress = te.getCaptureProgress();
             float[] baseColors = te.getBaseColors();
             GlStateManager.disableFog();

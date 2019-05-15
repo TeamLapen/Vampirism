@@ -1,8 +1,8 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "obsidian": "blocks/obsidian",
-    "diamond_block": "blocks/diamond_block"
+    "obsidian": "block/obsidian",
+    "diamond_block": "block/diamond_block"
   },
   "elements": [
     {

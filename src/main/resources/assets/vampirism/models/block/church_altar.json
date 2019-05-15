@@ -1,8 +1,8 @@
 {
   "textures": {
-    "particle": "blocks/planks_spruce",
-    "wood": "blocks/planks_spruce",
-    "book": "vampirism:blocks/church_altar_book"
+    "particle": "block/planks_spruce",
+    "wood": "block/planks_spruce",
+    "book": "vampirism:block/church_altar_book"
   },
   "elements": [
     {

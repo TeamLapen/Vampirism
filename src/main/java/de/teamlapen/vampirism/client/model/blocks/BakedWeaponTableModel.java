@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.model.blocks;
 
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -13,9 +14,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 
-import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
+
+import javax.annotation.Nullable;
 
 /**
  * Extends the basic weapon table model, by a variable lava fluid level
@@ -53,7 +56,7 @@ public class BakedWeaponTableModel implements IBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, Random rand) {
         List<BakedQuad> quads = new LinkedList<>();
 
 

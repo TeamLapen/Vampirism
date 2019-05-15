@@ -1,12 +1,12 @@
 {
 	"__comment": "Designed by Maxanier",
 	"textures": {
-		"particle": "vampirism:blocks/grinder",
-		"texture": "vampirism:blocks/grinder",
-		"bottom": "vampirism:blocks/grinder_bottom",
-		"top": "vampirism:blocks/grinder_top",
-		"center": "vampirism:blocks/grinder_center",
-		"base": "vampirism:blocks/grinder_base"
+		"particle": "vampirism:block/grinder",
+		"texture": "vampirism:block/grinder",
+		"bottom": "vampirism:block/grinder_bottom",
+		"top": "vampirism:block/grinder_top",
+		"center": "vampirism:block/grinder_center",
+		"base": "vampirism:block/grinder_base"
 	},
 	"elements": [
 		{

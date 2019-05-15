@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
+
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityCreature;
@@ -26,11 +27,11 @@ public class RenderConvertedCreature extends Render<EntityConvertedCreature> {
     public void doRender(EntityConvertedCreature entity, double x, double y, double z, float entityYaw, float partialTicks) {
         EntityCreature creature = entity.getOldCreature();
         if (creature != null) {
-            creature.isDead = false;
+            creature.removed = false;
             renderOverlay = true;
             this.renderManager.renderEntity(creature, x, y, z, entityYaw, partialTicks, false);
             renderOverlay = false;
-            creature.isDead = true;
+            creature.removed = true;
         }
     }
 

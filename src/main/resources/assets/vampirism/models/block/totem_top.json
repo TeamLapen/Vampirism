@@ -1,10 +1,10 @@
 {
   "__comment": "Designed by Maxanier with Cubik Studio - https://cubik.studio",
   "textures": {
-    "particle": "blocks/obsidian",
-    "core": "vampirism:blocks/totem_core",
-    "iron": "blocks/iron_block",
-    "obsidian": "blocks/obsidian"
+    "particle": "block/obsidian",
+    "core": "vampirism:block/totem_core",
+    "iron": "block/iron_block",
+    "obsidian": "block/obsidian"
   },
   "elements": [
     {

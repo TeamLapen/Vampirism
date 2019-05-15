@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.tileentity;
 
+import static net.minecraft.tileentity.TileEntity.LOGGER;
+
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
@@ -23,6 +25,7 @@ import de.teamlapen.vampirism.entity.vampire.EntityVampireFactionVillager;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -52,11 +55,11 @@ import net.minecraft.world.BossInfoServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.Event;
+
+import java.util.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
 
 
 /**
@@ -80,7 +83,7 @@ public class TileTotem extends TileEntity implements ITickable {
     /**
      * Check if the given position is inside a (statically) cached list of vampire village BBs
      */
-    public static boolean isInsideVampireAreaCached(int dimension, BlockPos pos) {
+    public static boolean isInsideVampireAreaCached(int dimension, BlockPos pos) { //TODO use {@link Dimension} instead of id
         HashMap<BlockPos, MutableBoundingBox> map = vampireVillages.lookup(dimension);
         if (map != null) {
             for (MutableBoundingBox bb : map.values()) {

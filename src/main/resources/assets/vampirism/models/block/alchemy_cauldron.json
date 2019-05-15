@@ -1,11 +1,11 @@
 {
   "__comment": "Designed by Maxanier with Cubik Studio",
   "textures": {
-    "particle": "vampirism:blocks/dark_steel",
-    "texture": "vampirism:blocks/dark_steel",
-    "coal": "blocks/coal_block",
-    "wood": "blocks/log_oak",
-    "stone": "blocks/stonebrick"
+    "particle": "vampirism:block/dark_steel",
+    "texture": "vampirism:block/dark_steel",
+    "coal": "block/coal_block",
+    "wood": "block/log_oak",
+    "stone": "block/stonebrick"
   },
   "elements": [
     {

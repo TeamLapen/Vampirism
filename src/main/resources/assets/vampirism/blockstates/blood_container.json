@@ -1,15 +1,12 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:blood_container/blood_container"
+    "model": "vampirism:block/blood_container/blood_container"
   },
   "variants": {
     "normal": [
       {
       }
-    ],
-    "inventory": {
-      "transform": "forge:default-block"
-    }
+    ]
   }
 }

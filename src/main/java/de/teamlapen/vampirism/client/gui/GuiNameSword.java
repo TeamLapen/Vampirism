@@ -4,17 +4,19 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.network.InputEventPacket;
-import net.minecraft.client.gui.GuiButton;
+
 import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -43,7 +45,7 @@ public class GuiNameSword extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRenderer, this.text1, this.width / 2, 70, 16777215);
         int i = 90;
@@ -52,7 +54,7 @@ public class GuiNameSword extends GuiScreen {
             i += this.fontRenderer.FONT_HEIGHT;
         }
 
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        super.render(mouseX, mouseY, partialTicks);
         GlStateManager.disableLighting();
         GlStateManager.disableBlend();
         this.nameField.drawTextBox();
@@ -61,8 +63,24 @@ public class GuiNameSword extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
-        this.buttonList.add(new GuiOptionButton(0, this.width / 2 - 155, this.height / 6 + 96, this.yes));
-        this.buttonList.add(new GuiOptionButton(1, this.width / 2 - 155 + 160, this.height / 6 + 96, this.no));
+        this.buttons.add(new GuiOptionButton(0, this.width / 2 - 155, this.height / 6 + 96, this.yes) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                if (!StringUtils.isBlank(nameField.getText())) {
+                    ITextComponent name = new TextComponentString(nameField.getText());
+                    GuiNameSword.this.sword.setDisplayName(name);
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, name));
+                }
+                GuiNameSword.this.close();
+            }
+        });
+        this.buttons.add(new GuiOptionButton(1, this.width / 2 - 155 + 160, this.height / 6 + 96, this.no) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
+                GuiNameSword.this.close();
+            }
+        });
         this.nameField = new GuiTextField(2, this.fontRenderer, this.width / 2 - 155 + 77, this.height / 6 + 70, 155, 12);
         this.nameField.setTextColor(-1);
         this.nameField.setDisabledTextColour(-1);
@@ -74,28 +92,18 @@ public class GuiNameSword extends GuiScreen {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        if (button.id == 0) {
-            String name = nameField.getText();
-            if (!StringUtils.isBlank(name)) {
-                sword.setStackDisplayName(name);
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, name));
-            }
-        } else if (button.id == 1) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
-        }
-        this.mc.displayGuiScreen(null);
+    public boolean keyPressed(int key1, int key2, int key3) {
+        boolean retur = this.nameField.keyPressed(key1, key2, key3);
+        if (super.keyPressed(key1, key2, key3))
+            return true;
+        return retur;
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        this.nameField.textboxKeyTyped(typedChar, keyCode);
-        super.keyTyped(typedChar, keyCode);
-    }
-
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-        this.nameField.mouseClicked(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        boolean retur = super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (this.nameField.mouseClicked(mouseX, mouseY, mouseButton))
+            return true;
+        return retur;
     }
 }

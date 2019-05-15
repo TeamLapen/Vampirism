@@ -1,11 +1,11 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "particle": "blocks/iron_block",
-    "cover": "vampirism:blocks/med_chair_cover",
-    "metal": "blocks/iron_block",
-    "side": "vampirism:blocks/dark_steel",
-    "hand": "blocks/iron_block"
+    "particle": "block/iron_block",
+    "cover": "vampirism:block/med_chair_cover",
+    "metal": "block/iron_block",
+    "side": "vampirism:block/dark_steel",
+    "hand": "block/iron_block"
   },
   "elements": [
     {

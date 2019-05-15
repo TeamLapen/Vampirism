@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.model.blocks;
 
 import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -16,6 +17,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -58,7 +60,7 @@ public class BakedAltarInspirationModel implements IBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, Random rand) {
         List<BakedQuad> quads = new LinkedList<>();
 
         try {

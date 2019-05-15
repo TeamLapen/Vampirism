@@ -1,10 +1,10 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "particle": "blocks/planks_spruce",
-    "foundation": "blocks/planks_spruce",
-    "iron": "blocks/iron_block",
-    "top": "vampirism:blocks/blood_table_top"
+    "particle": "block/planks_spruce",
+    "foundation": "block/planks_spruce",
+    "iron": "block/iron_block",
+    "top": "vampirism:block/blood_table_top"
   },
   "elements": [
     {

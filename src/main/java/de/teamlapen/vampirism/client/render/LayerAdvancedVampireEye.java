@@ -3,9 +3,10 @@ package de.teamlapen.vampirism.client.render;
 import de.teamlapen.vampirism.client.render.entities.RenderAdvancedVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.model.ModelBiped;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.model.ModelBiped;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,7 +30,7 @@ public class LayerAdvancedVampireEye implements LayerRenderer<EntityAdvancedVamp
     }
 
     @Override
-    public void doRenderLayer(EntityAdvancedVampire entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(EntityAdvancedVampire entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         int type = entitylivingbaseIn.getEyeType();
         if (type < 0 || type >= overlays.length) {
             type = 0;
@@ -38,7 +39,7 @@ public class LayerAdvancedVampireEye implements LayerRenderer<EntityAdvancedVamp
 
         GlStateManager.pushMatrix();
         if (entitylivingbaseIn.isSneaking()) {
-            GlStateManager.translate(0.0F, 0.2F, 0.0F);
+            GlStateManager.translatef(0.0F, 0.2F, 0.0F);
         }
         ((ModelBiped) this.renderer.getMainModel()).bipedHead.render(scale);
         GlStateManager.popMatrix();

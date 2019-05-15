@@ -1,0 +1,7 @@
+{
+	"parent": "item/generated",
+	"textures": {
+          "layer0": "item/leather_boots",
+          "layer1": "vampirism:item/swiftness_boots_overlay"
+    }
+}

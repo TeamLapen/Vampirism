@@ -1,15 +1,12 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:blood_potion_table"
+    "model": "vampirism:block/blood_potion_table"
   },
   "variants": {
     "normal": [
       {
       }
-    ],
-    "inventory": {
-      "transform": "forge:default-block"
-    }
+    ]
   }
 }

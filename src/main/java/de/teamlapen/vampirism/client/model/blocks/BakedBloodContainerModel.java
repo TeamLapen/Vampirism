@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.model.blocks;
 import de.teamlapen.vampirism.blocks.BlockBloodContainer;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.tileentity.TileBloodContainer;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -22,6 +23,7 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Extends the basic (JSON) baked blood container model, by the textured model that fits to the specified fluid and fluid level
@@ -74,7 +76,7 @@ public class BakedBloodContainerModel implements IBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, Random rand) {
         List<BakedQuad> quads = new LinkedList<>();
 
         try {
@@ -115,14 +117,14 @@ public class BakedBloodContainerModel implements IBakedModel {
     private static class CustomItemOverride extends ItemOverrideList {
 
         CustomItemOverride() {
-            super(new LinkedList<>());
+            super();
         }
 
         @Override
-        public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+        public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
             if (originalModel instanceof BakedBloodContainerModel) {
-                if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
-                    FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("fluid"));
+                if (stack.hasTag() && stack.getTag().hasKey("fluid")) {
+                    FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound("fluid"));
                     if (fluid != null) {
 
                         float amount = fluid.amount / (float) TileBloodContainer.LEVEL_AMOUNT;

@@ -1,11 +1,11 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "particle": "vampirism:blocks/pedestal_base",
-    "base": "vampirism:blocks/pedestal_base",
-    "top": "vampirism:blocks/pedestal_top",
-    "pillar": "vampirism:blocks/pedestal_pillar",
-    "bottom": "vampirism:blocks/pedestal_bottom"
+    "particle": "vampirism:block/pedestal_base",
+    "base": "vampirism:block/pedestal_base",
+    "top": "vampirism:block/pedestal_top",
+    "pillar": "vampirism:block/pedestal_pillar",
+    "bottom": "vampirism:block/pedestal_bottom"
   },
   "elements": [
     {

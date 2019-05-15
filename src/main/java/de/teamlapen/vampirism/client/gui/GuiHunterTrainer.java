@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -20,8 +21,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.io.IOException;
 
 /**
  * Gui for the Hunter Trainer interaction
@@ -38,8 +37,8 @@ public class GuiHunterTrainer extends GuiContainer {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
 
     }
@@ -50,13 +49,21 @@ public class GuiHunterTrainer extends GuiContainer {
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         String name = I18n.format("text.vampirism.level_up");
-        this.buttonList.add(this.buttonLevelup = new GuiButton(1, i + 120, j + 24, fontRenderer.getStringWidth(name) + 5, 20, name));
+        this.buttons.add(this.buttonLevelup = new GuiButton(1, i + 120, j + 24, fontRenderer.getStringWidth(name) + 5, 20, name) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
+                EntityPlayer player = Minecraft.getInstance().player;
+                UtilLib.spawnParticles(player.getEntityWorld(), EnumParticleTypes.ENCHANTMENT_TABLE, player.posX, player.posY, player.posZ, 1, 1, 1, 100, 1);
+                player.playSound(SoundEvents.BLOCK_NOTE_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
+            }
+        });
         this.buttonLevelup.enabled = false;
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public void tick() {
+        super.tick();
         if (container.hasChanged() || this.mc.player.getRNG().nextInt(40) == 6) {
             buttonLevelup.enabled = container.canLevelup();
         }
@@ -64,20 +71,8 @@ public class GuiHunterTrainer extends GuiContainer {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        if (button.id == 1) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
-            EntityPlayer player = Minecraft.getInstance().player;
-            UtilLib.spawnParticles(player.getEntityWorld(), EnumParticleTypes.ENCHANTMENT_TABLE, player.posX, player.posY, player.posZ, 1, 1, 1, 100, 1);
-            player.playSound(SoundEvents.BLOCK_NOTE_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
-        } else {
-            super.actionPerformed(button);
-        }
-    }
-
-    @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(altarGuiTextures);
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;
@@ -94,7 +89,7 @@ public class GuiHunterTrainer extends GuiContainer {
         if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
             ITextComponent item = missing.getItem().equals(ModItems.hunter_intel) ? ModItems.hunter_intel.getDisplayName(missing) : new TextComponentTranslation(missing.getTranslationKey() + ".name");
-            text = I18n.format("text.vampirism.ritual_missing_items", missing.getCount(), item.getUnformattedText());
+            text = I18n.format("text.vampirism.ritual_missing_items", missing.getCount(), item.getUnformattedComponentText());
         }
         if (text != null) this.fontRenderer.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
     }

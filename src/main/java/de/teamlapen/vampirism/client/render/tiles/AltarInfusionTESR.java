@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -14,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -28,7 +30,7 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
 
 
     @Override
-    public void render(TileAltarInfusion te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(TileAltarInfusion te, double x, double y, double z, float partialTicks, int destroyStage) {
         // Render the beams if the ritual is running
         TileAltarInfusion.PHASE phase = te.getCurrentPhase();
         if (phase == TileAltarInfusion.PHASE.BEAM1 || phase == TileAltarInfusion.PHASE.BEAM2) {
@@ -97,9 +99,9 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
         float distFlat = MathHelper.sqrt(wayX * wayX + wayZ * wayZ);
         float dist = MathHelper.sqrt(wayX * wayX + wayY * wayY + wayZ * wayZ);
         GlStateManager.pushMatrix();
-        GlStateManager.translate(relX, relY, relZ);
-        GlStateManager.rotate((float) (-Math.atan2(wayZ, wayX)) * 180.0F / (float) Math.PI - 90.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate((float) (-Math.atan2(distFlat, wayY)) * 180.0F / (float) Math.PI - 90.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.translated(relX, relY, relZ);
+        GlStateManager.rotatef((float) (-Math.atan2(wayZ, wayX)) * 180.0F / (float) Math.PI - 90.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotatef((float) (-Math.atan2(distFlat, wayY)) * 180.0F / (float) Math.PI - 90.0F, 1.0F, 0.0F, 0.0F);
 
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableCull();

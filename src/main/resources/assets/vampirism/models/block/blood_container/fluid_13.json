@@ -1,7 +1,7 @@
 {
   "__comment": "Designed by Maxanier ",
   "textures": {
-    "fluid": "blocks/water_still"
+    "fluid": "block/water_still"
   },
   "elements": [
     {

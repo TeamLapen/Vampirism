@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -33,11 +34,12 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.input.Mouse;
 
-import java.io.IOException;
+import org.lwjgl.glfw.GLFW;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -63,6 +65,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     private int field_146563_h;
     private int field_146564_i;
     private float zoomOut = 1.0F;
+    private double weelmovement = 0D;
     private double displayX;
     private double displayY;
     private double displayXNew;
@@ -75,8 +78,8 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     private int field_146554_D;
 
     @Override
-    public void confirmClicked(boolean result, int id) {
-        super.confirmClicked(result, id);
+    public void confirmResult(boolean result, int id) {
+        super.confirmResult(result, id);
         if (id == 10) {
             if (result) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
@@ -93,14 +96,14 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         if (!display) {
 
             this.drawDefaultBackground();
-            super.drawScreen(mouseX, mouseY, partialTicks);
+            super.render(mouseX, mouseY, partialTicks);
             return;
         }
-        if (Mouse.isButtonDown(0)) {
+        if (Minecraft.getInstance().mouseHelper.isLeftDown()) {
             int centerX = (this.width - this.display_width) / 2;
             int centerY = (this.height - this.display_height) / 2;
             int k = centerX + 8;
@@ -123,14 +126,14 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
             this.field_146554_D = 0;
         }
 
-        int mdmovement = Mouse.getDWheel();
         float zoomOutOld = this.zoomOut;
 
-        if (mdmovement < 0) {
+        if (weelmovement < 0) {
             this.zoomOut += 0.25F;
-        } else if (mdmovement > 0) {
+        } else if (weelmovement > 0) {
             this.zoomOut -= 0.25F;
         }
+        weelmovement = 0;
 
         this.zoomOut = MathHelper.clamp(this.zoomOut, 1.0F, 2.0F);
 
@@ -165,10 +168,16 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         this.drawDefaultBackground();
         this.drawSkills(mouseX, mouseY, partialTicks);
         GlStateManager.disableLighting();
-        GlStateManager.disableDepth();
+        GlStateManager.disableDepthTest();
         this.drawTitle();
         GlStateManager.enableLighting();
-        GlStateManager.enableDepth();
+        GlStateManager.enableDepthTest();
+    }
+    
+    @Override
+    public boolean mouseScrolled(double p_mouseScrolled_1_) {
+        this.weelmovement += p_mouseScrolled_1_;
+        return true;
     }
 
     @Override
@@ -187,15 +196,27 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
             skillNodes.clear();
             addToList(skillNodes, skillHandler.getRootNode());
         }
-        this.buttonList.clear();
-        this.buttonList.add(new GuiButton(1, this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done")));
+        this.buttons.clear();
+        this.buttons.add(new GuiButton(1, this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done")) {
+            @Override
+            public void onClick(double mouseX, double mouseY) {
+                GuiSkills.this.close();
+            }
+        });
         if (display) {
-            GuiButton resetSkills = new GuiButton(2, (this.width - display_width) / 2 + 24, this.height / 2 + 74, 125, 20, UtilLib.translate("text.vampirism.skill.resetall"));
+            GuiButton resetSkills = new GuiButton(2, (this.width - display_width) / 2 + 24, this.height / 2 + 74, 125, 20, UtilLib.translate("text.vampirism.skill.resetall")) {
+                @Override
+                public void onClick(double mouseX, double mouseY) {
+                    boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
+                    GuiYesNo resetGui = new GuiYesNo(GuiSkills.this, UtilLib.translate("gui.vampirism.reset_skills.title"), UtilLib.translate("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")), 10);
+                    Minecraft.getInstance().displayGuiScreen(resetGui);
+                }
+            };
 
             if (factionPlayer.getLevel() < 2) {
                 resetSkills.enabled = false;
             }
-            this.buttonList.add(resetSkills);
+            this.buttons.add(resetSkills);
         }
 
 
@@ -218,18 +239,6 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         }
     }
 
-    @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        if (button.id == 1) {
-            this.mc.displayGuiScreen(null);
-        }
-        if (button.id == 2) {
-            boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
-            GuiYesNo resetGui = new GuiYesNo(this, UtilLib.translate("gui.vampirism.reset_skills.title"), UtilLib.translate("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")), 10);
-            this.mc.displayGuiScreen(resetGui);
-        }
-    }
-
     protected void drawTitle() {
         String title = I18n.format("text.vampirism.skills.gui_title");
         int x = (this.width - display_width) / 2;
@@ -241,27 +250,31 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getKeyCode() == keyCode) {
+    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+        if (ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getKey().getKeyCode() == p_keyPressed_1_) {
             this.mc.displayGuiScreen(null);
-            this.mc.setIngameFocus();
+            this.mc.focusChanged(true);
+            return true;
         } else {
-            super.keyTyped(typedChar, keyCode);
+            super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
         }
-
+        return false;
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-        if (mouseButton == 0 && selected != null) {
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        boolean retur = super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && selected != null) {
             if (skillHandler.canSkillBeEnabled(selected) == ISkillHandler.Result.OK) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
                 playSoundEffect(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.7F);
+                return true;
             } else {
                 playSoundEffect(SoundEvents.BLOCK_NOTE_BASS, 0.5F);
+                return true;
             }
         }
+        return retur;
     }
 
     /**
@@ -304,8 +317,8 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         this.zLevel = 0.0F;
         GlStateManager.depthFunc(518);
         GlStateManager.pushMatrix();
-        GlStateManager.translate((float) i1, (float) j1, -200.0F);
-        GlStateManager.scale(1.0F / this.zoomOut, 1.0F / this.zoomOut, 1.0F);
+        GlStateManager.translatef((float) i1, (float) j1, -200.0F);
+        GlStateManager.scalef(1.0F / this.zoomOut, 1.0F / this.zoomOut, 1.0F);
         GlStateManager.enableTexture2D();
         GlStateManager.disableLighting();
         GlStateManager.enableRescaleNormal();
@@ -321,7 +334,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         //Render background block textures
         for (int y = 0; (float) y * f - (float) j2 < 155.0F; ++y) {
             float f2 = 0.6F - (float) (l1 + y) / 25.0F * 0.3F;
-            GlStateManager.color(f2, f2, f2, 1.0F);
+            GlStateManager.color4f(f2, f2, f2, 1.0F);
 
             for (int x = 0; (float) x * f1 - (float) i2 < 224.0F; ++x) {
                 random.setSeed((long) (this.mc.getSession().getPlayerID().hashCode() + k1 + x + (l1 + y) * 16));
@@ -356,7 +369,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         }
 
         //Draw lines/arrows
-        GlStateManager.enableDepth();
+        GlStateManager.enableDepthTest();
         GlStateManager.depthFunc(515);
         this.mc.getTextureManager().bindTexture(BACKGROUND);
 
@@ -424,16 +437,16 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
 
                     if (unlockstate == 0) {
                         float f5 = 1F;
-                        GlStateManager.color(f5, f5, f5, 1.0F);
+                        GlStateManager.color4f(f5, f5, f5, 1.0F);
                     } else if (unlockstate == 1) {
                         float f6 = 0.6F;
-                        GlStateManager.color(f6, f6, f6, 1.0F);
+                        GlStateManager.color4f(f6, f6, f6, 1.0F);
                     } else if (unlockstate == 2) {
                         float f7 = 0.3F;
-                        GlStateManager.color(f7, f7, f7, 1.0F);
+                        GlStateManager.color4f(f7, f7, f7, 1.0F);
                     } else if (unlockstate == -1) {
                         float f8 = 0.2F;
-                        GlStateManager.color(f8, f8, f8, 1.0F);
+                        GlStateManager.color4f(f8, f8, f8, 1.0F);
                     }
 
                     this.mc.getTextureManager().bindTexture(BACKGROUND);
@@ -452,7 +465,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
                     GlStateManager.disableLighting();
 
 
-                    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                    GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
                     if (mMouseX >= (float) x && mMouseX <= (float) (x + 22) && mMouseY >= (float) y && mMouseY <= (float) (y + 22)) {
                         newselected = skill;
@@ -466,7 +479,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         }
 
 
-        GlStateManager.disableDepth();
+        GlStateManager.disableDepthTest();
         GlStateManager.enableBlend();
         GlStateManager.popMatrix();
 
@@ -475,14 +488,14 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         int r = (color >> 16) & 0xFF;
         int g = (color >> 8) & 0xFF;
         int b = (color) & 0xFF;
-        GlStateManager.color(r / 255F, g / 255F, b / 255F, 1.0F);
+        GlStateManager.color4f(r / 255F, g / 255F, b / 255F, 1.0F);
         this.mc.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexturedModalRect(k, l, 0, 0, this.display_width, this.display_height);
         this.zLevel = 0.0F;
         GlStateManager.depthFunc(515);
-        GlStateManager.disableDepth();
+        GlStateManager.disableDepthTest();
         GlStateManager.enableTexture2D();
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        super.render(mouseX, mouseY, partialTicks);
 
         //Draw information for selected skill
         selected = newselected;
@@ -491,11 +504,11 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
             int m2MouseY = mouseY - 4;
 
             String name = I18n.format(selected.getTranslationKey());
-            String desc = selected.getDescription();
+            ITextComponent desc = selected.getDescription();
             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
             int width_name = Math.max(this.fontRenderer.getStringWidth(name), 110);
-            int height_desc = desc == null ? 0 : fontRenderer.getWordWrappedHeight(desc, width_name);
+            int height_desc = desc == null ? 0 : fontRenderer.getWordWrappedHeight(desc.getString(), width_name);
 
             if (result == ISkillHandler.Result.ALREADY_ENABLED || result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
                 height_desc += 12;
@@ -504,7 +517,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
 
             this.fontRenderer.drawStringWithShadow(name, (float) m2MouseX, (float) m2MouseY, 0xff808080);
             if (desc != null)
-                this.fontRenderer.drawSplitString(desc, m2MouseX, m2MouseY + 12, width_name, 0xff505050);
+                this.fontRenderer.drawSplitString(desc.toString(), m2MouseX, m2MouseY + 12, width_name, 0xff505050);
             if (result == ISkillHandler.Result.ALREADY_ENABLED) {
                 this.fontRenderer.drawStringWithShadow(I18n.format("text.vampirism.skill.unlocked"), m2MouseX, m2MouseY + height_desc + 3, 0xFFFBAE00);
             } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
@@ -513,7 +526,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         }
 
 
-        GlStateManager.enableDepth();
+        GlStateManager.enableDepthTest();
         GlStateManager.enableLighting();
         RenderHelper.disableStandardItemLighting();
     }
@@ -539,4 +552,5 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     private void playSoundEffect(SoundEvent event, float pitch) {
         mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(event, 1.0F));
     }
+
 }

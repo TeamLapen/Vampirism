@@ -1,21 +1,18 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:blood_sieve"
+    "model": "vampirism:block/blood_sieve"
   },
   "variants": {
     "active": {
       "true": {
         "textures": {
-          "filter": "vampirism:blocks/blood_sieve_filter_active"
+          "filter": "vampirism:block/blood_sieve_filter_active"
         }
       },
       "false": {
 
       }
-    },
-    "inventory": {
-      "transform": "forge:default-block"
     }
   }
 }

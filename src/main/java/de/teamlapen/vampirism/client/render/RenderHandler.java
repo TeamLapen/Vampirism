@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.render;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
+
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
@@ -16,6 +17,7 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.tileentity.TileTotem;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,8 +41,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -99,8 +102,8 @@ public class RenderHandler {
 
     public RenderHandler(Minecraft mc) {
         this.mc = mc;
-        this.displayHeight = mc.displayHeight;
-        this.displayWidth = mc.displayWidth;
+        this.displayHeight = mc.mainWindow.getHeight();
+        this.displayWidth = mc.mainWindow.getWidth();
     }
 
     @SubscribeEvent
@@ -129,7 +132,7 @@ public class RenderHandler {
             }
         }
         if (mc.player.ticksExisted % 10 == 0) {
-            if (Configs.renderVampireForestFog && (Helper.isEntityInVampireBiome(mc.player) || TileTotem.isInsideVampireAreaCached(mc.world.provider.getDimension(), mc.player.getPosition()))) {
+            if (Configs.renderVampireForestFog && (Helper.isEntityInVampireBiome(mc.player) || TileTotem.isInsideVampireAreaCached(mc.world.getDimension(), mc.player.getPosition()))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getSpecialAttributes().increasedVampireFogDistance ? 2 : 1;
             } else {
@@ -296,9 +299,9 @@ public class RenderHandler {
         if (vampireBiomeTicks > 0) {
             renderVampireBiomeFog(vampireBiomeTicks);
         }
-        if (displayHeight != mc.displayHeight || displayWidth != mc.displayWidth) {
-            this.displayHeight = mc.displayHeight;
-            this.displayWidth = mc.displayWidth;
+        if (displayHeight != mc.mainWindow.getHeight() || displayWidth != mc.mainWindow.getWidth()) {
+            this.displayHeight = mc.mainWindow.getHeight();
+            this.displayWidth = mc.mainWindow.getWidth();
             if (OpenGlHelper.areShadersSupported() && isRenderEntityOutlines()) {
                 blurShader.createBindFramebuffers(displayWidth, displayHeight);
                 bloodVisionShader1.createBindFramebuffers(displayWidth, displayHeight);
@@ -406,10 +409,10 @@ public class RenderHandler {
                 blit3 = bloodVisionShader3.addShader("blit", swap, bloodVisionFrameBuffer3);
 
 
-                this.blurShader.createBindFramebuffers(this.mc.displayWidth, this.mc.displayHeight);
-                this.bloodVisionShader1.createBindFramebuffers(this.mc.displayWidth, this.mc.displayHeight);
-                this.bloodVisionShader2.createBindFramebuffers(this.mc.displayWidth, this.mc.displayHeight);
-                this.bloodVisionShader3.createBindFramebuffers(this.mc.displayWidth, this.mc.displayHeight);
+                this.blurShader.createBindFramebuffers(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight());
+                this.bloodVisionShader1.createBindFramebuffers(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight());
+                this.bloodVisionShader2.createBindFramebuffers(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight());
+                this.bloodVisionShader3.createBindFramebuffers(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight());
 
             } catch (IOException | JsonSyntaxException ioexception) {
 
@@ -467,13 +470,13 @@ public class RenderHandler {
         renderedEntitiesWithGarlicInfused.clear();
 
         GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
 
 
-        this.bloodVisionFrameBuffer1.framebufferRenderExt(this.mc.displayWidth, this.mc.displayHeight, false);
+        this.bloodVisionFrameBuffer1.framebufferRenderExt(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight(), false);
         //this.mc.getFramebuffer().bindFramebuffer(false);
-        this.bloodVisionFrameBuffer2.framebufferRenderExt(this.mc.displayWidth, this.mc.displayHeight, false);
-        this.bloodVisionFrameBuffer3.framebufferRenderExt(this.mc.displayWidth, this.mc.displayHeight, false);
+        this.bloodVisionFrameBuffer2.framebufferRenderExt(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight(), false);
+        this.bloodVisionFrameBuffer3.framebufferRenderExt(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight(), false);
 
         this.mc.getFramebuffer().bindFramebuffer(false);
 
@@ -501,7 +504,7 @@ public class RenderHandler {
             GlStateManager.depthFunc(519);
             GlStateManager.disableLighting();
             GlStateManager.disableColorMaterial();
-            GlStateManager.disableDepth();
+            GlStateManager.disableDepthTest();
 
             framebuffer.bindFramebuffer(false);
 
@@ -527,7 +530,7 @@ public class RenderHandler {
             //GlStateManager.enableBlend();
             GlStateManager.enableColorMaterial();
             GlStateManager.depthFunc(515);
-            GlStateManager.enableDepth();
+            GlStateManager.enableDepthTest();
             //GlStateManager.enableAlpha();
             this.mc.entityRenderer.disableLightmap();
             renderingBloodVision = false;
@@ -548,12 +551,12 @@ public class RenderHandler {
         boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
         if (!fog)
             GlStateManager.enableFog();
-        GlStateManager.setFog(GlStateManager.FogMode.LINEAR);
-        GlStateManager.setFogStart(6.0F * f);
-        GlStateManager.setFogEnd(75F * f);
-        GlStateManager.glNormal3f(0F, -1F, 0F);
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        GlStateManager.setFogDensity(1);
+        GlStateManager.fogMode(GlStateManager.FogMode.LINEAR);
+        GlStateManager.fogStart(6.0F * f);
+        GlStateManager.fogEnd(75F * f);
+        GlStateManager.normal3f(0F, -1F, 0F);
+        GlStateManager.color4f(1F, 1F, 1F, 1F);
+        GlStateManager.fogDensity(1);
         if (!fog)
             GlStateManager.disableFog();
         GlStateManager.popMatrix();
@@ -564,7 +567,7 @@ public class RenderHandler {
         HUNTER_DISGUISE {
             @Override
             public void apply(float progress) {
-                GlStateManager.color(1F, 1F, 1F, 1 - progress * 0.8F);
+                GlStateManager.color4f(1F, 1F, 1F, 1 - progress * 0.8F);
                 if (progress >= 1F) {
                     GlStateManager.depthMask(false);
                 }
@@ -578,7 +581,7 @@ public class RenderHandler {
                 GlStateManager.disableBlend();
                 GlStateManager.alphaFunc(516, 0.1F);
                 GlStateManager.depthMask(true);
-                GlStateManager.color(1F, 1F, 1F, 1F);
+                GlStateManager.color4f(1F, 1F, 1F, 1F);
             }
         };
 

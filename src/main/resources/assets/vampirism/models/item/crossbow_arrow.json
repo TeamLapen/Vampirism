@@ -1,0 +1,7 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "vampirism:item/crossbow_arrow",
+		"layer1": "vampirism:item/crossbow_arrow_tip"
+	}
+}

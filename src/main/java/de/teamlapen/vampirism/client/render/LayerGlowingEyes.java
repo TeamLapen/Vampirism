@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render;
 
 import de.teamlapen.lib.lib.client.render.RenderUtil;
+
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,7 +24,7 @@ public class LayerGlowingEyes<T extends EntityLivingBase> implements LayerRender
     }
 
     @Override
-    public void doRenderLayer(@Nonnull T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(@Nonnull T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         RenderUtil.renderGlowing(render, RESOURCE_LOCATION, brightness, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
     }
 

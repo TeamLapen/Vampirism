@@ -3,45 +3,45 @@
     {
       "apply": [
         {
-          "model": "vampirism:fire_floor0"
+          "model": "vampirism:block/fire_floor0"
         },
         {
-          "model": "vampirism:fire_floor1"
+          "model": "vampirism:block/fire_floor1"
         }
       ]
     },
     {
       "apply": [
         {
-          "model": "vampirism:fire_side0"
+          "model": "vampirism:block/fire_side0"
         },
         {
-          "model": "vampirism:fire_side1"
+          "model": "vampirism:block/fire_side1"
         },
         {
-          "model": "vampirism:fire_side_alt0"
+          "model": "vampirism:block/fire_side_alt0"
         },
         {
-          "model": "vampirism:fire_side_alt1"
+          "model": "vampirism:block/fire_side_alt1"
         }
       ]
     },
     {
       "apply": [
         {
-          "model": "vampirism:fire_side0",
+          "model": "vampirism:block/fire_side0",
           "y": 90
         },
         {
-          "model": "vampirism:fire_side1",
+          "model": "vampirism:block/fire_side1",
           "y": 90
         },
         {
-          "model": "vampirism:fire_side_alt0",
+          "model": "vampirism:block/fire_side_alt0",
           "y": 90
         },
         {
-          "model": "vampirism:fire_side_alt1",
+          "model": "vampirism:block/fire_side_alt1",
           "y": 90
         }
       ]
@@ -49,19 +49,19 @@
     {
       "apply": [
         {
-          "model": "vampirism:fire_side0",
+          "model": "vampirism:block/fire_side0",
           "y": 180
         },
         {
-          "model": "vampirism:fire_side1",
+          "model": "vampirism:block/fire_side1",
           "y": 180
         },
         {
-          "model": "vampirism:fire_side_alt0",
+          "model": "vampirism:block/fire_side_alt0",
           "y": 180
         },
         {
-          "model": "vampirism:fire_side_alt1",
+          "model": "vampirism:block/fire_side_alt1",
           "y": 180
         }
       ]
@@ -69,19 +69,19 @@
     {
       "apply": [
         {
-          "model": "vampirism:fire_side0",
+          "model": "vampirism:block/fire_side0",
           "y": 270
         },
         {
-          "model": "vampirism:fire_side1",
+          "model": "vampirism:block/fire_side1",
           "y": 270
         },
         {
-          "model": "vampirism:fire_side_alt0",
+          "model": "vampirism:block/fire_side_alt0",
           "y": 270
         },
         {
-          "model": "vampirism:fire_side_alt1",
+          "model": "vampirism:block/fire_side_alt1",
           "y": 270
         }
       ]
