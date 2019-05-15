@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.items;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nonnull;
@@ -20,7 +21,7 @@ public interface IBloodPotionEffect {
     /**
      * @return The id this effect has been registed with
      */
-    String getId();
+    ResourceLocation getId();
 
     /**
      * @return The localized name

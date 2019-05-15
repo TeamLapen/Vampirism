@@ -1,12 +1,17 @@
 package de.teamlapen.vampirism.api.items;
 
+import de.teamlapen.vampirism.api.ThreadSafeAPI;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -17,29 +22,29 @@ public interface IBloodPotionRegistry {
     /**
      * Other effects
      */
-    String CATEGORY_OTHERS = "o";
+    ResourceLocation CATEGORY_OTHERS = new ResourceLocation("vampirism", "o");
 
     /**
      * Special other effects
      */
-    String CATEGORY_SPECIAL_OTHERS = "so";
+    ResourceLocation CATEGORY_SPECIAL_OTHERS = new ResourceLocation("vampirism", "so");
     /**
      * Normal body boosts like speed 1
      */
-    String CATEGORY_NORMAL_BODY_BOOSTS = "nbb";
+    ResourceLocation CATEGORY_NORMAL_BODY_BOOSTS = new ResourceLocation("vampirism", "nbb");
     /**
      * Special  body boosts like speed 3
      */
-    String CATEGORY_SPECIAL_BODY_BOOSTS = "sbb";
+    ResourceLocation CATEGORY_SPECIAL_BODY_BOOSTS = new ResourceLocation("vampirism", "sbb");
 
     /**
      * Normal  vampire skills like night vision
      */
-    String CATEGORY_NORMAL_VAMPIRE_SKILLS = "nvs";
+    ResourceLocation CATEGORY_NORMAL_VAMPIRE_SKILLS = new ResourceLocation("vampirism", "nvs");
     /**
      * Special vampire skills like disguise as vampire
      */
-    String CATEGORY_SPECIAL_VAMPIRE_SKILL = "svs";
+    ResourceLocation CATEGORY_SPECIAL_VAMPIRE_SKILL = new ResourceLocation("vampirism", "svs");
 
     /**
      * Retrieves the potion effect for the given id if registered
@@ -54,16 +59,6 @@ public interface IBloodPotionRegistry {
     @Nonnull
     List<String> getLocCategoryDescForItem(@Nonnull ItemStack item);
 
-    /**
-     * Gets or creates a new category using given id and isBad.
-     * Expects a list of items belonging to this category.
-     * Add items or blocks if meta/nbt should be ignored or itemstacks if meta/nbt is relevant
-     *
-     * @param id        Identifier which can be used by different mods to modify the same category. The id will be unique for good categories as well as for bad categories
-     * @param unlocDesc Only set if newly created. Can be null
-     * @return The created category
-     */
-    IBloodPotionCategory getOrCreateCategory(@Nonnull String id, boolean isBad, @Nullable String unlocDesc);
 
     /**
      * Retrieve a random effect (under consideration  of the given item)
@@ -75,17 +70,26 @@ public interface IBloodPotionRegistry {
     IBloodPotionEffect getRandomEffect(@Nonnull ItemStack item, boolean bad, Random rng);
 
     /**
+     * Add items to a category
+     * Adds all items in the list. See {@link IBloodPotionCategory#addItem(Item)},{@link IBloodPotionCategory#addItem(Block)},{@link IBloodPotionCategory#addItemExact(ItemStack)}
+     *
+     * @param categoryId Id of the category. Non-existent ones will be created
+     */
+    @ThreadSafeAPI
+    void addItemsToCategory(boolean bad, @Nonnull ResourceLocation categoryId, Objects... items);
+
+    /**
      * Register a new potion effect.
      *
      * @param id                 Unique id. Throws IllegalArgumentException if not
-     * @param category           The effects category. Has to be registered. Throws IllegalArgumentException if not
+     * @param categoryId         Identifier of a blood potion category. Non-existent ones will be created
      * @param isBad              if the effect ist bad
      * @param potion             The actual potion represented by this effect
      * @param weight             A weight value
      * @param propertyRandomizer randomizer for duration and amplifier
-     * @return The created wrapper
      */
-    IBloodPotionEffect registerPotionEffect(String id, IBloodPotionCategory category, boolean isBad, Potion potion, int weight, IBloodPotionPropertyRandomizer propertyRandomizer);
+    @ThreadSafeAPI
+    void registerPotionEffect(ResourceLocation id, ResourceLocation categoryId, boolean isBad, Potion potion, int weight, IBloodPotionPropertyRandomizer propertyRandomizer);
 
     class WeightedEffect extends WeightedRandom.Item {
         public final IBloodPotionEffect effect;

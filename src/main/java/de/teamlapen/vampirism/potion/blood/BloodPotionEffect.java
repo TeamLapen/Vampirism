@@ -1,12 +1,13 @@
 package de.teamlapen.vampirism.potion.blood;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
 import de.teamlapen.vampirism.api.items.IBloodPotionPropertyRandomizer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
@@ -14,16 +15,18 @@ import java.util.Random;
 
 class BloodPotionEffect implements IBloodPotionEffect {
 
-    private final String id;
+    private final ResourceLocation id;
     private final Potion potion;
     private final boolean isBad;
+    private final int weight;
     private final IBloodPotionPropertyRandomizer propertyRandomizer;
 
-    BloodPotionEffect(String id, Potion potion, boolean isBad, int weight, IBloodPotionPropertyRandomizer propertyRandomizer) {
+    BloodPotionEffect(ResourceLocation id, Potion potion, boolean isBad, int weight, IBloodPotionPropertyRandomizer propertyRandomizer) {
         this.id = id;
         this.potion = potion;
         this.isBad = isBad;
         this.propertyRandomizer = propertyRandomizer;
+        this.weight = weight;
     }
 
     @Override
@@ -36,18 +39,22 @@ class BloodPotionEffect implements IBloodPotionEffect {
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return id;
     }
 
     @Override
-    public String getLocName(NBTTagCompound properties) {
-        return UtilLib.translate(potion.getName());
+    public ITextComponent getLocName(NBTTagCompound properties) {
+        return potion.getDisplayName();
     }
 
     @Override
     public NBTTagCompound getRandomProperties(Random rng) {
         return propertyRandomizer.getRandomProperties(rng);
+    }
+
+    public int getWeight() {
+        return weight;
     }
 
     @Override
@@ -57,7 +64,7 @@ class BloodPotionEffect implements IBloodPotionEffect {
 
     @Override
     public void onActivated(EntityLivingBase hunter, NBTTagCompound nbt, float durationMult) {
-        hunter.addPotionEffect(new PotionEffect(potion, (int) (nbt.getInteger("duration") * durationMult), nbt.getInteger("amplifier")));
+        hunter.addPotionEffect(new PotionEffect(potion, (int) (nbt.getInt("duration") * durationMult), nbt.getInt("amplifier")));
     }
 
     @Override

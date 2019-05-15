@@ -10,14 +10,14 @@ import net.minecraft.world.World;
 
 public interface IVampirismCrossbowArrow<T extends EntityArrow & IEntityCrossbowArrow> {
 
-    public T createEntity(ItemStack stack, World world, EntityPlayer player, double heightOffset, double centerOffset, boolean rightHand);
+    T createEntity(ItemStack stack, World world, EntityPlayer player, double heightOffset, double centerOffset, boolean rightHand);
 
-    public boolean isCanBeInfinite(ItemStack stack);
+    boolean isBurning(ItemStack arrow);
 
-    public boolean isBurning(ItemStack arrow);
+    boolean isCanBeInfinite(ItemStack stack);
 
-    public void onHitBlock(ItemStack arrow, BlockPos blockPos, IEntityCrossbowArrow arrowEntity, Entity shootingEntity);
+    void onHitBlock(ItemStack arrow, BlockPos blockPos, IEntityCrossbowArrow arrowEntity, Entity shootingEntity);
 
-    public void onHitEntity(ItemStack arrow, EntityLivingBase entity, IEntityCrossbowArrow arrowEntity, Entity shootingEntity);
+    void onHitEntity(ItemStack arrow, EntityLivingBase entity, IEntityCrossbowArrow arrowEntity, Entity shootingEntity);
 
 }

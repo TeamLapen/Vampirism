@@ -1,7 +1,6 @@
 package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.HelperRegistry;
-import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -13,8 +12,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkEvent;
 import org.apache.commons.lang3.Validate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ import java.util.function.Supplier;
  */
 public class UpdateEntityPacket implements IMessage {
 
-    private final static String TAG = "UpdateEntityPacket";
+    private final static Logger LOGGER = LogManager.getLogger();
 
 
     static void encode(UpdateEntityPacket msg, PacketBuffer buf) {
@@ -64,24 +66,25 @@ public class UpdateEntityPacket implements IMessage {
 
     @OnlyIn(Dist.CLIENT)
     private static void handleCapability(Entity e, ResourceLocation key, NBTTagCompound data) {
-        ISyncable syncable;
         Capability cap = HelperRegistry.getSyncableEntityCaps().get(key);
         if (cap == null && e instanceof EntityPlayer) {
             cap = HelperRegistry.getSyncablePlayerCaps().get(key);
         }
         if (cap == null) {
-            LOGGER.warn("Capability with key %s is not registered in the HelperRegistry", key);
-        }
-        try {
-            syncable = (ISyncable) e.getCapability(cap, null);
-        } catch (ClassCastException ex) {
-            LOGGER.warn("Target entity's capability %s (%s)does not implement ISyncable (%s)", e.getCapability(cap, null), cap, ex);
-            return;
-        }
-        if (syncable == null) {
-            LOGGER.warn("Target entity %s does not have capability %s", e, cap);
+            LOGGER.warn("Capability with key {} is not registered in the HelperRegistry", key);
         } else {
-            syncable.loadUpdateFromNBT(data);
+            LazyOptional opt = e.getCapability(cap, null); //Lazy Optional is kinda strange
+            opt.ifPresent(inst -> {
+                if (inst instanceof ISyncable) {
+                    ((ISyncable) inst).loadUpdateFromNBT(data);
+                } else {
+                    LOGGER.warn("Target entity's capability {} ({})does not implement ISyncable", inst, key);
+                }
+            });
+            if (!opt.isPresent()) {
+                LOGGER.warn("Target entity {} does not have capability {}", e, cap);
+
+            }
         }
     }
 
@@ -92,9 +95,9 @@ public class UpdateEntityPacket implements IMessage {
         ctx.enqueueWork(() -> { //Execute on main thread
             Entity e = player.getEntityWorld().getEntityByID(message.id);
             if (e == null) {
-                LOGGER.error("Did not find entity %s", message.id);
+                LOGGER.error("Did not find entity {}", message.id);
                 if (message.playerItself) {
-                    LOGGER.error("Message is meant for player itself, but id mismatch %s %s. Loading anyway.", player.getEntityId(), message.id);
+                    LOGGER.error("Message is meant for player itself, but id mismatch {} {}. Loading anyway.", player.getEntityId(), message.id);
                     e = player;
                 }
             }
@@ -106,7 +109,7 @@ public class UpdateEntityPacket implements IMessage {
                         syncable.loadUpdateFromNBT(message.data);
 
                     } catch (ClassCastException ex) {
-                        LOGGER.warn("Target entity %s does not implement ISyncable (%s)", e, ex);
+                        LOGGER.warn("Target entity {} does not implement ISyncable ({})", e, ex);
                     }
                 }
                 if (message.caps != null) {
@@ -226,7 +229,7 @@ public class UpdateEntityPacket implements IMessage {
      */
     public static @Nullable
     UpdateEntityPacket createJoinWorldPacket(Entity entity) {
-        List<ISyncable.ISyncableEntityCapabilityInst> capsToSync = null;
+        final List<ISyncable.ISyncableEntityCapabilityInst> capsToSync = new ArrayList<>();
         Collection<Capability> allCaps = null;
         if (entity instanceof EntityCreature) {
             allCaps = HelperRegistry.getSyncableEntityCaps().values();
@@ -235,24 +238,20 @@ public class UpdateEntityPacket implements IMessage {
 
         }
         if (allCaps != null && allCaps.size() > 0) {
-            capsToSync = new ArrayList<>();
             for (Capability cap : allCaps) {
-                ISyncable.ISyncableEntityCapabilityInst p = (ISyncable.ISyncableEntityCapabilityInst) entity.getCapability(cap, null);
-                if (p != null) {
-                    capsToSync.add(p);
-                }
+                entity.getCapability(cap, null).ifPresent(inst -> capsToSync.add((ISyncable.ISyncableEntityCapabilityInst) inst));
             }
         }
-        if (capsToSync != null) {
+        if (capsToSync.size() > 0) {
             if (entity instanceof ISyncable) {
-                return UpdateEntityPacket.create((EntityLiving) entity, capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[capsToSync.size()]));
+                return UpdateEntityPacket.create((EntityLiving) entity, capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[0]));
             } else {
-                return UpdateEntityPacket.create(capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[capsToSync.size()]));
+                return UpdateEntityPacket.create(capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[0]));
             }
         } else if (entity instanceof ISyncable) {
             return UpdateEntityPacket.create(entity);
         } else {
-            VampLib.log.w("RequestUpdatePacket", "There is nothing to update for entity %s", entity);
+            LOGGER.warn("There is nothing to update for entity {}", entity);
             return null;
         }
 

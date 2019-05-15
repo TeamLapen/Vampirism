@@ -4,5 +4,5 @@ import net.minecraft.entity.IProjectile;
 
 public interface IEntityCrossbowArrow extends IProjectile {
 
-    public void setIgnoreHurtTimer();
+    void setIgnoreHurtTimer();
 }

@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,13 +21,13 @@ class BloodPotionCategory implements IBloodPotionCategory {
     private final
     @Nullable
     String unlocDesc;
-    private final String id;
+    private final ResourceLocation id;
     private final List<ItemStack> exactItems = NonNullList.create();
     private final List<Item> items = Lists.newLinkedList();
     private final List<IBloodPotionRegistry.WeightedEffect> effects = Lists.newArrayList();
 
-    BloodPotionCategory(String id, @Nullable String unlocDesc) {
-        this.unlocDesc = unlocDesc;
+    BloodPotionCategory(ResourceLocation id) {
+        this.unlocDesc = "text.vampirism.potioncat." + id.getNamespace() + "." + id.getPath() + ".desc";
         this.id = id;
 
 
@@ -90,7 +91,7 @@ class BloodPotionCategory implements IBloodPotionCategory {
         return copied;
     }
 
-    public String getId() {
+    public ResourceLocation getId() {
         return id;
     }
 
