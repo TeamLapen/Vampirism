@@ -6,7 +6,9 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.items.ItemInjection;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -14,7 +16,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
@@ -90,7 +91,7 @@ public class BlockMedChair extends VampirismBlock {
                     VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
                 } else {
                     handler.joinFaction(VReference.HUNTER_FACTION);
-                    playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 1));
+                    playerIn.addPotionEffect(new PotionEffect(ModPotions.poison, 200, 1));
                 }
                 stack.shrink(1);
                 if (stack.isEmpty()) {

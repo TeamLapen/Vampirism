@@ -3,14 +3,17 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.ModelCloak;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -77,15 +80,17 @@ public class ItemVampireCloak extends ItemArmor {
         super.onArmorTick(world, player, itemStack);
         if (player.ticksExisted % 16 == 8) {
             if (Helper.isHunter(player)) {
-                player.addPotionEffect(new PotionEffect(MobEffects.POISON, 20, 1));
+                player.addPotionEffect(new PotionEffect(ModPotions.poison, 20, 1));
             }
         }
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
-    protected void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        if (Helper.isHunter(playerIn)) {
-            tooltip.add(TextFormatting.RED + UtilLib.translate("text.vampirism.poisonous_to_hunter"));
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        if (Helper.isHunter(Minecraft.getMinecraft().player)) {
+            tooltip.add(TextFormatting.RED + UtilLib.translate("text.vampirism.poisonous_to_hunters"));
         }
     }
 

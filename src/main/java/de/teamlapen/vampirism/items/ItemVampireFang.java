@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
+
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
@@ -35,7 +35,7 @@ public class ItemVampireFang extends VampirismItem {
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {
                     PotionSanguinare.addRandom(playerIn, true);
-                    playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
+                    playerIn.addPotionEffect(new PotionEffect(ModPotions.poison, 60));
                 } else {
                     if (Helper.isVampire(playerIn)) {
                         playerIn.sendMessage(new TextComponentTranslation("text.vampirism.already_vampire"));
