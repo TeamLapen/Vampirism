@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,28 +29,25 @@ public class ItemBloodPotion extends VampirismItem {
     private final static String regName = "blood_potion";
 
     public ItemBloodPotion() {
-        super(regName);
-        this.setMaxDamage(1);
-        this.setMaxStackSize(1);
-        this.setCreativeTab(null);
+        super(regName, new Properties().defaultMaxDamage(1));
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (Minecraft.getInstance().player != null) {
             BloodPotions.addTooltip(stack, tooltip, HunterPlayer.get(Minecraft.getInstance().player));
         }
     }
 
     @Override
-    public EnumAction getItemUseAction(ItemStack stack) {
+    public EnumAction getUseAction(ItemStack stack) {
         return EnumAction.DRINK;
     }
 
     @Override
-    public int getMaxItemUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack) {
         return 32;
     }
 
@@ -78,7 +76,7 @@ public class ItemBloodPotion extends VampirismItem {
             BloodPotions.applyEffects(stack, entityLiving);
         }
 
-        if (entityplayer == null || !entityplayer.capabilities.isCreativeMode) {
+        if (entityplayer == null || !entityplayer.isCreative()) {
             stack.shrink(1);
             if (stack.isEmpty()) {
                 return new ItemStack(Items.GLASS_BOTTLE);

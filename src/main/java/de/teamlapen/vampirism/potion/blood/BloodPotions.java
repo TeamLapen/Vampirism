@@ -22,6 +22,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
@@ -81,7 +82,7 @@ public class BloodPotions {
     /**
      * Adds a tooltip to the given blood potion itemstack
      */
-    public static void addTooltip(ItemStack stack, List<String> tooltip, IHunterPlayer player) {
+    public static void addTooltip(ItemStack stack, List<ITextComponent> tooltip, IHunterPlayer player) {
 
         ISkillHandler<IHunterPlayer> skillHandler = player.getSkillHandler();
         List<ConfiguredEffect> effects = stack.hasTagCompound() ? readEffectsFromNBT(stack.getTagCompound()) : Lists.newArrayList();

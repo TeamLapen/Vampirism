@@ -2,14 +2,12 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 
@@ -20,7 +18,7 @@ public class ItemGarlic extends VampirismItem implements IPlantable {
     private final static String regName = "item_garlic";
 
     public ItemGarlic() {
-        super(regName);
+        super(regName, new Properties());
     }
 
     @Override
@@ -35,20 +33,19 @@ public class ItemGarlic extends VampirismItem implements IPlantable {
 
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (side != EnumFacing.UP) {
+    public EnumActionResult onItemUse(ItemUseContext ctx) {
+        ItemStack stack = ctx.getItem();
+        BlockPos pos = ctx.getPos();
+        if (ctx.getFace() != EnumFacing.UP) {
             return EnumActionResult.FAIL;
-        } else if (!player.canPlayerEdit(pos.offset(side), side, stack)) {
+        } else if (ctx.getPlayer() != null && !ctx.getPlayer().canPlayerEdit(pos.offset(ctx.getFace()), ctx.getFace(), stack)) {
             return EnumActionResult.FAIL;
-        } else if (worldIn.getBlockState(pos).getBlock().canSustainPlant(worldIn.getBlockState(pos), worldIn, pos, EnumFacing.UP, this) && worldIn.isAirBlock(pos.up())) {
-            worldIn.setBlockState(pos.up(), getPlant(worldIn, pos));
+        } else if (ctx.getWorld().getBlockState(pos).getBlock().canSustainPlant(ctx.getWorld().getBlockState(pos), ctx.getWorld(), pos, EnumFacing.UP, this) && ctx.getWorld().isAirBlock(pos.up())) {
+            ctx.getWorld().setBlockState(pos.up(), getPlant(ctx.getWorld(), pos));
             stack.shrink(1);
             return EnumActionResult.SUCCESS;
         } else {
             return EnumActionResult.FAIL;
         }
     }
-
-
 }

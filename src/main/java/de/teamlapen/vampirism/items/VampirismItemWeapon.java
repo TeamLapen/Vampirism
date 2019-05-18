@@ -7,9 +7,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
+import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -27,34 +29,32 @@ public class VampirismItemWeapon extends VampirismItem {
      * Calculation: Base += Base * -(1-Value) => Base * Value
      */
     private final float attackDamage;
-    private final Item.ToolMaterial material;
+    private final IItemTier material;
     private final float attackSpeed;
 
-    public VampirismItemWeapon(String regName, Item.ToolMaterial material) {
-        this(regName, material, 0.4F);
+    public VampirismItemWeapon(String regName, IItemTier material, Properties props) {
+        this(regName, material, 0.4F, props);
     }
 
 
-    public VampirismItemWeapon(String regName, Item.ToolMaterial material, float attackSpeedModifier) {
-        this(regName, material, attackSpeedModifier, 3F + material.getAttackDamage());
+    public VampirismItemWeapon(String regName, IItemTier material, float attackSpeedModifier, Properties props) {
+        this(regName, material, attackSpeedModifier, 3F + material.getAttackDamage(), props);
     }
 
-    public VampirismItemWeapon(String regName, Item.ToolMaterial material, float attackSpeedModifier, float attackDamage) {
-        super(regName);
+    public VampirismItemWeapon(String regName, IItemTier material, float attackSpeedModifier, float attackDamage, Properties props) {
+        super(regName, props.defaultMaxDamage(material.getMaxUses()));
         this.material = material;
-        this.maxStackSize = 1;
-        this.setMaxDamage(material.getMaxUses());
         this.attackDamage = attackDamage;
         this.attackSpeed = attackSpeedModifier;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         if (flagIn.isAdvanced()) {
-            tooltip.add("ModDamage: " + getAttackDamage(stack));
-            tooltip.add("ModSpeed: " + getAttackSpeed(stack));
+            tooltip.add(new TextComponentString("ModDamage: " + getAttackDamage(stack)));
+            tooltip.add(new TextComponentString("ModSpeed: " + getAttackSpeed(stack)));
         }
     }
 
@@ -72,10 +72,7 @@ public class VampirismItemWeapon extends VampirismItem {
 
     @Override
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        ItemStack mat = this.material.getRepairItemStack();
-        if (!mat.isEmpty() && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false))
-            return true;
-        return super.getIsRepairable(toRepair, repair);
+        return material.getRepairMaterial().test(repair) || super.getIsRepairable(toRepair, repair);
     }
 
     @Override
@@ -89,10 +86,6 @@ public class VampirismItemWeapon extends VampirismItem {
         return true;
     }
 
-    @Override
-    public boolean isFull3D() {
-        return true;
-    }
 
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving) {

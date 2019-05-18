@@ -8,7 +8,6 @@ import net.minecraft.init.PotionTypes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionUtils;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -30,24 +29,24 @@ public class ItemHolyWaterSplashBottle extends ItemHolyWaterBottle implements En
 
     public final static String regName = "holy_water_splash_bottle";
 
-    public ItemHolyWaterSplashBottle(String regName) {
-        super(regName);
+    public ItemHolyWaterSplashBottle(TIER tier) {
+        super(regName + "_" + tier, tier, new Properties());
     }
 
     @Override
     public void onImpact(EntityThrowableItem entity, ItemStack stack, RayTraceResult result, boolean remote) {
 
-        TIER tier = getTier(stack);
+        TIER tier = getTier();
         if (!remote) {
 
 
-            AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(4.0D, 2.0D, 4.0D);
+            AxisAlignedBB axisalignedbb = entity.getBoundingBox().grow(4.0D, 2.0D, 4.0D);
             List<EntityLivingBase> list1 = entity.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 
 
             if (!list1.isEmpty()) {
                 for (EntityLivingBase entitylivingbase : list1) {
-                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.entityHit != null);
+                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.entity != null);
                 }
             }
 
@@ -63,7 +62,7 @@ public class ItemHolyWaterSplashBottle extends ItemHolyWaterBottle implements En
         ItemStack stack = playerIn.getHeldItem(handIn);
 
 
-        worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+        worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
         if (!worldIn.isRemote) {
             EntityThrowableItem entityThrowable = new EntityThrowableItem(worldIn, playerIn);
@@ -74,8 +73,7 @@ public class ItemHolyWaterSplashBottle extends ItemHolyWaterBottle implements En
             worldIn.spawnEntity(entityThrowable);
         }
 
-        playerIn.addStat(StatList.getObjectUseStats(this));
-        if (!playerIn.capabilities.isCreativeMode) {
+        if (!playerIn.isCreative()) {
             stack.shrink(1);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);

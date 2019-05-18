@@ -1,18 +1,15 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.item.ItemTier;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -26,56 +23,42 @@ import java.util.Map;
 public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTier {
     private static final String regName = "hunter_axe";
 
+    private final TIER tier;
 
-    public ItemHunterAxe() {
-        super(regName, ToolMaterial.IRON, 0.37F);
+
+    public ItemHunterAxe(TIER tier) {
+        super(regName + "_" + tier, ItemTier.IRON, 0.37F, new Properties());
+        this.tier = tier;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        TIER tier = getTier(stack);
-        if (tier != TIER.NORMAL) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + tier.name().toLowerCase()));
-
-        }
-        tooltip.add(UtilLib.translateFormatted("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100)) + " " + UtilLib.translate(VReference.VAMPIRE_FACTION.getTranslationKeyPlural()));
+        addTierInformation(tooltip);
+        tooltip.add(new TextComponentTranslation("text.vampirism.deals_more_damage_to", Math.round((getVampireMult() - 1) * 100)).appendSibling(VReference.VAMPIRE_FACTION.getNamePlural()));
     }
 
 
     @Override
     public float getDamageMultiplierForFaction(@Nonnull ItemStack stack) {
-        return getVampireMult(getTier(stack));
+        return getVampireMult();
+    }
+
+    /**
+     * @return A itemstack with the correct knockback enchantment applied
+     */
+    public ItemStack getEnchantedStack() {
+        ItemStack stack = new ItemStack(this);
+        Map<Enchantment, Integer> map = new HashMap<>();
+        map.put(Enchantments.KNOCKBACK, getKnockback());
+        EnchantmentHelper.setEnchantments(map, stack);
+        return stack;
     }
 
     @Override
     public int getMinLevel(@Nonnull ItemStack stack) {
-        return getMinLevel(getTier(stack));
-    }
-
-
-    @Override
-    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            for (TIER t : TIER.values()) {
-                items.add(setTier(new ItemStack(this), t));
-            }
-        }
-    }
-
-
-    @Override
-    public TIER getTier(@Nonnull ItemStack stack) {
-        NBTTagCompound nbt = UtilLib.checkNBT(stack);
-        if (nbt.hasKey("tier")) {
-            try {
-                return TIER.valueOf(nbt.getString("tier"));
-            } catch (IllegalArgumentException e) {
-                VampirismMod.log.e("HunterAxe", e, "Cannot find tier %s", nbt.getString("tier"));
-            }
-        }
-        return TIER.NORMAL;
+        return getMinLevel();
     }
 
     @Override
@@ -83,18 +66,12 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
         return false;
     }
 
-    @Nonnull
     @Override
-    public ItemStack setTier(@Nonnull ItemStack stack, TIER tier) {
-        NBTTagCompound nbt = UtilLib.checkNBT(stack);
-        nbt.setString("tier", tier.name());
-        Map<Enchantment, Integer> map = new HashMap<>();
-        map.put(Enchantments.KNOCKBACK, getKnockback(tier));
-        EnchantmentHelper.setEnchantments(map, stack);
-        return stack;
+    public TIER getTier() {
+        return tier;
     }
 
-    private int getKnockback(TIER tier) {
+    private int getKnockback() {
         switch (tier) {
             case ULTIMATE:
                 return 4;
@@ -105,7 +82,7 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
         }
     }
 
-    private int getMinLevel(TIER tier) {
+    private int getMinLevel() {
         switch (tier) {
             case ULTIMATE:
                 return 8;
@@ -116,7 +93,7 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
         }
     }
 
-    private float getVampireMult(TIER tier) {
+    private float getVampireMult() {
         switch (tier) {
             case ULTIMATE:
                 return 1.4F;

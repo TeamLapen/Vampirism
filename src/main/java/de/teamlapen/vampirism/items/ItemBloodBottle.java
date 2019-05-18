@@ -3,19 +3,18 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -36,36 +35,28 @@ public class ItemBloodBottle extends VampirismItem {
      * Set's the registry name and the unlocalized name
      */
     public ItemBloodBottle() {
-        super(name);
-        this.setMaxStackSize(1);
-        this.setHasSubtypes(true);
-    }
-
-    @Override
-    public boolean doesSneakBypassUse(ItemStack stack, IBlockReader world, BlockPos pos, EntityPlayer player) {
-        IBlockState b = world.getBlockState(pos);
-        return (b.getBlock().hasTileEntity(b) && world.getTileEntity(pos).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
+        super(name, new Properties().containerItem(Items.GLASS_BOTTLE).defaultMaxDamage(AMOUNT));
     }
 
 
     @Override
-    public EnumAction getItemUseAction(ItemStack stack) {
+    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, EntityPlayer player) {
+        TileEntity t = world.getTileEntity(pos);
+        return t != null && t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).isPresent();
+    }
+
+
+
+    @Override
+    public EnumAction getUseAction(ItemStack stack) {
         return EnumAction.DRINK;
     }
 
     @Override
-    public int getMaxItemUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack) {
         return 15;
     }
 
-
-    @Override
-    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            items.add(new ItemStack(this, 1));
-            items.add(new ItemStack(this, 1, AMOUNT));
-        }
-    }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {

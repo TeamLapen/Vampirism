@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -16,7 +15,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,28 +33,28 @@ import java.util.List;
  */
 public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem, IFactionSlayerItem, IVampireFinisher {
 
-    public VampirismHunterWeapon(String regName, ToolMaterial material) {
-        super(regName, material);
+    public VampirismHunterWeapon(String regName, IItemTier material, Properties props) {
+        super(regName, material, props);
     }
 
-    public VampirismHunterWeapon(String regName, ToolMaterial material, float attackSpeedMod) {
-        super(regName, material, attackSpeedMod);
+    public VampirismHunterWeapon(String regName, IItemTier material, float attackSpeedMod, Properties props) {
+        super(regName, material, attackSpeedMod, props);
     }
 
-    public VampirismHunterWeapon(String regName, ToolMaterial material, float attackSpeedMod, float attackDamage) {
-        super(regName, material, attackSpeedMod, attackDamage);
+    public VampirismHunterWeapon(String regName, IItemTier material, float attackSpeedMod, float attackDamage, Properties props) {
+        super(regName, material, attackSpeedMod, attackDamage, props);
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (getUsingFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
             TextFormatting color = Minecraft.getInstance().player != null && Helper.canUseFactionItem(stack, this, FactionPlayerHandler.get(Minecraft.getInstance().player)) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
-            tooltip.add(color + UtilLib.translateFormatted(getUsingFaction(stack) == null ? "text.vampirism.all" : getUsingFaction(stack).getTranslationKeyPlural()) + ": " + getMinLevel(stack) + "+");
+            tooltip.add(new TextComponentTranslation(getUsingFaction(stack) == null ? "text.vampirism.all" : getUsingFaction(stack).getTranslationKeyPlural()).appendText(":" + getMinLevel(stack)).applyTextStyle(color));
             ISkill reqSkill = this.getRequiredSkill(stack);
             if (reqSkill != null) {
-                tooltip.add(color + UtilLib.translateFormatted("text.vampirism.required_skill", UtilLib.translate(reqSkill.getTranslationKey())));
+                tooltip.add(new TextComponentTranslation("text.vampirism.required_skill", new TextComponentTranslation(reqSkill.getTranslationKey())).applyTextStyle(color));
             }
         }
     }
@@ -78,8 +80,8 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
         private final int minLevel;
         private final float damageMult;
 
-        public SimpleHunterSword(String regName, ToolMaterial material, int minLevel, float damageMult) {
-            super(regName, material);
+        public SimpleHunterSword(String regName, IItemTier material, int minLevel, float damageMult, Properties prop) {
+            super(regName, material, prop);
             this.minLevel = minLevel;
             this.damageMult = damageMult;
         }
@@ -93,7 +95,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
         public float getDestroySpeed(ItemStack stack, IBlockState state) {
             Block block = state.getBlock();
 
-            if (block == Blocks.WEB) {
+            if (block == Blocks.COBWEB) {
                 return 15.0F;
             } else {
                 Material material = state.getMaterial();

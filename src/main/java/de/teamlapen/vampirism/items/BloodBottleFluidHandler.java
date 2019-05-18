@@ -3,11 +3,13 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
@@ -25,6 +27,8 @@ import javax.annotation.Nullable;
 public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityProvider {
 
     public static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
+    private final LazyOptional<IFluidHandlerItem> holder = LazyOptional.of(() -> this);
+
 
     /**
      * Returns a amount which is a multiple of capacity%10
@@ -89,13 +93,9 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     }
 
     public int getBlood(ItemStack stack) {
-        return stack.getItem() instanceof ItemBloodBottle ? stack.getItemDamage() * MULTIPLIER : 0;
+        return stack.getItem() == ModItems.blood_bottle ? stack.getDamage() * MULTIPLIER : 0;
     }
 
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY ? (T) this : null;
-    }
 
     @Nonnull
     @Override
@@ -108,12 +108,14 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
         return new IFluidTankProperties[]{new FluidTankProperties(new FluidStack(ModFluids.blood, getBlood(container)), capacity)};
     }
 
+    @Nonnull
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY;
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+        return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.orEmpty(cap, holder);
+
     }
 
     public void setBlood(ItemStack stack, int amt) {
-        stack.setItemDamage(amt / MULTIPLIER);
+        stack.setDamage(amt / MULTIPLIER);
     }
 }

@@ -4,14 +4,13 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.BlockAlchemicalFire;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,34 +28,32 @@ public class ItemAlchemicalFire extends VampirismItem {
     private static final String regName = "item_alchemical_fire";
 
     public ItemAlchemicalFire() {
-        super(regName);
+        super(regName, new Properties());
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add(UtilLib.translate("item.vampirism.item_alchemical_fire.desc1"));
-        tooltip.add(UtilLib.translate("item.vampirism.item_alchemical_fire.desc2"));
+        tooltip.add(UtilLib.translated("item.vampirism.item_alchemical_fire.desc1"));
+        tooltip.add(UtilLib.translated("item.vampirism.item_alchemical_fire.desc2"));
     }
 
-
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        pos = pos.offset(facing);
+    public EnumActionResult onItemUse(ItemUseContext ctx) {
+        BlockPos pos = ctx.getPos().offset(ctx.getFace());
 
-        if (!player.canPlayerEdit(pos, facing, player.getHeldItem(hand))) {
+        if (ctx.getPlayer() != null && !ctx.getPlayer().canPlayerEdit(pos, ctx.getFace(), ctx.getItem())) {
             return EnumActionResult.FAIL;
         } else {
-            if (worldIn.isAirBlock(pos)) {
-                worldIn.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
-                worldIn.setBlockState(pos, ModBlocks.alchemical_fire.getDefaultState().withProperty(BlockAlchemicalFire.AGE, 15), 11);
+            if (ctx.getWorld().isAirBlock(pos)) {
+                ctx.getWorld().playSound(ctx.getPlayer(), pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, ctx.getPlayer().getRNG().nextFloat() * 0.4F + 0.8F);
+                ctx.getWorld().setBlockState(pos, ModBlocks.alchemical_fire.getDefaultState().withProperty(BlockAlchemicalFire.AGE, 15), 11);
             }
 
             return EnumActionResult.SUCCESS;
         }
     }
-
 
 }

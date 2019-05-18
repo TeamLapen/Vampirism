@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,18 +16,12 @@ public class VampirismItemBloodFood extends ItemFood {
     protected final float saturation;
     private final String regName;
 
-    public VampirismItemBloodFood(String regName, int amount, float saturation) {
-        super(0, false);
+    public VampirismItemBloodFood(String regName, int amount, float saturation, Properties props) {
+        super(0, 0, false, props);
         this.regName = regName;
         this.bloodAmount = amount;
         this.saturation = saturation;
-        setCreativeTab(VampirismMod.creativeTab);
         setRegistryName(REFERENCE.MODID, regName);
-        this.setTranslationKey(REFERENCE.MODID + "." + regName);
-    }
-
-    public String getLocalizedName() {
-        return UtilLib.translate(getTranslationKey() + ".name");
     }
 
     /**

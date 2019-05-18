@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 /**
@@ -39,6 +41,20 @@ public interface IFaction<T extends IFactionEntity> {
      * If set returns unlocalized name in the plural form. Otherwise returns {@link IFaction#name()}
      */
     String getTranslationKeyPlural();
+
+    /**
+     * @return Translation component of name in singular
+     */
+    default ITextComponent getName() {
+        return new TextComponentTranslation(getTranslationKey());
+    }
+
+    /**
+     * @return Translation component of name in plural
+     */
+    default ITextComponent getNamePlural() {
+        return new TextComponentTranslation(getTranslationKeyPlural());
+    }
 
     boolean isEntityOfFaction(EntityCreature creature);
 

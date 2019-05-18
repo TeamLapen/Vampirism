@@ -2,14 +2,12 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.util.Helper;
@@ -18,17 +16,22 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,28 +51,28 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      */
     private final float minSpeed = 0.15f;
 
-    public VampirismVampireSword(String regName, ToolMaterial material, float attackSpeedModifier) {
-        super(regName, material, attackSpeedModifier);
+    public VampirismVampireSword(String regName, ItemTier material, float attackSpeedModifier, Properties prop) {
+        super(regName, material, attackSpeedModifier, prop);
     }
 
-    public VampirismVampireSword(String regName, ToolMaterial material) {
-        super(regName, material);
+    public VampirismVampireSword(String regName, ItemTier material, Properties prop) {
+        super(regName, material, prop);
     }
 
-    public VampirismVampireSword(String regName, ToolMaterial material, float attackSpeedModifier, float attackDamage) {
-        super(regName, material, attackSpeedModifier, attackDamage);
+    public VampirismVampireSword(String regName, ItemTier material, float attackSpeedModifier, float attackDamage, Properties prop) {
+        super(regName, material, attackSpeedModifier, attackDamage, prop);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         float charged = getCharged(stack);
         float trained = getTrained(stack, Minecraft.getInstance().player);
-        tooltip.add(UtilLib.translate("text.vampirism.sword_charged") + " " + ((int) (charged * 100f)) + "%");
-        tooltip.add(UtilLib.translate("text.vampirism.sword_trained") + " " + ((int) (trained * 100f)) + "%");
+        tooltip.add(UtilLib.translated("text.vampirism.sword_charged").appendText(" " + ((int) (charged * 100f)) + "%"));
+        tooltip.add(UtilLib.translated("text.vampirism.sword_trained").appendText(" " + ((int) (trained * 100f)) + "%"));
         if (Minecraft.getInstance().player != null && !VReference.VAMPIRE_FACTION.equals(FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction())) {
-            tooltip.add(UtilLib.translateFormatted("text.vampirism.can_only_be_used_by", UtilLib.translate(VReference.VAMPIRE_FACTION.getTranslationKeyPlural())));
+            tooltip.add(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(VReference.VAMPIRE_FACTION.getTranslationKeyPlural())));
         }
     }
 
@@ -103,7 +106,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    public int getMaxItemUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack) {
         return 40;
     }
 
@@ -153,8 +156,9 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         return stack;
     }
 
+
     @Override
-    public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
         if (worldIn.isRemote && (isSelected || itemSlot == 0)) {
             float charged = getCharged(stack);
@@ -191,17 +195,17 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      * @param value Clamped between 0 and 1
      */
     public void setTrained(@Nonnull ItemStack stack, @Nonnull EntityLivingBase player, float value) {
-        NBTTagCompound nbt = stack.getOrCreateSubCompound("trained");
-        nbt.setFloat(player.getPersistentID().toString(), MathHelper.clamp(value, 0f, 1f));
+        NBTTagCompound nbt = stack.getOrCreateChildTag("trained");
+        nbt.setFloat(player.getUniqueID().toString(), MathHelper.clamp(value, 0f, 1f));
     }
 
     /**
      * If the stack is not named and the player hasn't been named before, ask the player to name this stack
      */
     public void tryName(ItemStack stack, EntityPlayer player) {
-        if (!stack.hasDisplayName() && (!stack.hasTagCompound() || !stack.getTagCompound().getBoolean("dont_name"))) {
-            (player).openGui(VampirismMod.instance, ModGuiHandler.ID_NAME_SWORD, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
-            (player).world.playSound((player).posX, (player).posY, (player).posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
+        if (!stack.hasDisplayName() && player instanceof EntityPlayerMP && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
+            NetworkHooks.openGui(player, ); //new interaction object for name sword gui
+            player.world.playSound((player).posX, (player).posY, (player).posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
         }
     }
 
@@ -247,8 +251,8 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      * @return Value between 0 and 1
      */
     protected float getCharged(@Nonnull ItemStack stack) {
-        if (stack.hasTagCompound()) {
-            return stack.getTagCompound().getFloat("charged");
+        if (stack.hasTag()) {
+            return stack.getTag().getFloat("charged");
         }
         return 0.0f;
     }
@@ -267,8 +271,8 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      */
     protected float getTrained(@Nonnull ItemStack stack, @Nullable EntityLivingBase player) {
         if (player == null) return getTrained(stack);
-        UUID id = player.getPersistentID();
-        NBTTagCompound nbt = stack.getSubCompound("trained");
+        UUID id = player.getUniqueID();
+        NBTTagCompound nbt = stack.getChildTag("trained");
         if (nbt != null) {
             if (nbt.hasKey(id.toString())) {
                 return nbt.getFloat(id.toString());
@@ -284,8 +288,8 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      * @return Value between 0 and 1. Defaults to 0
      */
     protected float getTrained(@Nonnull ItemStack stack) {
-        if (stack.hasTagCompound()) {
-            NBTTagCompound nbt = stack.getTagCompound();
+        if (stack.hasTag()) {
+            NBTTagCompound nbt = stack.getTag();
             if (nbt.hasKey("trained-cache")) {
                 return nbt.getFloat("trained-cache");
             }

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -20,8 +19,12 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier 
     public static final String regName = "holy_water_bottle";
     private final TIER tier;
 
-    public ItemHolyWaterBottle(String regName, TIER tier, Item.Properties properties) {
-        super(regName, properties);
+    public ItemHolyWaterBottle(TIER tier) {
+        this(regName + "_" + tier, tier, new Properties());
+    }
+
+    protected ItemHolyWaterBottle(String regName, TIER tier, Properties props) {
+        super(regName, props);
         this.tier = tier;
     }
 
