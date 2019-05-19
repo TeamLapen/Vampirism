@@ -1,15 +1,16 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,9 +19,11 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWithTierNBTImpl {
+public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWithTier {
 
     private final static String baseRegName = "obsidian_armor";
+
+    private final TIER tier;
 
     public static boolean isFullyEquipped(EntityPlayer player) {
         for (ItemStack stack : player.inventory.armorInventory) {
@@ -37,20 +40,21 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
 
     private final float[] SPEED_REDUCTION = new float[]{-0.025F, -0.1F, -0.05F, -0.025F};
 
-    public ItemObsidianArmor(EntityEquipmentSlot equipmentSlotIn) {
-        super(ArmorMaterial.IRON, equipmentSlotIn, baseRegName);
+    public ItemObsidianArmor(EntityEquipmentSlot equipmentSlotIn, TIER tier) {
+        super(baseRegName + "_" + tier, ArmorMaterial.IRON, equipmentSlotIn, new Properties());
+        this.tier = tier;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        addTierInformation(stack, tooltip);
+        addTierInformation(tooltip);
     }
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        switch (getTier(stack)) {
+        switch (getTier()) {
             case ENHANCED:
                 return getTextureLocation("obsidian_armor_of_hell_enhanced", slot, type);
             case ULTIMATE:
@@ -65,23 +69,19 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
         Multimap<String, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
         if (slot == this.armorType) {
-            map.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Speed modifier", this.getSpeedReduction(slot.getIndex(), stack), 2));
+            map.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Speed modifier", this.getSpeedReduction(slot.getIndex()), 2));
         }
         return map;
     }
 
+    @Override
+    public TIER getTier() {
+        return tier;
+    }
 
     @Override
-    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            for (TIER t : TIER.values()) {
-                items.add(setTier(new ItemStack(this), t));
-            }
-        }
-    }
-    @Override
     protected int getDamageReduction(int slot, ItemStack stack) {
-        TIER tier = getTier(stack);
+        TIER tier = getTier();
         switch (tier) {
             case ULTIMATE:
                 return DAMAGE_REDUCTION_ULTIMATE[slot];
@@ -92,7 +92,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
         }
     }
 
-    private float getSpeedReduction(int slot, ItemStack stack) {
+    private float getSpeedReduction(int slot) {
         return SPEED_REDUCTION[slot];
     }
 }

@@ -7,15 +7,13 @@ import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,6 +27,9 @@ import java.util.List;
  */
 public class ItemTent extends VampirismItem {
     private static final String name = "item_tent";
+    private static final String name_spawner = "item_tent_spawner";
+
+    private final boolean spawner;
 
     public static boolean placeAt(World world, BlockPos pos, EnumFacing dir, boolean force, boolean spawner) {
         int x = pos.getX();
@@ -65,58 +66,45 @@ public class ItemTent extends VampirismItem {
         return block.canPlaceBlockAt(world, new BlockPos(x, y, z));
     }
 
-    public ItemTent() {
-        super(name);
+    public ItemTent(boolean spawner) {
+        super(spawner ? name : name_spawner, new Properties());
+        this.spawner = spawner;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("spawner")) {
-            tooltip.add(UtilLib.translate("tile.vampirism.tent.spawner"));
+        if (spawner) {
+            tooltip.add(UtilLib.translated("tile.vampirism.tent.spawner"));
         }
     }
 
 
-    @Override
-    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
-        super.getSubItems(tab, items);
-        if (isInCreativeTab(tab)) {
-            ItemStack spawner = new ItemStack(this);
-            NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setBoolean("spawner", true);
-            spawner.setTagCompound(nbt);
-            items.add(spawner);
-        }
-    }
-
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
-        if (facing != EnumFacing.UP)
+    public EnumActionResult onItemUse(ItemUseContext ctx) {
+        if (ctx.getFace() != EnumFacing.UP)
             return EnumActionResult.PASS;
-        if (world.isRemote) return EnumActionResult.PASS;
+        if (ctx.getWorld().isRemote) return EnumActionResult.PASS;
 
-        ItemStack stack = player.getHeldItem(hand);
+        ItemStack stack = ctx.getItem();
+        EntityPlayer player = ctx.getPlayer();
 
-        EnumFacing dir = EnumFacing.fromAngle(player.rotationYaw);
-        boolean flag = placeAt(world, pos.up(), dir, false, false);
+        EnumFacing dir = player == null ? EnumFacing.NORTH : EnumFacing.fromAngle(ctx.getPlayer().rotationYaw);
+        boolean flag = placeAt(ctx.getWorld(), ctx.getPos().up(), dir, false, false);
         if (flag) {
-            TileEntity tile = world.getTileEntity(pos.up());
+            TileEntity tile = ctx.getWorld().getTileEntity(ctx.getPos().up());
             if (tile instanceof TileTent) {
-                if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("spawner")) {
+                if (spawner) {
                     ((TileTent) tile).setSpawn(true);
                 }
             }
 
-            if (!player.capabilities.isCreativeMode) {
+            if (player != null || !player.isCreative()) {
                 stack.shrink(1);
             }
         }
         return flag ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
     }
-
-
 }

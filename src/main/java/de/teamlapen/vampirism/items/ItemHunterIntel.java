@@ -1,11 +1,8 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -24,36 +21,37 @@ public class ItemHunterIntel extends VampirismItem {
 
 
     private final static String name = "hunter_intel";
+    private final int level;
 
-    public ItemHunterIntel() {
-        super(name);
-        this.hasSubtypes = true;
+    public ItemHunterIntel(int level) {
+        super(name + "_" + level, new Properties());
+        this.level = level;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(TextFormatting.RED + UtilLib.translate("text.vampirism.for_level") + ": " + HunterLevelingConf.instance().getLevelForHunterIntelMeta(stack.getMetadata()));
-    }
-
-
-    public ITextComponent getDisplayName(ItemStack stack) {
-        return new TextComponentTranslation(getTranslationKey() + ".name").appendSibling(new TextComponentString(" ")).appendSibling(new TextComponentTranslation("text.vampirism.for_level")).appendSibling(new TextComponentString(" " + HunterLevelingConf.instance().getLevelForHunterIntelMeta(stack.getMetadata())));
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new TextComponentTranslation("text.vampirism.for_level").appendText(": " + HunterLevelingConf.instance().getHunterIntelMetaForLevel(level)).applyTextStyle(TextFormatting.RED));
     }
 
 
     @Override
-    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            for (int i = 0; i < HunterLevelingConf.instance().HUNTER_INTEL_COUNT; i++) {
-                items.add(new ItemStack(this, 1, i));
-            }
-        }
+    public ITextComponent getDisplayName(ItemStack stack) {
+        return new TextComponentTranslation(getTranslationKey() + ".name").appendSibling(new TextComponentString(" ")).appendSibling(new TextComponentTranslation("text.vampirism.for_level")).appendSibling(new TextComponentString(" " + HunterLevelingConf.instance().getLevelForHunterIntelMeta(level)));
     }
+
+
 
 
     @OnlyIn(Dist.CLIENT)
     public boolean hasEffect(ItemStack stack) {
         return true;
+    }
+
+    /**
+     * @return Level of this hunter intel 0 - {@link HunterLevelingConf#HUNTER_INTEL_COUNT}-1
+     */
+    public int getLevel() {
+        return level;
     }
 }

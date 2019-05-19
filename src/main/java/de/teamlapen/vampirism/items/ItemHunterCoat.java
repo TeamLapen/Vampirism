@@ -1,12 +1,13 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -15,7 +16,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTierNBTImpl {
+public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTier {
 
     private final static String baseRegName = "hunter_coat";
 
@@ -32,21 +33,24 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
     private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{2, 6, 7, 2};
     private final int[] DAMAGE_REDUCTION_NORMAL = new int[]{2, 5, 6, 2};
 
-    public ItemHunterCoat(EntityEquipmentSlot equipmentSlotIn) {
-        super(ArmorMaterial.IRON, equipmentSlotIn, baseRegName);
+    private final TIER tier;
+
+    public ItemHunterCoat(EntityEquipmentSlot equipmentSlotIn, TIER tier) {
+        super(baseRegName + "_" + tier, ArmorMaterial.IRON, equipmentSlotIn, new Properties());
+        this.tier = tier;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        addTierInformation(stack, tooltip);
+        addTierInformation(tooltip);
     }
 
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        switch (getTier(stack)) {
+        switch (getTier()) {
             case ENHANCED:
                 return getTextureLocation("hunter_coat_enhanced", slot, type);
             case ULTIMATE:
@@ -57,20 +61,14 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
 
     }
 
-
-
     @Override
-    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            for (TIER t : TIER.values()) {
-                items.add(setTier(new ItemStack(this), t));
-            }
-        }
+    public TIER getTier() {
+        return tier;
     }
 
     @Override
     protected int getDamageReduction(int slot, ItemStack stack) {
-        TIER tier = getTier(stack);
+        TIER tier = getTier();
         switch (tier) {
             case ULTIMATE:
                 return DAMAGE_REDUCTION_ULTIMATE[slot];
@@ -80,6 +78,4 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
                 return DAMAGE_REDUCTION_NORMAL[slot];
         }
     }
-
-
 }

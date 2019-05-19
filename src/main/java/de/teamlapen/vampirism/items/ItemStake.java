@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
 import net.minecraft.util.DamageSource;
 
 /**
@@ -25,7 +26,7 @@ public class ItemStake extends VampirismItemWeapon implements IVampireFinisher {
     private final static String regName = "stake";
 
     public ItemStake() {
-        super(regName, ToolMaterial.WOOD, 0.12F, 0.5F);
+        super(regName, ItemTier.WOOD, 0.12F, 0.5F, new Properties());
     }
 
 

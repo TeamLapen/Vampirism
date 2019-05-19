@@ -1,10 +1,11 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.client.model.ModelHunterHat;
-import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -17,7 +18,7 @@ public class ItemHunterHat extends VampirismHunterArmor {
     private final int type;
 
     public ItemHunterHat(int type) {
-        super(ArmorMaterial.IRON, EntityEquipmentSlot.HEAD, baseRegName + type);
+        super(baseRegName + "_" + type, ArmorMaterial.IRON, EntityEquipmentSlot.HEAD, new Properties());
         this.type = type;
     }
 
@@ -28,7 +29,6 @@ public class ItemHunterHat extends VampirismHunterArmor {
         return type == 0 ? ModelHunterHat.hat0 : ModelHunterHat.hat1;
     }
 
-    @OnlyIn(Dist.CLIENT)
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {

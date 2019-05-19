@@ -10,58 +10,38 @@ import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 /**
  * Item with different injection types
  */
 public class ItemInjection extends VampirismItem {
 
-    public final static int META_GARLIC = 1;
-    public final static int META_SANGUINARE = 2;
-    public final static int META_COUNT = 3;
+
     private final static String regName = "injection";
+    private final TYPE type;
 
-    public ItemInjection() {
-        super(regName);
-        this.hasSubtypes = true;
-    }
-
-    @Override
-    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            for (int i = 0; i < META_COUNT; i++) {
-                items.add(new ItemStack(this, 1, i));
-            }
-        }
-        super.getSubItems(tab, items);
+    public ItemInjection(TYPE type) {
+        super(regName + "_" + type, new Properties());
+        this.type = type;
     }
 
 
-    @Override
-    public String getTranslationKey(ItemStack stack) {
-        switch (stack.getMetadata()) {
-            case META_GARLIC:
-                return super.getTranslationKey(stack) + ".garlic";
-            case META_SANGUINARE:
-                return super.getTranslationKey(stack) + ".sanguinare";
-            default:
-                return super.getTranslationKey(stack);
-        }
-    }
+
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
-        if (stack.getMetadata() == META_SANGUINARE) {
+        if (type == TYPE.SANGUINARE) {
             IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
             if (handler.getCurrentLevel(VReference.HUNTER_FACTION) > 0) {
                 playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
@@ -86,4 +66,19 @@ public class ItemInjection extends VampirismItem {
     }
 
 
+    public enum TYPE implements IStringSerializable {
+        EMPTY("empty"), GARLIC("garlic"), SANGUINARE("sanguinare");
+
+        private final String name;
+
+        TYPE(String name) {
+            this.name = name;
+        }
+
+        @Override
+        @Nonnull
+        public String getName() {
+            return name;
+        }
+    }
 }

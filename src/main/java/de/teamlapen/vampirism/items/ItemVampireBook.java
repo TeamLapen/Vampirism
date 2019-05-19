@@ -14,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.play.server.SPacketSetSlot;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -41,14 +40,32 @@ public class ItemVampireBook extends VampirismItem {
     }
 
     public ItemVampireBook() {
-        super(regName);
-        this.setMaxStackSize(1);
+        super(regName, new Properties().maxStackSize(1));
+    }
+
+    @Override
+    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+        if (isInGroup(group)) {
+            items.add(VampireBookManager.getInstance().getRandomBook(new Random()).setDisplayName(UtilLib.translated("item.vampirism.vampire_book.name")));
+        }
+    }
+
+    @Override
+    public ITextComponent getDisplayName(ItemStack stack) {
+        if (stack.hasTag()) {
+            NBTTagCompound nbttagcompound = stack.getTag();
+            String s = nbttagcompound.getString("title");
+            if (!StringUtils.isNullOrEmpty(s)) {
+                return new TextComponentString(s);
+            }
+        }
+        return super.getDisplayName(stack);
     }
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        if (stack.hasTagCompound()) {
-            NBTTagCompound nbttagcompound = stack.getTagCompound();
+        if (stack.hasTag()) {
+            NBTTagCompound nbttagcompound = stack.getTag();
             String s = nbttagcompound.getString("title");
             if (!StringUtils.isNullOrEmpty(s)) {
                 return s;
@@ -56,15 +73,6 @@ public class ItemVampireBook extends VampirismItem {
         }
 
         return super.getItemStackDisplayName(stack);
-    }
-
-
-    @Override
-    public void getSubItems(ItemGroup tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            items.add(VampireBookManager.getInstance().getRandomBook(new Random()).setStackDisplayName(UtilLib.translate("item.vampirism.vampire_book.name")));
-
-        }
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -80,20 +88,19 @@ public class ItemVampireBook extends VampirismItem {
         }
 
         playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_VAMPIRE_BOOK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
-        playerIn.addStat(StatList.getObjectUseStats(this));
         return new ActionResult(EnumActionResult.SUCCESS, stack);
     }
 
     private void resolveContents(ItemStack stack, EntityPlayer player) {
-        if (!stack.isEmpty() && stack.getTagCompound() != null) {
-            NBTTagCompound nbttagcompound = stack.getTagCompound();
+        if (!stack.isEmpty() && stack.getTag() != null) {
+            NBTTagCompound nbttagcompound = stack.getTag();
             if (!nbttagcompound.getBoolean("resolved")) {
                 nbttagcompound.setBoolean("resolved", true);
                 if (validBookTagContents(nbttagcompound)) {
-                    NBTTagList nbttaglist = nbttagcompound.getTagList("pages", 8);
+                    NBTTagList nbttaglist = nbttagcompound.getList("pages", 8);
 
-                    for (int slot = 0; slot < nbttaglist.tagCount(); ++slot) {
-                        String s = nbttaglist.getStringTagAt(slot);
+                    for (int slot = 0; slot < nbttaglist.size(); ++slot) {
+                        String s = nbttaglist.getString(slot);
 
                         Object lvt_7_1_;
                         try {
