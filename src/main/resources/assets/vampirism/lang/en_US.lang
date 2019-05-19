@@ -352,7 +352,7 @@ effect.vampirism.saturation=Saturation
 effect.vampirism.sanguinare=Sanguinare Vampiris
 effect.vampirism.fire_protection=Fire Protection
 effect.vampirism.garlic=Garlic
-effect.vampirism.poison=Poison
+effect.vampirism.poison=Toxicant
 
 #FLUIDS
 fluid.vampirism.vampirismblood=Blood
