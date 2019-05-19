@@ -8,16 +8,24 @@
     },
     "description": {
       "translate": "advancement.vampirism.betrayal.desc"
-    }
+    },
+    "hidden": true
   },
   "parent": "vampirism:hunter/become_hunter",
   "criteria": {
-    "baron": {
+    "kill": {
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {
           "type": "vampirism:vampire_hunter"
         }
+      }
+    },
+    "faction": {
+      "trigger": "vampirism:faction",
+      "conditions": {
+        "faction": "Hunter",
+        "level": 1
       }
     }
   }
