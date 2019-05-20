@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.HalloweenSpecial;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -45,6 +46,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -55,6 +57,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     private final Minecraft mc;
     private final ResourceLocation icons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/icons.png");
+    private final ResourceLocation icons_poison = new ResourceLocation(REFERENCE.MODID, "textures/gui/icons_poison.png");
 
     private int screenColor = 0;
     private int screenPercentage = 0;
@@ -186,6 +189,16 @@ public class VampirismHUDOverlay extends ExtendedGui {
             mc.fontRenderer.drawString(text, x, y + 1, 0);
             mc.fontRenderer.drawString(text, x, y - 1, 0);
             mc.fontRenderer.drawString(text, x, y, color);
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderHealthBar(RenderGameOverlayEvent.Pre event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH) {
+            return;
+        }
+        if (mc.player.isPotionActive(ModPotions.poison)) {
+            mc.getTextureManager().bindTexture(icons_poison);
         }
     }
 

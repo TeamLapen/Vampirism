@@ -34,6 +34,7 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttribute;
@@ -63,13 +64,14 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
@@ -1119,7 +1121,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
         if ((entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) || entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) {
-            player.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
+            player.addPotionEffect(new PotionEffect(ModPotions.poison, 60));
             if (player instanceof EntityPlayerMP) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.POISONOUS_BITE);
             }
@@ -1186,7 +1188,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             blood = VampirePlayer.get((EntityPlayer) entity).onBite(this);
             saturationMod = VampirePlayer.get((EntityPlayer) entity).getBloodSaturation();
             if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
-                player.addPotionEffect(new PotionEffect(MobEffects.POISON, 15, 2));
+                player.addPotionEffect(new PotionEffect(ModPotions.poison, 15, 2));
             }
         } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD) {
             blood = ((IBiteableEntity) entity).onBite(this);
