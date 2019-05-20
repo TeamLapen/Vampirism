@@ -14,8 +14,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -25,12 +28,20 @@ public abstract class VampirismHunterArmor extends ItemArmor {
     protected static final UUID[] VAMPIRISM_ARMOR_MODIFIER = new UUID[]{UUID.fromString("f0b9a417-0cec-4629-8623-053cd0feec3c"), UUID.fromString("e54474a9-62a0-48ee-baaf-7efddca3d711"), UUID.fromString("ac0c33f4-ebbf-44fe-9be3-a729f7633329"), UUID.fromString("8839e157-d576-4cff-bf34-0a788131fe0f")};
 
 
-    public VampirismHunterArmor(String baseRegName, IArmorMaterial materialIn, EntityEquipmentSlot equipmentSlotIn, Item.Properties props) {
+    private final String translation_key;
+
+    public VampirismHunterArmor(String baseRegName, @Nullable String suffix, IArmorMaterial materialIn, EntityEquipmentSlot equipmentSlotIn, Item.Properties props) {
         super(materialIn, equipmentSlotIn, props);
         String regName = baseRegName + "_" + equipmentSlotIn.getName();
+        if (suffix != null) regName += "_" + suffix;
         setRegistryName(REFERENCE.MODID, regName);
+        translation_key = Util.makeTranslationKey("item", new ResourceLocation(REFERENCE.MODID, baseRegName + "_" + equipmentSlotIn.getName()));
     }
 
+    @Override
+    protected String getDefaultTranslationKey() {
+        return translation_key;
+    }
 
     @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {

@@ -23,6 +23,7 @@ public class ItemPureBlood extends VampirismItem {
     public ItemPureBlood(int level) {
         super(name + "_" + level, new Properties());
         this.level = level;
+        this.setTranslation_key(name);
     }
 
 

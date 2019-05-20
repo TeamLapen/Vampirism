@@ -26,6 +26,7 @@ public class ItemHunterIntel extends VampirismItem {
     public ItemHunterIntel(int level) {
         super(name + "_" + level, new Properties());
         this.level = level;
+        setTranslation_key(name);
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -59,8 +59,8 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         super(regName, material, prop);
     }
 
-    public VampirismVampireSword(String regName, ItemTier material, float attackSpeedModifier, float attackDamage, Properties prop) {
-        super(regName, material, attackSpeedModifier, attackDamage, prop);
+    public VampirismVampireSword(String regName, ItemTier material, int attackDamage, float attackSpeedModifier, Properties prop) {
+        super(regName, material, attackDamage, attackSpeedModifier, prop);
     }
 
     @OnlyIn(Dist.CLIENT)

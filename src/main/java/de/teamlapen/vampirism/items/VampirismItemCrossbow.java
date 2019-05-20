@@ -12,19 +12,16 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
-
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Random;
 
 /**
@@ -39,11 +36,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @param maxDamage Max damage or 0 if unbreakable
      */
     public VampirismItemCrossbow(String regName, int maxDamage) {
-        super(regName);
-        this.maxStackSize = 1;
-        if (maxDamage > 0) {
-            this.setMaxDamage(maxDamage);
-        }
+        super(regName, new Properties().maxStackSize(1).defaultMaxDamage(maxDamage));
     }
 
     @Override
@@ -74,14 +67,6 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         ItemStack stack = playerIn.getHeldItem(handIn);
         shoot(playerIn, 0, 0, worldIn, stack, handIn);
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-    }
-
-    public void setEnchantability(int enchantability) {
-        this.enchantability = enchantability;
-    }
-
-    public void setEnchantability(ToolMaterial material) {
-        this.enchantability = material.getEnchantability();
     }
 
 
@@ -168,7 +153,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If successful
      */
     protected boolean shoot(EntityPlayer player, float heightOffset, float centerOffset, World world, ItemStack stack, EnumHand hand) {
-        boolean creative = player.capabilities.isCreativeMode;
+        boolean creative = player.isCreative();
         boolean bowInfinite = isCrossbowInfinite(stack, player);
 
         ItemStack itemstack = this.findAmmo(player, stack);
@@ -234,7 +219,6 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     }
                 }
 
-                player.addStat(StatList.getObjectUseStats(this));
                 player.getCooldownTracker().setCooldown(stack.getItem(), getCooldown(player, stack));
                 return true;
             }
@@ -257,7 +241,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If the given arrow type can be used in an infinite crossbow
      */
     private boolean canArrowBeInfinite(ItemStack arrowStack) {
-        return !(arrowStack.getItem() instanceof IVampirismCrossbowArrow) || ((IVampirismCrossbowArrow) arrowStack.getItem()).isCanBeInfinite(arrowStack);
+        return !(arrowStack.getItem() instanceof IVampirismCrossbowArrow) || ((IVampirismCrossbowArrow) arrowStack.getItem()).isCanBeInfinite();
     }
 
 

@@ -18,7 +18,7 @@ public class ItemHunterHat extends VampirismHunterArmor {
     private final int type;
 
     public ItemHunterHat(int type) {
-        super(baseRegName + "_" + type, ArmorMaterial.IRON, EntityEquipmentSlot.HEAD, new Properties());
+        super(baseRegName, "" + type, ArmorMaterial.IRON, EntityEquipmentSlot.HEAD, new Properties());
         this.type = type;
     }
 

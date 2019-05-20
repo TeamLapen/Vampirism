@@ -32,7 +32,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
     private final TIER tier;
 
     public ItemArmorOfSwiftness(EntityEquipmentSlot equipmentSlotIn, TIER tier) {
-        super(baseRegName + "_" + tier, ArmorMaterial.LEATHER, equipmentSlotIn, new Item.Properties());
+        super(baseRegName, tier.getName(), ArmorMaterial.LEATHER, equipmentSlotIn, new Item.Properties());
         this.tier = tier;
     }
 
@@ -48,7 +48,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
         if (type == null) {
             return getTextureLocationLeather(slot);
         }
-        switch (getTier()) {
+        switch (getVampirismTier()) {
             case ENHANCED:
                 return getTextureLocation("swiftness_enhanced", slot, type);
             case ULTIMATE:
@@ -59,7 +59,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
     }
 
     @Override
-    public TIER getTier() {
+    public TIER getVampirismTier() {
         return tier;
     }
 
@@ -83,7 +83,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
                 int boost = Integer.MAX_VALUE;
                 for (ItemStack stack : player.inventory.armorInventory) {
                     if (!stack.isEmpty() && stack.getItem() instanceof ItemArmorOfSwiftness) {
-                        int b = getJumpBoost(getTier());
+                        int b = getJumpBoost(getVampirismTier());
                         if (b < boost) {
                             boost = b;
                         }

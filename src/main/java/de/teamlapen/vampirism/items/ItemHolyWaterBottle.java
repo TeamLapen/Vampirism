@@ -21,6 +21,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier 
 
     public ItemHolyWaterBottle(TIER tier) {
         this(regName + "_" + tier, tier, new Properties());
+        setTranslation_key(regName);
     }
 
     protected ItemHolyWaterBottle(String regName, TIER tier, Properties props) {
@@ -35,7 +36,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier 
     }
 
     @Override
-    public TIER getTier() {
+    public TIER getVampirismTier() {
         return tier;
     }
 

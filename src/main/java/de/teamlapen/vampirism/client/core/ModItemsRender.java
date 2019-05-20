@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.ItemCrossbowArrow;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,7 +20,7 @@ public class ModItemsRender {
 			if (tintIndex == 0) {
 				return ((ItemArmor) stack.getItem()).getColor(stack);
 			} else {
-				switch (ModItems.armor_of_swiftness_feet.getTier(stack)) {
+				switch (ModItems.armor_of_swiftness_feet.getVampirismTier(stack)) {
 					case ENHANCED:
 						return 0x007CFF;
 					case ULTIMATE:

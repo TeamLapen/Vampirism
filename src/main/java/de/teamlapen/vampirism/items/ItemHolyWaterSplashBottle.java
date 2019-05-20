@@ -31,12 +31,13 @@ public class ItemHolyWaterSplashBottle extends ItemHolyWaterBottle implements En
 
     public ItemHolyWaterSplashBottle(TIER tier) {
         super(regName + "_" + tier, tier, new Properties());
+        setTranslation_key(regName);
     }
 
     @Override
     public void onImpact(EntityThrowableItem entity, ItemStack stack, RayTraceResult result, boolean remote) {
 
-        TIER tier = getTier();
+        TIER tier = getVampirismTier();
         if (!remote) {
 
 

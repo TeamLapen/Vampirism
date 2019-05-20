@@ -31,11 +31,11 @@ public class ItemVampireBook extends VampirismItem {
     public static boolean validBookTagContents(NBTTagCompound nbt) {
         if (!ItemWritableBook.isNBTValid(nbt)) {
             return false;
-        } else if (!nbt.hasKey("title", 8)) {
+        } else if (!nbt.hasKey("title")) {
             return false;
         } else {
             String s = nbt.getString("title");
-            return (s != null && s.length() <= 32) && nbt.hasKey("author", 8);
+            return s.length() <= 32 && nbt.hasKey("author");
         }
     }
 
@@ -62,18 +62,6 @@ public class ItemVampireBook extends VampirismItem {
         return super.getDisplayName(stack);
     }
 
-    @Override
-    public String getItemStackDisplayName(ItemStack stack) {
-        if (stack.hasTag()) {
-            NBTTagCompound nbttagcompound = stack.getTag();
-            String s = nbttagcompound.getString("title");
-            if (!StringUtils.isNullOrEmpty(s)) {
-                return s;
-            }
-        }
-
-        return super.getItemStackDisplayName(stack);
-    }
 
     @OnlyIn(Dist.CLIENT)
     public boolean hasEffect(ItemStack stack) {
@@ -105,12 +93,12 @@ public class ItemVampireBook extends VampirismItem {
                         Object lvt_7_1_;
                         try {
                             ITextComponent var11 = ITextComponent.Serializer.fromJsonLenient(s);
-                            lvt_7_1_ = TextComponentUtils.processComponent(player, var11, player);
+                            lvt_7_1_ = TextComponentUtils.updateForEntity(null, var11, player);
                         } catch (Exception var9) {
                             lvt_7_1_ = new TextComponentString(s);
                         }
 
-                        nbttaglist.set(slot, new NBTTagString(ITextComponent.Serializer.componentToJson((ITextComponent) lvt_7_1_)));
+                        nbttaglist.set(slot, new NBTTagString(ITextComponent.Serializer.toJson((ITextComponent) lvt_7_1_)));
                     }
 
                     nbttagcompound.setTag("pages", nbttaglist);

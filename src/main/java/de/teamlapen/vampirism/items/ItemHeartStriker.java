@@ -25,9 +25,11 @@ public class ItemHeartStriker extends VampirismVampireSword implements IItemWith
     private final TIER tier;
 
     public ItemHeartStriker(TIER tier) {
-        super(regName + "_" + tier, ItemTier.IRON, 0.0f, 0.0f, new Properties());
+        super(regName + "_" + tier, ItemTier.IRON, 0, 0.0f, new Properties());
         this.tier = tier;
+        this.setTranslation_key(regName);
     }
+
 
     @OnlyIn(Dist.CLIENT)
     @Override
@@ -38,7 +40,7 @@ public class ItemHeartStriker extends VampirismVampireSword implements IItemWith
     }
 
     @Override
-    public TIER getTier() {
+    public TIER getVampirismTier() {
         return tier;
     }
 
@@ -51,7 +53,7 @@ public class ItemHeartStriker extends VampirismVampireSword implements IItemWith
             setTrained(stack, attacker, trained);
         }
         float charged = getCharged(stack);
-        charged -= Balance.general.HEART_SEEKER_USAGE_FACTOR * (getTier().ordinal() + 2) / 2f;
+        charged -= Balance.general.HEART_SEEKER_USAGE_FACTOR * (getVampirismTier().ordinal() + 2) / 2f;
         setCharged(stack, charged);
         attacker.setHeldItem(EnumHand.MAIN_HAND, stack);
         return super.hitEntity(stack, target, attacker);
@@ -59,16 +61,16 @@ public class ItemHeartStriker extends VampirismVampireSword implements IItemWith
 
     @Override
     protected float getBaseAttackDamage(ItemStack stack) {
-        return DAMAGE_TIER[getTier().ordinal()];
+        return DAMAGE_TIER[getVampirismTier().ordinal()];
     }
 
     @Override
     protected float getBaseAttackSpeed(ItemStack stack) {
-        return SPEED_TIER[getTier().ordinal()];
+        return SPEED_TIER[getVampirismTier().ordinal()];
     }
 
     @Override
     protected float getChargingFactor(ItemStack stack) {
-        return (float) Balance.general.HEART_SEEKER_CHARGING_FACTOR * 2f / (getTier().ordinal() + 2);
+        return (float) Balance.general.HEART_SEEKER_CHARGING_FACTOR * 2f / (getVampirismTier().ordinal() + 2);
     }
 }

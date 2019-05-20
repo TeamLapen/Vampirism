@@ -10,7 +10,7 @@ public class ItemPitchfork extends VampirismItemWeapon {
     private final static String regName = "pitchfork";
 
     public ItemPitchfork() {
-        super(regName, ItemTier.IRON, 0.27F, 8F, new Properties());
+        super(regName, ItemTier.IRON, 8, 0.27F, new Properties());
 
     }
 }

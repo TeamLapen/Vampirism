@@ -26,7 +26,7 @@ public class ItemStake extends VampirismItemWeapon implements IVampireFinisher {
     private final static String regName = "stake";
 
     public ItemStake() {
-        super(regName, ItemTier.WOOD, 0.12F, 0.5F, new Properties());
+        super(regName, ItemTier.WOOD, 1, 0.12F, new Properties());
     }
 
 

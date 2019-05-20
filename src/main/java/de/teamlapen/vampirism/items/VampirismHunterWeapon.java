@@ -41,8 +41,8 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
         super(regName, material, attackSpeedMod, props);
     }
 
-    public VampirismHunterWeapon(String regName, IItemTier material, float attackSpeedMod, float attackDamage, Properties props) {
-        super(regName, material, attackSpeedMod, attackDamage, props);
+    public VampirismHunterWeapon(String regName, IItemTier material, int attackDamage, float attackSpeedMod, Properties props) {
+        super(regName, material, attackDamage, attackSpeedMod, props);
     }
 
 

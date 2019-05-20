@@ -41,7 +41,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
     private final float[] SPEED_REDUCTION = new float[]{-0.025F, -0.1F, -0.05F, -0.025F};
 
     public ItemObsidianArmor(EntityEquipmentSlot equipmentSlotIn, TIER tier) {
-        super(baseRegName + "_" + tier, ArmorMaterial.IRON, equipmentSlotIn, new Properties());
+        super(baseRegName, tier.getName(), ArmorMaterial.IRON, equipmentSlotIn, new Properties());
         this.tier = tier;
     }
 
@@ -54,7 +54,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        switch (getTier()) {
+        switch (getVampirismTier()) {
             case ENHANCED:
                 return getTextureLocation("obsidian_armor_of_hell_enhanced", slot, type);
             case ULTIMATE:
@@ -75,13 +75,13 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
     }
 
     @Override
-    public TIER getTier() {
+    public TIER getVampirismTier() {
         return tier;
     }
 
     @Override
     protected int getDamageReduction(int slot, ItemStack stack) {
-        TIER tier = getTier();
+        TIER tier = getVampirismTier();
         switch (tier) {
             case ULTIMATE:
                 return DAMAGE_REDUCTION_ULTIMATE[slot];

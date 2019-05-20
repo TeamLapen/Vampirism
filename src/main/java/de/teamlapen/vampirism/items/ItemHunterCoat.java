@@ -36,7 +36,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
     private final TIER tier;
 
     public ItemHunterCoat(EntityEquipmentSlot equipmentSlotIn, TIER tier) {
-        super(baseRegName + "_" + tier, ArmorMaterial.IRON, equipmentSlotIn, new Properties());
+        super(baseRegName, tier.getName(), ArmorMaterial.IRON, equipmentSlotIn, new Properties());
         this.tier = tier;
     }
 
@@ -50,7 +50,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        switch (getTier()) {
+        switch (getVampirismTier()) {
             case ENHANCED:
                 return getTextureLocation("hunter_coat_enhanced", slot, type);
             case ULTIMATE:
@@ -62,13 +62,13 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
     }
 
     @Override
-    public TIER getTier() {
+    public TIER getVampirismTier() {
         return tier;
     }
 
     @Override
     protected int getDamageReduction(int slot, ItemStack stack) {
-        TIER tier = getTier();
+        TIER tier = getVampirismTier();
         switch (tier) {
             case ULTIMATE:
                 return DAMAGE_REDUCTION_ULTIMATE[slot];

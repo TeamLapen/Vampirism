@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -33,11 +32,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
@@ -154,7 +152,7 @@ public class ModItems {
             public boolean isInput(@Nonnull ItemStack stack) {
 
                 return holy_water_bottle.equals(stack.getItem())
-                        && holy_water_bottle.getTier(stack) == IItemWithTier.TIER.NORMAL;
+                        && holy_water_bottle.getVampirismTier(stack) == IItemWithTier.TIER.NORMAL;
             }
         });
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(
@@ -166,7 +164,7 @@ public class ModItems {
             public boolean isInput(@Nonnull ItemStack stack) {
 
                 return holy_water_bottle.equals(stack.getItem())
-                        && holy_water_bottle.getTier(stack) == IItemWithTier.TIER.ENHANCED;
+                        && holy_water_bottle.getVampirismTier(stack) == IItemWithTier.TIER.ENHANCED;
             }
         });
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(
@@ -178,7 +176,7 @@ public class ModItems {
             public boolean isInput(@Nonnull ItemStack stack) {
 
                 return holy_water_bottle.equals(stack.getItem())
-                        && holy_water_bottle.getTier(stack) == IItemWithTier.TIER.ULTIMATE;
+                        && holy_water_bottle.getVampirismTier(stack) == IItemWithTier.TIER.ULTIMATE;
             }
         });
     }
