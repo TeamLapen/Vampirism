@@ -230,7 +230,7 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public void onFOV(FOVUpdateEvent event) {
+    public void onFovOffsetUpdate(FOVUpdateEvent event) {
         if (Configs.disable_fov_changes && Helper.isVampire(event.getEntity())) {
             IAttributeInstance speed = event.getEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED);
             AttributeModifier vampirespeed = speed.getModifier(LevelAttributeModifier.getUUID(SharedMonsterAttributes.MOVEMENT_SPEED));
