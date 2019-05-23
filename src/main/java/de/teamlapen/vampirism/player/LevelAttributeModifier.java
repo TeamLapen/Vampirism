@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.player;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
@@ -90,5 +91,14 @@ public class LevelAttributeModifier {
         if (m != null) {
             att.removeModifier(m);
         }
+    }
+
+    /**
+     * 
+     * @param the attribute whose UUID you need
+     * @return the UUID of the given attribute
+     */
+    public static UUID getUUID(IAttribute attribute) {
+        return modifiers.get(attribute);
     }
 }

@@ -4,14 +4,17 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import javax.annotation.Nonnull;
+
 import java.io.File;
+
+import javax.annotation.Nonnull;
 
 /**
  * Manages configuration
@@ -30,6 +33,7 @@ public class Configs {
     public static int gui_level_offset_x;
     public static int gui_level_offset_y;
     public static boolean gui_skill_button_enable;
+    public static boolean disable_fov_changes;
     public static boolean renderVampireForestFog;
     public static boolean renderVampireForestFogEnforce;
     public static int blood_vision_recompile_ticks;
@@ -170,6 +174,7 @@ public class Configs {
         disable_hunter_camps = main_config.getBoolean("disable_hunter_camps", CATEGORY_DISABLE, false, "Disable the generation of hunter camps completely");
         disable_all_worldgen = main_config.getBoolean("disable_all_worldgen", CATEGORY_DISABLE, false, "Disable all world gen. Does not affect vampire Forest");
         disable_halloween_special = main_config.getBoolean("disable_halloween_special", CATEGORY_DISABLE, false, "Disable halloween special event");
+        disable_fov_changes = main_config.getBoolean("disable_fov_change_disabled", CATEGORY_DISABLE, false, "Disable the FOV changes of the vampire speed buffs");
 
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
