@@ -5,7 +5,6 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -15,9 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Renders an overlay over the entities face
@@ -28,7 +25,6 @@ import java.util.UUID;
 public class LayerPlayerFaceOverlay<T extends EntityCreature & IPlayerFace> implements LayerRenderer<T> {
 
     private final RenderBiped<T> renderBiped;
-    private static final Map<UUID, NetworkPlayerInfo> playerInfoMap = new HashMap<>();
 
     public LayerPlayerFaceOverlay(RenderBiped<T> renderBiped) {
         this.renderBiped = renderBiped;
