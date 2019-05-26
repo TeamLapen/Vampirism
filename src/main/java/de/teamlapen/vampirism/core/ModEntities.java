@@ -2,12 +2,14 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
+import de.teamlapen.vampirism.entity.converted.EntityConvertedHorse;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedSheep;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
 import de.teamlapen.vampirism.entity.hunter.*;
@@ -15,6 +17,7 @@ import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionSaveable
 import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
@@ -33,12 +36,13 @@ import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Handles all entity registrations and reference.
@@ -71,6 +75,7 @@ public class ModEntities {
     public static final String VILLAGER_ANGRY = "villager_angry";
     public static final String VILLAGER_CONVERTED = "villager_converted";
     public static final String HUNTER_TRAINER_DUMMY = "hunter_trainer_dummy";
+    public static final String HORSE_CONVERTED = "horse_converted";
 
 
     /**
@@ -98,7 +103,7 @@ public class ModEntities {
         registry.addConvertible(EntityCow.class, String.format(base, "cow"));
         registry.addConvertible(EntityPig.class, String.format(base, "pig"));
         registry.addConvertible(EntityOcelot.class, String.format(base, "cat"));
-        registry.addConvertible(EntityHorse.class, String.format(base, "horse"));
+        registry.addConvertible(EntityHorse.class, String.format(base, "horse"), new EntityConvertedHorse.ConvertingHandler());
         registry.addConvertible(EntityPolarBear.class, String.format(base, "polarbear"));
         registry.addConvertible(EntityRabbit.class, String.format(base, "rabbit"));
         registry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingHandler());
@@ -138,6 +143,7 @@ public class ModEntities {
         registry.register(prepareEntityEntry(EntityHunterFactionVillager.class, VILLAGER_HUNTER_FACTION, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
         registry.register(prepareEntityEntry(EntityVampireFactionVillager.class, VILLAGER_VAMPIRE_FACTION, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
         registry.register(prepareEntityEntry(EntityHunterTrainerDummy.class, HUNTER_TRAINER_DUMMY, "hunter_trainer_dummy", EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
+        registry.register(prepareEntityEntry(EntityConvertedHorse.class, HORSE_CONVERTED, "converted.horse", EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
     }
 
     static Biome[] getZombieBiomes() {
