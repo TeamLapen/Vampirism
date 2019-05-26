@@ -48,7 +48,7 @@ public class BalanceHunterSkills extends BalanceValues {
      * @param directory
      */
     public BalanceHunterSkills(File directory) {
-        super("hunter_skills", directory);
+        super("hunter_player_skills", directory);
     }
 
     @Override
