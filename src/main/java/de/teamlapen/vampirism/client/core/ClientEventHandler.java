@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
 import de.teamlapen.vampirism.blocks.BlockBloodContainer;
@@ -14,7 +15,10 @@ import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.player.LevelAttributeModifier;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -24,8 +28,12 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.RegistrySimple;
+import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.Attributes;
@@ -218,6 +226,18 @@ public class ClientEventHandler {
         } catch (Exception e) {
             VampirismMod.log.e("ModelBake", e, "Failed to load fluid models for weapon crafting table");
 
+        }
+    }
+
+    @SubscribeEvent
+    public void onFovOffsetUpdate(FOVUpdateEvent event) {
+        if (Configs.disable_fov_changes && Helper.isVampire(event.getEntity())) {
+            IAttributeInstance speed = event.getEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED);
+            AttributeModifier vampirespeed = speed.getModifier(LevelAttributeModifier.getUUID(SharedMonsterAttributes.MOVEMENT_SPEED));
+            if (vampirespeed == null)
+                return;
+            //removes speed buffs, add speed buffs without the vampire speed
+            event.setNewfov((float) (((double) (event.getFov()) * ((vampirespeed.getAmount() + 1) * (double) (event.getEntity().capabilities.getWalkSpeed()) + speed.getAttributeValue())) / ((vampirespeed.getAmount() + 1) * ((double) (event.getEntity().capabilities.getWalkSpeed()) + speed.getAttributeValue()))));
         }
     }
 }
