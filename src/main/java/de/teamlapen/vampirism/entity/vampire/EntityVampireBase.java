@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
+import de.teamlapen.vampirism.api.items.IItemWithTier.TIER;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
@@ -14,9 +15,11 @@ import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import de.teamlapen.vampirism.entity.EntitySoulOrb;
 import de.teamlapen.vampirism.entity.EntityVampirism;
+import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,6 +33,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -102,6 +106,17 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
             int amt = VampirePlayer.get((EntityPlayer) entity).onBite(this);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
             return true;
+        }
+        for (ItemStack e : entity.getArmorInventoryList()) {
+            if (e != null && e.getItem() instanceof ItemHunterCoat) {
+                int j = 1;
+                if (((ItemHunterCoat) e.getItem()).getTier(e).equals(TIER.ENHANCED))
+                    j = 2;
+                else if (((ItemHunterCoat) e.getItem()).getTier(e).equals(TIER.ULTIMATE))
+                    j = 3;
+                if (getRNG().nextInt((4 - j) * 2) == 0)
+                    addPotionEffect(new PotionEffect(ModPotions.poison, (int) (20 * Math.sqrt(j)), j));
+            }
         }
         return super.attackEntityAsMob(entity);
     }
