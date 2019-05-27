@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,9 +36,10 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Random;
+
+import javax.annotation.Nonnull;
 
 /**
  * Vampire Villager
@@ -76,12 +78,12 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
 
     @Override
     public MerchantRecipeList getRecipes(EntityPlayer player) {
-        MerchantRecipeList list = super.getRecipes(player);
         if (!addedAdditionalRecipes) {
-            addAdditionalRecipes(list);
-            Collections.shuffle(list);
+            addAdditionalRecipes(this.buyingList);
+            Collections.shuffle(this.buyingList);
             addedAdditionalRecipes = true;
         }
+        MerchantRecipeList list = super.getRecipes(player);
         return list;
     }
 
