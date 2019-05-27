@@ -69,6 +69,7 @@ public class TileTotem extends TileEntity implements ITickable {
     private final static String TAG = "TileTotem";
     private final static int DURATION_PHASE_1 = 60;
     private final Random rng = new Random();
+
     /**
      * Store a dimension -> blockpos -> BoundingBox map of villages controlled by vampires. Added/Updated on update package. Removed on invalidate.
      * <p>
@@ -211,14 +212,16 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     /**
-     * Force change to the given faction.
+     * Change to the given faction if currently neutral
      * Is performed in the next update tick.
      * Any ongoing capture is canceled
      *
      * @param newFaction
      * @param checkForHunterTrainer if set, we will default to hunter faction if there is a hunter trainer in the village
      */
-    public void forceChangeFaction(IPlayableFaction newFaction, boolean checkForHunterTrainer) {
+    public void setDefaultFaction(IPlayableFaction newFaction, boolean checkForHunterTrainer) {
+        if (controllingFaction != null || capturingFaction != null)
+            return; //Don't change already captured/attacked village
         this.forced_faction = newFaction;
         this.forced_faction_check_trainer = checkForHunterTrainer;
         this.forced_faction_timer = 20;
@@ -704,10 +707,9 @@ public class TileTotem extends TileEntity implements ITickable {
             @Nullable VampirismVillage village = getVillage();
             boolean insideVillageNew = village != null;
             if (insideVillageNew != insideVillage) {
-                //TODO
                 if (!insideVillageNew) {
                     this.capturingFaction = null;
-                    this.controllingFaction = null;
+                    //this.controllingFaction = null; Don't reset controlling faction. Maybe village is just temporarily unavailable #417
                     this.capture_timer = 0;
                     this.markDirty();
                 }

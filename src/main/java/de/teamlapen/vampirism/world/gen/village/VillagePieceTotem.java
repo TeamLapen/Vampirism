@@ -79,7 +79,7 @@ public class VillagePieceTotem extends StructureVillagePieces.Village {
             if (t instanceof TileTotem) {
                 IPlayableFaction[] factions = VampirismAPI.factionRegistry().getPlayableFactions();
                 IPlayableFaction f = factions[randomIn.nextInt(factions.length)];
-                ((TileTotem) t).forceChangeFaction(forceHunter ? VReference.HUNTER_FACTION : f, true);
+                ((TileTotem) t).setDefaultFaction(forceHunter ? VReference.HUNTER_FACTION : f, true);
             }
         }
 
