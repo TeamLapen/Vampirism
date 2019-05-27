@@ -42,7 +42,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,7 +55,7 @@ public class RenderHandler {
     private final Minecraft mc;
     private final int BLOOD_VISION_FADE_TICKS = 80;
 
-    private final int VAMPIRE_BIOME_FADE_TICKS = 160;
+    private final int VAMPIRE_BIOME_FADE_TICKS = 60;
     private final String TAG = "RenderHandler";
     private final List<EntityLivingBase> renderedEntitiesWithBlood = Lists.newLinkedList();
     private final List<EntityLivingBase> renderedEntitiesWithoutBlood = Lists.newLinkedList();
@@ -170,16 +169,6 @@ public class RenderHandler {
 
     }
 
-    @SubscribeEvent
-    public void onFogDensity(EntityViewRenderEvent.FogDensity event) {
-        if (event.getEntity() instanceof EntityPlayer) {
-            if (vampireBiomeTicks > 10 || bloodVisionTicks > 0) {
-                event.setDensity(1.0F);
-                event.setCanceled(true);
-            }
-        }
-
-    }
 
     @SubscribeEvent
     public void onRenderHand(RenderHandEvent event) {
@@ -541,23 +530,34 @@ public class RenderHandler {
         return flag;
     }
 
+    @SubscribeEvent
+    public void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
+        if (vampireBiomeTicks == 0) return;
+        float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) vampireBiomeTicks / 1.5f;
+        f *= vampireBiomeFogDistanceMultiplier;
+        float fogStart = Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
+        float fogEnd = Math.min(event.getFarPlaneDistance(), 50 * f);
+        GlStateManager.setFogStart(event.getFogMode() == -1 ? 0 : fogStart);
+        GlStateManager.setFogEnd(fogEnd);
+    }
+
     private void renderVampireBiomeFog(int ticks) {
 
-        float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) ticks / 1.5F;
-        f *= vampireBiomeFogDistanceMultiplier;
-        GlStateManager.pushMatrix();
-        boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
-        if (!fog)
-            GlStateManager.enableFog();
-        GlStateManager.setFog(GlStateManager.FogMode.LINEAR);
-        GlStateManager.setFogStart(6.0F * f);
-        GlStateManager.setFogEnd(75F * f);
-        GlStateManager.glNormal3f(0F, -1F, 0F);
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        GlStateManager.setFogDensity(1);
-        if (!fog)
-            GlStateManager.disableFog();
-        GlStateManager.popMatrix();
+//        float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) ticks / 1.5F;
+//        f *= vampireBiomeFogDistanceMultiplier;
+//        GlStateManager.pushMatrix();
+//        boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
+//        if (!fog)
+//            GlStateManager.enableFog();
+//        GlStateManager.setFog(GlStateManager.FogMode.LINEAR);
+//        GlStateManager.setFogStart(Math.min(6.0F * f,mc.gameSettings.renderDistanceChunks * 16  * 0.75f));
+//        GlStateManager.setFogEnd(Math.min(75F * f,mc.gameSettings.renderDistanceChunks * 16 ));
+//        GlStateManager.glNormal3f(0F, -1F, 0F);
+//        GlStateManager.color(1F, 1F, 1F, 1F);
+//        GlStateManager.setFogDensity(1);
+//        if (!fog)
+//            GlStateManager.disableFog();
+//        GlStateManager.popMatrix();
 
     }
 
