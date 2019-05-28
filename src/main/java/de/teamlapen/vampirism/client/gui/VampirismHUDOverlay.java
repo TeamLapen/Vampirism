@@ -20,7 +20,6 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.HalloweenSpecial;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -46,7 +45,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -360,7 +358,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             if (effect == null || effect.getAmplifier() < 5) {
                 screenColor = 0xfffff755;
                 fullScreen = false;
-                if (vampire.getRepresentingPlayer().capabilities.isCreativeMode) {
+                if (vampire.getRepresentingPlayer().capabilities.isCreativeMode || (effect != null && effect.getAmplifier() >= 4)) {
                     screenPercentage = Math.min(20, screenPercentage);
                 }
             } else {
