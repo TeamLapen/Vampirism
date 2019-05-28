@@ -46,7 +46,6 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
 
     private EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
-    private boolean addedAdditionalRecipes = false;
     private int bloodTimer = 0;
 
     public EntityConvertedVillager(World worldIn) {
@@ -74,16 +73,6 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         bloodTimer = -1200 - rand.nextInt(1200);
     }
 
-    @Override
-    public MerchantRecipeList getRecipes(EntityPlayer player) {
-        MerchantRecipeList list = super.getRecipes(player);
-        if (!addedAdditionalRecipes) {
-            addAdditionalRecipes(list);
-            Collections.shuffle(list);
-            addedAdditionalRecipes = true;
-        }
-        return list;
-    }
 
     @Override
     public EntityLivingBase getRepresentingEntity() {
@@ -133,9 +122,6 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
-        if (compound.hasKey("addedAdditionalRecipes")) {
-            addedAdditionalRecipes = compound.getBoolean("addedAdditionalRecipes");
-        }
     }
 
     @Override
@@ -153,7 +139,6 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
-        compound.setBoolean("addedAdditionalRecipes", addedAdditionalRecipes);
     }
 
     @Override
@@ -211,6 +196,11 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
             EntityConvertedVillager converted = new EntityConvertedVillager(entity.world);
             converted.readFromNBT(nbt);
             converted.setUniqueId(MathHelper.getRandomUUID(converted.rand));
+            if (converted.buyingList == null) {
+                converted.populateBuyingList();
+            }
+            converted.addAdditionalRecipes(converted.buyingList);
+            Collections.shuffle(converted.buyingList);
             return converted;
         }
     }
