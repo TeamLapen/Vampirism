@@ -2,14 +2,11 @@ package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -23,6 +20,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.UUID;
@@ -45,10 +44,12 @@ public abstract class VampirismHunterArmor extends ItemArmor implements ISpecial
         oldRegisteredName = baseRegName.replaceAll("_", "") + "_" + equipmentSlotIn.getName();
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        if (Helper.isVampire(Minecraft.getMinecraft().player)) {
+        EntityPlayer sp = VampirismMod.proxy.getSPPlayer();
+        if (sp != null && Helper.isVampire(sp)) {
             tooltip.add(TextFormatting.RED + UtilLib.translate("text.vampirism.poisonous_to_vampires"));
         }
     }

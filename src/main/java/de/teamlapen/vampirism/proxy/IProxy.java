@@ -30,4 +30,11 @@ public interface IProxy extends IInitListener {
 
     @Nullable
     Entity getMouseOverEntity();
+
+
+    /**
+     * @return The user player instance on client side null on server side
+     */
+    @Nullable
+    EntityPlayer getSPPlayer();
 }

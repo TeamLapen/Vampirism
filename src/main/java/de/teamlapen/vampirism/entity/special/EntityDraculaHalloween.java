@@ -90,7 +90,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
         }
         if (this.world.isRemote) {
             EntityLivingBase owner = getOwner();
-            if (owner != null && !isInvisible() && !VampirismMod.proxy.isPlayerThePlayer((EntityPlayer) owner)) {
+            if (owner != null && !isInvisible() && !((EntityPlayer) owner).isUser()) {
                 this.setInvisible(true);
                 VampirismMod.log.t("Setting invisible on other client");
             }

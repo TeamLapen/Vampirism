@@ -121,4 +121,9 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
+    @Nullable
+    @Override
+    public EntityPlayer getSPPlayer() {
+        return Minecraft.getMinecraft().player;
+    }
 }

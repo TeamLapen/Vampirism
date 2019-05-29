@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.proxy;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
+
+import javax.annotation.Nullable;
 
 /**
  * Abstract proxy base for both client and server.
@@ -13,5 +16,9 @@ public abstract class CommonProxy implements IProxy {
     public void onInitStep(Step step, FMLStateEvent event) {
     }
 
-
+    @Nullable
+    @Override
+    public EntityPlayer getSPPlayer() {
+        return null;
+    }
 }
