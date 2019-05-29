@@ -28,6 +28,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -196,7 +197,9 @@ public class InputEventPacket implements IMessage {
 
                 FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
                 VampirismMod.log.d(TAG, "Player %s left faction", player);
-                player.attackEntityFrom(DamageSource.MAGIC, 1000);
+                if (!FMLCommonHandler.instance().getMinecraftServerInstance().isHardcore()) {
+                    player.attackEntityFrom(DamageSource.MAGIC, 1000);
+                }
 
             } else if (message.action.equals(WAKEUP)) {
                 VampirePlayer.get(player).wakeUpPlayer(false, true, true);

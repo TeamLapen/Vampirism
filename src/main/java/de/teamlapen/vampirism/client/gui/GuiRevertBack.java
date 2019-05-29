@@ -3,8 +3,10 @@ package de.teamlapen.vampirism.client.gui;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.InputEventPacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,8 +14,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiRevertBack extends GuiYesNo {
 
-    public GuiRevertBack() {
-        super(null, UtilLib.translate("gui.vampirism.revertback.head"), UtilLib.translate("gui.vampirism.revertback.desc"), 0);
+    private static String getDescription() {
+        String s = UtilLib.translate("gui.vampirism.revertback.desc");
+        World w = Minecraft.getMinecraft().world;
+        if (w != null && w.getWorldInfo().isHardcoreModeEnabled()) {
+            s += " You won't die in hardcore mode.";
+        }
+        return s;
     }
 
     @Override
@@ -25,4 +32,7 @@ public class GuiRevertBack extends GuiYesNo {
         this.mc.displayGuiScreen(null);
     }
 
+    public GuiRevertBack() {
+        super(null, UtilLib.translate("gui.vampirism.revertback.head"), getDescription(), 0);
+    }
 }
