@@ -613,6 +613,10 @@ public class TestCommand extends BasicCommand {
         return "/" + getName() + " <sub>";
     }
 
+    @Override
+    public int getRequiredPermissionLevel() {
+        return PERMISSION_LEVEL_CHEAT;
+    }
 
     public abstract static class SubCommand extends CommandBase {
 

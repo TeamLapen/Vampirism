@@ -11,10 +11,10 @@ import java.util.List;
  */
 public abstract class BasicCommand extends CommandTreeBase {
 
-    protected final int PERMISSION_LEVEL_ALL = 0;
-    protected final int PERMISSION_LEVEL_CHEAT = 2;
-    protected final int PERMISSION_LEVEL_ADMIN = 3;
-    protected final int PERMISSION_LEVEL_FULL = 4;
+    protected final static int PERMISSION_LEVEL_ALL = 0;
+    protected final static int PERMISSION_LEVEL_CHEAT = 2;
+    protected final static int PERMISSION_LEVEL_ADMIN = 3;
+    protected final static int PERMISSION_LEVEL_FULL = 4;
 
     protected final List<String> aliases = Lists.newArrayList();
 
@@ -27,8 +27,4 @@ public abstract class BasicCommand extends CommandTreeBase {
     }
 
 
-    @Override
-    public int getRequiredPermissionLevel() {
-        return 0;
-    }
 }

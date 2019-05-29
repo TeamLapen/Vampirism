@@ -229,7 +229,7 @@ public class VampirismCommand extends BasicCommand {
                 return getName() + " <id [0-" + (REFERENCE.EYE_TYPE_COUNT - 1) + "]> ";
             }
         });
-        addSubcommand(new SubCommand(0) {
+        addSubcommand(new SubCommand(PERMISSION_LEVEL_ALL) {
 
 
             @Override
@@ -260,7 +260,7 @@ public class VampirismCommand extends BasicCommand {
             }
         });
 
-        addSubcommand(new SubCommand(0) {
+        addSubcommand(new SubCommand(PERMISSION_LEVEL_ALL) {
 
 
             @Override
@@ -340,7 +340,7 @@ public class VampirismCommand extends BasicCommand {
                 return getName() + " <maxRadius in chunks>";
             }
         });
-        addSubcommand(new SubCommand(0) {
+        addSubcommand(new SubCommand(PERMISSION_LEVEL_ALL) {
 
 
             @Override
@@ -480,6 +480,15 @@ public class VampirismCommand extends BasicCommand {
         return "/vampirism <sub>";
     }
 
+    @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+        return true;
+    }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return PERMISSION_LEVEL_ALL;
+    }
 
     public abstract static class SubCommand extends CommandBase {
         private final int perm;
@@ -490,7 +499,7 @@ public class VampirismCommand extends BasicCommand {
 
         @Override
         public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-            return VampirismMod.inDev || sender.canUseCommand(getRequiredPermissionLevel(), "vampirism." + getName());
+            return perm == PERMISSION_LEVEL_ALL || sender.canUseCommand(getRequiredPermissionLevel(), "vampirism." + getName());
         }
 
         @Override
