@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.util.Helper;
 
 import net.minecraft.entity.EntityCreature;
@@ -24,7 +25,7 @@ import net.minecraft.world.World;
 public class EntityConvertedHorse extends EntityHorse implements IConvertedCreature<EntityHorse> {
 
     private EnumStrength garlicCache = EnumStrength.NONE;
-    private int bloodTimer = 0;
+    private boolean sundamageCache;
 
     public EntityConvertedHorse(World world) {
         super(world);
@@ -38,7 +39,6 @@ public class EntityConvertedHorse extends EntityHorse implements IConvertedCreat
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
         this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
-        bloodTimer = -1200 - rand.nextInt(1200);
     }
 
     @Override
@@ -51,26 +51,25 @@ public class EntityConvertedHorse extends EntityHorse implements IConvertedCreat
 
     @Override
     public boolean isGettingSundamage(boolean forceRefresh) {
-        // TODO Auto-generated method stub
-        return false;
+        if (!forceRefresh)
+            return sundamageCache;
+        return (sundamageCache = Helper.gettingSundamge(this));
     }
 
     @Override
     public boolean isIgnoringSundamage() {
-        // TODO Auto-generated method stub
-        return false;
+        return this.isPotionActive(ModPotions.sunscreen);
     }
 
     @Override
     public boolean useBlood(int amt, boolean allowPartial) {
         this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, amt * 20));
-        bloodTimer = 0;
         return true;
     }
 
     @Override
     public boolean wantsBlood() {
-        return bloodTimer > 0;
+        return false;
     }
 
     @Override
