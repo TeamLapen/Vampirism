@@ -2,6 +2,9 @@ package de.teamlapen.vampirism.blocks;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraftforge.common.ToolType;
+
+import javax.annotation.Nullable;
 
 /**
  * Part of the Altar of Infusion structure
@@ -10,9 +13,18 @@ public class BlockAltarTip extends VampirismBlock {
     private final static String name = "altar_tip";
 
     public BlockAltarTip() {
-        super(name, Material.IRON);
-        setHarvestLevel("pickaxe", 1);
-        this.setHardness(1.0F);
+        super(name, Properties.create(Material.IRON).hardnessAndResistance(1f));
+    }
+
+    @Override
+    public int getHarvestLevel(IBlockState p_getHarvestLevel_1_) {
+        return 1;
+    }
+
+    @Nullable
+    @Override
+    public ToolType getHarvestTool(IBlockState p_getHarvestTool_1_) {
+        return ToolType.PICKAXE;
     }
 
     @Override
@@ -20,10 +32,6 @@ public class BlockAltarTip extends VampirismBlock {
         return false;
     }
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
 
 
 }

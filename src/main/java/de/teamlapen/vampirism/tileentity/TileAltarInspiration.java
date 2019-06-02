@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -19,6 +18,10 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -33,6 +36,20 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
     private final int RITUAL_TIME = 60;
     private int ritualTicksLeft = 0;
     private EntityPlayer ritualPlayer;
+
+    public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
+
+    @Nonnull
+    @Override
+    public IModelData getModelData() {
+        FluidStack fluid = tank.getFluid();
+        int l = 0;
+        if (fluid != null) {
+            float i = (fluid.amount / (float) TileAltarInspiration.CAPACITY * 10);
+            l = (i > 0 && i < 1) ? 1 : (int) i;
+        }
+        return new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).build(); //TODO 1.13 is it good to recreate is all the time
+    }
 
     public TileAltarInspiration() {
         this.tank = new InternalTank(CAPACITY);
@@ -53,13 +70,20 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
         return write(new NBTTagCompound());
     }
 
+    @Override
+    public void markDirty() {
+        ModelDataManager.requestModelDataRefresh(this);
+        world.markBlockRangeForRenderUpdate(getPos(), getPos());
+        super.markDirty();
+    }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         FluidStack old = tank.getFluid();
         this.read(pkt.getNbtCompound());
         if (old != null && !old.isFluidStackIdentical(tank.getFluid()) || old == null && tank.getFluid() != null) {
-            this.world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+            markDirty(); //TODO 1.13 do we even need this
         }
     }
 
@@ -82,16 +106,14 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
             VampLib.proxy.getParticleHandler().spawnParticles(p.world, ModParticles.FLYING_BLOOD_ENTITY, this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5, 40, 0.1F, p.getRNG(), player.getRepresentingPlayer(), false);
         } else {
             ((InternalTank) tank).doDrain(neededBlood, true);
-            IBlockState state = world.getBlockState(getPos());
-
-            world.notifyBlockUpdate(pos, state, state, 3);
+            markDirty();
         }
         ritualPlayer = p;
         ritualTicksLeft = RITUAL_TIME;
     }
 
     @Override
-    public void update() {
+    public void tick() {
         if (ritualTicksLeft == 0) return;
 
         if (!world.isRemote) {
@@ -113,8 +135,6 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
                     VampirePlayer.get(ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false);
                     markDirty();
-                    IBlockState state = world.getBlockState(getPos());
-                    this.world.notifyBlockUpdate(pos, state, state, 3);
                     break;
                 default:
                     break;

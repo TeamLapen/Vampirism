@@ -2,57 +2,55 @@ package de.teamlapen.vampirism.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.EnumProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * Pillar for Altar of Infusion structure
  */
 public class BlockAltarPillar extends VampirismBlock {
-    public final static PropertyEnum<EnumPillarType> typeProperty = PropertyEnum.create("type", EnumPillarType.class);
     private final static String name = "altar_pillar";
+    private final static EnumProperty<EnumPillarType> TYPE_PROPERTY = EnumProperty.create("type", EnumPillarType.class);
 
     public BlockAltarPillar() {
-        super(name, Material.ROCK);
-        this.setHarvestLevel("pickaxe", 0);
-        this.setHardness(0.9F);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(typeProperty, EnumPillarType.NONE));
+        super(name, Properties.create(Material.ROCK).hardnessAndResistance(0.9f));
+        this.setDefaultState(this.stateContainer.getBaseState().with(TYPE_PROPERTY, EnumPillarType.NONE));
+
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockReader world, BlockPos pos, IBlockState state, int fortune) {
-        List<ItemStack> list = new ArrayList<>();
-        list.add(new ItemStack(Item.getItemFromBlock(this), 1));
-        EnumPillarType type = state.getValue(typeProperty);
+    public void getDrops(IBlockState state, NonNullList<ItemStack> drops, World world, BlockPos pos, int fortune) {
+        drops.add(new ItemStack(this.asItem(), 1));
+        EnumPillarType type = state.get(TYPE_PROPERTY);
         if (type != EnumPillarType.NONE) {
-            list.add(new ItemStack(Item.getItemFromBlock(type.fillerBlock), 1));
+            drops.add(new ItemStack(type.fillerBlock.asItem(), 1));
         }
-        return list;
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(typeProperty).meta;
+    public int getHarvestLevel(IBlockState p_getHarvestLevel_1_) {
+        return 0;
     }
 
+    @Nullable
     @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(typeProperty, EnumPillarType.byMetadata(meta));
+    public ToolType getHarvestTool(IBlockState p_getHarvestTool_1_) {
+        return ToolType.PICKAXE;
     }
 
     @Override
@@ -61,31 +59,25 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        EnumPillarType type = state.getValue(typeProperty);
+    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer playerIn, EnumHand hand, EnumFacing p_196250_6_, float hitX, float hitY, float hitZ) {
+        EnumPillarType type = state.get(TYPE_PROPERTY);
         ItemStack heldItem = playerIn.getHeldItem(hand);
         if (type != EnumPillarType.NONE && heldItem.isEmpty()) {
-            if (!playerIn.capabilities.isCreativeMode) {
+            if (!playerIn.isCreative()) {
                 playerIn.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, new ItemStack(Item.getItemFromBlock(type.fillerBlock)));
             }
 
-            worldIn.setBlockState(pos, state.withProperty(typeProperty, EnumPillarType.NONE));
+            worldIn.setBlockState(pos, state.with(TYPE_PROPERTY, EnumPillarType.NONE));
             return true;
         }
         if (type == EnumPillarType.NONE && !heldItem.isEmpty()) {
-            ItemStack stack = heldItem;
             for (EnumPillarType t : EnumPillarType.values()) {
-                if (stack.getItem().equals(Item.getItemFromBlock(t.fillerBlock))) {
-                    if (!playerIn.capabilities.isCreativeMode) {
-                        stack.shrink(1);
+                if (heldItem.getItem().equals(t.fillerBlock.asItem())) {
+                    if (!playerIn.isCreative()) {
+                        heldItem.shrink(1);
                     }
 
-                    worldIn.setBlockState(pos, state.withProperty(typeProperty, t));
+                    worldIn.setBlockState(pos, state.with(TYPE_PROPERTY, t));
                     return true;
                 }
             }
@@ -94,27 +86,14 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, typeProperty);
+    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> p_206840_1_) {
+        p_206840_1_.add(TYPE_PROPERTY);
     }
 
+
     public enum EnumPillarType implements IStringSerializable {
-        NONE(0, "none", 0, Blocks.AIR), STONE(1, "stone", 1, Blocks.STONEBRICK), IRON(2, "iron", 2, Blocks.IRON_BLOCK), GOLD(3, "gold", 3, Blocks.GOLD_BLOCK), BONE(4, "bone", 1.5F, Blocks.BONE_BLOCK);
-        private static final EnumPillarType[] METADATA_LOOKUP = new EnumPillarType[values().length];
+        NONE(0, "none", 0, Blocks.AIR), STONE(1, "stone", 1, Blocks.STONE_BRICKS), IRON(2, "iron", 2, Blocks.IRON_BLOCK), GOLD(3, "gold", 3, Blocks.GOLD_BLOCK), BONE(4, "bone", 1.5F, Blocks.BONE_BLOCK);
 
-        static {
-            for (EnumPillarType type : values()) {
-                METADATA_LOOKUP[type.meta] = type;
-            }
-        }
-
-        public static EnumPillarType byMetadata(int metadata) {
-            if (metadata < 0 || metadata >= METADATA_LOOKUP.length) {
-                metadata = 0;
-            }
-
-            return METADATA_LOOKUP[metadata];
-        }
 
         public final String name;
         public final Block fillerBlock;

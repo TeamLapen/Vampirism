@@ -3,11 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import de.teamlapen.vampirism.world.VampirismWorldData;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,41 +15,70 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Altar of inspiration used for vampire levels 1-4
  */
 public class BlockAltarInspiration extends VampirismBlockContainer {
     public final static String regName = "altar_inspiration";
-    public static final IUnlistedProperty<Integer> FLUID_LEVEL = new Properties.PropertyAdapter<>(PropertyInteger.create("fluidLevel", 0, 10));
 
     public BlockAltarInspiration() {
-        super(regName, Material.IRON);
-        this.setHarvestLevel("pickaxe", 1);
-        this.setHardness(2F);
+        super(regName, Properties.create(Material.IRON).hardnessAndResistance(2f));
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        super.breakBlock(worldIn, pos, state);
-        VampirismWorldData.get(worldIn).onAltarInspirationDestroyed(pos);
-
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(IBlockReader worldIn) {
         return new TileAltarInspiration();
+    }
+
+    @Override
+    public int getHarvestLevel(IBlockState state) {
+        return 1;
+    }
+
+    @Nullable
+    @Override
+    public ToolType getHarvestTool(IBlockState state) {
+        return ToolType.PICKAXE;
+    }
+
+    @Override
+    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        ItemStack stack = player.getHeldItem(hand);
+        if (!stack.isEmpty() && !worldIn.isRemote) {
+            LazyOptional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
+            if (opt.isPresent()) {
+                TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
+                if (!player.isSneaking() && tileEntity != null) {
+                    tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map((handler) -> {
+                        FluidActionResult result = FluidUtil.tryEmptyContainer(stack, handler, Integer.MAX_VALUE, player, true);
+                        if (result.isSuccess()) {
+                            player.setHeldItem(hand, result.getResult());
+                            return true;
+                        }
+                        return false;
+                    });
+
+                }
+                tileEntity.markDirty();
+                return true;
+            }
+        }
+        if (stack.isEmpty()) {
+            TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
+            tileEntity.startRitual(player);
+        }
+
+        return true;
     }
 
     @Override
@@ -61,20 +86,6 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
         return BlockRenderLayer.TRANSLUCENT;
     }
 
-    @Override
-    public IBlockState getExtendedState(IBlockState state, IBlockReader world, BlockPos pos) {
-        IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
-        TileAltarInspiration tile = (TileAltarInspiration) world.getTileEntity(pos);
-        if (tile != null) {
-            FluidStack fluid = tile.getTankInfo().fluid;
-            if (fluid != null) {
-                float i = (fluid.amount / (float) TileAltarInspiration.CAPACITY * 10);
-                int l = (i > 0 && i < 1) ? 1 : (int) i;
-                return extendedBlockState.withProperty(FLUID_LEVEL, l);
-            }
-        }
-        return extendedBlockState.withProperty(FLUID_LEVEL, 0);
-    }
 
     @Nonnull
     @Override
@@ -88,43 +99,9 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
+    public void onReplaced(IBlockState state, World worldIn, BlockPos pos, IBlockState newState, boolean isMoving) {
+        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        VampirismWorldData.get(worldIn).onAltarInspirationDestroyed(pos);
     }
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack stack = playerIn.getHeldItem(hand);
-        if (!stack.isEmpty() && !worldIn.isRemote) {
-            if (FluidLib.hasFluidItemCap(stack)) {
-                TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
-                if (!playerIn.isSneaking()) {
-                    FluidActionResult result = FluidUtil.tryEmptyContainer(stack, tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), Integer.MAX_VALUE, playerIn, true);
-                    if (result.isSuccess()) {
-                        playerIn.setHeldItem(hand, result.getResult());
-                    }
-                }
-                worldIn.notifyBlockUpdate(pos, state, state, 3);
-                tileEntity.markDirty();
-                return true;
-            }
-        }
-        if (stack.isEmpty()) {
-            TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
-            tileEntity.startRitual(playerIn);
-        }
-
-        return true;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockReader blockAccess, BlockPos pos, EnumFacing side) {
-        return Block.shouldSideBeRendered(blockState, blockAccess, pos, side);
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new ExtendedBlockState(this, new IProperty[]{}, new IUnlistedProperty[]{FLUID_LEVEL});
-    }
 }

@@ -22,8 +22,7 @@ public class BlockBloodPotionTable extends VampirismBlock {
 
 
     public BlockBloodPotionTable() {
-        super(regName, Material.IRON);
-        setHardness(1.0F);
+        super(regName, Properties.create(Material.IRON).hardnessAndResistance(1f));
     }
 
     @Override
@@ -31,10 +30,7 @@ public class BlockBloodPotionTable extends VampirismBlock {
         return false;
     }
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
+
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -53,9 +49,7 @@ public class BlockBloodPotionTable extends VampirismBlock {
     private boolean canUse(EntityPlayer player) {
         IPlayableFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
         if (faction != null && faction.equals(VReference.HUNTER_FACTION)) {
-            if (faction.getPlayerCapability(player).getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_table)) {
-                return true;
-            }
+            return faction.getPlayerCapability(player).getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_table);
         }
         return false;
     }

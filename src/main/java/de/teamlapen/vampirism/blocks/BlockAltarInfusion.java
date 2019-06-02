@@ -15,8 +15,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -26,21 +29,52 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
     private final static String name = "altar_infusion";
 
     public BlockAltarInfusion() {
-        super(name, Material.ROCK);
-        this.setHardness(5.0F);
-        this.setHarvestLevel("pickaxe", 2);
+        super(name, Properties.create(Material.ROCK).hardnessAndResistance(5));
     }
 
+    @Nullable
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        dropItems(worldIn, pos);
-        super.breakBlock(worldIn, pos, state);
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(IBlockReader world) {
         return new TileAltarInfusion();
     }
+
+    @Override
+    public int getHarvestLevel(IBlockState state) {
+        return 2;
+    }
+
+    @Nullable
+    @Override
+    public ToolType getHarvestTool(IBlockState state) {
+        return ToolType.PICKAXE;
+    }
+
+    @Override
+    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        ItemStack heldItem = player.getHeldItem(hand);
+        TileAltarInfusion te = (TileAltarInfusion) worldIn.getTileEntity(pos);
+        //If empty hand and can start -> Start
+        if (worldIn.isRemote || te == null) return true;
+        int result = te.canActivate(player, true);
+        if (heldItem.isEmpty()) {
+            if (result == 1) {
+                te.startRitual(player);
+                return true;
+            }
+
+        }
+        //If non empty hand or missing items -> open GUI
+        else if (!heldItem.isEmpty() || result == -4) {
+            if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING) {
+                player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
+                return true;
+            }
+            player.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            return true;
+        }
+        return true;
+    }
+
 
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
@@ -54,36 +88,12 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
+    public void onReplaced(IBlockState state, World worldIn, BlockPos pos, IBlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            dropItems(worldIn, pos);
 
-
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing faing, float hitX, float hitY, float hitZ) {
-        ItemStack heldItem = playerIn.getHeldItem(hand);
-        TileAltarInfusion te = (TileAltarInfusion) worldIn.getTileEntity(pos);
-        //If empty hand and can start -> Start
-        if (worldIn.isRemote) return true;
-        int result = te.canActivate(playerIn, true);
-        if (heldItem.isEmpty()) {
-            VampirismMod.log.d("AltarInfusion", "Trying to activate. Result: %s", result);
-            if (result == 1) {
-                te.startRitual(playerIn);
-                return true;
-            }
-
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
-        //If non empty hand or missing items -> open GUI
-        else if (!heldItem.isEmpty() || result == -4) {
-            if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING) {
-                playerIn.sendMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
-                return true;
-            }
-            playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());
-            return true;
-        }
-        return true;
     }
 
     private void dropItems(World world, BlockPos pos) {
@@ -105,8 +115,8 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
 
                 EntityItem entityItem = new EntityItem(world, pos.getX() + rx, pos.getY() + ry, pos.getZ() + rz, item.copy());
 
-                if (item.hasTagCompound()) {
-                    entityItem.getItem().setTagCompound(item.getTagCompound().copy());
+                if (item.hasTag()) {
+                    entityItem.getItem().setTag(item.getTag().copy());
                 }
 
                 float factor = 0.05F;
