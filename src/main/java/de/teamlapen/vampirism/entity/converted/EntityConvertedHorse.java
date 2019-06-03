@@ -6,7 +6,9 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -75,6 +77,25 @@ public class EntityConvertedHorse extends EntityHorse implements IConvertedCreat
     @Override
     public EntityLivingBase getRepresentingEntity() {
         return this;
+    }
+
+    @Override
+    public void onLivingUpdate() {
+        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
+            isGettingGarlicDamage(true);
+        }
+        if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
+            isGettingSundamage(true);
+        }
+        if (!world.isRemote) {
+            if (isGettingSundamage() && ticksExisted % 40 == 11) {
+                this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 42));
+            }
+            if (isGettingGarlicDamage() != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(), this.ticksExisted);
+            }
+        }
+        super.onLivingUpdate();
     }
 
     @Override
