@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.event.ModEventFactory;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -24,6 +25,7 @@ import de.teamlapen.vampirism.entity.vampire.EntityVampireFactionVillager;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
@@ -53,9 +55,10 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
 
 
 /**
@@ -625,11 +628,12 @@ public class TileTotem extends TileEntity implements ITickable {
                                         spawnVillagerInVillage(new EntityHunterFactionVillager(this.world), seed, true);
                                     } else if (controllingFaction.equals(VReference.VAMPIRE_FACTION)) {
                                         spawnVillagerInVillage(new EntityVampireFactionVillager(this.world), seed, false);
+                                    } else {
+                                        MinecraftForge.EVENT_BUS.post(new VampirismVillageEvent.SpawnFactionVillager(village, this.world, seed, controllingFaction));
                                     }
                                 } else {
-                                    boolean isVampire = this.controllingFaction == VReference.VAMPIRE_FACTION && seed.getRNG().nextBoolean();
-                                    VampirismVillageEvent.SpawnNewVillager event = new VampirismVillageEvent.SpawnNewVillager(village, seed, isVampire);
-                                    MinecraftForge.EVENT_BUS.post(event);
+                                    boolean isConverted = this.controllingFaction != VReference.HUNTER_FACTION && seed.getRNG().nextBoolean();
+                                    VampirismVillageEvent.SpawnNewVillager event = ModEventFactory.fireSpawnNewVillager(village, seed, isConverted, controllingFaction);
                                     if (event.getResult() != Event.Result.DENY) {
                                         EntityVillager newVillager;
                                         if (event.getResult() == Event.Result.ALLOW && event.getNewVillager() != null) {
@@ -640,7 +644,7 @@ public class TileTotem extends TileEntity implements ITickable {
                                             newVillager.setGrowingAge(-24000);
                                             seed.setGrowingAge(6000);
                                         }
-                                        if (event.isWillBeVampire()) {
+                                        if (event.isWillBeConverted()) {
                                             IConvertedCreature converted = ExtendedCreature.get(newVillager).makeVampire(); //Already spawns the creature in the world
                                         } else {
                                             this.spawnVillagerInVillage(newVillager, seed, this.controllingFaction == VReference.HUNTER_FACTION);
@@ -677,13 +681,15 @@ public class TileTotem extends TileEntity implements ITickable {
                     int z = (int) (affectedArea.minZ + rng.nextInt((int) (affectedArea.maxZ - affectedArea.minZ)));
                     BlockPos pos = new BlockPos(x, world.getHeight(x, z) - 1, z);
                     IBlockState b = world.getBlockState(pos);
-                    if (b.getBlock() == world.getBiome(pos).topBlock.getBlock() && b.getBlock() != Blocks.SAND && controllingFaction == VReference.VAMPIRE_FACTION) {
-                        world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
-                        if (world.getBlockState(pos.up()).getBlock() == Blocks.TALLGRASS) {
-                            world.setBlockToAir(pos.up());
+                    if (ModEventFactory.fireReplaceVillageBlock(getVillage(), world, b, controllingFaction)) {
+                        if (b.getBlock() == world.getBiome(pos).topBlock.getBlock() && b.getBlock() != Blocks.SAND && controllingFaction == VReference.VAMPIRE_FACTION) {
+                            world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
+                            if (world.getBlockState(pos.up()).getBlock() == Blocks.TALLGRASS) {
+                                world.setBlockToAir(pos.up());
+                            }
+                        } else if (b.getBlock() == ModBlocks.cursed_earth && controllingFaction == VReference.HUNTER_FACTION) {
+                            world.setBlockState(pos, world.getBiome(pos).topBlock);
                         }
-                    } else if (b.getBlock() == ModBlocks.cursed_earth && controllingFaction == VReference.HUNTER_FACTION) {
-                        world.setBlockState(pos, world.getBiome(pos).topBlock);
                     }
                 }
             }
@@ -808,7 +814,7 @@ public class TileTotem extends TileEntity implements ITickable {
         } else if (f == VReference.VAMPIRE_FACTION) {
             return new ResourceLocation("vampirism:vampire");
         }
-        return null;
+        return ModEventFactory.fireCaptureEntityEvent(getVillage(), f);
     }
 
     @Nullable
@@ -1008,6 +1014,8 @@ public class TileTotem extends TileEntity implements ITickable {
      */
     private void updateCreaturesOnCapture() {
         List<EntityVillager> villager = this.world.getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
+        if (ModEventFactory.fireVillagerCaptureEvent(getVillage(), villager, controllingFaction, capturingFaction))
+            return;
         if (capturingFaction == VReference.HUNTER_FACTION) {
             List<EntityHunterBase> hunter = this.world.getEntitiesWithinAABB(EntityHunterBase.class, getAffectedArea());
             if (controllingFaction == VReference.VAMPIRE_FACTION) {
