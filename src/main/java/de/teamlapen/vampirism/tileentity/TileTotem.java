@@ -392,7 +392,10 @@ public class TileTotem extends TileEntity implements ITickable {
         if (v != null) {
             v.removeTotemAndReset(this.pos);
         }
-        updateBossinfoPlayers(null);
+        if (capturingFaction != null)
+            abortCapture(false);
+        else
+            updateBossinfoPlayers(null);
     }
 
     @Override
