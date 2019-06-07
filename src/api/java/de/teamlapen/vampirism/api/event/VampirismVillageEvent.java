@@ -4,12 +4,12 @@ import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
-import de.teamlapen.vampirism.world.villages.VampirismVillage;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -40,7 +40,7 @@ public abstract class VampirismVillageEvent extends Event {
      * <p>
      * Your villager should have the position set, but should not be spawned in the world.
      * <p>
-     * The willBeAggressive field tells if the villager will be converted to an aggressive version. You can change this.
+     * The {@linkplain #willBeConverted} field tells if the villager will be converted to an aggressive version. You can change this.
      * DON'T set an aggressive villager even if this field is true
      */
     @HasResult
@@ -57,7 +57,7 @@ public abstract class VampirismVillageEvent extends Event {
         private boolean willBeConverted;
         private final IPlayableFaction<?> faction;
 
-        public SpawnNewVillager(@Nonnull IVampirismVillage village, @Nonnull EntityVillager seedVillager, boolean willBeConverted, IPlayableFaction<?> faction) {
+        public SpawnNewVillager(@Nonnull IVampirismVillage village, @Nonnull EntityVillager seedVillager, boolean willBeConverted, @Nonnull IPlayableFaction<?> faction) {
             super(village);
             this.seedVillager = seedVillager;
             this.willBeConverted = willBeConverted;
@@ -103,19 +103,25 @@ public abstract class VampirismVillageEvent extends Event {
             this.willBeConverted = willBeConverted;
         }
 
+        /**
+         * Faction that owns the village
+         */
+        public IPlayableFaction<?> getFaction() {
+            return faction;
+        }
+
     }
 
     /**
      * Fired when a normal villager should be converted to angry villager.
      * You can set a custom replacement and cancel this event to make it take effect.
-     * The oldVillager is probably not added to a world
+     * The {@link #oldVillager} is probably not added to a world
      */
     @Cancelable
     public static class MakeAggressive extends VampirismVillageEvent {
 
         private final EntityVillager oldVillager;
-        private @Nullable
-        IVillageCaptureEntity captureVillager;
+        private @Nullable IVillageCaptureEntity captureVillager;
 
         public MakeAggressive(@Nullable IVampirismVillage village, @Nonnull EntityVillager villager) {
             super(village);
@@ -155,9 +161,9 @@ public abstract class VampirismVillageEvent extends Event {
     @HasResult
     public static class VillagerCaptureFinish extends VampirismVillageEvent {
 
-        private final List<EntityVillager> villager;
-        private final IPlayableFaction<?> controllingFaction;
-        private final IPlayableFaction<?> capturingFaction;
+        private final @Nonnull List<EntityVillager> villager;
+        private final @Nullable IPlayableFaction<?> controllingFaction;
+        private final @Nonnull IPlayableFaction<?> capturingFaction;
 
         public VillagerCaptureFinish(@Nullable IVampirismVillage village, @Nonnull List<EntityVillager> villagerIn, @Nullable IPlayableFaction<?> controllingFactionIn, @Nonnull IPlayableFaction<?> capturingFactionIn) {
             super(village);
@@ -166,14 +172,17 @@ public abstract class VampirismVillageEvent extends Event {
             capturingFaction = capturingFactionIn;
         }
 
+        @Nonnull
         public List<EntityVillager> getVillager() {
             return villager;
         }
 
+        @Nullable
         public IPlayableFaction<?> getControllingFaction() {
             return controllingFaction;
         }
 
+        @Nonnull
         public IPlayableFaction<?> getCapturingFaction() {
             return capturingFaction;
         }
@@ -185,14 +194,18 @@ public abstract class VampirismVillageEvent extends Event {
      */
     public static class CaptureEntity extends VampirismVillageEvent {
 
-        private final IFaction<?> faction;
+        private @Nonnull final IFaction<?> faction;
         private ResourceLocation entity;
 
-        public CaptureEntity(@Nonnull IFaction f) {
-            super(null);
+        public CaptureEntity(@Nullable IVampirismVillage village, @Nonnull IFaction<?> f) {
+            super(village);
             faction = f;
         }
 
+        /**
+         * the faction of the spawning entity
+         */
+        @Nonnull
         public IFaction<?> getFaction() {
             return faction;
         }
@@ -200,50 +213,82 @@ public abstract class VampirismVillageEvent extends Event {
         /**
          * set the Entity to spawn
          * 
-         * @param entity
+         * @param resourcelocation
+         *            of the entity
          */
         public void setEntity(ResourceLocation entity) {
             this.entity = entity;
         }
 
         /**
-         * @returns capture entity which should be spawned
+         * @returns resourcelocation of the capture entity which should be spawned
          */
+        @Nullable
         public ResourceLocation getEntity() {
             return entity;
         }
     }
 
     /**
-     * Fired when a Faction villager should be spawned, but the controlling faction in not hunter or vampire
-     * seed Entity must be killed
+     * Fired when a Faction villager should be spawned, but the controlling faction in not hunter or vampire.
+     * The {@link #newVillager} will replace the {@link #seed} villager
      */
     public static class SpawnFactionVillager extends VampirismVillageEvent {
 
-        private final IPlayableFaction<?> faction;
-        private final World world;
-        private final EntityVillager seed;
+        private final @Nonnull IPlayableFaction<?> faction;
+        private final @Nonnull EntityVillager seed;
+        private EntityVillager newVillager;
+        private boolean poisonousBlood;
 
-        public SpawnFactionVillager(IVampirismVillage village, World world, EntityVillager seed, IPlayableFaction<?> faction) {
+        public SpawnFactionVillager(@Nullable IVampirismVillage village, @Nonnull EntityVillager seed, @Nonnull IPlayableFaction<?> faction) {
             super(village);
             this.faction = faction;
-            this.world = world;
             this.seed = seed;
         }
 
+        /**
+         * faction of the village
+         */
+        @Nonnull
         public IPlayableFaction<?> getFaction() {
             return faction;
         }
 
         /**
-         * @returns entity to be replaced (must be removed)
+         * @returns entity to be replaced
          */
+        @Nonnull
         public EntityVillager getSeed() {
             return seed;
         }
 
-        public World getWorld() {
-            return world;
+        /**
+         * @returns the new villager
+         */
+        @Nullable
+        public EntityVillager getVillager() {
+            return newVillager;
+        }
+
+        /**
+         * sets the new villager
+         */
+        public void setVillager(EntityVillager villager) {
+            newVillager = villager;
+        }
+
+        /**
+         * if the villager should be protected against vampire
+         */
+        public boolean hasPoisonousBlood() {
+            return poisonousBlood;
+        }
+
+        /**
+         * sets the protection against vampire
+         */
+        public void setPoisonousBlood(boolean poisonous) {
+            poisonousBlood = poisonous;
         }
 
     }
@@ -253,27 +298,98 @@ public abstract class VampirismVillageEvent extends Event {
      */
     public static class ReplaceBlock extends VampirismVillageEvent {
 
-        private final World world;
-        private final IBlockState state;
-        private final IPlayableFaction<?> faction;
+        private final @Nonnull World world;
+        private final @Nonnull IBlockState state;
+        private final @Nonnull IPlayableFaction<?> faction;
 
-        public ReplaceBlock(VampirismVillage village, World world, IBlockState b, IPlayableFaction<?> controllingFaction) {
+        public ReplaceBlock(@Nullable IVampirismVillage village, @Nonnull World world, @Nonnull IBlockState b, @Nonnull IPlayableFaction<?> controllingFaction) {
             super(village);
             this.world = world;
             this.state = b;
             this.faction = controllingFaction;
         }
 
+        @Nonnull
         public World getWorld() {
             return world;
         }
 
+        /**
+         * @returns blockstate of the block to be replaced
+         */
+        @Nonnull
         public IBlockState getState() {
             return state;
         }
 
+        /**
+         * @returns faction of the village
+         */
+        @Nonnull
         public IPlayableFaction<?> getFaction() {
             return faction;
+        }
+
+    }
+
+    /**
+     * fired when the caption process is started
+     */
+    @HasResult
+    public static class InitiateCapture extends VampirismVillageEvent {
+
+        private final @Nonnull World world;
+        private final @Nullable IPlayableFaction<?> controllingFaction;
+        private final @Nonnull IPlayableFaction<?> capturingFaction;
+
+        public InitiateCapture(@Nullable IVampirismVillage village, @Nonnull World world, @Nullable IPlayableFaction<?> controllingFaction, @Nonnull IPlayableFaction<?> capturingFaction) {
+            super(village);
+            this.world = world;
+            this.controllingFaction = controllingFaction;
+            this.capturingFaction = capturingFaction;
+        }
+
+        @Nonnull
+        public World getWorld() {
+            return world;
+        }
+
+        /**
+         * @returns controlling faction
+         */
+        @Nullable
+        public IPlayableFaction<?> getControllingFaction() {
+            return controllingFaction;
+        }
+
+        /**
+         * @returns capturing faction
+         */
+        @Nonnull
+        public IPlayableFaction<?> getCapturingFaction() {
+            return capturingFaction;
+        }
+
+    }
+
+    /**
+     * fired when the village area is updated (used for vampire fog rendering & sundamage)
+     */
+    public static class RegisterVillageBoundingBoxEvent extends VampirismVillageEvent {
+
+        private final @Nonnull StructureBoundingBox bb;
+
+        public RegisterVillageBoundingBoxEvent(@Nullable IVampirismVillage village, @Nonnull StructureBoundingBox bb) {
+            super(village);
+            this.bb = bb;
+        }
+        
+        /**
+         * @returns bounding box of the village
+         */
+        @Nonnull
+        public StructureBoundingBox getBoundingBox() {
+            return bb;
         }
 
     }

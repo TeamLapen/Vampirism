@@ -311,8 +311,9 @@ public class TileTotem extends TileEntity implements ITickable {
     public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
         readFromNBT(tag);
         if (tag.hasKey("village_bb")) {
+            StructureBoundingBox bb = new StructureBoundingBox(tag.getIntArray("village_bb"));
+            ModEventFactory.fireRegisterVillageBBEvent(getVillage(), bb);
             if (controllingFaction == VReference.VAMPIRE_FACTION) {
-                StructureBoundingBox bb = new StructureBoundingBox(tag.getIntArray("village_bb"));
                 registerVampireArea(bb); //Replaces old area if different
             } else {
                 unregisterVampireArea();
@@ -351,12 +352,15 @@ public class TileTotem extends TileEntity implements ITickable {
         this.capture_timer = 0;
         force_village_update = true;
         this.markDirty();
-        if (!world.isRemote && capturingFaction == VReference.VAMPIRE_FACTION) {
-            List<EntityVillager> villager = this.world.getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
-            for (EntityVillager v : villager) {
-                if (v instanceof EntityFactionVillager) continue;
-                if (v.getRNG().nextInt(3) == 0) {
-                    makeAggressive(v, this.getVillage());
+        if (ModEventFactory.fireInitateCaptureEvent(getVillage(), world, controllingFaction, capturingFaction)) {
+            if (!world.isRemote && capturingFaction == VReference.VAMPIRE_FACTION) {
+                List<EntityVillager> villager = this.world.getEntitiesWithinAABB(EntityVillager.class, getAffectedArea());
+                for (EntityVillager v : villager) {
+                    if (v instanceof EntityFactionVillager)
+                        continue;
+                    if (v.getRNG().nextInt(3) == 0) {
+                        makeAggressive(v, this.getVillage());
+                    }
                 }
             }
         }
@@ -372,8 +376,10 @@ public class TileTotem extends TileEntity implements ITickable {
     public void markDirty() {
         super.markDirty();
         world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+        StructureBoundingBox bb = new StructureBoundingBox(UtilLib.bbToInt(getAffectedArea()));
+        ModEventFactory.fireRegisterVillageBBEvent(getVillage(), bb);
         if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
-            registerVampireArea(new StructureBoundingBox(UtilLib.bbToInt(getAffectedArea())));
+            registerVampireArea(bb);
         } else {
             unregisterVampireArea();
         }
@@ -629,11 +635,12 @@ public class TileTotem extends TileEntity implements ITickable {
                                     } else if (controllingFaction.equals(VReference.VAMPIRE_FACTION)) {
                                         spawnVillagerInVillage(new EntityVampireFactionVillager(this.world), seed, false);
                                     } else {
-                                        MinecraftForge.EVENT_BUS.post(new VampirismVillageEvent.SpawnFactionVillager(village, this.world, seed, controllingFaction));
+                                        VampirismVillageEvent.SpawnFactionVillager event = ModEventFactory.fireSpawnFactionVillagerEvent(village, seed, controllingFaction);
+                                        spawnVillagerInVillage(event.getVillager(), seed, event.hasPoisonousBlood());
                                     }
                                 } else {
                                     boolean isConverted = this.controllingFaction != VReference.HUNTER_FACTION && seed.getRNG().nextBoolean();
-                                    VampirismVillageEvent.SpawnNewVillager event = ModEventFactory.fireSpawnNewVillager(village, seed, isConverted, controllingFaction);
+                                    VampirismVillageEvent.SpawnNewVillager event = ModEventFactory.fireSpawnNewVillagerEvent(village, seed, isConverted, controllingFaction);
                                     if (event.getResult() != Event.Result.DENY) {
                                         EntityVillager newVillager;
                                         if (event.getResult() == Event.Result.ALLOW && event.getNewVillager() != null) {
@@ -681,16 +688,15 @@ public class TileTotem extends TileEntity implements ITickable {
                     int z = (int) (affectedArea.minZ + rng.nextInt((int) (affectedArea.maxZ - affectedArea.minZ)));
                     BlockPos pos = new BlockPos(x, world.getHeight(x, z) - 1, z);
                     IBlockState b = world.getBlockState(pos);
-                    if (ModEventFactory.fireReplaceVillageBlock(getVillage(), world, b, controllingFaction)) {
-                        if (b.getBlock() == world.getBiome(pos).topBlock.getBlock() && b.getBlock() != Blocks.SAND && controllingFaction == VReference.VAMPIRE_FACTION) {
-                            world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
-                            if (world.getBlockState(pos.up()).getBlock() == Blocks.TALLGRASS) {
-                                world.setBlockToAir(pos.up());
-                            }
-                        } else if (b.getBlock() == ModBlocks.cursed_earth && controllingFaction == VReference.HUNTER_FACTION) {
-                            world.setBlockState(pos, world.getBiome(pos).topBlock);
+                    if (b.getBlock() == world.getBiome(pos).topBlock.getBlock() && b.getBlock() != Blocks.SAND && controllingFaction == VReference.VAMPIRE_FACTION) {
+                        world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
+                        if (world.getBlockState(pos.up()).getBlock() == Blocks.TALLGRASS) {
+                            world.setBlockToAir(pos.up());
                         }
+                    } else if (b.getBlock() == ModBlocks.cursed_earth && controllingFaction == VReference.HUNTER_FACTION) {
+                        world.setBlockState(pos, world.getBiome(pos).topBlock);
                     }
+                    ModEventFactory.fireReplaceVillageBlockEvent(getVillage(), world, b, controllingFaction);
                 }
             }
         }
@@ -936,7 +942,8 @@ public class TileTotem extends TileEntity implements ITickable {
      * @param poisonousBlood  if the villager should have poisonous blood
      * @return false if spawn is not possible
      */
-    private boolean spawnVillagerInVillage(@Nonnull EntityVillager newVillager, @Nullable Entity entityToReplace, boolean poisonousBlood) {
+    private boolean spawnVillagerInVillage(EntityVillager newVillager, @Nullable Entity entityToReplace, boolean poisonousBlood) {
+        if (newVillager == null) return false;
         if (!spawnEntityInVillage(newVillager, entityToReplace)) return false;
         if (entityToReplace instanceof EntityVillager) {
             newVillager.setHomePosAndDistance(((EntityVillager) entityToReplace).getHomePosition(), (int) ((EntityVillager) entityToReplace).getMaximumHomeDistance());
