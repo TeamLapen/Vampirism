@@ -46,15 +46,18 @@ public class BlockAlchemicalFire extends VampirismBlock {
         return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP);
     }
 
+    @Nullable
+    @Override
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+        return NULL_AABB;
+    }
+
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
+    @Override
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
-    @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
-        return NULL_AABB;
-    }
 
     public MapColor getMapColor(IBlockState state) {
         return MapColor.TNT;

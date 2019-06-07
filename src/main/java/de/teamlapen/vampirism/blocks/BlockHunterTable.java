@@ -36,9 +36,11 @@ public class BlockHunterTable extends VampirismBlock {
     }
 
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
+    @Override
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
+
 
     @Override
     public int getMetaFromState(IBlockState state) {
