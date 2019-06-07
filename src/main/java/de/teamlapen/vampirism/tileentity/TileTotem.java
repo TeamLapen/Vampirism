@@ -24,6 +24,7 @@ import de.teamlapen.vampirism.entity.vampire.EntityVampireFactionVillager;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
@@ -53,9 +54,10 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
 
 
 /**
@@ -770,6 +772,7 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     private void completeCapture(boolean notifyPlayer) {
+        informEntitiesAboutCaptureStop();
         if (!this.world.isRemote)
             this.updateCreaturesOnCapture();
         if (capturingFaction == null) {
@@ -781,7 +784,6 @@ public class TileTotem extends TileEntity implements ITickable {
         force_village_update = true;
         this.markDirty();
         //VampirismMod.log.t("Completed capture");
-        informEntitiesAboutCaptureStop();
         if (notifyPlayer)
             notifyNearbyPlayers(new TextComponentTranslation("text.vampirism.village.village_captured_by", new TextComponentTranslation(controllingFaction.getUnlocalizedNamePlural())));
         updateBossinfoPlayers(null);
