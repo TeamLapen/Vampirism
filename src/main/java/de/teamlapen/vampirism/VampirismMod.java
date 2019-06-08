@@ -166,6 +166,7 @@ public class VampirismMod {
         VampireBookManager.getInstance().init();
         BloodPotions.register();
         StructureManager.init();
+        Permissions.init();
         VampirismEntitySelectors.registerSelectors();
         registryManager.onInitStep(IInitListener.Step.INIT, event);
         proxy.onInitStep(IInitListener.Step.INIT, event);

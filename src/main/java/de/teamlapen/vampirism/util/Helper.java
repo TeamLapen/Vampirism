@@ -27,6 +27,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -126,7 +127,7 @@ public class Helper {
 
     public static boolean canTurnPlayer(IVampire biter, @Nullable EntityPlayer target) {
         if (biter instanceof IVampirePlayer) {
-            return Permissions.canPlayerTurnPlayer(((IVampirePlayer) biter).getRepresentingPlayer());
+            return PermissionAPI.hasPermission(((IVampirePlayer) biter).getRepresentingPlayer(), Permissions.INFECT_PLAYER);
         } else {
             return !Configs.disable_mob_bite_infection;
         }
