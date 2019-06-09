@@ -65,7 +65,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     private int targetLevel;
 
     public TileAltarInfusion() {
-        super(new InventorySlot[]{new InventorySlot(items[0], 44, 34), new InventorySlot(items[1], 80, 34), new InventorySlot(items[2], 116, 34)});
+        super(ModTiles.altar_infusion, new InventorySlot[]{new InventorySlot(items[0], 44, 34), new InventorySlot(items[1], 80, 34), new InventorySlot(items[2], 116, 34)});
     }
 
     /**

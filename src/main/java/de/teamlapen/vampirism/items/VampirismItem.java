@@ -27,7 +27,7 @@ public class VampirismItem extends Item {
     @Override
     protected String getDefaultTranslationKey() {
         if (this.translation_key == null) {
-            this.translation_key = Util.makeTranslationKey("item", IRegistry.field_212630_s.getKey(this));
+            this.translation_key = Util.makeTranslationKey("item", IRegistry.ITEM.getKey(this));
         }
 
         return this.translation_key;

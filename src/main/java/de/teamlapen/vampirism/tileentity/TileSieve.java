@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.BlockSieve;
 import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -33,6 +34,7 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
     private boolean active;
 
     public TileSieve() {
+        super(ModTiles.sieve);
         tank = new FilteringFluidTank(2 * Fluid.BUCKET_VOLUME).setListener(this);
         tank.setCanDrain(false);
     }

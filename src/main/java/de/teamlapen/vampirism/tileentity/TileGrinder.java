@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.tile.InventoryTileEntity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,6 +34,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
         return BloodConversionRegistry.getImpureBloodValue(stack) > 0;
     }
 
+
     protected static List<EntityItem> getCaptureItems(World worldIn, BlockPos pos) {
         int posX = pos.getX();
         int posY = pos.getY();
@@ -46,7 +48,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     private IItemHandler itemHandler = new InvWrapper(this);
 
     public TileGrinder() {
-        super(new InventorySlot[]{new InventorySlot(TileGrinder::canProcess, 80, 34)});
+        super(ModTiles.grinder, new InventorySlot[]{new InventorySlot(TileGrinder::canProcess, 80, 34)});
     }
 
     @SuppressWarnings("unchecked")

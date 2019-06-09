@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.blocks.BlockGarlicBeacon;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.state.IBlockState;
@@ -20,11 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
-/**
- * 1.10
- *
- * @author maxanier
- */
+
 public class TileGarlicBeacon extends TileEntity implements ITickable {
     private int id;
     private EnumStrength strength = EnumStrength.MEDIUM;
@@ -32,6 +29,11 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
     private int r = 1;
     private boolean registered = false;
     private int fueled = 0;
+
+
+    public TileGarlicBeacon() {
+        super(ModTiles.garlic_beacon);
+    }
 
     public int getFuelTime() {
         return fueled;

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
@@ -16,6 +17,10 @@ public class TileSunscreenBeacon extends TileEntity implements ITickable {
 
     private BlockPos oldPos;
     private Predicate<EntityPlayer> selector;
+
+    public TileSunscreenBeacon() {
+        super(ModTiles.sunscreen_beacon);
+    }
 
     @Override
     public void update() {

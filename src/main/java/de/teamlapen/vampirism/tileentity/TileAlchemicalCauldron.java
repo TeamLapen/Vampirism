@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.blocks.BlockAlchemicalCauldron;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
@@ -41,11 +42,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-/**
- * 1.10
- *
- * @author maxanier
- */
+
 public class TileAlchemicalCauldron extends InventoryTileEntity implements ITickable, ISidedInventory {
 
     private static final int SLOT_RESULT = 0;
@@ -123,7 +120,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     private UUID ownerID;
 
     public TileAlchemicalCauldron() {
-        super(new InventorySlot[]{new InventorySlot(item -> false, 116, 35), new InventorySlot(TileAlchemicalCauldron::isLiquidStack, 44, 17), new InventorySlot(68, 17), new InventorySlot(TileEntityFurnace::isItemFuel, 56, 53)});
+        super(ModTiles.alchemical_cauldron, new InventorySlot[]{new InventorySlot(item -> false, 116, 35), new InventorySlot(TileAlchemicalCauldron::isLiquidStack, 44, 17), new InventorySlot(68, 17), new InventorySlot(TileEntityFurnace::isItemFuel, 56, 53)});
     }
 
     @Override

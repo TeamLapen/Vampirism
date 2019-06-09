@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
@@ -42,6 +43,10 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     @Override
     public int getItemEnchantability(ItemStack stack) {
         return enchantability;
+    }
+
+    public void setEnchantability(ItemTier material) {
+        this.enchantability = material.getEnchantability();
     }
 
     @Override

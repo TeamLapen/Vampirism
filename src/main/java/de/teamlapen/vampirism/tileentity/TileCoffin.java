@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.vampirism.blocks.BlockCoffin;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,6 +28,9 @@ public class TileCoffin extends TileEntity implements ITickable {
 
     private boolean lastTickOccupied;
 
+    public TileCoffin() {
+        super(ModTiles.coffin);
+    }
 
     public void changeColor(EnumDyeColor color) {
         this.color = color;

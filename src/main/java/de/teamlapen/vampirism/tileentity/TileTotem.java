@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.EntityFactionVillager;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
@@ -75,6 +76,11 @@ public class TileTotem extends TileEntity implements ITickable {
      * On integrated servers this is updated from both client and server (so twice), but values should just override each other
      */
     private final static IntHashMap<HashMap<BlockPos, MutableBoundingBox>> vampireVillages = new IntHashMap<>();
+
+
+    public TileTotem() {
+        super(ModTiles.totem);
+    }
 
     /**
      * Check if the given position is inside a (statically) cached list of vampire village BBs

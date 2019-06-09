@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.blocks.BlockTent;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -44,12 +45,13 @@ public class ItemTent extends VampirismItem {
 
         Block tent = ModBlocks.tent;
         Block main = ModBlocks.tent_main;
-        if (force || canPlaceAt(tent, world, x, y, z) && canPlaceAt(tent, world, x1, y, z1) && canPlaceAt(tent, world, x2, y, z2) && canPlaceAt(tent, world, x3, y, z3)) {
-            boolean flag = world.setBlockState(pos, main.getDefaultState().withProperty(BlockTent.FACING, dir.getOpposite()), 3);
+        IBlockState mainState = main.getDefaultState();
+        if (force || canPlaceAt(mainState, tent, world, x, y, z) && canPlaceAt(mainState, tent, world, x1, y, z1) && canPlaceAt(mainState, tent, world, x2, y, z2) && canPlaceAt(mainState, tent, world, x3, y, z3)) {
+            boolean flag = world.setBlockState(pos, main.getDefaultState().with(BlockTent.FACING, dir.getOpposite()), 3);
             if (flag) {
-                world.setBlockState(new BlockPos(x1, y, z1), tent.getDefaultState().withProperty(BlockTent.FACING, dir).withProperty(BlockTent.POSITION, 1), 3);
-                world.setBlockState(new BlockPos(x2, y, z2), tent.getDefaultState().withProperty(BlockTent.FACING, dir).withProperty(BlockTent.POSITION, 2), 3);
-                world.setBlockState(new BlockPos(x3, y, z3), tent.getDefaultState().withProperty(BlockTent.FACING, dir.getOpposite()).withProperty(BlockTent.POSITION, 3), 3);
+                world.setBlockState(new BlockPos(x1, y, z1), tent.getDefaultState().with(BlockTent.FACING, dir).with(BlockTent.POSITION, 1), 3);
+                world.setBlockState(new BlockPos(x2, y, z2), tent.getDefaultState().with(BlockTent.FACING, dir).with(BlockTent.POSITION, 2), 3);
+                world.setBlockState(new BlockPos(x3, y, z3), tent.getDefaultState().with(BlockTent.FACING, dir.getOpposite()).with(BlockTent.POSITION, 3), 3);
                 if (spawner) {
                     TileEntity tile = world.getTileEntity(pos);
                     if (tile instanceof TileTent) {
@@ -62,8 +64,8 @@ public class ItemTent extends VampirismItem {
         return false;
     }
 
-    private static boolean canPlaceAt(Block block, World world, int x, int y, int z) {
-        return block.canPlaceBlockAt(world, new BlockPos(x, y, z));
+    private static boolean canPlaceAt(IBlockState state, Block block, World world, int x, int y, int z) {
+        return block.isValidPosition(state, world, new BlockPos(x, y, z));
     }
 
     public ItemTent(boolean spawner) {

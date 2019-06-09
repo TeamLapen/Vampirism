@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -39,6 +40,11 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     private int chargingTicks;
     private int bloodStored = 0;
     private int chargeRate = 30;
+
+
+    public TilePedestal() {
+        super(ModTiles.blood_pedestal);
+    }
 
     @Nonnull
     private ItemStack internalStack = ItemStack.EMPTY;

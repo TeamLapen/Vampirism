@@ -4,6 +4,7 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -52,6 +53,7 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
     }
 
     public TileAltarInspiration() {
+        super(ModTiles.altar_inspiration);
         this.tank = new InternalTank(CAPACITY);
     }
 

@@ -26,8 +26,8 @@ public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossb
     private final EnumArrowType type;
 
 
-    public ItemCrossbowArrow(EnumArrowType type, Properties properties) {
-        super(regName + "_" + type.name, properties);
+    public ItemCrossbowArrow(EnumArrowType type) {
+        super(regName + "_" + type.name, new Properties());
         this.type = type;
     }
 

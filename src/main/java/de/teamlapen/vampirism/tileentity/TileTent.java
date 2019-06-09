@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.SimpleSpawnerLogic;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
@@ -94,6 +95,7 @@ public class TileTent extends TileEntity implements ITickable {
     private boolean spawn = false;
 
     public TileTent() {
+        super(ModTiles.tent);
         spawnerLogic.setEntityName(new ResourceLocation(REFERENCE.MODID, ModEntities.BASIC_HUNTER_NAME));
         spawnerLogic.setActivateRange(64);
         spawnerLogic.setSpawnRange(6);

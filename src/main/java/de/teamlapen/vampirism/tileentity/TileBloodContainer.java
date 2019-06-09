@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,6 +36,7 @@ public class TileBloodContainer extends net.minecraftforge.fluids.capability.Til
 
 
     public TileBloodContainer() {
+        super(ModTiles.blood_container);
         this.tank = new FluidTankWithListener(CAPACITY).setListener(this);
 
     }

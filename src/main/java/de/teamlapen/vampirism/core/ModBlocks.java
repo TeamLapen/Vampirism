@@ -1,15 +1,11 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.lib.lib.item.ItemMetaBlock;
 import de.teamlapen.vampirism.blocks.*;
-import de.teamlapen.vampirism.tileentity.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -64,83 +60,52 @@ public class ModBlocks {
     public static final VampirismBlock totem_base = getNull();
 
 
-
-
-    private static void registerTiles() {
-        registerTileEntity(TileTent.class, "tent", "VampirismTent");
-        registerTileEntity(TileCoffin.class, "coffin", "VampirismCoffin");
-        registerTileEntity(TileAltarInfusion.class, "altar_infusion", "VampirismAltarInfusion");
-        registerTileEntity(TileBloodContainer.class, "blood_container", "VampirismBloodContainer");
-        registerTileEntity(TileAltarInspiration.class, "altar_inspiration", "VampirismAltarInspiration");
-        registerTileEntity(TileSunscreenBeacon.class, "sunscreen_beacon", "VampirismSunscreenBeacon");
-        registerTileEntity(TileAlchemicalCauldron.class, "alchemical_cauldron", "VampirismAlchemicalCauldron");
-        registerTileEntity(TileGarlicBeacon.class, "garlic_beacon", "VampirismGarlicBeacon");
-        registerTileEntity(TilePedestal.class, "blood_pedestal");
-        registerTileEntity(TileGrinder.class, "grinder");
-        registerTileEntity(TileSieve.class, "sieve");
-        registerTileEntity(TileTotem.class, "totem");
-    }
-
-    /**
-     * Register the given tile entity and add pre 1.11 name to DATA FIXER
-     *
-     * @param clazz Tile class
-     * @param id    Tile id. Is converted to resource location  MODID:<id>
-     */
-    private static void registerTileEntity(Class<? extends TileEntity> clazz, String id, String old) {
-        registerTileEntity(clazz, id);
-    }
-
-
-
-    /**
-     * Register the given tile entity
-     *
-     * @param clazz Tile class
-     * @param id    Tile id. Is converted to resource location  MODID:<id>
-     */
-    private static void registerTileEntity(Class<? extends TileEntity> clazz, String id) {
-        GameRegistry.registerTileEntity(clazz, REFERENCE.MODID + ":" + id);
+    private static @Nonnull
+    ItemBlock itemBlock(@Nonnull Block block, @Nonnull Item.Properties props) {
+        ItemBlock item = new ItemBlock(block, props);
+        item.setRegistryName(block.getRegistryName());
+        return item;
     }
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
-        registry.register(new ItemMetaBlock(castle_block));
-        Item itemBloodContainer = new ItemBlock(blood_container);
-        itemBloodContainer.setRegistryName(blood_container.getRegistryName());
-        itemBloodContainer.setMaxStackSize(1);
-        registry.register(itemBloodContainer);
-        registry.register(itemBlock(cursed_earth));
-        registry.register(new ItemMetaBlock(vampirism_flower));
-        registry.register(itemBlock(altar_infusion));
-        registry.register(itemBlock(altar_pillar));
-        registry.register(itemBlock(altar_tip));
-        registry.register(itemBlock(hunter_table));
-        registry.register(itemBlock(church_altar));
-        registry.register(itemBlock(altar_inspiration));
-        registry.register(itemBlock(fire_place));
-        registry.register(itemBlock(weapon_table));
-        registry.register(itemBlock(blood_potion_table));
-        registry.register(itemBlock(sunscreen_beacon));
-        registry.register(itemBlock(alchemical_cauldron));
-        registry.register(itemBlock(garlic_beacon));
-        registry.register(itemBlock(castle_stairs_dark));
-        registry.register(itemBlock(castle_stairs_dark_stone));
-        registry.register(itemBlock(castle_stairs_purple));
-        registry.register(itemBlock(blood_pedestal));
-        registry.register(itemBlock(blood_grinder));
-        registry.register(itemBlock(blood_sieve));
-        registry.register(itemBlock(totem_base));
-        registry.register(itemBlock(totem_top));
-        registry.register(new ItemSlab(castle_slab, castle_slab, castle_slab_double).setRegistryName(castle_slab.getRegistryName()));
+        registry.register(itemBlock(castle_block_dark_brick, new Item.Properties()));
+        registry.register(itemBlock(castle_block_dark_brick_bloody, new Item.Properties()));
+        registry.register(itemBlock(castle_block_dark_stone, new Item.Properties()));
+        registry.register(itemBlock(castle_block_normal_brick, new Item.Properties()));
+        registry.register(itemBlock(castle_block_purple_brick, new Item.Properties()));
+
+        registry.register(itemBlock(blood_container, new Item.Properties().maxStackSize(1)));
+
+        registry.register(itemBlock(cursed_earth, new Item.Properties()));
+        registry.register(itemBlock(vampirism_flower_orchid, new Item.Properties()));
+        registry.register(itemBlock(altar_infusion, new Item.Properties()));
+        registry.register(itemBlock(altar_pillar, new Item.Properties()));
+        registry.register(itemBlock(altar_tip, new Item.Properties()));
+        registry.register(itemBlock(hunter_table, new Item.Properties()));
+        registry.register(itemBlock(church_altar, new Item.Properties()));
+        registry.register(itemBlock(altar_inspiration, new Item.Properties()));
+        registry.register(itemBlock(fire_place, new Item.Properties()));
+        registry.register(itemBlock(weapon_table, new Item.Properties()));
+        registry.register(itemBlock(blood_potion_table, new Item.Properties()));
+        registry.register(itemBlock(sunscreen_beacon, new Item.Properties()));
+        registry.register(itemBlock(alchemical_cauldron, new Item.Properties()));
+        registry.register(itemBlock(garlic_beacon_normal, new Item.Properties()));
+        registry.register(itemBlock(garlic_beacon_improved, new Item.Properties()));
+        registry.register(itemBlock(garlic_beacon_weak, new Item.Properties()));
+
+        registry.register(itemBlock(castle_stairs_dark, new Item.Properties()));
+        registry.register(itemBlock(castle_stairs_dark_stone, new Item.Properties()));
+        registry.register(itemBlock(castle_stairs_purple, new Item.Properties()));
+        registry.register(itemBlock(blood_pedestal, new Item.Properties()));
+        registry.register(itemBlock(blood_grinder, new Item.Properties()));
+        registry.register(itemBlock(blood_sieve, new Item.Properties()));
+        registry.register(itemBlock(totem_base, new Item.Properties()));
+        registry.register(itemBlock(totem_top, new Item.Properties()));
+        registry.register(itemBlock(castle_slab_dark_brick, new Item.Properties()));
+        registry.register(itemBlock(castle_slab_dark_stone, new Item.Properties()));
+        registry.register(itemBlock(castle_slab_purple_brick, new Item.Properties()));
     }
 
-    private static @Nonnull
-    ItemBlock itemBlock(@Nonnull Block b) {
-        ItemBlock item = new ItemBlock(b);
-        //noinspection ConstantConditions
-        item.setRegistryName(b.getRegistryName());
-        return item;
-    }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
         BlockCastleBlock castleBlock_dark_brick = new BlockCastleBlock(BlockCastleBlock.EnumVariant.DARK_BRICK);
@@ -188,7 +153,6 @@ public class ModBlocks {
         registry.register(new BlockSieve());
         registry.register(new BlockTotemTop());
         registry.register(new BlockTotemBase());
-        registerTiles();
     }
 
     static void registerCraftingRecipes() {
