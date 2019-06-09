@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
+import de.teamlapen.vampirism.blocks.BlockSieve;
 import de.teamlapen.vampirism.core.ModFluids;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -69,9 +70,7 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
     private void setActive(boolean active) {
         if (this.active != active) {
             this.active = active;
-            this.world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
-        } else {
-            this.active = active;
+            this.world.setBlockState(getPos(), world.getBlockState(pos).with(BlockSieve.PROPERTY_ACTIVE, active));
         }
     }
 

@@ -79,9 +79,9 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                         } else if (worldIn.getBlockState(blockpos1).getMaterial().isSolid() && worldIn.getBlockState(blockpos1).getBlock() != Blocks.CHEST) {
                             if (ay == -1 || ay == 4) {
                                 if (rand.nextInt(40) == 0) {
-                                    worldIn.setBlockState(blockpos1, ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_BRICK_BLOODY), 2);
+                                    worldIn.setBlockState(blockpos1, ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumVariant.DARK_BRICK_BLOODY), 2);
                                 } else {
-                                    worldIn.setBlockState(blockpos1, ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_BRICK), 2);
+                                    worldIn.setBlockState(blockpos1, ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumVariant.DARK_BRICK), 2);
                                 }
                             } else {
                                 worldIn.setBlockState(blockpos1, Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.SPRUCE), 2);

@@ -15,7 +15,6 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -37,7 +36,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -349,7 +347,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
                             textureatlassprite = this.getTexture(Blocks.REDSTONE_BLOCK);
                         }
                     } else if (j4 == 10) {
-                        textureatlassprite = this.getTexture(ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_BRICK_BLOODY));
+                        textureatlassprite = this.getTexture(ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumVariant.DARK_BRICK_BLOODY));
                     } else if (j4 == 8) {
                         textureatlassprite = this.getTexture(Blocks.STONEBRICK);
                     } else if (j4 > 4) {

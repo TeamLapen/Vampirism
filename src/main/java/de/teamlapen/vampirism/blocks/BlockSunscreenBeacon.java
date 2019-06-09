@@ -12,10 +12,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -26,37 +24,34 @@ public class BlockSunscreenBeacon extends VampirismBlockContainer {
     private static final String regName = "sunscreen_beacon";
 
     public BlockSunscreenBeacon() {
-        super(regName, Material.IRON);
-        if (Configs.sunscreen_beacon_mineable) {
-            this.setHardness(50);
-        } else {
-            this.setCreativeTab(null);
-            this.setBlockUnbreakable();
-        }
+        super(regName, Properties.create(Material.IRON).hardnessAndResistance(Configs.sunscreen_beacon_mineable ? 50 : -1, Configs.sunscreen_beacon_mineable ? 50 : 3600000));
     }
 
 
-    @OnlyIn(Dist.CLIENT)
+
+
     @Override
-    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(UtilLib.translate(getTranslationKey() + ".tooltip1"));
-        tooltip.add(UtilLib.translateFormatted(getTranslationKey() + ".tooltip2", Configs.sunscreen_beacon_distance));
+    public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
+        super.addInformation(stack, world, tooltip, advanced);
+        tooltip.add(UtilLib.translated(getTranslationKey() + ".tooltip1"));
+        tooltip.add(UtilLib.translated(getTranslationKey() + ".tooltip2", Configs.sunscreen_beacon_distance));
     }
 
 
     @Override
-    public boolean canHarvestBlock(IBlockReader world, BlockPos pos, EntityPlayer player) {
+    public boolean canHarvestBlock(IBlockState state, IBlockReader world, BlockPos pos, EntityPlayer player) {
         return Configs.sunscreen_beacon_mineable;
     }
 
+
+    @Nullable
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(IBlockReader worldIn) {
         return new TileSunscreenBeacon();
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
+    @Override
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
@@ -65,11 +60,8 @@ public class BlockSunscreenBeacon extends VampirismBlockContainer {
         return EnumBlockRenderType.MODEL;
     }
 
+    @Override
     public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 

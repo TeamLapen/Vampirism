@@ -22,11 +22,11 @@ import java.util.Random;
 
 public class BlockCastleBlock extends VampirismBlock {
     private static final String name = "castle_block";
-    private final EnumType type;
+    private final EnumVariant variant;
 
-    public BlockCastleBlock(EnumType type) {
-        super(name, Properties.create(Material.ROCK).hardnessAndResistance(2, 10).sound(SoundType.STONE));
-        this.type = type;
+    public BlockCastleBlock(EnumVariant variant) {
+        super(name + "_" + variant, Properties.create(Material.ROCK).hardnessAndResistance(2, 10).sound(SoundType.STONE));
+        this.variant = variant;
 
     }
 
@@ -34,13 +34,13 @@ public class BlockCastleBlock extends VampirismBlock {
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, world, tooltip, advanced);
-        tooltip.add(new TextComponentTranslation(getTranslationKey() + (type == EnumType.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).applyTextStyle(TextFormatting.ITALIC));
+        tooltip.add(new TextComponentTranslation(getTranslationKey() + (variant == EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).applyTextStyle(TextFormatting.ITALIC));
     }
 
 
     @Override
     public void animateTick(IBlockState state, World world, BlockPos pos, Random rand) {
-        if (!BlockCastleStairs.isBlockStairs(state) && type == EnumType.DARK_BRICK_BLOODY) {
+        if (!BlockCastleStairs.isBlockStairs(state) && variant == EnumVariant.DARK_BRICK_BLOODY) {
             if (rand.nextInt(180) == 0) {
                 world.playSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.ambient_castle, SoundCategory.AMBIENT, 0.8F, 1.0F, false);
             }
@@ -49,7 +49,7 @@ public class BlockCastleBlock extends VampirismBlock {
     }
 
 
-    public enum EnumType implements IStringSerializable {
+    public enum EnumVariant implements IStringSerializable {
         DARK_BRICK(0, "dark_brick"),
         PURPLE_BRICK(1, "purple_brick"),
         DARK_BRICK_BLOODY(2, "dark_brick_bloody"),
@@ -68,7 +68,7 @@ public class BlockCastleBlock extends VampirismBlock {
         private final String name;
         private final String unlocalizedName;
 
-        EnumType(int metaIn, String nameIn) {
+        EnumVariant(int metaIn, String nameIn) {
             this.meta = metaIn;
             this.name = nameIn;
             this.unlocalizedName = nameIn;

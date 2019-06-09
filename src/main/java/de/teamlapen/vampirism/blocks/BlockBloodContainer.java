@@ -39,7 +39,7 @@ public class BlockBloodContainer extends VampirismBlockContainer {
 
     @Override
     public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
+        return BlockRenderLayer.TRANSLUCENT;
     }
 
 

@@ -56,6 +56,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
         return this.getDefaultState().with(FACING, context.getNearestLookingDirection());
     }
 
+    @Override
     public IBlockState mirror(IBlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
@@ -96,6 +97,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
         return EnumBlockRenderType.MODEL;
     }
 
+    @Override
     public IBlockState rotate(IBlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }

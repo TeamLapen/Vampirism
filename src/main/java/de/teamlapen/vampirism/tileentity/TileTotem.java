@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.tileentity;
 
-import static net.minecraft.tileentity.TileEntity.LOGGER;
-
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
@@ -25,7 +23,6 @@ import de.teamlapen.vampirism.entity.vampire.EntityVampireFactionVillager;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -56,10 +53,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.*;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.*;
 
 
 /**
@@ -383,16 +379,15 @@ public class TileTotem extends TileEntity implements ITickable {
 
     }
 
-    /**
-     * Update the village information and remove bossbar.
-     * Call if block is removed
-     */
-    public void onTileRemoved() {
+
+    @Override
+    public void remove() {
         VampirismVillage v = getVillage();
         if (v != null) {
             v.removeTotemAndReset(this.pos);
         }
         updateBossinfoPlayers(null);
+        super.remove();
     }
 
     @Override

@@ -8,16 +8,15 @@ import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockCrops;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IItemProvider;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 /**
  * Garlic Plant
@@ -32,30 +31,30 @@ public class BlockGarlic extends BlockCrops {
     public static final String regName = "garlic";
 
     public BlockGarlic() {
-        this.setCreativeTab(null);
+        super(Properties.create(Material.PLANTS));
         setRegistryName(REFERENCE.MODID, regName);
-        this.setTranslationKey(REFERENCE.MODID + "." + regName);
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockReader world, BlockPos pos, IBlockState state, int fortune) {
-        return super.getDrops(world, pos, state, fortune - 1);
+    public void getDrops(IBlockState p_getDrops_1_, NonNullList<ItemStack> p_getDrops_2_, World p_getDrops_3_, BlockPos p_getDrops_4_, int fortune) {
+        super.getDrops(p_getDrops_1_, p_getDrops_2_, p_getDrops_3_, p_getDrops_4_, fortune - 1);
     }
 
     @Override
-    public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
-        if (state.getValue(AGE) > 5 && Helper.isVampire(entityIn)) {
-            DamageHandler.affectVampireGarlicDirect(entityIn instanceof EntityPlayer ? VReference.VAMPIRE_FACTION.getPlayerCapability((EntityPlayer) entityIn) : (IVampire) entityIn, EnumStrength.WEAK);
+    public void onEntityCollision(IBlockState state, World world, BlockPos pos, Entity entity) {
+        if (state.get(AGE) > 5 && Helper.isVampire(entity)) {
+            DamageHandler.affectVampireGarlicDirect(entity instanceof EntityPlayer ? VReference.VAMPIRE_FACTION.getPlayerCapability((EntityPlayer) entity) : (IVampire) entity, EnumStrength.WEAK);
         }
     }
 
     @Override
-    protected Item getCrop() {
+    protected IItemProvider getCropsItem() {
         return ModItems.item_garlic;
     }
 
     @Override
-    protected Item getSeed() {
+    protected IItemProvider getSeedsItem() {
         return ModItems.item_garlic;
     }
+
 }

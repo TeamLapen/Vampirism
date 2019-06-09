@@ -1,14 +1,17 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -18,22 +21,17 @@ import java.util.List;
 public class BlockCastleStairs extends BlockStairs {
     private final static String REGNAME_BASE = "castle_stairs_";
 
-    public BlockCastleStairs(BlockCastleBlock block, BlockCastleBlock.EnumType type, String name) {
-        super(block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, type));
-        this.setCreativeTab(VampirismMod.creativeTab);
+    public BlockCastleStairs(IBlockState state, String name) {
+        super(state, Properties.create(Material.ROCK).hardnessAndResistance(2, 10).sound(SoundType.STONE));
         setRegistryName(REFERENCE.MODID, REGNAME_BASE + name);
-        this.setTranslationKey(REFERENCE.MODID + "." + REGNAME_BASE + name);
-        setHardness(2.0F);
-        setResistance(10.0F);
-        setSoundType(SoundType.STONE);
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add("§o" + UtilLib.translate(ModBlocks.castle_block.getTranslationKey() + (this.equals(ModBlocks.castle_stairs_dark_stone) ? ".no_spawn" : ".vampire_spawn")) + "§r");
+        tooltip.add(new TextComponentTranslation(ModBlocks.castle_block.getTranslationKey() + (this.equals(ModBlocks.castle_stairs_dark_stone) ? ".no_spawn" : ".vampire_spawn")).applyTextStyle(TextFormatting.ITALIC));
 
     }
 

@@ -6,67 +6,105 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.ItemInjection;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.EnumProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * Block which represents the top and the bottom part of a "Medical Chair" used for injections
  */
 public class BlockMedChair extends VampirismBlock {
-    public static final PropertyEnum<EnumPart> PART = PropertyEnum.create("part", EnumPart.class);
+    public static final EnumProperty<EnumPart> PART = EnumProperty.create("part", EnumPart.class);
     private final static String name = "med_chair";
+    public static final DirectionProperty FACING = BlockHorizontal.HORIZONTAL_FACING;
+
 
     public BlockMedChair() {
-        super(name, Material.IRON);
-        this.blockState.getBaseState().withProperty(PART, EnumPart.TOP).withProperty(FACING, EnumFacing.NORTH);
-        this.setHasFacing();
-        setHardness(0.5F);
+        super(name, Properties.create(Material.IRON).hardnessAndResistance(1));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, EnumFacing.NORTH).with(PART, EnumPart.TOP));
 
     }
 
+    @Nullable
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        super.breakBlock(worldIn, pos, state);
-        EnumFacing dir = state.getValue(FACING);
-        BlockPos other;
-        if (state.getValue(PART) == EnumPart.TOP) {
-            other = pos.offset(dir);
-            worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.item_med_chair, 1)));
+    public IBlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState().with(FACING, context.getNearestLookingDirection());
+    }
+
+    @Override
+    public IBlockState mirror(IBlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+    }
+
+    @Override
+    public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+
+        ItemStack stack = player.getHeldItem(hand);
+        if (!stack.isEmpty() && stack.getItem().equals(ModItems.injection_garlic)) {
+            IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(player);
+            IPlayableFaction faction = handler.getCurrentFaction();
+            if (handler.canJoin(faction)) {
+                if (world.isRemote) {
+                    VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
+                } else {
+                    handler.joinFaction(VReference.HUNTER_FACTION);
+                    player.addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 1));
+                }
+                stack.shrink(1);
+                if (stack.isEmpty()) {
+                    player.inventory.deleteStack(stack);
+                }
+            } else if (faction != null) {
+                if (!world.isRemote) {
+                    player.sendMessage(new TextComponentTranslation("text.vampirism.med_chair_other_faction", new TextComponentTranslation(faction.getTranslationKey())));
+                }
+
+            }
         } else {
-            other = pos.offset(dir.getOpposite());
+            if (world.isRemote)
+                player.sendMessage(new TextComponentTranslation("text.vampirism.need_item_to_use", new TextComponentTranslation((new ItemStack(ModItems.injection_garlic).getTranslationKey() + ".name")));
         }
-        worldIn.removeBlock(other);
+
+        return true;
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(PART).getMeta() << 2 | state.getValue(FACING).getHorizontalIndex();
+    public void onReplaced(IBlockState state, World world, BlockPos pos, IBlockState newState, boolean isMoving) {
+        super.onReplaced(state, world, pos, newState, isMoving);
+        if (state.getBlock() != newState.getBlock()) {
+            EnumFacing dir = state.get(FACING);
+            BlockPos other;
+            if (state.get(PART) == EnumPart.TOP) {
+                other = pos.offset(dir);
+                world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.item_med_chair, 1)));
+            } else {
+                other = pos.offset(dir.getOpposite());
+            }
+            world.removeBlock(other);
+        }
     }
 
     @Override
-    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer, hand).withProperty(FACING, placer.getHorizontalFacing().rotateY().rotateY()).withProperty(PART, EnumPart.fromMeta(placer.getRNG().nextInt(2)));//TODO
+    public IBlockState rotate(IBlockState state, Rotation rot) {
+        return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(PART, EnumPart.fromMeta(meta >> 2)).withProperty(FACING, EnumFacing.byHorizontalIndex(meta));
-    }
 
     @Override
     public boolean isFullCube(IBlockState state) {
@@ -74,46 +112,10 @@ public class BlockMedChair extends VampirismBlock {
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
+    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+        builder.add(FACING, PART);
     }
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-
-        ItemStack stack = playerIn.getHeldItem(hand);
-        if (!stack.isEmpty() && stack.getItem().equals(ModItems.injection) && stack.getMetadata() == ItemInjection.META_GARLIC) {
-            IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
-            IPlayableFaction faction = handler.getCurrentFaction();
-            if (handler.canJoin(faction)) {
-                if (worldIn.isRemote) {
-                    VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
-                } else {
-                    handler.joinFaction(VReference.HUNTER_FACTION);
-                    playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 1));
-                }
-                stack.shrink(1);
-                if (stack.isEmpty()) {
-                    playerIn.inventory.deleteStack(stack);
-                }
-            } else if (faction != null) {
-                if (!worldIn.isRemote) {
-                    playerIn.sendMessage(new TextComponentTranslation("text.vampirism.med_chair_other_faction", new TextComponentTranslation(faction.getTranslationKey())));
-                }
-
-            }
-        } else {
-            if (worldIn.isRemote)
-                playerIn.sendMessage(new TextComponentTranslation("text.vampirism.need_item_to_use", new TextComponentTranslation((new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC)).getTranslationKey() + ".name")));
-        }
-
-        return true;
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING, PART);
-    }
 
     public enum EnumPart implements IStringSerializable {
         TOP("top", 0), BOTTOM("bottom", 1);
@@ -131,10 +133,6 @@ public class BlockMedChair extends VampirismBlock {
         EnumPart(String name, int meta) {
             this.name = name;
             this.meta = meta;
-        }
-
-        public int getMeta() {
-            return meta;
         }
 
         @Override

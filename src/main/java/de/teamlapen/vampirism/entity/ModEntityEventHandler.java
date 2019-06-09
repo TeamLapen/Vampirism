@@ -77,7 +77,7 @@ public class ModEntityEventHandler {
     public void onEntityCheckSpawn(LivingSpawnEvent.CheckSpawn event) {
         IBlockState blockState = event.getWorld().getBlockState(new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down());
         if (blockState.getBlock().equals(ModBlocks.castle_block)) {
-            if (BlockCastleBlock.EnumType.DARK_STONE.equals(blockState.getValue(BlockCastleBlock.VARIANT)) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
+            if (BlockCastleBlock.EnumVariant.DARK_STONE.equals(blockState.getValue(BlockCastleBlock.VARIANT)) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
                 event.setResult(Event.Result.DENY);
             }
         } else if (blockState.getBlock() instanceof BlockCastleStairs) {

@@ -166,7 +166,7 @@ public class ModEventHandler {
             if (ModBiomes.vampireForest.equals(event.getWorld().getBiome(event.getPos()))) {
                 EntityPlayer p = event.getHarvester();
                 if (p != null && p.getRNG().nextInt(Balance.general.DROP_ORCHID_FROM_LEAVES_CHANCE) == 0) {
-                    event.getDrops().add(new ItemStack(ModBlocks.vampirism_flower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
+                    event.getDrops().add(new ItemStack(ModBlocks.vampirism_flower, 1, VampirismFlower.TYPE.ORCHID.getMeta()));
                 }
             }
         }

@@ -52,7 +52,7 @@ public class BiomeGenVampireForest extends Biome {
 
     @Override
     public void addDefaultFlowers() {
-        addFlower(ModBlocks.vampirism_flower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID), 10);
+        addFlower(ModBlocks.vampirism_flower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.TYPE.ORCHID), 10);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class BiomeGenVampireForest extends Biome {
 
         @GameRegistry.ObjectHolder("vampirism:vampirism_flower")
         private static VampirismFlower flower = null;
-        private IBlockState state = ModBlocks.vampirism_flower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID);
+        private IBlockState state = ModBlocks.vampirism_flower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.TYPE.ORCHID);
 
         private WorldGenVampireOrchid() {
             super(Blocks.YELLOW_FLOWER, BlockFlower.EnumFlowerType.DANDELION);

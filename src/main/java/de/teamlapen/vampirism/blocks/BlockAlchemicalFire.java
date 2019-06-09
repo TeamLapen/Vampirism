@@ -32,7 +32,7 @@ public class BlockAlchemicalFire extends VampirismBlock {
     private static final String name = "alchemical_fire";
 
     public BlockAlchemicalFire() {
-        super(name, Properties.create(Material.FIRE, MaterialColor.TNT).hardnessAndResistance(0.0f).lightValue(15).sound(SoundType.CLOTH).doesNotBlockMovement().needsRandomTick());
+        super(name, Properties.create(Material.FIRE, MaterialColor.TNT).hardnessAndResistance(0.0f).lightValue(15).sound(SoundType.CLOTH).doesNotBlockMovement().tickRandomly());
         this.setDefaultState(this.stateContainer.getBaseState().with(AGE, 0));
     }
 
@@ -58,10 +58,6 @@ public class BlockAlchemicalFire extends VampirismBlock {
         return BlockFaceShape.UNDEFINED;
     }
 
-    @Override
-    public MaterialColor getMapColor(IBlockState state, IBlockReader worldIn, BlockPos pos) {
-        return super.getMapColor(state, worldIn, pos);
-    }
 
     @Override
     public BlockRenderLayer getRenderLayer() {

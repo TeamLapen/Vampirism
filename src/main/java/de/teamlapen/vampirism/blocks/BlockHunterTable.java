@@ -3,18 +3,19 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.HunterTableContainer;
 import de.teamlapen.vampirism.network.ModGuiHandler;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
 
 /**
  * Table for hunter "education/leveling"
@@ -22,38 +23,45 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 public class BlockHunterTable extends VampirismBlock {
     public static final String name = "hunter_table";
+    public static final DirectionProperty FACING = BlockHorizontal.HORIZONTAL_FACING;
+
 
     public static HunterTableContainer createInventoryContainer(EntityPlayer player, BlockPos pos) {
         return new HunterTableContainer(player, pos);
     }
 
     public BlockHunterTable() {
-        super(name, Material.WOOD);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-        this.setHasFacing();
-        setHardness(0.5F);
-
+        super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.5f));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, EnumFacing.NORTH));
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
+    @Override
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
+    @Nullable
     @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getHorizontalIndex();
+    public IBlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState().with(FACING, context.getNearestLookingDirection());
     }
 
     @Override
-    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer, hand).withProperty(FACING, placer.getHorizontalFacing());
+    public IBlockState mirror(IBlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta));
+    public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TABLE, world, pos.getX(), pos.getY(), pos.getZ());
+        return true;
     }
+
+    @Override
+    public IBlockState rotate(IBlockState state, Rotation rot) {
+        return state.with(FACING, rot.rotate(state.get(FACING)));
+    }
+
 
     @Override
     public boolean isFullCube(IBlockState state) {
@@ -61,20 +69,10 @@ public class BlockHunterTable extends VampirismBlock {
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
+    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+        builder.add(FACING);
     }
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
-        return true;
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING);
-    }
 
 
 }

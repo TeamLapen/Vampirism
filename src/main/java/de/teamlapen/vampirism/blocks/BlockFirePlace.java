@@ -4,12 +4,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
+import net.minecraft.world.IWorldReaderBase;
+import net.minecraft.world.IWorldWriter;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,17 +19,18 @@ import java.util.Random;
 
 
 public class BlockFirePlace extends VampirismBlock {
-    protected static final AxisAlignedBB BBOX = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
+    protected static final AxisAlignedBB BBOX = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D); //TODO 1.13 shape
     private final static String regName = "fire_place";
 
     public BlockFirePlace() {
-        super(regName, Material.WOOD);
-        this.setLightLevel(1.0F);
-        setHardness(1.0F);
+        super(regName, Properties.create(Material.WOOD).lightValue(15).hardnessAndResistance(1));
+
     }
 
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP);
+
+    @Override
+    public boolean isValidPosition(IBlockState state, IWorldReaderBase world, BlockPos pos) {
+        return world.getBlockState(pos.down()).isTopSolid();
     }
 
     @Override
@@ -36,10 +38,7 @@ public class BlockFirePlace extends VampirismBlock {
         return BlockRenderLayer.CUTOUT;
     }
 
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockReader source, BlockPos pos) {
-        return BBOX;
-    }
+
 
     public boolean isFullCube(IBlockState state) {
         return false;
@@ -51,13 +50,14 @@ public class BlockFirePlace extends VampirismBlock {
 
 
     @Override
-    public void onNeighborChange(IBlockReader world, BlockPos pos, BlockPos neighbor) {
-        if (!world.getBlockState(pos.down()).isSideSolid(world, pos, EnumFacing.UP)) {
-            if (world instanceof World) {
-                ((World) world).destroyBlock(pos, true);
+    public void onNeighborChange(IBlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+        if (!isValidPosition(state, world, pos)) {
+            if (world instanceof IWorldWriter) {
+                ((IWorldWriter) world).destroyBlock(pos, true);
             }
         }
     }
+
 
     @OnlyIn(Dist.CLIENT)
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {

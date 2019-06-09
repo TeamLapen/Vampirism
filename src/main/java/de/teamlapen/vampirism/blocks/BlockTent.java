@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.blocks;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -15,8 +18,8 @@ import net.minecraft.world.World;
  * Position property contains the position within the 4 block arrangement
  */
 public class BlockTent extends VampirismBlock {
-    public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-    public static final PropertyInteger POSITION = PropertyInteger.create("position", 0, 3);
+    public static final DirectionProperty FACING = BlockHorizontal.HORIZONTAL_FACING;
+    public static final IntegerProperty POSITION = IntegerProperty.create("position", 0, 3);
     private static final String name = "tent";
 
     public BlockTent() {
@@ -24,32 +27,32 @@ public class BlockTent extends VampirismBlock {
     }
 
     protected BlockTent(String name) {
-        super(name, Material.CLOTH);
-        this.setCreativeTab(null);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POSITION, 0));
-        this.setHardness(0.6F);
+        super(name, Properties.create(Material.CLOTH).hardnessAndResistance(0.6f).sound(SoundType.CLOTH));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, EnumFacing.NORTH).with(POSITION, 0));
     }
 
-    @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        super.breakBlock(worldIn, pos, state);
-        EnumFacing dir = state.getValue(FACING);
-        int p = state.getValue(POSITION);
-        if (p == 0) {
-            dir = dir.getOpposite();
-        } else if (p == 1) {
-            pos = pos.offset(dir.rotateY());
-        } else if (p == 2) {
-            pos = pos.offset(dir.rotateY()).offset(dir.getOpposite());
-        } else if (p == 3) {
-            pos = pos.offset(dir);
-            dir = dir.getOpposite();
-        }
-        worldIn.removeBlock(pos);
-        worldIn.removeBlock(pos.offset(dir));
-        worldIn.removeBlock(pos.offset(dir.rotateYCCW()));
-        worldIn.removeBlock(pos.offset(dir).offset(dir.rotateYCCW()));
 
+    @Override
+    public void onReplaced(IBlockState state, World world, BlockPos pos, IBlockState newState, boolean isMoving) {
+        super.onReplaced(state, world, pos, newState, isMoving);
+        if (newState.getBlock() != state.getBlock()) {
+            EnumFacing dir = state.get(FACING);
+            int p = state.get(POSITION);
+            if (p == 0) {
+                dir = dir.getOpposite();
+            } else if (p == 1) {
+                pos = pos.offset(dir.rotateY());
+            } else if (p == 2) {
+                pos = pos.offset(dir.rotateY()).offset(dir.getOpposite());
+            } else if (p == 3) {
+                pos = pos.offset(dir);
+                dir = dir.getOpposite();
+            }
+            world.removeBlock(pos);
+            world.removeBlock(pos.offset(dir));
+            world.removeBlock(pos.offset(dir.rotateYCCW()));
+            world.removeBlock(pos.offset(dir).offset(dir.rotateYCCW()));
+        }
 
     }
 
@@ -61,31 +64,13 @@ public class BlockTent extends VampirismBlock {
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
-        int meta = state.getValue(FACING).getHorizontalIndex();
-        meta += state.getValue(POSITION) << 2;
-        return meta;
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        int dir = meta & 3;
-        int pos = (meta >> 2);
-        return getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(dir)).withProperty(POSITION, pos);
-    }
-
-    @Override
     public boolean isFullCube(IBlockState state) {
         return false;
     }
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
 
     @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING, POSITION);
+    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+        builder.add(FACING, POSITION);
     }
 }

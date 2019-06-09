@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockTallGrass;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -14,7 +13,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.ToolType;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 
@@ -23,15 +24,26 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
     private static final String name = "cursed_earth";
 
     public BlockCursedEarth() {
-        super(name, Material.GROUND);
-        this.setHardness(0.5F).setResistance(2.0F).setHarvestLevel("shovel", 0);
-        setSoundType(SoundType.GROUND);
+        super(name, Properties.create(Material.GROUND).hardnessAndResistance(0.5f, 2.0f).sound(SoundType.GROUND));
+
     }
 
     @Override
-    public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient) {
+    public boolean canGrow(IBlockReader iBlockReader, BlockPos blockPos, IBlockState iBlockState, boolean b) {
         return true;
     }
+
+    @Override
+    public int getHarvestLevel(IBlockState p_getHarvestLevel_1_) {
+        return 0;
+    }
+
+    @Nullable
+    @Override
+    public ToolType getHarvestTool(IBlockState p_getHarvestTool_1_) {
+        return ToolType.SHOVEL;
+    }
+
 
     @Override
     public boolean canSustainPlant(IBlockState state, IBlockReader world, BlockPos pos, EnumFacing direction, IPlantable plantable) {
@@ -57,15 +69,15 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
                     if (worldIn.isAirBlock(blockpos1)) {
                         if (rand.nextInt(8) == 0) {
                             VampirismFlower blockflower = ModBlocks.vampirism_flower;
-                            IBlockState iblockstate = blockflower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID);
+                            IBlockState iblockstate = blockflower.getDefaultState().with(VampirismFlower.TYPE, VampirismFlower.TYPE.ORCHID);
 
-                            if (blockflower.canBlockStay(worldIn, blockpos1, iblockstate)) {
+                            if (blockflower.isValidPosition(iblockstate, worldIn, blockpos1)) {
                                 worldIn.setBlockState(blockpos1, iblockstate, 3);
                             }
                         } else {
-                            IBlockState iblockstate1 = Blocks.TALLGRASS.getDefaultState().withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS);
+                            IBlockState iblockstate1 = Blocks.TALL_GRASS.getDefaultState();
 
-                            if (Blocks.TALLGRASS.canBlockStay(worldIn, blockpos1, iblockstate1)) {
+                            if (Blocks.TALL_GRASS.isValidPosition(iblockstate1, worldIn, blockpos1)) {
                                 worldIn.setBlockState(blockpos1, iblockstate1, 3);
                             }
                         }
