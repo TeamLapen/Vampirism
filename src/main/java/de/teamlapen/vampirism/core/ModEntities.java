@@ -17,7 +17,6 @@ import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionSaveable
 import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
@@ -36,13 +35,12 @@ import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Handles all entity registrations and reference.
@@ -75,7 +73,7 @@ public class ModEntities {
     public static final String VILLAGER_ANGRY = "villager_angry";
     public static final String VILLAGER_CONVERTED = "villager_converted";
     public static final String HUNTER_TRAINER_DUMMY = "hunter_trainer_dummy";
-    public static final String HORSE_CONVERTED = "horse_converted";
+    public static final String HORSE_CONVERTED = "converted_horse";
 
 
     /**
