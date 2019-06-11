@@ -10,8 +10,6 @@ import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
-import de.teamlapen.vampirism.util.ModEventFactory;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -24,9 +22,9 @@ import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireFactionVillager;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
+import de.teamlapen.vampirism.util.ModEventFactory;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
@@ -56,10 +54,9 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.*;
 
 
 /**
@@ -689,15 +686,15 @@ public class TileTotem extends TileEntity implements ITickable {
                     int z = (int) (affectedArea.minZ + rng.nextInt((int) (affectedArea.maxZ - affectedArea.minZ)));
                     BlockPos pos = new BlockPos(x, world.getHeight(x, z) - 1, z);
                     IBlockState b = world.getBlockState(pos);
-                    if (b.getBlock() == world.getBiome(pos).topBlock.getBlock() && b.getBlock() != Blocks.SAND && controllingFaction == VReference.VAMPIRE_FACTION) {
-                        world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
-                        if (world.getBlockState(pos.up()).getBlock() == Blocks.TALLGRASS) {
-                            world.setBlockToAir(pos.up());
+                    if (!ModEventFactory.fireReplaceVillageBlockEvent(getVillage(), world, b, pos, controllingFaction)) {
+                        if (b.getBlock() == world.getBiome(pos).topBlock.getBlock() && b.getBlock() != Blocks.SAND && controllingFaction == VReference.VAMPIRE_FACTION) {
+                            world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
+                            if (world.getBlockState(pos.up()).getBlock() == Blocks.TALLGRASS) {
+                                world.setBlockToAir(pos.up());
+                            }
+                        } else if (b.getBlock() == ModBlocks.cursed_earth && controllingFaction == VReference.HUNTER_FACTION) {
+                            world.setBlockState(pos, world.getBiome(pos).topBlock);
                         }
-                    } else if (b.getBlock() == ModBlocks.cursed_earth && controllingFaction == VReference.HUNTER_FACTION) {
-                        world.setBlockState(pos, world.getBiome(pos).topBlock);
-                    } else {
-                        ModEventFactory.fireReplaceVillageBlockEvent(getVillage(), world, b, controllingFaction);
                     }
                 }
             }

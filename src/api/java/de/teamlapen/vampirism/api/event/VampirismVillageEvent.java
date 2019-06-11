@@ -4,20 +4,19 @@ import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 public abstract class VampirismVillageEvent extends Event {
 
@@ -319,19 +318,26 @@ public abstract class VampirismVillageEvent extends Event {
     /**
      * fired when blocks around a village should be replaced, but the controlling faction is neither vampire nor hunter
      */
+    @Cancelable
     public static class ReplaceBlock extends VampirismVillageEvent {
 
         private final @Nonnull World world;
         private final @Nonnull IBlockState state;
         private final @Nonnull IPlayableFaction<?> faction;
+        private final @Nonnull
+        BlockPos pos;
 
-        public ReplaceBlock(@Nullable IVampirismVillage village, @Nonnull World world, @Nonnull IBlockState b, @Nonnull IPlayableFaction<?> controllingFaction) {
+        public ReplaceBlock(@Nullable IVampirismVillage village, @Nonnull World world, @Nonnull IBlockState b, @Nonnull BlockPos pos, @Nonnull IPlayableFaction<?> controllingFaction) {
             super(village);
             this.world = world;
             this.state = b;
             this.faction = controllingFaction;
+            this.pos = pos;
         }
 
+        /**
+         * @returns the world of the block
+         */
         @Nonnull
         public World getWorld() {
             return world;
@@ -351,6 +357,14 @@ public abstract class VampirismVillageEvent extends Event {
         @Nonnull
         public IPlayableFaction<?> getFaction() {
             return faction;
+        }
+
+        /**
+         * @returns the position of the block
+         */
+        @Nonnull
+        public BlockPos getBlockPos() {
+            return pos;
         }
 
     }

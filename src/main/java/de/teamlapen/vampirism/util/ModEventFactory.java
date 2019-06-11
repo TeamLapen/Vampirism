@@ -6,20 +6,19 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.event.FactionEvent;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class ModEventFactory {
 
@@ -43,9 +42,9 @@ public class ModEventFactory {
         return event;
     }
 
-    public static void fireReplaceVillageBlockEvent(@Nullable IVampirismVillage village, @Nonnull World world, @Nonnull IBlockState b, @Nonnull IPlayableFaction<?> controllingFaction) {
-        VampirismVillageEvent.ReplaceBlock event = new VampirismVillageEvent.ReplaceBlock(village, world, b, controllingFaction);
-        MinecraftForge.EVENT_BUS.post(event);
+    public static boolean fireReplaceVillageBlockEvent(@Nullable IVampirismVillage village, @Nonnull World world, @Nonnull IBlockState b, @Nonnull BlockPos pos, @Nonnull IPlayableFaction<?> controllingFaction) {
+        VampirismVillageEvent.ReplaceBlock event = new VampirismVillageEvent.ReplaceBlock(village, world, b, pos, controllingFaction);
+        return MinecraftForge.EVENT_BUS.post(event);
     }
 
     public static boolean fireInitiateCaptureEvent(@Nonnull IVampirismVillage village, @Nonnull World world, @Nullable IPlayableFaction<?> controllingFaction, @Nonnull IPlayableFaction<?> capturingFaction) {
