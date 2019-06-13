@@ -24,7 +24,7 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends IForgeRegi
     }
 
     /**
-     * Can be overriden to check addidional requirements
+     * Can be overridden to check additional requirements
      *
      * @return
      */

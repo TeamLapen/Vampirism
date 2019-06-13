@@ -7,12 +7,14 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.core.VampirismRegistries;
+import de.teamlapen.vampirism.util.Permissions;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -248,6 +250,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             return IAction.PERM.COOLDOWN;
         } else{
             if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
+            if (!isActionAllowedPermission(action)) return IAction.PERM.DISALLOWED;
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
                 if (action.onActivated(player)) {
@@ -275,6 +278,11 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             }
         }
         unlockedActions.addAll(actions);
+    }
+
+    private boolean isActionAllowedPermission(IAction action) {
+        ResourceLocation id = action.getRegistryName();
+        return player.getRepresentingEntity().world.isRemote || PermissionAPI.hasPermission(player.getRepresentingPlayer(), Permissions.ACTION_PREFIX + id.getNamespace() + "." + id.getPath());
     }
 
     /**

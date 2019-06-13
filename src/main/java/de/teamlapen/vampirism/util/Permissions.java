@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.util;
 
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.core.VampirismRegistries;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
@@ -14,6 +16,7 @@ public class Permissions {
     public static final String FEED = "vampirism.bite.feed";
     public static final String FEED_PLAYER = "vampirism.bite.feed.player";
     public static final String INFECT_PLAYER = "vampirism.infect.player";
+    public static final String ACTION_PREFIX = "vampirism.action.";
 
     public static void init() {
         PermissionAPI.registerNode(VAMPIRISM, DefaultPermissionLevel.ALL, "Used to check if permission system works");
@@ -22,6 +25,9 @@ public class Permissions {
         PermissionAPI.registerNode(FEED, DefaultPermissionLevel.ALL, "Allow feeding");
         PermissionAPI.registerNode(FEED_PLAYER, DefaultPermissionLevel.ALL, "Allow feeding from players");
         PermissionAPI.registerNode(INFECT_PLAYER, DefaultPermissionLevel.ALL, "Allow players to infect other players");
+        for (IAction action : VampirismRegistries.ACTIONS.getValuesCollection()) {
+            PermissionAPI.registerNode(ACTION_PREFIX + action.getRegistryName().getNamespace() + "." + action.getRegistryName().getPath(), DefaultPermissionLevel.ALL, "Use action " + action.getUnlocalizedName());
+        }
     }
 
     public static boolean isPvpEnabled(EntityPlayer player) {
