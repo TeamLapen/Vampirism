@@ -51,6 +51,8 @@ public class LayerPlayerFaceOverlay<T extends EntityCreature & IPlayerFace> impl
         GlStateManager.enableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
 
         ((ModelBiped) this.renderBiped.getMainModel()).bipedHead.render(scale);
+        ((ModelBiped) this.renderBiped.getMainModel()).bipedHeadwear.render(scale);
+
         GlStateManager.popMatrix();
 
 
