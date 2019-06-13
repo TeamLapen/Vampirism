@@ -4,12 +4,9 @@ import de.teamlapen.lib.lib.client.render.RenderAreaParticleCloud;
 import de.teamlapen.vampirism.client.render.entities.*;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
+import de.teamlapen.vampirism.entity.converted.EntityConvertedHorse;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
-import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
-import de.teamlapen.vampirism.entity.hunter.EntityAggressiveVillager;
-import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainerDummy;
+import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
 import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
@@ -48,5 +45,6 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(EntityDarkBloodProjectile.class, RenderDarkBloodProjectile::new);
         RenderingRegistry.registerEntityRenderingHandler(EntitySoulOrb.class, manager -> new RenderSoulOrb(manager, Minecraft.getMinecraft().getRenderItem()));
         RenderingRegistry.registerEntityRenderingHandler(EntityHunterTrainerDummy.class, RenderHunterTrainerDummy::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityConvertedHorse.class, RenderConvertedHorse::new);
     }
 }
