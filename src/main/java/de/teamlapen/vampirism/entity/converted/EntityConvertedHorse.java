@@ -58,7 +58,7 @@ public class EntityConvertedHorse extends EntityHorse implements IConvertedCreat
 
     @Override
     public String getName() {
-        return UtilLib.translate("entity.vampirism.vampire.name") + " " + (super.getName());
+        return UtilLib.translate("entity.vampirism.vampire.name") + " " + UtilLib.translate("entity.Horse.name");
     }
 
     @Override
@@ -85,7 +85,7 @@ public class EntityConvertedHorse extends EntityHorse implements IConvertedCreat
 
     @Override
     protected boolean canDespawn() {
-        return true;
+        return !isTame();
     }
 
     @Override

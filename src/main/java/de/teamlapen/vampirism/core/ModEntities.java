@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -141,7 +140,7 @@ public class ModEntities {
         registry.register(prepareEntityEntry(EntityHunterFactionVillager.class, VILLAGER_HUNTER_FACTION, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
         registry.register(prepareEntityEntry(EntityVampireFactionVillager.class, VILLAGER_VAMPIRE_FACTION, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
         registry.register(prepareEntityEntry(EntityHunterTrainerDummy.class, HUNTER_TRAINER_DUMMY, "hunter_trainer_dummy", EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
-        registry.register(prepareEntityEntry(EntityConvertedHorse.class, HORSE_CONVERTED, "converted.horse", EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
+        registry.register(prepareEntityEntry(EntityConvertedHorse.class, HORSE_CONVERTED, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
     }
 
     static Biome[] getZombieBiomes() {
