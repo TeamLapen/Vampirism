@@ -18,6 +18,7 @@ For a more detailed description head over to the Minecraft forums or the Cursefo
 
 ## Team
 - [maxanier](http://maxanier.de) _Everything_  
+- [Cheaterpaul]() _Coding_
 
 #### Inactive
 - Mistadon _Code/Models_  
