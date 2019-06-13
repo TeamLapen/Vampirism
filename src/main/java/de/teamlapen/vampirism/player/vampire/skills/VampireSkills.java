@@ -16,15 +16,16 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 /**
  * Registers the default vampire skills
  */
-@GameRegistry.ObjectHolder(REFERENCE.MODID)
+@ObjectHolder(REFERENCE.MODID)
 public class VampireSkills {
 
     public static final ISkill night_vision = UtilLib.getNull();
@@ -158,7 +159,7 @@ public class VampireSkills {
 
 
             @Override
-            public String getDescription() {
+            public ITextComponent getDescription() {
                 if (Balance.vps.DISABLE_AVOIDED_BY_CREEPERS) {
                     return TextFormatting.RED + "Disabled by admin" + TextFormatting.RESET;
                 }
@@ -196,8 +197,8 @@ public class VampireSkills {
         registry.register(new ActionSkill<>("teleport", VampireActions.teleport));
         registry.register(new VampirismSkill.SimpleVampireSkill("sword_finisher", 0, 16, true) {
             @Override
-            public String getDescription() {
-                return UtilLib.translateFormatted("text.vampirism.skill.sword_finisher.desc", (int) (Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC * 100));
+            public ITextComponent getDescription() {
+                return UtilLib.translate("text.vampirism.skill.sword_finisher.desc", (int) (Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC * 100));
             }
         });
         registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile));

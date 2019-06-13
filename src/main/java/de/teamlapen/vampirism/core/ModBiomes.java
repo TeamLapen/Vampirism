@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.biome.BiomeGenVampireForest;
 import de.teamlapen.vampirism.config.Balance;
@@ -10,12 +9,15 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.registries.IForgeRegistry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Handles all biome registrations and reference.
  */
 public class ModBiomes {
 
+    private static final Logger LOGGER = LogManager.getLogger(ModBiomes.class);
     public static BiomeGenVampireForest vampireForest;
 
 
@@ -28,7 +30,7 @@ public class ModBiomes {
         if (!Configs.disable_vampireForest) {
 
             BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampireForest, Balance.general.VAMPIRE_FOREST_WEIGHT));
-            VampirismMod.log.d("ModBiomes", "Registered vampire forest with weight %d", Balance.general.VAMPIRE_FOREST_WEIGHT);
+            LOGGER.debug("Registered vampire forest with weight %d", Balance.general.VAMPIRE_FOREST_WEIGHT);
             VampirismAPI.sundamageRegistry().addNoSundamageBiome(ModBiomes.vampireForest.getBiomeClass());
 
         }

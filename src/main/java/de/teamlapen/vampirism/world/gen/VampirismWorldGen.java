@@ -38,7 +38,7 @@ public class VampirismWorldGen implements IWorldGenerator {
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         if (!Configs.disable_all_worldgen) {
-            int dim = world.provider.getDimension();
+            int dim = world.dimension;
             if (dim == 0 || dim != -1 && dim != 1 && (contains(Configs.worldGenDimensions, dim) || VampirismAPI.isWorldGenEnabledFor(dim))) {
                 generateOverworld(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
             }

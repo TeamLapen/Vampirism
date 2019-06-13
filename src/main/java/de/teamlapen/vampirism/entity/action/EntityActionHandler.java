@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.action;
 
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.actions.*;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
@@ -148,7 +149,7 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         List<EntityActionEntry> entry = Lists.newArrayList();
         int weightsum = 0;
         for (IEntityAction e : availableActions) {
-            int weight = ((DefaultEntityAction<T>) e).getWeight(entity);
+            int weight = ((DefaultEntityAction) e).getWeight(entity);
             if (weight > 0) {
                 entry.add(new EntityActionEntry(weight, e));
                 weightsum += weight;
@@ -187,7 +188,7 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
     }
 
     public void read(NBTTagCompound nbt) {
-        if (nbt.hasKey("activeAction")) {
+        if (nbt.contains("activeAction")) {
             deactivateAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation(nbt.getString("activeAction"))));
             isPlayerTarget = true;
         }
@@ -195,7 +196,7 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
 
     public void write(NBTTagCompound nbt) {
         if (isPlayerTarget() && getAction() != null) {
-            nbt.setString("activeAction", action.getRegistryName().toString());
+            nbt.putString("activeAction", action.getRegistryName().toString());
         }
     }
 

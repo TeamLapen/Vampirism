@@ -37,6 +37,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 
@@ -46,6 +48,7 @@ import javax.annotation.Nullable;
  */
 public class EntityBasicVampire extends EntityVampireBase implements IBasicVampire, IEntityActionUser {
 
+    private final static Logger LOGGER = LogManager.getLogger(EntityBasicVampire.class);
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityBasicVampire.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 2;
     private final int ANGRY_TICKS_PER_ATTACK = 120;
@@ -193,12 +196,12 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     @Override
     public void read(NBTTagCompound tagCompund) {
         super.read(tagCompund);
-        if (tagCompund.hasKey("level")) {
-            setLevel(tagCompund.getInteger("level"));
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
         }
-        if (tagCompund.hasKey("village_attack_area")) {
+        if (tagCompund.contains("village_attack_area")) {
             this.attackVillage(UtilLib.intToBB(tagCompund.getIntArray("village_attack_area")));
-        } else if (tagCompund.hasKey("village_defense_area")) {
+        } else if (tagCompund.contains("village_defense_area")) {
             this.defendVillage(UtilLib.intToBB(tagCompund.getIntArray("village_defense_area")));
         }
 
@@ -207,7 +210,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     @Override
     public void tick() {
         super.tick();
-        if (advancedLeader != null && !advancedLeader.isEntityAlive()) {
+        if (advancedLeader != null && !advancedLeader.isAlive()) {
             advancedLeader = null;
         }
         if (!this.world.isRemote && this.ticksExisted % 40 == 8) {
@@ -237,11 +240,11 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     @Override
     public void writeAdditional(NBTTagCompound nbt) {
         super.writeAdditional(nbt);
-        nbt.setInteger("level", getLevel());
+        nbt.putInt("level", getLevel());
         if (village_attack_area != null) {
-            nbt.setIntArray("village_attack_area", UtilLib.bbToInt(village_attack_area));
+            nbt.putIntArray("village_attack_area", UtilLib.bbToInt(village_attack_area));
         } else if (village_defense_area != null) {
-            nbt.setIntArray("village_defense_area", UtilLib.bbToInt(village_defense_area));
+            nbt.putIntArray("village_defense_area", UtilLib.bbToInt(village_defense_area));
         }
     }
 
@@ -332,7 +335,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
             this.tasks.addTask(1, new EntityAIBreakDoor(this));
             ((PathNavigateGround) this.getNavigator()).setBreakDoors(true);
         }
-        this.tasks_avoidHunter = new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1);
+        this.tasks_avoidHunter = new EntityAIAvoidEntity<>(this, EntityCreature.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION));
         this.tasks.addTask(2, this.tasks_avoidHunter);
         this.tasks.addTask(2, new VampireAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
@@ -357,8 +360,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MAX_HEALTH + Balance.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_SPEED);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MAX_HEALTH + Balance.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_SPEED);
     }
 }

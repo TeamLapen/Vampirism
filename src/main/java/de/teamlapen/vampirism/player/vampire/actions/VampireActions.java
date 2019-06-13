@@ -3,14 +3,13 @@ package de.teamlapen.vampirism.player.vampire.actions;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.util.REFERENCE;
-
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 /**
  * Registers and holds all skills for vampire player
  */
-@GameRegistry.ObjectHolder(REFERENCE.MODID)
+@ObjectHolder(REFERENCE.MODID)
 public class VampireActions {
     public static final FreezeVampireAction freeze = UtilLib.getNull();
     public static final InvisibilityVampireAction vampire_invisibility = UtilLib.getNull();

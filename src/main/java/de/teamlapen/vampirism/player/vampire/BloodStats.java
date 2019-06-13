@@ -11,12 +11,14 @@ import net.minecraft.util.FoodStats;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Handles VP's blood stats. Very similar to {@link FoodStats}
  */
 public class BloodStats implements IBloodStats {
-    private final static String TAG = "BloodStats";
+    private final static Logger LOGGER = LogManager.getLogger(BloodStats.class);
     private final EntityPlayer player;
     private int maxBlood = 20;
     private int bloodLevel = 20;
@@ -135,15 +137,15 @@ public class BloodStats implements IBloodStats {
      * @param nbt
      */
     public void readNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey("bloodLevel")) {
-            bloodLevel = nbt.getInteger("bloodLevel");
-            if (nbt.hasKey("bloodTimer")) {
-                bloodTimer = nbt.getInteger("bloodTimer");
+        if (nbt.contains("bloodLevel")) {
+            bloodLevel = nbt.getInt("bloodLevel");
+            if (nbt.contains("bloodTimer")) {
+                bloodTimer = nbt.getInt("bloodTimer");
                 bloodSaturationLevel = nbt.getFloat("bloodSaturation");
                 bloodExhaustionLevel = nbt.getFloat("bloodExhaustion");
             }
-            if (nbt.hasKey("maxBlood")) {
-                maxBlood = nbt.getInteger("maxBlood");
+            if (nbt.contains("maxBlood")) {
+                maxBlood = nbt.getInt("maxBlood");
             }
         }
     }
@@ -173,7 +175,7 @@ public class BloodStats implements IBloodStats {
      */
     void addExhaustion(float amount, boolean ignoreModifier) {
         VampirePlayer.get(player).checkAttributes(VReference.bloodExhaustion);
-        IAttributeInstance attribute = player.getEntityAttribute(VReference.bloodExhaustion);
+        IAttributeInstance attribute = player.getAttribute(VReference.bloodExhaustion);
         float mult;
         if (ignoreModifier) {
             mult = 1F;
@@ -183,7 +185,7 @@ public class BloodStats implements IBloodStats {
                 LOGGER.warn("Blood exhaustion attribute is null for player %s (%s)", player, player == null ? null : player.getAttributeMap());
                 mult = (float) VReference.bloodExhaustion.getDefaultValue();
             } else {
-                mult = (float) attribute.getAttributeValue();
+                mult = (float) attribute.getValue();
             }
         }
 
@@ -191,11 +193,11 @@ public class BloodStats implements IBloodStats {
     }
 
     void loadUpdate(NBTTagCompound nbt) {
-        if (nbt.hasKey("maxBlood")) {
-            setMaxBlood(nbt.getInteger("maxBlood"));
+        if (nbt.contains("maxBlood")) {
+            setMaxBlood(nbt.getInt("maxBlood"));
         }
-        if (nbt.hasKey("bloodLevel")) {
-            setBloodLevel(nbt.getInteger("bloodLevel"));
+        if (nbt.contains("bloodLevel")) {
+            setBloodLevel(nbt.getInt("bloodLevel"));
         }
     }
 
@@ -217,10 +219,10 @@ public class BloodStats implements IBloodStats {
      */
     void writeNBT(NBTTagCompound nbt) {
         writeNBTBlood(nbt);
-        nbt.setInteger("bloodTimer", bloodTimer);
-        nbt.setFloat("bloodSaturation", bloodSaturationLevel);
-        nbt.setFloat("bloodExhaustion", bloodExhaustionLevel);
-        nbt.setInteger("maxBlood", maxBlood);
+        nbt.putInt("bloodTimer", bloodTimer);
+        nbt.putFloat("bloodSaturation", bloodSaturationLevel);
+        nbt.putFloat("bloodExhaustion", bloodExhaustionLevel);
+        nbt.putInt("maxBlood", maxBlood);
     }
 
     /**
@@ -229,12 +231,12 @@ public class BloodStats implements IBloodStats {
      * @param nbt
      */
     void writeNBTBlood(NBTTagCompound nbt) {
-        nbt.setInteger("bloodLevel", bloodLevel);
+        nbt.putInt("bloodLevel", bloodLevel);
     }
 
     NBTTagCompound writeUpdate(NBTTagCompound nbt) {
-        nbt.setInteger("bloodLevel", bloodLevel);
-        nbt.setInteger("maxBlood", maxBlood);
+        nbt.putInt("bloodLevel", bloodLevel);
+        nbt.putInt("maxBlood", maxBlood);
         return nbt;
     }
 

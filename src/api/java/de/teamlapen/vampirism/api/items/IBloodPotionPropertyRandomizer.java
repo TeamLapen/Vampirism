@@ -31,8 +31,8 @@ public interface IBloodPotionPropertyRandomizer {
         @Override
         public NBTTagCompound getRandomProperties(Random rnd) {
             NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setInt("duration", (minDuration + rnd.nextInt(maxDuration - minDuration) + 1));
-            nbt.setInt("amplifier", amplifier);
+            nbt.putInt("duration", (minDuration + rnd.nextInt(maxDuration - minDuration) + 1));
+            nbt.putInt("amplifier", amplifier);
             return nbt;
         }
     }

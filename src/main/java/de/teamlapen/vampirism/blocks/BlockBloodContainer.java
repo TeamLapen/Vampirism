@@ -110,7 +110,7 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-        if (stack.hasTag() && stack.getTag().hasKey("fluid")) {
+        if (stack.hasTag() && stack.getTag().contains("fluid")) {
             NBTTagCompound nbt = stack.getTag().getCompound("fluid");
             FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
             if (fluid == null) {

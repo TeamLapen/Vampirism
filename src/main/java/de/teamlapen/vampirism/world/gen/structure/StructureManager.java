@@ -3,31 +3,31 @@ package de.teamlapen.vampirism.world.gen.structure;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.world.loot.LootHandler;
-
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 public class StructureManager {
 
+    private static final Logger LOGGER = LogManager.getLogger(StructureManager.class);
     private final static Map<Structure, VampirismTemplate> templates = Maps.newHashMap();
     private final static String TAG = "StructureManager";
 
     public static void init() {
-        VampirismMod.log.d(TAG, "Loading structures");
+        LOGGER.debug("Loading structures");
         for (Structure s : Structure.values()) {
             loadTemplate(s);
         }
-        VampirismMod.log.d(TAG, "Loaded %s structures", Structure.values().length);
+        LOGGER.debug("Loaded %s structures", Structure.values().length);
     }
 
     private static void loadTemplate(Structure structure) {

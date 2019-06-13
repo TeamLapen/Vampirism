@@ -33,31 +33,31 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
                 int j = converted.getRNG().nextInt(3) + converted.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
-                    converted.dropItem(Items.LEATHER, 1);
+                    converted.entityDropItem(Items.LEATHER, 1);
                 }
                 j = converted.getRNG().nextInt(3) + converted.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
-                    converted.dropItem(Items.ROTTEN_FLESH, 1);
+                    converted.entityDropItem(Items.ROTTEN_FLESH, 1);
                 }
 
             } else if (entity instanceof EntityPig || entity instanceof EntityHorse) {
                 int j = converted.getRNG().nextInt(2) + converted.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
-                    converted.dropItem(Items.ROTTEN_FLESH, 1);
+                    converted.entityDropItem(Items.ROTTEN_FLESH, 1);
                 }
             } else if (entity instanceof EntityLlama) {
                 int j = converted.getRNG().nextInt(3);
-                if (j > 0) converted.dropItem(Items.LEATHER, j);
+                if (j > 0) converted.entityDropItem(Items.LEATHER, j);
             } else if (entity instanceof EntityPolarBear) {
                 int j = converted.getRNG().nextInt(3);
-                if (j > 0) converted.dropItem(Items.FISH, j);
+                if (j > 0) converted.entityDropItem(Items.FISH, j); //TODO select fish
                 int k = converted.getRNG().nextInt(2);
-                if (k > 0) converted.dropItem(Items.ROTTEN_FLESH, k);
+                if (k > 0) converted.entityDropItem(Items.ROTTEN_FLESH, k);
             } else if (entity instanceof EntityRabbit) {
                 int j = converted.getRNG().nextInt(2);
-                if (j > 0) converted.dropItem(Items.RABBIT_HIDE, j);
+                if (j > 0) converted.entityDropItem(Items.RABBIT_HIDE, j);
             } else {
                 //TODO maybe call dropFewItems via reflection
             }
@@ -67,7 +67,7 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
 
         @Override
         public double getConvertedDMG(EntityCreature entity) {
-            IAttributeInstance dmg = entity.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+            IAttributeInstance dmg = entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
             if (dmg != null) {
                 return dmg.getBaseValue() * 1.3;
             } else {
@@ -77,17 +77,17 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
 
         @Override
         public double getConvertedKnockbackResistance(EntityCreature entity) {
-            return entity.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).getBaseValue();
+            return entity.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).getBaseValue();
         }
 
         @Override
         public double getConvertedMaxHealth(EntityCreature entity) {
-            return entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue() * 1.5;
+            return entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue() * 1.5;
         }
 
         @Override
         public double getConvertedSpeed(EntityCreature entity) {
-            return Math.min(entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 1.2, 2.9D);
+            return Math.min(entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 1.2, 2.9D);
         }
     };
 

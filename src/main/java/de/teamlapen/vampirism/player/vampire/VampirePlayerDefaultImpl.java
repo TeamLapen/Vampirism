@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.vampire;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -13,6 +12,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,9 +27,9 @@ import java.util.function.Predicate;
 @Deprecated
 class VampirePlayerDefaultImpl implements IVampirePlayer {
 
-
+    private final static Logger LOGGER = LogManager.getLogger(VampirePlayerDefaultImpl.class);
     public VampirePlayerDefaultImpl() {
-        VampirismMod.log.e("VampirePlayerCapability", "Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
+        LOGGER.error("Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
     }
 
     @Override

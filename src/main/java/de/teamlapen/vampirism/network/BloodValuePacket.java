@@ -1,10 +1,11 @@
 package de.teamlapen.vampirism.network;
 
 import com.google.common.collect.Maps;
+import io.netty.buffer.ByteBuf;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -34,7 +35,7 @@ public class BloodValuePacket implements IMessage {
     public BloodValuePacket(Map<ResourceLocation, Integer> values) {
         nbt = new NBTTagCompound();
         for (Map.Entry<ResourceLocation, Integer> entry : values.entrySet()) {
-            nbt.setInteger(entry.getKey().toString(), entry.getValue());
+            nbt.putInt(entry.getKey().toString(), entry.getValue());
         }
     }
 
@@ -52,7 +53,7 @@ public class BloodValuePacket implements IMessage {
         Map<ResourceLocation, Integer> values = Maps.newHashMap();
         try {
             for (String s : nbt.getKeySet()) {
-                values.put(new ResourceLocation(s), nbt.getInteger(s));
+                values.put(new ResourceLocation(s), nbt.getInt(s));
             }
         } catch (Exception e) {
             VampirismMod.log.e("SyncBloodValuePacket", "Failed to parse nbt packet");

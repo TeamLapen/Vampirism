@@ -6,16 +6,15 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Particles;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -54,8 +53,8 @@ public class GuiHunterTrainer extends GuiContainer {
             public void onClick(double mouseX, double mouseY) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
                 EntityPlayer player = Minecraft.getInstance().player;
-                UtilLib.spawnParticles(player.getEntityWorld(), EnumParticleTypes.ENCHANTMENT_TABLE, player.posX, player.posY, player.posZ, 1, 1, 1, 100, 1);
-                player.playSound(SoundEvents.BLOCK_NOTE_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
+                UtilLib.spawnParticles(player.getEntityWorld(), Particles.ENCHANT, player.posX, player.posY, player.posZ, 1, 1, 1, 100, 1);
+                player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
             }
         });
         this.buttonLevelup.enabled = false;

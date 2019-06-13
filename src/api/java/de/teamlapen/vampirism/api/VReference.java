@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import net.minecraft.enchantment.EnumEnchantmentType;
-import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
@@ -70,7 +70,7 @@ public class VReference {
      * Vampire creatures have this creature attribute.
      * Don't know why this exists alongside EnumCreatureType, but this is used by enchanments
      */
-    public static EnumCreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE;
+    public static CreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE;
     /**
      * Vampire Player Faction
      * Filled during pre-init.

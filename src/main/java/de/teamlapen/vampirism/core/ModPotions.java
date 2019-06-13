@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionThirst;
@@ -13,18 +12,21 @@ import net.minecraft.init.PotionTypes;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handles all potion registrations and reference.
  */
-@GameRegistry.ObjectHolder(REFERENCE.MODID)
+@ObjectHolder(REFERENCE.MODID)
 public class ModPotions {
 
+    private static final Logger LOGGER = LogManager.getLogger(ModPotions.class);
     public static final Potion sanguinare = getNull();
     public static final Potion thirst = getNull();
     public static final Potion saturation = getNull();
@@ -65,7 +67,7 @@ public class ModPotions {
 
         Using 2) for now
         */
-        VampirismMod.log.i("Potion", "Fixing vanilla night vision potion types");
+        LOGGER.info("Fixing vanilla night vision potion types");
         try {
             for (PotionEffect effect : PotionTypes.NIGHT_VISION.getEffects()) {
                 if (effect.getPotion().equals(vanilla_night_vision)) { //If still referring to vanilla potion replace
@@ -78,7 +80,7 @@ public class ModPotions {
                 }
             }
         } catch (ReflectionHelper.UnableToAccessFieldException e) {
-            VampirismMod.log.e("Potion", e, "Unable to modify vanilla night vision types. Potion items and more might not work");
+            LOGGER.error("Unable to modify vanilla night vision types. Potion items and more might not work", e);
         }
     }
 
@@ -91,7 +93,7 @@ public class ModPotions {
 
     static boolean checkNightVision() {
         if (!(MobEffects.NIGHT_VISION instanceof VampirismNightVisionPotion)) {
-            VampirismMod.log.w("Potion", "Vampirism was not able to register it's night vision potion");
+            LOGGER.warn("Vampirism was not able to register it's night vision potion");
             return false;
         }
         return true;

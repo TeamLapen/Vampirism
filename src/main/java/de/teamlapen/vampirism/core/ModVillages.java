@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceModChurch;
@@ -9,16 +7,17 @@ import de.teamlapen.vampirism.world.gen.village.VillagePieceTotem;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceTrainer;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.MapGenVillage;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
@@ -26,11 +25,11 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  * Handles Village related stuff
  */
 public class ModVillages {
-    @GameRegistry.ObjectHolder("vampirism:hunter_expert")
+    @ObjectHolder("vampirism:hunter_expert")
     public static final VillagerRegistry.VillagerProfession profession_hunter_expert = getNull();
-    @GameRegistry.ObjectHolder("vampirism:vampire_expert")
+    @ObjectHolder("vampirism:vampire_expert")
     public static final VillagerRegistry.VillagerProfession profession_vampire_expert = getNull();
-    private final static String TAG = "ModVillages";
+    private final static Logger LOGGER = LogManager.getLogger(ModVillages.class);
 
     static void init() {
         registerCreationHandlers();
@@ -74,7 +73,7 @@ public class ModVillages {
             }
 
 
-            VampirismMod.log.d(TAG, "Modified MapGenVillage fields.");
+            LOGGER.debug("Modified MapGenVillage fields.");
 
         } else {
             //Should not be possible
@@ -87,8 +86,8 @@ public class ModVillages {
         if (priest != null) {
             VillagerRegistry.VillagerCareer hunterPriest = new VillagerRegistry.VillagerCareer(priest, "vampirism.hunter_priest");
             hunterPriest.addTrade(1, new EntityVillager.EmeraldForItems(Items.GOLD_INGOT, new EntityVillager.PriceInfo(8, 10)));
-            hunterPriest.addTrade(2, new EntityVillager.ListItemForEmeralds(ModItems.holy_water_bottle, new EntityVillager.PriceInfo(-8, -2)));
-            hunterPriest.addTrade(3, new EntityVillager.ListItemForEmeralds(ModItems.holy_water_bottle.setTier(new ItemStack(ModItems.holy_water_bottle), IItemWithTier.TIER.ENHANCED), new EntityVillager.PriceInfo(-5, -1)));
+            hunterPriest.addTrade(2, new EntityVillager.ListItemForEmeralds(ModItems.holy_water_bottle_normal, new EntityVillager.PriceInfo(-8, -2)));
+            hunterPriest.addTrade(3, new EntityVillager.ListItemForEmeralds(ModItems.holy_water_bottle_enhanced, new EntityVillager.PriceInfo(-5, -1)));
             hunterPriest.addTrade(3, new EntityVillager.ListItemForEmeralds(ModItems.holy_salt, new EntityVillager.PriceInfo(-10, -3)));
             hunterPriest.addTrade(4, new EntityVillager.ListItemForEmeralds(Items.EXPERIENCE_BOTTLE, new EntityVillager.PriceInfo(3, 11)));
         } else {

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Lists;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
@@ -79,7 +80,7 @@ public class VampirismWorldData extends WorldSavedData {
 
     @Override
     public void read(NBTTagCompound nbt) {
-        if (nbt.hasKey("vampire_dungeons")) {
+        if (nbt.contains("vampire_dungeons")) {
             vampireDungeons.clear();
             NBTTagList dungeons = nbt.getTagList("vampire_dungeons", 10);
             for (int i = 0; i < dungeons.tagCount(); i++) {
@@ -95,7 +96,7 @@ public class VampirismWorldData extends WorldSavedData {
         for (BlockPos pos : vampireDungeons) {
             dungeons.appendTag(NBTUtil.createPosTag(pos));
         }
-        compound.setTag("vampire_dungeons", dungeons);
+        compound.put("vampire_dungeons", dungeons);
         return compound;
     }
 }

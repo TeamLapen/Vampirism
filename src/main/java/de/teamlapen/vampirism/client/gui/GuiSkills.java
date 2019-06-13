@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
-import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -268,7 +267,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
                 playSoundEffect(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.7F);
                 return true;
             } else {
-                playSoundEffect(SoundEvents.BLOCK_NOTE_BASS, 0.5F);
+                playSoundEffect(SoundEvents.BLOCK_NOTE_BLOCK_BASS, 0.5F);
                 return true;
             }
         }
@@ -347,11 +346,11 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
                             textureatlassprite = this.getTexture(Blocks.REDSTONE_BLOCK);
                         }
                     } else if (j4 == 10) {
-                        textureatlassprite = this.getTexture(ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumVariant.DARK_BRICK_BLOODY));
+                        textureatlassprite = this.getTexture(ModBlocks.castle_block_dark_brick_bloody);
                     } else if (j4 == 8) {
-                        textureatlassprite = this.getTexture(Blocks.STONEBRICK);
+                        textureatlassprite = this.getTexture(Blocks.STONE_BRICKS);
                     } else if (j4 > 4) {
-                        textureatlassprite = this.getTexture(ModBlocks.castle_block);
+                        textureatlassprite = this.getTexture(ModBlocks.castle_block_normal_brick);
                     } else if (j4 > 0) {
                         textureatlassprite = this.getTexture(Blocks.DIRT);
 

@@ -196,7 +196,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      */
     public void setTrained(@Nonnull ItemStack stack, @Nonnull EntityLivingBase player, float value) {
         NBTTagCompound nbt = stack.getOrCreateChildTag("trained");
-        nbt.setFloat(player.getUniqueID().toString(), MathHelper.clamp(value, 0f, 1f));
+        nbt.putFloat(player.getUniqueID().toString(), MathHelper.clamp(value, 0f, 1f));
     }
 
     /**
@@ -274,7 +274,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         UUID id = player.getUniqueID();
         NBTTagCompound nbt = stack.getChildTag("trained");
         if (nbt != null) {
-            if (nbt.hasKey(id.toString())) {
+            if (nbt.contains(id.toString())) {
                 return nbt.getFloat(id.toString());
             }
         }
@@ -290,7 +290,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     protected float getTrained(@Nonnull ItemStack stack) {
         if (stack.hasTag()) {
             NBTTagCompound nbt = stack.getTag();
-            if (nbt.hasKey("trained-cache")) {
+            if (nbt.contains("trained-cache")) {
                 return nbt.getFloat("trained-cache");
             }
         }

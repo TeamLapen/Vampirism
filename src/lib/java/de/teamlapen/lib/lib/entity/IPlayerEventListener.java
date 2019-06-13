@@ -3,6 +3,7 @@ package de.teamlapen.lib.lib.entity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -12,7 +13,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
  */
 public interface IPlayerEventListener {
 
-    void onChangedDimension(int from, int to);
+    void onChangedDimension(DimensionType from, DimensionType to);
 
     void onDeath(DamageSource src);
 

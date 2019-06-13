@@ -7,13 +7,13 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.entity.action.hunter.GarlicAOFEntityAction;
 import de.teamlapen.vampirism.entity.action.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 /**
  * Register and holds all actions for vampirism entities
  */
-@GameRegistry.ObjectHolder(REFERENCE.MODID)
+@ObjectHolder(REFERENCE.MODID)
 public class EntityActions {
     public static final InvisibleEntityAction<?> entity_invisible = UtilLib.getNull();
     /**

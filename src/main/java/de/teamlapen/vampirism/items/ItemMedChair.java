@@ -57,9 +57,9 @@ public class ItemMedChair extends VampirismItem {
         if (player == null || player.canPlayerEdit(pos, ctx.getFace(), stack) && player.canPlayerEdit(otherPos, ctx.getFace(), stack)) {
 
             if (flag1 && flag2 && UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()) && UtilLib.doesBlockHaveSolidTopSurface(world, otherPos.down())) {
-                IBlockState state1 = ModBlocks.med_chair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).withProperty(BlockMedChair.FACING, facing.getOpposite());
+                IBlockState state1 = ModBlocks.med_chair.getDefaultState().with(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).with(BlockMedChair.FACING, facing.getOpposite());
                 if (world.setBlockState(pos, state1, 3)) {
-                    IBlockState state2 = state1.withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.TOP).withProperty(BlockMedChair.FACING, facing.getOpposite());
+                    IBlockState state2 = state1.with(BlockMedChair.PART, BlockMedChair.EnumPart.TOP).with(BlockMedChair.FACING, facing.getOpposite());
                     world.setBlockState(otherPos, state2, 3);
                 }
                 stack.shrink(1);

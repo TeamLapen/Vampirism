@@ -10,6 +10,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 
@@ -19,8 +21,7 @@ import java.util.UUID;
  */
 public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener, IMinionLord {
 
-
-    private static final String TAG = "VampirismPlayer";
+    private final static Logger LOGGER = LogManager.getLogger(VampirismPlayer.class);
     protected final EntityPlayer player;
 
     public VampirismPlayer(EntityPlayer player) {
@@ -91,7 +92,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
 
     @Override
     public boolean isTheEntityAlive() {
-        return player.isEntityAlive();
+        return player.isAlive();
     }
 
 

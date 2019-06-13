@@ -12,17 +12,18 @@ public class PotionSanguinareEffect extends PotionEffect {
     }
 
     @Override
-    public void combine(PotionEffect other) {
+    public boolean combine(PotionEffect other) {
         //Sanguinare cannot be combined
+        return false;
     }
 
     @Override
-    public boolean onUpdate(EntityLivingBase entityIn) {
+    public boolean tick(EntityLivingBase entityIn) {
         if (this.getDuration() % 10 == 0 && entityIn instanceof EntityPlayer) {
             if (!Helper.canBecomeVampire((EntityPlayer) entityIn)) {
                 return false;
             }
         }
-        return super.onUpdate(entityIn);
+        return super.tick(entityIn);
     }
 }

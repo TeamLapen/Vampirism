@@ -2,26 +2,26 @@ package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Maps;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.annotation.Nonnull;
 
 /**
  * Implements {@link IGarlicChunkHandler} using maps to store
  */
 public class GarlicChunkHandler implements IGarlicChunkHandler {
 
+    private static final Logger LOGGER = LogManager.getLogger(GarlicChunkHandler.class);
     private final HashMap<ChunkPos, EnumStrength> strengthHashMap = Maps.newHashMap();
     private final HashMap<Integer, Emitter> emitterHashMap = Maps.newHashMap();
 
@@ -64,7 +64,7 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
     @Override
     public void removeGarlicBlock(int id) {
         Emitter e = emitterHashMap.remove(id);
-        if (e == null) VampirismMod.log.d("GarlicChunkHandler", "Removed emitter did not exist");
+        if (e == null) LOGGER.debug("Removed emitter did not exist");
         rebuildStrengthMap();
     }
 
@@ -96,7 +96,7 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         @Nonnull
         @Override
         public IGarlicChunkHandler getHandler(World world) {
-            return handlers.computeIfAbsent(world.provider.getDimension(), k -> new GarlicChunkHandler());
+            return handlers.computeIfAbsent(world.dimension, k -> new GarlicChunkHandler());
         }
     }
 

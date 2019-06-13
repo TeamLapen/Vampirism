@@ -124,7 +124,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Override
     public @Nonnull
     ItemStack getArrowStackForAttack(EntityLivingBase target) {
-        return new ItemStack(ModItems.crossbow_arrow);
+        return new ItemStack(ModItems.crossbow_arrow_normal);
     }
 
     @Nullable
@@ -205,8 +205,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     @Nullable
     @Override
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
-        livingdata = super.onInitialSpawn(difficulty, livingdata);
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata, @Nullable NBTTagCompound itemNbt) {
+        livingdata = super.onInitialSpawn(difficulty, livingdata, itemNbt);
 
         if (this.getRNG().nextInt(4) == 0) {
             this.setLeftHanded(true);
@@ -254,11 +254,11 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Override
     public void read(NBTTagCompound tagCompund) {
         super.read(tagCompund);
-        if (tagCompund.hasKey("level")) {
-            setLevel(tagCompund.getInteger("level"));
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
         }
 
-        if (tagCompund.hasKey("crossbow") && tagCompund.getBoolean("crossbow")) {
+        if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
             this.setLeftHanded(true);
             this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.basic_crossbow));
         } else {
@@ -266,9 +266,9 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
         }
         this.updateCombatTask();
-        if (tagCompund.hasKey("village_attack_area")) {
+        if (tagCompund.contains("village_attack_area")) {
             this.attackVillage(UtilLib.intToBB(tagCompund.getIntArray("village_attack_area")));
-        } else if (tagCompund.hasKey("village_defense_area")) {
+        } else if (tagCompund.contains("village_defense_area")) {
             this.defendVillage(UtilLib.intToBB(tagCompund.getIntArray("village_defense_area")));
         }
 
@@ -316,12 +316,12 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Override
     public void writeAdditional(NBTTagCompound nbt) {
         super.writeAdditional(nbt);
-        nbt.setInteger("level", getLevel());
-        nbt.setBoolean("crossbow", isCrossbowInMainhand());
+        nbt.putInt("level", getLevel());
+        nbt.putBoolean("crossbow", isCrossbowInMainhand());
         if (village_attack_area != null) {
-            nbt.setIntArray("village_attack_area", UtilLib.bbToInt(village_attack_area));
+            nbt.putIntArray("village_attack_area", UtilLib.bbToInt(village_attack_area));
         } else if (village_defense_area != null) {
-            nbt.setIntArray("village_defense_area", UtilLib.bbToInt(village_defense_area));
+            nbt.putIntArray("village_defense_area", UtilLib.bbToInt(village_defense_area));
         }
     }
 
@@ -333,7 +333,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    protected boolean canDespawn() {
+    public boolean canDespawn() {
         return isLookingForHome() && super.canDespawn();
     }
 
@@ -392,7 +392,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand hand) {
         int hunterLevel = HunterPlayer.get(player).getLevel();
-        if (this.isEntityAlive() && !player.isSneaking()) {
+        if (this.isAlive() && !player.isSneaking()) {
             if (!world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
                     if (trainee == null) {
@@ -447,9 +447,9 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_SPEED);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * l);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_SPEED);
     }
 
     private int getWatchedId() {

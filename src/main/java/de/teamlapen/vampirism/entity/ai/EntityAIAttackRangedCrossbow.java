@@ -67,7 +67,7 @@ public class EntityAIAttackRangedCrossbow extends EntityAIBase {
         EntityLivingBase entitylivingbase = this.entity.getAttackTarget();
 
         if (entitylivingbase != null) {
-            double d0 = this.entity.getDistanceSq(entitylivingbase.posX, entitylivingbase.getEntityBoundingBox().minY, entitylivingbase.posZ);
+            double d0 = this.entity.getDistanceSq(entitylivingbase.posX, entitylivingbase.getBoundingBox().minY, entitylivingbase.posZ);
             boolean canSee = this.entity.getEntitySenses().canSee(entitylivingbase);
             boolean couldSee = this.seeTime > 0;
 
@@ -126,7 +126,7 @@ public class EntityAIAttackRangedCrossbow extends EntityAIBase {
         ItemStack arrows = attacker.getArrowStackForAttack(target);
         EntityCrossbowArrow entityArrow = EntityCrossbowArrow.createWithShooter(entity.getEntityWorld(), entity, 0, 0.3F, !entity.isLeftHanded(), arrows);
         double sx = target.posX - entityArrow.posX;
-        double sy = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - entityArrow.posY;
+        double sy = target.getBoundingBox().minY + (double) (target.height / 3.0F) - entityArrow.posY;
         double sz = target.posZ - entityArrow.posZ;
         double dist = MathHelper.sqrt(sx * sx + sz * sz);
         entityArrow.shoot(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getEntityWorld().getDifficulty().getId() * 4));

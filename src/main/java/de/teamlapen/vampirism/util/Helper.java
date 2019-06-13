@@ -62,7 +62,7 @@ public class Helper {
                         try {
                             Biome biome = entity.getEntityWorld().getBiome(pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (!TileTotem.isInsideVampireAreaCached(entity.getEntityWorld().getDimension().getType().getId(), new BlockPos(entity.posX, entity.posY + 1, entity.posZ))) { //For some reason client returns different value for #getPosition than server
+                                if (!TileTotem.isInsideVampireAreaCached(entity.getEntityWorld().getDimension(), new BlockPos(entity.posX, entity.posY + 1, entity.posZ))) { //For some reason client returns different value for #getPosition than server
                                     entity.getEntityWorld().profiler.endSection();
                                     return true;
                                 }

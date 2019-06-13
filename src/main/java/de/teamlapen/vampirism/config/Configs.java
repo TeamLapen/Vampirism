@@ -203,15 +203,15 @@ public class Configs {
 
     public static void writeToNBTServer(NBTTagCompound nbt) {
         if (renderVampireForestFogEnforce) {
-            nbt.setBoolean("vampire_forest_fog", renderVampireForestFog);
+            nbt.putBoolean("vampire_forest_fog", renderVampireForestFog);
         }
-        nbt.setBoolean("pvp_only_between_factions", pvp_only_between_factions);
+        nbt.putBoolean("pvp_only_between_factions", pvp_only_between_factions);
     }
 
     @OnlyIn(Dist.CLIENT)
     public static void readFromNBTClient(NBTTagCompound nbt) {
         overriddenByServer = true;
-        if (nbt.hasKey("vampire_forest_fog")) {
+        if (nbt.contains("vampire_forest_fog")) {
             renderVampireForestFog = nbt.getBoolean("vampire_forest_fog");
         }
         pvp_only_between_factions = nbt.getBoolean("pvp_only_between_factions");

@@ -68,14 +68,14 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
     }
 
     @Override
-    protected boolean canDespawn() {
+    public boolean canDespawn() {
         return !hasHome() && super.canDespawn();
     }
 
@@ -102,7 +102,7 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
         ItemStack stack = player.getHeldItem(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() == Items.SPAWN_EGG;
 
-        if (!flag && this.isEntityAlive() && !player.isSneaking()) {
+        if (!flag && this.isAlive() && !player.isSneaking()) {
             if (!this.world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
                     if (trainee == null) {

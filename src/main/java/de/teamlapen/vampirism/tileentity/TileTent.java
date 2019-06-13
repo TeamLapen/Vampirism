@@ -136,8 +136,8 @@ public class TileTent extends TileEntity implements ITickable {
     @Override
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
-        if (nbt.hasKey("spawner_logic")) {
-            spawnerLogic.readFromNbt(nbt.getCompoundTag("spawner_logic"));
+        if (nbt.contains("spawner_logic")) {
+            spawnerLogic.readFromNbt(nbt.getCompound("spawner_logic"));
         }
         spawn = nbt.getBoolean("spawn");
     }
@@ -157,7 +157,7 @@ public class TileTent extends TileEntity implements ITickable {
         }
         if (spawn) {
             spawnerLogic.updateSpawner();
-            if (!this.world.isRemote && this.world.getWorldTime() % 64 == 0) {
+            if (!this.world.isRemote && this.world.getGameTime() % 64 == 0) {
                 if (this.world.villageCollection.getNearestVillage(this.pos, 5) != null) {
                     this.spawn = false; //Disable spawning inside villages
                 }
@@ -172,8 +172,8 @@ public class TileTent extends TileEntity implements ITickable {
         NBTTagCompound nbt = super.write(compound);
         NBTTagCompound logic = new NBTTagCompound();
         spawnerLogic.writeToNbt(logic);
-        nbt.setTag("spawner_logic", logic);
-        nbt.setBoolean("spawn", spawn);
+        nbt.put("spawner_logic", logic);
+        nbt.putBoolean("spawn", spawn);
         return nbt;
     }
 }

@@ -316,7 +316,7 @@ public class ModItems {
 
                 return true;
             }
-        };
+        });
         registry.register(new ItemAlchemicalFire());
         registry.register(new VampirismItem("garlic_beacon_core", new Item.Properties()));
         registry.register(new VampirismItem("garlic_beacon_core_improved", new Item.Properties()));

@@ -151,13 +151,13 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
 
     @Override
     public void read(NBTTagCompound compound) {
-        if (compound.hasKey("item")) {
-            this.internalStack = new ItemStack(compound.getCompoundTag("item"));
+        if (compound.contains("item")) {
+            this.internalStack = new ItemStack(compound.getCompound("item"));
         } else {
             this.internalStack = ItemStack.EMPTY;
         }
-        this.bloodStored = compound.getInteger("blood_stored");
-        this.chargingTicks = compound.getInteger("charging_ticks");
+        this.bloodStored = compound.getInt("blood_stored");
+        this.chargingTicks = compound.getInt("charging_ticks");
     }
 
     @Nonnull
@@ -212,10 +212,10 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
         if (hasStack()) {
-            compound.setTag("item", this.internalStack.serializeNBT());
+            compound.put("item", this.internalStack.serializeNBT());
         }
-        compound.setInteger("blood_stored", bloodStored);
-        compound.setInteger("charging_ticks", chargingTicks);
+        compound.putInt("blood_stored", bloodStored);
+        compound.putInt("charging_ticks", chargingTicks);
         return super.write(compound);
     }
 

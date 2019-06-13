@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
@@ -8,8 +7,6 @@ import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
-import de.teamlapen.vampirism.blocks.BlockCastleBlock;
-import de.teamlapen.vampirism.blocks.BlockCastleStairs;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
@@ -34,15 +31,18 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Event handler for all entity related events
  */
 public class ModEntityEventHandler {
 
+    private final static Logger LOGGER = LogManager.getLogger(ModEntityEventHandler.class);
     private boolean skipAttackDamageOnce = false;
     private boolean warnAboutCreeper = true;
 
@@ -76,14 +76,10 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityCheckSpawn(LivingSpawnEvent.CheckSpawn event) {
         IBlockState blockState = event.getWorld().getBlockState(new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down());
-        if (blockState.getBlock().equals(ModBlocks.castle_block)) {
-            if (BlockCastleBlock.EnumVariant.DARK_STONE.equals(blockState.getValue(BlockCastleBlock.VARIANT)) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
-                event.setResult(Event.Result.DENY);
-            }
-        } else if (blockState.getBlock() instanceof BlockCastleStairs) {
-            if (ModBlocks.castle_stairs_dark_stone.equals(blockState.getBlock()) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
-                event.setResult(Event.Result.DENY);
-            }
+        if (blockState.getBlock().equals(ModBlocks.castle_block_dark_stone) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
+            event.setResult(Event.Result.DENY);
+        } else if (blockState.getBlock().equals(ModBlocks.castle_stairs_dark_stone) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
+            event.setResult(Event.Result.DENY);
         }
     }
 
@@ -122,7 +118,7 @@ public class ModEntityEventHandler {
                     ((EntityCreeper) event.getEntity()).targetTasks.addTask(1, new EntityAINearestAttackableTarget<>((EntityCreeper) event.getEntity(), EntityPlayer.class, 10, true, false, input -> input != null && !VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers));
                 } else {
                     if (warnAboutCreeper) {
-                        VampirismMod.log.w("EntityEventHandler", "Could not replace creeper target task");
+                        LOGGER.warn("Could not replace creeper target task");
                         warnAboutCreeper = false;
                     }
                 }

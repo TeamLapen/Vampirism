@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import com.google.common.base.Predicates;
+
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
@@ -113,8 +114,8 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     @Override
     public void writeAdditional(NBTTagCompound compound) {
         super.writeAdditional(compound);
-        compound.setFloat("direct_damage", directDamage);
-        compound.setFloat("indirect_damage", indirecDamage);
+        compound.putFloat("direct_damage", directDamage);
+        compound.putFloat("indirect_damage", indirecDamage);
     }
 
     @Override
@@ -147,21 +148,21 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     protected void onImpact(RayTraceResult result) {
         if (!this.world.isRemote) {
             if (initialNoClip && this.ticksExisted > 20) {
-                if (result.typeOfHit == RayTraceResult.Type.BLOCK) {
+                if (result.type == RayTraceResult.Type.BLOCK) {
                     return;
                 }
-                if (result.typeOfHit == RayTraceResult.Type.ENTITY && result.entityHit instanceof EntityVampireMinionBase && (this.shootingEntity != null && this.shootingEntity.equals(((EntityVampireMinionBase) result.entityHit).getLord()))) {
+                if (result.type == RayTraceResult.Type.ENTITY && result.entity instanceof EntityVampireMinionBase && (this.shootingEntity != null && this.shootingEntity.equals(((EntityVampireMinionBase) result.entity).getLord()))) {
                     return;
                 }
             }
 
-            if (result.entityHit != null) {
-                result.entityHit.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), directDamage);
-                if (result.entityHit instanceof EntityLivingBase) {
+            if (result.entity != null) {
+                result.entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), directDamage);
+                if (result.entity instanceof EntityLivingBase) {
                     if (this.rand.nextInt(3) == 0) {
-                        ((EntityLivingBase) result.entityHit).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100));
-                        ((EntityLivingBase) result.entityHit).knockBack(this, 1f, -this.motionX, -this.motionZ);
-                        ((EntityLivingBase) result.entityHit).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
+                        ((EntityLivingBase) result.entity).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100));
+                        ((EntityLivingBase) result.entity).knockBack(this, 1f, -this.motionX, -this.motionZ);
+                        ((EntityLivingBase) result.entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
 
                     }
                 }

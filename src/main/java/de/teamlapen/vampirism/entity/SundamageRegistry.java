@@ -6,8 +6,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -17,18 +20,18 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 
 public class SundamageRegistry implements ISundamageRegistry {
-    private static final String TAG = "SundamageRegistry";
-    private HashMap<Integer, Boolean> sundamageDims = new HashMap<>();
-    private HashMap<Integer, Boolean> sundamageConfiguredDims = new HashMap<>();
+    private static final Logger LOGGER = LogManager.getLogger(SundamageRegistry.class);
+    private HashMap<DimensionType, Boolean> sundamageDims = new HashMap<>();
+    private HashMap<DimensionType, Boolean> sundamageConfiguredDims = new HashMap<>();
     private Set<ResourceLocation> noSundamageBiomesIDs = new CopyOnWriteArraySet<>();
     private Set<ResourceLocation> noSundamageConfiguredBiomesIDs = new CopyOnWriteArraySet<>();
     private Set<Class> noSundamageBiomes = new CopyOnWriteArraySet<>();
     private boolean defaultSundamage = false;
 
     public SundamageRegistry() {
-        sundamageDims.put(0, true);
-        sundamageDims.put(-1, false);
-        sundamageDims.put(1, false);
+        sundamageDims.put(DimensionType.OVERWORLD, true);
+        sundamageDims.put(DimensionType.NETHER, false);
+        sundamageDims.put(DimensionType.THE_END, false);
     }
 
     @Override
@@ -70,7 +73,7 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     @Override
-    public boolean getSundamageInDim(int dim) {
+    public boolean getSundamageInDim(DimensionType dim) {
         Boolean r = sundamageConfiguredDims.get(dim);
         if (r == null) {
             r = sundamageDims.get(dim);
@@ -85,23 +88,23 @@ public class SundamageRegistry implements ISundamageRegistry {
 
     @OnlyIn(Dist.CLIENT)
     public void readClient(NBTTagCompound nbt) {
-        if (nbt.hasKey("sundamage")) {
-            NBTTagCompound sundamage = nbt.getCompoundTag("sundamage");
+        if (nbt.contains("sundamage")) {
+            NBTTagCompound sundamage = nbt.getCompound("sundamage");
             defaultSundamage = sundamage.getBoolean("default");
             sundamageConfiguredDims.clear();
-            NBTTagCompound dimensions = sundamage.getCompoundTag("dimensions");
-            for (String s : dimensions.getKeySet()) {
+            NBTTagCompound dimensions = sundamage.getCompound("dimensions");
+            for (String s : dimensions.keySet()) {
                 try {
-                    int dim = Integer.parseInt(s);
+                    ResourceLocation dim = new ResourceLocation(s);
                     boolean value = sundamage.getBoolean(s);
-                    specifyConfiguredSundamageForDim(dim, value);
+                    specifyConfiguredSundamageForDim(DimensionType.byName(dim), value);
                 } catch (NumberFormatException e) {
                     LOGGER.error("Failed to parse dimension id (%s) in update packet ", s);
                 }
             }
             noSundamageConfiguredBiomesIDs.clear();
-            NBTTagCompound biomes = sundamage.getCompoundTag("biomes");
-            for (String s : biomes.getKeySet()) {
+            NBTTagCompound biomes = sundamage.getCompound("biomes");
+            for (String s : biomes.keySet()) {
                 ResourceLocation res = new ResourceLocation(s);
                 addNoSundamageBiomeConfigured(res);
             }
@@ -128,31 +131,31 @@ public class SundamageRegistry implements ISundamageRegistry {
     /**
      * Adds settings from Vampirism's config file.
      *
-     * @param dimensionId
+     * @param dimension
      * @param sundamage
      */
-    public void specifyConfiguredSundamageForDim(int dimensionId, boolean sundamage) {
-        sundamageConfiguredDims.put(dimensionId, sundamage);
+    public void specifyConfiguredSundamageForDim(DimensionType dimension, boolean sundamage) {
+        sundamageConfiguredDims.put(dimension, sundamage);
     }
 
     @Override
-    public void specifySundamageForDim(int dimensionId, boolean sundamage) {
-        sundamageDims.put(dimensionId, sundamage);
+    public void specifySundamageForDim(DimensionType dimension, boolean sundamage) {
+        sundamageDims.put(dimension, sundamage);
     }
 
     public void writeServer(NBTTagCompound nbt) {
         NBTTagCompound sundamage = new NBTTagCompound();
         NBTTagCompound dimensions = new NBTTagCompound();
-        for (Map.Entry<Integer, Boolean> entry : sundamageConfiguredDims.entrySet()) {
-            dimensions.setBoolean(entry.getKey().toString(), entry.getValue());
+        for (Map.Entry<DimensionType, Boolean> entry : sundamageConfiguredDims.entrySet()) {
+            dimensions.putBoolean(DimensionType.getKey(entry.getKey()).toString(), entry.getValue());
         }
-        sundamage.setTag("dimensions", dimensions);
+        sundamage.put("dimensions", dimensions);
         NBTTagCompound biomes = new NBTTagCompound();
         for (ResourceLocation s : noSundamageConfiguredBiomesIDs) {
-            biomes.setBoolean(s.toString(), true);
+            biomes.putBoolean(s.toString(), true);
         }
-        sundamage.setTag("biomes", biomes);
-        sundamage.setBoolean("default", defaultSundamage);
-        nbt.setTag("sundamage", sundamage);
+        sundamage.put("biomes", biomes);
+        sundamage.putBoolean("default", defaultSundamage);
+        nbt.put("sundamage", sundamage);
     }
 }

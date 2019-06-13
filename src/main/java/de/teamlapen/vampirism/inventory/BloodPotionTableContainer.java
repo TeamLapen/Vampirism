@@ -47,19 +47,19 @@ public class BloodPotionTableContainer extends Container {
         }
         this.max_crafting_time = crafting_time;
 
-        this.addSlotToContainer(new PotionSlot(inventory, 0, 115, 55));
-        this.addSlotToContainer(new PotionSlot(inventory, 1, 137, 55));
-        this.addSlotToContainer(new InventoryContainer.FilterSlot(inventory, 2, 126, 14, item -> ModItems.item_garlic.equals(item.getItem())));
-        this.addSlotToContainer(new Slot(inventory, 3, 101, 22));
+        this.addSlot(new PotionSlot(inventory, 0, 115, 55));
+        this.addSlot(new PotionSlot(inventory, 1, 137, 55));
+        this.addSlot(new InventoryContainer.FilterSlot(inventory, 2, 126, 14, item -> ModItems.item_garlic.equals(item.getItem())));
+        this.addSlot(new Slot(inventory, 3, 101, 22));
 
         for (int k = 0; k < 3; ++k) {
             for (int i1 = 0; i1 < 9; ++i1) {
-                this.addSlotToContainer(new Slot(playerInventory, i1 + k * 9 + 9, 8 + i1 * 18, 84 + k * 18));
+                this.addSlot(new Slot(playerInventory, i1 + k * 9 + 9, 8 + i1 * 18, 84 + k * 18));
             }
         }
 
         for (int l = 0; l < 9; ++l) {
-            this.addSlotToContainer(new Slot(playerInventory, l, 8 + l * 18, 142));
+            this.addSlot(new Slot(playerInventory, l, 8 + l * 18, 142));
         }
     }
 

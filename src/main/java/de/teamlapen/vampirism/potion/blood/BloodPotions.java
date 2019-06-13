@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.potion.blood;
 
 
 import com.google.common.collect.Lists;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -90,8 +91,8 @@ public class BloodPotions {
         if (skillHandler.isSkillEnabled(HunterSkills.blood_potion_identify_some)) {
             NBTTagCompound nbt = stack.hasTagCompound() ? stack.getTagCompound() : new NBTTagCompound();
             int seed;
-            if (nbt.hasKey("ident_seed")) {
-                seed = nbt.getInteger("ident_seed");
+            if (nbt.contains("ident_seed")) {
+                seed = nbt.getInt("ident_seed");
             } else {
                 seed = stack.hashCode();
             }
@@ -207,12 +208,12 @@ public class BloodPotions {
         NBTTagCompound nbt = stack.hasTagCompound() ? stack.getTagCompound() : new NBTTagCompound();
         NBTTagCompound effectTag = new NBTTagCompound();
         for (ConfiguredEffect effect : effects) {
-            effectTag.setTag(effect.getEffect().getId(), effect.getProperties());
+            effecttag.put(effect.getEffect().getId(), effect.getProperties());
         }
-        nbt.setTag("effects", effectTag);
-        if (!nbt.hasKey("ident_seed")) {
+        nbt.put("effects", effectTag);
+        if (!nbt.contains("ident_seed")) {
             int seed = stack.hashCode();
-            nbt.setInteger("ident_seed", seed);
+            nbt.putInt("ident_seed", seed);
         }
         stack.setTagCompound(nbt);
     }

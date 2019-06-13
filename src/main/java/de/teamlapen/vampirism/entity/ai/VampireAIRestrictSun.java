@@ -26,7 +26,7 @@ public class VampireAIRestrictSun<T extends EntityCreature & IVampire> extends E
     public boolean shouldExecute() {
         if (vampire.ticksExisted % 10 == 3) {
             Biome biome = vampire.getEntityWorld().getBiome(vampire.getPosition());
-            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(vampire.getEntityWorld().provider.getDimension()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome) && !TileTotem.isInsideVampireAreaCached(vampire.getEntityWorld().provider.getDimension(), vampire.getPosition());
+            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(vampire.getEntityWorld().dimension.getType()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome) && !TileTotem.isInsideVampireAreaCached(vampire.getEntityWorld().getDimension(), vampire.getPosition());
         }
         return cache && vampire.getEntityWorld().isDaytime() && !vampire.isIgnoringSundamage();
     }

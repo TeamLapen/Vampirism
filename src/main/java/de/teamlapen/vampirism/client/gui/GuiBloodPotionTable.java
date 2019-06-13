@@ -6,9 +6,8 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -111,14 +110,14 @@ public class GuiBloodPotionTable extends GuiContainer {
 
     private void startSound() {
         if (sound == null) {
-            sound = new PositionedSoundRecord(ModSounds.boiling, SoundCategory.BLOCKS, 1, 1, container.getBlockPos());
-            this.mc.getSoundHandler().playSound(sound);
+            sound = new SimpleSound(ModSounds.boiling, SoundCategory.BLOCKS, 1, 1, container.getBlockPos());
+            this.mc.getSoundHandler().play(sound);
         }
     }
 
     private void stopSound() {
         if (sound != null) {
-            this.mc.getSoundHandler().stopSound(sound);
+            this.mc.getSoundHandler().stop(sound);
             sound = null;
         }
     }

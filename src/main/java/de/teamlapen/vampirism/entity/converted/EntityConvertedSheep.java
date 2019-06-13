@@ -90,7 +90,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
     @Override
     public void writeAdditional(NBTTagCompound nbt) {
         super.writeAdditional(nbt);
-        nbt.setBoolean("Sheared", this.getSheared());
+        nbt.putBoolean("Sheared", this.getSheared());
     }
 
     @Override

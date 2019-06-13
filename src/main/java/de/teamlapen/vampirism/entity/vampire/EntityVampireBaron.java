@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.minions.ISaveableMinionHandler;
@@ -32,7 +31,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,6 +45,7 @@ import java.util.UUID;
  * Vampire that spawns in the vampire forest, has minions and drops pure blood
  */
 public class EntityVampireBaron extends EntityVampireBase implements IVampireBaron {
+    private final static Logger LOGGER = LogManager.getLogger(EntityVampireBaron.class);
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityVampireBaron.class, DataSerializers.VARINT);
     private final SaveableMinionHandler<IVampireMinion.Saveable> minionHandler;
     private final int MAX_LEVEL = 4;
@@ -105,14 +108,14 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     @Override
     public boolean getCanSpawnHere() {
-        int i = MathHelper.floor(this.getEntityBoundingBox().minY);
+        int i = MathHelper.floor(this.getBoundingBox().minY);
         //Only spawn on the surface
         if (i < 60) return false;
 //        CastlePositionData data = CastlePositionData.get(world);
 //        if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
 //            return false;
 //        }
-        BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
+        BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
 
         return ModBlocks.cursed_earth.equals(world.getBlockState(blockpos.down()).getBlock()) && super.getCanSpawnHere();
     }
@@ -134,7 +137,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            VampirismMod.log.t("Lev %s", level);
+            LOGGER.info("Lev %s", level);
         }
     }
 
@@ -160,7 +163,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     @Nonnull
     @Override
-    public String getName() {
+    public ITextComponent getName() {
         return super.getName() + " " + UtilLib.translate("text.vampirism.entity_level") + " " + (getLevel() + 1);
     }
 
@@ -186,7 +189,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     @Override
     public boolean isTheEntityAlive() {
-        return this.isEntityAlive();
+        return this.isAlive();
     }
 
     @Override
@@ -220,7 +223,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             if (i == 1) {
                 EntityLiving e = new EntityVampireMinionSaveable(world);
                 if (e == null) {
-                    VampirismMod.log.w("VampireBaron", "Failed to create saveable minion");
+                    LOGGER.warn("Failed to create saveable minion");
                 } else {
                     e.copyLocationAndAnglesFrom(this);
                     world.spawnEntity(e);
@@ -231,7 +234,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME));
             }
             if (m == null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getEntityBoundingBox().grow(19, 4, 19), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME), 3, Collections.emptyList()); //Do not avoid player here. Already using spawnBehind sometimes
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getBoundingBox().grow(19, 4, 19), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME), 3, Collections.emptyList()); //Do not avoid player here. Already using spawnBehind sometimes
             }
             if (m != null) {
                 m.setLord(this);
@@ -262,7 +265,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     @Override
     public void readAdditional(NBTTagCompound nbt) {
         super.readAdditional(nbt);
-        setLevel(MathHelper.clamp(nbt.getInteger("level"), 0, MAX_LEVEL));
+        setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
         minionHandler.loadMinions(nbt.getTagList("minions", 10));
     }
 
@@ -292,8 +295,8 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     @Override
     public void writeAdditional(NBTTagCompound nbt) {
         super.writeAdditional(nbt);
-        nbt.setInteger("level", getLevel());
-        nbt.setTag("minions", minionHandler.getMinionsToSave());
+        nbt.putInt("level", getLevel());
+        nbt.put("minions", minionHandler.getMinionsToSave());
     }
 
     @Override
@@ -356,16 +359,16 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     protected void updateEntityAttributes(boolean aggressive) {
         if (aggressive) {
-            this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20D);
-            this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
+            this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20D);
+            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
                     Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getLevel())));
         } else {
-            this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5D);
-            this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
+            this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5D);
+            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
                     Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()) / 3);
         }
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
                 .setBaseValue(Balance.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
     }
 

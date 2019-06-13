@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
@@ -10,20 +9,23 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Converted creature class.
  * Contains (stores and syncs) a normal Entity for rendering purpose
  */
 public class EntityConvertedCreature<T extends EntityCreature> extends EntityVampireBase implements IConvertedCreature<T>, ISyncable {
-    private final static String TAG = "ConvCreature";
+    private final static Logger LOGGER = LogManager.getLogger(EntityConvertedCreature.class);
     private T entityCreature;
     private boolean entityChanged = false;
     private boolean canDespawn = false;
@@ -34,7 +36,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public String getName() {
+    public ITextComponent getName() {
         return UtilLib.translate("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName());
     }
 
@@ -50,8 +52,8 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     @Override
     public void loadUpdateFromNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey("entity_old")) {
-            setEntityCreature((T) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity_old"), getEntityWorld()));
+        if (nbt.contains("entity_old")) {
+            setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), getEntityWorld()));
         }
     }
 
@@ -102,7 +104,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     public void tick() {
         super.tick();
         if (!world.isRemote && entityCreature == null) {
-            VampirismMod.log.d(TAG, "Setting dead, since creature is null");
+            LOGGER.debug("Setting dead, since creature is null");
             this.remove();
         }
     }
@@ -117,15 +119,15 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     @Override
     public void readAdditional(NBTTagCompound nbt) {
         super.readAdditional(nbt);
-        if (nbt.hasKey("entity_old")) {
-            setEntityCreature((T) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity_old"), world));
+        if (nbt.contains("entity_old")) {
+            setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), world));
             if (nil()) {
-                LOGGER.warn("Failed to create old entity %s. Maybe the entity does not exist anymore", nbt.getCompoundTag("entity_old"));
+                LOGGER.warn("Failed to create old entity %s. Maybe the entity does not exist anymore", nbt.getCompound("entity_old"));
             }
         } else {
             LOGGER.warn("Saved entity did not have a old entity");
         }
-        if (nbt.hasKey("converted_canDespawn")) {
+        if (nbt.contains("converted_canDespawn")) {
             canDespawn = nbt.getBoolean("converted_canDespawn");
         }
     }
@@ -168,7 +170,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     public void writeAdditional(NBTTagCompound nbt) {
         super.writeAdditional(nbt);
         writeOldEntityToNBT(nbt);
-        nbt.setBoolean("converter_canDespawn", canDespawn);
+        nbt.putBoolean("converter_canDespawn", canDespawn);
 
     }
 
@@ -185,7 +187,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    protected boolean canDespawn() {
+    public boolean canDespawn() {
         return canDespawn;
     }
 
@@ -208,7 +210,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
-        this.tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1));
+        this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityCreature.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
         //this.tasks.addTask(3, new VampireAIFleeSun(this, 1F));
         this.tasks.addTask(4, new EntityAIRestrictSun(this));
         tasks.addTask(5, new EntityAIAttackMeleeNoSun(this, 0.9D, false));
@@ -230,14 +232,14 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     protected void updateEntityAttributes() {
         if (!nil()) {
             IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
-            this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG(entityCreature));
-            this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth(entityCreature));
-            this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance(entityCreature));
-            this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed(entityCreature));
+            this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG(entityCreature));
+            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth(entityCreature));
+            this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance(entityCreature));
+            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed(entityCreature));
         } else {
-            this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000);
-            this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(0);
-            this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0);
+            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000);
+            this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(0);
+            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0);
         }
 
     }
@@ -254,7 +256,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
                 entityCreature.isDead = false;
                 entityCreature.writeUnlessPassenger(entity);
                 entityCreature.isDead = true;
-                nbt.setTag("entity_old", entity);
+                nbt.put("entity_old", entity);
             } catch (Exception e) {
                 LOGGER.error(e, "Failed to write old entity (%s) to NBT. If this happens more often please report this to the mod author.", entityCreature);
                 this.setEntityCreature(null);

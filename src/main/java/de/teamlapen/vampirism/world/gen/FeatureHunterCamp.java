@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world.gen;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -17,6 +16,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.fluids.IFluidBlock;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.Random;
@@ -26,6 +27,7 @@ import java.util.Random;
  */
 public class FeatureHunterCamp extends Feature {
 
+    private static final Logger LOGGER = LogManager.getLogger(FeatureHunterCamp.class);
     private IBlockState campfire_blockstate;
 
 
@@ -66,7 +68,7 @@ public class FeatureHunterCamp extends Feature {
                 UtilLib.spawnEntityInWorld(worldIn, box, hunter, 8, Collections.emptyList());
                 hunter.setCampArea(box.grow(4, 5, 4));
                 if (VampirismWorldGen.debug)
-                    VampirismMod.log.i("HunterCamp", "Generated advanced hunter camp at %s", center);
+                    LOGGER.info("Generated advanced hunter camp at %s", center);
                 return true;
             }
             return false;
@@ -74,7 +76,7 @@ public class FeatureHunterCamp extends Feature {
             BlockPos pos = position.add(rand.nextInt(16), 0, rand.nextInt(16));
             boolean flag = placeTent(worldIn, rand, findSolidPos(worldIn, pos), EnumFacing.byHorizontalIndex(rand.nextInt(EnumFacing.HORIZONTALS.length)));
             if (flag && VampirismWorldGen.debug)
-                VampirismMod.log.i("HunterCamp", "Generated normal hunter camp at %s", pos);
+                LOGGER.info("Generated normal hunter camp at %s", pos);
             return flag;
         }
     }

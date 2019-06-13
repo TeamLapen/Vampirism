@@ -2,8 +2,8 @@ package de.teamlapen.lib.lib.util;
 
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
@@ -58,7 +58,7 @@ public abstract class SimpleSpawnerLogic {
 
     public void readFromNbt(NBTTagCompound nbt) {
         //Compat for 1.10 worlds
-        if (nbt.hasKey("entity_name")) {
+        if (nbt.contains("entity_name")) {
             String n = nbt.getString("entity_name");
             if (n.contains("vampirism.")) {
                 entityName = new ResourceLocation(REFERENCE.MODID, n.replace("vampirism.", ""));
@@ -144,7 +144,7 @@ public abstract class SimpleSpawnerLogic {
                 boolean flag1 = false;
 
                 for (int i = 0; i < this.spawnCount; ++i) {
-                    Entity entity = EntityList.createEntityByIDFromName(this.getEntityName(), this.getSpawnerWorld());
+                    Entity entity = EntityType.create(this.getSpawnerWorld(), this.getEntityName());
 
                     if (entity == null) {
                         break;
@@ -181,17 +181,17 @@ public abstract class SimpleSpawnerLogic {
     }
 
     public void writeToNbt(NBTTagCompound nbt) {
-        if (entityName != null) nbt.setString("id", entityName.toString());
-        nbt.setInt("min_delay", minSpawnDelay);
-        nbt.setInt("max_delay", maxSpawnDelay);
-        nbt.setInt("max_nearby", maxNearbyEntities);
-        nbt.setInt("delay", spawnDelay);
-        nbt.setInt("activate_range", activateRange);
-        nbt.setInt("spawn_range", spawnRange);
-        nbt.setInt("spawn_count", spawnCount);
-        nbt.setInt("spawned_today", spawnedToday);
-        nbt.setLong("spawned_last", spawnedLast);
-        nbt.setBoolean("spawner_flag", flag);
+        if (entityName != null) nbt.putString("id", entityName.toString());
+        nbt.putInt("min_delay", minSpawnDelay);
+        nbt.putInt("max_delay", maxSpawnDelay);
+        nbt.putInt("max_nearby", maxNearbyEntities);
+        nbt.putInt("delay", spawnDelay);
+        nbt.putInt("activate_range", activateRange);
+        nbt.putInt("spawn_range", spawnRange);
+        nbt.putInt("spawn_count", spawnCount);
+        nbt.putInt("spawned_today", spawnedToday);
+        nbt.putLong("spawned_last", spawnedLast);
+        nbt.putBoolean("spawner_flag", flag);
     }
 
     protected AxisAlignedBB getSpawningBox() {

@@ -43,7 +43,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
 
     private
     @Nonnull
-    ItemStack arrowStack = new ItemStack(ModItems.crossbow_arrow);
+    ItemStack arrowStack = new ItemStack(ModItems.crossbow_arrow_normal);
     private boolean ignoreHurtTimer = false;
 
     public EntityCrossbowArrow(World world) {
@@ -68,7 +68,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
     @Override
     public void readAdditional(NBTTagCompound compound) {
         super.readAdditional(compound);
-        arrowStack.deserializeNBT(compound.getCompoundTag("arrowStack"));
+        arrowStack.deserializeNBT(compound.getCompound("arrowStack"));
     }
 
     /**
@@ -81,7 +81,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
     @Override
     public void writeAdditional(NBTTagCompound compound) {
         super.writeAdditional(compound);
-        compound.setTag("arrowStack", arrowStack.write(new NBTTagCompound()));
+        compound.put("arrowStack", arrowStack.write(new NBTTagCompound()));
     }
 
     @Override
@@ -103,7 +103,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
 
     @Override
     protected void onHit(RayTraceResult raytraceResultIn) {
-        if (raytraceResultIn.entityHit == null) {
+        if (raytraceResultIn.entity == null) {
             Item item = arrowStack.getItem();
             if (item instanceof IVampirismCrossbowArrow) {
                 ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.shootingEntity);

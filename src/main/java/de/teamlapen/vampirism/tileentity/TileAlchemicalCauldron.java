@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.lib.util.ISoundReference;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
@@ -37,6 +36,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,6 +46,7 @@ import java.util.UUID;
 
 public class TileAlchemicalCauldron extends InventoryTileEntity implements ITickable, ISidedInventory {
 
+    private final static Logger LOGGER = LogManager.getLogger(TileAlchemicalCauldron.class);
     private static final int SLOT_RESULT = 0;
     private static final int SLOT_LIQUID = 1;
     private static final int SLOT_INGREDIENT = 2;
@@ -180,7 +182,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
 
     @Nonnull
     @Override
-    public String getName() {
+    public ITextComponent getName() {
         return "vampirism.container." + BlockAlchemicalCauldron.regName;
     }
 
@@ -227,12 +229,12 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound nbt = super.write(new NBTTagCompound());
-        nbt.setBoolean("cooking", cookTime > 0 && isBurning());
-        nbt.setBoolean("burning", burnTime > 0);
-        nbt.setString("username", getOwnerName());
+        nbt.putBoolean("cooking", cookTime > 0 && isBurning());
+        nbt.putBoolean("burning", burnTime > 0);
+        nbt.putString("username", getOwnerName());
         ItemStack liquidItem = getStackInSlot(SLOT_LIQUID);
         if (liquidItem != null) {
-            nbt.setTag("liquidItem", liquidItem.write(new NBTTagCompound()));
+            nbt.put("liquidItem", liquidItem.write(new NBTTagCompound()));
         }
         return nbt;
     }
@@ -243,7 +245,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         super.handleUpdateTag(nbt);
         cookingClient = nbt.getBoolean("cooking");
         burningClient = nbt.getBoolean("burning");
-        if (nbt.hasKey("liquidItem")) {
+        if (nbt.contains("liquidItem")) {
             this.setInventorySlotContents(SLOT_LIQUID, new ItemStack(nbt.getCompoundTag("liquidItem")));
         } else {
             this.setInventorySlotContents(SLOT_LIQUID, ItemStack.EMPTY);
@@ -315,18 +317,18 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     @Override
     public void read(NBTTagCompound tagCompound) {
         super.read(tagCompound);
-        if (tagCompound.hasKey("burntime")) {
-            this.burnTime = tagCompound.getInteger("burntime");
-            this.cookTime = tagCompound.getInteger("cooktime");
-            this.totalBurnTime = tagCompound.getInteger("cooktime_total");
+        if (tagCompound.contains("burntime")) {
+            this.burnTime = tagCompound.getInt("burntime");
+            this.cookTime = tagCompound.getInt("cooktime");
+            this.totalBurnTime = tagCompound.getInt("cooktime_total");
         }
         if (tagCompound.hasUniqueId("owner")) {
             ownerID = tagCompound.getUniqueId("owner");
         }
-        if (tagCompound.hasKey("ownername")) {
+        if (tagCompound.contains("ownername")) {
             username = tagCompound.getString("ownername");
         }
-        if (tagCompound.hasKey("bypass_recipecheck")) {
+        if (tagCompound.contains("bypass_recipecheck")) {
             ItemStack liquid = getStackInSlot(SLOT_LIQUID);
             ItemStack ingredient = getStackInSlot(SLOT_INGREDIENT);
             if (!liquid.isEmpty()) {
@@ -364,7 +366,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     }
 
     @Override
-    public void update() {
+    public void tick() {
         boolean wasBurning = isBurning();
         boolean wasCooking = cookTime > 0;
         boolean dirty = false;
@@ -424,13 +426,13 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
         super.write(compound);
-        compound.setInteger("burntime", this.burnTime);
-        compound.setInteger("cooktime", this.cookTime);
-        compound.setInteger("cooktime_total", this.totalCookTime);
+        compound.putInt("burntime", this.burnTime);
+        compound.putInt("cooktime", this.cookTime);
+        compound.putInt("cooktime_total", this.totalCookTime);
         if (ownerID != null) compound.setUniqueId("owner", ownerID);
-        if (username != null) compound.setString("ownername", username);
+        if (username != null) compound.putString("ownername", username);
         if (checkedRecipe != null) {
-            compound.setBoolean("bypass_recipecheck", true);
+            compound.putBoolean("bypass_recipecheck", true);
         }
         return compound;
     }
@@ -487,7 +489,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
                     handler.drain(s, true);
                     setInventorySlotContents(SLOT_LIQUID, handler.getContainer());
                 } else {
-                    VampirismMod.log.w("AlchemicalCauldron", "Cooked item without valid input liquid (Recipe %s, Input %s)", recipe, fluidContainer);
+                    LOGGER.w("Cooked item without valid input liquid (Recipe %s, Input %s)", recipe, fluidContainer);
                 }
             }
             decrStackSize(SLOT_INGREDIENT, 1);

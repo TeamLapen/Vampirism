@@ -25,7 +25,7 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
         if (flag) {
             EntityLivingBase entitylivingbase = this.attacker.getAttackTarget();
             if (entitylivingbase != null) {
-                double distance = this.attacker.getDistanceSq(entitylivingbase.posX, entitylivingbase.getEntityBoundingBox().minY, entitylivingbase.posZ);
+                double distance = this.attacker.getDistanceSq(entitylivingbase.posX, entitylivingbase.getBoundingBox().minY, entitylivingbase.posZ);
                 if (distance <= this.getAttackReachSqr(entitylivingbase)) {
                     return true;
                 }
@@ -38,7 +38,7 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
             if (avoidSun) {
 
                 Path path = this.path;
-                if (attacker.getEntityWorld().canSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getEntityBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
+                if (attacker.getEntityWorld().canSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
                     return false;
                 }
 

@@ -71,7 +71,7 @@ public class TileCoffin extends TileEntity implements ITickable {
     public void read(NBTTagCompound par1NBTTagCompound) {
         super.read(par1NBTTagCompound);
 
-        this.color = par1NBTTagCompound.getInteger("color");
+        this.color = par1NBTTagCompound.getInt("color");
 
     }
 
@@ -82,7 +82,7 @@ public class TileCoffin extends TileEntity implements ITickable {
     }
 
     @Override
-    public void update() {
+    public void tick() {
         if (!hasWorld() || !world.isRemote || !BlockCoffin.isHead(world, pos)) {
             return;
 
@@ -100,7 +100,7 @@ public class TileCoffin extends TileEntity implements ITickable {
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
         NBTTagCompound nbt = super.write(compound);
-        nbt.setInteger("color", color);
+        nbt.putInt("color", color);
         return nbt;
     }
 }

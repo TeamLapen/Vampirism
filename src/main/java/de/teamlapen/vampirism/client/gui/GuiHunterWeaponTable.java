@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.gui;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.inventory.HunterWeaponTableContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -48,7 +47,7 @@ public class GuiHunterWeaponTable extends GuiContainer {
         super.tick();
         IBlockState blockState = this.world.getBlockState(pos);
         if (blockState.getBlock() instanceof BlockWeaponTable) {
-            lava = blockState.getValue(BlockWeaponTable.LAVA);
+            lava = blockState.get(BlockWeaponTable.LAVA);
             if (world.getGameTime() % 10 == 4) {
                 isMissingLava = ((HunterWeaponTableContainer) this.inventorySlots).isMissingLava();
             }

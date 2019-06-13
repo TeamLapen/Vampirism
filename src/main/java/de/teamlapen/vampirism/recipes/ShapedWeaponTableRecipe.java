@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.VampirismRegistries;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,9 +19,9 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.IRegistry;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.RecipeType;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -286,7 +285,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
             }
 
-            map.put(entry.getKey(), Ingredient.fromJson(entry.getValue()));
+            map.put(entry.getKey(), Ingredient.deserialize(entry.getValue()));
         }
 
         map.put(" ", Ingredient.EMPTY);
@@ -295,7 +294,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
 
     private static ItemStack deserializeItem(JsonObject p_199798_0_) {
         String s = JsonUtils.getString(p_199798_0_, "item");
-        Item item = IRegistry.field_212630_s.func_212608_b(new ResourceLocation(s));
+        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(s));
         if (item == null) {
             throw new JsonSyntaxException("Unknown item '" + s + "'");
         } else if (p_199798_0_.has("data")) {
@@ -347,7 +346,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
             String group = buffer.readString(32767);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(height * width, Ingredient.EMPTY);
             for (int k = 0; k < ingredients.size(); ++k) {
-                ingredients.set(k, Ingredient.fromBuffer(buffer));
+                ingredients.set(k, Ingredient.read(buffer));
             }
             ItemStack itemstack = buffer.readItemStack();
             int level = buffer.readVarInt();
@@ -367,7 +366,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
             buffer.writeVarInt(recipe.recipeHeight);
             buffer.writeString(recipe.group);
             for (Ingredient ingredient : recipe.recipeItems) {
-                ingredient.writeToBuffer(buffer);
+                ingredient.write(buffer);
             }
             buffer.writeItemStack(recipe.recipeOutput);
             buffer.writeVarInt(recipe.requiredLevel);

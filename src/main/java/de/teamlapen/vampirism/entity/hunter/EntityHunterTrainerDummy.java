@@ -1,12 +1,8 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.EntityVampirism;
-import de.teamlapen.vampirism.entity.ai.HunterAILookAtTrainee;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,10 +44,10 @@ public class EntityHunterTrainerDummy extends EntityVampirism {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
     }
 
     @Override
@@ -78,7 +74,7 @@ public class EntityHunterTrainerDummy extends EntityVampirism {
         ItemStack stack = player.getHeldItem(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() == Items.SPAWN_EGG;
 
-        if (!flag && this.isEntityAlive() && !player.isSneaking()) {
+        if (!flag && this.isAlive() && !player.isSneaking()) {
             if (!this.world.isRemote) {
             	if(Helper.isHunter(player)) {
             		player.sendMessage(new TextComponentTranslation("text.vampirism.trainer_disabled_hunter"));

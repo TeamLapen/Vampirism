@@ -6,9 +6,9 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentDamage;
 import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -22,7 +22,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
     }
 
     @Override
-    public float calcDamageByCreature(int level, EnumCreatureAttribute creatureType) {
+    public float calcDamageByCreature(int level, CreatureAttribute creatureType) {
         return creatureType == VReference.VAMPIRE_CREATURE_ATTRIBUTE ? level * 2.5F : 0;
     }
 

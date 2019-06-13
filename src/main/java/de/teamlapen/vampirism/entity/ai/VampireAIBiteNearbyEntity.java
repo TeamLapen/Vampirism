@@ -39,7 +39,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return creature.getEntity().isEntityAlive() && creature.getEntity().getEntityBoundingBox().intersects(getBiteBoundingBox()) && this.timer > 0;
+        return creature.getEntity().isAlive() && creature.getEntity().getBoundingBox().intersects(getBiteBoundingBox()) && this.timer > 0;
     }
 
     @Override
@@ -97,6 +97,6 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
     }
 
     protected AxisAlignedBB getBiteBoundingBox() {
-        return vampireEntity.getEntityBoundingBox().grow(0.5, 0.7, 0.5);
+        return vampireEntity.getBoundingBox().grow(0.5, 0.7, 0.5);
     }
 }

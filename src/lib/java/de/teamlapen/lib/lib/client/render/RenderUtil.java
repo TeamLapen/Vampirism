@@ -52,11 +52,11 @@ public class RenderUtil {
         }
         OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, brightness, 0.0F);
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().entityRenderer.setupFogColor(true);
+        Minecraft.getInstance().gameRenderer.setupFogColor(true);
     }
 
     private static void endGlowing(int brightnessForRender){
-        Minecraft.getInstance().entityRenderer.setupFogColor(false);
+        Minecraft.getInstance().gameRenderer.setupFogColor(false);
         int j = brightnessForRender % 65536;
         int k = brightnessForRender / 65536;
         OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, j, k);

@@ -11,6 +11,8 @@ import net.minecraft.entity.ai.EntityAIFleeSun;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,7 +24,7 @@ import java.util.List;
  */
 public class EntityVampireMinionSaveable extends EntityVampireMinionBase implements IVampireMinion.Saveable {
 
-    private final static String TAG = "SVampireMinion";
+    private final static Logger LOGGER = LogManager.getLogger(EntityVampireMinionSaveable.class);
     private final ArrayList<IMinionCommand> commands = new ArrayList<>();
     protected IMinionLordWithSaveable lord;
 

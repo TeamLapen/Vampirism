@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.special;
 
 import com.google.common.base.Optional;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModSounds;
@@ -20,6 +21,8 @@ import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -31,6 +34,7 @@ import java.util.UUID;
  */
 public class EntityDraculaHalloween extends EntityVampirism {
 
+    private final static Logger LOGGER = LogManager.getLogger(EntityDraculaHalloween.class);
     protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityTameable.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private int seen = 0;
     private int hiding = 0;
@@ -38,7 +42,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
 
     public EntityDraculaHalloween(World world) {
         super(world);
-        this.setEntityInvulnerable(true);
+        this.setInvulnerable(true);
     }
 
     @Override
@@ -92,7 +96,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
             EntityLivingBase owner = getOwner();
             if (owner != null && !isInvisible() && !VampirismMod.proxy.isPlayerThePlayer((EntityPlayer) owner)) {
                 this.setInvisible(true);
-                VampirismMod.log.t("Setting invisible on other client");
+                LOGGER.info("Setting invisible on other client");
             }
             return;
         }
@@ -162,12 +166,12 @@ public class EntityDraculaHalloween extends EntityVampirism {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
-        return super.write(compound);
+    public NBTTagCompound writeWithoutTypeId(NBTTagCompound compound) {
+        return super.writeWithoutTypeId(compound);
     }
 
     @Override
-    protected boolean canDespawn() {
+    public boolean canDespawn() {
         return false;
     }
 

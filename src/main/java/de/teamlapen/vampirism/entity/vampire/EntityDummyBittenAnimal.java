@@ -26,8 +26,8 @@ public class EntityDummyBittenAnimal extends EntityLiving {
 
 
     @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
+    public void livingTick() {
+        super.livingTick();
         if (this.ticksExisted > 4 && !this.getEntityWorld().isRemote) {
             EntityCreature entity;
             int rand = this.rand.nextInt(3);

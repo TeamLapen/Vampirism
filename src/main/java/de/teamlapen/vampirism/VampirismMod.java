@@ -53,9 +53,8 @@ import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
-
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EnumCreatureAttribute;
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -74,11 +73,10 @@ import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.File;
 
 /**
@@ -114,7 +112,7 @@ public class VampirismMod {
      * type. Use the instance in {@link VReference} instead of this one. This is
      * only here to init it as early as possible
      */
-    private static final EnumCreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = EnumHelper.addCreatureAttribute("VAMPIRISM_VAMPIRE");
+    private static final CreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = EnumHelper.addCreatureAttribute("VAMPIRISM_VAMPIRE");
 
     public static VampirismMod instance;
     @SuppressWarnings("Convert2MethodRef")

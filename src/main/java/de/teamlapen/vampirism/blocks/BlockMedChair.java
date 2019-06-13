@@ -78,7 +78,7 @@ public class BlockMedChair extends VampirismBlock {
             }
         } else {
             if (world.isRemote)
-                player.sendMessage(new TextComponentTranslation("text.vampirism.need_item_to_use", new TextComponentTranslation((new ItemStack(ModItems.injection_garlic).getTranslationKey() + ".name")));
+                player.sendMessage(new TextComponentTranslation("text.vampirism.need_item_to_use", new TextComponentTranslation((new ItemStack(ModItems.injection_garlic).getTranslationKey() + ".name"))));
         }
 
         return true;

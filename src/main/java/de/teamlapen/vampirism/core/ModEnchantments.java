@@ -5,13 +5,13 @@ import de.teamlapen.vampirism.items.enchantment.EnchantmentCrossbowInfinite;
 import de.teamlapen.vampirism.items.enchantment.EnchantmentVampireSlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 
-@GameRegistry.ObjectHolder(REFERENCE.MODID)
+@ObjectHolder(REFERENCE.MODID)
 public class ModEnchantments {
 
     public static final EnchantmentCrossbowInfinite crossbowinfinite = getNull();

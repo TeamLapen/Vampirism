@@ -1,17 +1,20 @@
 package de.teamlapen.vampirism.player.actions;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.core.VampirismRegistries;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ import java.util.List;
  * Probably not the fastest or cleanest approach, but I did not find the perfect solution yet.
  */
 public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T> {
-    private final static String TAG = "ActionHandler";
+    private final static Logger LOGGER = LogManager.getLogger(ActionHandler.class);
 
 
     /**
@@ -123,8 +126,8 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         //NBT only contains actions that are active/cooldown
         activeTimers.clear();
         cooldownTimers.clear();
-        if (nbt.hasKey("actions_active")) loadTimerMapFromNBT(nbt.getCompoundTag("actions_active"), activeTimers);
-        if (nbt.hasKey("actions_cooldown")) loadTimerMapFromNBT(nbt.getCompoundTag("actions_cooldown"), cooldownTimers);
+        if (nbt.contains("actions_active")) loadTimerMapFromNBT(nbt.getCompound("actions_active"), activeTimers);
+        if (nbt.contains("actions_cooldown")) loadTimerMapFromNBT(nbt.getCompound("actions_cooldown"), cooldownTimers);
     }
 
     /**
@@ -159,14 +162,14 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
          * Any locally active action is removed from the NBT so after the iteration only actions that are not locally active should be present in the map. Therefore any remaining actions are activated.
          *
          */
-        if (nbt.hasKey("actions_active")) {
-            NBTTagCompound active = nbt.getCompoundTag("actions_active");
+        if (nbt.contains("actions_active")) {
+            NBTTagCompound active = nbt.getCompound("actions_active");
             for (ObjectIterator<Object2IntMap.Entry<ResourceLocation>> it = activeTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
                 Object2IntMap.Entry<ResourceLocation> client_active = it.next();
                 String key = client_active.getKey().toString();
-                if (active.hasKey(key)) {
-                    client_active.setValue(active.getInteger(key));
-                    nbt.removeTag(key);
+                if (active.contains(key)) {
+                    client_active.setValue(active.getInt(key));
+                    nbt.remove(key);
                 } else {
                     ILastingAction<T> action = (ILastingAction<T>) VampirismRegistries.ACTIONS.getValue(client_active.getKey());
                     assert action != null;
@@ -174,22 +177,22 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
                     it.remove();
                 }
             }
-            for (String key : active.getKeySet()) {
+            for (String key : active.keySet()) {
                 ResourceLocation id = new ResourceLocation(key);
                 ILastingAction<T> action = (ILastingAction<T>) VampirismRegistries.ACTIONS.getValue(id);
                 if (action == null) {
                     LOGGER.error("Action %s is not available client side", key);
                 } else {
                     action.onActivatedClient(player);
-                    activeTimers.put(id, active.getInteger(key));
+                    activeTimers.put(id, active.getInt(key));
                 }
             }
 
         }
 
-        if (nbt.hasKey("actions_cooldown")) {
+        if (nbt.contains("actions_cooldown")) {
             cooldownTimers.clear();
-            loadTimerMapFromNBT(nbt.getCompoundTag("actions_cooldown"), cooldownTimers);
+            loadTimerMapFromNBT(nbt.getCompound("actions_cooldown"), cooldownTimers);
         }
 
     }
@@ -224,8 +227,8 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      */
     public void saveToNbt(NBTTagCompound nbt) {
 
-        nbt.setTag("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
-        nbt.setTag("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
+        nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
+        nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
     }
 
     @Override
@@ -326,18 +329,18 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      * @param nbt
      */
     public void writeUpdateForClient(NBTTagCompound nbt) {
-        nbt.setTag("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
-        nbt.setTag("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
+        nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
+        nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
     }
 
     private void loadTimerMapFromNBT(NBTTagCompound nbt, Object2IntMap<ResourceLocation> map) {
-        for (String key : nbt.getKeySet()) {
+        for (String key : nbt.keySet()) {
             ResourceLocation id = new ResourceLocation(key);
             IAction action = VampirismRegistries.ACTIONS.getValue(id);
             if (action == null) {
                 LOGGER.warn("Did not find action with key %s", key);
             } else {
-                map.put(id, nbt.getInteger(key));
+                map.put(id, nbt.getInt(key));
             }
         }
     }
@@ -345,7 +348,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     private NBTTagCompound writeTimersToNBT(ObjectSet<Object2IntMap.Entry<ResourceLocation>> set) {
         NBTTagCompound nbt = new NBTTagCompound();
         for (Object2IntMap.Entry<ResourceLocation> entry : set) {
-            nbt.setInteger(entry.getKey().toString(), entry.getIntValue());
+            nbt.putInt(entry.getKey().toString(), entry.getIntValue());
         }
         return nbt;
     }

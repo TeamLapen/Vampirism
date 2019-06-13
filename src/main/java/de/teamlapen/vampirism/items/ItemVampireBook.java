@@ -31,11 +31,11 @@ public class ItemVampireBook extends VampirismItem {
     public static boolean validBookTagContents(NBTTagCompound nbt) {
         if (!ItemWritableBook.isNBTValid(nbt)) {
             return false;
-        } else if (!nbt.hasKey("title")) {
+        } else if (!nbt.contains("title")) {
             return false;
         } else {
             String s = nbt.getString("title");
-            return s.length() <= 32 && nbt.hasKey("author");
+            return s.length() <= 32 && nbt.contains("author");
         }
     }
 
@@ -83,7 +83,7 @@ public class ItemVampireBook extends VampirismItem {
         if (!stack.isEmpty() && stack.getTag() != null) {
             NBTTagCompound nbttagcompound = stack.getTag();
             if (!nbttagcompound.getBoolean("resolved")) {
-                nbttagcompound.setBoolean("resolved", true);
+                nbttagcompound.putBoolean("resolved", true);
                 if (validBookTagContents(nbttagcompound)) {
                     NBTTagList nbttaglist = nbttagcompound.getList("pages", 8);
 
@@ -101,7 +101,7 @@ public class ItemVampireBook extends VampirismItem {
                         nbttaglist.set(slot, new NBTTagString(ITextComponent.Serializer.toJson((ITextComponent) lvt_7_1_)));
                     }
 
-                    nbttagcompound.setTag("pages", nbttaglist);
+                    nbttagcompound.put("pages", nbttaglist);
                     if (player instanceof EntityPlayerMP && player.getHeldItemMainhand() == stack) {
                         Slot var10 = player.openContainer.getSlotFromInventory(player.inventory, player.inventory.currentItem);
                         ((EntityPlayerMP) player).connection.sendPacket(new SPacketSetSlot(0, var10.slotNumber, stack));

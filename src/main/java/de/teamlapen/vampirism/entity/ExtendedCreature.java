@@ -17,7 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.init.MobEffects;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
@@ -175,13 +175,13 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     @Override
     public void loadUpdateFromNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey(KEY_BLOOD)) {
-            setBlood(nbt.getInteger(KEY_BLOOD));
+        if (nbt.contains(KEY_BLOOD)) {
+            setBlood(nbt.getInt(KEY_BLOOD));
         }
-        if (nbt.hasKey(KEY_MAX_BLOOD)) {
-            setBlood(nbt.getInteger(KEY_MAX_BLOOD));
+        if (nbt.contains(KEY_MAX_BLOOD)) {
+            setBlood(nbt.getInt(KEY_MAX_BLOOD));
         }
-        if (nbt.hasKey(POISONOUS_BLOOD)) {
+        if (nbt.contains(POISONOUS_BLOOD)) {
             setPoisonousBlood(nbt.getBoolean(POISONOUS_BLOOD));
         }
     }
@@ -280,27 +280,27 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     @Override
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-        nbt.setInteger(KEY_BLOOD, getBlood());
-        nbt.setInteger(KEY_MAX_BLOOD, getBlood());
-        nbt.setBoolean(POISONOUS_BLOOD, hasPoisonousBlood());
+        nbt.putInt(KEY_BLOOD, getBlood());
+        nbt.putInt(KEY_MAX_BLOOD, getBlood());
+        nbt.putBoolean(POISONOUS_BLOOD, hasPoisonousBlood());
     }
 
     private void loadNBTData(NBTTagCompound compound) {
-        if (compound.hasKey(KEY_MAX_BLOOD)) {
-            setMaxBlood(compound.getInteger(KEY_MAX_BLOOD));
+        if (compound.contains(KEY_MAX_BLOOD)) {
+            setMaxBlood(compound.getInt(KEY_MAX_BLOOD));
         }
-        if (compound.hasKey(KEY_BLOOD)) {
-            setBlood(compound.getInteger(KEY_BLOOD));
+        if (compound.contains(KEY_BLOOD)) {
+            setBlood(compound.getInt(KEY_BLOOD));
         }
-        if (compound.hasKey(POISONOUS_BLOOD)) {
+        if (compound.contains(POISONOUS_BLOOD)) {
             setPoisonousBlood(compound.getBoolean(POISONOUS_BLOOD));
         }
     }
 
     private void saveNBTData(NBTTagCompound compound) {
-        compound.setInteger(KEY_BLOOD, blood);
-        compound.setInteger(KEY_MAX_BLOOD, maxBlood);
-        compound.setBoolean(POISONOUS_BLOOD, poisonousBlood);
+        compound.putInt(KEY_BLOOD, blood);
+        compound.putInt(KEY_MAX_BLOOD, maxBlood);
+        compound.putBoolean(POISONOUS_BLOOD, poisonousBlood);
     }
 
     private void sync() {
@@ -314,12 +314,12 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     private static class Storage implements Capability.IStorage<IExtendedCreatureVampirism> {
         @Override
-        public void readNBT(Capability<IExtendedCreatureVampirism> capability, IExtendedCreatureVampirism instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT(Capability<IExtendedCreatureVampirism> capability, IExtendedCreatureVampirism instance, EnumFacing side, INBTBase nbt) {
             ((ExtendedCreature) instance).loadNBTData((NBTTagCompound) nbt);
         }
 
         @Override
-        public NBTBase writeNBT(Capability<IExtendedCreatureVampirism> capability, IExtendedCreatureVampirism instance, EnumFacing side) {
+        public INBTBase writeNBT(Capability<IExtendedCreatureVampirism> capability, IExtendedCreatureVampirism instance, EnumFacing side) {
             NBTTagCompound nbt = new NBTTagCompound();
             ((ExtendedCreature) instance).saveNBTData(nbt);
             return nbt;

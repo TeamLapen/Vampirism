@@ -83,7 +83,7 @@ public class MinionAIFollowLord extends EntityAIBase {
      * Updates the task
      */
     @Override
-    public void updateTask() {
+    public void tick() {
         if (--this.timer <= 0) {
             this.timer = 10;
             minionEntity.getNavigator().tryMoveToEntityLiving(this.boss.getRepresentingEntity(), this.speed);

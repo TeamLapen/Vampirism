@@ -46,10 +46,10 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             width = 0.2F;
         }
         if (player.width != width || player.height != height) {
-            AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
+            AxisAlignedBB axisalignedbb = player.getBoundingBox();
             axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double) width, axisalignedbb.minY + (double) height, axisalignedbb.minZ + (double) width);
 
-            if (!player.getEntityWorld().collidesWithAnyBlock(axisalignedbb)) {
+            if (!player.getEntityWorld().checkBlockCollision(axisalignedbb)) {
                 if (!VampirePlayer.get(player).setEntitySize(width, height)) return;
             }
         }
@@ -172,7 +172,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     private void setModifier(EntityPlayer player, boolean enabled) {
         if (enabled) {
 
-            IAttributeInstance health = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
+            IAttributeInstance health = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
             if (health.getModifier(healthModifierUUID) == null) {
                 health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -Balance.vpa.BAT_HEALTH_REDUCTION, 2).setSaved(false));
             }
@@ -184,13 +184,13 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else {
 
             // Health modifier
-            IAttributeInstance health = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
+            IAttributeInstance health = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
             AttributeModifier m = health.getModifier(healthModifierUUID);
             if (m != null) {
                 health.removeModifier(m);
             }
 
-            if (!player.capabilities.isCreativeMode) {
+            if (!player.isCreative()) {
                 player.capabilities.allowFlying = false;
             }
             player.capabilities.isFlying = false;

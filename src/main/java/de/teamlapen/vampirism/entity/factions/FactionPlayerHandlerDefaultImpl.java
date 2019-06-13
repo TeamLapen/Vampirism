@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.entity.factions;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 
@@ -15,8 +16,9 @@ import javax.annotation.Nonnull;
 @Deprecated
 class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
 
+    private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandlerDefaultImpl.class);
     public FactionPlayerHandlerDefaultImpl() {
-        VampirismMod.log.e("FactionPlayerHandlerCapability", "Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
+        LOGGER.error("Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
 
     }
 

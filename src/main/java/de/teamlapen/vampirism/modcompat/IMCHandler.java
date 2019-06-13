@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.modcompat;
 
 import com.google.common.collect.ImmutableList;
+
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
@@ -19,9 +20,9 @@ public class IMCHandler {
                 if ("blood-value".equals(m.key)) {
                     if (m.isNBTMessage()) {
                         NBTTagCompound nbt = m.getNBTValue();
-                        if (nbt.hasKey("id") && nbt.hasKey("value")) {
+                        if (nbt.contains("id") && nbt.contains("value")) {
                             ResourceLocation id = new ResourceLocation(nbt.getString("id"));
-                            int value = nbt.getInteger("value");
+                            int value = nbt.getInt("value");
                             VampirismMod.log.i("InterModComm", "Received blood value of %s for %s from %s", value, id, m.getSender());
                             entityRegistry.addBloodValue(id, value);
                         } else {

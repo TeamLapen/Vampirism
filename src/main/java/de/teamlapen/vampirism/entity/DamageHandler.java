@@ -11,8 +11,8 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
@@ -52,7 +52,7 @@ public class DamageHandler {
         if (strength == EnumStrength.NONE) return;
         EntityLivingBase entity = vampire.getRepresentingEntity();
         entity.addPotionEffect(new PotionEffect(ModPotions.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
-        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode) return;
+        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) return;
         entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
             entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (multiplier * 20), 1, ambient, false));
@@ -92,7 +92,7 @@ public class DamageHandler {
      */
     public static void affectEntityHolyWaterSplash(EntityLivingBase entity, EnumStrength strength, double distSq, boolean directHit) {
         boolean vampire = Helper.isVampire(entity);
-        if (entity.canBeHitWithPotion() && (vampire || EnumCreatureAttribute.UNDEAD.equals(entity.getCreatureAttribute()))) {
+        if (entity.canBeHitWithPotion() && (vampire || CreatureAttribute.UNDEAD.equals(entity.getCreatureAttribute()))) {
             if (distSq < 16.0D) {
                 double affect = 1.0D - Math.sqrt(distSq) / 4.0D;
 

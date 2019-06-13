@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
-import de.teamlapen.vampirism.VampirismMod;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
@@ -15,6 +15,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.IEntitySelectorFactory;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -25,6 +27,7 @@ import java.util.Map;
  */
 public class VampirismEntitySelectors {
 
+    private final static Logger LOGGER = LogManager.getLogger(VampirismEntitySelectors.class);
     private static final String FACTION = "vampirism:faction";
     private static final String LEVEL = "vampirism:level";
     private static final String MIN_LEVEL = "vampirism:minLevel";
@@ -71,7 +74,7 @@ public class VampirismEntitySelectors {
                 final int l = Integer.parseInt(level);
                 list.add(input -> input instanceof EntityPlayer && FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() == l);
             } catch (NumberFormatException e) {
-                VampirismMod.log.w("EntitySelectors", "Failed to parse level (%s)", level);
+                LOGGER.warn("Failed to parse level (%s)", level);
                 list.add(input -> false);
             }
 
@@ -83,7 +86,7 @@ public class VampirismEntitySelectors {
                 final int l = Integer.parseInt(minLevel);
                 list.add(input -> input instanceof EntityPlayer && FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() >= l);
             } catch (NumberFormatException e) {
-                VampirismMod.log.w("EntitySelectors", "Failed to parse level (%s)", level);
+                LOGGER.warn("Failed to parse level (%s)", level);
                 list.add(input -> false);
             }
 
@@ -95,7 +98,7 @@ public class VampirismEntitySelectors {
                 final int l = Integer.parseInt(maxLevel);
                 list.add(input -> input instanceof EntityPlayer && FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() <= l);
             } catch (NumberFormatException e) {
-                VampirismMod.log.w("EntitySelectors", "Failed to parse level (%s)", level);
+                LOGGER.warn("Failed to parse level (%s)", level);
                 list.add(input -> false);
             }
 

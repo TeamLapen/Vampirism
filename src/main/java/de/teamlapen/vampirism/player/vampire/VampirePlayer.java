@@ -174,7 +174,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
             if (!isRemote()) {
                 NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setInteger(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
+                nbt.putInt(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
                 this.sync(nbt, false);
             }
         }
@@ -242,7 +242,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 25, 4, false, false));
 
                     NBTTagCompound nbt = new NBTTagCompound();
-                    nbt.setInteger(KEY_VICTIM_ID, feed_victim);
+                    nbt.putInt(KEY_VICTIM_ID, feed_victim);
                     sync(nbt, true);
 
                 }
@@ -320,7 +320,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         player.removePotionEffect(MobEffects.SLOWNESS);
         if (sync) {
             NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setInteger(KEY_VICTIM_ID, feed_victim);
+            nbt.putInt(KEY_VICTIM_ID, feed_victim);
             sync(nbt, true);
         }
     }
@@ -403,7 +403,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             this.glowingEyes = value;
             if (!isRemote()) {
                 NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setBoolean(KEY_GLOWING_EYES, glowingEyes);
+                nbt.putBoolean(KEY_GLOWING_EYES, glowingEyes);
                 sync(nbt, true);
             }
         }
@@ -490,9 +490,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     public void loadData(NBTTagCompound nbt) {
         bloodStats.readNBT(nbt);
-        eyeType = nbt.getInteger(KEY_EYE);
-        fangType = nbt.getInteger(KEY_FANGS);
-        glowingEyes = !nbt.hasKey(KEY_GLOWING_EYES) || nbt.getBoolean(KEY_GLOWING_EYES);
+        eyeType = nbt.getInt(KEY_EYE);
+        fangType = nbt.getInt(KEY_FANGS);
+        glowingEyes = !nbt.contains(KEY_GLOWING_EYES) || nbt.getBoolean(KEY_GLOWING_EYES);
         actionHandler.loadFromNbt(nbt);
         skillHandler.loadFromNbt(nbt);
     }
@@ -803,9 +803,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     public void saveData(NBTTagCompound nbt) {
         bloodStats.writeNBT(nbt);
-        nbt.setInteger(KEY_EYE, eyeType);
-        nbt.setInteger(KEY_FANGS, fangType);
-        nbt.setBoolean(KEY_GLOWING_EYES, glowingEyes);
+        nbt.putInt(KEY_EYE, eyeType);
+        nbt.putInt(KEY_FANGS, fangType);
+        nbt.putBoolean(KEY_GLOWING_EYES, glowingEyes);
         actionHandler.saveToNbt(nbt);
         skillHandler.saveToNbt(nbt);
 
@@ -847,7 +847,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             this.eyeType = eyeType;
             if (!isRemote()) {
                 NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setInteger(KEY_EYE, eyeType);
+                nbt.putInt(KEY_EYE, eyeType);
                 sync(nbt, true);
             }
         }
@@ -868,7 +868,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             this.fangType = fangType;
             if (!isRemote()) {
                 NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setInteger(KEY_FANGS, fangType);
+                nbt.putInt(KEY_FANGS, fangType);
                 sync(nbt, true);
             }
         }
@@ -1050,26 +1050,26 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     protected void loadUpdate(NBTTagCompound nbt) {
-        if (nbt.hasKey(KEY_EYE)) {
-            setEyeType(nbt.getInteger(KEY_EYE));
+        if (nbt.contains(KEY_EYE)) {
+            setEyeType(nbt.getInt(KEY_EYE));
         }
-        if (nbt.hasKey(KEY_FANGS)) {
-            setFangType(nbt.getInteger(KEY_FANGS));
+        if (nbt.contains(KEY_FANGS)) {
+            setFangType(nbt.getInt(KEY_FANGS));
         }
-        if (nbt.hasKey(KEY_SPAWN_BITE_PARTICLE)) {
-            spawnBiteParticle(nbt.getInteger(KEY_SPAWN_BITE_PARTICLE));
+        if (nbt.contains(KEY_SPAWN_BITE_PARTICLE)) {
+            spawnBiteParticle(nbt.getInt(KEY_SPAWN_BITE_PARTICLE));
         }
-        if (nbt.hasKey(KEY_GLOWING_EYES)) {
+        if (nbt.contains(KEY_GLOWING_EYES)) {
             setGlowingEyes(nbt.getBoolean(KEY_GLOWING_EYES));
         }
-        if (nbt.hasKey(KEY_VICTIM_ID)) {
-            feed_victim = nbt.getInteger(KEY_VICTIM_ID);
+        if (nbt.contains(KEY_VICTIM_ID)) {
+            feed_victim = nbt.getInt(KEY_VICTIM_ID);
         }
         bloodStats.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
-        if (nbt.hasKey(KEY_VISION)) {
-            int id = nbt.getInteger(KEY_VISION);
+        if (nbt.contains(KEY_VISION)) {
+            int id = nbt.getInt(KEY_VISION);
             IVampireVision vision;
             if (id == -1) {
                 vision = null;
@@ -1087,14 +1087,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     protected void writeFullUpdate(NBTTagCompound nbt) {
-        nbt.setInteger(KEY_EYE, getEyeType());
-        nbt.setInteger(KEY_FANGS, getFangType());
-        nbt.setBoolean(KEY_GLOWING_EYES, getGlowingEyes());
-        nbt.setInteger(KEY_VICTIM_ID, feed_victim);
+        nbt.putInt(KEY_EYE, getEyeType());
+        nbt.putInt(KEY_FANGS, getFangType());
+        nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());
+        nbt.putInt(KEY_VICTIM_ID, feed_victim);
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
-        nbt.setInteger(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
+        nbt.putInt(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
     }
 
     private void applyEntityAttributes() {
