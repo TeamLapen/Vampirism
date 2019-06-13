@@ -25,9 +25,7 @@ public class ModEventFactory {
     public static boolean fireVillagerCaptureEvent(@Nonnull IVampirismVillage village, @Nonnull List<EntityVillager> villagerIn, @Nullable IPlayableFaction<?> controllingFactionIn, @Nonnull IPlayableFaction<?> capturingFactionIn, @Nonnull AxisAlignedBB affectedArea) {
         VampirismVillageEvent.VillagerCaptureFinish event = new VampirismVillageEvent.VillagerCaptureFinish(village, villagerIn, controllingFactionIn, capturingFactionIn, affectedArea);
         MinecraftForge.EVENT_BUS.post(event);
-        if (event.getResult().equals(Result.DENY))
-            return true;
-        return false;
+        return event.getResult().equals(Result.DENY);
     }
 
     public static ResourceLocation fireSpawnCaptureEntityEvent(@Nullable IVampirismVillage village, @Nonnull IFaction<?> faction) {
@@ -36,23 +34,21 @@ public class ModEventFactory {
         return event.getEntity();
     }
 
-    public static VampirismVillageEvent.SpawnNewVillager fireSpawnNewVillagerEvent(@Nullable IVampirismVillage village, @Nonnull EntityVillager seed, boolean converted, IPlayableFaction<?> controllingFaction) {
+    public static VampirismVillageEvent.SpawnNewVillager fireSpawnNewVillagerEvent(@Nonnull IVampirismVillage village, @Nonnull EntityVillager seed, boolean converted, IPlayableFaction<?> controllingFaction) {
         VampirismVillageEvent.SpawnNewVillager event = new VampirismVillageEvent.SpawnNewVillager(village, seed, converted, controllingFaction);
         MinecraftForge.EVENT_BUS.post(event);
         return event;
     }
 
-    public static boolean fireReplaceVillageBlockEvent(@Nullable IVampirismVillage village, @Nonnull World world, @Nonnull IBlockState b, @Nonnull BlockPos pos, @Nonnull IPlayableFaction<?> controllingFaction) {
+    public static void fireReplaceVillageBlockEvent(@Nullable IVampirismVillage village, @Nonnull World world, @Nonnull IBlockState b, @Nonnull BlockPos pos, @Nonnull IPlayableFaction<?> controllingFaction) {
         VampirismVillageEvent.ReplaceBlock event = new VampirismVillageEvent.ReplaceBlock(village, world, b, pos, controllingFaction);
-        return MinecraftForge.EVENT_BUS.post(event);
+        MinecraftForge.EVENT_BUS.post(event);
     }
 
     public static boolean fireInitiateCaptureEvent(@Nonnull IVampirismVillage village, @Nonnull World world, @Nullable IPlayableFaction<?> controllingFaction, @Nonnull IPlayableFaction<?> capturingFaction) {
         VampirismVillageEvent.InitiateCapture event = new VampirismVillageEvent.InitiateCapture(village, world, controllingFaction, capturingFaction);
         MinecraftForge.EVENT_BUS.post(event);
-        if (event.getResult().equals(Result.DENY))
-            return false;
-        return true;
+        return !event.getResult().equals(Result.DENY);
     }
 
     public static VampirismVillageEvent.SpawnFactionVillager fireSpawnFactionVillagerEvent(@Nullable IVampirismVillage village, @Nonnull EntityVillager seed, @Nonnull IPlayableFaction<?> controllingFaction) {

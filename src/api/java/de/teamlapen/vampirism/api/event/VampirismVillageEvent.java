@@ -316,9 +316,10 @@ public abstract class VampirismVillageEvent extends Event {
     }
 
     /**
-     * fired when blocks around a village should be replaced, but the controlling faction is neither vampire nor hunter
+     * Fired when blocks around a village should be replaced
+     * Only fired if Vampirism didn't already replace a block.
+     * Can be used to replace a block on your own
      */
-    @Cancelable
     public static class ReplaceBlock extends VampirismVillageEvent {
 
         private final @Nonnull World world;

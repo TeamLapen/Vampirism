@@ -686,15 +686,23 @@ public class TileTotem extends TileEntity implements ITickable {
                     int z = (int) (affectedArea.minZ + rng.nextInt((int) (affectedArea.maxZ - affectedArea.minZ)));
                     BlockPos pos = new BlockPos(x, world.getHeight(x, z) - 1, z);
                     IBlockState b = world.getBlockState(pos);
-                    if (!ModEventFactory.fireReplaceVillageBlockEvent(getVillage(), world, b, pos, controllingFaction)) {
-                        if (b.getBlock() == world.getBiome(pos).topBlock.getBlock() && b.getBlock() != Blocks.SAND && controllingFaction == VReference.VAMPIRE_FACTION) {
+                    boolean flag = false;
+                    if (controllingFaction == VReference.VAMPIRE_FACTION) {
+                        if (b.getBlock() == world.getBiome(pos).topBlock.getBlock() && b.getBlock() != Blocks.SAND) {
                             world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
                             if (world.getBlockState(pos.up()).getBlock() == Blocks.TALLGRASS) {
                                 world.setBlockToAir(pos.up());
+                                flag = true;
                             }
-                        } else if (b.getBlock() == ModBlocks.cursed_earth && controllingFaction == VReference.HUNTER_FACTION) {
-                            world.setBlockState(pos, world.getBiome(pos).topBlock);
                         }
+                    } else if (controllingFaction == VReference.HUNTER_FACTION) {
+                        if (b.getBlock() == ModBlocks.cursed_earth) {
+                            world.setBlockState(pos, world.getBiome(pos).topBlock);
+                            flag = true;
+                        }
+                    }
+                    if (!flag) {
+                        ModEventFactory.fireReplaceVillageBlockEvent(getVillage(), world, b, pos, controllingFaction);
                     }
                 }
             }
