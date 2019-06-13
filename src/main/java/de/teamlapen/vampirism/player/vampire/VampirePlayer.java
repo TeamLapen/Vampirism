@@ -34,7 +34,6 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttribute;
@@ -63,15 +62,15 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.server.permission.PermissionAPI;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
@@ -284,7 +283,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 return BITE_TYPE.SUCK_BLOOD_CREATURE;
             }
         } else if (entity instanceof EntityPlayer) {
-            if (((EntityPlayer) entity).capabilities.isCreativeMode || !Permissions.getPermission("pvp", player)) {
+            if (((EntityPlayer) entity).capabilities.isCreativeMode || !Permissions.isPvpEnabled(player)) {
                 return BITE_TYPE.NONE;
             }
             boolean hunter = Helper.isHunter(player);
@@ -1117,6 +1116,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * @param hunter Is the entity a hunter?
      */
     private void biteAttack(EntityLivingBase entity, boolean hunter) {
+        if (!PermissionAPI.hasPermission(player, Permissions.BITE_PLAYER)) return;
         checkAttributes(VReference.biteDamage);
         float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);

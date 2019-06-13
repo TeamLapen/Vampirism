@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.modcompat.IntegrationsNotifier;
 import de.teamlapen.vampirism.network.SyncConfigPacket;
 import de.teamlapen.vampirism.tileentity.TileTotem;
 import de.teamlapen.vampirism.util.DaySleepHelper;
+import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.ModWorldEventListener;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
@@ -40,6 +41,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.List;
 
@@ -132,6 +134,9 @@ public class ModEventHandler {
                 event.player.sendMessage(new TextComponentString("Please consider resetting the balance values to the updated ones, using " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance all'" + TextFormatting.RESET));
                 event.player.sendMessage(new TextComponentString("For more information use " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance help'" + TextFormatting.RESET));
             }
+        }
+        if (!PermissionAPI.hasPermission(event.player, Permissions.VAMPIRISM)) {
+            event.player.sendMessage(new TextComponentString("[" + TextFormatting.DARK_PURPLE + "Vampirism" + TextFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.VAMPIRISM + "' to suppress this warning)."));
         }
 
         if (!Configs.disable_config_sync) {

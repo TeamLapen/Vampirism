@@ -125,6 +125,8 @@ public class InputEventPacket implements IMessage {
                                 case COOLDOWN:
                                     player.sendMessage(new TextComponentTranslation("text.vampirism.action.cooldown_not_over"));
                                     break;
+                                case DISALLOWED:
+                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.disallowed"));
                                 default://Everything alright
                             }
                         } else {
