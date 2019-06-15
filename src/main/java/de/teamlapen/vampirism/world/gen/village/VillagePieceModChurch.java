@@ -17,7 +17,7 @@ import java.util.Random;
 /**
  * Vanilla Church with a {@link de.teamlapen.vampirism.blocks.BlockChurchAltar} inside
  */
-public class VillagePieceModChurch extends StructureVillagePieces.Church {
+public class VillagePieceModChurch extends StructureVillagePieces.Church {//TODO Make StructureFeature
 
     public VillagePieceModChurch() {
 

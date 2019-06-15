@@ -32,7 +32,7 @@ import java.util.Random;
 /**
  * Village Part - House with Vampire Hunter equipment as well as an Hunter Trainer Entity
  */
-public class VillagePieceTrainer extends StructureVillagePieces.Village {
+public class VillagePieceTrainer extends StructureVillagePieces.Village { //TODO Make StructureFeature
 
     public VillagePieceTrainer() {
     }

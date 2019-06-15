@@ -1,6 +1,6 @@
-package de.teamlapen.vampirism.world.gen;
+package de.teamlapen.vampirism.biome.features;
 
-import de.teamlapen.vampirism.blocks.BlockCastleBlock;
+import de.teamlapen.vampirism.biome.VampirismBiome;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import de.teamlapen.vampirism.tileentity.TileBloodContainer;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import de.teamlapen.vampirism.world.loot.LootHandler;
-import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.init.Blocks;
@@ -17,21 +16,25 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.WorldEntitySpawner;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
 
 
-public class WorldGenVampireDungeon extends WorldGenerator {
+public class FeatureVampireDungeon<C extends IFeatureConfig> extends Feature {
 
-    private final static String TAG = "vampireDungeon";
+    private static final Logger LOGGER = LogManager.getLogger(FeatureVampireDungeon.class);
 
     @Override
-    public boolean generate(World worldIn, Random rand, BlockPos position) {
+    public boolean place(IWorld worldIn, IChunkGenerator generator, Random rand, BlockPos position, IFeatureConfig config) {
         int sizeX = rand.nextInt(2) + 2;
         int lx = -sizeX - 1;//Lowest x offset
         int hx = sizeX + 1; //Highest x offset
@@ -79,12 +82,12 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                         } else if (worldIn.getBlockState(blockpos1).getMaterial().isSolid() && worldIn.getBlockState(blockpos1).getBlock() != Blocks.CHEST) {
                             if (ay == -1 || ay == 4) {
                                 if (rand.nextInt(40) == 0) {
-                                    worldIn.setBlockState(blockpos1, ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumVariant.DARK_BRICK_BLOODY), 2);
+                                    worldIn.setBlockState(blockpos1, ModBlocks.castle_block_dark_brick_bloody.getDefaultState(), 2);
                                 } else {
-                                    worldIn.setBlockState(blockpos1, ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumVariant.DARK_BRICK), 2);
+                                    worldIn.setBlockState(blockpos1, ModBlocks.castle_block_dark_brick.getDefaultState(), 2);
                                 }
                             } else {
-                                worldIn.setBlockState(blockpos1, Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.SPRUCE), 2);
+                                worldIn.setBlockState(blockpos1, Blocks.SPRUCE_PLANKS.getDefaultState(), 2);
                             }
                         }
                     }
@@ -114,7 +117,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                             if (tileentity1 instanceof TileEntityChest) {
                                 ((TileEntityChest) tileentity1).setLootTable(LootHandler.STRUCTURE_VAMPIRE_DUNGEON, rand.nextLong());
                             } else {
-                                LOGGER.warn("Failed to generate dungeon chest at (%s)", VampirismWorldGen.debug ? blockpos2 : "hidden");
+                                LOGGER.warn("Failed to generate dungeon chest at (%s)", VampirismBiome.debug ? blockpos2 : "hidden");
                             }
 
                             break;
@@ -144,7 +147,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                             if (tileentity1 instanceof TileBloodContainer) {
                                 ((TileBloodContainer) tileentity1).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (TileBloodContainer.CAPACITY * rand.nextFloat()))));
                             } else {
-                                LOGGER.warn("Failed to generate blood container in dungeon at (%s)", VampirismWorldGen.debug ? blockpos2 : "hidden");
+                                LOGGER.warn("Failed to generate blood container in dungeon at (%s)", VampirismBiome.debug ? blockpos2 : "hidden");
                             }
 
                             break;
@@ -158,7 +161,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                     BlockPos blockpos2 = new BlockPos(l4, i5, j5);
 
                     if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, worldIn, blockpos2)) {
-                        EntityAdvancedVampire vampire = new EntityAdvancedVampire(worldIn);
+                        EntityAdvancedVampire vampire = new EntityAdvancedVampire(worldIn.getWorld());
                         vampire.setPosition(l4, i5 + 0.3, j5);
                         if (vampire.getCanSpawnHere()) {
                             worldIn.spawnEntity(vampire);
@@ -174,12 +177,12 @@ public class WorldGenVampireDungeon extends WorldGenerator {
 
             if (tileentity instanceof TileAltarInspiration && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                 tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(new FluidStack(ModFluids.blood, (int) (TileAltarInspiration.CAPACITY * rand.nextFloat())), true);
-                VampirismWorldData.get(worldIn).addNewVampireDungeon(position);
+                VampirismWorldData.get(worldIn.getWorld()).addNewVampireDungeon(position);
             } else {
-                LOGGER.warn("Failed to generate altar of inspiration in dungeon at (%s)", VampirismWorldGen.debug ? position : "hidden");
+                LOGGER.warn("Failed to generate altar of inspiration in dungeon at (%s)", VampirismBiome.debug ? position : "hidden");
             }
 
-            if (VampirismWorldGen.debug) LOGGER.info("Generated vampire dungeon at %s", position);
+            if (VampirismBiome.debug) LOGGER.info("Generated vampire dungeon at %s", position);
             return true;
         } else {
             return false;

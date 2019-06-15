@@ -87,7 +87,7 @@ public class VillagePieceTotem extends StructureVillagePieces.Village {
     }
 
     @Override
-    public void buildComponent(StructureComponent componentIn, List<StructureComponent> listIn, Random rand) {
+    public void buildComponent(StructureComponent componentIn, List<StructureComponent> listIn, Random rand) { //TODO Make StructureFeature
         StructureVillagePieces.generateAndAddRoadPiece((StructureVillagePieces.Start) componentIn, listIn, rand, this.boundingBox.minX - 1, this.boundingBox.maxY - 4, this.boundingBox.minZ, EnumFacing.WEST, this.getComponentType());
         StructureVillagePieces.generateAndAddRoadPiece((StructureVillagePieces.Start) componentIn, listIn, rand, this.boundingBox.maxX + 1, this.boundingBox.maxY - 4, this.boundingBox.minZ, EnumFacing.EAST, this.getComponentType());
         StructureVillagePieces.generateAndAddRoadPiece((StructureVillagePieces.Start) componentIn, listIn, rand, this.boundingBox.minX, this.boundingBox.maxY - 4, this.boundingBox.minZ - 1, EnumFacing.NORTH, this.getComponentType());
