@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.biome.features;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-<<<<<<< HEAD:src/main/java/de/teamlapen/vampirism/world/gen/FeatureHunterCamp.java
-=======
 import de.teamlapen.vampirism.biome.VampirismBiome;
->>>>>>> b96bb8ad2cc711a78ea456644da279165f165594:src/main/java/de/teamlapen/vampirism/biome/features/FeatureHunterCamp.java
+import de.teamlapen.vampirism.biome.config.HunterTentConfig;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -22,7 +20,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraftforge.fluids.IFluidBlock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +30,7 @@ import java.util.Random;
 /**
  * Generate hunter camps
  */
-public class FeatureHunterCamp<C extends IFeatureConfig> extends Feature {
+public class FeatureHunterCamp extends Feature<HunterTentConfig> {
 
     private static final Logger LOGGER = LogManager.getLogger(FeatureHunterCamp.class);
     private IBlockState campfire_blockstate;
@@ -51,7 +48,7 @@ public class FeatureHunterCamp<C extends IFeatureConfig> extends Feature {
      * @return
      */
     @Override
-    public boolean place(IWorld worldIn, IChunkGenerator generator, Random rand, BlockPos position, IFeatureConfig config) {
+    public boolean place(IWorld worldIn, IChunkGenerator generator, Random rand, BlockPos position, HunterTentConfig config) {
         if (worldIn.getWorld().getBiome(position).getScale() < 0.3 && rand.nextInt(6) == 0) {
             int r = rand.nextInt(2);
             int r1 = rand.nextInt(2);

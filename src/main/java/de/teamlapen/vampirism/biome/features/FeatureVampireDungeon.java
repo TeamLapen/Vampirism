@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.biome.features;
 
 import de.teamlapen.vampirism.biome.VampirismBiome;
+import de.teamlapen.vampirism.biome.config.VampireDungeonConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
@@ -20,7 +21,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.apache.logging.log4j.LogManager;
@@ -29,12 +29,12 @@ import org.apache.logging.log4j.Logger;
 import java.util.Random;
 
 
-public class FeatureVampireDungeon<C extends IFeatureConfig> extends Feature {
+public class FeatureVampireDungeon extends Feature<VampireDungeonConfig> {
 
     private static final Logger LOGGER = LogManager.getLogger(FeatureVampireDungeon.class);
 
     @Override
-    public boolean place(IWorld worldIn, IChunkGenerator generator, Random rand, BlockPos position, IFeatureConfig config) {
+    public boolean place(IWorld worldIn, IChunkGenerator generator, Random rand, BlockPos position, VampireDungeonConfig config) {
         int sizeX = rand.nextInt(2) + 2;
         int lx = -sizeX - 1;//Lowest x offset
         int hx = sizeX + 1; //Highest x offset
