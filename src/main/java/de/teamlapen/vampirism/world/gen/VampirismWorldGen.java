@@ -1,12 +1,6 @@
 package de.teamlapen.vampirism.world.gen;
 
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.config.Configs;
-import net.minecraft.init.Biomes;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
@@ -16,8 +10,15 @@ import java.util.Random;
 /**
  * Handles Vampirism's world gen
  */
-public class VampirismWorldGen implements IWorldGenerator {
-    public static boolean debug = false;
+public class VampirismWorldGen implements IWorldGenerator { //TODO DELETE CLASS (keep it for reference (how to generate?))
+    public VampirismWorldGen() {
+    }
+
+    @Override
+    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
+
+    }
+    /*public static boolean debug = false;
     private static VampirismWorldGen instance;
 
     public static VampirismWorldGen getInstance() {
@@ -28,18 +29,19 @@ public class VampirismWorldGen implements IWorldGenerator {
     }
 
     public final FeatureHunterCamp hunterCamp;
-    public final WorldGenVampireDungeon vampireDungeon;
+    public final FeatureVampireDungeon vampireDungeon;
 
     private VampirismWorldGen() {
         this.hunterCamp = new FeatureHunterCamp();
-        this.vampireDungeon = new WorldGenVampireDungeon();
+        this.vampireDungeon = new FeatureVampireDungeon();
+        ForgeRegistries.BIOMES.
     }
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         if (!Configs.disable_all_worldgen) {
-            int dim = world.dimension;
-            if (dim == 0 || dim != -1 && dim != 1 && (contains(Configs.worldGenDimensions, dim) || VampirismAPI.isWorldGenEnabledFor(dim))) {
+            Dimension dim = world.dimension;
+            if (dim.getType() == DimensionType.OVERWORLD || dim.getType() != DimensionType.THE_END && dim.getType() != DimensionType.NETHER && (contains(Configs.worldGenDimensions, dim) || VampirismAPI.isWorldGenEnabledFor(dim))) {
                 generateOverworld(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
             }
         }
@@ -82,10 +84,10 @@ public class VampirismWorldGen implements IWorldGenerator {
 
     }
 
-    private boolean contains(int[] array, int value) {
-        for (int i : array) {
+    private boolean contains(Dimension[] array, Dimension value) {
+        for (Dimension i : array) {
             if (i == value) return true;
         }
         return false;
-    }
+    }*/
 }

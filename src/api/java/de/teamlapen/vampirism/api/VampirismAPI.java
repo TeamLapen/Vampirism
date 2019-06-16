@@ -15,17 +15,16 @@ import de.teamlapen.vampirism.api.items.IAlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
-
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.Dimension;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
-import java.util.Set;
-
 import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
  * Class for core api methods
@@ -47,7 +46,7 @@ public class VampirismAPI {
     private static IBloodPotionRegistry bloodPotionRegistry;
     private static IGarlicChunkHandler.Provider garlicHandlerProvider;
     private static IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingManager;
-    private static Set<Integer> worldGenDimensions = Sets.newHashSet();
+    private static Set<Dimension> worldGenDimensions = Sets.newHashSet();
     private static ISkillManager skillManager;
     private static IActionManager actionManager;
     private static IEntityActionManager entityActionManager;
@@ -133,7 +132,7 @@ public class VampirismAPI {
     /**
      * If Vampirism's world gen is enabled in this dimension
      */
-    public static boolean isWorldGenEnabledFor(int dim) {
+    public static boolean isWorldGenEnabledFor(Dimension dim) {
         return worldGenDimensions.contains(dim);
     }
 
