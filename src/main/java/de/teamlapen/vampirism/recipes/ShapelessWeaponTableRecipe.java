@@ -4,13 +4,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+import it.unimi.dsi.fastutil.ints.IntList;
 
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.VampirismRegistries;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
@@ -20,8 +20,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.RecipeType;
-
-import it.unimi.dsi.fastutil.ints.IntList;
 
 /**
  * 
@@ -167,7 +165,7 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
             NonNullList<Ingredient> nonnulllist = NonNullList.create();
 
             for (int i = 0; i < p_199568_0_.size(); ++i) {
-                Ingredient ingredient = Ingredient.fromJson(p_199568_0_.get(i));
+                Ingredient ingredient = Ingredient.deserialize(p_199568_0_.get(i));
                 if (!ingredient.hasNoMatchingItems()) {
                     nonnulllist.add(ingredient);
                 }
@@ -181,7 +179,7 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
             String group = buffer.readString(32767);
             NonNullList<Ingredient> ingredients = NonNullList.withSize(buffer.readVarInt(), Ingredient.EMPTY);
             for (int j = 0; j < ingredients.size(); ++j) {
-                ingredients.set(j, Ingredient.fromBuffer(buffer));
+                ingredients.set(j, Ingredient.read(buffer));
             }
             ItemStack result = buffer.readItemStack();
             int level = buffer.readVarInt();
@@ -199,7 +197,7 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
             buffer.writeVarInt(recipe.recipeItems.size());
 
             for (Ingredient ingredient : recipe.recipeItems) {
-                ingredient.writeToBuffer(buffer);
+                ingredient.write(buffer);
             }
             buffer.writeItemStack(recipe.recipeOutput);
             buffer.writeVarInt(recipe.requiredLevel);

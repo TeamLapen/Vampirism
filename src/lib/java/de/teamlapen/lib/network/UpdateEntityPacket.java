@@ -35,15 +35,15 @@ public class UpdateEntityPacket implements IMessage {
 
     static void encode(UpdateEntityPacket msg, PacketBuffer buf) {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setInt("id", msg.id);
+        tag.putInt("id", msg.id);
         if (msg.data != null) {
-            tag.setTag("data", msg.data);
+            tag.put("data", msg.data);
         }
         if (msg.caps != null) {
-            tag.setTag("caps", msg.caps);
+            tag.put("caps", msg.caps);
         }
         if (msg.playerItself) {
-            tag.setBoolean("itself", true);
+            tag.putBoolean("itself", true);
         }
         buf.writeCompoundTag(tag);
     }
@@ -52,13 +52,13 @@ public class UpdateEntityPacket implements IMessage {
         NBTTagCompound tag = buf.readCompoundTag();
         UpdateEntityPacket pkt = new UpdateEntityPacket();
         pkt.id = tag.getInt("id");
-        if (tag.hasKey("data")) {
+        if (tag.contains("data")) {
             pkt.data = tag.getCompound("data");
         }
-        if (tag.hasKey("caps")) {
+        if (tag.contains("caps")) {
             pkt.caps = tag.getCompound("caps");
         }
-        if (tag.hasKey("itself")) {
+        if (tag.contains("itself")) {
             pkt.playerItself = tag.getBoolean("itself");
         }
         return new UpdateEntityPacket();
@@ -168,7 +168,7 @@ public class UpdateEntityPacket implements IMessage {
         for (ISyncable.ISyncableEntityCapabilityInst cap : caps) {
             NBTTagCompound data = new NBTTagCompound();
             cap.writeFullUpdateToNBT(data);
-            packet.caps.setTag(cap.getCapKey().toString(), data);
+            packet.caps.put(cap.getCapKey().toString(), data);
         }
         return packet;
     }
@@ -184,7 +184,7 @@ public class UpdateEntityPacket implements IMessage {
         UpdateEntityPacket packet = new UpdateEntityPacket();
         packet.id = cap.getTheEntityID();
         packet.caps = new NBTTagCompound();
-        packet.caps.setTag(cap.getCapKey().toString(), data);
+        packet.caps.put(cap.getCapKey().toString(), data);
         return packet;
     }
 

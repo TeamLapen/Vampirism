@@ -57,7 +57,7 @@ public abstract class EntityAIFlee extends EntityAIBase {
 
     private Vec3d findPossibleShelter() {
         Random random = this.theCreature.getRNG();
-        BlockPos blockpos = new BlockPos(this.theCreature.posX, this.theCreature.getEntityBoundingBox().minY, this.theCreature.posZ);
+        BlockPos blockpos = new BlockPos(this.theCreature.posX, this.theCreature.getBoundingBox().minY, this.theCreature.posZ);
 
         for (int i = 0; i < 10; ++i) {
             BlockPos blockpos1 = blockpos.add(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);

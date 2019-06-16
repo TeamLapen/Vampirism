@@ -28,7 +28,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
         double oy = player.posY;
         double oz = player.posZ;
         if (target == null) {
-            player.playSound(SoundEvents.BLOCK_NOTE_BASS, 1, 1);
+            player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return false;
         }
         BlockPos pos = null;
@@ -38,7 +38,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
         if (pos != null) {
             player.setPosition(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-            if (!player.getEntityWorld().getCollisionBoxes(player, player.getEntityBoundingBox()).isEmpty() || player.getEntityWorld().containsAnyLiquid(player.getEntityBoundingBox())) {
+            if (!player.getEntityWorld().getCollisionBoxes(player, player.getBoundingBox()).isEmpty() || player.getEntityWorld().containsAnyLiquid(player.getBoundingBox())) {
                 pos = null;
             }
 
@@ -47,7 +47,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
         if (pos == null) {
             player.setPosition(ox, oy, oz);
-            player.playSound(SoundEvents.BLOCK_NOTE_BASEDRUM, 1, 1);
+            player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM, 1, 1);
             return false;
         }
         if (player instanceof EntityPlayerMP) {
@@ -62,8 +62,8 @@ public class TeleportVampireAction extends DefaultVampireAction {
         particleCloud.setDuration(5);
         particleCloud.setSpawnRate(15);
         player.getEntityWorld().spawnEntity(particleCloud);
-        player.getEntityWorld().playSound(ox, oy, oz, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
-        player.getEntityWorld().playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 1, 1, false);
+        player.getEntityWorld().playSound(ox, oy, oz, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
+        player.getEntityWorld().playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1, false);
         return true;
     }
 

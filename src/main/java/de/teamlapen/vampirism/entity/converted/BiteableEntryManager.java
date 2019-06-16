@@ -3,14 +3,15 @@ package de.teamlapen.vampirism.entity.converted;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import de.teamlapen.vampirism.VampirismMod;
+
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.config.Configs;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -31,7 +32,7 @@ import java.util.Set;
  */
 public class BiteableEntryManager {
 
-    private static final String TAG = "BiteableEntryManager";
+    private final static Logger LOGGER = LogManager.getLogger(BiteableEntryManager.class);
     private final Map<ResourceLocation, BiteableEntry> hardcoded;
 
     private final Map<ResourceLocation, BiteableEntry> dynamic = Maps.newHashMap();
@@ -82,7 +83,7 @@ public class BiteableEntryManager {
      */
     public @Nullable
     BiteableEntry calculate(EntityCreature creature) {
-        ResourceLocation id = EntityList.getKey(creature);
+        ResourceLocation id = new ResourceLocation(creature.getEntityString());
         if (blacklist.contains(id)) return null;
         BiteableEntry entry = get(id);
         if (entry != null) return entry;
@@ -90,7 +91,7 @@ public class BiteableEntryManager {
             blacklist.add(id);
             return null;
         }
-        AxisAlignedBB bb = creature.getEntityBoundingBox();
+        AxisAlignedBB bb = creature.getBoundingBox();
         double v = bb.maxX - bb.minX;
         v *= bb.maxY - bb.minY;
         v *= bb.maxZ - bb.minZ;
@@ -106,7 +107,7 @@ public class BiteableEntryManager {
         if (creature.getMaxHealth() > 50) {
             blood = 0;//Make sure very strong creatures cannot be easily killed by sucking their blood
         }
-        VampirismMod.log.d(TAG, "Calculated size %s and blood value %s for entity %s", Math.round(v * 100) / 100F, blood, id);
+        LOGGER.debug("Calculated size %s and blood value %s for entity %s", Math.round(v * 100) / 100F, blood, id);
         if (blood == 0) {
             blacklist.add(id);
             return null;

@@ -17,7 +17,7 @@ public class ItemStackUtil {
             if (stack.getCount() <= amt) {
                 inv.setInventorySlotContents(slot, ItemStack.EMPTY);
             } else {
-                stack = stack.splitStack(amt);
+                stack = stack.split(amt);
                 if (stack.isEmpty()) {
                     inv.setInventorySlotContents(slot, ItemStack.EMPTY);
                 }
@@ -42,7 +42,7 @@ public class ItemStackUtil {
         if (stackA.isEmpty() && stackB.isEmpty()) return true;
         if (stackA.isEmpty() || stackB.isEmpty()) return false;
         if (stackA.getItem() != stackB.getItem()) return false;
-        if (stackA.getItemDamage() != stackB.getItemDamage()) return false;
+        if (stackA.getDamage() != stackB.getDamage()) return false;
         return ItemStack.areItemStackTagsEqual(stackA, stackB);
     }
 }

@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.entity.EntityCreature;
 
-public abstract class VampireEntityAction<T extends EntityCreature & IEntityActionUser> extends DefaultEntityAction<T> implements IEntityAction {
+public abstract class VampireEntityAction<T extends EntityCreature & IEntityActionUser> extends DefaultEntityAction implements IEntityAction {
 
     public VampireEntityAction(EntityActionTier tier, EntityClassType[] param) {
         super(tier, param);

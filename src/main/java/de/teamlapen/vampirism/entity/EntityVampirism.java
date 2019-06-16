@@ -63,7 +63,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     public boolean attackEntityAsMob(Entity entity) {
-        float f = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+        float f = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
         int i = 0;
 
         if (entity instanceof EntityLivingBase) {
@@ -152,11 +152,11 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void livingTick() {
         if (hasArms) {
             this.updateArmSwingProgress();
         }
-        super.onLivingUpdate();
+        super.livingTick();
         if (entityActionHandler != null) {
             entityActionHandler.handle();
         }
@@ -174,19 +174,19 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     @Override
     public void readAdditional(NBTTagCompound nbt) {
         super.readAdditional(nbt);
-        if (nbt.hasKey("home")) {
+        if (nbt.contains("home")) {
             saveHome = true;
             int[] h = nbt.getIntArray("home");
             home = new AxisAlignedBB(h[0], h[1], h[2], h[3], h[4], h[5]);
-            if (nbt.hasKey("homeMovePrio")) {
-                this.setMoveTowardsRestriction(nbt.getInteger("moveHomePrio"), true);
+            if (nbt.contains("homeMovePrio")) {
+                this.setMoveTowardsRestriction(nbt.getInt("moveHomePrio"), true);
             }
         }
         if (entityActionHandler != null) {
             entityActionHandler.read(nbt);
         }
-        if (nbt.hasKey("entityclasstype")) {
-            EntityClassType type = EntityClassType.getEntityClassType(nbt.getInteger("entityclasstype"));
+        if (nbt.contains("entityclasstype")) {
+            EntityClassType type = EntityClassType.getEntityClassType(nbt.getInt("entityclasstype"));
             if (type != null)
                 entityclass = type;
         }
@@ -207,20 +207,20 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         super.writeAdditional(nbt);
         if (saveHome && hasHome()) {
             int[] h = { (int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ };
-            nbt.setIntArray("home", h);
+            nbt.putIntArray("home", h);
             if (moveTowardsRestrictionAdded && moveTowardsRestrictionPrio > -1) {
-                nbt.setInteger("homeMovePrio", moveTowardsRestrictionPrio);
+                nbt.putInt("homeMovePrio", moveTowardsRestrictionPrio);
             }
         }
         if (entityActionHandler != null) {
             entityActionHandler.write(nbt);
         }
-        nbt.setInteger("entityclasstype", EntityClassType.getID(entityclass));
+        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
     }
 
@@ -277,7 +277,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     protected boolean isLowLightLevel() {
-        BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
+        BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
 
         if (this.world.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)) {
             return false;
@@ -342,7 +342,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected void teleportAway() {
         this.setInvisible(true);
         VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, this.posX, this.posY + this.height / 2, this.posZ, 20, 1, this.rand, 134, 10, 0x0A0A0A, 0.6);
-        this.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1, 1);
+        this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
         this.remove();
     }
@@ -381,8 +381,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected void setupEntityClass() {
         entitytier = EntityActionTier.Default;
         entityclass = EntityClassType.getRandomClass(this.getRNG());
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
     }
 }

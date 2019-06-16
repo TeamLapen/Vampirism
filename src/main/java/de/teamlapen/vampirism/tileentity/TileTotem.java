@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
@@ -26,10 +25,7 @@ import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -40,7 +36,6 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.IntHashMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -50,9 +45,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
+import net.minecraft.world.dimension.Dimension;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.Event;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,6 +65,7 @@ import java.util.*;
  * It displays the current status and allows players to capture the village.
  */
 public class TileTotem extends TileEntity implements ITickable {
+    private final static Logger LOGGER = LogManager.getLogger(TileTotem.class);
     private final static int NOTIFY_DISTANCE_SQ = 40000;
     private final static String TAG = "TileTotem";
     private final static int DURATION_PHASE_1 = 60;
@@ -75,7 +75,7 @@ public class TileTotem extends TileEntity implements ITickable {
      * This is originally intended to store the area on clientside, but also used on server side to create a matching experience.
      * On integrated servers this is updated from both client and server (so twice), but values should just override each other
      */
-    private final static IntHashMap<HashMap<BlockPos, MutableBoundingBox>> vampireVillages = new IntHashMap<>();
+    private final static HashMap<Dimension, HashMap<BlockPos, MutableBoundingBox>> vampireVillages = new HashMap<>();
 
 
     public TileTotem() {
@@ -85,8 +85,8 @@ public class TileTotem extends TileEntity implements ITickable {
     /**
      * Check if the given position is inside a (statically) cached list of vampire village BBs
      */
-    public static boolean isInsideVampireAreaCached(int dimension, BlockPos pos) { //TODO use {@link Dimension} instead of id
-        HashMap<BlockPos, MutableBoundingBox> map = vampireVillages.lookup(dimension);
+    public static boolean isInsideVampireAreaCached(Dimension dimension, BlockPos pos) { //TODO use {@link Dimension} instead of id
+        HashMap<BlockPos, MutableBoundingBox> map = vampireVillages.get(dimension);
         if (map != null) {
             for (MutableBoundingBox bb : map.values()) {
                 if (bb.isVecInside(pos)) {
@@ -123,8 +123,8 @@ public class TileTotem extends TileEntity implements ITickable {
     /**
      * Remove all cached areas for the given map/dimension
      */
-    public static void clearCacheForDimension(int i) {
-        Map m = vampireVillages.lookup(i);
+    public static void clearCacheForDimension(Dimension i) {
+        Map m = vampireVillages.get(i);
         if (m != null) {
             m.clear();
         }
@@ -190,7 +190,7 @@ public class TileTotem extends TileEntity implements ITickable {
     private int capture_timer;
 
     public boolean canPlayerRemoveBlock(EntityPlayer player) {
-        if (player.capabilities.isCreativeMode) return true;
+        if (player.isCreative()) return true;
         @Nullable IPlayableFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
         if (controllingFaction == null) {
             if (capturingFaction == null || capturingFaction.equals(faction)) {
@@ -302,14 +302,14 @@ public class TileTotem extends TileEntity implements ITickable {
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound nbt = new NBTTagCompound();
         write(nbt);
-        nbt.setIntArray("village_bb", UtilLib.bbToInt(getAffectedArea()));
+        nbt.putIntArray("village_bb", UtilLib.bbToInt(getAffectedArea()));
         return nbt;
     }
 
     @Override
     public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
         read(tag);
-        if (tag.hasKey("village_bb")) {
+        if (tag.contains("village_bb")) {
             if (controllingFaction == VReference.VAMPIRE_FACTION) {
                 MutableBoundingBox bb = new MutableBoundingBox(tag.getIntArray("village_bb"));
                 registerVampireArea(bb); //Replaces old area if different
@@ -407,7 +407,7 @@ public class TileTotem extends TileEntity implements ITickable {
         if (!"".equals(controlling)) {
             IFaction f = VampirismAPI.factionRegistry().getFactionByName(controlling);
             if (!(f instanceof IPlayableFaction)) {
-                VampirismMod.log.w("TileTotem", "Stored faction %s does not exist or is not playable", controlling);
+                LOGGER.warn("Stored faction %s does not exist or is not playable", controlling);
             } else {
                 controllingFaction = (IPlayableFaction) f;
             }
@@ -415,7 +415,7 @@ public class TileTotem extends TileEntity implements ITickable {
         if (!"".equals(capturing)) {
             IFaction f = VampirismAPI.factionRegistry().getFactionByName(capturing);
             if (!(f instanceof IPlayableFaction)) {
-                VampirismMod.log.w("TileTotem", "Stored faction %s does not exist or is not playable", capturing);
+                LOGGER.warn("Stored faction %s does not exist or is not playable", capturing);
             } else {
                 capturingFaction = (IPlayableFaction) f;
             }
@@ -423,9 +423,9 @@ public class TileTotem extends TileEntity implements ITickable {
         this.setControllingFaction(controllingFaction);
         this.setCapturingFaction(capturingFaction);
         if (capturingFaction != null) {
-            this.capture_timer = compound.getInteger("timer");
-            this.capture_abort_timer = compound.getInteger("abort_timer");
-            this.capture_remainingEnemies_cache = compound.getInteger("rem_enem");
+            this.capture_timer = compound.getInt("timer");
+            this.capture_abort_timer = compound.getInt("abort_timer");
+            this.capture_remainingEnemies_cache = compound.getInt("rem_enem");
             this.capture_phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
         }
         force_village_update = true;
@@ -471,7 +471,7 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     @Override
-    public void update() {
+    public void tick() {
         int time = (int) this.world.getGameTime();
 
         //Remote ----------------------------------
@@ -662,7 +662,7 @@ public class TileTotem extends TileEntity implements ITickable {
                                 entityId = getEntityForFaction(this.controllingFaction);
                             }
                             if (entityId != null && defenderNumMax > guards.size()) {
-                                Entity e = EntityList.createEntityByIDFromName(entityId, world);
+                                Entity e = EntityType.create(world, entityId);
                                 if (e != null && !spawnEntityInVillage(e, null)) {
                                     e.remove();
                                 }
@@ -729,13 +729,13 @@ public class TileTotem extends TileEntity implements ITickable {
     @Nonnull
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
-        compound.setString("controlling", controllingFaction == null ? "" : controllingFaction.name());
-        compound.setString("capturing", capturingFaction == null ? "" : capturingFaction.name());
+        compound.putString("controlling", controllingFaction == null ? "" : controllingFaction.name());
+        compound.putString("capturing", capturingFaction == null ? "" : capturingFaction.name());
         if (capturingFaction != null) {
-            compound.setInteger("timer", capture_timer);
-            compound.setInteger("abort_timer", capture_abort_timer);
-            compound.setString("phase", capture_phase.name());
-            compound.setInteger("rem_enem", capture_remainingEnemies_cache);
+            compound.putInt("timer", capture_timer);
+            compound.putInt("abort_timer", capture_abort_timer);
+            compound.putString("phase", capture_phase.name());
+            compound.putInt("rem_enem", capture_remainingEnemies_cache);
         }
         return super.write(compound);
     }
@@ -834,10 +834,10 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     private void registerVampireArea(MutableBoundingBox box) {
-        HashMap<BlockPos, MutableBoundingBox> map = vampireVillages.lookup(this.world.provider.getDimension());
+        HashMap<BlockPos, MutableBoundingBox> map = vampireVillages.get(this.world.getDimension());
         if (map == null) {
             map = new HashMap<>();
-            vampireVillages.addKey(this.world.provider.getDimension(), map);
+            vampireVillages.put(this.world.getDimension(), map);
         }
         map.put(this.getPos(), box);
 
@@ -861,7 +861,7 @@ public class TileTotem extends TileEntity implements ITickable {
             LOGGER.warn("No village capture entity registered for %s", attack ? this.capturingFaction : this.controllingFaction);
             return;
         }
-        Entity e = EntityList.createEntityByIDFromName(id, world);
+        Entity e = EntityType.create(world, id);
         if (e instanceof EntityVampireBase) {
             ((EntityVampireBase) e).setSpawnRestriction(EntityVampireBase.SpawnRestriction.SIMPLE);
         }
@@ -878,7 +878,7 @@ public class TileTotem extends TileEntity implements ITickable {
         } else if (e != null) {
             LOGGER.warn("Creature registered for village capture does not implement IVillageCaptureEntity");
         } else {
-            VampirismMod.log.t("Failed to spawn creature");
+            LOGGER.info("Failed to spawn creature");
         }
 
     }
@@ -931,7 +931,7 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     private void unregisterVampireArea() {
-        HashMap<BlockPos, MutableBoundingBox> map = vampireVillages.lookup(this.world.provider.getDimension());
+        HashMap<BlockPos, MutableBoundingBox> map = vampireVillages.get(this.world.getDimension());
         if (map != null) {
             map.remove(this.getPos());
         }

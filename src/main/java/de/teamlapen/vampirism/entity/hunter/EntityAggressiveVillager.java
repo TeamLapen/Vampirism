@@ -43,7 +43,7 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
     public static EntityAggressiveVillager makeHunter(EntityVillager villager) {
         EntityAggressiveVillager hunter = new EntityAggressiveVillager(villager.world);
         NBTTagCompound nbt = new NBTTagCompound();
-        villager.write(nbt);
+        villager.writeWithoutTypeId(nbt);
         hunter.read(nbt);
         hunter.setUniqueId(MathHelper.getRandomUUID(hunter.rand));
         hunter.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.pitchfork));
@@ -64,8 +64,8 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
     }
 
     @Override
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
-        IEntityLivingData data = super.onInitialSpawn(difficulty, livingdata);
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata, @Nullable NBTTagCompound itemNbt) {
+        IEntityLivingData data = super.onInitialSpawn(difficulty, livingdata, itemNbt);
         this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.pitchfork));
         return data;
     }
@@ -78,9 +78,9 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE);
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_MAX_HEALTH);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE);
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_MAX_HEALTH);
     }
 
     @Nullable
@@ -113,7 +113,7 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
     public void stopVillageAttackDefense() {
         EntityVillager villager = new EntityVillager(this.world);
         NBTTagCompound nbt = new NBTTagCompound();
-        this.write(nbt);
+        this.writeWithoutTypeId(nbt);
         villager.read(nbt);
         villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
         world.spawnEntity(villager);

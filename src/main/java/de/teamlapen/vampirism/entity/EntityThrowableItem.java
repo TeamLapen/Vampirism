@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.Item;
@@ -11,6 +10,8 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 
@@ -21,6 +22,7 @@ import javax.annotation.Nonnull;
  */
 public class EntityThrowableItem extends EntityThrowable {
 
+    private final static Logger LOGGER = LogManager.getLogger(EntityThrowableItem.class);
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityThrowableItem.class, DataSerializers.ITEM_STACK);
 
     public EntityThrowableItem(World worldIn) {
@@ -56,7 +58,7 @@ public class EntityThrowableItem extends EntityThrowable {
     @Override
     public void readAdditional(NBTTagCompound compound) {
         super.readAdditional(compound);
-        ItemStack stack = new ItemStack(compound.getCompoundTag("thrownItem"));
+        ItemStack stack = new ItemStack(compound.getCompound("thrownItem"));
         if (stack.isEmpty()) {
             this.remove();
         } else {
@@ -69,7 +71,7 @@ public class EntityThrowableItem extends EntityThrowable {
         super.writeAdditional(compound);
         ItemStack stack = getItem();
         if (!stack.isEmpty()) {
-            compound.setTag("thrownItem", stack.write(new NBTTagCompound()));
+            compound.put("thrownItem", stack.write(new NBTTagCompound()));
         }
     }
 
@@ -91,7 +93,7 @@ public class EntityThrowableItem extends EntityThrowable {
             if (item instanceof IVampirismThrowableItem) {
                 ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.world.isRemote);
             } else {
-                VampirismMod.log.w("EntityThrowableItem", "Saved item (%s) is not an instance of IVampirismThrowableItem. This should not be able to happen", stack);
+                LOGGER.warn("Saved item (%s) is not an instance of IVampirismThrowableItem. This should not be able to happen", stack);
             }
         }
         if (!this.world.isRemote) this.remove();

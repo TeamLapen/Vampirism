@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.minions.ISaveableMinion;
@@ -8,12 +7,14 @@ import de.teamlapen.vampirism.api.entity.minions.ISaveableMinionHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.MinionHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,7 +25,7 @@ import java.util.function.Predicate;
  * Implementation of saveableminion handler
  */
 public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveableMinionHandler<T> {
-    private final static String TAG = "MinionHandler";
+    private final static Logger LOGGER = LogManager.getLogger(SaveableMinionHandler.class);
     private final List<T> minions;
     private final IMinionLord lord;
     private final Predicate<EntityLivingBase> entityPredicate;
@@ -125,19 +126,19 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
      */
     public void loadMinions(NBTTagList list) {
         if (list == null || list.tagCount() == 0) {
-            VampirismMod.log.d(TAG, "Empty minion list to load");
+            LOGGER.debug("Empty minion list to load");
             return;
         }
         loadedMinions = new ArrayList<>();
         for (int i = 0; i < list.tagCount(); i++) {
             NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
-            Entity entity = EntityList.createEntityFromNBT(nbttagcompound, lord.getRepresentingEntity().world);
+            Entity entity = EntityType.create(lord.getRepresentingEntity().world, nbttagcompound);
             if (entity != null && entity instanceof ISaveableMinion) {
                 entity.posY = entity.posY + entity.height;
                 loadedMinions.add((T) entity);
-                VampirismMod.log.d(TAG, "Loaded minion from nbt");
+                LOGGER.debug("Loaded minion from nbt");
             } else {
-                VampirismMod.log.d(TAG, "Failed to load minion from NBT");
+                LOGGER.debug("Failed to load minion from NBT");
             }
         }
 
@@ -180,7 +181,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
 
     @Override
     public String toString() {
-        return TAG + " for " + lord.toString() + " with " + getMinionCount() + " minions";
+        return "SaveableMinionHandler" + " for " + lord.toString() + " with " + getMinionCount() + " minions";
     }
 
     @Override

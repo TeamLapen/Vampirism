@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
+
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -43,18 +43,20 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Event handler for player related events
  */
 public class ModPlayerEventHandler {
 
-
+    private final static Logger LOGGER = LogManager.getLogger(ModPlayerEventHandler.class);
     @SubscribeEvent
     public void onAttachCapability(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof EntityPlayer) {
@@ -63,7 +65,7 @@ public class ModPlayerEventHandler {
                 event.addCapability(REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.createNewCapability((EntityPlayer) event.getObject()));
                 event.addCapability(REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.createNewCapability((EntityPlayer) event.getObject()));
             } catch (Exception e) {
-                VampirismMod.log.e("ModPlayerEventHandler", "Failed to attach capabilities to player. Player: %s", event.getObject());
+                LOGGER.error("Failed to attach capabilities to player. Player: %s", event.getObject());
                 Throwables.propagate(e);
             }
         }
@@ -80,9 +82,10 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onBlockPlaced(BlockEvent.PlaceEvent event) {
+    public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
+        if (!(event.getEntity() instanceof EntityPlayer)) return;
         try {
-            if (VampirePlayer.get(event.getPlayer()).getSpecialAttributes().bat || HunterPlayer.get(event.getPlayer()).getSpecialAttributes().isDisguised()) {
+            if (VampirePlayer.get((EntityPlayer) event.getEntity()).getSpecialAttributes().bat || HunterPlayer.get((EntityPlayer) event.getEntity()).getSpecialAttributes().isDisguised()) {
                 event.setCanceled(true);
             }
         } catch (Exception e) {

@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
 /**
@@ -77,7 +78,7 @@ public class HunterBasicContainer extends InventoryContainer {
         }
 
         @Override
-        public String getName() {
+        public ITextComponent getName() {
             return "entity.vampirism." + ModEntities.BASIC_HUNTER_NAME + ".name";
         }
     }

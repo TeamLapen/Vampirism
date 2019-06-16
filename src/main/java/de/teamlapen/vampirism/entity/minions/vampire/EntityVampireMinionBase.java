@@ -17,13 +17,13 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Particles;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -128,11 +128,11 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
             setOldVampireTexture(-1);
         }
         if (getOldVampireTexture() != -1 && world.isRemote) {
-            UtilLib.spawnParticlesAroundEntity(this, EnumParticleTypes.SPELL_WITCH, 1.0F, 3);
+            UtilLib.spawnParticlesAroundEntity(this, Particles.WITCH, 1.0F, 3);
         }
         if (!this.world.isRemote && !this.dead) {
 
-            List<EntityItem> list = this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(1.0D, 0.0D, 1.0D));
+            List<EntityItem> list = this.world.getEntitiesWithinAABB(EntityItem.class, this.getBoundingBox().grow(1.0D, 0.0D, 1.0D));
 
             for (EntityItem entityitem : list) {
                 if (!entityitem.isDead && !(entityitem.getItem().isEmpty())) {
@@ -158,11 +158,11 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     @Override
     public void readAdditional(NBTTagCompound nbt) {
         super.readAdditional(nbt);
-        IMinionCommand command = this.getCommand(nbt.getInteger("command_id"));
+        IMinionCommand command = this.getCommand(nbt.getInt("command_id"));
         if (command != null) {
             this.activateMinionCommand(command);
         }
-        if (nbt.hasKey("CustomName", 8) && nbt.getString("CustomName").length() > 0) {
+        if (nbt.contains("CustomName", 8) && nbt.getString("CustomName").length() > 0) {
             this.tryToSetName(nbt.getString("CustomName"), null);
         }
     }
@@ -202,7 +202,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     @Override
     public void writeAdditional(NBTTagCompound nbt) {
         super.writeAdditional(nbt);
-        nbt.setInteger("command_id", getActiveCommand().getId());
+        nbt.putInt("command_id", getActiveCommand().getId());
     }
 
     @Override
@@ -216,10 +216,10 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(30D);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MAX_HEALTH);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_MINION_ATTACK_DAMAGE);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MOVEMENT_SPEED);
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(30D);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MAX_HEALTH);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_MINION_ATTACK_DAMAGE);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MOVEMENT_SPEED);
     }
 
     /**

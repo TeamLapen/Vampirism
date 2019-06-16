@@ -40,7 +40,7 @@ public class HunterTableContainer extends InventoryContainer {
                 return 1;
             }
         }, 0, 146, 28);
-        this.addSlotToContainer(slotResult);
+        this.addSlot(slotResult);
         hunterLevel = FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION);
     }
 

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import com.google.common.base.Predicates;
+
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.material.Material;
@@ -89,7 +90,7 @@ public class EntitySoulOrb extends Entity {
 
     @Override
     public boolean handleWaterMovement() {
-        return this.world.handleMaterialAcceleration(this.getEntityBoundingBox(), Material.WATER, this);
+        return this.world.isMaterialInBB(this.getBoundingBox(), Material.WATER);
     }
 
     @Override
@@ -137,7 +138,7 @@ public class EntitySoulOrb extends Entity {
             this.motionZ = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
         }
 
-        this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
+        this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
 
         if (this.age % 10 == 5 & (this.player == null || this.player.isDead || this.player.getDistanceSq(this) > 64)) {
             this.player = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 8, Predicates.and(EntitySelectors.NOT_SPECTATING, Helper::isHunter));
@@ -163,7 +164,7 @@ public class EntitySoulOrb extends Entity {
         float f = 0.98F;
 
         if (this.onGround) {
-            BlockPos underPos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ));
+            BlockPos underPos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getBoundingBox().minY) - 1, MathHelper.floor(this.posZ));
             net.minecraft.block.state.IBlockState underState = this.world.getBlockState(underPos);
             f = underState.getBlock().getSlipperiness(underState, this.world, underPos, this) * 0.98F;
         }
@@ -192,7 +193,7 @@ public class EntitySoulOrb extends Entity {
     @Override
     protected void readAdditional(NBTTagCompound compound) {
         this.setType(TYPE.valueOf(compound.getString("type")));
-        this.age = compound.getInteger("age");
+        this.age = compound.getInt("age");
         soulItemStack = null;//Reset item just in case a item of a different type has been created beforehand
     }
 
@@ -203,8 +204,8 @@ public class EntitySoulOrb extends Entity {
 
     @Override
     protected void writeAdditional(NBTTagCompound compound) {
-        compound.setString("type", this.getType().name());
-        compound.setInteger("age", age);
+        compound.putString("type", this.getType().name());
+        compound.putInt("age", age);
     }
 
     private ItemStack createSoulItemStack() {

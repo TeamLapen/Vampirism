@@ -40,15 +40,15 @@ public class VampireAIFollowAdvanced extends EntityAIBase {
 
         EntityAdvancedVampire leader = entity.getAdvancedLeader();
         if (leader != null) {
-            return leader.isEntityAlive() && this.entity.getDistanceSq(leader) > DIST;
+            return leader.isAlive() && this.entity.getDistanceSq(leader) > DIST;
         }
 
-        List<EntityAdvancedVampire> list = this.entity.getEntityWorld().getEntitiesWithinAABB(EntityAdvancedVampire.class, this.entity.getEntityBoundingBox().grow(8, 4, 8));
+        List<EntityAdvancedVampire> list = this.entity.getEntityWorld().getEntitiesWithinAABB(EntityAdvancedVampire.class, this.entity.getBoundingBox().grow(8, 4, 8));
 
         double d0 = Double.MAX_VALUE;
 
         for (EntityAdvancedVampire entity1 : list) {
-            if (entity1.isEntityAlive() && entity1.getFollowingCount() < entity1.getMaxFollowerCount()) {
+            if (entity1.isAlive() && entity1.getFollowingCount() < entity1.getMaxFollowerCount()) {
                 double d1 = this.entity.getDistanceSq(entity1);
 
                 if (d1 <= d0) {
@@ -72,7 +72,7 @@ public class VampireAIFollowAdvanced extends EntityAIBase {
     }
 
     @Override
-    public void updateTask() {
+    public void tick() {
         if (--this.delayCounter <= 0 && entity.getAdvancedLeader() != null) {
             this.delayCounter = 10;
             this.entity.getNavigator().tryMoveToEntityLiving(this.entity.getAdvancedLeader(), this.speed);

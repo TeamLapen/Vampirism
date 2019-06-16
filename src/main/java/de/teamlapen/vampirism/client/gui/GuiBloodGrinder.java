@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -33,7 +32,7 @@ public class GuiBloodGrinder extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.fontRenderer.drawString(ModBlocks.blood_grinder.getLocalizedName(), 8, 6, 0x404040);
+        this.fontRenderer.drawString(ModBlocks.blood_grinder.getNameTextComponent().getFormattedText(), 8, 6, 0x404040);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 0x404040);
     }
 }

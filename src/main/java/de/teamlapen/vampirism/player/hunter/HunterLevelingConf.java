@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.player.hunter;
 
-import de.teamlapen.vampirism.VampirismMod;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Stores values/informations about the leveling of hunters. Might be replaced by an actually configurable object at some point
  * All levels here are target levels, not the levels the player currently is on
  */
 public class HunterLevelingConf {
+    private final static Logger LOGGER = LogManager.getLogger(HunterLevelingConf.class);
     private static HunterLevelingConf instance;
 
     public static HunterLevelingConf instance() {
@@ -93,7 +95,7 @@ public class HunterLevelingConf {
             case 14:
                 return new int[]{40, 40};
             default:
-                VampirismMod.log.w("HunterLevelingConf", "Something is wrong with the hunter levels");
+                LOGGER.warn("Something is wrong with the hunter levels");
         }
         return null;//Should never be reached
     }

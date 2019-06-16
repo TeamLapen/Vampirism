@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.world.loot;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
@@ -31,7 +32,7 @@ public class SetMetaBasedOnLevel extends LootFunction {
             if (max != -1) {
                 l = Math.min(max, l);
             }
-            stack.setItemDamage(l);
+            stack.setDamage(l);
         }
         return stack;
     }

@@ -20,11 +20,9 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.HalloweenSpecial;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -46,7 +44,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -241,18 +238,17 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if ((screenPercentage > 0 || screenBottomPercentage > 0) && !Configs.disable_screen_overlay) {
             // Set the working matrix/layer to a layer directly on the screen/in front of
             // the player
-            ScaledResolution scaledresolution = new ScaledResolution(this.mc);
             // int factor=scaledresolution.getScaleFactor();
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             GlStateManager.matrixMode(GL11.GL_PROJECTION);
             GlStateManager.loadIdentity();
-            GlStateManager.ortho(0.0D, scaledresolution.getScaledWidth_double(), scaledresolution.getScaledHeight_double(), 0.0D, 1D, -1D);
+            GlStateManager.ortho(0.0D, this.mc.mainWindow.getScaledWidth(), this.mc.mainWindow.getScaledHeight(), 0.0D, 1D, -1D);
             GlStateManager.matrixMode(GL11.GL_MODELVIEW);
             GlStateManager.loadIdentity();
             GlStateManager.pushMatrix();
             GL11.glDisable(GL11.GL_DEPTH_TEST);
-            int w = (scaledresolution.getScaledWidth());
-            int h = (scaledresolution.getScaledHeight());
+            int w = (this.mc.mainWindow.getScaledWidth());
+            int h = (this.mc.mainWindow.getScaledHeight());
             if (fullScreen) {
                 // Render a see through colored square over the whole screen
                 float r = (float) (screenColor >> 16 & 255) / 255.0F;
@@ -347,7 +343,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             if (effect == null || effect.getAmplifier() < 5) {
                 screenColor = 0xfffff755;
                 fullScreen = false;
-                if (vampire.getRepresentingPlayer().capabilities.isCreativeMode) {
+                if (vampire.getRepresentingPlayer().isCreative()) {
                     screenPercentage = Math.min(20, screenPercentage);
                 }
             } else {
@@ -399,14 +395,13 @@ public class VampirismHUDOverlay extends ExtendedGui {
         GlStateManager.pushMatrix();
         // Set the working matrix/layer to a layer directly on the screen/in front of
         // the player
-        ScaledResolution scaledresolution = new ScaledResolution(this.mc);
         // int factor=scaledresolution.getScaleFactor();
-        int w = (scaledresolution.getScaledWidth());
-        int h = (scaledresolution.getScaledHeight());
+        int w = (this.mc.mainWindow.getScaledWidth());
+        int h = (this.mc.mainWindow.getScaledHeight());
 
-        Minecraft.getInstance().entityRenderer.setupOverlayRendering();
+        this.mc.mainWindow.setupOverlayRendering();
 
-        Minecraft.getInstance().textureManager.bindTexture(new ResourceLocation(REFERENCE.MODID, "textures/gui/special_halloween.png"));
+        this.mc.textureManager.bindTexture(new ResourceLocation(REFERENCE.MODID, "textures/gui/special_halloween.png"));
 
         int width = 507;
         int height = 102;

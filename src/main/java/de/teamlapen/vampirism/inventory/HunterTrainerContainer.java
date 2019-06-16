@@ -15,6 +15,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
@@ -108,7 +109,7 @@ public class HunterTrainerContainer extends InventoryContainer {
         }
 
         @Override
-        public String getName() {
+        public ITextComponent getName() {
             return "entity.vampirism." + ModEntities.HUNTER_TRAINER + ".name";
         }
 

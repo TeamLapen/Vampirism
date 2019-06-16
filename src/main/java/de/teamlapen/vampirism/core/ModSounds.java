@@ -3,15 +3,15 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handle all sound related stuff
  */
-@GameRegistry.ObjectHolder(REFERENCE.MODID)
+@ObjectHolder(REFERENCE.MODID)
 public class ModSounds {
     public static final SoundEvent entity_vampire_scream = getNull();
     public static final SoundEvent player_bite = getNull();

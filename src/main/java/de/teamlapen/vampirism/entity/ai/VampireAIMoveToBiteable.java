@@ -48,7 +48,7 @@ public class VampireAIMoveToBiteable extends EntityAIBase {
             return false;
         }
         if (!vampire.wantsBlood()) return false;
-        List list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, vampireEntity.getEntityBoundingBox().grow(10, 3, 10));
+        List list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, vampireEntity.getBoundingBox().grow(10, 3, 10));
         for (Object o : list) {
             IExtendedCreatureVampirism creature = ExtendedCreature.get((EntityCreature)o);
             if (creature.canBeBitten(vampire) && !((EntityCreature) o).hasCustomName() && !creature.hasPoisonousBlood()) {

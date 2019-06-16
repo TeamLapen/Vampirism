@@ -18,8 +18,9 @@ public class VampireNightVisionEffect extends PotionEffect {
     }
 
     @Override
-    public void combine(PotionEffect other) {
+    public boolean combine(PotionEffect other) {
         //Don't change anything
+        return false;
     }
 
     @Override
@@ -38,17 +39,16 @@ public class VampireNightVisionEffect extends PotionEffect {
     }
 
     @Override
-    public boolean onUpdate(EntityLivingBase entityIn) {
+    public boolean tick(EntityLivingBase entityIn) {
         return true;
     }
 
     @Override
     public void performEffect(EntityLivingBase entityIn) {
-
     }
 
     @Override
-    public NBTTagCompound writeCustomPotionEffectToNBT(NBTTagCompound nbt) {
+    public NBTTagCompound write(NBTTagCompound nbt) {
         return nbt;
     }
 }

@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.tile.InventoryTileEntity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +14,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
@@ -48,7 +48,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     private IItemHandler itemHandler = new InvWrapper(this);
 
     public TileGrinder() {
-        super(ModTiles.grinder, new InventorySlot[]{new InventorySlot(TileGrinder::canProcess, 80, 34)});
+        super(new InventorySlot[]{new InventorySlot(TileGrinder::canProcess, 80, 34)});
     }
 
     @SuppressWarnings("unchecked")
@@ -62,7 +62,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     }
 
     @Override
-    public String getName() {
+    public ITextComponent getName() {
         return "tile.vampirism.blood_grinder.name";
     }
 
@@ -74,8 +74,8 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     @Override
     public void read(NBTTagCompound tagCompound) {
         super.read(tagCompound);
-        cooldownPull = tagCompound.getInteger("cooldown_pull");
-        cooldownProcess = tagCompound.getInteger("cooldown_process");
+        cooldownPull = tagCompound.getInt("cooldown_pull");
+        cooldownProcess = tagCompound.getInt("cooldown_process");
     }
 
     @Override
@@ -98,8 +98,8 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
 
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
-        compound.setInteger("cooldown_pull", cooldownPull);
-        compound.setInteger("cooldown_process", cooldownProcess);
+        compound.putInt("cooldown_pull", cooldownPull);
+        compound.putInt("cooldown_process", cooldownProcess);
         return super.write(compound);
     }
 

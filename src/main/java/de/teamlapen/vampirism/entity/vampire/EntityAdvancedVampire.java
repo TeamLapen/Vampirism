@@ -29,6 +29,7 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -117,7 +118,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     }
 
     @Override
-    public String getName() {
+    public ITextComponent getName() {
         String senderName = this.getDataManager().get(NAME);
         return "none".equals(senderName) ? super.getName() : senderName;
     }
@@ -146,11 +147,11 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     @Override
     public void read(NBTTagCompound tagCompund) {
         super.read(tagCompund);
-        if (tagCompund.hasKey("level")) {
-            setLevel(tagCompund.getInteger("level"));
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
         }
-        if (tagCompund.hasKey("type")) {
-            getDataManager().set(TYPE, tagCompund.getInteger("type"));
+        if (tagCompund.contains("type")) {
+            getDataManager().set(TYPE, tagCompund.getInt("type"));
             getDataManager().set(NAME, tagCompund.getString("name"));
             getDataManager().set(TEXTURE, tagCompund.getString("texture"));
         }
@@ -169,10 +170,10 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     @Override
     public void writeAdditional(NBTTagCompound nbt) {
         super.writeAdditional(nbt);
-        nbt.setInteger("level", getLevel());
-        nbt.setInteger("type", getEyeType());
-        nbt.setString("texture", getDataManager().get(TEXTURE));
-        nbt.setString("name", getDataManager().get(NAME));
+        nbt.putInt("level", getLevel());
+        nbt.putInt("type", getEyeType());
+        nbt.putString("texture", getDataManager().get(TEXTURE));
+        nbt.putString("name", getDataManager().get(NAME));
     }
 
     @Override
@@ -233,9 +234,9 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
 
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH + Balance.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_SPEED);
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(13);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH + Balance.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_SPEED);
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(13);
     }
 }

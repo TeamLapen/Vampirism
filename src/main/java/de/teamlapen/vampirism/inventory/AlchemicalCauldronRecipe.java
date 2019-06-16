@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.inventory;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -16,6 +15,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,6 +28,7 @@ import java.util.Arrays;
  * @author maxanier
  */
 public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
+    private final static Logger LOGGER = LogManager.getLogger(AlchemicalCauldronRecipe.class);
     private static final ISkill[] EMPTY_SKILLS = {};
     @Nonnull
     private final ItemStack output;
@@ -48,12 +50,12 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
             IFluidHandler handler = FluidLib.getFluidItemCap(liquid);
             FluidStack stack = handler.drain(Integer.MAX_VALUE, false);
             if (stack != null) {
-                VampirismMod.log.d("AlchemicalCauldron", "Replaced %s liquid item with %s fluid stack", liquid, stack);
+                LOGGER.debug("Replaced %s liquid item with %s fluid stack", liquid, stack);
                 fluidStack = stack;
                 fluidItem = ItemStack.EMPTY;
                 descriptiveStack = liquid;
             } else {
-                VampirismMod.log.d("AlchemicalCauldron", "Could not extract fluid from fluid container item %s", liquid);
+                LOGGER.debug("Could not extract fluid from fluid container item %s", liquid);
                 fluidStack = null;
                 fluidItem = liquid;
             }
@@ -209,14 +211,14 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
 
     private void addFluidStackDescription(ItemStack stack, FluidStack fluidStack) {
 
-        NBTTagCompound nbt = stack.getTagCompound();
+        NBTTagCompound nbt = stack.getTag();
         if (nbt == null) nbt = new NBTTagCompound();
-        NBTTagCompound display = nbt.hasKey("display", 10) ? nbt.getCompoundTag("display") : new NBTTagCompound();
-        NBTTagList lore = nbt.hasKey("Lore", 0) ? nbt.getTagList("Lore", 9) : new NBTTagList();
+        NBTTagCompound display = nbt.contains("display", 10) ? nbt.getCompound("display") : new NBTTagCompound();
+        NBTTagList lore = nbt.contains("Lore", 0) ? nbt.getTagList("Lore", 9) : new NBTTagList();
         lore.appendTag(new NBTTagString(UtilLib.translate("text.vampirism.liquid_container")));
-        display.setTag("Lore", lore);
-        nbt.setTag("display", display);
-        stack.setTagCompound(nbt);
+        display.put("Lore", lore);
+        nbt.put("display", display);
+        stack.setTag(nbt);
 
         stack.addEnchantment(Enchantments.UNBREAKING, 1);
         stack.setStackDisplayName(fluidStack.getLocalizedName() + ": " + fluidStack.amount + "mB");

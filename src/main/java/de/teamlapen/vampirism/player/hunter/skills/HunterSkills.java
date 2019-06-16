@@ -15,13 +15,13 @@ import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 /**
  * Registers the default hunter skills
  */
-@GameRegistry.ObjectHolder(REFERENCE.MODID)
+@ObjectHolder(REFERENCE.MODID)
 public class HunterSkills {
 
     public static final ISkill double_crossbow = UtilLib.getNull();
@@ -62,7 +62,7 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("stake1", 16, 32, false) {
             @Override
             public String getDescription() {
-                String desc = UtilLib.translateFormatted("text.vampirism.skill.stake1.desc", (int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100));
+                String desc = UtilLib.translate("text.vampirism.skill.stake1.desc", (int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100));
                 if (Balance.hps.INSTANT_KILL_SKILL_1_FROM_BEHIND) {
                     desc += " " + UtilLib.translate("text.vampirism.from_behind");
                 }
@@ -75,9 +75,9 @@ public class HunterSkills {
             public String getDescription() {
                 String desc = null;
                 if (Balance.hps.INSTANT_KILL_SKILL_2_ONLY_NPC) {
-                    desc = UtilLib.translateFormatted("text.vampirism.skill.stake2.desc_npc", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                    desc = UtilLib.translate("text.vampirism.skill.stake2.desc_npc", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
                 } else {
-                    desc = UtilLib.translateFormatted("text.vampirism.skill.stake2.desc_all", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                    desc = UtilLib.translate("text.vampirism.skill.stake2.desc_all", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
 
                 }
                 return desc;

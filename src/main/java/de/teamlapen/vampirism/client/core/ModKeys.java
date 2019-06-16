@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
-
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -29,7 +28,8 @@ import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
@@ -40,6 +40,8 @@ import javax.annotation.Nullable;
  */
 @OnlyIn(Dist.CLIENT)
 public class ModKeys {
+
+    private static final Logger LOGGER = LogManager.getLogger(ModKeys.class);
 
     private static final String CATEGORY = "keys.vampirism.category";
     private static final String SUCK_BLOOD = "keys.vampirism.suck";
@@ -79,7 +81,7 @@ public class ModKeys {
             case ACTION2:
                 return ACTION2;
             default:
-                VampirismMod.log.e("ModKeys", "Keybinding %s does not exist", key);
+                LOGGER.error("Keybinding %s does not exist", key);
                 return ACTION;
         }
     }
@@ -181,7 +183,7 @@ public class ModKeys {
             } else {
                 IAction action = VampirismAPI.actionManager().getRegistry().getValue(key);
                 if (action == null) {
-                    VampirismMod.log.i("ModKeys", "Bound action %s not found", key);
+                    LOGGER.info("Bound action %s not found", key);
                 } else if (!action.getFaction().equals(player.getFaction())) {
                     player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.only_faction", UtilLib.translate(action.getFaction().getTranslationKey())), true);
                 } else {

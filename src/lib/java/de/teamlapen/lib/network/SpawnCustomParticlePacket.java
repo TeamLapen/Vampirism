@@ -54,16 +54,16 @@ public class SpawnCustomParticlePacket implements IMessage {
 
     public SpawnCustomParticlePacket(ResourceLocation particle, double posX, double posY, double posZ, NBTTagCompound param, int count, double maxdist) {
         this(particle, posX, posY, posZ, param);
-        nbt.setInt("count", count);
-        nbt.setDouble("maxdist", maxdist);
+        nbt.putInt("count", count);
+        nbt.putDouble("maxdist", maxdist);
     }
 
     public SpawnCustomParticlePacket(ResourceLocation particle, double posX, double posY, double posZ, NBTTagCompound param) {
         nbt = new NBTTagCompound();
-        nbt.setDouble("x", posX);
-        nbt.setDouble("y", posY);
-        nbt.setDouble("z", posZ);
-        nbt.setString("id", particle.toString());
-        nbt.setTag("data", param);
+        nbt.putDouble("x", posX);
+        nbt.putDouble("y", posY);
+        nbt.putDouble("z", posZ);
+        nbt.putString("id", particle.toString());
+        nbt.put("data", param);
     }
 }

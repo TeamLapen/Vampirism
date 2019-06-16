@@ -9,7 +9,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -202,7 +202,7 @@ public class VampirismVillage implements IVampirismVillage {
     }
 
     private void removeDeadAndOldAggressors() {
-        villageAggressors.removeIf(aggressorVampire -> !aggressorVampire.creature.isEntityAlive() || Math.abs(this.tickCounter - aggressorVampire.aggressionTime) > 600);
+        villageAggressors.removeIf(aggressorVampire -> !aggressorVampire.creature.isAlive() || Math.abs(this.tickCounter - aggressorVampire.aggressionTime) > 600);
 
     }
 
@@ -213,12 +213,12 @@ public class VampirismVillage implements IVampirismVillage {
     private static class Storage implements Capability.IStorage<IVampirismVillage> {
 
         @Override
-        public void readNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, EnumFacing side, INBTBase nbt) {
             ((VampirismVillage) instance).read((NBTTagCompound) nbt);
         }
 
         @Override
-        public NBTBase writeNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, EnumFacing side) {
+        public INBTBase writeNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, EnumFacing side) {
             NBTTagCompound nbt = new NBTTagCompound();
             ((VampirismVillage) instance).write(nbt);
             return nbt;

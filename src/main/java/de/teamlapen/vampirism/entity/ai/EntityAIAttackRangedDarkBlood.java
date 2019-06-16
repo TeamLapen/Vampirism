@@ -46,7 +46,7 @@ public class EntityAIAttackRangedDarkBlood extends EntityAIBase {
         } else {
             EntityLivingBase target = entity.getAttackTarget();
             if (target != null) {
-                double d0 = this.entity.getDistanceSq(target.posX, target.getEntityBoundingBox().minY, target.posZ);
+                double d0 = this.entity.getDistanceSq(target.posX, target.getBoundingBox().minY, target.posZ);
                 boolean canSee = this.entity.getEntitySenses().canSee(target);
                 boolean couldSee = this.seeTime > 0;
 

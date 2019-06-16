@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.vampirism.VampirismMod;
+
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
@@ -10,6 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,8 +20,8 @@ import java.util.List;
 
 class BloodPotionCategory implements IBloodPotionCategory {
 
-    private final
-    @Nullable
+    private final static Logger LOGGER = LogManager.getLogger(BloodPotionCategory.class);
+    private final @Nullable
     String unlocDesc;
     private final ResourceLocation id;
     private final List<ItemStack> exactItems = NonNullList.create();
@@ -62,7 +64,7 @@ class BloodPotionCategory implements IBloodPotionCategory {
             } else if (item instanceof ItemStack) {
                 addItemExact((ItemStack) item);
             } else {
-                VampirismMod.log.w("BloodPotionCategory", "Failed to add item '%s' of unkown type", item);
+                LOGGER.warn("Failed to add item '%s' of unkown type", item);
             }
         }
     }
@@ -75,7 +77,7 @@ class BloodPotionCategory implements IBloodPotionCategory {
         }
         for (ItemStack next : exactItems) {
             if (stack.getItem() != next.getItem()) continue;
-            if (stack.getItemDamage() != next.getItemDamage()) continue;
+            if (stack.getDamage() != next.getDamage()) continue;
             if (!ItemStack.areItemStackTagsEqual(stack, next)) continue;
             return true;
         }

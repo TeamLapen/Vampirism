@@ -44,7 +44,7 @@ public class ClientProxy extends CommonProxy {
     public Entity getMouseOverEntity() {
         RayTraceResult r = Minecraft.getInstance().objectMouseOver;
         if (r == null) return null;
-        return r.entityHit;
+        return r.entity;
     }
 
     @Override

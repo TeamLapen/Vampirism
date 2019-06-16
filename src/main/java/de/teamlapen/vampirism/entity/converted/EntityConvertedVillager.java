@@ -133,7 +133,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     @Override
     public void readAdditional(NBTTagCompound compound) {
         super.readAdditional(compound);
-        if (compound.hasKey("addedAdditionalRecipes")) {
+        if (compound.contains("addedAdditionalRecipes")) {
             addedAdditionalRecipes = compound.getBoolean("addedAdditionalRecipes");
         }
     }
@@ -153,7 +153,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     @Override
     public void writeAdditional(NBTTagCompound compound) {
         super.writeAdditional(compound);
-        compound.setBoolean("addedAdditionalRecipes", addedAdditionalRecipes);
+        compound.putBoolean("addedAdditionalRecipes", addedAdditionalRecipes);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         this.tasks.taskEntries.removeIf(entry -> entry.action instanceof EntityAIMoveIndoors || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem);
 
         tasks.addTask(0, new EntityAIRestrictSun(this));
-        tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, false, VReference.HUNTER_FACTION), 10, 0.45F, 0.55F));
+        tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, 10, 0.45F, 0.55F, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, false, VReference.HUNTER_FACTION)));
         tasks.addTask(2, new EntityAIMoveIndoorsDay(this));
         tasks.addTask(5, new VampireAIFleeSun(this, 0.6F, true));
         tasks.addTask(6, new EntityAIAttackMelee(this, 0.6F, false));
@@ -207,7 +207,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         @Override
         public IConvertedCreature<EntityVillager> createFrom(EntityVillager entity) {
             NBTTagCompound nbt = new NBTTagCompound();
-            entity.write(nbt);
+            entity.writeWithoutTypeId(nbt);
             EntityConvertedVillager converted = new EntityConvertedVillager(entity.world);
             converted.read(nbt);
             converted.setUniqueId(MathHelper.getRandomUUID(converted.rand));

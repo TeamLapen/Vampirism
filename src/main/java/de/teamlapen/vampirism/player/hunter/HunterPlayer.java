@@ -19,7 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
@@ -277,12 +277,12 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     private static class Storage implements Capability.IStorage<IHunterPlayer> {
         @Override
-        public void readNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, EnumFacing side, INBTBase nbt) {
             ((HunterPlayer) instance).loadData((NBTTagCompound) nbt);
         }
 
         @Override
-        public NBTBase writeNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, EnumFacing side) {
+        public INBTBase writeNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, EnumFacing side) {
             NBTTagCompound nbt = new NBTTagCompound();
             ((HunterPlayer) instance).saveData(nbt);
             return nbt;

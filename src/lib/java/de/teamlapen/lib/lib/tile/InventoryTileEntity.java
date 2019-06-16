@@ -169,12 +169,12 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
             ItemStack stack = slots[i].stack;
             if (!stack.isEmpty()) {
                 NBTTagCompound tag = new NBTTagCompound();
-                tag.setByte("Slot", (byte) i);
+                tag.putByte("Slot", (byte) i);
                 stack.write(tag);
                 itemList.add(tag);
             }
         }
-        nbt.setTag("Inventory", itemList);
+        nbt.put("Inventory", itemList);
 
         return nbt;
     }

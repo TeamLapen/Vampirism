@@ -166,7 +166,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
         if (!itemstack.isEmpty() || bowInfinite) {
             if (itemstack.isEmpty()) {
-                itemstack = new ItemStack(ModItems.crossbow_arrow);
+                itemstack = new ItemStack(ModItems.crossbow_arrow_normal);
             }
 
             float f = getArrowVelocity();
@@ -176,7 +176,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
                 if (!world.isRemote) {
                     boolean rightHand = player.getPrimaryHand() == EnumHandSide.RIGHT && hand == EnumHand.MAIN_HAND || player.getPrimaryHand() == EnumHandSide.LEFT && hand == EnumHand.OFF_HAND;
-                    IVampirismCrossbowArrow itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow) itemstack.getItem() : ModItems.crossbow_arrow;
+                    IVampirismCrossbowArrow itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow) itemstack.getItem() : ModItems.crossbow_arrow_normal;
                     EntityArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
                     entityarrow.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 

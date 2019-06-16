@@ -6,13 +6,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Particles;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -48,8 +49,8 @@ public class BlockAlchemicalFire extends VampirismBlock {
             double d0 = (double) pos.getX() + rand.nextDouble();
             double d1 = (double) pos.getY() + rand.nextDouble() * 0.5D + 0.5D;
             double d2 = (double) pos.getZ() + rand.nextDouble();
-            EnumParticleTypes type = i == 0 ? BasicParticleType.SMOKE_LARGE : i == 1 ? EnumParticleTypes.SPELL_WITCH : rand.nextInt(10) == 0 ? EnumParticleTypes.FIREWORKS_SPARK : EnumParticleTypes.REDSTONE;
-            worldIn.spawnParticle(type, d0, d1, d2, 0.0D, i == 2 ? 0.1D : 0.0D, 0.0D);
+            IParticleData type = i == 0 ? Particles.LARGE_SMOKE : i == 1 ? Particles.WITCH : rand.nextInt(10) == 0 ? Particles.FIREWORK : RedstoneParticleData.REDSTONE_DUST;
+            worldIn.addParticle(type, d0, d1, d2, 0.0D, i == 2 ? 0.1D : 0.0D, 0.0D);
         }
     }
 

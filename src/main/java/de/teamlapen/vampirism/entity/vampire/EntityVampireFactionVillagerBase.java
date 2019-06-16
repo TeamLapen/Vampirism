@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
+
 import javax.annotation.Nonnull;
 
 public class EntityVampireFactionVillagerBase extends EntityFactionVillager implements IVampire {
@@ -69,7 +70,7 @@ public class EntityVampireFactionVillagerBase extends EntityFactionVillager impl
         }
         if (!world.isRemote) {
             if (isGettingSundamage() && ticksExisted % 40 == 11) {
-                double dmg = getEntityAttribute(VReference.sunDamage).getAttributeValue();
+                double dmg = getAttribute(VReference.sunDamage).getValue();
                 if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
             }
             if (isGettingGarlicDamage() != EnumStrength.NONE) {
@@ -77,7 +78,7 @@ public class EntityVampireFactionVillagerBase extends EntityFactionVillager impl
             }
         }
         if (!this.world.isRemote) {
-            if (isEntityAlive() && isInWater()) {
+            if (isAlive() && isInWater()) {
                 setAir(300);
                 if (ticksExisted % 16 == 4) {
                     addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 80, 0));

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.model.blocks;
 import de.teamlapen.vampirism.blocks.BlockBloodContainer;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.tileentity.TileBloodContainer;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -123,7 +122,7 @@ public class BakedBloodContainerModel implements IBakedModel {
         @Override
         public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
             if (originalModel instanceof BakedBloodContainerModel) {
-                if (stack.hasTag() && stack.getTag().hasKey("fluid")) {
+                if (stack.hasTag() && stack.getTag().contains("fluid")) {
                     FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound("fluid"));
                     if (fluid != null) {
 

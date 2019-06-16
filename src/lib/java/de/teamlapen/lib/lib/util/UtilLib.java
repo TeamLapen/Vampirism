@@ -2,6 +2,7 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -172,7 +173,7 @@ public class UtilLib {
     public static Entity spawnEntityBehindEntity(EntityLivingBase p, ResourceLocation id) {
 
         BlockPos behind = getPositionBehindEntity(p, 2);
-        EntityLiving e = (EntityLiving) EntityList.createEntityByIDFromName(id, p.getEntityWorld());
+        EntityLiving e = (EntityLiving) EntityType.create(p.getEntityWorld(), id);
 
         e.setPosition(behind.getX(), p.posY, behind.getZ());
 
@@ -264,7 +265,7 @@ public class UtilLib {
      */
     @Nullable
     public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, ResourceLocation id, int maxTry, @Nonnull List<EntityLivingBase> avoidedEntities) {
-        Entity e = EntityList.createEntityByIDFromName(id, world);
+        Entity e = EntityType.create(world, id);
         if (spawnEntityInWorld(world, box, e, maxTry,avoidedEntities)) {
             return e;
         } else {
@@ -331,7 +332,7 @@ public class UtilLib {
                 double d7 = d3 + (entity.posX - d3) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
                 double d8 = d4 + (entity.posY - d4) * d6 + entity.getRNG().nextDouble() * entity.height;
                 double d9 = d5 + (entity.posZ - d5) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
-                entity.getEntityWorld().spawnParticle(Particles.PORTAL, d7, d8, d9, f, f1, f2);
+                entity.getEntityWorld().addParticle(Particles.PORTAL, d7, d8, d9, f, f1, f2);
             }
 
             if (sound) {
@@ -351,7 +352,7 @@ public class UtilLib {
         double y = yCoord;
         double z = zCoord;
         for (int i = 0; i < amount; i++) {
-            world.spawnParticle(particle, x, y, z, xSpeed, ySpeed, zSpeed);
+            world.addParticle(particle, x, y, z, xSpeed, ySpeed, zSpeed);
             Random ran = world.rand;
             x = xCoord + (ran.nextGaussian() * maxOffset);
             y = yCoord + (ran.nextGaussian() * maxOffset);
@@ -371,7 +372,7 @@ public class UtilLib {
             double d7 = e.posX + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
             double d8 = e.posY + (maxDistance / 2) * d6 + e.getRNG().nextDouble() * e.height;
             double d9 = e.posZ + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
-            e.getEntityWorld().spawnParticle(particle, d7, d8, d9, f, f1, f2);
+            e.getEntityWorld().addParticle(particle, d7, d8, d9, f, f1, f2);
         }
     }
 
@@ -442,9 +443,9 @@ public class UtilLib {
      * @param pos
      */
     public static void write(NBTTagCompound nbt, String base, BlockPos pos) {
-        nbt.setInt(base + "_x", pos.getX());
-        nbt.setInt(base + "_y", pos.getY());
-        nbt.setInt(base + "_z", pos.getZ());
+        nbt.putInt(base + "_x", pos.getX());
+        nbt.putInt(base + "_y", pos.getY());
+        nbt.putInt(base + "_z", pos.getZ());
     }
 
     /**

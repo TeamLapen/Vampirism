@@ -37,7 +37,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
      */
     private static int getArrowsLeft(@Nonnull ItemStack bowStack) {
         NBTTagCompound nbt = bowStack.getTag();
-        if (nbt == null || !nbt.hasKey("arrows")) return 0;
+        if (nbt == null || !nbt.contains("arrows")) return 0;
         return nbt.getInt("arrows");
 
     }
@@ -49,7 +49,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
     private static ItemStack setArrowsLeft(@Nonnull ItemStack bowStack, int arrows) {
         int i = Math.max(-1, Math.min(MAX_ARROW_COUNT, arrows));
         NBTTagCompound nbt = bowStack.hasTag() ? bowStack.getTag() : new NBTTagCompound();
-        nbt.setInt("arrows", i);
+        nbt.putInt("arrows", i);
         bowStack.setTag(nbt);
         return bowStack;
     }
@@ -62,13 +62,13 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
      */
     private static boolean reduceArrowCount(@Nonnull ItemStack bowStack, Random rnd) {
         NBTTagCompound nbt = bowStack.getTag();
-        if (nbt == null || !nbt.hasKey("arrows")) return false;
+        if (nbt == null || !nbt.contains("arrows")) return false;
         int count = nbt.getInt("arrows");
         if (count == -1) return true;
         if (count == 0) return false;
         int frugal = isCrossbowFrugal(bowStack);
         if (frugal > 0 && rnd.nextInt(frugal + 2) == 0) return true;
-        nbt.setInt("arrows", count - 1);
+        nbt.putInt("arrows", count - 1);
         bowStack.setTag(nbt);
         return true;
     }
@@ -152,7 +152,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
             }
             return ItemStack.EMPTY;
         }
-        return new ItemStack(ModItems.crossbow_arrow);
+        return new ItemStack(ModItems.crossbow_arrow_normal);
     }
 
     @Override

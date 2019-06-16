@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.player.skills;
 
 import com.google.common.collect.Lists;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -10,17 +9,17 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillEvent;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.core.VampirismRegistries;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-
-import java.util.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.*;
 
 /**
  * 1.12
@@ -29,7 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class SkillManager implements ISkillManager {
 
-
+    private final static Logger LOGGER = LogManager.getLogger(SkillManager.class);
     private final Map<ResourceLocation, SkillNode> rootNodes = new HashMap<>();
 
     /**
@@ -168,7 +167,7 @@ public class SkillManager implements ISkillManager {
     ISkill getRootSkill(IPlayableFaction faction) {
         ISkill skill = VampirismRegistries.SKILLS.getValue(faction.getKey());
         if (skill == null) {
-            VampirismMod.log.bigWarning("SkillManager", "No root skill exists for faction %s", faction.getKey());
+            LOGGER.warn("No root skill exists for faction %s", faction.getKey()); //TODO was big warning
             throw new IllegalStateException("You need to register a root skill for your faction " + faction.getKey());
         }
         return skill;

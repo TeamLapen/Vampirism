@@ -86,7 +86,7 @@ public class BlockCoffin extends VampirismBlockContainer {
 
     @Override
     public IItemProvider getItemDropped(IBlockState state, World worldIn, BlockPos pos, int fortune) {
-        return state.get(PART) == CoffinPart.FOOT ? Items.AIR : super.getItemDropped(state, worldIn, pos, fortune))
+        return state.get(PART) == CoffinPart.FOOT ? Items.AIR : super.getItemDropped(state, worldIn, pos, fortune);
     }
 
     @Override

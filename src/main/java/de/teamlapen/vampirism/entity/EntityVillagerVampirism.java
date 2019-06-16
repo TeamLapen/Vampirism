@@ -37,7 +37,7 @@ public class EntityVillagerVampirism extends EntityVillager {
     }
 
     public boolean attackEntityAsMob(Entity entity) {
-        float f = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+        float f = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
         int i = 0;
 
         if (entity instanceof EntityLivingBase) {
@@ -70,7 +70,7 @@ public class EntityVillagerVampirism extends EntityVillager {
 
     @Override
     public boolean attackEntityFrom(DamageSource src, float p_70097_2_) {
-        if (this.isEntityInvulnerable(src)) {
+        if (this.isInvulnerableTo(src)) {
             return false;
         } else if (super.attackEntityFrom(src, p_70097_2_)) {
             Entity entity = src.getTrueSource();
@@ -96,9 +96,9 @@ public class EntityVillagerVampirism extends EntityVillager {
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void livingTick() {
         this.updateArmSwingProgress();
-        super.onLivingUpdate();
+        super.livingTick();
     }
 
     @Override
@@ -111,8 +111,8 @@ public class EntityVillagerVampirism extends EntityVillager {
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
     }
 

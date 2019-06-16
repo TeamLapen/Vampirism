@@ -85,9 +85,9 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
     @Override
     public void read(NBTTagCompound compound) {
         super.read(compound);
-        r = compound.getInteger("radius");
-        defaultStrength = EnumStrength.getFromStrenght(compound.getInteger("strength"));
-        setFueledTime(compound.getInteger("fueled"));
+        r = compound.getInt("radius");
+        defaultStrength = EnumStrength.getFromStrenght(compound.getInt("strength"));
+        setFueledTime(compound.getInt("fueled"));
     }
 
     public void setType(BlockGarlicBeacon.Type type) {
@@ -109,7 +109,7 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
     }
 
     @Override
-    public void update() {
+    public void tick() {
         if (fueled > 0) {
             if (fueled == 1) {
                 setFueledTime(0);
@@ -129,9 +129,9 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
         super.write(compound);
-        compound.setInteger("radius", r);
-        compound.setInteger("strength", defaultStrength.getStrength());
-        compound.setInteger("fueled", fueled);
+        compound.putInt("radius", r);
+        compound.putInt("strength", defaultStrength.getStrength());
+        compound.putInt("fueled", fueled);
         return compound;
     }
 

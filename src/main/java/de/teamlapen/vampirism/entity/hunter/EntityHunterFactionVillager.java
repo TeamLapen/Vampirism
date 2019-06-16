@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
-import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModVillages;
 import de.teamlapen.vampirism.entity.EntityFactionVillager;
@@ -13,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.village.MerchantRecipe;
@@ -30,32 +30,24 @@ public class EntityHunterFactionVillager extends EntityFactionVillager implement
 
     private final static EntityVillager.ITradeList[][] TRADES = {
             {
-                    new ItemsForSouls(new PriceInfo(10, 15), createTiers(IItemWithTier.TIER.NORMAL, ModItems.hunter_coat_feet, ModItems.obsidian_armor_feet, ModItems.armor_of_swiftness_feet), new PriceInfo(1, 1)),
-                    new ItemsForSouls(new PriceInfo(25, 35), createTiers(IItemWithTier.TIER.NORMAL, ModItems.hunter_coat_legs, ModItems.obsidian_armor_legs, ModItems.armor_of_swiftness_legs), new PriceInfo(1, 1)),
-                    new ItemsForSouls(new PriceInfo(30, 40), createTiers(IItemWithTier.TIER.NORMAL, ModItems.hunter_coat_chest, ModItems.obsidian_armor_chest, ModItems.armor_of_swiftness_chest), new PriceInfo(1, 1)),
-                    new ItemsForSouls(new PriceInfo(20, 30), createTiers(IItemWithTier.TIER.NORMAL, ModItems.hunter_coat_head, ModItems.obsidian_armor_head, ModItems.armor_of_swiftness_head), new PriceInfo(1, 1)),
+                    new ItemsForSouls(new PriceInfo(10, 15), new ItemStack[]{new ItemStack(ModItems.hunter_coat_feet_normal), new ItemStack(ModItems.obsidian_armor_feet_normal), new ItemStack(ModItems.armor_of_swiftness_feet_normal)}, new PriceInfo(1, 1)),
+                    new ItemsForSouls(new PriceInfo(25, 35), new ItemStack[]{new ItemStack(ModItems.hunter_coat_legs_normal), new ItemStack(ModItems.obsidian_armor_legs_normal), new ItemStack(ModItems.armor_of_swiftness_legs_normal)}, new PriceInfo(1, 1)),
+                    new ItemsForSouls(new PriceInfo(30, 40), new ItemStack[]{new ItemStack(ModItems.hunter_coat_chest_normal), new ItemStack(ModItems.obsidian_armor_chest_normal), new ItemStack(ModItems.armor_of_swiftness_chest_normal)}, new PriceInfo(1, 1)),
+                    new ItemsForSouls(new PriceInfo(20, 30), new ItemStack[]{new ItemStack(ModItems.hunter_coat_head_normal), new ItemStack(ModItems.obsidian_armor_head_normal), new ItemStack(ModItems.armor_of_swiftness_head_normal)}, new PriceInfo(1, 1)),
                     new ItemsForSouls(new PriceInfo(10, 20), ModItems.item_garlic, new PriceInfo(2, 5)),
                     new ItemsForSouls(new PriceInfo(50, 100), Items.DIAMOND, new PriceInfo(1, 1))
             },
             {
-                    new ItemsForSouls(new PriceInfo(10, 15), createTiers(IItemWithTier.TIER.ENHANCED, ModItems.hunter_coat_feet, ModItems.obsidian_armor_feet, ModItems.armor_of_swiftness_feet), new PriceInfo(1, 1)),
-                    new ItemsForSouls(new PriceInfo(25, 35), createTiers(IItemWithTier.TIER.ENHANCED, ModItems.hunter_coat_legs, ModItems.obsidian_armor_legs, ModItems.armor_of_swiftness_legs), new PriceInfo(1, 1)),
-                    new ItemsForSouls(new PriceInfo(30, 40), createTiers(IItemWithTier.TIER.ENHANCED, ModItems.hunter_coat_chest, ModItems.obsidian_armor_chest, ModItems.armor_of_swiftness_chest), new PriceInfo(1, 1)),
-                    new ItemsForSouls(new PriceInfo(20, 30), createTiers(IItemWithTier.TIER.ENHANCED, ModItems.hunter_coat_head, ModItems.obsidian_armor_head, ModItems.armor_of_swiftness_head), new PriceInfo(1, 1)),
+                    new ItemsForSouls(new PriceInfo(10, 15), new ItemStack[]{new ItemStack(ModItems.hunter_coat_feet_enhanced), new ItemStack(ModItems.obsidian_armor_feet_enhanced), new ItemStack(ModItems.armor_of_swiftness_feet_enhanced)}, new PriceInfo(1, 1)),
+                    new ItemsForSouls(new PriceInfo(25, 35), new ItemStack[]{new ItemStack(ModItems.hunter_coat_legs_enhanced), new ItemStack(ModItems.obsidian_armor_legs_enhanced), new ItemStack(ModItems.armor_of_swiftness_legs_enhanced)}, new PriceInfo(1, 1)),
+                    new ItemsForSouls(new PriceInfo(30, 40), new ItemStack[]{new ItemStack(ModItems.hunter_coat_chest_enhanced), new ItemStack(ModItems.obsidian_armor_chest_enhanced), new ItemStack(ModItems.armor_of_swiftness_chest_enhanced)}, new PriceInfo(1, 1)),
+                    new ItemsForSouls(new PriceInfo(20, 30), new ItemStack[]{new ItemStack(ModItems.hunter_coat_head_enhanced), new ItemStack(ModItems.obsidian_armor_head_enhanced), new ItemStack(ModItems.armor_of_swiftness_head_enhanced)}, new PriceInfo(1, 1)),
                     new ItemsForSouls(new PriceInfo(40, 90), Items.DIAMOND, new PriceInfo(1, 2))
             },
             {
-                    new ItemsForSouls(new PriceInfo(100, 200), createTiers(IItemWithTier.TIER.ULTIMATE, ModItems.hunter_coat_feet, ModItems.obsidian_armor_feet, ModItems.armor_of_swiftness_feet, ModItems.hunter_coat_legs, ModItems.obsidian_armor_legs, ModItems.armor_of_swiftness_legs, ModItems.hunter_coat_chest, ModItems.obsidian_armor_chest, ModItems.armor_of_swiftness_chest, ModItems.hunter_coat_head, ModItems.obsidian_armor_head, ModItems.armor_of_swiftness_head), new PriceInfo(1, 1))
+                    new ItemsForSouls(new PriceInfo(100, 200), new ItemStack[]{new ItemStack(ModItems.hunter_coat_feet_ultimate), new ItemStack(ModItems.obsidian_armor_feet_ultimate), new ItemStack(ModItems.armor_of_swiftness_feet_ultimate), new ItemStack(ModItems.hunter_coat_legs_ultimate), new ItemStack(ModItems.obsidian_armor_legs_ultimate), new ItemStack(ModItems.armor_of_swiftness_legs_ultimate), new ItemStack(ModItems.hunter_coat_chest_ultimate), new ItemStack(ModItems.obsidian_armor_chest_ultimate), new ItemStack(ModItems.armor_of_swiftness_chest_ultimate), new ItemStack(ModItems.hunter_coat_head_ultimate), new ItemStack(ModItems.obsidian_armor_head_ultimate), new ItemStack(ModItems.armor_of_swiftness_head_ultimate)}, new PriceInfo(1, 1))
             }
     };
-
-    private static ItemStack[] createTiers(IItemWithTier.TIER tier, IItemWithTier... items) {
-        ItemStack[] stacks = new ItemStack[items.length];
-        for (int i = 0; i < items.length; i++) {
-            stacks[i] = items[i].setTier(new ItemStack((Item) items[i]), tier);
-        }
-        return stacks;
-    }
 
     public EntityHunterFactionVillager(World worldIn) {
         super(worldIn);
@@ -63,9 +55,9 @@ public class EntityHunterFactionVillager extends EntityFactionVillager implement
 
     @Nullable
     @Override
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata, @Nullable NBTTagCompound itemNbt) {
         this.setProfession(ModVillages.profession_hunter_expert);
-        return this.finalizeMobSpawn(difficulty, livingdata, false);
+        return this.finalizeMobSpawn(difficulty, livingdata, itemNbt, false);
     }
 
     @Override

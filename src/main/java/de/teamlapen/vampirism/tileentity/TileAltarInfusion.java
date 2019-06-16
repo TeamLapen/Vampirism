@@ -25,7 +25,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -35,6 +34,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -44,7 +45,7 @@ import java.util.*;
  */
 public class TileAltarInfusion extends InventoryTileEntity implements ITickable {
 
-    private final static String TAG = "TEAltarInfusion";
+    private final static Logger LOGGER = LogManager.getLogger(TileAltarInfusion.class);
     private static final Item[] items = new Item[]{
             ModItems.pure_blood, ModItems.human_heart, ModItems.vampire_book
     };
@@ -65,7 +66,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     private int targetLevel;
 
     public TileAltarInfusion() {
-        super(ModTiles.altar_infusion, new InventorySlot[]{new InventorySlot(items[0], 44, 34), new InventorySlot(items[1], 80, 34), new InventorySlot(items[2], 116, 34)});
+        super(new InventorySlot[]{new InventorySlot(items[0], 44, 34), new InventorySlot(items[1], 80, 34), new InventorySlot(items[2], 116, 34)});
     }
 
     /**
@@ -136,7 +137,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     }
 
     @Override
-    public String getName() {
+    public ITextComponent getName() {
         return "tile.vampirism.altar_infusion.name";
     }
 
@@ -192,14 +193,14 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     @Override
     public void read(NBTTagCompound tagCompound) {
         super.read(tagCompound);
-        int tick = tagCompound.getInteger("tick");
+        int tick = tagCompound.getInt("tick");
         if (tick > 0 && player == null) {
             try {
                 this.player = this.getWorld().getPlayerEntityByUUID(UUID.fromString(tagCompound.getString("playerUUID")));
                 this.runningTick = tick;
                 this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
             } catch (NullPointerException e) {
-                LOGGER.warn("Failed to find player %d", tagCompound.getInteger("playerUUID"));
+                LOGGER.warn("Failed to find player %d", tagCompound.getInt("playerUUID"));
             }
         }
         if (player == null) {
@@ -215,7 +216,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
      * ONLY call if {@link TileAltarInfusion#canActivate(EntityPlayer, boolean)} returned 1
      */
     public void startRitual(EntityPlayer player) {
-        VampirismMod.log.d(TAG, "Starting ritual for %s", player);
+        LOGGER.debug("Starting ritual for %s", player);
         this.player = player;
         runningTick = DURATION_TICK;
 
@@ -239,7 +240,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     @Override
     public void update() {
         if (runningTick == DURATION_TICK && !world.isRemote) {
-            VampirismMod.log.d(TAG, "Ritual started");
+            LOGGER.debug("Ritual started");
             consumeItems();
             this.markDirty();
         }
@@ -294,7 +295,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 }
             } else {
                 this.world.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
-                this.world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
+                this.world.addParticle(Particles.EXPLOSION_HUGE, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
             }
 
             player.addPotionEffect(new PotionEffect(ModPotions.saturation, 400, 2));
@@ -306,9 +307,9 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
         NBTTagCompound nbt = super.write(compound);
-        nbt.setInteger("tick", runningTick);
+        nbt.putInt("tick", runningTick);
         if (player != null) {
-            nbt.setString("playerUUID", player.getUniqueID().toString());
+            nbt.putString("playerUUID", player.getUniqueID().toString());
         }
         return nbt;
     }

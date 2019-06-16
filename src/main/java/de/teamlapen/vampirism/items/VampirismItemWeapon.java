@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -12,12 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
-import net.minecraft.util.registry.IRegistry;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -72,7 +73,7 @@ public class VampirismItemWeapon extends ItemSword {
     @Override
     protected String getDefaultTranslationKey() {
         if (this.translation_key == null) {
-            this.translation_key = Util.makeTranslationKey("item", IRegistry.field_212630_s.getKey(this));
+            this.translation_key = Util.makeTranslationKey("item", ForgeRegistries.ITEMS.getKey(this));
         }
 
         return this.translation_key;

@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.tests;
 
 import com.google.common.base.Stopwatch;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.blocks.BlockCastleBlock;
+
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.fluids.BloodHelper;
@@ -25,6 +24,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,6 +40,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Tests {
 
+    private final static Logger LOGGER = LogManager.getLogger(Tests.class);
     public static void runTests(World world, EntityPlayer player) {
         sendMsg(player, "Starting tests");
         log("Clearing area");
@@ -122,7 +124,7 @@ public class Tests {
                     failed = true;
                 }
             } catch (IllegalAccessException e) {
-                VampirismMod.log.e("TEST", e, "Failed to check fields of class %s", clazz.getName());
+                LOGGER.error(e, "Failed to check fields of class %s", clazz.getName());
                 return false;
             }
 
@@ -166,13 +168,13 @@ public class Tests {
         block.getBlock().onBlockActivated(info.world, info.pos, block, info.player, info.player.getActiveHand(), EnumFacing.random(info.world.rand), 0, 0, 0);
         block = info.world.getBlockState(info.pos);
         assert info.player.getHeldItem(info.player.getActiveHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
-        log("Block lava level: %s", block.getValue(BlockWeaponTable.LAVA));
-        assert (block.getValue(BlockWeaponTable.LAVA) * BlockWeaponTable.MB_PER_META) == Fluid.BUCKET_VOLUME : "Incorrect Fluid Transaction";
+        log("Block lava level: %s", block.get(BlockWeaponTable.LAVA));
+        assert (block.get(BlockWeaponTable.LAVA) * BlockWeaponTable.MB_PER_META) == Fluid.BUCKET_VOLUME : "Incorrect Fluid Transaction";
         return true;
     }
 
     private static void log(String msg, Object... format) {
-        VampirismMod.log.w("TEST", msg, format);
+        LOGGER.warn(msg, format);
     }
 
     private static void sendMsg(EntityPlayer player, String msg) {
@@ -183,7 +185,7 @@ public class Tests {
         for (int x = -21; x < 22; x++) {
             for (int y = 1; y < 22; y++) {
                 for (int z = -21; z < 22; z++) {
-                    IBlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumVariant.DARK_STONE) : Blocks.AIR.getDefaultState();
+                    IBlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castle_block_dark_stone.getDefaultState() : Blocks.AIR.getDefaultState();
                     world.setBlockState(new BlockPos(x, y, z), s);
                 }
             }

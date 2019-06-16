@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.village.MerchantRecipe;
@@ -27,21 +28,21 @@ public class EntityVampireFactionVillager extends EntityVampireFactionVillagerBa
 
     private final static EntityVillager.ITradeList[][] TRADES = {
             {
-                    new ItemsForHeart(new PriceInfo(10, 15), new ItemStack(ModItems.pure_blood, 1, 0), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.pure_blood, 1, 1), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood, 1, 2), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(10, 15), new ItemStack(ModItems.pure_blood_0, 1), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.pure_blood_1, 1), new PriceInfo(1, 1)),
+                    new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood_2, 1), new PriceInfo(1, 1)),
                     new ItemsForHeart(new PriceInfo(1, 5), ModItems.item_coffin, new PriceInfo(1, 1))
             }, {
             new ItemsForHeart(new PriceInfo(3, 12), new ItemStack(ModItems.blood_bottle, 1, 9), new PriceInfo(1, 15)),
-                    new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood, 1, 4), new PriceInfo(1, 1)),
-            new ItemsForHeart(new PriceInfo(20, 30), new ItemStack(ModItems.pure_blood, 1, 3), new PriceInfo(1, 1))
+            new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood_4, 1), new PriceInfo(1, 1)),
+            new ItemsForHeart(new PriceInfo(20, 30), new ItemStack(ModItems.pure_blood_3, 1), new PriceInfo(1, 1))
             }, {
             new ItemsForHeart(new PriceInfo(10, 30), new ItemStack[]{
-                            new ItemStack(ModItems.vampire_cloak, 1, 0),
-                            new ItemStack(ModItems.vampire_cloak, 1, 1),
-                            new ItemStack(ModItems.vampire_cloak, 1, 2),
-                            new ItemStack(ModItems.vampire_cloak, 1, 3),
-                            new ItemStack(ModItems.vampire_cloak, 1, 4)}, new PriceInfo(1, 1))
+                    new ItemStack(ModItems.vampire_cloak_black_blue, 1),
+                    new ItemStack(ModItems.vampire_cloak_black_red, 1),
+                    new ItemStack(ModItems.vampire_cloak_black_white, 1),
+                    new ItemStack(ModItems.vampire_cloak_red_black, 1),
+                    new ItemStack(ModItems.vampire_cloak_white_black, 1)}, new PriceInfo(1, 1))
             }
     };
 
@@ -51,9 +52,9 @@ public class EntityVampireFactionVillager extends EntityVampireFactionVillagerBa
 
     @Nullable
     @Override
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata, @Nullable NBTTagCompound itemNbt) {
         this.setProfession(ModVillages.profession_vampire_expert);
-        return this.finalizeMobSpawn(difficulty, livingdata, false);
+        return this.finalizeMobSpawn(difficulty, livingdata, itemNbt, false);
     }
 
     @Override

@@ -9,6 +9,8 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.VampirismRegistries;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.List;
  * Handles skills for Vampirism's IFactionPlayers
  */
 public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> {
-    private final static String TAG = "SkillHandler";
+    private final static Logger LOGGER = LogManager.getLogger(SkillHandler.class);
     /**
      * All currently activated skills
      */
@@ -141,8 +143,8 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     }
 
     public void loadFromNbt(NBTTagCompound nbt) {
-        if (!nbt.hasKey("skills")) return;
-        for (String id : nbt.getCompoundTag("skills").getKeySet()) {
+        if (!nbt.contains("skills")) return;
+        for (String id : nbt.getCompound("skills").keySet()) {
             ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(id));
             if (skill == null) {
                 LOGGER.warn("Skill %s does not exist anymore", id);
@@ -155,9 +157,9 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     }
 
     public void readUpdateFromServer(NBTTagCompound nbt) {
-        if (!nbt.hasKey("skills")) return;
+        if (!nbt.contains("skills")) return;
         List<ISkill> old = (List<ISkill>) enabledSkills.clone();
-        for (String id : nbt.getCompoundTag("skills").getKeySet()) {
+        for (String id : nbt.getCompound("skills").keySet()) {
             ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(id));
             if (skill == null) {
                 LOGGER.error("Skill %s does not exist on client!!!", id);
@@ -185,18 +187,18 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     public void saveToNbt(NBTTagCompound nbt) {
         NBTTagCompound skills = new NBTTagCompound();
         for (ISkill skill : enabledSkills) {
-            skills.setBoolean(skill.getRegistryName().toString(), true);
+            skills.putBoolean(skill.getRegistryName().toString(), true);
         }
-        nbt.setTag("skills", skills);
+        nbt.put("skills", skills);
 
     }
 
     public void writeUpdateForClient(NBTTagCompound nbt) {
         NBTTagCompound skills = new NBTTagCompound();
         for (ISkill skill : enabledSkills) {
-            skills.setBoolean(skill.getRegistryName().toString(), true);
+            skills.putBoolean(skill.getRegistryName().toString(), true);
         }
-        nbt.setTag("skills", skills);
+        nbt.put("skills", skills);
         dirty = false;
     }
 }

@@ -26,6 +26,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -97,7 +98,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    public String getName() {
+    public ITextComponent getName() {
         String senderName = this.getDataManager().get(NAME);
         return "none".equals(senderName) ? super.getName() : senderName;
     }
@@ -123,11 +124,11 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     @Override
     public void read(NBTTagCompound tagCompund) {
         super.read(tagCompund);
-        if (tagCompund.hasKey("level")) {
-            setLevel(tagCompund.getInteger("level"));
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
         }
-        if (tagCompund.hasKey("type")) {
-            getDataManager().set(TYPE, tagCompund.getInteger("type"));
+        if (tagCompund.contains("type")) {
+            getDataManager().set(TYPE, tagCompund.getInt("type"));
             getDataManager().set(NAME, tagCompund.getString("name"));
             getDataManager().set(TEXTURE, tagCompund.getString("texture"));
         }
@@ -152,10 +153,10 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     @Override
     public void writeAdditional(NBTTagCompound nbt) {
         super.writeAdditional(nbt);
-        nbt.setInteger("level", getLevel());
-        nbt.setInteger("type", getHunterType());
-        nbt.setString("texture", getDataManager().get(TEXTURE));
-        nbt.setString("name", getDataManager().get(NAME));
+        nbt.putInt("level", getLevel());
+        nbt.putInt("type", getHunterType());
+        nbt.putString("texture", getDataManager().get(TEXTURE));
+        nbt.putString("name", getDataManager().get(NAME));
     }
 
     @Override
@@ -166,7 +167,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    protected boolean canDespawn() {
+    public boolean canDespawn() {
         return isLookingForHome() && super.canDespawn();
     }
 
@@ -212,8 +213,8 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
 
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH + Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_SPEED);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH + Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH_PL * l);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE_PL * l);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_SPEED);
     }
 }

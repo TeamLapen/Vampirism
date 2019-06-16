@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.hunter;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -8,6 +7,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -18,8 +19,9 @@ import java.util.function.Predicate;
 @Deprecated
 class HunterPlayerDefaultImpl implements IHunterPlayer {
 
+    private final static Logger LOGGER = LogManager.getLogger(HunterPlayerDefaultImpl.class);
     public HunterPlayerDefaultImpl() {
-        VampirismMod.log.e("HunterPlayerCapability", "Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
+        LOGGER.error("Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
 
     }
 

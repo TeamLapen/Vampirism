@@ -18,9 +18,9 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,6 +30,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -154,7 +155,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
-    public EnumCreatureAttribute getCreatureAttribute() {
+    public CreatureAttribute getCreatureAttribute() {
         return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
@@ -219,7 +220,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         }
         if (!world.isRemote) {
             if (isGettingSundamage() && ticksExisted % 40 == 11) {
-                double dmg = getEntityAttribute(VReference.sunDamage).getAttributeValue();
+                double dmg = getAttribute(VReference.sunDamage).getValue();
                 if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
             }
             if (isGettingGarlicDamage() != EnumStrength.NONE) {
@@ -227,7 +228,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
             }
         }
         if (!this.world.isRemote) {
-            if (isEntityAlive() && isInWater()) {
+            if (isAlive() && isInWater()) {
                 setAir(300);
                 if (ticksExisted % 16 == 4) {
                     addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 80, 0));

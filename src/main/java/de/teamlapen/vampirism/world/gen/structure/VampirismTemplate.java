@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.world.gen.structure;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.SRGNAMES;
-
 import net.minecraft.block.BlockChest;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
@@ -13,13 +11,15 @@ import net.minecraft.world.gen.feature.template.ITemplateProcessor;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-
-import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class VampirismTemplate extends Template {
 
+    private static final Logger LOGGER = LogManager.getLogger(VampirismTemplate.class);
     private ResourceLocation lootTable;
 
 
@@ -39,7 +39,7 @@ public class VampirismTemplate extends Template {
                 }
             }
             if (!flag) {
-                VampirismMod.log.w("VampirismTemplate", "Loot Table (%s) specified but no chest found", lootTable);
+                LOGGER.warn("Loot Table (%s) specified but no chest found", lootTable);
             }
         }
     }

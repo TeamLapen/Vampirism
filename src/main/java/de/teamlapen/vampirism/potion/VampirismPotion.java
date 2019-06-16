@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.potion;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
@@ -46,10 +47,10 @@ public class VampirismPotion extends Potion {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderInventoryEffect(int x, int y, PotionEffect effect, Minecraft mc) {
+    public void renderInventoryEffect(PotionEffect effect, Gui gui, int x, int y, float z) {
         int index = getStatusIconIndex();
         if (index >= 0) {
-            mc.getTextureManager().bindTexture(ICONS);
+            Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
             UtilLib.drawTexturedModalRect(0, x + 6, y + 7, index % 8 * 18, index / 8 * 18, 18, 18, ICON_TEXTURE_WIDTH, ICON_TEXTURE_HEIGHT);
         }
     }

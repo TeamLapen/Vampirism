@@ -1,10 +1,11 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.EntityCreature;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 
@@ -14,8 +15,9 @@ import javax.annotation.Nullable;
 @Deprecated
 class ExtendedCreatureDefaultImpl implements IExtendedCreatureVampirism {
 
+    private final static Logger LOGGER = LogManager.getLogger(ExtendedCreatureDefaultImpl.class);
     public ExtendedCreatureDefaultImpl() {
-        VampirismMod.log.e("ExtendedCreatureCapability", "Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
+        LOGGER.error("Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
 
     }
 

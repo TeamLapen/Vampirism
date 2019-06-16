@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -109,7 +110,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     public
     @Nullable
     IConvertedCreature convert(EntityCreature entity) {
-        ResourceLocation id = EntityList.getKey(entity);
+        ResourceLocation id = new ResourceLocation(entity.getEntityString());
         BiteableEntry b = biteableEntryManager.get(id);
         if (b != null && b.convertingHandler != null) {
             return b.convertingHandler.createFrom(entity);

@@ -48,11 +48,11 @@ public class ModParticles {
             @Override
             public NBTTagCompound createParticleInfo(Object... param) {
                 NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setInteger("0", (Integer) param[0]);
-                nbt.setInteger("1", (Integer) param[1]);
-                nbt.setInteger("2", (Integer) param[2]);
+                nbt.putInt("0", (Integer) param[0]);
+                nbt.putInt("1", (Integer) param[1]);
+                nbt.putInt("2", (Integer) param[2]);
                 if (param.length > 3) {
-                    nbt.setDouble("3", (Double) param[3]);
+                    nbt.putDouble("3", (Double) param[3]);
                 }
                 return nbt;
             }
@@ -60,10 +60,10 @@ public class ModParticles {
             @Nonnull
             @Override
             public Object[] readParticleInfo(NBTTagCompound nbt) {
-                Object[] data = new Object[nbt.hasKey("3") ? 4 : 3];
-                data[0] = nbt.getInteger("0");
-                data[1] = nbt.getInteger("1");
-                data[2] = nbt.getInteger("2");
+                Object[] data = new Object[nbt.contains("3") ? 4 : 3];
+                data[0] = nbt.getInt("0");
+                data[1] = nbt.getInt("1");
+                data[2] = nbt.getInt("2");
                 if (data.length > 3) {
                     data[3] = nbt.getDouble("3");
                 }
@@ -85,12 +85,12 @@ public class ModParticles {
             @Override
             public NBTTagCompound createParticleInfo(Object... param) {
                 NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setDouble("0", (Double) param[0]);
-                nbt.setDouble("1", (Double) param[1]);
-                nbt.setDouble("2", (Double) param[2]);
-                nbt.setInteger("3", (Integer) param[3]);
+                nbt.putDouble("0", (Double) param[0]);
+                nbt.putDouble("1", (Double) param[1]);
+                nbt.putDouble("2", (Double) param[2]);
+                nbt.putInt("3", (Integer) param[3]);
                 if (param.length > 4) {
-                    nbt.setInteger("4", (Integer) param[4]);
+                    nbt.putInt("4", (Integer) param[4]);
                 }
                 return nbt;
             }
@@ -99,13 +99,13 @@ public class ModParticles {
             @OnlyIn(Dist.CLIENT)
             @Override
             public Object[] readParticleInfo(NBTTagCompound nbt) {
-                Object[] data = new Object[nbt.hasKey("4") ? 5 : 4];
+                Object[] data = new Object[nbt.contains("4") ? 5 : 4];
                 data[0] = nbt.getDouble("0");
                 data[1] = nbt.getDouble("1");
                 data[2] = nbt.getDouble("2");
-                data[3] = nbt.getInteger("3");
+                data[3] = nbt.getInt("3");
                 if (data.length > 4) {
-                    data[4] = nbt.getInteger("4");
+                    data[4] = nbt.getInt("4");
                 }
                 return data;
             }
@@ -121,8 +121,8 @@ public class ModParticles {
             @Override
             public NBTTagCompound createParticleInfo(Object... param) {
                 NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setInteger("0", ((Entity) param[0]).getEntityId());
-                nbt.setBoolean("1", (Boolean) param[1]);
+                nbt.putInt("0", ((Entity) param[0]).getEntityId());
+                nbt.putBoolean("1", (Boolean) param[1]);
                 return nbt;
             }
 
@@ -130,7 +130,7 @@ public class ModParticles {
             @OnlyIn(Dist.CLIENT)
             @Override
             public Object[] readParticleInfo(NBTTagCompound nbt) {
-                int i = nbt.getInteger("0");
+                int i = nbt.getInt("0");
                 World world = Minecraft.getInstance().world;
                 if (world == null) return null;
                 Entity e = world.getEntityByID(i);
@@ -195,9 +195,9 @@ public class ModParticles {
             @Override
             public NBTTagCompound createParticleInfo(Object... param) {
                 NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setDouble("0", (Double) param[0]);
-                nbt.setDouble("1", (Double) param[1]);
-                nbt.setDouble("2", (Double) param[2]);
+                nbt.putDouble("0", (Double) param[0]);
+                nbt.putDouble("1", (Double) param[1]);
+                nbt.putDouble("2", (Double) param[2]);
                 return nbt;
             }
 

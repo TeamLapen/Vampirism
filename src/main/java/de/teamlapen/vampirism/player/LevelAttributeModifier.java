@@ -6,6 +6,8 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +18,7 @@ import java.util.UUID;
  */
 public class LevelAttributeModifier {
 
-    private static final String TAG = "LevelAttributeModifier";
+    private final static Logger LOGGER = LogManager.getLogger(LevelAttributeModifier.class);
 
     private static final Map<IAttribute, UUID> modifiers = new HashMap<>();
 
@@ -56,7 +58,7 @@ public class LevelAttributeModifier {
             return;
         }
         double m = calculateModifierValue(level, lcap, max, type);
-        IAttributeInstance instance = player.getEntityAttribute(attribute);
+        IAttributeInstance instance = player.getAttribute(attribute);
         rmMod(instance, mod);
         if (evenIntOnly) {
             m = Math.round(m / 2) * 2;

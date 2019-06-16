@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -58,14 +57,14 @@ public class HunterWeaponTableCraftingSlot extends Slot {
         int lava = 0;
         IBlockState blockState = world.getBlockState(pos);
         if (blockState.getBlock() instanceof BlockWeaponTable) {
-            lava = blockState.getValue(BlockWeaponTable.LAVA);
+            lava = blockState.get(BlockWeaponTable.LAVA);
         }
         HunterPlayer hunterPlayer = HunterPlayer.get(playerIn);
         IWeaponTableRecipe recipe = findMatchingRecipe(playerIn, hunterPlayer, lava);
         if (recipe != null && recipe.getRequiredLavaUnits() > 0) {
             lava = Math.max(0, lava - recipe.getRequiredLavaUnits());
             if (blockState.getBlock() instanceof BlockWeaponTable) {
-                world.setBlockState(pos, blockState.withProperty(BlockWeaponTable.LAVA, lava));
+                world.setBlockState(pos, blockState.with(BlockWeaponTable.LAVA, lava));
             }
         }
         NonNullList<ItemStack> remaining = recipe == null ? playerIn.world.getRecipeManager().getRemainingItems(this.craftMatrix, playerIn.world, ModRecipes.WEAPONTABLE_CRAFTING_TYPE) : recipe.getRemainingItems(this.craftMatrix);

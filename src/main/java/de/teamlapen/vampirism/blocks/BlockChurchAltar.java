@@ -64,7 +64,7 @@ public class BlockChurchAltar extends VampirismBlock {
             if (ModItems.holy_salt_water.equals(heldItem.getItem())) {
                 if (world.isRemote) return true;
                 boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && ((IHunterPlayer) handler.getCurrentFactionPlayer()).getSkillHandler().isSkillEnabled(HunterSkills.holy_water_enhanced);
-                ItemStack newStack = new ItemStack(enhanced ? ModItems.holy_water_bottle_enhanced : ModItems.holy_water_bottle, heldItem.getCount());
+                ItemStack newStack = new ItemStack(enhanced ? ModItems.holy_water_bottle_enhanced : ModItems.holy_water_bottle_normal, heldItem.getCount());
                 player.setHeldItem(hand, newStack);
                 return true;
             } else if (ModItems.pure_salt.equals(heldItem.getItem())) {
