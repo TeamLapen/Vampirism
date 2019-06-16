@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.dimension.Dimension;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -68,7 +69,7 @@ public class Configs {
     public static boolean disable_halloween_special;
 
     public static @Nonnull
-    int[] worldGenDimensions = new int[0];
+    Dimension[] worldGenDimensions = new Dimension[0];
 
     public static boolean autoConvertGlasBottles;
     private static Configuration main_config;

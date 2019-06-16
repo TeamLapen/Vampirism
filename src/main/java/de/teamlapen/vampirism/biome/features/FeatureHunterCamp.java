@@ -1,6 +1,10 @@
-package de.teamlapen.vampirism.world.gen;
+package de.teamlapen.vampirism.biome.features;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+<<<<<<< HEAD:src/main/java/de/teamlapen/vampirism/world/gen/FeatureHunterCamp.java
+=======
+import de.teamlapen.vampirism.biome.VampirismBiome;
+>>>>>>> b96bb8ad2cc711a78ea456644da279165f165594:src/main/java/de/teamlapen/vampirism/biome/features/FeatureHunterCamp.java
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -12,9 +16,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraftforge.fluids.IFluidBlock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,13 +33,13 @@ import java.util.Random;
 /**
  * Generate hunter camps
  */
-public class FeatureHunterCamp extends Feature {
+public class FeatureHunterCamp<C extends IFeatureConfig> extends Feature {
 
     private static final Logger LOGGER = LogManager.getLogger(FeatureHunterCamp.class);
     private IBlockState campfire_blockstate;
 
 
-    FeatureHunterCamp() {
+    public FeatureHunterCamp() {
         super();
         campfire_blockstate = ModBlocks.fire_place.getDefaultState();
     }
@@ -43,8 +51,8 @@ public class FeatureHunterCamp extends Feature {
      * @return
      */
     @Override
-    public boolean generate(World worldIn, Random rand, BlockPos position) {
-        if (worldIn.getBiomeForCoordsBody(position).getHeightVariation() < 0.3 && rand.nextInt(6) == 0) {
+    public boolean place(IWorld worldIn, IChunkGenerator generator, Random rand, BlockPos position, IFeatureConfig config) {
+        if (worldIn.getWorld().getBiome(position).getScale() < 0.3 && rand.nextInt(6) == 0) {
             int r = rand.nextInt(2);
             int r1 = rand.nextInt(2);
             int r2 = rand.nextInt(2);
@@ -63,19 +71,19 @@ public class FeatureHunterCamp extends Feature {
                 placeTent(worldIn, rand, pos2, EnumFacing.WEST);
                 placeTent(worldIn, rand, pos3, EnumFacing.NORTH);
                 placeTent(worldIn, rand, pos4, EnumFacing.SOUTH);
-                EntityAdvancedHunter hunter = new EntityAdvancedHunter(worldIn);
+                EntityAdvancedHunter hunter = new EntityAdvancedHunter(worldIn.getWorld());
                 AxisAlignedBB box = new AxisAlignedBB(center.add(-7, 0, -10), center.add(7, 1, 7));
-                UtilLib.spawnEntityInWorld(worldIn, box, hunter, 8, Collections.emptyList());
+                UtilLib.spawnEntityInWorld(worldIn.getWorld(), box, hunter, 8, Collections.emptyList());
                 hunter.setCampArea(box.grow(4, 5, 4));
-                if (VampirismWorldGen.debug)
+                if (VampirismBiome.debug)
                     LOGGER.info("Generated advanced hunter camp at %s", center);
                 return true;
             }
             return false;
         } else {
             BlockPos pos = position.add(rand.nextInt(16), 0, rand.nextInt(16));
-            boolean flag = placeTent(worldIn, rand, findSolidPos(worldIn, pos), EnumFacing.byHorizontalIndex(rand.nextInt(EnumFacing.HORIZONTALS.length)));
-            if (flag && VampirismWorldGen.debug)
+            boolean flag = placeTent(worldIn, rand, findSolidPos(worldIn, pos), EnumFacing.byHorizontalIndex(rand.nextInt(4)));
+            if (flag && VampirismBiome.debug)
                 LOGGER.info("Generated normal hunter camp at %s", pos);
             return flag;
         }
@@ -94,7 +102,7 @@ public class FeatureHunterCamp extends Feature {
 
         //Check temperature
         BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
-        pos = world.getHeight(pos);
+        pos = world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, pos);
         float t = biome.getTemperature(pos);
         if (t > 1.5F || t < 0.1F) return false;
 
@@ -122,20 +130,20 @@ public class FeatureHunterCamp extends Feature {
 
     }
 
-    private boolean checkGroundAndPos(World worldIn, BlockPos position, IBlockState ground) {
+    private boolean checkGroundAndPos(IWorld worldIn, BlockPos position, IBlockState ground) {
         if (worldIn.getBlockState(position).getMaterial().isLiquid()) return false;
         IBlockState b = worldIn.getBlockState(position.down());
         if (b.getMaterial().isLiquid() || b.getBlock() instanceof IFluidBlock) return false;
         if (ground != null && b.getMaterial().isReplaceable()) {
-            worldIn.setBlockState(position.down(), ground);
+            worldIn.setBlockState(position.down(), ground, 2);
             return true;
         }
-        return worldIn.isSideSolid(position.down(), EnumFacing.UP, false);
+        return worldIn.getWorld().isTopSolid(position.down());
     }
 
-    private BlockPos findSolidPos(World world, BlockPos position) {
+    private BlockPos findSolidPos(IWorld world, BlockPos position) {
         Material material;
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(world.getHeight(position).up(30));
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, position).up(30));
         while (((material = world.getBlockState(pos).getMaterial()) == Material.LEAVES || material == Material.PLANTS || world.isAirBlock(pos)) && pos.getY() > 50) {
             pos.move(EnumFacing.DOWN);
         }
@@ -143,23 +151,22 @@ public class FeatureHunterCamp extends Feature {
     }
 
 
-    private boolean placeFire(World worldIn, BlockPos position) {
+    private boolean placeFire(IWorld worldIn, BlockPos position) {
         if (checkGroundAndPos(worldIn, position, null)) {
-            setBlockAndNotifyAdequately(worldIn, position, campfire_blockstate);
+            setBlockState(worldIn, position, campfire_blockstate);
             return true;
         }
         return false;
     }
 
-    private boolean placeTent(World worldIn, Random rand, BlockPos position, EnumFacing facing) {
+    private boolean placeTent(IWorld worldIn, Random rand, BlockPos position, EnumFacing facing) {
 
         IBlockState ground = worldIn.getBlockState(position.down());
-        if (ground.getBlock().isSideSolid(ground, worldIn, position.down(), EnumFacing.UP)) {
+        if (ground.isTopSolid()) {
 
-
-            BlockPos tl = worldIn.getHeight(position.offset(facing).offset(facing.rotateYCCW()));
-            BlockPos bl = worldIn.getHeight(position.offset(facing.rotateYCCW()));
-            BlockPos tr = worldIn.getHeight(position.offset(facing));
+            BlockPos tl = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, position.offset(facing).offset(facing.rotateYCCW()));
+            BlockPos bl = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, position.offset(facing.rotateYCCW()));
+            BlockPos tr = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, position.offset(facing));
             if (Math.abs(tl.getY() - position.getY()) < 2 && Math.abs(bl.getY() - position.getY()) < 2 && Math.abs(tr.getY() - position.getY()) < 2) {
                 tl = new BlockPos(tl.getX(), position.getY(), tl.getZ());
                 bl = new BlockPos(bl.getX(), position.getY(), bl.getZ());
@@ -173,10 +180,10 @@ public class FeatureHunterCamp extends Feature {
                 worldIn.removeBlock(entrance1);
                 worldIn.removeBlock(entrance2);
                 if (rand.nextInt(3) == 0) {
-                    this.setBlockAndNotifyAdequately(worldIn, worldIn.getHeight(entrance1.offset(facing.getOpposite())), Blocks.CRAFTING_TABLE.getDefaultState());
+                    this.setBlockState(worldIn, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, entrance1.offset(facing.getOpposite())), Blocks.CRAFTING_TABLE.getDefaultState());
                 }
                 if (rand.nextInt(3) == 0) {
-                    this.setBlockAndNotifyAdequately(worldIn, worldIn.getHeight(entrance2.offset(facing.getOpposite())), Blocks.TORCH.getDefaultState());
+                    this.setBlockState(worldIn, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, entrance2.offset(facing.getOpposite())), Blocks.TORCH.getDefaultState());
                 }
 
                 return true;

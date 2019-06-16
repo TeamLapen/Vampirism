@@ -15,6 +15,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -32,7 +33,7 @@ public class ItemTent extends VampirismItem {
 
     private final boolean spawner;
 
-    public static boolean placeAt(World world, BlockPos pos, EnumFacing dir, boolean force, boolean spawner) {
+    public static boolean placeAt(IWorld world, BlockPos pos, EnumFacing dir, boolean force, boolean spawner) {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
@@ -64,7 +65,7 @@ public class ItemTent extends VampirismItem {
         return false;
     }
 
-    private static boolean canPlaceAt(IBlockState state, Block block, World world, int x, int y, int z) {
+    private static boolean canPlaceAt(IBlockState state, Block block, IWorld world, int x, int y, int z) {
         return block.isValidPosition(state, world, new BlockPos(x, y, z));
     }
 
