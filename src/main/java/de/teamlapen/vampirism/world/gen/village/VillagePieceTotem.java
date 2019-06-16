@@ -11,25 +11,26 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.structure.StructureComponent;
-import net.minecraft.world.gen.structure.StructureVillagePieces;
-import net.minecraft.world.gen.structure.template.TemplateManager;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraft.world.gen.feature.structure.VillagePieces;
+import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 
 import java.util.List;
 import java.util.Random;
 
 
-public class VillagePieceTotem extends StructureVillagePieces.Village {
+public class VillagePieceTotem extends VillagePieces.Village {
 
     private boolean forceHunter = false;
 
     public VillagePieceTotem() {
     }
 
-    public VillagePieceTotem(StructureVillagePieces.Start start, int type, MutableBoundingBox boundingBox, EnumFacing facing, boolean forceHunter) {
+    public VillagePieceTotem(VillagePieces.Start start, int type, MutableBoundingBox boundingBox, EnumFacing facing, boolean forceHunter) {
         super(start, type);
         this.setCoordBaseMode(facing);//Set facing
         this.boundingBox = boundingBox;
@@ -37,7 +38,7 @@ public class VillagePieceTotem extends StructureVillagePieces.Village {
     }
 
     @Override
-    public boolean addComponentParts(World worldIn, Random randomIn, MutableBoundingBox structureBoundingBoxIn) {
+    public boolean addComponentParts(IWorld worldIn, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos p_74875_4_) {
         if (this.averageGroundLvl < 0) {
             this.averageGroundLvl = this.getAverageGroundLevel(worldIn, structureBoundingBoxIn);
 
@@ -50,7 +51,7 @@ public class VillagePieceTotem extends StructureVillagePieces.Village {
 
         IBlockState sand_path = getBiomeSpecificBlockState(Blocks.SANDSTONE.getDefaultState());
         IBlockState grass_path = this.getBiomeSpecificBlockState(Blocks.GRASS_PATH.getDefaultState());
-        IBlockState plank_path = this.getBiomeSpecificBlockState(Blocks.PLANKS.getDefaultState());
+        IBlockState plank_path = this.getBiomeSpecificBlockState(Blocks.OAK_PLANKS.getDefaultState()); //TODO possible needs more planks reference
         IBlockState cobble = this.getBiomeSpecificBlockState(Blocks.COBBLESTONE.getDefaultState());
 
 
@@ -87,39 +88,39 @@ public class VillagePieceTotem extends StructureVillagePieces.Village {
     }
 
     @Override
-    public void buildComponent(StructureComponent componentIn, List<StructureComponent> listIn, Random rand) { //TODO Make StructureFeature
-        StructureVillagePieces.generateAndAddRoadPiece((StructureVillagePieces.Start) componentIn, listIn, rand, this.boundingBox.minX - 1, this.boundingBox.maxY - 4, this.boundingBox.minZ, EnumFacing.WEST, this.getComponentType());
-        StructureVillagePieces.generateAndAddRoadPiece((StructureVillagePieces.Start) componentIn, listIn, rand, this.boundingBox.maxX + 1, this.boundingBox.maxY - 4, this.boundingBox.minZ, EnumFacing.EAST, this.getComponentType());
-        StructureVillagePieces.generateAndAddRoadPiece((StructureVillagePieces.Start) componentIn, listIn, rand, this.boundingBox.minX, this.boundingBox.maxY - 4, this.boundingBox.minZ - 1, EnumFacing.NORTH, this.getComponentType());
-        StructureVillagePieces.generateAndAddRoadPiece((StructureVillagePieces.Start) componentIn, listIn, rand, this.boundingBox.minX, this.boundingBox.maxY - 4, this.boundingBox.maxZ + 1, EnumFacing.SOUTH, this.getComponentType());
+    public void buildComponent(StructurePiece componentIn, List<StructurePiece> listIn, Random rand) { //TODO possible source of error
+        getNextComponentNN((VillagePieces.Start) componentIn, listIn, rand, -4, 0);
+        getNextComponentPP((VillagePieces.Start) componentIn, listIn, rand, -4, 0);
+        getNextComponentNN((VillagePieces.Start) componentIn, listIn, rand, -4, 0);
+        getNextComponentPP((VillagePieces.Start) componentIn, listIn, rand, -4, 0);
     }
 
     @Override
-    protected void readStructureFromNBT(NBTTagCompound tagCompound, TemplateManager p_143011_2_) {
-        super.readStructureFromNBT(tagCompound, p_143011_2_);
-        if (tagCompound.hasKey("force_hunter")) {
+    protected void readAdditional(NBTTagCompound tagCompound, TemplateManager p_143011_2_) {
+        super.readAdditional(tagCompound, p_143011_2_);
+        if (tagCompound.contains("force_hunter")) {
             forceHunter = tagCompound.getBoolean("force_hunter");
         }
     }
 
     @Override
-    protected void writeStructureToNBT(NBTTagCompound tagCompound) {
-        super.writeStructureToNBT(tagCompound);
-        tagCompound.setBoolean("force_hunter", forceHunter);
+    protected void writeAdditional(NBTTagCompound tagCompound) {
+        super.writeAdditional(tagCompound);
+        tagCompound.putBoolean("force_hunter", forceHunter);
     }
 
     public static class CreationHandler implements VillagerRegistry.IVillageCreationHandler {
 
         @Override
-        public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
+        public VillagePieces.Village buildComponent(VillagePieces.PieceWeight villagePiece, VillagePieces.Start startPiece, List<StructurePiece> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
             MutableBoundingBox structureBoundingBox = MutableBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 2, 4, 2, facing);
             boolean forceHunter = false;
-            for (StructureComponent c : pieces) {
+            for (StructurePiece c : pieces) {
                 if (c instanceof VillagePieceTrainer) {
                     forceHunter = true;
                 }
             }
-            return canVillageGoDeeper(structureBoundingBox) && StructureComponent.findIntersecting(pieces, structureBoundingBox) == null ? new VillagePieceTotem(startPiece, p5, structureBoundingBox, facing, forceHunter) : null;
+            return canVillageGoDeeper(structureBoundingBox) && StructurePiece.findIntersecting(pieces, structureBoundingBox) == null ? new VillagePieceTotem(startPiece, p5, structureBoundingBox, facing, forceHunter) : null;
 
         }
 
@@ -129,8 +130,8 @@ public class VillagePieceTotem extends StructureVillagePieces.Village {
         }
 
         @Override
-        public StructureVillagePieces.PieceWeight getVillagePieceWeight(Random random, int i) {
-            return new StructureVillagePieces.PieceWeight(VillagePieceTotem.class, 20, random.nextInt(2) == 1 ? 1 : 0);
+        public VillagePieces.PieceWeight getVillagePieceWeight(Random random, int i) {
+            return new VillagePieces.PieceWeight(VillagePieceTotem.class, 20, random.nextInt(2) == 1 ? 1 : 0);
         }
     }
 }
