@@ -65,8 +65,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -202,7 +202,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             LOGGER.warn("Player can't bite in spectator mode");
             return;
         }
-        double dist = player.getAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1;
+        double dist = player.getAttribute(EntityPlayer.REACH_DISTANCE).getValue() + 1;
         if (player.getDistanceSq(pos) > dist * dist) {
             LOGGER.warn("Block sent by client is not in reach" + pos);
         } else {
@@ -227,7 +227,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             return;
         }
         if (e instanceof EntityLivingBase) {
-            if (e.getDistance(player) <= player.getAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
+            if (e.getDistance(player) <= player.getAttribute(EntityPlayer.REACH_DISTANCE).getValue() + 1) {
                 feed_victim_bite_type = determineBiteType((EntityLivingBase) e);
                 if (feed_victim_bite_type == BITE_TYPE.ATTACK || feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER || feed_victim_bite_type == BITE_TYPE.HUNTER_CREATURE) {
                     biteAttack((EntityLivingBase) e, feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER);
@@ -823,7 +823,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         try {
             if (reflectionMethodSetSize == null) {
-                reflectionMethodSetSize = ReflectionHelper.findMethod(Entity.class, "setSize", SRGNAMES.Entity_setSize, float.class, float.class);
+                reflectionMethodSetSize = ObfuscationReflectionHelper.findMethod(Entity.class, SRGNAMES.Entity_setSize, float.class, float.class);
             }
             reflectionMethodSetSize.invoke(player, width, height);
             return true;

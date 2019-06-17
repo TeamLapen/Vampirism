@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.tileentity.TileEntityType;
@@ -168,7 +169,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterEntities(RegistryEvent.Register<EntityEntry> event) {
+    public void onRegisterEntities(RegistryEvent.Register<EntityType<?>> event) {
 
         ModEntities.registerEntities(event.getRegistry());
     }
