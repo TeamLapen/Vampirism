@@ -17,8 +17,12 @@ import net.minecraft.util.DamageSource;
 public class EnchantmentVampireSlayer extends Enchantment {
     public EnchantmentVampireSlayer(Rarity rarityIn) {
         super(rarityIn, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[]{EntityEquipmentSlot.MAINHAND});
-        this.setName("vampirism.vampire_slayer");
         this.setRegistryName(REFERENCE.MODID, "vampireslayer");
+    }
+
+    @Override
+    protected String getDefaultTranslationKey() {
+        return "vampirism.vampire_slayer";
     }
 
     @Override

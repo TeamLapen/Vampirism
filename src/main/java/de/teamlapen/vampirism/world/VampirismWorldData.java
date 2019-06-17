@@ -82,7 +82,7 @@ public class VampirismWorldData extends WorldSavedData {
     public void read(NBTTagCompound nbt) {
         if (nbt.contains("vampire_dungeons")) {
             vampireDungeons.clear();
-            NBTTagList dungeons = nbt.getTagList("vampire_dungeons", 10);
+            NBTTagList dungeons = nbt.getList("vampire_dungeons", 10);
             for (int i = 0; i < dungeons.tagCount(); i++) {
                 NBTTagCompound tag = dungeons.getCompoundTagAt(i);
                 vampireDungeons.add(NBTUtil.getPosFromTag(tag));

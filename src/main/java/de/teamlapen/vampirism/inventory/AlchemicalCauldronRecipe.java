@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
@@ -214,13 +215,13 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
         NBTTagCompound nbt = stack.getTag();
         if (nbt == null) nbt = new NBTTagCompound();
         NBTTagCompound display = nbt.contains("display", 10) ? nbt.getCompound("display") : new NBTTagCompound();
-        NBTTagList lore = nbt.contains("Lore", 0) ? nbt.getTagList("Lore", 9) : new NBTTagList();
-        lore.appendTag(new NBTTagString(UtilLib.translate("text.vampirism.liquid_container")));
+        NBTTagList lore = nbt.contains("Lore", 0) ? nbt.getList("Lore", 9) : new NBTTagList();
+        lore.add(new NBTTagString(UtilLib.translate("text.vampirism.liquid_container")));
         display.put("Lore", lore);
         nbt.put("display", display);
         stack.setTag(nbt);
 
         stack.addEnchantment(Enchantments.UNBREAKING, 1);
-        stack.setStackDisplayName(fluidStack.getLocalizedName() + ": " + fluidStack.amount + "mB");
+        stack.setDisplayName(new TextComponentString(fluidStack.getLocalizedName() + ": " + fluidStack.amount + "mB"));
     }
 }

@@ -160,8 +160,8 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.updateEntityAttributes();
 
     }

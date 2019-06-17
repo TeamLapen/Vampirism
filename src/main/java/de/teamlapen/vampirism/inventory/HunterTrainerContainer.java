@@ -16,13 +16,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.oredict.OreDictionary;
+
+import javax.annotation.Nullable;
 
 /**
  * Container which handles hunter levelup at an hunter trainer
  */
 public class HunterTrainerContainer extends InventoryContainer {
-    private final static Item[] items = new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, ModItems.hunter_intel};
+    private final static Item[] items = new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, ModItems.hunter_intel_0};
     private final EntityPlayer player;
     private boolean changed = false;
     private ItemStack missing = ItemStack.EMPTY;
@@ -110,12 +113,18 @@ public class HunterTrainerContainer extends InventoryContainer {
 
         @Override
         public ITextComponent getName() {
-            return "entity.vampirism." + ModEntities.HUNTER_TRAINER + ".name";
+            return new TextComponentString("entity.vampirism." + ModEntities.HUNTER_TRAINER + ".name");
         }
 
         @Override
         public boolean isEmpty() {
             return false;
+        }
+
+        @Nullable
+        @Override
+        public ITextComponent getCustomName() {
+            return null;//TODO not null?
         }
     }
 }

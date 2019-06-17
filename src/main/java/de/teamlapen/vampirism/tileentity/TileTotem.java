@@ -43,6 +43,7 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.village.Village;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.dimension.Dimension;
@@ -267,8 +268,7 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     @Nullable
-    @Override
-    public ITextComponent getDisplayName() {
+    public ITextComponent getDisplayName() { //TODO the method doesnt exist anymore
         if (capturingFaction != null) {
             return new TextComponentTranslation("text.vampirism.village.faction_capturing", new TextComponentTranslation(capturingFaction.getTranslationKeyPlural()));
         } else if (controllingFaction != null) {
@@ -895,16 +895,31 @@ public class TileTotem extends TileEntity implements ITickable {
         if (entityToReplace != null) {
             newEntity.copyLocationAndAnglesFrom(entityToReplace);
         } else {
+            if (!(newEntity instanceof EntityLiving)) return false;
             VampirismVillage village = this.getVillage();
             if (village == null) return false;
-            Vec3d vec = village.getVillage().findRandomSpawnPos(village.getVillage().getCenter(), 2, 3, 2);
-            if (vec == null) return false;
-            if (!world.isAirBlock(new BlockPos(vec))) vec = vec.add(0, 1, 0);
-            newEntity.setPosition(vec.x, vec.y, vec.z);
+            BlockPos pos = findRandomSpawnPos(village.getVillage(), (EntityLiving) newEntity);
+            if (pos == null) return false;
+            if (!world.isAirBlock(pos)) pos = pos.add(0, 1, 0);
+            newEntity.setPosition(pos.getX(), pos.getY(), pos.getZ());
         }
         if (entityToReplace != null) world.removeEntity(entityToReplace);
         world.spawnEntity(newEntity);
         return true;
+    }
+
+    private BlockPos findRandomSpawnPos(Village village, EntityLiving entity) {
+        for (int i = 0; i < 10; ++i) {
+            BlockPos blockpos = village.getCenter().add(this.world.rand.nextInt(16) - 8, this.world.rand.nextInt(6) - 3, this.world.rand.nextInt(16) - 8);
+            if (village.isBlockPosWithinSqVillageRadius(blockpos)) {
+                if (entity != null) {
+                    if (entity.canSpawn(this.world, false) && entity.isNotColliding(this.world)) {
+                        return blockpos;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -925,7 +940,7 @@ public class TileTotem extends TileEntity implements ITickable {
             if (village == null) return false;
             newVillager.setHomePosAndDistance(village.getVillage().getCenter(), village.getVillage().getVillageRadius());
         }
-        newVillager.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(newVillager)), null);
+        newVillager.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(newVillager)), null, null);
         ExtendedCreature.get(newVillager).setPoisonousBlood(poisonousBlood);
         return true;
     }

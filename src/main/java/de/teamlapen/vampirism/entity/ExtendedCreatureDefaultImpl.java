@@ -70,7 +70,6 @@ class ExtendedCreatureDefaultImpl implements IExtendedCreatureVampirism {
 
     @Override
     public void tick() {
-
     }
 
     @Override

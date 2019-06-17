@@ -13,6 +13,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
 
@@ -68,7 +69,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
     }
 
     @Override
-    public List<ItemStack> onSheared(ItemStack item, IBlockReader world, BlockPos pos, int fortune) {
+    public List<ItemStack> onSheared(ItemStack item, IWorld world, BlockPos pos, int fortune) {
 
         this.setSheared(true);
         int i = 1 + this.rand.nextInt(3);

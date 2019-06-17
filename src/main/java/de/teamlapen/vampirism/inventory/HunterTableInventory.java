@@ -7,6 +7,8 @@ import net.minecraft.item.Item;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import javax.annotation.Nullable;
+
 /**
  * Inventory for the hunter table. Simply sets the inventory slots up and handles item (temporary) storage
  */
@@ -25,5 +27,9 @@ public class HunterTableInventory extends SimpleInventory {
         return new TextComponentTranslation(ModBlocks.hunter_table.getTranslationKey());
     }
 
-
+    @Nullable
+    @Override
+    public ITextComponent getCustomName() {
+        return null;//TODO not null?
+    }
 }

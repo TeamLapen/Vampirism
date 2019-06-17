@@ -211,7 +211,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void livingTick() {
         if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
             isGettingGarlicDamage(true);
         }
@@ -235,7 +235,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
                 }
             }
         }
-        super.onLivingUpdate();
+        super.livingTick();
     }
 
     @Override
@@ -250,8 +250,8 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
@@ -275,7 +275,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     protected void onDeathUpdate() {
         if (this.deathTime == 19) {
             if (!this.world.isRemote && (dropSoul && this.world.getGameRules().getBoolean("doMobLoot"))) {
-                this.world.spawnEntity(new EntitySoulOrb(this.world, this.posX, this.posY, this.posZ, EntitySoulOrb.TYPE.VAMPIRE));
+                this.world.spawnEntity(new EntitySoulOrb(this.world, this.posX, this.posY, this.posZ, EntitySoulOrb.VARIANT.VAMPIRE));
             }
         }
         super.onDeathUpdate();

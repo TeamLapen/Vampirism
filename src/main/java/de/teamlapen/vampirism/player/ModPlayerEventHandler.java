@@ -99,7 +99,7 @@ public class ModPlayerEventHandler {
         HunterPlayer hunter = HunterPlayer.get(event.getEntityPlayer());
         if (vampire.getSpecialAttributes().bat || hunter.getSpecialAttributes().isDisguised()) {
             event.setCanceled(true);
-        } else if (ModBlocks.garlic_beacon.equals(event.getState().getBlock()) && vampire.getLevel() > 0) {
+        } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && vampire.getLevel() > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
         }
     }
@@ -177,7 +177,7 @@ public class ModPlayerEventHandler {
                     boolean convert = false;
                     if (glasBottle && block instanceof ITileEntityProvider) {
                         TileEntity entity = event.getWorld().getTileEntity(event.getPos());
-                        if (entity != null && entity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace())) {
+                        if (entity != null && entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace()) != null) {
                             net.minecraftforge.fluids.capability.IFluidHandler fluidHandler = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace());
                             FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.blood, 1000), false);
                             if (drain != null && drain.amount >= BloodBottleFluidHandler.MULTIPLIER) {
@@ -217,7 +217,7 @@ public class ModPlayerEventHandler {
             world.playEvent(null, 1009, pos, 0);
             world.removeBlock(pos);
             event.setCanceled(true);
-        } else if (ModBlocks.garlic_beacon.equals(state.getBlock()) && Helper.isVampire(event.getEntityPlayer())) {
+        } else if ((ModBlocks.garlic_beacon_normal.equals(state.getBlock()) || ModBlocks.garlic_beacon_weak.equals(state.getBlock()) || ModBlocks.garlic_beacon_improved.equals(state.getBlock())) && Helper.isVampire(event.getEntityPlayer())) {
             event.getEntityPlayer().addPotionEffect(new PotionEffect(ModPotions.garlic));
         }
     }

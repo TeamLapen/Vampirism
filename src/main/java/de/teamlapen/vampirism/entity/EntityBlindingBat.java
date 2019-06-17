@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -22,8 +23,8 @@ public class EntityBlindingBat extends EntityBat {
     }
 
     @Override
-    public boolean getCanSpawnHere() {
-        return this.world.checkNoEntityCollision(this.getBoundingBox()) && this.world.collidesWithAnyBlock(this.getEntityBoundingBox()) && !this.world.containsAnyLiquid(this.getEntityBoundingBox());
+    public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
+        return worldIn.checkNoEntityCollision(this, this.getBoundingBox()) && worldIn.isCollisionBoxesEmpty(this, this.getBoundingBox()) && worldIn.containsAnyLiquid(this.getBoundingBox()); //TODO eventually dublicated check (isCollisionBoxesEmpty
     }
 
     @Override

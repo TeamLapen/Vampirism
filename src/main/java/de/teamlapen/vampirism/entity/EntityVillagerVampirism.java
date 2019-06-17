@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -86,8 +87,8 @@ public class EntityVillagerVampirism extends EntityVillager {
     }
 
     @Override
-    public boolean getCanSpawnHere() {
-        return (peaceful || this.world.getDifficulty() != EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
+    public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
+        return (peaceful || this.world.getDifficulty() != EnumDifficulty.PEACEFUL) && super.canSpawn(worldIn, fromSpawner);
     }
 
     @Nullable

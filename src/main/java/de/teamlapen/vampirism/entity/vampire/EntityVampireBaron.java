@@ -164,7 +164,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     @Nonnull
     @Override
     public ITextComponent getName() {
-        return super.getName() + " " + UtilLib.translate("text.vampirism.entity_level") + " " + (getLevel() + 1);
+        return super.getName().appendText(" " + UtilLib.translate("text.vampirism.entity_level") + " " + (getLevel() + 1));//TODO is right?
     }
 
     @Override
@@ -184,7 +184,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     @Override
     public UUID getThePersistentID() {
-        return this.getPersistentID();
+        return this.entityUniqueID;
     }
 
     @Override
@@ -266,7 +266,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     public void readAdditional(NBTTagCompound nbt) {
         super.readAdditional(nbt);
         setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
-        minionHandler.loadMinions(nbt.getTagList("minions", 10));
+        minionHandler.loadMinions(nbt.getList("minions", 10));
     }
 
     @Override

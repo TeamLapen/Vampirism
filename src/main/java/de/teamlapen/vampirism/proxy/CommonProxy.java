@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
-import net.minecraftforge.fml.common.event.FMLStateEvent;
+
+import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 
 /**
  * Abstract proxy base for both client and server.
@@ -10,7 +11,7 @@ import net.minecraftforge.fml.common.event.FMLStateEvent;
  */
 public abstract class CommonProxy implements IProxy {
     @Override
-    public void onInitStep(Step step, FMLStateEvent event) {
+    public void onInitStep(Step step, ModLifecycleEvent event) {
     }
 
 

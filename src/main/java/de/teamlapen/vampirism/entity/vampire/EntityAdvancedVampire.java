@@ -30,6 +30,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -120,7 +121,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     @Override
     public ITextComponent getName() {
         String senderName = this.getDataManager().get(NAME);
-        return "none".equals(senderName) ? super.getName() : senderName;
+        return "none".equals(senderName) ? super.getName() : new TextComponentString(senderName);
     }
 
     @Nullable

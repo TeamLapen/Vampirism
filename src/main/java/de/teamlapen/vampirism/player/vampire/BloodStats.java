@@ -82,8 +82,8 @@ public class BloodStats implements IBloodStats {
         FoodStats foodStats = player.getFoodStats();
         foodStats.setFoodLevel(10);
         EnumDifficulty enumDifficulty = player.getEntityWorld().getDifficulty();
-        float exhaustion = foodStats.foodExhaustionLevel;
-        foodStats.foodExhaustionLevel = 0;
+        float exhaustion = foodStats.foodExhaustionLevel;//TODO foodExhaustionLevel is not readable
+        foodStats.foodExhaustionLevel = 0;//TODO foodExhaustionLevel is only additive edible
         addExhaustion(exhaustion);
         this.prevBloodLevel = bloodLevel;
         if (this.bloodExhaustionLevel > 4.0F) {

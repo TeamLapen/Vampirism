@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class EntityDummyBittenAnimal extends EntityLiving {
     public EntityDummyBittenAnimal(World p_i1595_1_) {
         super(p_i1595_1_);
-    }
+    }//TODO EntityType
 
     @Override
     public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {

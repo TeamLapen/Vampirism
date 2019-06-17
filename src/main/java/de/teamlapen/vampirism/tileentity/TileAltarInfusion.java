@@ -18,6 +18,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.Particles;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,6 +31,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -47,7 +49,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     private final static Logger LOGGER = LogManager.getLogger(TileAltarInfusion.class);
     private static final Item[] items = new Item[]{
-            ModItems.pure_blood, ModItems.human_heart, ModItems.vampire_book
+            ModItems.pure_blood_0, ModItems.human_heart, ModItems.vampire_book
     };
     private final int DURATION_TICK = 450;
     /**
@@ -138,7 +140,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     @Override
     public ITextComponent getName() {
-        return "tile.vampirism.altar_infusion.name";
+        return new TextComponentString("tile.vampirism.altar_infusion.name");
     }
 
     /**
@@ -295,7 +297,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 }
             } else {
                 this.world.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
-                this.world.addParticle(Particles.EXPLOSION_HUGE, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
+                this.world.addParticle(Particles.EXPLOSION, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);//TODO was Explosion_huge
             }
 
             player.addPotionEffect(new PotionEffect(ModPotions.saturation, 400, 2));
@@ -325,7 +327,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         ItemStack missing = InventoryHelper.checkItems(this, items, new int[]{requirements.blood, requirements.heart, requirements.vampireBook}, new int[]{requirements.getBloodMetaForCheck(), OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE});
         if (!missing.isEmpty()) {
             if (messagePlayer) {
-                ITextComponent item = missing.getItem().equals(ModItems.pure_blood) ? ModItems.pure_blood.getDisplayName(missing) : new TextComponentTranslation(missing.getTranslationKey() + ".name");
+                ITextComponent item = missing.getItem().equals(ModItems.pure_blood_0) ? ModItems.pure_blood_0.getDisplayName(missing) : new TextComponentTranslation(missing.getTranslationKey() + ".name");
                 ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", missing.getCount(), item);
                 player.sendMessage(main);
             }
@@ -369,7 +371,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             BlockAltarPillar.EnumPillarType type = null;
             IBlockState temp;
             while ((temp = getWorld().getBlockState(pPos.add(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
-                BlockAltarPillar.EnumPillarType t = temp.getValue(BlockAltarPillar.typeProperty);
+                BlockAltarPillar.EnumPillarType t = temp.get(BlockAltarPillar.typeProperty);
                 if (type == null) {
                     type = t;
                     j++;

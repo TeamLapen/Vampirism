@@ -21,7 +21,7 @@ import net.minecraftforge.oredict.OreDictionary;
  */
 public class HunterTableContainer extends InventoryContainer {
 
-    public final static Item[] items = new Item[]{Items.BOOK, ModItems.vampire_fang, ModItems.pure_blood, ModItems.vampire_book};
+    public final static Item[] items = new Item[]{Items.BOOK, ModItems.vampire_fang, ModItems.pure_blood_0, ModItems.vampire_book};
     private final HunterTableInventory inventory;
     private final SlotResult slotResult;
     private final int hunterLevel;
@@ -80,7 +80,7 @@ public class HunterTableContainer extends InventoryContainer {
             int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
             missing = checkItems(req[0], req[1], req[2], req[3]);
             if (missing.isEmpty()) {
-                slotResult.inventory.setInventorySlotContents(0, new ItemStack(ModItems.hunter_intel, 1, levelingConf.getHunterIntelMetaForLevel(hunterLevel + 1)));
+                slotResult.inventory.setInventorySlotContents(0, new ItemStack(ModItems.hunter_intel, 1, levelingConf.getHunterIntelMetaForLevel(hunterLevel + 1))); //TODO select hunterintel based on level(switch statement)
             } else {
                 slotResult.inventory.setInventorySlotContents(0, ItemStack.EMPTY);
             }

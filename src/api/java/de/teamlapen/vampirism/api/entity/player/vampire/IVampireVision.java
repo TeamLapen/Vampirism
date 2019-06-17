@@ -11,5 +11,5 @@ public interface IVampireVision {
 
     void onDeactivated(IVampirePlayer player);
 
-    void onUpdate(IVampirePlayer player);
+    void tick(IVampirePlayer player);
 }

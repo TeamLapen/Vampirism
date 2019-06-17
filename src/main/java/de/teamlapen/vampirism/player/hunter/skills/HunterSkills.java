@@ -15,6 +15,8 @@ import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -61,10 +63,10 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("tech_weapons", 240, 32, true));
         registry.register(new VampirismSkill.SimpleHunterSkill("stake1", 16, 32, false) {
             @Override
-            public String getDescription() {
-                String desc = UtilLib.translate("text.vampirism.skill.stake1.desc", (int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100));
+            public ITextComponent getDescription() {
+                TextComponentString desc = new TextComponentString(UtilLib.translate("text.vampirism.skill.stake1.desc", (int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100)));
                 if (Balance.hps.INSTANT_KILL_SKILL_1_FROM_BEHIND) {
-                    desc += " " + UtilLib.translate("text.vampirism.from_behind");
+                    desc.appendText(" " + UtilLib.translate("text.vampirism.from_behind"));
                 }
                 return desc;
             }
@@ -72,12 +74,12 @@ public class HunterSkills {
 
         registry.register(new VampirismSkill.SimpleHunterSkill("stake2", 224, 32, false) {
             @Override
-            public String getDescription() {
-                String desc = null;
+            public ITextComponent getDescription() {
+                TextComponentString desc = null;
                 if (Balance.hps.INSTANT_KILL_SKILL_2_ONLY_NPC) {
-                    desc = UtilLib.translate("text.vampirism.skill.stake2.desc_npc", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                    new TextComponentString(UtilLib.translate("text.vampirism.skill.stake2.desc_npc", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH));
                 } else {
-                    desc = UtilLib.translate("text.vampirism.skill.stake2.desc_all", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                    new TextComponentString(UtilLib.translate("text.vampirism.skill.stake2.desc_all", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH));
 
                 }
                 return desc;
@@ -90,8 +92,8 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_category_hint", 128, 32, true));
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", 80, 32, true) {
             @Override
-            public String getDescription() {
-                return UtilLib.translate("text.vampirism.skill.blood_potion_less_bad.desc");
+            public ITextComponent getDescription() {
+                return new TextComponentString(UtilLib.translate("text.vampirism.skill.blood_potion_less_bad.desc"));
             }
 
             @Override
@@ -113,8 +115,8 @@ public class HunterSkills {
         registry.register(attackSpeed);
         registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter) {
             @Override
-            public String getDescription() {
-                return UtilLib.translate("text.vampirism.skill.disguise_hunter.desc");
+            public ITextComponent getDescription() {
+                return new TextComponentString(UtilLib.translate("text.vampirism.skill.disguise_hunter.desc"));
             }
         });
         registry.register(new ActionSkill<IHunterPlayer>(new ResourceLocation("vampirism", "hunter_awareness"), HunterActions.awareness_hunter));

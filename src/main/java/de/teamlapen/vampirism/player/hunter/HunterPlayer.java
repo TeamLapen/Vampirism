@@ -24,6 +24,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -65,11 +66,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             @Override
             public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
                 return capability == CAP ? CAP.<T>cast(inst) : null;
-            }
-
-            @Override
-            public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-                return CAP.equals(capability);
             }
 
             @Override
@@ -149,7 +145,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     @Override
-    public void onChangedDimension(int from, int to) {
+    public void onChangedDimension(DimensionType from, DimensionType to) {
 
     }
 

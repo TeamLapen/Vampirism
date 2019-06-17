@@ -13,9 +13,13 @@ import net.minecraft.item.ItemStack;
 public class EnchantmentArrowFrugality extends Enchantment {
     public EnchantmentArrowFrugality(Rarity rarityIn) {
         super(rarityIn, VReference.CROSSBOW_ENCHANTMENT, new EntityEquipmentSlot[]{EntityEquipmentSlot.MAINHAND});
-        this.setName("vampirism.arrow_frugality");
         this.setRegistryName(REFERENCE.MODID, "crossbowfrugality");
 
+    }
+
+    @Override
+    protected String getDefaultTranslationKey() {
+        return "vampirism.arrow_frugality";
     }
 
     @Override

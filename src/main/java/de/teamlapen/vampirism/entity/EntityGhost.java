@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.world.loot.LootHandler;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.IMob;
@@ -50,8 +50,8 @@ public class EntityGhost extends EntityVampirism implements IMob {
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.GHOST_ATTACK_DAMAGE);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(Balance.mobProps.GHOST_FOLLOW_RANGE);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.GHOST_SPEED);
@@ -80,8 +80,7 @@ public class EntityGhost extends EntityVampirism implements IMob {
      * Ghost do not make any step sounds
      */
     @Override
-    protected void playStepSound(BlockPos p_180429_1_, Block p_180429_2_) {
+    protected void playStepSound(BlockPos pos, IBlockState blockIn) {
         return;
     }
-
 }

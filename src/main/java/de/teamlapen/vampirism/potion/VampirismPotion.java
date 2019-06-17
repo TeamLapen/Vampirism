@@ -24,7 +24,6 @@ public class VampirismPotion extends Potion {
     public VampirismPotion(String name, boolean badEffect, int potionColor) {
         super(badEffect, potionColor);
         this.setRegistryName(REFERENCE.MODID, name);
-        this.setPotionName("effect.vampirism." + name);
     }
 
 
@@ -35,11 +34,11 @@ public class VampirismPotion extends Potion {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderHUDEffect(int k, int l, PotionEffect effect, Minecraft mc, float alpha) {
+    public void renderHUDEffect(PotionEffect effect, Gui gui, int x, int y, float z, float alpha) {
         int index = getStatusIconIndex();
         if (index >= 0) {
-            mc.getTextureManager().bindTexture(ICONS);
-            UtilLib.drawTexturedModalRect(0, k + 3, l + 3, index % 8 * 18, index / 8 * 18, 18, 18, ICON_TEXTURE_WIDTH, ICON_TEXTURE_HEIGHT);
+            Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
+            UtilLib.drawTexturedModalRect(0, x + 3, y + 3, index % 8 * 18, index / 8 * 18, 18, 18, ICON_TEXTURE_WIDTH, ICON_TEXTURE_HEIGHT);
 
         }
 

@@ -42,8 +42,8 @@ public class EntityHunterTrainerDummy extends EntityVampirism {
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
@@ -51,7 +51,7 @@ public class EntityHunterTrainerDummy extends EntityVampirism {
     }
 
     @Override
-    protected boolean canDespawn() {
+    public boolean canDespawn() {
         return !hasHome() && super.canDespawn();
     }
 

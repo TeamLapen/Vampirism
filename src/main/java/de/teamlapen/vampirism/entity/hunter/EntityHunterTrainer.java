@@ -52,8 +52,8 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
     }
 
     @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
+    public void livingTick() {
+        super.livingTick();
         if (trainee != null && !(trainee.openContainer instanceof HunterTrainerContainer)) {
             this.trainee = null;
         }
@@ -66,8 +66,8 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);

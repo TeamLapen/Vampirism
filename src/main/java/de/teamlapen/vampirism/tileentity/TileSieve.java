@@ -101,7 +101,7 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
     }
 
     @Override
-    public void update() {
+    public void tick() {
         //Process content
         if (--cooldownProcess < 0) {
             cooldownProcess = 15;

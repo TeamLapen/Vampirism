@@ -40,7 +40,7 @@ public class EntityAIAttackRangedDarkBlood extends EntityAIBase {
     }
 
     @Override
-    public void updateTask() {
+    public void tick() {
         if (attackTime > 0) {
             attackTime--;
         } else {
@@ -82,7 +82,7 @@ public class EntityAIAttackRangedDarkBlood extends EntityAIBase {
      * Spawns the dark blood entity heading towards the target entity
      */
     protected void attack(EntityLivingBase target) {
-        Vec3d vec3d = target.getPositionVector().add(0, target.height * 0.6f, 0).subtract(entity.getPositionEyes(1f)).normalize();
+        Vec3d vec3d = target.getPositionVector().add(0, target.height * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
 
         EntityDarkBloodProjectile projectile = new EntityDarkBloodProjectile(entity.getEntityWorld(), entity.posX + vec3d.x * 0.3f, entity.posY + entity.getEyeHeight() * 0.9f, entity.posZ + vec3d.z * 0.3f, vec3d.x, vec3d.y, vec3d.z);
         projectile.shootingEntity = entity;

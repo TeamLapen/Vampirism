@@ -80,7 +80,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
 
     @Override
     public float getBlockPathWeight(BlockPos pos) {
-        float i = 0.5F - this.world.getLightBrightness(pos);
+        float i = 0.5F - this.world.getLight(pos);
         if (i > 0)
             return i;
         return 0.01F;

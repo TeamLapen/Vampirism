@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
@@ -34,7 +35,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
         double posX = shooter.posX - Math.sin(yaw) * centerOffset;
         double posZ = shooter.posZ + Math.cos(yaw) * centerOffset;
         EntityCrossbowArrow entityArrow = new EntityCrossbowArrow(world, posX, shooter.posY + (double) shooter.getEyeHeight() - 0.10000000149011612D + heightOffset, posZ, arrow);
-        entityArrow.shootingEntity = shooter;
+        entityArrow.shootingEntity = shooter.getUniqueID();
         if (shooter instanceof EntityPlayer) {
             entityArrow.pickupStatus = EntityArrow.PickupStatus.ALLOWED;
         }
@@ -48,7 +49,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
 
     public EntityCrossbowArrow(World world) {
         super(world);
-    }
+    }//TODO EntityType
 
 
     /**
@@ -92,7 +93,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
             if (ignoreHurtTimer && living.hurtResistantTime > 0) {
                 living.hurtResistantTime = 0;
             }
-            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.shootingEntity);
+            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.world instanceof WorldServer ? ((WorldServer) this.world).getEntityFromUuid(this.shootingEntity) : null); //TODO server only
         }
     }
 
@@ -106,7 +107,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
         if (raytraceResultIn.entity == null) {
             Item item = arrowStack.getItem();
             if (item instanceof IVampirismCrossbowArrow) {
-                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.shootingEntity);
+                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.world instanceof WorldServer ? ((WorldServer) this.world).getEntityFromUuid(this.shootingEntity) : null);//TODO server only
             }
         }
         super.onHit(raytraceResultIn);

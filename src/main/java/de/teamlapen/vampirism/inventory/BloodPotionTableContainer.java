@@ -13,6 +13,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -31,7 +32,7 @@ public class BloodPotionTableContainer extends Container {
     private final World world;
     private final int max_crafting_time;
     private final boolean portable;
-    private final IInventory inventory = new InventoryBasic("vampirism.blood_potion_table", false, 4);
+    private final IInventory inventory = new InventoryBasic(new TextComponentString("vampirism.blood_potion_table"), 4);
     private int craftingTimer = 0;
     private int prevCraftingTimer = 0;
 

@@ -86,8 +86,8 @@ public class EntityDraculaHalloween extends EntityVampirism {
     }
 
     @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
+    public void livingTick() {
+        super.livingTick();
 
         if (!HalloweenSpecial.isEnabled()) {
             this.remove();

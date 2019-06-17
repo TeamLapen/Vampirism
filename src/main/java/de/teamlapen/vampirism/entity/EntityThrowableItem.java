@@ -27,11 +27,11 @@ public class EntityThrowableItem extends EntityThrowable {
 
     public EntityThrowableItem(World worldIn) {
         super(worldIn);
-    }
+    }//TODO EntityType
 
     public EntityThrowableItem(World worldIn, EntityLivingBase thrower) {
         super(worldIn, thrower);
-    }
+    }//TODO EntityType
 
     /**
      * @return Itemstack represented by this entity. Corresponding item is instance of {@link IVampirismThrowableItem}
@@ -58,7 +58,7 @@ public class EntityThrowableItem extends EntityThrowable {
     @Override
     public void readAdditional(NBTTagCompound compound) {
         super.readAdditional(compound);
-        ItemStack stack = new ItemStack(compound.getCompound("thrownItem"));
+        ItemStack stack = ItemStack.read(compound.getCompound("thrownItem"));
         if (stack.isEmpty()) {
             this.remove();
         } else {

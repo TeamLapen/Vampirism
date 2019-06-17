@@ -111,7 +111,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void livingTick() {
         if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
             isGettingGarlicDamage(true);
         }
@@ -127,7 +127,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
             }
         }
         bloodTimer++;
-        super.onLivingUpdate();
+        super.livingTick();
     }
 
     @Override

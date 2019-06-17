@@ -37,6 +37,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -317,7 +318,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     @Override
     public void stopVillageAttackDefense() {
-        this.setCustomNameTag("");
+        this.setCustomName(null);
         if (village_defense_area != null) {
             this.tasks.addTask(2, this.tasks_avoidHunter);
             village_defense_area = null;
