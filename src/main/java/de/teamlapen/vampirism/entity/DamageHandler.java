@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.entity.action.EntityActionHandler;
+import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
@@ -119,6 +121,11 @@ public class DamageHandler {
             }
             if (actionHandler.isActionActive(VampireActions.vampire_invisibility)) {
                 actionHandler.toggleAction(VampireActions.vampire_invisibility);
+            }
+        } else if (vampire && entity instanceof EntityVampirism) {
+            EntityActionHandler h = ((EntityVampirism) entity).getActionHandler();
+            if (h.isActionActive(EntityActions.entity_invisible)) {
+                h.deactivateAction();
             }
         }
     }

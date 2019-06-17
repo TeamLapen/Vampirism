@@ -10,12 +10,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * Usage for every {@link IFactionEntity} like Hunter/Vampire entities,
  * is used with {@link EntityActionHandler#handle()} in UpdateLiving in an EntityVampirism
+ * TODO maybe abstract API interface as well
  */
 public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
 
@@ -38,18 +41,6 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         cooldown = 50;
         duration = -1;
         preActivation = -1;
-    }
-
-    /**
-     * Sets the given list of actions to the actions the EntityActionHandler should use
-     *
-     * @param actionsIn
-     */
-    public void setAvailableActions(List<IEntityAction> actionsIn) {
-        this.availableActions = actionsIn;
-        if (availableActions.contains(EntityActions.entity_heal)) {
-            availableActions.remove(EntityActions.entity_regeneration);
-        }
     }
 
     /**
@@ -84,7 +75,7 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         }
     }
 
-    private void deactivateAction() {
+    public void deactivateAction() {
         deactivateAction(null);
     }
 
@@ -209,7 +200,7 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         }
     }
 
-    public void removeAction(IEntityAction actionIn) {
-        availableActions.remove(actionIn);
+    public boolean isActionActive(@Nonnull IEntityAction action) {
+        return action.equals(this.action);
     }
 }

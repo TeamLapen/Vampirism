@@ -28,11 +28,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+
 import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * Base class for most vampirism mobs
+ * TODO @cheaterpaul why are all EntityAction parts in this class but it does not implement IEntityActionUser. Either move it to the entities that actually use it (preferred) or make this implement IEntityActionUser
  */
 public abstract class EntityVampirism extends EntityCreature implements IEntityWithHome, IVampirismEntity {
 
@@ -93,6 +95,10 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         }
 
         return flag;
+    }
+
+    public EntityActionHandler getActionHandler() {
+        return entityActionHandler;
     }
 
     @Override
@@ -234,13 +240,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return true;
     }
 
-    /**
-     * Clears tasks and targetTasks
-     */
-    protected void clearAITasks() {
-        tasks.taskEntries.clear();
-        targetTasks.taskEntries.clear();
-    }
 
     /**
      * Removes the MoveTowardsRestriction task
@@ -261,7 +260,9 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return heightIn > 4 ? SoundEvents.ENTITY_HOSTILE_BIG_FALL : SoundEvents.ENTITY_HOSTILE_SMALL_FALL;
     }
 
-    protected SoundEvent getHurtSound() {
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return SoundEvents.ENTITY_HOSTILE_HURT;
     }
 
