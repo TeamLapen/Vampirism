@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.MinionHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -49,8 +50,8 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     private boolean wantsBlood = false;
 
 
-    public EntityVampireMinionBase(World world) {
-        super(world, false);
+    public EntityVampireMinionBase(EntityType type, World world) {
+        super(type, world, false);
         // this.setSize(0.5F, 1.1F);
         //this.func_110163_bv(); TODO check if this was relevant
 

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import com.google.common.base.Predicates;
 
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.material.Material;
@@ -37,7 +38,7 @@ public class EntitySoulOrb extends Entity {
     private ItemStack soulItemStack;
 
     public EntitySoulOrb(World worldIn, double x, double y, double z, VARIANT type) {
-        super(worldIn);//TODO EntityType
+        super(ModEntities.soul_orb, worldIn);
         this.setVariant(type);
         this.isImmuneToFire = true;
         delayBeforePickup = 10;
@@ -50,7 +51,7 @@ public class EntitySoulOrb extends Entity {
     }
 
     public EntitySoulOrb(World worldIn) {
-        super(worldIn);//TODO EntityType
+        super(ModEntities.soul_orb, worldIn);
         this.setSize(0.25F, 0.25F);
     }
 

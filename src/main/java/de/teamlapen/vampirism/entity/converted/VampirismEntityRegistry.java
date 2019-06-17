@@ -180,7 +180,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Nullable
     @Override
     public BiteableEntry getEntry(EntityCreature creature) {
-        return getEntry(EntityList.getKey(creature));
+        return getEntry(creature.getType().getRegistryName());
     }
 
     @Nullable

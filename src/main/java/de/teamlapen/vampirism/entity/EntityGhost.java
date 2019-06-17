@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -21,8 +22,8 @@ import javax.annotation.Nullable;
  * Entity Ghost
  */
 public class EntityGhost extends EntityVampirism implements IMob {
-    public EntityGhost(World p_i1595_1_) {
-        super(p_i1595_1_);
+    public EntityGhost(World worldIn) {
+        super(ModEntities.ghost, worldIn);
         ((PathNavigateGround) getNavigator()).setCanSwim(true);
         this.setSize(0.8F, 1.95F);
         this.experienceValue = 8;

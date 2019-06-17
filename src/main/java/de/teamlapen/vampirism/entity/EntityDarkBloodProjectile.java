@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import com.google.common.base.Predicates;
 
 import de.teamlapen.lib.VampLib;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
 import net.minecraft.entity.Entity;
@@ -35,22 +36,22 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     private boolean excludeShooter = false;
 
     public EntityDarkBloodProjectile(World worldIn) {
-        super(worldIn);
-    }//TODO EntityType
+        super(ModEntities.dark_blood_projectile, worldIn);
+    }
 
     /**
      * Copies the location from shooter.
      * Adds a small random to the motion
      */
     public EntityDarkBloodProjectile(World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ) {
-        super(worldIn, shooter, accelX, accelY, accelZ);//TODO EntityType
+        super(ModEntities.dark_blood_projectile, worldIn, shooter, accelX, accelY, accelZ);
     }
 
     /**
      * Does not add a small random to the motion
      */
     public EntityDarkBloodProjectile(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
-        super(worldIn, x, y, z, accelX, accelY, accelZ);//TODO EntityType
+        super(ModEntities.dark_blood_projectile, worldIn, x, y, z, accelX, accelY, accelZ);
     }
 
     @Override

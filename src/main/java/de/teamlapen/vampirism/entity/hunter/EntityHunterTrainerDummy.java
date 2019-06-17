@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.Helper;
@@ -21,7 +22,7 @@ public class EntityHunterTrainerDummy extends EntityVampirism {
     private final int MOVE_TO_RESTRICT_PRIO = 3;
 
     public EntityHunterTrainerDummy(World world) {
-        super(world);
+        super(ModEntities.hunter_trainer_dummy, world);
         saveHome = true;
         hasArms = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);

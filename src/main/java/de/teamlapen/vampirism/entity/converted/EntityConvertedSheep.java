@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
+import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -30,7 +31,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
     private Boolean lastSheared = null;
 
     public EntityConvertedSheep(World world) {
-        super(world);
+        super(ModEntities.converted_sheep, world);
     }
 
     public EnumDyeColor getFleeceColor() {

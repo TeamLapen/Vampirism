@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import net.minecraft.entity.EntityCreature;
@@ -31,7 +32,11 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     private boolean canDespawn = false;
 
     public EntityConvertedCreature(World world) {
-        super(world, false);
+        super(ModEntities.converted_creature, world, false);
+    }
+
+    public EntityConvertedCreature(EntityType type, World world) {
+        super(type, world, false);
 
     }
 

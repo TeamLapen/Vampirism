@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.Item;
@@ -26,12 +27,12 @@ public class EntityThrowableItem extends EntityThrowable {
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityThrowableItem.class, DataSerializers.ITEM_STACK);
 
     public EntityThrowableItem(World worldIn) {
-        super(worldIn);
-    }//TODO EntityType
+        super(ModEntities.throwable_item, worldIn);
+    }
 
     public EntityThrowableItem(World worldIn, EntityLivingBase thrower) {
-        super(worldIn, thrower);
-    }//TODO EntityType
+        super(ModEntities.throwable_item, thrower, worldIn);
+    }
 
     /**
      * @return Itemstack represented by this entity. Corresponding item is instance of {@link IVampirismThrowableItem}

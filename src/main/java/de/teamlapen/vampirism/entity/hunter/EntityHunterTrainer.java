@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.ai.HunterAILookAtTrainee;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
@@ -29,7 +30,7 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
     private EntityPlayer trainee;
 
     public EntityHunterTrainer(World world) {
-        super(world, false);
+        super(ModEntities.hunter_trainer, world, false);
         saveHome = true;
         hasArms = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);

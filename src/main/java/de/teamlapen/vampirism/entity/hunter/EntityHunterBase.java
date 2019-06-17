@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.world.World;
@@ -14,8 +15,8 @@ import net.minecraft.world.World;
 public abstract class EntityHunterBase extends EntityVampirism implements IHunter {
     private final boolean countAsMonster;
 
-    public EntityHunterBase(World world, boolean countAsMonster) {
-        super(world);
+    public EntityHunterBase(EntityType type, World world, boolean countAsMonster) {
+        super(type, world);
         this.countAsMonster = countAsMonster;
     }
 

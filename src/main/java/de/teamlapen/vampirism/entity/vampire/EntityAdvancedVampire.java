@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
@@ -53,7 +54,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     private int followingEntities = 0;
 
     public EntityAdvancedVampire(World world) {
-        super(world, true);
+        super(ModEntities.advanced_vampire, world, true);
         this.setSize(0.6F, 1.95F);
         this.canSuckBloodFromPlayer = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);

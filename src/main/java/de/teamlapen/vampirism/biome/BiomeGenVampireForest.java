@@ -28,12 +28,11 @@ public class BiomeGenVampireForest extends VampirismBiome {
         this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, createCompositeFeature(Feature.TALL_GRASS, new TallGrassConfig(Blocks.GRASS.getDefaultState()), TWICE_SURFACE, new FrequencyConfig(4)));
         //TODO NO_FEATURE_CONFIG & TWICE_SURFACE
         this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, createCompositeFeature(Feature.DEAD_BUSH, IFeatureConfig.NO_FEATURE_CONFIG, TWICE_SURFACE, new FrequencyConfig(3)));
-        //TODO EntityType must be created
-        this.addSpawn(EnumCreatureType.MONSTER, new SpawnListEntry(ModEntities.GHOST, 3, 1, 1));
-        this.addSpawn(EnumCreatureType.MONSTER, new SpawnListEntry(ModEntities.BASIC_VAMPIRE, 7, 1, 3));
-        this.addSpawn(EnumCreatureType.MONSTER, new SpawnListEntry(ModEntities.VAMPIRE_BARON, 2, 1, 1));
-        this.addSpawn(EnumCreatureType.AMBIENT, new SpawnListEntry(ModEntities.BLINDING_BAT, 8, 2, 4));
-        this.addSpawn(EnumCreatureType.CREATURE, new SpawnListEntry(ModEntities.DUMMY_BITTEN_ANIMAL, 15, 3, 6));
+        this.addSpawn(EnumCreatureType.MONSTER, new SpawnListEntry(ModEntities.ghost, 3, 1, 1));
+        this.addSpawn(EnumCreatureType.MONSTER, new SpawnListEntry(ModEntities.vampire, 7, 1, 3));
+        this.addSpawn(EnumCreatureType.MONSTER, new SpawnListEntry(ModEntities.vampire_baron, 2, 1, 1));
+        this.addSpawn(EnumCreatureType.AMBIENT, new SpawnListEntry(ModEntities.blinding_bat, 8, 2, 4));
+        this.addSpawn(EnumCreatureType.CREATURE, new SpawnListEntry(ModEntities.dummy_creature, 15, 3, 6));
     }
 
     @Override

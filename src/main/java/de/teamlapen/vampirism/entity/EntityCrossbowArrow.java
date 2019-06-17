@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,8 +49,8 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
     private boolean ignoreHurtTimer = false;
 
     public EntityCrossbowArrow(World world) {
-        super(world);
-    }//TODO EntityType
+        super(ModEntities.crossbow_arrow, world);
+    }
 
 
     /**
@@ -93,7 +94,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
             if (ignoreHurtTimer && living.hurtResistantTime > 0) {
                 living.hurtResistantTime = 0;
             }
-            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.world instanceof WorldServer ? ((WorldServer) this.world).getEntityFromUuid(this.shootingEntity) : null); //TODO server only
+            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.world instanceof WorldServer ? ((WorldServer) this.world).getEntityFromUuid(this.shootingEntity) : null); //TODO nonnull server only
         }
     }
 
@@ -107,7 +108,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
         if (raytraceResultIn.entity == null) {
             Item item = arrowStack.getItem();
             if (item instanceof IVampirismCrossbowArrow) {
-                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.world instanceof WorldServer ? ((WorldServer) this.world).getEntityFromUuid(this.shootingEntity) : null);//TODO server only
+                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.world instanceof WorldServer ? ((WorldServer) this.world).getEntityFromUuid(this.shootingEntity) : null);//TODO nonnull server only
             }
         }
         super.onHit(raytraceResultIn);

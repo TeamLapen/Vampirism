@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
@@ -88,7 +89,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     private AxisAlignedBB village_defense_area;
 
     public EntityBasicVampire(World world) {
-        super(world, true);
+        super(ModEntities.vampire, world, true);
         this.canSuckBloodFromPlayer = true;
         hasArms = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);

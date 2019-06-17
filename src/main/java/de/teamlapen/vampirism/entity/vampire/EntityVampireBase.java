@@ -18,10 +18,7 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -29,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -40,13 +38,13 @@ import javax.annotation.Nonnull;
 public abstract class EntityVampireBase extends EntityVampirism implements IVampireMob {
 
     /**
-     * Rules to consider for {@link #getCanSpawnHere()}
+     * Rules to consider for {@link #canSpawn(IWorld, boolean)}
      */
     protected SpawnRestriction spawnRestriction = SpawnRestriction.NORMAL;
     private final boolean countAsMonsterForSpawn;
 
     @Override
-    public boolean getCanSpawnHere() {
+    public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
         if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
             if (isGettingSundamage(true) || isGettingGarlicDamage(true) != EnumStrength.NONE) return false;
 
@@ -68,7 +66,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
             }
         }
 
-        return super.getCanSpawnHere();
+        return super.canSpawn(worldIn, fromSpawner);
     }
     protected EnumStrength garlicResist = EnumStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
@@ -84,14 +82,14 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     /**
      * @param countAsMonsterForSpawn If this entity should be counted as vampire and as monster during spawning
      */
-    public EntityVampireBase(World world, boolean countAsMonsterForSpawn) {
-        super(world);
+    public EntityVampireBase(EntityType type, World world, boolean countAsMonsterForSpawn) {
+        super(type, world);
         this.countAsMonsterForSpawn = countAsMonsterForSpawn;
 
     }
 
     /**
-     * Select rules to consider for {@link #getCanSpawnHere()}
+     * Select rules to consider for {@link #canSpawn(IWorld, boolean)}
      */
     public void setSpawnRestriction(SpawnRestriction r) {
         this.spawnRestriction = r;
