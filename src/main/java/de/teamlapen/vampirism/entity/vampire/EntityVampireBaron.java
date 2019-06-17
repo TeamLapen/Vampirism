@@ -32,6 +32,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,7 +64,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     private boolean prevAttacking = false;
 
     public EntityVampireBaron(World world) {
-        super(world, true);
+        super(ModEntities.vampire_baron, world, true);
         minionHandler = new SaveableMinionHandler<>(this);
         this.setSize(0.6F, 1.95F);
 
@@ -107,7 +108,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public boolean getCanSpawnHere() {
+    public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
         int i = MathHelper.floor(this.getBoundingBox().minY);
         //Only spawn on the surface
         if (i < 60) return false;
@@ -117,7 +118,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 //        }
         BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
 
-        return ModBlocks.cursed_earth.equals(world.getBlockState(blockpos.down()).getBlock()) && super.getCanSpawnHere();
+        return ModBlocks.cursed_earth.equals(world.getBlockState(blockpos.down()).getBlock()) && super.canSpawn(worldIn, fromSpawner);
     }
 
     @Override
@@ -164,7 +165,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     @Nonnull
     @Override
     public ITextComponent getName() {
-        return super.getName() + " " + UtilLib.translate("text.vampirism.entity_level") + " " + (getLevel() + 1);
+        return super.getName().appendText(" " + UtilLib.translate("text.vampirism.entity_level") + " " + (getLevel() + 1));//TODO is right?
     }
 
     @Override
@@ -184,7 +185,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     @Override
     public UUID getThePersistentID() {
-        return this.getPersistentID();
+        return this.entityUniqueID;
     }
 
     @Override
@@ -201,7 +202,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void livingTick() {
         if (!prevAttacking && this.getAttackTarget() != null) {
             prevAttacking = true;
             updateEntityAttributes(true);
@@ -231,10 +232,10 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 }
 
             } else if (i == 2 && this.getAttackTarget() != null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME));
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), new ResourceLocation(REFERENCE.MODID, ModEntities.vampire_minion_s);
             }
             if (m == null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getBoundingBox().grow(19, 4, 19), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME), 3, Collections.emptyList()); //Do not avoid player here. Already using spawnBehind sometimes
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getBoundingBox().grow(19, 4, 19), new ResourceLocation(REFERENCE.MODID, ModEntities.vampire_minion_s), 3, Collections.emptyList()); //Do not avoid player here. Already using spawnBehind sometimes
             }
             if (m != null) {
                 m.setLord(this);
@@ -259,14 +260,14 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 this.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 60));
             }
         }
-        super.onLivingUpdate();
+        super.livingTick();
     }
 
     @Override
     public void readAdditional(NBTTagCompound nbt) {
         super.readAdditional(nbt);
         setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
-        minionHandler.loadMinions(nbt.getTagList("minions", 10));
+        minionHandler.loadMinions(nbt.getList("minions", 10));
     }
 
     @Override

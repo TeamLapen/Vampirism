@@ -55,11 +55,6 @@ public class VampirismVillage implements IVampirismVillage {
             }
 
             @Override
-            public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-                return CAP.equals(capability);
-            }
-
-            @Override
             public NBTTagCompound serializeNBT() {
                 return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
             }
@@ -190,8 +185,8 @@ public class VampirismVillage implements IVampirismVillage {
     public void tick(long worldTime) {
         this.tickCounter = (int) worldTime;
 
-        if (totemLocation != null && village.world.getGameTime() % 1024 == 0) {
-            IBlockState state = village.world.getBlockState(totemLocation);
+        if (totemLocation != null && tickCounter % 1024 == 0) {
+            IBlockState state = village.world.getBlockState(totemLocation);//TODO world is private
             if (!state.getBlock().equals(ModBlocks.totem_top)) {
                 removeTotemAndReset(totemLocation);
             }

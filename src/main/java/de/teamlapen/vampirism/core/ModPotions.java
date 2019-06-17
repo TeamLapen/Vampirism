@@ -12,7 +12,7 @@ import net.minecraft.init.PotionTypes;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
@@ -71,15 +71,15 @@ public class ModPotions {
         try {
             for (PotionEffect effect : PotionTypes.NIGHT_VISION.getEffects()) {
                 if (effect.getPotion().equals(vanilla_night_vision)) { //If still referring to vanilla potion replace
-                    ReflectionHelper.setPrivateValue(PotionEffect.class, effect, modded_night_vision, "potion", SRGNAMES.PotionEffect_potion);
+                    ObfuscationReflectionHelper.setPrivateValue(PotionEffect.class, effect, modded_night_vision, SRGNAMES.PotionEffect_potion);
                 }
             }
             for (PotionEffect effect : PotionTypes.LONG_NIGHT_VISION.getEffects()) {
                 if (effect.getPotion().equals(vanilla_night_vision)) {
-                    ReflectionHelper.setPrivateValue(PotionEffect.class, effect, modded_night_vision, "potion", SRGNAMES.PotionEffect_potion);
+                    ObfuscationReflectionHelper.setPrivateValue(PotionEffect.class, effect, modded_night_vision, SRGNAMES.PotionEffect_potion);
                 }
             }
-        } catch (ReflectionHelper.UnableToAccessFieldException e) {
+        } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
             LOGGER.error("Unable to modify vanilla night vision types. Potion items and more might not work", e);
         }
     }

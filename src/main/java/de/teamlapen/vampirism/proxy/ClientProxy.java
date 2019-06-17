@@ -21,7 +21,9 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
+import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -31,7 +33,7 @@ import java.util.Map;
  */
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
-    private final static String TAG = "ClientProxy";
+    private final static Logger LOGGER = LogManager.getLogger(ClientProxy.class);
 
     private VampirismHUDOverlay overlay;
 
@@ -58,7 +60,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void onInitStep(Step step, FMLStateEvent event) {
+    public void onInitStep(Step step, ModLifecycleEvent event) {
         super.onInitStep(step, event);
         RegistryManager.getRegistryManagerClient().onInitStep(step, event);
         switch (step) {

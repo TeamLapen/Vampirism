@@ -33,7 +33,7 @@ public class NightVision implements IVampireVision {
     }
 
     @Override
-    public void onUpdate(IVampirePlayer player) {
+    public void tick(IVampirePlayer player) {
         if (player.getRepresentingPlayer().ticksExisted % 50 == 8) {
             PotionEffect effect = player.getRepresentingPlayer().getActivePotionEffect(MobEffects.NIGHT_VISION);
             if (!(effect instanceof VampireNightVisionEffect)) {

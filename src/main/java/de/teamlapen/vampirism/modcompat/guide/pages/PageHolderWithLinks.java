@@ -8,6 +8,7 @@ import amerifrance.guideapi.api.util.GuiHelper;
 import amerifrance.guideapi.gui.GuiBase;
 import amerifrance.guideapi.gui.GuiEntry;
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.modcompat.guide.GuideBook;
 import de.teamlapen.vampirism.modcompat.guide.client.GuiLinkedEntry;
@@ -17,9 +18,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.net.URI;
 import java.util.List;
@@ -81,13 +82,13 @@ public class PageHolderWithLinks implements IPage {
         return page.canSee(book, category, entry, player, bookStack, guiEntry);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
         page.draw(book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void drawExtras(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
         int ll = guiLeft + guiBase.xSize - 5;
@@ -102,7 +103,7 @@ public class PageHolderWithLinks implements IPage {
         page.drawExtras(book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void onInit(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, GuiEntry guiEntry) {
         while (lateLinks.size() > 0) {
@@ -117,7 +118,7 @@ public class PageHolderWithLinks implements IPage {
         page.onInit(book, category, entry, player, bookStack, guiEntry);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void onLeftClicked(Book book, CategoryAbstract category, EntryAbstract entry, int mouseX, int mouseY, EntityPlayer player, GuiEntry guiEntry) {
         if (mouseX > guiEntry.guiLeft + guiEntry.xSize) {
@@ -137,7 +138,7 @@ public class PageHolderWithLinks implements IPage {
         page.onLeftClicked(book, category, entry, mouseX, mouseY, player, guiEntry);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void onRightClicked(Book book, CategoryAbstract category, EntryAbstract entry, int mouseX, int mouseY, EntityPlayer player, GuiEntry guiEntry) {
         page.onRightClicked(book, category, entry, mouseX, mouseY, player, guiEntry);
@@ -148,7 +149,7 @@ public class PageHolderWithLinks implements IPage {
 
         public abstract String getDisplayName();
 
-        @SideOnly(Side.CLIENT)
+        @OnlyIn(Dist.CLIENT)
         public abstract void onClicked(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, int page);
     }
 
@@ -192,7 +193,7 @@ public class PageHolderWithLinks implements IPage {
             return linkedEntry.getLocalizedName();
         }
 
-        @SideOnly(Side.CLIENT)
+        @OnlyIn(Dist.CLIENT)
         @Override
         public void onClicked(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, int page) {
             openLinkedEntry(book, category, linkedEntry, player, bookStack, entry, page);
@@ -201,7 +202,7 @@ public class PageHolderWithLinks implements IPage {
         /**
          * Simply opens a gui screen with a GuiLinkedEntry. Not sure why the @SideOnly does not work, but this uses Class.forName to solve server side class not found issues
          */
-        @SideOnly(Side.CLIENT)
+        @OnlyIn(Dist.CLIENT)
         private void openLinkedEntry(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, EntryAbstract from, int fromPage) {
 //        GuiScreen screen = null;
 //        try {

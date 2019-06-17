@@ -47,8 +47,8 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class ModItems {
 
     public static final ItemVampireFang vampire_fang = getNull();
-    public static final ItemHumanHeart human_heart = getNull();
-    public static final ItemHumanHeartWeak weak_human_heart = getNull();
+    public static final VampirismItemBloodFood human_heart = getNull();
+    public static final VampirismItemBloodFood weak_human_heart = getNull();
     public static final ItemBloodBottle blood_bottle = getNull();
     public static final ItemTent item_tent = getNull();
     public static final ItemTent item_tent_spawner = getNull();
@@ -64,6 +64,16 @@ public class ModItems {
     public static final ItemInjection injection_garlic = getNull();
     public static final ItemInjection injection_sanguinare = getNull();
     public static final ItemInjection injection_empty = getNull();
+
+    public static final ItemHunterIntel hunter_intel_0 = getNull();
+    public static final ItemHunterIntel hunter_intel_1 = getNull();
+    public static final ItemHunterIntel hunter_intel_2 = getNull();
+    public static final ItemHunterIntel hunter_intel_3 = getNull();
+    public static final ItemHunterIntel hunter_intel_4 = getNull();
+    public static final ItemHunterIntel hunter_intel_5 = getNull();
+    public static final ItemHunterIntel hunter_intel_6 = getNull();
+    public static final ItemHunterIntel hunter_intel_7 = getNull();
+    public static final ItemHunterIntel hunter_intel_8 = getNull();
 
     public static final ItemMedChair item_med_chair = getNull();
     public static final ItemPitchfork pitchfork = getNull();
@@ -232,8 +242,8 @@ public class ModItems {
 
     static void registerItems(IForgeRegistry<Item> registry) {
         registry.register(new ItemVampireFang());
-        registry.register(new ItemHumanHeart());
-        registry.register(new ItemHumanHeartWeak());
+        registry.register(new VampirismItemBloodFood("human_heart", 20, 1.2F, new Item.Properties()));
+        registry.register(new VampirismItemBloodFood("weak_human_heart", 10, 0.9F, new Item.Properties()));
         registry.register(new ItemBloodBottle());
         registry.register(new ItemTent(true));
         registry.register(new ItemTent(false));

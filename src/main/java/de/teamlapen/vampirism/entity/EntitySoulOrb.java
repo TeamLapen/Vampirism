@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import com.google.common.base.Predicates;
 
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.material.Material;
@@ -36,9 +37,9 @@ public class EntitySoulOrb extends Entity {
     @Nullable
     private ItemStack soulItemStack;
 
-    public EntitySoulOrb(World worldIn, double x, double y, double z, TYPE type) {
-        super(worldIn);
-        this.setType(type);
+    public EntitySoulOrb(World worldIn, double x, double y, double z, VARIANT type) {
+        super(ModEntities.soul_orb, worldIn);
+        this.setVariant(type);
         this.isImmuneToFire = true;
         delayBeforePickup = 10;
         this.setSize(0.25F, 0.25F);
@@ -50,7 +51,7 @@ public class EntitySoulOrb extends Entity {
     }
 
     public EntitySoulOrb(World worldIn) {
-        super(worldIn);
+        super(ModEntities.soul_orb, worldIn);
         this.setSize(0.25F, 0.25F);
     }
 
@@ -95,7 +96,7 @@ public class EntitySoulOrb extends Entity {
 
     @Override
     public boolean isInvisibleToPlayer(@Nonnull EntityPlayer player) {
-        switch (getType()) {
+        switch (getVariant()) {
             case VAMPIRE:
                 return !Helper.isHunter(player) || player.isSpectator();
             default:
@@ -192,24 +193,24 @@ public class EntitySoulOrb extends Entity {
 
     @Override
     protected void readAdditional(NBTTagCompound compound) {
-        this.setType(TYPE.valueOf(compound.getString("type")));
+        this.setVariant(VARIANT.valueOf(compound.getString("type")));
         this.age = compound.getInt("age");
         soulItemStack = null;//Reset item just in case a item of a different type has been created beforehand
     }
 
     @Override
     protected void registerData() {
-        this.getDataManager().register(TYPE_PARAMETER, TYPE.NONE.name());
+        this.getDataManager().register(TYPE_PARAMETER, VARIANT.NONE.name());
     }
 
     @Override
     protected void writeAdditional(NBTTagCompound compound) {
-        compound.putString("type", this.getType().name());
+        compound.putString("type", this.getVariant().name());
         compound.putInt("age", age);
     }
 
     private ItemStack createSoulItemStack() {
-        switch (getType()) {
+        switch (getVariant()) {
             case VAMPIRE:
                 return new ItemStack(ModItems.soul_orb_vampire);
             default:
@@ -217,16 +218,16 @@ public class EntitySoulOrb extends Entity {
         }
     }
 
-    private TYPE getType() {
-        return TYPE.valueOf(getDataManager().get(TYPE_PARAMETER));
+    private VARIANT getVariant() {
+        return VARIANT.valueOf(getDataManager().get(TYPE_PARAMETER));
     }
 
-    private void setType(TYPE type) {
+    private void setVariant(VARIANT type) {
         getDataManager().set(TYPE_PARAMETER, type.name());
     }
 
 
-    public enum TYPE {
+    public enum VARIANT {
         NONE, VAMPIRE
     }
 }

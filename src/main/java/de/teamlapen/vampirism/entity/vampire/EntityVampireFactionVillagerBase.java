@@ -61,7 +61,7 @@ public class EntityVampireFactionVillagerBase extends EntityFactionVillager impl
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void livingTick() {
         if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
             isGettingGarlicDamage(true);
         }
@@ -85,7 +85,7 @@ public class EntityVampireFactionVillagerBase extends EntityFactionVillager impl
                 }
             }
         }
-        super.onLivingUpdate();
+        super.livingTick();
     }
 
     @Override
@@ -100,8 +100,8 @@ public class EntityVampireFactionVillagerBase extends EntityFactionVillager impl
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
     

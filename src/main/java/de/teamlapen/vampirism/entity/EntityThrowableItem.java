@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.Item;
@@ -26,11 +27,11 @@ public class EntityThrowableItem extends EntityThrowable {
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityThrowableItem.class, DataSerializers.ITEM_STACK);
 
     public EntityThrowableItem(World worldIn) {
-        super(worldIn);
+        super(ModEntities.throwable_item, worldIn);
     }
 
     public EntityThrowableItem(World worldIn, EntityLivingBase thrower) {
-        super(worldIn, thrower);
+        super(ModEntities.throwable_item, thrower, worldIn);
     }
 
     /**
@@ -58,7 +59,7 @@ public class EntityThrowableItem extends EntityThrowable {
     @Override
     public void readAdditional(NBTTagCompound compound) {
         super.readAdditional(compound);
-        ItemStack stack = new ItemStack(compound.getCompound("thrownItem"));
+        ItemStack stack = ItemStack.read(compound.getCompound("thrownItem"));
         if (stack.isEmpty()) {
             this.remove();
         } else {

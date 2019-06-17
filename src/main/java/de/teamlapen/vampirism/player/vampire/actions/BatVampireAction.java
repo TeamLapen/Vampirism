@@ -84,7 +84,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage() && vampire.isGettingGarlicDamage() == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd));
+        return !vampire.isGettingSundamage() && vampire.isGettingGarlicDamage() == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().dimension instanceof EndDimension));
     }
 
     @Override
@@ -156,7 +156,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (vampire.isGettingGarlicDamage() != EnumStrength.NONE && !vampire.isRemote()) {
             vampire.getRepresentingEntity().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_garlic"));
             return true;
-        } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().getEntityWorld().provider instanceof EndDimension) {
+        } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().getEntityWorld().dimension instanceof EndDimension) {
             vampire.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_end"));
             return true;
         } else return vampire.getRepresentingPlayer().isInWater();

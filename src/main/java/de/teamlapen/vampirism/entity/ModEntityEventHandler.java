@@ -135,7 +135,7 @@ public class ModEntityEventHandler {
     public void baseTick(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() instanceof EntityCreature) {
             event.getEntity().getEntityWorld().profiler.startSection("vampirism_extended_creature");
-            ExtendedCreature.get((EntityCreature) event.getEntity()).onUpdate();
+            ExtendedCreature.get((EntityCreature) event.getEntity()).tick();
             event.getEntity().getEntityWorld().profiler.endSection();
 
         } else if (!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof EntityPlayer) {

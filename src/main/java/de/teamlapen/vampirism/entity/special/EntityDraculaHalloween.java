@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.EntityAreaParticleCloud;
 import de.teamlapen.vampirism.entity.EntityVampirism;
@@ -41,7 +42,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
     private boolean particle = false;
 
     public EntityDraculaHalloween(World world) {
-        super(world);
+        super(ModEntities.special_dracula_halloween, world);
         this.setInvulnerable(true);
     }
 
@@ -86,8 +87,8 @@ public class EntityDraculaHalloween extends EntityVampirism {
     }
 
     @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
+    public void livingTick() {
+        super.livingTick();
 
         if (!HalloweenSpecial.isEnabled()) {
             this.remove();

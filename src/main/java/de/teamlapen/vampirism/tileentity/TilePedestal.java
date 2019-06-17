@@ -152,7 +152,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     @Override
     public void read(NBTTagCompound compound) {
         if (compound.contains("item")) {
-            this.internalStack = new ItemStack(compound.getCompound("item"));
+            this.internalStack = ItemStack.read(compound.getCompound("item"));
         } else {
             this.internalStack = ItemStack.EMPTY;
         }
@@ -168,7 +168,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     }
 
     @Override
-    public void update() {
+    public void tick() {
         if (!this.world.isRemote) {
             if (chargingTicks > 0) {
                 chargingTicks--;

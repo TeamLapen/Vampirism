@@ -4,7 +4,7 @@ package de.teamlapen.lib.lib.util;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 
 /**
- * Simple interface which provides preInit,init and postInit.
+ * Simple interface which provides ClientSetup, CommonSetup and LoadComplete.
  */
 public interface IInitListener {
     void onInitStep(Step step, ModLifecycleEvent event);

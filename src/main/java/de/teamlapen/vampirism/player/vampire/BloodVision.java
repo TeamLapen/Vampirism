@@ -23,7 +23,7 @@ public class BloodVision implements IVampireVision {
     }
 
     @Override
-    public void onUpdate(IVampirePlayer player) {
+    public void tick(IVampirePlayer player) {
 
     }
 }

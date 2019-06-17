@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.IPlayerFace;
@@ -27,6 +28,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -44,7 +46,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     private final int MOVE_TO_RESTRICT_PRIO = 3;
 
     public EntityAdvancedHunter(World world) {
-        super(world, true);
+        super(ModEntities.advanced_hunter, world, true);
         saveHome = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
 
@@ -100,7 +102,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     @Override
     public ITextComponent getName() {
         String senderName = this.getDataManager().get(NAME);
-        return "none".equals(senderName) ? super.getName() : senderName;
+        return "none".equals(senderName) ? super.getName() : new TextComponentString(senderName);
     }
 
     @Nullable
@@ -160,8 +162,8 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.updateEntityAttributes();
 
     }

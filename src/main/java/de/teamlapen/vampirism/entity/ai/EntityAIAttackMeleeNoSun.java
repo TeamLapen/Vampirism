@@ -32,12 +32,12 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
             }
             boolean avoidSun = false;
             if (attacker.getNavigator() instanceof PathNavigateGround) {
-                avoidSun = ((PathNavigateGround) attacker.getNavigator()).shouldAvoidSun;
+                avoidSun = ((PathNavigateGround) attacker.getNavigator()).shouldAvoidSun;//TODO is private
             }
 
             if (avoidSun) {
 
-                Path path = this.path;
+                Path path = this.path;//TODO is private
                 if (attacker.getEntityWorld().canSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
                     return false;
                 }

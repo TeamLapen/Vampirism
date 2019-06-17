@@ -51,7 +51,7 @@ public class SundamageRegistry implements ISundamageRegistry {
     @Override
     public void addNoSundamageBiomes(Biome... biomes) {
         for (Biome b : biomes) {
-            addNoSundamageBiome(b.getBiomeClass());
+            addNoSundamageBiome(b.getClass());
         }
     }
 
@@ -65,7 +65,7 @@ public class SundamageRegistry implements ISundamageRegistry {
     public boolean getSundamageInBiome(@Nonnull Biome biome) {
         if (!getSundamageInBiome(biome.getRegistryName())) return false;
         for (Class clazz : noSundamageBiomes) {
-            if (clazz.isAssignableFrom(biome.getBiomeClass())) {
+            if (clazz.isAssignableFrom(biome.getClass())) {
                 return false;
             }
         }

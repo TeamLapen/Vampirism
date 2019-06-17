@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.Helper;
@@ -21,7 +22,7 @@ public class EntityHunterTrainerDummy extends EntityVampirism {
     private final int MOVE_TO_RESTRICT_PRIO = 3;
 
     public EntityHunterTrainerDummy(World world) {
-        super(world);
+        super(ModEntities.hunter_trainer_dummy, world);
         saveHome = true;
         hasArms = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
@@ -42,8 +43,8 @@ public class EntityHunterTrainerDummy extends EntityVampirism {
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
@@ -51,7 +52,7 @@ public class EntityHunterTrainerDummy extends EntityVampirism {
     }
 
     @Override
-    protected boolean canDespawn() {
+    public boolean canDespawn() {
         return !hasHome() && super.canDespawn();
     }
 

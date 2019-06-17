@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import net.minecraft.entity.EntityCreature;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
  */
 public class EntityDummyBittenAnimal extends EntityLiving {
     public EntityDummyBittenAnimal(World p_i1595_1_) {
-        super(p_i1595_1_);
+        super(ModEntities.blinding_bat, p_i1595_1_);
     }
 
     @Override

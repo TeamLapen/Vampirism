@@ -165,7 +165,7 @@ public class Tests {
         info.world.setBlockState(info.pos, ModBlocks.weapon_table.getDefaultState());
         info.player.setHeldItem(info.player.getActiveHand(), new ItemStack(Items.LAVA_BUCKET));
         IBlockState block = info.world.getBlockState(info.pos);
-        block.getBlock().onBlockActivated(info.world, info.pos, block, info.player, info.player.getActiveHand(), EnumFacing.random(info.world.rand), 0, 0, 0);
+        block.getBlock().onBlockActivated(block, info.world, info.pos, info.player, info.player.getActiveHand(), EnumFacing.random(info.world.rand), 0, 0, 0);
         block = info.world.getBlockState(info.pos);
         assert info.player.getHeldItem(info.player.getActiveHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
         log("Block lava level: %s", block.get(BlockWeaponTable.LAVA));

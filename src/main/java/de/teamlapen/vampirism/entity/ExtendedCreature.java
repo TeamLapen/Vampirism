@@ -69,11 +69,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
 
             @Override
-            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-                return CAP.equals(capability);
-            }
-
-            @Override
             public NBTTagCompound serializeNBT() {
                 return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
             }

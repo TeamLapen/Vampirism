@@ -14,7 +14,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+
+import javax.annotation.Nullable;
 
 /**
  * Container for interacting with basic hunters to level up as a hunter
@@ -79,7 +82,13 @@ public class HunterBasicContainer extends InventoryContainer {
 
         @Override
         public ITextComponent getName() {
-            return "entity.vampirism." + ModEntities.BASIC_HUNTER_NAME + ".name";
+            return new TextComponentString("entity.vampirism." + ModEntities.BASIC_HUNTER_NAME + ".name");
+        }
+
+        @Nullable
+        @Override
+        public ITextComponent getCustomName() {
+            return null;//TODO not null?
         }
     }
 }

@@ -14,7 +14,6 @@ public class VampirismNightVisionPotion extends Potion {
     public VampirismNightVisionPotion() {
         super(false, 2039713);
         setIconIndex(4, 1);
-        setPotionName("effect.nightVision");
         LOGGER.warn("-------Please ignore the following error!------");
         this.setRegistryName("minecraft", "night_vision");
         LOGGER.warn("-----------------------------------------------");

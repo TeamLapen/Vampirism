@@ -3,17 +3,19 @@ package de.teamlapen.vampirism.entity;
 import com.google.common.base.Predicates;
 
 import de.teamlapen.lib.VampLib;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.Particles;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -34,7 +36,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     private boolean excludeShooter = false;
 
     public EntityDarkBloodProjectile(World worldIn) {
-        super(worldIn);
+        super(ModEntities.dark_blood_projectile, worldIn);
     }
 
     /**
@@ -42,14 +44,14 @@ public class EntityDarkBloodProjectile extends EntityFireball {
      * Adds a small random to the motion
      */
     public EntityDarkBloodProjectile(World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ) {
-        super(worldIn, shooter, accelX, accelY, accelZ);
+        super(ModEntities.dark_blood_projectile, worldIn, shooter, accelX, accelY, accelZ);
     }
 
     /**
      * Does not add a small random to the motion
      */
     public EntityDarkBloodProjectile(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
-        super(worldIn, x, y, z, accelX, accelY, accelZ);
+        super(ModEntities.dark_blood_projectile, worldIn, x, y, z, accelX, accelY, accelZ);
     }
 
     @Override
@@ -131,8 +133,8 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     }
 
     @Override
-    protected EnumParticleTypes getParticleType() {
-        return EnumParticleTypes.SUSPENDED;
+    protected IParticleData getParticle() {
+        return Particles.UNDERWATER;//TODO should be the same (was suspended)
     }
 
     protected double getRadius() {
@@ -170,7 +172,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
 
             }
 
-            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().grow(2), Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING));
+            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(2), Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING));
             for (Entity e : list) {
                 if (excludeShooter && e == shootingEntity) {
                     continue;
@@ -178,7 +180,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
                 if (e instanceof EntityLivingBase && e.getDistanceSq(this) < 4) {
                     EntityLivingBase entity = (EntityLivingBase) e;
                     entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
-                    if (entity != result.entityHit)
+                    if (entity != result.entity)
                         entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), indirecDamage);
 
                 }

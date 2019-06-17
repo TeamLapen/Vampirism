@@ -9,10 +9,10 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.MapGenBase;
-import net.minecraft.world.gen.structure.MapGenStructureIO;
+import net.minecraft.world.gen.feature.structure.StructureIO;
 import net.minecraft.world.gen.structure.MapGenVillage;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -38,9 +38,9 @@ public class ModVillages {
     }
 
     private static void registerPieces() {
-        MapGenStructureIO.registerStructureComponent(VillagePieceTrainer.class, "Vampirism-TR");
-        MapGenStructureIO.registerStructureComponent(VillagePieceModChurch.class, "Vampirism-MC");
-        MapGenStructureIO.registerStructureComponent(VillagePieceTotem.class, "Vampirism-To");
+        StructureIO.registerStructureComponent(VillagePieceTrainer.class, "Vampirism-TR");
+        StructureIO.registerStructureComponent(VillagePieceModChurch.class, "Vampirism-MC");
+        StructureIO.registerStructureComponent(VillagePieceTotem.class, "Vampirism-To");
     }
 
     private static void registerCreationHandlers() {
@@ -56,19 +56,19 @@ public class ModVillages {
 
 
             try {
-                ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_size, "size", SRGNAMES.MapGenVillage_size);
-            } catch (ReflectionHelper.UnableToAccessFieldException e) {
+                ObfuscationReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_size, SRGNAMES.MapGenVillage_size);
+            } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
                 LOGGER.error(e, "Could not modify field 'terrainType' in MapGenVillage");
             }
 
             try {
-                ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_density, "distance", SRGNAMES.MapGenVillage_distance);
-            } catch (ReflectionHelper.UnableToAccessFieldException e) {
+                ObfuscationReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_density, SRGNAMES.MapGenVillage_distance);
+            } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
                 LOGGER.error(e, "Could not modify field for village density in MapGenVillage");
             }
             try {
-                ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_min_dist, "minTownSeparation", SRGNAMES.MapGenVillage_minTownSeperation);
-            } catch (ReflectionHelper.UnableToAccessFieldException e) {
+                ObfuscationReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_min_dist, SRGNAMES.MapGenVillage_minTownSeperation);
+            } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
                 LOGGER.error(e, "Could not modify field for village min dist in MapGenVillage");
             }
 

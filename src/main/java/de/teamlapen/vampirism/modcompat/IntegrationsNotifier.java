@@ -1,10 +1,11 @@
 package de.teamlapen.vampirism.modcompat;
 
 import com.google.common.collect.Lists;
+
+import de.teamlapen.lib.lib.config.forge.Configuration;
+import de.teamlapen.lib.lib.config.forge.Property;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.Loader;
 import org.apache.commons.lang3.StringUtils;
 

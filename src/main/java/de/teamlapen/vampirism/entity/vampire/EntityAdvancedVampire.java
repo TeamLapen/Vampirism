@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
@@ -30,6 +31,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -52,7 +54,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     private int followingEntities = 0;
 
     public EntityAdvancedVampire(World world) {
-        super(world, true);
+        super(ModEntities.advanced_vampire, world, true);
         this.setSize(0.6F, 1.95F);
         this.canSuckBloodFromPlayer = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
@@ -120,7 +122,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     @Override
     public ITextComponent getName() {
         String senderName = this.getDataManager().get(NAME);
-        return "none".equals(senderName) ? super.getName() : senderName;
+        return "none".equals(senderName) ? super.getName() : new TextComponentString(senderName);
     }
 
     @Nullable

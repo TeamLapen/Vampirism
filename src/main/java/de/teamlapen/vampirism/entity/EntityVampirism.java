@@ -11,10 +11,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.init.SoundEvents;
@@ -26,7 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.EnumLightType;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -56,8 +54,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
      */
     private int randomTickDivider;
 
-    public EntityVampirism(World world) {
-        super(world);
+    public EntityVampirism(EntityType type, World world) {
+        super(type, world);
         setupEntityClass();
         moveTowardsRestriction = new EntityAIMoveTowardsRestriction(this, 1.0F);
     }
@@ -102,8 +100,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     @Override
-    public boolean getCanSpawnHere() {
-        return (peaceful || this.world.getDifficulty() != EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
+    public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
+        return (peaceful || this.world.getDifficulty() != EnumDifficulty.PEACEFUL) && super.canSpawn(worldIn, fromSpawner);
     }
 
     @Nullable
@@ -279,15 +277,15 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected boolean isLowLightLevel() {
         BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
 
-        if (this.world.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)) {
+        if (this.world.getLightFor(EnumLightType.SKY, blockpos) > this.rand.nextInt(32)) {
             return false;
         } else {
-            int i = this.world.getLightFromNeighbors(blockpos);
+            int i = this.world.getLight(blockpos);//TODO was getLightFromNeighbors(blockpos)
 
             if (this.world.isThundering()) {
                 int j = this.world.getSkylightSubtracted();
                 this.world.setSkylightSubtracted(10);
-                i = this.world.getLightFromNeighbors(blockpos);
+                i = this.world.getLight(blockpos);//TODO was getLightFromNeighbors(blockpos)
                 this.world.setSkylightSubtracted(j);
             }
 

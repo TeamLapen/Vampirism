@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.vampirism.blocks.BlockCoffin;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -12,8 +11,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -33,7 +30,7 @@ public class TileCoffin extends TileEntity implements ITickable {
     }
 
     public void changeColor(EnumDyeColor color) {
-        this.color = color;
+        this.color = color.getId();
         markDirty();
         //TODO
     }
@@ -73,12 +70,6 @@ public class TileCoffin extends TileEntity implements ITickable {
 
         this.color = par1NBTTagCompound.getInt("color");
 
-    }
-
-
-    @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-        return oldState.getBlock() != newState.getBlock();
     }
 
     @Override

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.minions.IMinionCommand;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMinion;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.minions.ai.MinionAIFollowLord;
 import de.teamlapen.vampirism.entity.minions.commands.DefendLordCommand;
@@ -29,7 +30,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
     protected IMinionLordWithSaveable lord;
 
     public EntityVampireMinionSaveable(World world) {
-        super(world);
+        super(ModEntities.vampire_minion_s, world);
         commands.add(getActiveCommand());
 //        commands.add(new AttackHostileExceptPlayer(1, this));
 //        commands.add(new AttackHostileIncludingPlayer(2, this));

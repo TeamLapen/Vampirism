@@ -1,5 +1,10 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
+import mezz.jei.api.IModPlugin;
+import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.helpers.IJeiHelpers;
+
 import de.teamlapen.vampirism.client.gui.GuiAlchemicalCauldron;
 import de.teamlapen.vampirism.client.gui.GuiHunterWeaponTable;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -7,20 +12,23 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronContainer;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponTableContainer;
-import mezz.jei.api.*;
-import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
 /**
  * Plugin for Just Enough Items
  */
-@JEIPlugin
-public class VampirismJEIPlugin extends BlankModPlugin {
+@JeiPlugin
+public class VampirismJEIPlugin implements IModPlugin {
     public static final String HUNTER_WEAPON_RECIPE_UID = "vampirism.hunter_weapon";
     public static final String ALCHEMICAL_CAULDRON_RECIPE_UID = "vampirism.alchemical_cauldron";
+
+    @Override
+    public ResourceLocation getPluginUid() {
+        return new ResourceLocation("vampirism", "test");//TODO
+    }
 
     @Override
     public void register(@Nonnull IModRegistry registry) {

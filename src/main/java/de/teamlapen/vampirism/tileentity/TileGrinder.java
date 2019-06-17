@@ -15,6 +15,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
@@ -63,12 +64,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
 
     @Override
     public ITextComponent getName() {
-        return "tile.vampirism.blood_grinder.name";
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return ((facing == null || facing != EnumFacing.DOWN) && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, facing);
+        return new TextComponentString("tile.vampirism.blood_grinder.name");
     }
 
     @Override
@@ -79,7 +75,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     }
 
     @Override
-    public void update() {
+    public void tick() {
         if (this.world != null && !this.world.isRemote) {
             --this.cooldownPull;
             if (cooldownPull <= 0) {
