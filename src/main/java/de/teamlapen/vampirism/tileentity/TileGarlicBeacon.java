@@ -15,7 +15,6 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -50,11 +49,14 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
         return this.write(new NBTTagCompound());
     }
 
+
     @Override
-    public void invalidate() {
-        super.invalidate();
+    public void remove() {
+        super.remove();
         unregister();
+
     }
+
 
     @Override
     public void markDirty() {
@@ -135,10 +137,6 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
         return compound;
     }
 
-    @Override
-    protected void setWorldCreate(World world) {
-        this.setWorld(world);
-    }
 
     private void register() {
         if (registered) {
@@ -167,7 +165,7 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
             strength = defaultStrength;
         }
         if (time > 0 && old == 0 || time == 0 && old > 0) {
-            if (!isInvalid()) {
+            if (!isRemoved()) {
                 unregister();
                 register();
             }

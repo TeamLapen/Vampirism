@@ -24,6 +24,7 @@ public class InventoryHelper {
 
     /**
      * Checks if the given inventory contains at least the given amount of items in the respective slots.
+     * TODO 1.13 probably has to be modified/removed since meta data does not exist
      *
      * @param inventory
      * @param items     Has to have the same size as the inventory
@@ -68,7 +69,7 @@ public class InventoryHelper {
 
 
     @Nonnull
-    public static LazyOptional<Pair<IItemHandler, Object>> tryGetItemHandler(IBlockReader world, BlockPos pos, @Nullable EnumFacing side) {
+    public static LazyOptional<Pair<IItemHandler, TileEntity>> tryGetItemHandler(IBlockReader world, BlockPos pos, @Nullable EnumFacing side) {
         IBlockState state = world.getBlockState(pos);
         if (state.getBlock().hasTileEntity(state)) {
             TileEntity tile = world.getTileEntity(pos);

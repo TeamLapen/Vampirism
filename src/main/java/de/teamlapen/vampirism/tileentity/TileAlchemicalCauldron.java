@@ -8,14 +8,15 @@ import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
-import de.teamlapen.vampirism.blocks.BlockAlchemicalCauldron;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -26,15 +27,16 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,14 +62,11 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
      */
     private static int getLiquidColor(ItemStack s) {
         if (s != null) {
-            if (FluidLib.hasFluidItemCap(s)) {
-                IFluidHandler handler = FluidLib.getFluidItemCap(s);
-                FluidStack fluid = handler.drain(10000, false);
-                if (fluid != null) {
+            return FluidUtil.getFluidHandler(s)
+                    .map(handler ->
+                            handler.drain(10000, false)
+                    ).map(fluidStack -> fluidStack == null ? null : getFluidColor(fluidStack)).orElse(AlchemicalCauldronCraftingManager.getInstance().getLiquidColor(s));
 
-                    return getFluidColor(fluid);
-                }
-            }
         }
         return AlchemicalCauldronCraftingManager.getInstance().getLiquidColor(s);
     }
@@ -78,11 +77,11 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
      */
     private static int getFluidColor(FluidStack stack) {
         Fluid fluid = stack.getFluid();
-        if (fluid.equals(FluidRegistry.WATER)) {
-            return 0xC03040FF;
-        } else if (fluid.equals(FluidRegistry.LAVA)) {
-            return 0xFFFF5010;
-        }
+//        if (fluid.equals(FluidRegistry.WATER)) { //TODO 1.13
+//            return 0xC03040FF;
+//        } else if (fluid.equals(FluidRegistry.LAVA)) {
+//            return 0xFFFF5010;
+//        }
         int color = fluid.getColor(stack);
         if (color == 0xFFFFFFFF) {
             color = 0xFFFFFFFE; //0xFFFFFFFF == -1 which makes our isLiquidCheck fail
@@ -111,18 +110,25 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
      */
     @Nullable
     private IAlchemicalCauldronRecipe checkedRecipe;
-    /**
-     * The username of the owner.
-     */
-    private String username;
+
+    //TODO 1.13 Add AT for TileEntityFurnance#getBurnTime
+    private static int getItemBurnTime(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return 0;
+        } else {
+            Item item = stack.getItem();
+            int ret = stack.getBurnTime();
+            return net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(stack, ret == -1 ? TileEntityFurnace.getBurnTimes().getOrDefault(item, 0) : ret);
+        }
+    }
     /**
      * The UUID of the owner. Null on client, can be null on server.
      */
     private UUID ownerID;
-
-    public TileAlchemicalCauldron() {
-        super(new InventorySlot[]{new InventorySlot(item -> false, 116, 35), new InventorySlot(TileAlchemicalCauldron::isLiquidStack, 44, 17), new InventorySlot(68, 17), new InventorySlot(TileEntityFurnace::isItemFuel, 56, 53)});
-    }
+    /**
+     * The username of the owner.
+     */
+    private ITextComponent username;
 
     @Override
     public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
@@ -179,26 +185,14 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return liquidColor;
     }
 
+    public TileAlchemicalCauldron() {
+        super(ModTiles.alchemical_cauldron, new InventorySlot[]{new InventorySlot(item -> false, 116, 35), new InventorySlot(TileAlchemicalCauldron::isLiquidStack, 44, 17), new InventorySlot(68, 17), new InventorySlot(TileEntityFurnace::isItemFuel, 56, 53)});
+    }
+
     @Nonnull
     @Override
     public ITextComponent getName() {
-        return "vampirism.container." + BlockAlchemicalCauldron.regName;
-    }
-
-    /**
-     * @return The name of the owner or "Unknown" if not yet set or synced
-     */
-    public String getOwnerName() {
-        if (username == null) {
-
-            EntityPlayer player = getOwner();
-            if (player != null) {
-                username = player.getDisplayNameString();
-            } else {
-                return "Unknown";
-            }
-        }
-        return username;
+        return new TextComponentTranslation("tile.vampirism.alchemical_cauldron.name");
     }
 
     @Nonnull
@@ -224,34 +218,34 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
     }
 
+    /**
+     * @return The name of the owner or "Unknown" if not yet set or synced
+     */
+    public ITextComponent getOwnerName() {
+        if (username == null) {
+
+            EntityPlayer player = getOwner();
+            if (player != null) {
+                username = player.getDisplayName();
+            } else {
+                return new TextComponentString("Unknown");
+            }
+        }
+        return username;
+    }
+
     @Nonnull
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound nbt = super.write(new NBTTagCompound());
         nbt.putBoolean("cooking", cookTime > 0 && isBurning());
         nbt.putBoolean("burning", burnTime > 0);
-        nbt.putString("username", getOwnerName());
+        nbt.putString("username", ITextComponent.Serializer.toJson(username));
         ItemStack liquidItem = getStackInSlot(SLOT_LIQUID);
         if (liquidItem != null) {
             nbt.put("liquidItem", liquidItem.write(new NBTTagCompound()));
         }
         return nbt;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void handleUpdateTag(@Nonnull NBTTagCompound nbt) {
-        super.handleUpdateTag(nbt);
-        cookingClient = nbt.getBoolean("cooking");
-        burningClient = nbt.getBoolean("burning");
-        if (nbt.contains("liquidItem")) {
-            this.setInventorySlotContents(SLOT_LIQUID, new ItemStack(nbt.getCompoundTag("liquidItem")));
-        } else {
-            this.setInventorySlotContents(SLOT_LIQUID, ItemStack.EMPTY);
-        }
-        username = nbt.getString("username");
-        liquidColor = getLiquidColor(getStackInSlot(SLOT_LIQUID));
-        this.world.markBlockRangeForRenderUpdate(pos, pos);
     }
 
     /**
@@ -284,17 +278,23 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return isStackInSlot(SLOT_LIQUID);
     }
 
-    /**
-     * Checks if the given player is the owner.
-     * If none has been set yet, the given one becomes the owner.
-     */
-    public boolean isOwner(EntityPlayer player) {
-        if (ownerID != null) {
-            return ownerID.equals(player.getPersistentID());
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void handleUpdateTag(@Nonnull NBTTagCompound nbt) {
+        super.handleUpdateTag(nbt);
+        cookingClient = nbt.getBoolean("cooking");
+        burningClient = nbt.getBoolean("burning");
+        if (nbt.contains("liquidItem")) {
+            this.setInventorySlotContents(SLOT_LIQUID, ItemStack.read(nbt.getCompound("liquidItem")));
         } else {
-            setOwner(player);
-            return true;
+            this.setInventorySlotContents(SLOT_LIQUID, ItemStack.EMPTY);
         }
+        String u = nbt.getString("username");
+
+        username = ITextComponent.Serializer.fromJson(u);
+
+        liquidColor = getLiquidColor(getStackInSlot(SLOT_LIQUID));
+        this.world.markBlockRangeForRenderUpdate(pos, pos);
     }
 
     public void markDirty(boolean sync) {
@@ -313,27 +313,16 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
 
     }
 
-    @Override
-    public void read(NBTTagCompound tagCompound) {
-        super.read(tagCompound);
-        if (tagCompound.contains("burntime")) {
-            this.burnTime = tagCompound.getInt("burntime");
-            this.cookTime = tagCompound.getInt("cooktime");
-            this.totalBurnTime = tagCompound.getInt("cooktime_total");
-        }
-        if (tagCompound.hasUniqueId("owner")) {
-            ownerID = tagCompound.getUniqueId("owner");
-        }
-        if (tagCompound.contains("ownername")) {
-            username = tagCompound.getString("ownername");
-        }
-        if (tagCompound.contains("bypass_recipecheck")) {
-            ItemStack liquid = getStackInSlot(SLOT_LIQUID);
-            ItemStack ingredient = getStackInSlot(SLOT_INGREDIENT);
-            if (!liquid.isEmpty()) {
-                checkedRecipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(liquid, ingredient);
-
-            }
+    /**
+     * Checks if the given player is the owner.
+     * If none has been set yet, the given one becomes the owner.
+     */
+    public boolean isOwner(EntityPlayer player) {
+        if (ownerID != null) {
+            return ownerID.equals(player.getUniqueID());
+        } else {
+            setOwner(player);
+            return true;
         }
     }
 
@@ -365,6 +354,36 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     }
 
     @Override
+    public void read(NBTTagCompound tagCompound) {
+        super.read(tagCompound);
+        if (tagCompound.contains("burntime")) {
+            this.burnTime = tagCompound.getInt("burntime");
+            this.cookTime = tagCompound.getInt("cooktime");
+            this.totalBurnTime = tagCompound.getInt("cooktime_total");
+        }
+        if (tagCompound.hasUniqueId("owner")) {
+            ownerID = tagCompound.getUniqueId("owner");
+        }
+        if (tagCompound.contains("username")) {
+            String u = tagCompound.getString("username");
+            username = ITextComponent.Serializer.fromJson(u);
+        }
+        if (tagCompound.contains("bypass_recipecheck")) {
+            ItemStack liquid = getStackInSlot(SLOT_LIQUID);
+            ItemStack ingredient = getStackInSlot(SLOT_INGREDIENT);
+            if (!liquid.isEmpty()) {
+                checkedRecipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(liquid, ingredient);
+
+            }
+        }
+    }
+
+    public void setOwner(EntityPlayer player) {
+        ownerID = player.getUniqueID();
+        this.markDirty(true);
+    }
+
+    @Override
     public void tick() {
         boolean wasBurning = isBurning();
         boolean wasCooking = cookTime > 0;
@@ -376,7 +395,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         if (!world.isRemote) {
             if (isBurning() || isStackInSlot(SLOT_LIQUID) && isStackInSlot(SLOT_FUEL)) {
                 if (!isBurning() && canCook()) {
-                    this.burnTime = TileEntityFurnace.getItemBurnTime(getStackInSlot(SLOT_FUEL));
+                    this.burnTime = getItemBurnTime(getStackInSlot(SLOT_FUEL));
                     if (isBurning()) {
                         decrStackSize(SLOT_FUEL, 1);
                         dirty = true;
@@ -422,20 +441,6 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         }
     }
 
-    @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
-        super.write(compound);
-        compound.putInt("burntime", this.burnTime);
-        compound.putInt("cooktime", this.cookTime);
-        compound.putInt("cooktime_total", this.totalCookTime);
-        if (ownerID != null) compound.setUniqueId("owner", ownerID);
-        if (username != null) compound.putString("ownername", username);
-        if (checkedRecipe != null) {
-            compound.putBoolean("bypass_recipecheck", true);
-        }
-        return compound;
-    }
-
     private boolean canCook() {
         if (!isStackInSlot(SLOT_LIQUID)) return false;
         IAlchemicalCauldronRecipe recipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(getStackInSlot(SLOT_LIQUID), getStackInSlot(SLOT_INGREDIENT));
@@ -470,29 +475,18 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         }
     }
 
-    private void finishCooking() {
-        if (canCook()) {
-            IAlchemicalCauldronRecipe recipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(getStackInSlot(SLOT_LIQUID), getStackInSlot(SLOT_INGREDIENT));
-            if (!isStackInSlot(SLOT_RESULT)) {
-                setInventorySlotContents(SLOT_RESULT, recipe.getOutput().copy());
-            } else if (getStackInSlot(SLOT_RESULT).isItemEqual(recipe.getOutput())) {
-                getStackInSlot(SLOT_RESULT).grow(recipe.getOutput().getCount());
-            }
-            if (recipe.isValidLiquidItem(getStackInSlot(SLOT_LIQUID))) {
-                decrStackSize(SLOT_LIQUID, 1);
-            } else {
-                ItemStack fluidContainer = getStackInSlot(SLOT_LIQUID);
-                FluidStack s = recipe.isValidFluidItem(fluidContainer);
-                if (s != null) {
-                    IFluidHandlerItem handler = (IFluidHandlerItem) FluidLib.getFluidItemCap(fluidContainer);
-                    handler.drain(s, true);
-                    setInventorySlotContents(SLOT_LIQUID, handler.getContainer());
-                } else {
-                    LOGGER.w("Cooked item without valid input liquid (Recipe %s, Input %s)", recipe, fluidContainer);
-                }
-            }
-            decrStackSize(SLOT_INGREDIENT, 1);
+    @Override
+    public NBTTagCompound write(NBTTagCompound compound) {
+        super.write(compound);
+        compound.putInt("burntime", this.burnTime);
+        compound.putInt("cooktime", this.cookTime);
+        compound.putInt("cooktime_total", this.totalCookTime);
+        if (ownerID != null) compound.putUniqueId("owner", ownerID);
+        if (username != null) compound.putString("ownername", ITextComponent.Serializer.toJson(username));
+        if (checkedRecipe != null) {
+            compound.putBoolean("bypass_recipecheck", true);
         }
+        return compound;
     }
 
     private int getCookTime() {
@@ -513,9 +507,29 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return null;
     }
 
-    public void setOwner(EntityPlayer player) {
-        ownerID = player.getPersistentID();
-        this.markDirty(true);
+    private void finishCooking() {
+        if (canCook()) {
+            IAlchemicalCauldronRecipe recipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(getStackInSlot(SLOT_LIQUID), getStackInSlot(SLOT_INGREDIENT));
+            if (!isStackInSlot(SLOT_RESULT)) {
+                setInventorySlotContents(SLOT_RESULT, recipe.getOutput().copy());
+            } else if (getStackInSlot(SLOT_RESULT).isItemEqual(recipe.getOutput())) {
+                getStackInSlot(SLOT_RESULT).grow(recipe.getOutput().getCount());
+            }
+            if (recipe.isValidLiquidItem(getStackInSlot(SLOT_LIQUID))) {
+                decrStackSize(SLOT_LIQUID, 1);
+            } else {
+                ItemStack fluidContainer = getStackInSlot(SLOT_LIQUID);
+                FluidStack s = recipe.isValidFluidItem(fluidContainer);
+                if (s != null) {
+                    IFluidHandlerItem handler = (IFluidHandlerItem) FluidLib.getFluidItemCap(fluidContainer);
+                    handler.drain(s, true);
+                    setInventorySlotContents(SLOT_LIQUID, handler.getContainer());
+                } else {
+                    LOGGER.warn("Cooked item without valid input liquid (Recipe {}, Input {})", recipe, fluidContainer);
+                }
+            }
+            decrStackSize(SLOT_INGREDIENT, 1);
+        }
     }
 
     private boolean isStackInSlot(int slot) {

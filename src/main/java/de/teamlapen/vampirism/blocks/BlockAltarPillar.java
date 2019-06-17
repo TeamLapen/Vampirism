@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  */
 public class BlockAltarPillar extends VampirismBlock {
     private final static String name = "altar_pillar";
-    private final static EnumProperty<EnumPillarType> TYPE_PROPERTY = EnumProperty.create("type", EnumPillarType.class);
+    public final static EnumProperty<EnumPillarType> TYPE_PROPERTY = EnumProperty.create("type", EnumPillarType.class);
 
     public BlockAltarPillar() {
         super(name, Properties.create(Material.ROCK).hardnessAndResistance(0.9f));

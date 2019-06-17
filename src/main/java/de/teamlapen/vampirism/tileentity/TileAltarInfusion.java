@@ -35,7 +35,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -68,7 +67,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     private int targetLevel;
 
     public TileAltarInfusion() {
-        super(new InventorySlot[]{new InventorySlot(items[0], 44, 34), new InventorySlot(items[1], 80, 34), new InventorySlot(items[2], 116, 34)});
+        super(ModTiles.altar_infusion, new InventorySlot[]{new InventorySlot(items[0], 44, 34), new InventorySlot(items[1], 80, 34), new InventorySlot(items[2], 116, 34)});
     }
 
     /**
@@ -143,6 +142,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         return new TextComponentString("tile.vampirism.altar_infusion.name");
     }
 
+
     /**
      * Returns the affected player. If the ritual isn't running it returns null
      *
@@ -197,13 +197,15 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         super.read(tagCompound);
         int tick = tagCompound.getInt("tick");
         if (tick > 0 && player == null) {
-            try {
                 this.player = this.getWorld().getPlayerEntityByUUID(UUID.fromString(tagCompound.getString("playerUUID")));
+            if (this.player != null) {
                 this.runningTick = tick;
                 this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
-            } catch (NullPointerException e) {
-                LOGGER.warn("Failed to find player %d", tagCompound.getInt("playerUUID"));
+            } else {
+                LOGGER.warn("Failed to find player {}", tagCompound.getInt("playerUUID"));
+
             }
+
         }
         if (player == null) {
             this.runningTick = 0;
@@ -218,7 +220,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
      * ONLY call if {@link TileAltarInfusion#canActivate(EntityPlayer, boolean)} returned 1
      */
     public void startRitual(EntityPlayer player) {
-        LOGGER.debug("Starting ritual for %s", player);
+        LOGGER.debug("Starting ritual for {}", player);
         this.player = player;
         runningTick = DURATION_TICK;
 
@@ -240,7 +242,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     }
 
     @Override
-    public void update() {
+    public void tick() {
         if (runningTick == DURATION_TICK && !world.isRemote) {
             LOGGER.debug("Ritual started");
             consumeItems();
@@ -249,7 +251,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         runningTick--;
         if (runningTick <= 0)
             return;
-        if (player == null || player.isDead) {
+        if (player == null || !player.isAlive()) {
             runningTick = 1;
         } else {
             player.motionX = 0;
@@ -287,7 +289,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             if (!world.isRemote) {
                 IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
                 if (handler.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1) {
-                    LOGGER.warn("Player %s changed level while the ritual was running. Cannot levelup.", player);
+                    LOGGER.warn("Player {} changed level while the ritual was running. Cannot levelup.", player);
                     return;
                 }
                 handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
@@ -371,7 +373,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             BlockAltarPillar.EnumPillarType type = null;
             IBlockState temp;
             while ((temp = getWorld().getBlockState(pPos.add(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
-                BlockAltarPillar.EnumPillarType t = temp.get(BlockAltarPillar.typeProperty);
+                BlockAltarPillar.EnumPillarType t = temp.get(BlockAltarPillar.TYPE_PROPERTY);
                 if (type == null) {
                     type = t;
                     j++;

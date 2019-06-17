@@ -11,6 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.text.ITextComponent;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -28,7 +32,8 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
      * @param slots A slot 'description'. The array should contain one Slot instance for each inventory slot which should be created. The slots must each contain the position where they should be
      *              displayed in the GUI, they can also contain a filter for which items are allowed. Make sure that these Slot instance are unique on server and client.
      */
-    public InventoryTileEntity(InventorySlot[] slots) {
+    public InventoryTileEntity(TileEntityType<?> tileEntityTypeIn, InventorySlot[] slots) {
+        super(tileEntityTypeIn);
         this.slots = slots;
     }
 
@@ -87,6 +92,12 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     @Override
     public boolean hasCustomName() {
         return false;
+    }
+
+    @Nullable
+    @Override
+    public ITextComponent getCustomName() {
+        return null;
     }
 
     @Override
