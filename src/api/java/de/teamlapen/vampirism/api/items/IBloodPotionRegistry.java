@@ -11,7 +11,6 @@ import net.minecraft.util.WeightedRandom;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -76,7 +75,7 @@ public interface IBloodPotionRegistry {
      * @param categoryId Id of the category. Non-existent ones will be created
      */
     @ThreadSafeAPI
-    void addItemsToCategory(boolean bad, @Nonnull ResourceLocation categoryId, Objects... items);
+    void addItemsToCategory(boolean bad, @Nonnull ResourceLocation categoryId, Item... items);
 
     /**
      * Register a new potion effect.

@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
 import de.teamlapen.vampirism.api.items.IBloodPotionPropertyRandomizer;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
@@ -17,7 +18,10 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class BloodPotionRegistry implements IBloodPotionRegistry {
@@ -57,7 +61,7 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
 
     @ThreadSafeAPI
     @Override
-    public void addItemsToCategory(boolean bad, @Nonnull ResourceLocation categoryId, Objects... items) {
+    public void addItemsToCategory(boolean bad, @Nonnull ResourceLocation categoryId, Item... items) {
         categoryItemsQueue.add(Triple.of(categoryId, bad, items));
     }
 
