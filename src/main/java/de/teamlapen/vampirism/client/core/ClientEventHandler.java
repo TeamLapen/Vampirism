@@ -15,7 +15,6 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -38,7 +37,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -122,7 +120,7 @@ public class ClientEventHandler {
 
             //For each registered fluid: Replace the fluid model texture by fluid (still) texture and cache the retextured model
 
-            for (Map.Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet()) {
+            for (Map.Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet()) {//TODO Fluid
                 for (int x = 0; x < containerFluidModels.length; x++) {
                     retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder<String, String>()
                             .put("fluid", entry.getValue().getStill().toString())

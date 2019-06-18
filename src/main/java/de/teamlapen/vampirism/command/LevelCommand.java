@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -45,7 +44,7 @@ public class LevelCommand extends BasicCommand {
                             .executes(context -> {
                                 return setLevel(context, faction, IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().asPlayer()));
                             })
-                            .then(Commands.argument("player", EntityArgument.multiplePlayers())
+                            .then(Commands.argument("player", EntityArgument.entities())
                                     .executes(context -> {
                                         return setLevel(context, faction, IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "player"));
                                     }))));
@@ -61,7 +60,7 @@ public class LevelCommand extends BasicCommand {
                 context.getSource().sendErrorMessage(new TextComponentTranslation("command.vampirism.base.level.cant_leave"));
             }
             if (handler.setFactionAndLevel(faction, level)) {
-                context.getSource().sendFeedback(new TextComponentString(player.getName() + " is now a " + faction.getUnlocalizedName() + " level " + level), true);
+                context.getSource().sendFeedback(new TextComponentString(player.getName() + " is now a " + faction.getName() + " level " + level), true);
             } else {
                 context.getSource().sendErrorMessage(new TextComponentTranslation("commands.vampirism.failed_to_execute"));
             }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
@@ -33,7 +34,7 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
 
     @Nullable
     @Override
-    public IBloodPotionEffect getEffectFromId(@Nonnull String id) {
+    public IBloodPotionEffect getEffectFromId(@Nonnull ResourceLocation id) {
         return allEffects.get(id);
     }
 

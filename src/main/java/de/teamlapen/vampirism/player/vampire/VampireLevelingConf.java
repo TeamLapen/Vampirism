@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import com.google.common.collect.Maps;
+
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
@@ -94,7 +95,7 @@ public class VampireLevelingConf {
          * @return Either wildcard value or negative
          */
         public int getBloodMetaForCheck() {
-            return bloodMeta == 0 ? OreDictionary.WILDCARD_VALUE : -bloodMeta;
+            return bloodMeta == 0 ? OreDictionary.WILDCARD_VALUE : -bloodMeta;//TODO Oredict removed use other value
         }
     }
 

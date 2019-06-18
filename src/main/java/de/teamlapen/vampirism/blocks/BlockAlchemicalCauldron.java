@@ -67,7 +67,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
             TileAlchemicalCauldron tile = getTile(worldIn, pos);
             if (tile != null) {
                 if (tile.canUse(playerIn)) {
-                    playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALCHEMICAL_CAULDRON, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                    playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALCHEMICAL_CAULDRON, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO OpenGui
                 }
             }
         }

@@ -69,7 +69,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
                 player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
                 return true;
             }
-            player.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO OpenGui
             return true;
         }
         return true;

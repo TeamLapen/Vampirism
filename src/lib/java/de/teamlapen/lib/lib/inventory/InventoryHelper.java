@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 /**
  * Helper method for Inventories respectively {@link InventorySlot.IInventorySlotInventory}
  */
-public class InventoryHelper {
+public class InventoryHelper {//TODO OreDictionary removed select another value
 
 
     /**

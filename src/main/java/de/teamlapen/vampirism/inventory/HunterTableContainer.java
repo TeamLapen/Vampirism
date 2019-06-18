@@ -108,7 +108,7 @@ public class HunterTableContainer extends InventoryContainer {
      * @return
      */
     private ItemStack checkItems(int fangs, int blood, int bloodMeta, int par3) {
-        return InventoryHelper.checkItems(inventory, items, new int[]{1, fangs, blood, par3}, new int[]{OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE, bloodMeta == 0 ? OreDictionary.WILDCARD_VALUE : -bloodMeta, OreDictionary.WILDCARD_VALUE});
+        return InventoryHelper.checkItems(inventory, items, new int[]{1, fangs, blood, par3}, new int[]{OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE, bloodMeta == 0 ? OreDictionary.WILDCARD_VALUE : -bloodMeta, OreDictionary.WILDCARD_VALUE});//TODO OreDict removed -> user other number (-1)?
     }
 
     private class SlotResult extends net.minecraft.inventory.Slot {

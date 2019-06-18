@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.BlankRecipeWrapper;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -20,14 +21,14 @@ import java.awt.*;
 /**
  * Base class for hunter weapon recipe wrapper
  */
-public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
+public abstract class WeaponTableRecipeWrapper extends BlankRecipeWrapper {
     private static final ItemStack lavaStack = new ItemStack(Items.LAVA_BUCKET);
 
     private
     @Nonnull
     final IWeaponTableRecipe recipe;
 
-    protected HunterWeaponRecipeWrapper(@Nonnull IWeaponTableRecipe recipe) {
+    protected WeaponTableRecipeWrapper(@Nonnull IWeaponTableRecipe recipe) {
         this.recipe = recipe;
     }
 

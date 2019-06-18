@@ -47,8 +47,8 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
 
 
     AlchemicalCauldronRecipe(@Nonnull ItemStack output, ItemStack liquid, @Nonnull ItemStack ingredient) {
-        if (FluidLib.hasFluidItemCap(liquid)) {
-            IFluidHandler handler = FluidLib.getFluidItemCap(liquid);
+        if (FluidLib.hasFluidItemCap(liquid)) {//TODO Maxanier
+            IFluidHandler handler = FluidLib.getFluidItemCap(liquid);//TODO .orElse/.orElseThrow/.orElseGet
             FluidStack stack = handler.drain(Integer.MAX_VALUE, false);
             if (stack != null) {
                 LOGGER.debug("Replaced %s liquid item with %s fluid stack", liquid, stack);
@@ -155,8 +155,8 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     @Override
     public FluidStack isValidFluidItem(@Nonnull ItemStack stack) {
         if (fluidStack == null) return null;
-        if (FluidLib.hasFluidItemCap(stack)) {
-            IFluidHandler handler = FluidLib.getFluidItemCap(stack);
+        if (FluidLib.hasFluidItemCap(stack)) {//TODO @Maxanier
+            IFluidHandler handler = FluidLib.getFluidItemCap(stack);//TODO .orElse/.orElseThrow/.orElseGet
             FluidStack drained = handler.drain(fluidStack, false);
             if (drained == null || !drained.isFluidStackIdentical(fluidStack)) {
                 return null;

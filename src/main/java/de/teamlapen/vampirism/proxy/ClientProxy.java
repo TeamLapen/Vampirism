@@ -32,7 +32,7 @@ import java.util.Map;
  * Clientside Proxy
  */
 @OnlyIn(Dist.CLIENT)
-public class ClientProxy extends CommonProxy {
+public class ClientProxy extends CommonProxy {//TODO Mod Setup @maxanier
     private final static Logger LOGGER = LogManager.getLogger(ClientProxy.class);
 
     private VampirismHUDOverlay overlay;

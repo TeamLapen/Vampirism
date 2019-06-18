@@ -27,7 +27,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
     private float radiusPerTick;
 
     public BasicEntityAreaParticleCloud(World worldIn) {
-        super(worldIn);
+        super(worldIn);//TODO create EntityType like EntityAreaEffectCloud
         this.duration = 60;
         this.waitTime = 0;
         this.radiusPerTick = 0F;
@@ -130,9 +130,9 @@ public class BasicEntityAreaParticleCloud extends Entity {
                     int cr = rgb >> 16 & 255;
                     int cg = rgb >> 8 & 255;
                     int cb = rgb & 255;
-                    this.world.spawnParticle(particle, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (double) ((float) cr / 255.0F), (double) ((float) cg / 255.0F), (double) ((float) cb / 255.0F));
+                    this.world.addParticle(particle, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (double) ((float) cr / 255.0F), (double) ((float) cg / 255.0F), (double) ((float) cb / 255.0F));
                 } else {
-                    this.world.spawnParticle(particle, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (0.5D - this.rand.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.rand.nextDouble()) * 0.15D);
+                    this.world.addParticle(particle, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (0.5D - this.rand.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.rand.nextDouble()) * 0.15D);
                 }
             }
         } else {

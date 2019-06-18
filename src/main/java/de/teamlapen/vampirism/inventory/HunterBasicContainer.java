@@ -82,7 +82,7 @@ public class HunterBasicContainer extends InventoryContainer {
 
         @Override
         public ITextComponent getName() {
-            return new TextComponentString("entity.vampirism." + ModEntities.BASIC_HUNTER_NAME + ".name");
+            return new TextComponentString("entity.vampirism." + ModEntities.vampire_hunter.getName() + ".name");
         }
 
         @Nullable

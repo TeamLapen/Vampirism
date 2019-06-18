@@ -397,7 +397,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             if (!world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
                     if (trainee == null) {
-                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_BASIC, this.world, (int) posX, (int) posY, (int) posZ);
+                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_BASIC, this.world, (int) posX, (int) posY, (int) posZ);//TODO Gui
                         trainee = player;
                     } else {
                         player.sendMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));
@@ -432,7 +432,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     @Override
     public void stopVillageAttackDefense() {
-        this.setCustomNameTag("");
+        this.setCustomName(null);
         if (village_defense_area != null) {
             village_defense_area = null;
         } else if (village_attack_area != null) {

@@ -5,7 +5,7 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 /**
  * Unlisted String property that accepts all values
  */
-public class PropertyStringUnlisted implements IUnlistedProperty<String> {
+public class PropertyStringUnlisted implements IUnlistedProperty<String> {//TODO dont know what to do
     private final String name;
 
     public PropertyStringUnlisted(String name) {

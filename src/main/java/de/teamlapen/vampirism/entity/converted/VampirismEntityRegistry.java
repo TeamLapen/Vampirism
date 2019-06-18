@@ -133,7 +133,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         if (i != null) {
             bloodValueMultiplier = i / 10F;
         }
-        final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.create(null);
+        final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.create(null);//TODO @maxanier
         for (Map.Entry<Class<? extends EntityCreature>, IConvertingHandler> entry : convertibles.entrySet()) {
             ResourceLocation id = EntityList.getKey(entry.getKey());
             if (id == null) {

@@ -31,7 +31,7 @@ import java.util.function.Function;
 /**
  * Extended entity property which every {@link EntityCreature} has
  */
-public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst, IExtendedCreatureVampirism {
+public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst, IExtendedCreatureVampirism {//TODO Capabilities
 
     @CapabilityInject(IExtendedCreatureVampirism.class)
     public static final Capability<IExtendedCreatureVampirism> CAP = null;

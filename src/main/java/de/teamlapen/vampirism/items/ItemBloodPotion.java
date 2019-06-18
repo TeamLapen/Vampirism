@@ -76,7 +76,7 @@ public class ItemBloodPotion extends VampirismItem {
             BloodPotions.applyEffects(stack, entityLiving);
         }
 
-        if (entityplayer == null || !entityplayer.isCreative()) {
+        if (entityplayer == null || !entityplayer.abilities.isCreativeMode) {
             stack.shrink(1);
             if (stack.isEmpty()) {
                 return new ItemStack(Items.GLASS_BOTTLE);

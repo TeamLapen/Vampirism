@@ -51,7 +51,7 @@ public class ModVillages {
         }
     }
 
-    public static void modifyVillageSize(MapGenBase mapGenVillage) {
+    public static void modifyVillageSize(MapGenBase mapGenVillage) {//TODO modify villagesize
         if (mapGenVillage instanceof MapGenVillage) {
 
 

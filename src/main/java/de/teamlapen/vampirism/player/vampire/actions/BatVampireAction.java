@@ -166,7 +166,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
      * Set's flightspeed capability
      */
     private void setFlightSpeed(EntityPlayer player, float speed) {
-        player.capabilities.flySpeed = speed;
+        player.abilities.setFlySpeed(speed);
     }
 
     private void setModifier(EntityPlayer player, boolean enabled) {
@@ -177,8 +177,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -Balance.vpa.BAT_HEALTH_REDUCTION, 2).setSaved(false));
             }
 
-            player.capabilities.allowFlying = true;
-            player.capabilities.isFlying = true;
+            player.abilities.allowFlying = true;
+            player.abilities.isFlying = true;
             setFlightSpeed(player, (float) Balance.vpa.BAT_FLIGHT_SPEED);
             player.sendPlayerAbilities();
         } else {
@@ -190,10 +190,10 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 health.removeModifier(m);
             }
 
-            if (!player.isCreative()) {
-                player.capabilities.allowFlying = false;
+            if (!player.abilities.isCreativeMode) {
+                player.abilities.allowFlying = false;
             }
-            player.capabilities.isFlying = false;
+            player.abilities.isFlying = false;
             setFlightSpeed(player, 0.05F);
             player.sendPlayerAbilities();
         }
@@ -209,7 +209,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     private void setPlayerBat(EntityPlayer player, boolean bat) {
         if (bat) updatePlayerBatSize(player);
         if (bat) player.setPosition(player.posX, player.posY + (PLAYER_HEIGHT - BAT_HEIGHT), player.posZ);
-        player.eyeHeight = (bat ? BAT_EYE_HEIGHT : player.getDefaultEyeHeight());
+        player.eyeHeight = (bat ? BAT_EYE_HEIGHT : player.getDefaultEyeHeight());//TODO private access
     }
 
 }

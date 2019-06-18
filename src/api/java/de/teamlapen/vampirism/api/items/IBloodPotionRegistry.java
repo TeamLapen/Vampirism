@@ -50,7 +50,7 @@ public interface IBloodPotionRegistry {
      * Retrieves the potion effect for the given id if registered
      */
     @Nullable
-    IBloodPotionEffect getEffectFromId(@Nonnull String id);
+    IBloodPotionEffect getEffectFromId(@Nonnull ResourceLocation id);
 
     /**
      * Get a localized multiline description for the given item's category.

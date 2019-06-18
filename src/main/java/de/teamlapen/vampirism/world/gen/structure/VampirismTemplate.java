@@ -23,7 +23,7 @@ public class VampirismTemplate extends Template {
     private ResourceLocation lootTable;
 
     @Override
-    public boolean addBlocksToWorld(IWorld worldIn, BlockPos pos, @Nullable ITemplateProcessor templateProcessor, PlacementSettings placementIn, int flags) {
+    public boolean addBlocksToWorld(IWorld worldIn, BlockPos pos, @Nullable ITemplateProcessor templateProcessor, PlacementSettings placementIn, int flags) {//TODO right return statement
         super.addBlocksToWorld(worldIn, pos, templateProcessor, placementIn, flags);
         if (lootTable != null) {
             boolean flag = false;

@@ -44,7 +44,7 @@ public class StructureManager {
             if (structure.loot) template.setLootTable(LootHandler.addStructureLootTable(structure.name));
 
         } catch (IOException e) {
-            LOGGER.error(e, "Failed to load structure file %s", structure.name);
+            LOGGER.error(String.format("Failed to load structure file %s", structure.name), e);
         }
 
     }

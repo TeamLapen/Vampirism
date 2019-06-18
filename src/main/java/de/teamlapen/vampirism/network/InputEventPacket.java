@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.network;
 
+import io.netty.buffer.ByteBuf;
+
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
@@ -20,7 +22,6 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,7 +36,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * Sends any input related event to the server
  */
-public class InputEventPacket implements IMessage {
+public class InputEventPacket implements IMessage {//TODO @maxanier
 
 
     public static final String SUCKBLOOD = "sb";

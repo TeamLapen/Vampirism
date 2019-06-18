@@ -74,7 +74,7 @@ public class ItemHolyWaterSplashBottle extends ItemHolyWaterBottle implements En
             worldIn.spawnEntity(entityThrowable);
         }
 
-        if (!playerIn.isCreative()) {
+        if (!playerIn.abilities.isCreativeMode) {
             stack.shrink(1);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);

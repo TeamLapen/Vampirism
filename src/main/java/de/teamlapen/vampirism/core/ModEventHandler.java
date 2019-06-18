@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * Handles all events used in central parts of the mod
  */
-public class ModEventHandler {
+public class ModEventHandler {//TODO Mod Events @Maxanier
 
     private final static Logger LOGGER = LogManager.getLogger(ModEventHandler.class);
 
@@ -137,14 +137,14 @@ public class ModEventHandler {
         if (!Configs.disable_config_sync) {
             if (event.getPlayer() != null && (event.getPlayer() instanceof EntityPlayerMP)) {
                 LOGGER.debug("Sending configuration to client (%s)", event.getPlayer());
-                VampirismMod.dispatcher.sendTo(SyncConfigPacket.createSyncConfigPacket(), (EntityPlayerMP) event.getPlayer());
+                VampirismMod.dispatcher.sendTo(SyncConfigPacket.createSyncConfigPacket(), (EntityPlayerMP) event.getPlayer());//TODO Dispatcher
             }
         }
     }
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
-        event.getWorld().addEventListener(new ModWorldEventListener(event.getWorld().provider.getDimension()));
+        event.getWorld().addEventListener(new ModWorldEventListener(event.getWorld().getDimension()));
     }
 
     @SubscribeEvent
@@ -157,7 +157,7 @@ public class ModEventHandler {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
-        VampirismAPI.getGarlicChunkHandler(event.getWorld()).clear();
+        VampirismAPI.getGarlicChunkHandler(event.getWorld().getWorld()).clear();//TODO test is World right (or IWorld)
         TileTotem.clearCacheForDimension(event.getWorld().getDimension());
     }
 

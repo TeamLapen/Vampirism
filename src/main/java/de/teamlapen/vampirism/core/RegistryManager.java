@@ -34,7 +34,7 @@ import net.minecraftforge.registries.ObjectHolderRegistry;
  * Handles registrations of all registrable things as well as a few additional
  * dependent things
  */
-public class RegistryManager implements IInitListener {
+public class RegistryManager implements IInitListener {//TODO Mod Loading process @maxanier
 
     /**
      * Delegate for some client side registrations

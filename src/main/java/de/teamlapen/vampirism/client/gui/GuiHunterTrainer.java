@@ -51,7 +51,7 @@ public class GuiHunterTrainer extends GuiContainer {
         this.buttons.add(this.buttonLevelup = new GuiButton(1, i + 120, j + 24, fontRenderer.getStringWidth(name) + 5, 20, name) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));//TODO Dispatcher
                 EntityPlayer player = Minecraft.getInstance().player;
                 UtilLib.spawnParticles(player.getEntityWorld(), Particles.ENCHANT, player.posX, player.posY, player.posZ, 1, 1, 1, 100, 1);
                 player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);

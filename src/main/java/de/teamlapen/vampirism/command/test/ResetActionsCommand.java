@@ -7,7 +7,6 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -28,7 +27,7 @@ public class ResetActionsCommand extends BasicCommand {
                 .executes(context -> {
                     return resetActions(context.getSource(), Lists.newArrayList(context.getSource().asPlayer()));
                 })
-                .then(Commands.argument("players", EntityArgument.multiplePlayers())
+                .then(Commands.argument("players", EntityArgument.entities())
                         .executes(context -> {
                             return resetActions(context.getSource(), Lists.newArrayList(EntityArgument.getPlayers(context, "players")));
                         }));

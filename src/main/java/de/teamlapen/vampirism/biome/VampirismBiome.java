@@ -24,7 +24,7 @@ public abstract class VampirismBiome extends Biome {
     public static final AbstractFlowersFeature VAMPIREFOREST_FLOWER_FEATURE = new FeatureVampireForestFlower();
     public static final AbstractTreeFeature<NoFeatureConfig> VAMPIRE_TREE_FEATURE = new TreeFeature(false, 4, Blocks.SPRUCE_LOG.getDefaultState(), Blocks.OAK_LEAVES.getDefaultState(), false);
     public static final Feature<HunterTentConfig> HUNTER_TENT = new FeatureHunterCamp();//TODO possible a structure
-    public static final Feature<VampireDungeonConfig> VAMPIRE_DUNGEON = new FeatureVampireDungeon<>();//TODO possible a structure
+    public static final Feature<VampireDungeonConfig> VAMPIRE_DUNGEON = new FeatureVampireDungeon();//TODO possible a structure
     public static final CompositeFeature<HunterTentConfig, FrequencyConfig> HUNTER_TENT_FEATURE = Biome.createCompositeFeature(HUNTER_TENT, new HunterTentConfig(), AT_SURFACE, new FrequencyConfig(10));
     public static final CompositeFeature<VampireDungeonConfig, NoPlacementConfig> VAMPIRE_DUNGEON_FEATURE = Biome.createCompositeFeature(VAMPIRE_DUNGEON, new VampireDungeonConfig(), PASSTHROUGH, IPlacementConfig.NO_PLACEMENT_CONFIG);
 

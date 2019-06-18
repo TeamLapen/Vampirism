@@ -45,7 +45,7 @@ public class HunterTrainerContainer extends InventoryContainer {
         HunterLevelingConf levelingConf = HunterLevelingConf.instance();
         if (!levelingConf.isLevelValidForTrainer(targetLevel)) return false;
         int[] req = levelingConf.getItemRequirementsForTrainer(targetLevel);
-        missing = InventoryHelper.checkItems(tile, items, new int[]{req[0], req[1], 1}, new int[]{OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE, levelingConf.getHunterIntelMetaForLevel(targetLevel) == 0 ? OreDictionary.WILDCARD_VALUE : -levelingConf.getHunterIntelMetaForLevel(targetLevel)});
+        missing = InventoryHelper.checkItems(tile, items, new int[]{req[0], req[1], 1}, new int[]{OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE, levelingConf.getHunterIntelMetaForLevel(targetLevel) == 0 ? OreDictionary.WILDCARD_VALUE : -levelingConf.getHunterIntelMetaForLevel(targetLevel)});//TODO OreDict removed -> user other number (-1)?
         return missing.isEmpty();
     }
 
@@ -108,12 +108,12 @@ public class HunterTrainerContainer extends InventoryContainer {
      */
     public static class HunterTrainerInventory extends SimpleInventory {
         public HunterTrainerInventory() {
-            super(new InventorySlot[]{new InventorySlot(Items.IRON_INGOT, 27, 26), new InventorySlot(Items.GOLD_INGOT, 57, 26), new InventorySlot(ModItems.hunter_intel, 86, 26)});
+            super(new InventorySlot[]{new InventorySlot(Items.IRON_INGOT, 27, 26), new InventorySlot(Items.GOLD_INGOT, 57, 26), new InventorySlot(ModItems.hunter_intel_0, 86, 26)});
         }
 
         @Override
         public ITextComponent getName() {
-            return new TextComponentString("entity.vampirism." + ModEntities.HUNTER_TRAINER + ".name");
+            return new TextComponentString("entity.vampirism." + ModEntities.hunter_trainer.getName() + ".name");
         }
 
         @Override

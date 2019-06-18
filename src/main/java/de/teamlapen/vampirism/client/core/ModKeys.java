@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
-import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
@@ -113,29 +112,29 @@ public class ModKeys {
             EntityPlayer player = Minecraft.getInstance().player;
             if (mouseOver != null && !player.isSpectator() && FactionPlayerHandler.get(player).isInFaction(VReference.VAMPIRE_FACTION) && !VampirePlayer.get(player).getActionHandler().isActionActive(VampireActions.bat)) {
                 if (mouseOver.entity != null) {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entity.getEntityId()));
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entity.getEntityId()));//TODO Dispatcher
                 } else if (mouseOver.type == RayTraceResult.Type.BLOCK) {
                     BlockPos pos = mouseOver.getBlockPos();
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DRINK_BLOOD_BLOCK, "" + pos.getX() + ":" + pos.getY() + ":" + pos.getZ()));
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DRINK_BLOOD_BLOCK, "" + pos.getX() + ":" + pos.getY() + ":" + pos.getZ()));//TODO Dispatcher
                 } else {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + -1));
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + -1));//TODO Dispatcher
                 }
             }
         } else if (keyPressed == KEY.ACTION) {
             EntityPlayer player = Minecraft.getInstance().player;
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
-                player.openGui(VampirismMod.instance, ModGuiHandler.ID_ACTION, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                player.openGui(VampirismMod.instance, ModGuiHandler.ID_ACTION, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());//TODO Gui
             }
         } else if (keyPressed == KEY.SKILL) {
             EntityPlayer player = Minecraft.getInstance().player;
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
                 player.displayGui(guiOwner);
-                openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());//TODO Gui
             }
         } else if (keyPressed == KEY.VISION) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));//TODO Dispatcher
         } else if (keyPressed == KEY.BLOOD_POTION) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.OPEN_BLOOD_POTION, ""));
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.OPEN_BLOOD_POTION, ""));//TODO Dispatcher
         } else if (keyPressed == KEY.ACTION1) {
             FactionPlayerHandler factionHandler = FactionPlayerHandler.get(Minecraft.getInstance().player);
             toggleBoundAction(factionHandler.getCurrentFactionPlayer(), factionHandler.getBoundAction1());
@@ -143,9 +142,9 @@ public class ModKeys {
             FactionPlayerHandler factionHandler = FactionPlayerHandler.get(Minecraft.getInstance().player);
             toggleBoundAction(factionHandler.getCurrentFactionPlayer(), factionHandler.getBoundAction2());
         }
-        if (suckKeyDown && !GameSettings.isKeyDown(SUCK)) {
+        if (suckKeyDown && !SUCK.isKeyDown()) {//TODO check if its right
             suckKeyDown = false;
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));//TODO Dispatcher
         }
     }
 
@@ -187,7 +186,7 @@ public class ModKeys {
                 } else if (!action.getFaction().equals(player.getFaction())) {
                     player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.only_faction", UtilLib.translate(action.getFaction().getTranslationKey())), true);
                 } else {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + key));
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + key));//TODO Dispatcher
                 }
             }
         }

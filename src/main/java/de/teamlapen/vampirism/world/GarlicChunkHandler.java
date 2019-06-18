@@ -96,7 +96,7 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         @Nonnull
         @Override
         public IGarlicChunkHandler getHandler(World world) {
-            return handlers.computeIfAbsent(world.dimension, k -> new GarlicChunkHandler());
+            return handlers.computeIfAbsent(world.dimension, k -> new GarlicChunkHandler());//TODO ?
         }
     }
 

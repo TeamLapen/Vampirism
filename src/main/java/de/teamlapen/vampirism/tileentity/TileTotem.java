@@ -191,7 +191,7 @@ public class TileTotem extends TileEntity implements ITickable {
     private int capture_timer;
 
     public boolean canPlayerRemoveBlock(EntityPlayer player) {
-        if (player.isCreative()) return true;
+        if (player.abilities.isCreativeMode) return true;
         @Nullable IPlayableFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
         if (controllingFaction == null) {
             if (capturingFaction == null || capturingFaction.equals(faction)) {
@@ -362,7 +362,7 @@ public class TileTotem extends TileEntity implements ITickable {
     }
 
     @Override
-    public void invalidate() {
+    public void invalidate() {//TODO ?
         super.invalidate();
         unregisterVampireArea();
     }

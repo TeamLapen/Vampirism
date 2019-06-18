@@ -53,7 +53,6 @@ public class EntityThrowableItem extends EntityThrowable {
         if (!stack.isEmpty() && !(stack.getItem() instanceof IVampirismThrowableItem))
             throw new IllegalArgumentException("EntityThrowable only accepts IVampirismThrowableItem, but not " + stack);
         this.getDataManager().set(ITEM, stack);
-        this.getDataManager().setDirty(ITEM);
     }
 
     @Override

@@ -162,7 +162,7 @@ public class BlockCoffin extends VampirismBlockContainer {
                 }
                 tile.changeColor(((ItemDye) heldItem.getItem()).getDyeColor());
                 ((TileCoffin) other).changeColor(((ItemDye) heldItem.getItem()).getDyeColor());
-                if (!player.isCreative()) {
+                if (!player.abilities.isCreativeMode) {
                     heldItem.shrink(1);
                 }
                 return true;
@@ -225,7 +225,7 @@ public class BlockCoffin extends VampirismBlockContainer {
         IBlockState iblockstate = worldIn.getBlockState(blockpos);
         if (iblockstate.getBlock() == this && iblockstate.get(PART) != part) {
             worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 35);
-            if (!worldIn.isRemote && !player.isCreative()) {
+            if (!worldIn.isRemote && !player.abilities.isCreativeMode) {
                 if (part == CoffinPart.HEAD) {
                     state.dropBlockAsItem(worldIn, pos, 0);
                 } else {

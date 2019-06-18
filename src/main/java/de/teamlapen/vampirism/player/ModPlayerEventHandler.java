@@ -178,7 +178,7 @@ public class ModPlayerEventHandler {
                     if (glasBottle && block instanceof ITileEntityProvider) {
                         TileEntity entity = event.getWorld().getTileEntity(event.getPos());
                         if (entity != null && entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace()) != null) {
-                            net.minecraftforge.fluids.capability.IFluidHandler fluidHandler = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace());
+                            net.minecraftforge.fluids.capability.IFluidHandler fluidHandler = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace());//TODO .orElse/.orElseThrow/.orElseGet
                             FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.blood, 1000), false);
                             if (drain != null && drain.amount >= BloodBottleFluidHandler.MULTIPLIER) {
                                 convert = true;

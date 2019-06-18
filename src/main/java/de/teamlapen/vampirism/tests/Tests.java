@@ -124,7 +124,7 @@ public class Tests {
                     failed = true;
                 }
             } catch (IllegalAccessException e) {
-                LOGGER.error(e, "Failed to check fields of class %s", clazz.getName());
+                LOGGER.error(String.format("Failed to check fields of class %s", clazz.getName()), e);
                 return false;
             }
 
@@ -135,7 +135,7 @@ public class Tests {
     private static boolean bloodFluidHandler(TestInfo info) {
         info.world.setBlockState(info.pos, ModBlocks.blood_container.getDefaultState());
         TileEntity t = info.world.getTileEntity(info.pos);
-        IFluidHandler handler = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.random(info.world.rand));
+        IFluidHandler handler = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.random(info.world.rand));//TODO .orElse/.orELseThrow/.orElseGet
         handler.fill(new FluidStack(ModFluids.blood, 10000000), true);
         int blood = BloodHelper.getBlood(handler);
         assert blood > 0 : "Could not fill blood container";

@@ -17,6 +17,7 @@ import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +43,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     @Override
     public ITextComponent getName() {
-        return UtilLib.translate("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName());
+        return new TextComponentString(UtilLib.translate("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName()));
     }
 
     public T getOldCreature() {
@@ -115,9 +116,9 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public void playLivingSound() {
+    public void playAmbientSound() {
         if (!nil()) {
-            entityCreature.playLivingSound();
+            entityCreature.playAmbientSound();
         }
     }
 
@@ -186,8 +187,8 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.updateEntityAttributes();
     }
 
@@ -258,12 +259,12 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
         if (!nil()) {
             try {
                 NBTTagCompound entity = new NBTTagCompound();
-                entityCreature.isDead = false;
+                entityCreature.dead = false;//TODO is protected
                 entityCreature.writeUnlessPassenger(entity);
-                entityCreature.isDead = true;
+                entityCreature.dead = true;//TODO is protected
                 nbt.put("entity_old", entity);
             } catch (Exception e) {
-                LOGGER.error(e, "Failed to write old entity (%s) to NBT. If this happens more often please report this to the mod author.", entityCreature);
+                LOGGER.error(String.format("Failed to write old entity (%s) to NBT. If this happens more often please report this to the mod author.", entityCreature), e);//TODO other way?
                 this.setEntityCreature(null);
             }
         }

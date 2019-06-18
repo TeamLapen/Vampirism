@@ -14,7 +14,7 @@ public class FluidBlood extends Fluid {
         this.setTemperature(309);
         this.setViscosity(3000);
         this.setRarity(EnumRarity.UNCOMMON);
-        if (Loader.isModLoaded(REFERENCE.INTEGRATIONS_MODID)) {
+        if (Loader.isModLoaded(REFERENCE.INTEGRATIONS_MODID)) {//TODO @Maxanier
             this.setUnlocalizedName(REFERENCE.MODID + "." + name + ".vampirism");
         } else {
             this.setUnlocalizedName(REFERENCE.MODID + "." + name);

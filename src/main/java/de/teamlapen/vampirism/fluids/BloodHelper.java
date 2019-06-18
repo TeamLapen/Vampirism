@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.fluids;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
@@ -12,6 +11,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 
@@ -20,6 +21,7 @@ import javax.annotation.Nonnull;
  */
 public class BloodHelper {
 
+    private static final Logger LOGGER = LogManager.getLogger(BloodHelper.class);
 
     /**
      * Returns the first stack on the players hotbar that can store blood
@@ -40,7 +42,7 @@ public class BloodHelper {
      * Checks if the given stack can store blood
      */
     public static boolean canStoreBlood(@Nonnull ItemStack stack) {
-        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
+        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);//TODO .orElse/.orElseThrow/.orElseGet
         return handler != null && handler.fill(new FluidStack(ModFluids.blood, 1000), false) > 0;
     }
 
@@ -65,7 +67,7 @@ public class BloodHelper {
      * Returns the amount of blood stored in the given stack
      */
     public static int getBlood(@Nonnull ItemStack stack) {
-        FluidStack stack1 = FluidUtil.getFluidContained(stack);
+        FluidStack stack1 = FluidUtil.getFluidContained(stack);//TODO .orElse/.orElseThrow/.orElseGet
         return stack1 == null ? 0 : stack1.amount;
 
     }
@@ -86,7 +88,7 @@ public class BloodHelper {
         if (exact && doDrain) {
             if (drain(stack, amount, false, false) != amount) return 0;
         }
-        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
+        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);//TODO .orElse/.orElseThrow/.orElseGet
         if (handler != null) {
             FluidStack fluidStack = handler.drain(amount, doDrain);
             return fluidStack == null ? 0 : fluidStack.amount;
@@ -95,7 +97,7 @@ public class BloodHelper {
     }
 
     public static int fill(@Nonnull ItemStack stack, int amount, boolean doFill) {
-        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
+        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);//TODO .orElse/.orElseThrow/.orElseGet
         if (handler != null) {
             return handler.fill(new FluidStack(ModFluids.blood, amount), doFill);
         }
@@ -125,10 +127,10 @@ public class BloodHelper {
         }
         ItemStack glas = getGlassBottleInHotbar(player.inventory);
         if (!glas.isEmpty() && Configs.autoConvertGlasBottles) {
-            ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1, 0);
+            ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1, 0);//TODO BloodPotion
             int filled = fill(bloodBottle, amt, true);
             if (filled == 0) {
-                VampirismMod.log.w("BloodHelper", "Failed to fill blood bottle with blood");
+                LOGGER.warn("Failed to fill blood bottle with blood");
             }
             glas.shrink(1);
             if (glas.isEmpty()) {

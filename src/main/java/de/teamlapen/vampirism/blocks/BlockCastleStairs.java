@@ -31,7 +31,7 @@ public class BlockCastleStairs extends BlockStairs {
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(new TextComponentTranslation(ModBlocks.castle_block.getTranslationKey() + (this.equals(ModBlocks.castle_stairs_dark_stone) ? ".no_spawn" : ".vampire_spawn")).applyTextStyle(TextFormatting.ITALIC));
+        tooltip.add(new TextComponentTranslation(this.equals(ModBlocks.castle_stairs_dark_stone) ? "castle_block.vampire_spawn" : "castle_block.no_spawn").applyTextStyle(TextFormatting.ITALIC));//TODO get the keys on different way
 
     }
 

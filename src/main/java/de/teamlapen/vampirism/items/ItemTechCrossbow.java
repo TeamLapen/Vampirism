@@ -144,7 +144,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
 
                 if (!itemstack.isEmpty() && this.isArrowPackage(itemstack)) {
                     setArrowsLeft(bowStack, MAX_ARROW_COUNT);
-                    if (!player.isCreative()) {
+                    if (!player.abilities.isCreativeMode) {
                         player.inventory.decrStackSize(i, 1);
                     }
                     player.getCooldownTracker().setCooldown(bowStack.getItem(), getReloadCooldown(player, bowStack));

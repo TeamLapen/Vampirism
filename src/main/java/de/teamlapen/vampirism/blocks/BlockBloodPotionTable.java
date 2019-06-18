@@ -37,7 +37,7 @@ public class BlockBloodPotionTable extends VampirismBlock {
 
         if (!worldIn.isRemote) {
             if (canUse(playerIn))
-                playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO OpenGui
             else {
                 playerIn.sendMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
             }

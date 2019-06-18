@@ -1,18 +1,18 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import de.teamlapen.vampirism.inventory.ShapelessHunterWeaponRecipe;
 import mezz.jei.api.ingredients.IIngredients;
+
+import de.teamlapen.vampirism.recipes.ShapelessWeaponTableRecipe;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
 
-public class ShapelessHunterWeaponRecipeWrapper extends HunterWeaponRecipeWrapper {
-    private final
-    @Nonnull
-    ShapelessHunterWeaponRecipe recipe;
+public class ShapelessWeaponTableRecipeWrapper extends WeaponTableRecipeWrapper {
+    private final @Nonnull
+    ShapelessWeaponTableRecipe recipe;
 
-    protected ShapelessHunterWeaponRecipeWrapper(@Nonnull ShapelessHunterWeaponRecipe recipe) {
+    protected ShapelessWeaponTableRecipeWrapper(@Nonnull ShapelessWeaponTableRecipe recipe) {
         super(recipe);
         this.recipe = recipe;
         for (Object input : this.recipe.recipeItems) {

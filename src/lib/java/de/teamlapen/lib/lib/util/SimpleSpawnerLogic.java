@@ -158,7 +158,7 @@ public abstract class SimpleSpawnerLogic {
                     }
 
                     if (limitType != null) {
-                        int total = this.getSpawnerWorld().countEntities(limitType, true);
+                        int total = this.getSpawnerWorld().countEntities(limitType.getClass(), limitType.getMaxNumberOfCreature() + 1);//TODO must verify
                         total = total * UtilLib.countPlayerLoadedChunks(this.getSpawnerWorld()) / MOB_COUNT_DIV;
                         if (total > limitType.getMaxNumberOfCreature()) {
                             this.resetTimer();

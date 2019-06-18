@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.fluids.FluidBlood;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
-public class ModFluids {
+public class ModFluids {//TODO Fluids
     public static Fluid blood = new FluidBlood(VReference.FLUID_BLOOD_NAME);
     public static Fluid impure_blood = new FluidBlood(VReference.FLUID_IMPURE_BLOOD_NAME);
 

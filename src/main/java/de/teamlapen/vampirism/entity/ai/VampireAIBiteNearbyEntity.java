@@ -82,7 +82,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
     }
 
     @Override
-    public void updateTask() {
+    public void tick() {
         EntityCreature e = creature.getEntity();
         if (vampireEntity instanceof EntityLiving) {
             ((EntityLiving) vampireEntity).getLookHelper().setLookPosition(e.posX, e.posY + (double) e.getEyeHeight(), e.posZ, 10.0F, (float) ((EntityLiving) vampireEntity).getVerticalFaceSpeed());

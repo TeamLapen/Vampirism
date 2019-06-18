@@ -150,8 +150,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 IVampirePlayer player = VampirePlayer.get(mc.player);
                 if (player.wantsBlood()) {
                     TileEntity tile = Minecraft.getInstance().world.getTileEntity(p.getBlockPos());
-                    if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-                        if (FluidLib.getFluidAmount(tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), ModFluids.blood) > 0) {
+                    if (tile != null && tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).isPresent()) {//TODO LazyOption
+                        if (FluidLib.getFluidAmount(tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), ModFluids.blood) > 0) {//TODO LazyOption
                             renderBloodFangs(this.mc.mainWindow.getScaledWidth(), this.mc.mainWindow.getScaledHeight(), 1, 0xFF0000);
                             event.setCanceled(true);
                         }
@@ -343,7 +343,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             if (effect == null || effect.getAmplifier() < 5) {
                 screenColor = 0xfffff755;
                 fullScreen = false;
-                if (vampire.getRepresentingPlayer().isCreative()) {
+                if (vampire.getRepresentingPlayer().abilities.isCreativeMode) {
                     screenPercentage = Math.min(20, screenPercentage);
                 }
             } else {

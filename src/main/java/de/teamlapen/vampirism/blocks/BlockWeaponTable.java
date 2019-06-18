@@ -49,7 +49,7 @@ public class BlockWeaponTable extends VampirismBlock {
             if (lava < MAX_LAVA) {
                 LazyOptional<IFluidHandlerItem> opt = FluidUtil.getFluidHandler(heldItem);
                 opt.ifPresent(fluidHandler -> {
-                    FluidStack missing = new FluidStack(Fluids.LAVA, (MAX_LAVA - lava) * MB_PER_META); //Forge fluid system will be rewritten
+                    FluidStack missing = new FluidStack(Fluids.LAVA, (MAX_LAVA - lava) * MB_PER_META); //TODO Fluid
                     FluidStack drainable = fluidHandler.drain(missing, false);
                     if (drainable != null && drainable.amount >= MB_PER_META) {
                         FluidStack drained = fluidHandler.drain(missing, true);
@@ -71,7 +71,7 @@ public class BlockWeaponTable extends VampirismBlock {
             if (!flag) {
 
                 if (canUse(player))
-                    player.openGui(VampirismMod.instance, ModGuiHandler.ID_WEAPON_TABLE, world, pos.getX(), pos.getY(), pos.getZ());
+                    player.openGui(VampirismMod.instance, ModGuiHandler.ID_WEAPON_TABLE, world, pos.getX(), pos.getY(), pos.getZ());//TODO open Gui
                 else {
                     player.sendMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
                 }

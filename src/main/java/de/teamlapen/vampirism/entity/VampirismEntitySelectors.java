@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Creates and adds custom entity selectors based on Vampirism's properties
  */
-public class VampirismEntitySelectors {
+public class VampirismEntitySelectors {//TODO @maxanier
 
     private final static Logger LOGGER = LogManager.getLogger(VampirismEntitySelectors.class);
     private static final String FACTION = "vampirism:faction";
