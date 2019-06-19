@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity;
 
 import com.google.common.collect.Maps;
+
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 
 import javax.annotation.Nullable;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 public enum EntityClassType {
+    None(0, 0, 0),
     Tank(0.3, 0, 0),
     Fighter(0, 0.1, 0),
     Support(0, 0, 0),
