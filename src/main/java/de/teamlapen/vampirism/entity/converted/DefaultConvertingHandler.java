@@ -52,7 +52,7 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
                 if (j > 0) converted.entityDropItem(Items.LEATHER, j);
             } else if (entity instanceof EntityPolarBear) {
                 int j = converted.getRNG().nextInt(3);
-                if (j > 0) converted.entityDropItem(Items.FISH, j); //TODO select fish
+                if (j > 0) converted.entityDropItem(Items.PUFFERFISH, j);
                 int k = converted.getRNG().nextInt(2);
                 if (k > 0) converted.entityDropItem(Items.ROTTEN_FLESH, k);
             } else if (entity instanceof EntityRabbit) {

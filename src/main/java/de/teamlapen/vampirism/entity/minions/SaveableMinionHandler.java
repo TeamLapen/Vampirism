@@ -67,7 +67,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
 
     @Override
     public void checkMinions() {
-        minions.removeIf(m -> MinionHelper.entity(m).dead || !lord.equals(m.getLord()));//TODO protected attribute
+        minions.removeIf(m -> !MinionHelper.entity(m).isAlive() || !lord.equals(m.getLord()));
     }
 
     @Override
@@ -90,13 +90,13 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
         NBTTagList list = new NBTTagList();
         for (IMinion m : minions) {
             Entity e = MinionHelper.entity(m);
-            boolean dead = e.dead;//TODO protected attribute
-            e.dead = false;//TODO protected attribute
+            boolean removed = !e.isAlive();
+            e.removed = false;
             NBTTagCompound nbt = new NBTTagCompound();
             e.writeUnlessRemoved(nbt);
             list.add(nbt);
-            if (dead)
-                e.dead = true;//TODO protected attribute
+            if (removed)
+                e.removed = true;
         }
         //VampirismMod.log.d(TAG, "Saved " + list.tagCount() + " minions");
         return list;

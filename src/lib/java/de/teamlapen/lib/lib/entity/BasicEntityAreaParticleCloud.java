@@ -2,6 +2,7 @@ package de.teamlapen.lib.lib.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAreaEffectCloud;
+import net.minecraft.entity.EntityType;
 import net.minecraft.init.Particles;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -26,8 +27,8 @@ public class BasicEntityAreaParticleCloud extends Entity {
     private int waitTime;
     private float radiusPerTick;
 
-    public BasicEntityAreaParticleCloud(World worldIn) {
-        super(worldIn);//TODO create EntityType like EntityAreaEffectCloud
+    public BasicEntityAreaParticleCloud(EntityType type, World worldIn) {
+        super(type, worldIn);
         this.duration = 60;
         this.waitTime = 0;
         this.radiusPerTick = 0F;

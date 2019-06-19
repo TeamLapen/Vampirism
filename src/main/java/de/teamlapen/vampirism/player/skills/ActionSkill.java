@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.player.skills;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -56,7 +55,7 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
 
     @Override
     public ITextComponent getDescription() {
-        return new TextComponentString(UtilLib.translate(customDescription ? "text.vampirism.skill." + this.getRegistryName().getPath() + ".desc" : "text.vampirism.skill.unlocks_action"));
+        return new TextComponentTranslation(customDescription ? "text.vampirism.skill." + this.getRegistryName().getPath() + ".desc" : "text.vampirism.skill.unlocks_action");
     }
 
     @OnlyIn(Dist.CLIENT)

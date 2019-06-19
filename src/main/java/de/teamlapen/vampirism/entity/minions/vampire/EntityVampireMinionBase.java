@@ -138,7 +138,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
             List<EntityItem> list = this.world.getEntitiesWithinAABB(EntityItem.class, this.getBoundingBox().grow(1.0D, 0.0D, 1.0D));
 
             for (EntityItem entityitem : list) {
-                if (!entityitem.dead && !(entityitem.getItem().isEmpty())) {//TODO proceted field
+                if (entityitem.isAlive() && !(entityitem.getItem().isEmpty())) {
                     ItemStack itemstack = entityitem.getItem();
                     if (activeCommand.shouldPickupItem(itemstack)) {
                         ItemStack stack1 = this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);

@@ -134,7 +134,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
 
     @Override
     protected IParticleData getParticle() {
-        return Particles.UNDERWATER;//TODO should be the same (was suspended)
+        return Particles.UNDERWATER;
     }
 
     protected double getRadius() {
@@ -172,7 +172,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
 
             }
 
-            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(2), Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING));//TODO Predicate @maxanier
+            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(2), Predicates.and((EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING));//TODO Predicate @maxanier
             for (Entity e : list) {
                 if (excludeShooter && e == shootingEntity) {
                     continue;

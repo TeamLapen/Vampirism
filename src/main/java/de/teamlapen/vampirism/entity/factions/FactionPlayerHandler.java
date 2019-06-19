@@ -323,7 +323,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * Called when the faction has changed
      */
     private void onChangedFaction() {
-        //TODO still nedded?
+        //TODO still needed?
         //player.refreshDisplayName();
     }
 

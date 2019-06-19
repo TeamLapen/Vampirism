@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -24,7 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -107,7 +106,7 @@ public class BloodPotions {
             if (identifyRandom != null && identifyRandom.nextBoolean()) {
                 text = effect.getEffect().getLocName(effect.properties);
             } else {
-                text = new TextComponentString(UtilLib.translate("text.vampirism.unknown"));
+                text = new TextComponentTranslation("text.vampirism.unknown");
 
             }
             if (skillHandler.isSkillEnabled(HunterSkills.blood_potion_good_or_bad)) {

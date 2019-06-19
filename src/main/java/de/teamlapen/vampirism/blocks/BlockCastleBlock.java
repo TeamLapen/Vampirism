@@ -48,6 +48,10 @@ public class BlockCastleBlock extends VampirismBlock {
         }
     }
 
+    public EnumVariant getVariant() {
+        return variant;
+    }
+
 
     public enum EnumVariant implements IStringSerializable {
         DARK_BRICK(0, "dark_brick"),

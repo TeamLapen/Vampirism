@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 /**
  * Basic abstract class for TileEntitys which need a small inventory (with an gui)
  */
-public abstract class InventoryTileEntity extends TileEntity implements IInventory, InventorySlot.IInventorySlotInventory {//TODO TileEntity
+public abstract class InventoryTileEntity extends TileEntity implements IInventory, InventorySlot.IInventorySlotInventory {
 
     /**
      * Maximal squared distance from which the player can access the inventory

@@ -213,12 +213,12 @@ public class UtilLib {
     /**
      * @param world           World
      * @param box             Area where the creature should spawn
-     * @param e               Entity
+     * @param e               Entity that has a EntityType<? extends EntityLiving>
      * @param maxTry          Max position tried
      * @param avoidedEntities Avoid being to close or seen by these entities. If no valid spawn location is found, this is ignored
      * @return Successful spawn
      */
-    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<EntityLivingBase> avoidedEntities) {
+    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<EntityLivingBase> avoidedEntities) {//TODO this method is only called for EntityLiving -> modify?
         if (!world.isAreaLoaded((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ, true)) {
             return false;
         }
@@ -227,7 +227,7 @@ public class UtilLib {
         BlockPos backupPos=null; //
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
-            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(e.getType()), world, c)) {//TODO figure out
+            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType((EntityType<? extends EntityLiving>) e.getType()), world, c, (EntityType<? extends EntityLiving>) e.getType())) {//TODO i see no other way
                 e.setPosition(c.getX(), c.getY() + 0.2, c.getZ());
                 if (!(e instanceof EntityLiving) || (((EntityLiving) e).canSpawn(world, false) && ((EntityLiving) e).isNotColliding())) {
                     backupPos = c; //Store the location in case we do not find a better one

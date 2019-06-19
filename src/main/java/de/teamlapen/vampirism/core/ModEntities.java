@@ -190,7 +190,7 @@ public class ModEntities {
     }
 
     private static <T extends Entity> EntityType<T> prepareEntityType(String id, EntityType.Builder<T> builder, boolean spawnable) {
-        EntityType.Builder<T> type = builder.tracker(80, 1, true);//TODO check if spawn egg works & spawnplacement removed & is oldName needed?
+        EntityType.Builder<T> type = builder.tracker(80, 1, true);
         if (!spawnable)
             type.disableSummoning();
         return type.build(REFERENCE.MODID + ":" + id);
