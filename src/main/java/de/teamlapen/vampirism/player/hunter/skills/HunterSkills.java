@@ -94,7 +94,7 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", 80, 32, true) {
             @Override
             public ITextComponent getDescription() {
-                return new TextComponentTranslation "text.vampirism.skill.blood_potion_less_bad.desc");
+                return new TextComponentTranslation("text.vampirism.skill.blood_potion_less_bad.desc");
             }
 
             @Override

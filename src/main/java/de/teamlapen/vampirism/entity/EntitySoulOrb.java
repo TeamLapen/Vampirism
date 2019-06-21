@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import com.google.common.base.Predicates;
-
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
@@ -142,7 +140,7 @@ public class EntitySoulOrb extends Entity {
         this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
 
         if (this.age % 10 == 5 & (this.player == null || !this.player.isAlive() || this.player.getDistanceSq(this) > 64)) {
-            this.player = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 8, Predicates.and(EntitySelectors.NOT_SPECTATING, Helper::isHunter);//TODO predicate @maxanier
+            this.player = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 8, EntitySelectors.NOT_SPECTATING.and(Helper::isHunter));
         }
 
         if (this.player != null) {

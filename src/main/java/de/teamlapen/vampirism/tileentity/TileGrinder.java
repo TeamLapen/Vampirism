@@ -25,6 +25,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -112,14 +113,14 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
             for (int i = 0; i < handler.getSlots(); i++) {
                 ItemStack extracted = handler.extractItem(i, 1, true);
                 if (!extracted.isEmpty()) {
-                    for (int j = 0; j < itemHandler.getSlots(); j++) {
-                        ItemStack simulated = itemHandler.insertItem(j, extracted, true);
+                    ItemStack simulated = ItemHandlerHelper.insertItemStacked(itemHandler, extracted, true);
+
                         if (simulated.isEmpty()) {
                             extracted = handler.extractItem(i, 1, false);
-                            itemHandler.insertItem(j, extracted, false);
+                            ItemHandlerHelper.insertItemStacked(itemHandler, extracted, false);
                             return true;
                         }
-                    }
+
                 }
             }
 

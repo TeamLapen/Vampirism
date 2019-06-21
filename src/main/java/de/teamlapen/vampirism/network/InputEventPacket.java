@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.network;
 
-import io.netty.buffer.ByteBuf;
-
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -25,18 +24,29 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
+import org.apache.commons.lang3.Validate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.function.Supplier;
 
 /**
  * Sends any input related event to the server
  */
-public class InputEventPacket implements IMessage {//TODO @maxanier
+public class InputEventPacket implements IMessage {
+    private final static Logger LOGGER = LogManager.getLogger();
+    private final static String SPLIT = "&";
+
+    static void encode(InputEventPacket msg, PacketBuffer buf) {
+        buf.writeString(msg.action + SPLIT + msg.param);
+    }
 
 
     public static final String SUCKBLOOD = "sb";
@@ -54,98 +64,85 @@ public class InputEventPacket implements IMessage {//TODO @maxanier
     public static final String DRINK_BLOOD_BLOCK = "db";
     public static final String NAME_ITEM = "ni";
     private final static String TAG = "InputEventPacket";
-    private final String SPLIT = "&";
+
+    static InputEventPacket decode(PacketBuffer buf) {
+        String[] s = buf.readString(50).split(SPLIT);
+        InputEventPacket msg = new InputEventPacket();
+        msg.action = s[0];
+        if (s.length > 1) {
+            msg.param = s[1];
+        } else {
+            msg.param = "";
+        }
+        return msg;
+    }
     private String param;
     private String action;
 
-    /**
-     * Don't use
-     */
-    public InputEventPacket() {
 
-    }
 
     public InputEventPacket(String action, String param) {
         this.action = action;
         this.param = param;
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        String[] s = ByteBufUtils.readUTF8String(buf).split(SPLIT);
-        action = s[0];
-        if (s.length > 1) {
-            param = s[1];
-        } else {
-            param = "";
-        }
-
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf) {
-
-        ByteBufUtils.writeUTF8String(buf, action + SPLIT + param);
-
-    }
-
-    public static class Handler extends AbstractServerMessageHandler<InputEventPacket> {
-
-        @Override
-        public IMessage handleServerMessage(EntityPlayer player, InputEventPacket message, MessageContext ctx) {
-            if (message.action == null)
-                return null;
+    public static void handle(final InputEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+        final NetworkEvent.Context ctx = contextSupplier.get();
+        Validate.notNull(msg.action);
+        EntityPlayer player = ctx.getSender();
+        Validate.notNull(player);
+        ctx.enqueueWork(() -> {
             IFactionPlayer factionPlayer = FactionPlayerHandler.get(player).getCurrentFactionPlayer();
-            if (message.action.equals(SUCKBLOOD)) {
+            if (msg.action.equals(SUCKBLOOD)) {
                 int id = 0;
                 try {
-                    id = Integer.parseInt(message.param);
+                    id = Integer.parseInt(msg.param);
                 } catch (NumberFormatException e) {
-                    LOGGER.error(e, "Receiving invalid param for %s", message.action);
+                    LOGGER.error("Receiving invalid param {} for {}", msg.param, msg.action);
                 }
                 if (id != 0) {
                     VampirePlayer.get(player).biteEntity(id);
                 }
-            } else if (message.action.equals(ENDSUCKBLOOD)) {
+            } else if (msg.action.equals(ENDSUCKBLOOD)) {
                 VampirePlayer.get(player).endFeeding(true);
-            } else if (message.action.equals(TOGGLEACTION)) {
-                ResourceLocation id = new ResourceLocation(message.param);
+            } else if (msg.action.equals(TOGGLEACTION)) {
+                ResourceLocation id = new ResourceLocation(msg.param);
                 if (factionPlayer != null) {
-                        IActionHandler actionHandler = factionPlayer.getActionHandler();
+                    IActionHandler actionHandler = factionPlayer.getActionHandler();
                     IAction action = VampirismRegistries.ACTIONS.getValue(id);
-                        if (action != null) {
-                            IAction.PERM r = actionHandler.toggleAction(action);
-                            switch (r) {
-                                case NOT_UNLOCKED:
-                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.not_unlocked"));
-                                    break;
-                                case DISABLED:
-                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));
-                                    break;
-                                case COOLDOWN:
-                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.cooldown_not_over"));
-                                    break;
-                                default://Everything alright
-                            }
-                        } else {
-                            LOGGER.error("Failed to find action with id %d", id);
+                    if (action != null) {
+                        IAction.PERM r = actionHandler.toggleAction(action);
+                        switch (r) {
+                            case NOT_UNLOCKED:
+                                player.sendMessage(new TextComponentTranslation("text.vampirism.action.not_unlocked"));
+                                break;
+                            case DISABLED:
+                                player.sendMessage(new TextComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));
+                                break;
+                            case COOLDOWN:
+                                player.sendMessage(new TextComponentTranslation("text.vampirism.action.cooldown_not_over"));
+                                break;
+                            default://Everything alright
                         }
                     } else {
-                    LOGGER.error("Player %s is in no faction, so he cannot use action %d", player, id);
+                        LOGGER.error("Failed to find action with id {}", id);
                     }
+                } else {
+                    LOGGER.error("Player {} is in no faction, so he cannot use action {}", player, id);
+                }
 
 
-            } else if (message.action.equals(DRINK_BLOOD_BLOCK)) {
-                String[] coords = message.param.split(":");
+            } else if (msg.action.equals(DRINK_BLOOD_BLOCK)) {
+                String[] coords = msg.param.split(":");
                 if (coords.length == 3) {
                     BlockPos pos = new BlockPos(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
                     VampirePlayer.get(player).biteBlock(pos);
                 } else {
-                    LOGGER.warn("Received invalid %s parameter", DRINK_BLOOD_BLOCK);
+                    LOGGER.warn("Received invalid {} parameter", DRINK_BLOOD_BLOCK);
                 }
-            } else if (message.action.equals(UNLOCKSKILL)) {
+            } else if (msg.action.equals(UNLOCKSKILL)) {
                 if (factionPlayer != null) {
-                    ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(message.param));
+                    ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(msg.param));
                     if (skill != null) {
                         ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                         ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
@@ -159,17 +156,17 @@ public class InputEventPacket implements IMessage {//TODO @maxanier
                             }
 
                         } else {
-                            LOGGER.warn("Skill %s cannot be activated for %s (%s)", skill, player, result);
+                            LOGGER.warn("Skill {} cannot be activated for {} ({})", skill, player, result);
                         }
                     } else {
-                        LOGGER.warn("Skill %s was not found so %s cannot activate it", message.param, player);
+                        LOGGER.warn("Skill {} was not found so {} cannot activate it", msg.param, player);
                     }
                 } else {
-                    LOGGER.error("Player %s is in no faction, so he cannot unlock skills");
+                    LOGGER.error("Player {} is in no faction, so he cannot unlock skills", player);
                 }
 
 
-            } else if (message.action.equals(RESETSKILL)) {
+            } else if (msg.action.equals(RESETSKILL)) {
                 if (factionPlayer != null) {
                     ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                     skillHandler.resetSkills();
@@ -189,25 +186,25 @@ public class InputEventPacket implements IMessage {//TODO @maxanier
                 } else {
                     LOGGER.error("Player %s is in no faction, so he cannot reset skills");
                 }
-            } else if (message.action.equals(TRAINERLEVELUP)) {
+            } else if (msg.action.equals(TRAINERLEVELUP)) {
                 if (player.openContainer instanceof HunterTrainerContainer) {
                     ((HunterTrainerContainer) player.openContainer).onLevelupClicked();
                 }
-            } else if (message.action.equals(REVERTBACK)) {
+            } else if (msg.action.equals(REVERTBACK)) {
 
                 FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
-                VampirismMod.log.d(TAG, "Player %s left faction", player);
+                LOGGER.debug("Player {} left faction", player);
                 player.attackEntityFrom(DamageSource.MAGIC, 1000);
 
-            } else if (message.action.equals(WAKEUP)) {
+            } else if (msg.action.equals(WAKEUP)) {
                 VampirePlayer.get(player).wakeUpPlayer(false, true, true);
-            } else if (message.action.equals(VAMPIRE_VISION_TOGGLE)) {
+            } else if (msg.action.equals(VAMPIRE_VISION_TOGGLE)) {
                 VampirePlayer.get(player).switchVision();
-            } else if (message.action.equals(CRAFT_BLOOD_POTION)) {
-                if (player.openContainer != null && player.openContainer instanceof BloodPotionTableContainer) {
+            } else if (msg.action.equals(CRAFT_BLOOD_POTION)) {
+                if (player.openContainer instanceof BloodPotionTableContainer) {
                     ((BloodPotionTableContainer) player.openContainer).onCraftingClicked();
                 }
-            } else if (message.action.equals(OPEN_BLOOD_POTION)) {
+            } else if (msg.action.equals(OPEN_BLOOD_POTION)) {
 
                 IHunterPlayer hunter = HunterPlayer.get(player);
                 if (hunter.getLevel() > 0) {
@@ -219,12 +216,12 @@ public class InputEventPacket implements IMessage {//TODO @maxanier
                 } else {
                     player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(VReference.HUNTER_FACTION.getTranslationKey())));
                 }
-            } else if (message.action.equals(BASICHUNTERLEVELUP)) {
+            } else if (msg.action.equals(BASICHUNTERLEVELUP)) {
                 if (player.openContainer instanceof HunterBasicContainer) {
                     ((HunterBasicContainer) player.openContainer).onLevelUpClicked();
                 }
-            } else if (message.action.equals(NAME_ITEM)) {
-                String name = message.param;
+            } else if (msg.action.equals(NAME_ITEM)) {
+                String name = msg.param;
                 if (VampirismVampireSword.DO_NOT_NAME_STRING.equals(name)) {
                     ItemStack stack = player.getHeldItemMainhand();
                     if (stack.getItem() instanceof VampirismVampireSword) {
@@ -232,16 +229,11 @@ public class InputEventPacket implements IMessage {//TODO @maxanier
                     }
                 } else if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
                     ItemStack stack = player.getHeldItemMainhand();
-                    stack.setStackDisplayName(name);
+                    stack.setDisplayName(new TextComponentString(name));
                 }
             }
             return null;
-        }
-
-        @Override
-        protected boolean handleOnMainThread() {
-            return true;
-        }
+        });
     }
 
 }

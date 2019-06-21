@@ -204,7 +204,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      */
     public void tryName(ItemStack stack, EntityPlayer player) {
         if (!stack.hasDisplayName() && player instanceof EntityPlayerMP && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
-            NetworkHooks.openGui(player, ); //TODO new interaction object for name sword gui
+            NetworkHooks.openGui(player, null); //TODO new interaction object for name sword gui
             player.world.playSound((player).posX, (player).posY, (player).posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
         }
     }

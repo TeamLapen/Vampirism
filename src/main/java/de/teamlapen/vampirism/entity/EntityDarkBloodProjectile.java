@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import com.google.common.base.Predicates;
-
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
@@ -172,7 +170,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
 
             }
 
-            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(2), Predicates.and((EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING));//TODO Predicate @maxanier
+            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(2), EntitySelectors.IS_ALIVE.and(EntitySelectors.NOT_SPECTATING));
             for (Entity e : list) {
                 if (excludeShooter && e == shootingEntity) {
                     continue;

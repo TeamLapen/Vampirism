@@ -1,24 +1,11 @@
 package de.teamlapen.vampirism.client.gui;
 
-import de.teamlapen.lib.lib.config.BalanceValues;
-import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.config.ConfigElement;
-import net.minecraftforge.fml.client.config.DummyConfigElement;
-import net.minecraftforge.fml.client.config.GuiConfigEntries;
-import net.minecraftforge.fml.client.config.IConfigElement;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-/**
+/*
  * Mod config gui
+ *
+ * TODO 1.13 migrate to new config system first
  */
+/*
 @OnlyIn(Dist.CLIENT)
 public class ModConfigGui extends GuiConfig {//TODO GUI config
     private static List<IConfigElement> getConfigElements() {
@@ -66,3 +53,5 @@ public class ModConfigGui extends GuiConfig {//TODO GUI config
 
     }
 }
+
+ */

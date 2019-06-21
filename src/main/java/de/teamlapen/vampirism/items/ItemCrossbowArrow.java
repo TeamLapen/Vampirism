@@ -111,9 +111,6 @@ public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossb
         return type;
     }
 
-    public EnumArrowType getType() {
-        return type;
-    }
 
     public enum EnumArrowType {
         NORMAL("normal", 2.0, 0xFFFFFF), VAMPIRE_KILLER("vampire_killer", 0.5, 0x7A0073), SPITFIRE("spitfire", 0.5, 0xFF2211);

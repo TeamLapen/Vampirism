@@ -52,21 +52,14 @@ import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.launchwrapper.Launch;
-import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.common.util.ModFixs;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
@@ -98,19 +91,19 @@ public class VampirismMod {//TODO MOD @maxanier
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_HUNTER", IHunterMob.class, 25, Material.AIR, false, false);//TODO new CreatureType
+    private final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumCreatureType.create("VAMPIRISM_HUNTER", IHunterMob.class, 25, false, false);
     /**
      * Vampire creatures are of this creature type. Use the instance in
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private static final EnumCreatureType VAMPIRE_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_VAMPIRE", IVampireMob.class, 30, Material.AIR, false, false);//TODO new CreatureType
+    private static final EnumCreatureType VAMPIRE_CREATURE_TYPE = EnumCreatureType.create("VAMPIRISM_VAMPIRE", IVampireMob.class, 30, false, false);
     /**
      * Vampire creatures have this attribute Vampire creatures are of this creature
      * type. Use the instance in {@link VReference} instead of this one. This is
      * only here to init it as early as possible
      */
-    private static final CreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = EnumHelper.addCreatureAttribute("VAMPIRISM_VAMPIRE");//TODO new CreatureAttribute
+    private static final CreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = new CreatureAttribute();
 
     public static VampirismMod instance;
     @SuppressWarnings("Convert2MethodRef")
