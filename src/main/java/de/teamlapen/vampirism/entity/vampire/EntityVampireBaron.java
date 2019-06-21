@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionSaveable;
 import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -32,6 +31,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
@@ -165,7 +165,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     @Nonnull
     @Override
     public ITextComponent getName() {
-        return super.getName().appendText(" " + UtilLib.translate("text.vampirism.entity_level") + " " + (getLevel() + 1));//TODO is right?
+        return super.getName().appendText(" " + new TextComponentTranslation("text.vampirism.entity_level") + " " + (getLevel() + 1));
     }
 
     @Override
@@ -232,10 +232,10 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 }
 
             } else if (i == 2 && this.getAttackTarget() != null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), new ResourceLocation(REFERENCE.MODID, ModEntities.vampire_minion_s);
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), ModEntities.vampire_minion_s);
             }
             if (m == null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getBoundingBox().grow(19, 4, 19), new ResourceLocation(REFERENCE.MODID, ModEntities.vampire_minion_s), 3, Collections.emptyList()); //Do not avoid player here. Already using spawnBehind sometimes
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getBoundingBox().grow(19, 4, 19), ModEntities.vampire_minion_s, 3, Collections.emptyList()); //Do not avoid player here. Already using spawnBehind sometimes
             }
             if (m != null) {
                 m.setLord(this);
@@ -301,8 +301,8 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.updateEntityAttributes(false);
     }
 
@@ -334,7 +334,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         this.tasks.addTask(4, new VampireAIFleeGarlic(this, 0.9F, false));
         this.tasks.addTask(5, new BaronAIAttackMelee(this, 1.0F));
         this.tasks.addTask(6, new BaronAIAttackRanged(this, 60, 64, 6, 4));
-        this.tasks.addTask(6, new EntityAIAvoidEntity<>(this, EntityPlayer.class, input -> input != null && !isLowerLevel(input), 6.0F, 0.6, 0.7F));//TODO Works only partially. Pathfinding somehow does not find escape routes
+        this.tasks.addTask(6, new EntityAIAvoidEntity<>(this, EntityPlayer.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel((EntityPlayer) input)));//TODO Works only partially. Pathfinding somehow does not find escape routes
         this.tasks.addTask(7, new EntityAIWander(this, 0.2));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 10.0F));
         this.tasks.addTask(10, new EntityAILookIdle(this));

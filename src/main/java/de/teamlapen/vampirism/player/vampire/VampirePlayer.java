@@ -60,6 +60,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -83,7 +84,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IVampirePlayer {
+public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IVampirePlayer {//TODO Capability
 
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
     @CapabilityInject(IVampirePlayer.class)
@@ -119,7 +120,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
 
             @Override
-            public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
                 return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
             }
 
@@ -185,7 +186,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Increases exhaustion level by supplied amount
      */
     public void addExhaustion(float p_71020_1_) {
-        if (!player.capabilities.disableDamage && getLevel() > 0) {
+        if (!player.abilities.disableDamage && getLevel() > 0) {
             if (!isRemote()) {
                 bloodStats.addExhaustion(p_71020_1_);
             }
@@ -285,7 +286,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 return BITE_TYPE.SUCK_BLOOD_CREATURE;
             }
         } else if (entity instanceof EntityPlayer) {
-            if (((EntityPlayer) entity).isCreative() || !Permissions.getPermission("pvp", player)) {
+            if (((EntityPlayer) entity).abilities.isCreativeMode || !Permissions.getPermission("pvp", player)) {
                 return BITE_TYPE.NONE;
             }
             boolean hunter = Helper.isHunter(player);
@@ -567,7 +568,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             actionHandler.onActionsReactivated();
             ticksInSun = 0;
             if (wasDead) {
-                if (Loader.isModLoaded(SpongeModCompat.MODID)) {
+                if (Loader.isModLoaded(SpongeModCompat.MODID)) {//TODO @Maxanier
                     //Workaround for issue caused by https://github.com/SpongePowered/SpongeForge/issues/736 TODO remove?
                     int level = getLevel();
                     onLevelChanged(level, level);
@@ -625,7 +626,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onPlayerLoggedIn() {
-        if (getLevel() > 0 && FMLCommonHandler.instance().getSide().isServer()) {
+        if (getLevel() > 0 && FMLCommonHandler.instance().getSide().isServer()) {//TODO @Maxanier
             player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 200, 4, true, false));
         }
     }
@@ -772,7 +773,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (feed_victim != -1 && feedBiteTickCounter++ >= 5) {
                 Entity e = VampirismMod.proxy.getMouseOverEntity();
                 if (e == null || e.getEntityId() != feed_victim) {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));//TODO Dispatcher
                     return;
                 }
                 feedBiteTickCounter = 0;
@@ -828,7 +829,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             reflectionMethodSetSize.invoke(player, width, height);
             return true;
         } catch (Exception e) {
-            LOGGER.error(e, "Could not change players size! ");
+            LOGGER.error("Could not change players size! ", e);
             return false;
         }
     }
@@ -898,7 +899,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 return EntityPlayer.SleepResult.OTHER_PROBLEM;
             }
 
-            if (!player.world.provider.isSurfaceWorld()) {
+            if (!player.world.dimension.isSurfaceWorld()) {
                 return EntityPlayer.SleepResult.NOT_POSSIBLE_HERE;
             }
 
@@ -947,14 +948,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     break;
                 default://Should not happen
             }
-            player.setRenderOffsetForSleep(enumfacing);
+            player.setRenderOffsetForSleep(enumfacing);//TODO is Private
 
             player.setPosition((double) ((float) bedLocation.getX() + f), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + f1));
         } else {
             player.setPosition((double) ((float) bedLocation.getX() + 0.5F), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + 0.5F));
         }
 
-        player.capabilities.isFlying = false;
+        player.abilities.isFlying = false;
         player.sendPlayerAbilities();
         sleepTimer = 0;
         sleepingInCoffin = true;
@@ -1143,7 +1144,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
         if (ModBlocks.blood_container.equals(blockState.getBlock())) {
             if (tileEntity != null && tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) != null) {
-                IFluidHandler handler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+                IFluidHandler handler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);//TODO .orElse/.orElseThrow/.orElseGet
                 FluidStack drainable = handler.drain(new FluidStack(ModFluids.blood, need * VReference.FOOD_TO_FLUID_BLOOD), false);
                 if (drainable != null && drainable.amount >= VReference.FOOD_TO_FLUID_BLOOD) {
                     FluidStack drained = handler.drain((drainable.amount / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, true);
@@ -1229,7 +1230,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (sunscreen >= 5 && ticksInSun > 50) {
             ticksInSun = 50;
         }
-        if (isRemote || player.isCreative() || player.capabilities.disableDamage) return;
+        if (isRemote || player.abilities.isCreativeMode || player.abilities.disableDamage) return;
         if (Balance.vp.SUNDAMAGE_NAUSEA && getLevel() >= Balance.vp.SUNDAMAGE_NAUSEA_MINLEVEL && player.ticksExisted % 300 == 1 && ticksInSun > 50 && sunscreen == -1) {
             player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 180));
         }
@@ -1263,7 +1264,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
             vec31 = vec31.add(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
 
-            player.world.addParticle(EnumParticleTypes.ITEM_CRACK, vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z, Item.getIdFromItem(Items.APPLE));
+            player.world.addParticle(EnumParticleTypes.ITEM_CRACK, vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z, Item.getIdFromItem(Items.APPLE));//TODO cant find Particle
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
         player.world.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);

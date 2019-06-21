@@ -21,7 +21,7 @@ import java.util.Map;
  * Currently unused
  */
 @Deprecated
-public class BloodValuePacket implements IMessage {
+public class BloodValuePacket implements IMessage {//TODO @maxanier
 
     private NBTTagCompound nbt;
 

@@ -9,7 +9,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.DummyConfigElement;
-
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
@@ -21,7 +20,7 @@ import java.util.List;
  * Mod config gui
  */
 @OnlyIn(Dist.CLIENT)
-public class ModConfigGui extends GuiConfig {
+public class ModConfigGui extends GuiConfig {//TODO GUI config
     private static List<IConfigElement> getConfigElements() {
         List<IConfigElement> list = new ArrayList<>();
         list.addAll(new ConfigElement(Configs.getMainConfig().getCategory(Configs.CATEGORY_GENERAL)).getChildElements());

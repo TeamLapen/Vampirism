@@ -42,7 +42,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         //Weapon crafting table
         registry.addRecipeCategories(new HunterWeaponRecipeCategory(guiHelper));
         registry.addRecipeHandlers(new ShapedHunterWeaponRecipesHandler());
-        registry.addRecipeHandlers(new ShapelessHunterWeaponRecipeHandler());
+        registry.addRecipeHandlers(new ShapelessWeaponTableRecipeHandler());
         registry.addRecipeClickArea(GuiHunterWeaponTable.class, 113, 46, 28, 23, HUNTER_WEAPON_RECIPE_UID);
         registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.weapon_table), HUNTER_WEAPON_RECIPE_UID);
         //TODO registry.addRecipes(HunterWeaponCraftingManager.getInstance().getRecipes()); Recipes stored in forge recipe registry {@link ForgeRecipeManager#sortedRecipes}

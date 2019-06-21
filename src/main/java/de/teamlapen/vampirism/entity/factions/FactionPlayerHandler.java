@@ -21,6 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.Event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,14 +61,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
 
             @Override
-            public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
 
                 return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
-            }
-
-            @Override
-            public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-                return CAP.equals(capability);
             }
 
             @Override
@@ -327,7 +323,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * Called when the faction has changed
      */
     private void onChangedFaction() {
-        player.refreshDisplayName();
+        //TODO still needed?
+        //player.refreshDisplayName();
     }
 
     private void saveNBTData(NBTTagCompound nbt) {

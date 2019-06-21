@@ -118,14 +118,14 @@ public class VampirismAPI {
     /**
      * Makes Vampirism execute it's worldgen in this dimension
      */
-    public static void addDimensionForWorldgen(int id) {
+    public static void addDimensionForWorldgen(Dimension id) {
         worldGenDimensions.add(id);
     }
 
     /**
      * Removes a dimensions from Vampirism's worldgen if it has been added before
      */
-    public static void removeDimensionFromWorldgen(int id) {
+    public static void removeDimensionFromWorldgen(Dimension id) {
         worldGenDimensions.remove(id);
     }
 
@@ -168,7 +168,7 @@ public class VampirismAPI {
      * @return The respective {@link IFactionPlayerHandler}
      */
     public static IFactionPlayerHandler getFactionPlayerHandler(EntityPlayer player) {
-        return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);
+        return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);//TODO LazyOption.else() || LazyOption.elseThrow() || LazyOption.elseGet()
     }
 
 
@@ -176,14 +176,14 @@ public class VampirismAPI {
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
      */
     public static IExtendedCreatureVampirism getExtendedCreatureVampirism(EntityCreature creature) {
-        return creature.getCapability(CAP_CREATURE, null);
+        return creature.getCapability(CAP_CREATURE, null);//TODO LazyOption.else() || LazyOption.elseThrow() || LazyOption.elseGet()
     }
 
     /**
      * Get the {@link IVampirismVillage} instance for the given village
      */
     public static IVampirismVillage getVampirismVillage(Village village) {
-        return village.getCapability(CAP_VILLAGE, null);
+        return village.getCapability(CAP_VILLAGE, null);//TODO LazyOption.else() || LazyOption.elseThrow() || LazyOption.elseGet()
     }
 
     /**

@@ -81,7 +81,7 @@ import java.io.File;
  * Main class for Vampirism TODO readd "required-after:teamlapen-lib;"
  */
 @Mod(value = REFERENCE.MODID)
-public class VampirismMod {
+public class VampirismMod {//TODO MOD @maxanier
 
     private final static Logger log = LogManager.getLogger();
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
@@ -98,19 +98,19 @@ public class VampirismMod {
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_HUNTER", IHunterMob.class, 25, Material.AIR, false, false);
+    private final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_HUNTER", IHunterMob.class, 25, Material.AIR, false, false);//TODO new CreatureType
     /**
      * Vampire creatures are of this creature type. Use the instance in
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private static final EnumCreatureType VAMPIRE_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_VAMPIRE", IVampireMob.class, 30, Material.AIR, false, false);
+    private static final EnumCreatureType VAMPIRE_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_VAMPIRE", IVampireMob.class, 30, Material.AIR, false, false);//TODO new CreatureType
     /**
      * Vampire creatures have this attribute Vampire creatures are of this creature
      * type. Use the instance in {@link VReference} instead of this one. This is
      * only here to init it as early as possible
      */
-    private static final CreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = EnumHelper.addCreatureAttribute("VAMPIRISM_VAMPIRE");
+    private static final CreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = EnumHelper.addCreatureAttribute("VAMPIRISM_VAMPIRE");//TODO new CreatureAttribute
 
     public static VampirismMod instance;
     @SuppressWarnings("Convert2MethodRef")

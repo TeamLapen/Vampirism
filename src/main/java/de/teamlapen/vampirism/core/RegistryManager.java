@@ -24,9 +24,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
+import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 import net.minecraftforge.registries.ObjectHolderRegistry;
 
 
@@ -34,7 +34,7 @@ import net.minecraftforge.registries.ObjectHolderRegistry;
  * Handles registrations of all registrable things as well as a few additional
  * dependent things
  */
-public class RegistryManager implements IInitListener {
+public class RegistryManager implements IInitListener {//TODO Mod Loading process @maxanier
 
     /**
      * Delegate for some client side registrations
@@ -62,7 +62,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @Override
-    public void onInitStep(Step step, FMLStateEvent event) {
+    public void onInitStep(Step step, ModLifecycleEvent event) {
 
         switch (step) {
             case INIT:

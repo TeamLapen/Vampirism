@@ -86,7 +86,7 @@ public class BloodConversionRegistry {
         if (conv == 0) {
             return null;
         }
-        return new FluidStack(FluidRegistry.getFluid(VReference.FLUID_BLOOD_NAME), conv);
+        return new FluidStack(FluidRegistry.getFluid(VReference.FLUID_BLOOD_NAME), conv);//TODO Fluid
     }
 
     /**

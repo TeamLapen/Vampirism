@@ -116,7 +116,7 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
 
         int k = chunkX / distance;
         int l = chunkZ / distance;
-        Random random = world.setRandomSeed(k, l, 10387312);
+        Random random = world.setRandomSeed(k, l, 10387312);//TODO @Maxanier
         k = k * distance;
         l = l * distance;
         k = k + random.nextInt(distance - 2);

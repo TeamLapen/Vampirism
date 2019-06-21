@@ -24,7 +24,7 @@ public class EntityBlindingBat extends EntityBat {
 
     @Override
     public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
-        return worldIn.checkNoEntityCollision(this, this.getBoundingBox()) && worldIn.isCollisionBoxesEmpty(this, this.getBoundingBox()) && worldIn.containsAnyLiquid(this.getBoundingBox()); //TODO eventually dublicated check (isCollisionBoxesEmpty
+        return worldIn.checkNoEntityCollision(this, this.getBoundingBox()) && worldIn.isCollisionBoxesEmpty(this, this.getBoundingBox()) && !worldIn.containsAnyLiquid(this.getBoundingBox()); //TODO eventually dublicated check (isCollisionBoxesEmpty
     }
 
     @Override

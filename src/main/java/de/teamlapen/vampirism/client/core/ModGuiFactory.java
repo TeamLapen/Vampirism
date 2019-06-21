@@ -14,7 +14,7 @@ public class ModGuiFactory implements IModGuiFactory {
     @Override
     public GuiScreen createConfigGui(GuiScreen parentScreen) {
         return new ModConfigGui(parentScreen);
-    }
+    }//TODO Gui
 
     @Override
     public boolean hasConfigGui() {

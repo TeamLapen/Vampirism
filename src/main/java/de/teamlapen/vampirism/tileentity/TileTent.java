@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * Tile entity which spawns hunters for tents
  */
 public class TileTent extends TileEntity implements ITickable {
-    public static IFixableData getTentFixer() {
+    public static IFixableData getTentFixer() {//TODO need Fixes?
         return new IFixableData() {
             @Nonnull
             @Override

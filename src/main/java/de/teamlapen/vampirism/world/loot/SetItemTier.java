@@ -20,7 +20,7 @@ import java.util.Random;
 /**
  * Function to set the tier of any {@link IItemWithTier}
  */
-class SetItemTier extends LootFunction {
+class SetItemTier extends LootFunction {//TODO still needed ?
 
     private static final Logger LOGGER = LogManager.getLogger(SetItemTier.class);
     private final IItemWithTier.TIER tier;

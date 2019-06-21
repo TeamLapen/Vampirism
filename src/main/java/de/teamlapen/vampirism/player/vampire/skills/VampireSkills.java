@@ -18,6 +18,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -162,7 +163,7 @@ public class VampireSkills {
             @Override
             public ITextComponent getDescription() {
                 if (Balance.vps.DISABLE_AVOIDED_BY_CREEPERS) {
-                    return new TextComponentString(TextFormatting.RED + "Disabled by admin" + TextFormatting.RESET);
+                    return new TextComponentString("Disabled by admin").applyTextStyle(TextFormatting.RED);
                 }
                 return super.getDescription();
             }
@@ -199,7 +200,7 @@ public class VampireSkills {
         registry.register(new VampirismSkill.SimpleVampireSkill("sword_finisher", 0, 16, true) {
             @Override
             public ITextComponent getDescription() {
-                return new TextComponentString(UtilLib.translate("text.vampirism.skill.sword_finisher.desc", (int) (Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC * 100)));
+                return new TextComponentTranslation("text.vampirism.skill.sword_finisher.desc", (int) (Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC * 100));
             }
         });
         registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile));

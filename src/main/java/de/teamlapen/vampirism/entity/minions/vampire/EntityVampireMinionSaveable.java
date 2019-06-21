@@ -106,7 +106,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void livingTick() {
         if (!this.world.isRemote) {
             if (lord == null) {
 
@@ -116,7 +116,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
             }
 
         }
-        super.onLivingUpdate();
+        super.livingTick();
     }
 
     /**

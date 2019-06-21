@@ -75,7 +75,7 @@ public class ItemVampireBook extends VampirismItem {
             this.resolveContents(stack, playerIn);
         }
 
-        playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_VAMPIRE_BOOK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
+        playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_VAMPIRE_BOOK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);//TODO GUI
         return new ActionResult(EnumActionResult.SUCCESS, stack);
     }
 

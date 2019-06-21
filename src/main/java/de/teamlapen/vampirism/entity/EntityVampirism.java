@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Base class for most vampirism mobs
  */
-public abstract class EntityVampirism extends EntityCreature implements IEntityWithHome, IVampirismEntity {
+public abstract class EntityVampirism extends EntityCreature implements IEntityWithHome, IVampirismEntity {//TODO move entityaction stuff to users @cheaterpaul
 
     private final EntityAIBase moveTowardsRestriction;
     protected boolean hasArms = true;

@@ -19,8 +19,7 @@ public class BiomeGenVampireForest extends VampirismBiome {
     public final static String name = "vampireForest";
 
     public BiomeGenVampireForest() {
-        //TODO temperature,downfall,(parent, precipitation)
-        super(new BiomeBuilder().surfaceBuilder(new CompositeSurfaceBuilder<>(Biome.DEFAULT_SURFACE_BUILDER, VAMPIRE_SURFACE)).category(Category.FOREST).depth(0.1F).scale(0.025F).waterColor(0xEE2505).waterFogColor(0xEE2505).precipitation(RainType.NONE));
+        super(new BiomeBuilder().surfaceBuilder(new CompositeSurfaceBuilder<>(Biome.DEFAULT_SURFACE_BUILDER, VAMPIRE_SURFACE)).category(Category.FOREST).depth(0.1F).scale(0.025F).waterColor(0xEE2505).waterFogColor(0xEE2505).precipitation(RainType.NONE).parent(null).precipitation(Biome.RainType.NONE));
         //TODO extra count and chance & NO_FEATURE_CONFIG?
         this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, createCompositeFeature(Feature.RANDOM_FEATURE_LIST, new RandomDefaultFeatureListConfig(new Feature[]{VAMPIRE_TREE_FEATURE}, new IFeatureConfig[]{IFeatureConfig.NO_FEATURE_CONFIG}, new float[]{0.33333334F}, VAMPIRE_TREE_FEATURE, IFeatureConfig.NO_FEATURE_CONFIG), AT_SURFACE_WITH_EXTRA, new AtSurfaceWithExtraConfig(5, 0.05F, 1)));
         //TODO check if enough flowers are generated

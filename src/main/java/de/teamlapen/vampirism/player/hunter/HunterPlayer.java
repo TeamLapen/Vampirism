@@ -26,6 +26,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import javax.annotation.Nonnull;
@@ -36,7 +37,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 /**
  * Main class for hunter players
  */
-public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHunterPlayer {
+public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHunterPlayer {//TODO Capabilities
 
     @CapabilityInject(IHunterPlayer.class)
     public final static Capability<IHunterPlayer> CAP = getNull();
@@ -64,7 +65,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             }
 
             @Override
-            public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
                 return capability == CAP ? CAP.<T>cast(inst) : null;
             }
 

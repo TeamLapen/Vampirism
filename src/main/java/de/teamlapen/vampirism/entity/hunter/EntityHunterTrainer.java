@@ -14,7 +14,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.item.ItemSpawnEgg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.EnumHand;
@@ -101,14 +101,14 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
-        boolean flag = !stack.isEmpty() && stack.getItem() == Items.SPAWN_EGG;
+        boolean flag = !stack.isEmpty() && stack.getItem() instanceof ItemSpawnEgg;
 
         if (!flag && this.isAlive() && !player.isSneaking()) {
             if (!this.world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
                     if (trainee == null) {
                         this.trainee = player;
-                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.getEntityWorld(), getPosition().getX(), getPosition().getY(), getPosition().getZ());
+                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.getEntityWorld(), getPosition().getX(), getPosition().getY(), getPosition().getZ());//TODO Gui
                     } else {
                         player.sendMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));
                     }

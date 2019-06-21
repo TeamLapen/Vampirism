@@ -48,7 +48,7 @@ public class VReference {
     /**
      * Plant type for plants that grow on cursed earth;
      */
-    public static final EnumPlantType VAMPIRE_PLANT_TYPE = EnumPlantType.getPlantType("VAMPIRISM_VAMPIRE");
+    public static final EnumPlantType VAMPIRE_PLANT_TYPE = EnumPlantType.getPlantType("VAMPIRISM_VAMPIRE");//TODO new planttype
     public static final DamageSource SUNDAMAGE = new DamageSource("sun").setDamageBypassesArmor().setMagicDamage();
     public static final DamageSource VAMPIRE_ON_FIRE = new DamageSource("vampire_on_fire").setDamageBypassesArmor().setMagicDamage();
     public static final DamageSource VAMPIRE_IN_FIRE = new DamageSource("vampire_in_fire").setMagicDamage();
@@ -57,7 +57,7 @@ public class VReference {
     /**
      * Enchantment type for crossbows
      */
-    public static final EnumEnchantmentType CROSSBOW_ENCHANTMENT = EnumHelper.addEnchantmentType("vampirism:crossbow", input -> input instanceof IVampirismCrossbow);
+    public static final EnumEnchantmentType CROSSBOW_ENCHANTMENT = EnumHelper.addEnchantmentType("vampirism:crossbow", input -> input instanceof IVampirismCrossbow);//TODO new enchantmenttype
     /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
      */

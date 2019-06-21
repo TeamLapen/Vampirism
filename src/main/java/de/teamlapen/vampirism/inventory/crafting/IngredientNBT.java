@@ -5,7 +5,7 @@ import net.minecraft.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
 
-public class IngredientNBT extends Ingredient { //TODO does we need this class?
+public class IngredientNBT extends Ingredient { //TODO does we need this class? @Maxanier
     private final ItemStack stack;
 
     public IngredientNBT(ItemStack stack) {

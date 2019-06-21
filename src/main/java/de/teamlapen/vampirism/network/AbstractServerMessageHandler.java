@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * Extend this to easily handle messages on server side
  */
-public abstract class AbstractServerMessageHandler<T extends IMessage> extends AbstractMessageHandler<T>
+public abstract class AbstractServerMessageHandler<T extends IMessage> extends AbstractMessageHandler<T>//TODO @maxanier
 
 {
 

@@ -36,7 +36,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     private boolean excludeShooter = false;
 
     public EntityDarkBloodProjectile(World worldIn) {
-        super(ModEntities.dark_blood_projectile, worldIn);
+        super(ModEntities.dark_blood_projectile, worldIn, 1.0F, 1.0F);
     }
 
     /**
@@ -44,14 +44,14 @@ public class EntityDarkBloodProjectile extends EntityFireball {
      * Adds a small random to the motion
      */
     public EntityDarkBloodProjectile(World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ) {
-        super(ModEntities.dark_blood_projectile, worldIn, shooter, accelX, accelY, accelZ);
+        super(ModEntities.dark_blood_projectile, shooter, accelX, accelY, accelZ, worldIn, 1.0F, 1.0F);
     }
 
     /**
      * Does not add a small random to the motion
      */
     public EntityDarkBloodProjectile(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
-        super(ModEntities.dark_blood_projectile, worldIn, x, y, z, accelX, accelY, accelZ);
+        super(ModEntities.dark_blood_projectile, x, y, z, accelX, accelY, accelZ, worldIn, 1.0F, 1.0F);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
 
     @Override
     protected IParticleData getParticle() {
-        return Particles.UNDERWATER;//TODO should be the same (was suspended)
+        return Particles.UNDERWATER;
     }
 
     protected double getRadius() {
@@ -172,7 +172,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
 
             }
 
-            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(2), Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING));
+            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(2), Predicates.and((EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING));//TODO Predicate @maxanier
             for (Entity e : list) {
                 if (excludeShooter && e == shootingEntity) {
                     continue;

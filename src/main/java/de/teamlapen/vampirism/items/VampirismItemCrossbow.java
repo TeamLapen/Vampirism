@@ -158,7 +158,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If successful
      */
     protected boolean shoot(EntityPlayer player, float heightOffset, float centerOffset, World world, ItemStack stack, EnumHand hand) {
-        boolean creative = player.isCreative();
+        boolean creative = player.abilities.isCreativeMode;
         boolean bowInfinite = isCrossbowInfinite(stack, player);
 
         ItemStack itemstack = this.findAmmo(player, stack);

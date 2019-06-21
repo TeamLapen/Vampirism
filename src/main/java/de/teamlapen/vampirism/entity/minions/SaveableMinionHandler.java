@@ -67,7 +67,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
 
     @Override
     public void checkMinions() {
-        minions.removeIf(m -> MinionHelper.entity(m).isDead || !lord.equals(m.getLord()));
+        minions.removeIf(m -> !MinionHelper.entity(m).isAlive() || !lord.equals(m.getLord()));
     }
 
     @Override
@@ -90,13 +90,13 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
         NBTTagList list = new NBTTagList();
         for (IMinion m : minions) {
             Entity e = MinionHelper.entity(m);
-            boolean dead = e.isDead;
-            e.isDead = false;
+            boolean removed = !e.isAlive();
+            e.removed = false;
             NBTTagCompound nbt = new NBTTagCompound();
             e.writeUnlessRemoved(nbt);
-            list.appendTag(nbt);
-            if (dead)
-                e.isDead = true;
+            list.add(nbt);
+            if (removed)
+                e.removed = true;
         }
         //VampirismMod.log.d(TAG, "Saved " + list.tagCount() + " minions");
         return list;
@@ -125,14 +125,14 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
      * @param list
      */
     public void loadMinions(NBTTagList list) {
-        if (list == null || list.tagCount() == 0) {
+        if (list == null || list.size() == 0) {
             LOGGER.debug("Empty minion list to load");
             return;
         }
         loadedMinions = new ArrayList<>();
-        for (int i = 0; i < list.tagCount(); i++) {
-            NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
-            Entity entity = EntityType.create(lord.getRepresentingEntity().world, nbttagcompound);
+        for (int i = 0; i < list.size(); i++) {
+            NBTTagCompound nbttagcompound = list.getCompound(i);
+            Entity entity = EntityType.create(nbttagcompound, lord.getRepresentingEntity().world);
             if (entity != null && entity instanceof ISaveableMinion) {
                 entity.posY = entity.posY + entity.height;
                 loadedMinions.add((T) entity);

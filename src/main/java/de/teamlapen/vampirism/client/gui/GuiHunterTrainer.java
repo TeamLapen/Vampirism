@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
+import de.teamlapen.vampirism.items.ItemHunterIntel;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -51,7 +51,7 @@ public class GuiHunterTrainer extends GuiContainer {
         this.buttons.add(this.buttonLevelup = new GuiButton(1, i + 120, j + 24, fontRenderer.getStringWidth(name) + 5, 20, name) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));//TODO Dispatcher
                 EntityPlayer player = Minecraft.getInstance().player;
                 UtilLib.spawnParticles(player.getEntityWorld(), Particles.ENCHANT, player.posX, player.posY, player.posZ, 1, 1, 1, 100, 1);
                 player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
@@ -87,7 +87,7 @@ public class GuiHunterTrainer extends GuiContainer {
         String text = null;
         if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
-            ITextComponent item = missing.getItem().equals(ModItems.hunter_intel) ? ModItems.hunter_intel.getDisplayName(missing) : new TextComponentTranslation(missing.getTranslationKey() + ".name");
+            ITextComponent item = missing.getItem() instanceof ItemHunterIntel ? missing.getItem().getDisplayName(missing) : new TextComponentTranslation(missing.getTranslationKey() + ".name");
             text = I18n.format("text.vampirism.ritual_missing_items", missing.getCount(), item.getUnformattedComponentText());
         }
         if (text != null) this.fontRenderer.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);

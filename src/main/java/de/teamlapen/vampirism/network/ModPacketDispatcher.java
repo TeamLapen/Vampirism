@@ -7,7 +7,7 @@ import net.minecraftforge.api.distmarker.Dist;
 /**
  * Vampirism packet dispatcher
  */
-public class ModPacketDispatcher extends AbstractPacketDispatcher {
+public class ModPacketDispatcher extends AbstractPacketDispatcher {//TODO @maxanier
     public ModPacketDispatcher() {
         super(REFERENCE.MODID);
     }

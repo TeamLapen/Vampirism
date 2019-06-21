@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
-import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -13,7 +11,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.common.property.IExtendedBlockState;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -64,8 +61,7 @@ public class BakedAltarInspirationModel implements IBakedModel {
         List<BakedQuad> quads = new LinkedList<>();
 
         try {
-            IExtendedBlockState extendedState = (IExtendedBlockState) state;
-            int fluidLevel = extendedState.getValue(BlockAltarInspiration.FLUID_LEVEL);
+            int fluidLevel = state.getFluidState().getLevel();
 
             quads.addAll(baseModel.getQuads(state, side, rand));
             if (fluidLevel > 0 && fluidLevel <= FLUID_LEVELS) {

@@ -22,6 +22,7 @@ import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.Heightmap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,7 +37,7 @@ import java.util.UUID;
 public class EntityDraculaHalloween extends EntityVampirism {
 
     private final static Logger LOGGER = LogManager.getLogger(EntityDraculaHalloween.class);
-    protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityTameable.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityTameable.class, DataSerializers.OPTIONAL_UNIQUE_ID);//TODO @maxanier
     private int seen = 0;
     private int hiding = 0;
     private boolean particle = false;
@@ -192,7 +193,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
         this.setPosition(behind.getX(), target.posY, behind.getZ());
 
         if (!this.isNotColliding()) {
-            int y = getEntityWorld().getHeight(behind).getY();
+            int y = getEntityWorld().getHeight(Heightmap.Type.WORLD_SURFACE, behind).getY();
             this.setPosition(behind.getX(), y, behind.getZ());
         }
     }

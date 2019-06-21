@@ -1,8 +1,5 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
-import de.teamlapen.vampirism.util.REFERENCE;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.ICraftingGridHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -11,6 +8,10 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
+
+import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -77,7 +78,7 @@ public class HunterWeaponRecipeCategory extends BlankRecipeCategory {
             ShapedHunterWeaponRecipesWrapper wrapper = (ShapedHunterWeaponRecipesWrapper) recipeWrapper;
             craftingGridHelper.setInputs(guiItemStackGroup, inputs, ((ShapedHunterWeaponRecipesWrapper) recipeWrapper).getWidth(), ((ShapedHunterWeaponRecipesWrapper) recipeWrapper).getHeight());
 
-        } else if (recipeWrapper instanceof ShapelessHunterWeaponRecipeWrapper) {
+        } else if (recipeWrapper instanceof ShapelessWeaponTableRecipeWrapper) {
             recipeLayout.setShapeless();
         }
         guiItemStackGroup.set(craftOutputSlot, outputs.get(0));

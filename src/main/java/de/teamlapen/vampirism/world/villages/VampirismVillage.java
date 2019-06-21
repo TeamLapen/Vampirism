@@ -15,6 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,7 +25,7 @@ import java.util.List;
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 
-public class VampirismVillage implements IVampirismVillage {
+public class VampirismVillage implements IVampirismVillage {//TODO Capability
 
     @CapabilityInject(IVampirismVillage.class)
     @Nonnull
@@ -50,7 +51,7 @@ public class VampirismVillage implements IVampirismVillage {
 
             @Nullable
             @Override
-            public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
                 return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
             }
 

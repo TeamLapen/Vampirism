@@ -105,7 +105,7 @@ public class ModEntityEventHandler {
         //Creeper AI changes for AvoidedByCreepers Skill
         if (!event.getWorld().isRemote && !Balance.vps.DISABLE_AVOIDED_BY_CREEPERS) {
             if (event.getEntity() instanceof EntityCreeper) {
-                ((EntityCreeper) event.getEntity()).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.getEntity(), EntityPlayer.class, input -> input != null && VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers, 20, 1.1, 1.3));
+                ((EntityCreeper) event.getEntity()).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.getEntity(), EntityPlayer.class, 20, 1.1, 1.3, input -> input != null && VampirePlayer.get((EntityPlayer) input).getSpecialAttributes().avoided_by_creepers));
 
                 EntityAIBase target = null;
                 for (EntityAITasks.EntityAITaskEntry t : ((EntityCreeper) event.getEntity()).targetTasks.taskEntries) {

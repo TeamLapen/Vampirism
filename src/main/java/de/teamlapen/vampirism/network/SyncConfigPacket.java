@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.network;
 
+import io.netty.buffer.ByteBuf;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,7 +19,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * Packet that syncs selected config values
  */
-public class SyncConfigPacket implements IMessage {
+public class SyncConfigPacket implements IMessage {//TODO @maxanier
     public static SyncConfigPacket createSyncConfigPacket() {
         SyncConfigPacket packet = new SyncConfigPacket();
         packet.loadConfig();

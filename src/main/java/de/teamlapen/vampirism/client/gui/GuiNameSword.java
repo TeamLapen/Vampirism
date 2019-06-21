@@ -4,7 +4,6 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.network.InputEventPacket;
-
 import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -14,7 +13,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -57,7 +55,7 @@ public class GuiNameSword extends GuiScreen {
         super.render(mouseX, mouseY, partialTicks);
         GlStateManager.disableLighting();
         GlStateManager.disableBlend();
-        this.nameField.drawTextBox();
+        this.nameField.drawTextField(0, 0, 0F);//TODO method parameter are not used
     }
 
     @Override
@@ -69,7 +67,7 @@ public class GuiNameSword extends GuiScreen {
                 if (!StringUtils.isBlank(nameField.getText())) {
                     ITextComponent name = new TextComponentString(nameField.getText());
                     GuiNameSword.this.sword.setDisplayName(name);
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, name));
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, name));//TODO Dispatcher
                 }
                 GuiNameSword.this.close();
             }
@@ -77,7 +75,7 @@ public class GuiNameSword extends GuiScreen {
         this.buttons.add(new GuiOptionButton(1, this.width / 2 - 155 + 160, this.height / 6 + 96, this.no) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));//TODO Dispatcher
                 GuiNameSword.this.close();
             }
         });

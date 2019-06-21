@@ -15,7 +15,6 @@ import de.teamlapen.vampirism.entity.ai.EntityAIMoveIndoorsDay;
 import de.teamlapen.vampirism.entity.ai.VampireAIBiteNearbyEntity;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIMoveToBiteable;
-import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -181,7 +180,9 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         }
         addRecipe(list, new ItemStack(ModItems.human_heart, 9), 2, this.getRNG(), 0.5F);
         addRecipe(list, 3, new ItemStack(ModItems.human_heart, 9), this.getRNG(), 0.5F);
-        addRecipe(list, 1, new ItemStack(ModItems.blood_bottle, 3, ItemBloodBottle.AMOUNT), rand, 0.9F);
+        ItemStack bottle = new ItemStack(ModItems.blood_bottle, 3);
+        bottle.setDamage(9);
+        addRecipe(list, 1, bottle, rand, 0.9F);
     }
 
     /**

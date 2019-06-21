@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.modcompat;
 
+import de.teamlapen.lib.lib.config.forge.ConfigCategory;
+import de.teamlapen.lib.lib.config.forge.Configuration;
 import de.teamlapen.lib.lib.util.IModCompat;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
+import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 
 
 public class SpongeModCompat implements IModCompat {
@@ -20,7 +20,7 @@ public class SpongeModCompat implements IModCompat {
     }
 
     @Override
-    public void onInitStep(Step step, FMLStateEvent event) {
+    public void onInitStep(Step step, ModLifecycleEvent event) {
 
     }
 }

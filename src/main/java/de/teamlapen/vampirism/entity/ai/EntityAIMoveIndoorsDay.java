@@ -43,7 +43,7 @@ public class EntityAIMoveIndoorsDay extends EntityAIBase {
     public boolean shouldExecute() {
         BlockPos blockpos = new BlockPos(this.entityObj);
 
-        if (this.entityObj.getEntityWorld().isDaytime() && this.entityObj.getEntityWorld().provider.hasSkyLight()) {
+        if (this.entityObj.getEntityWorld().isDaytime() && this.entityObj.getEntityWorld().dimension.hasSkyLight()) {
             if (this.entityObj.getRNG().nextInt(50) != 0) {
                 return false;
             } else if (this.insidePosX != -1 && this.entityObj.getDistanceSq((double) this.insidePosX, this.entityObj.posY, (double) this.insidePosZ) < 4.0D) {
