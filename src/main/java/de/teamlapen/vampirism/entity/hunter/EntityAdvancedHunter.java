@@ -4,9 +4,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -35,7 +33,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Advanced hunter. Is strong. Represents supporters
@@ -48,6 +45,10 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
 
     private final int MAX_LEVEL = 1;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
+    /**
+     * available actions for AI task & task
+     */
+    protected EntityActionHandler<?> entityActionHandler;
     protected EntityClassType entityclass;
     protected EntityActionTier entitytier;
 
@@ -248,11 +249,6 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     @Override
     public EntityActionTier getEntityTier() {
         return entitytier;
-    }
-
-    @Override
-    public List<IEntityAction> getAvailableActions() {
-        return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
     }
 
     /**

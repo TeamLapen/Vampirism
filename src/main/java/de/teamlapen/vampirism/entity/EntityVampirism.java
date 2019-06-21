@@ -4,7 +4,6 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.entity.IEntityWithHome;
 import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -32,8 +31,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     private final EntityAIBase moveTowardsRestriction;
     protected boolean hasArms = true;
     protected boolean peaceful = false;
-    /** available actions for AI task & task */
-    protected EntityActionHandler<?> entityActionHandler;
 
     /**
      * Whether the home should be saved to nbt or not

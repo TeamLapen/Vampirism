@@ -7,9 +7,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
@@ -51,7 +49,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 
 /**
@@ -65,6 +62,10 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private final EntityAIAttackMelee attackMelee;
     private final EntityAIAttackRangedCrossbow attackRange;
+    /**
+     * available actions for AI task & task
+     */
+    protected EntityActionHandler<?> entityActionHandler;
     protected EntityClassType entityclass;
     protected EntityActionTier entitytier;
 
@@ -489,11 +490,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Override
     public EntityActionTier getEntityTier() {
         return entitytier;
-    }
-
-    @Override
-    public List<IEntityAction> getAvailableActions() {
-        return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
     }
 
     /**

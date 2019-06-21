@@ -4,9 +4,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -39,7 +37,6 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Advanced vampire. Is strong. Represents supporters
@@ -56,6 +53,10 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
      * Not guaranteed to be exact and not saved to nbt
      */
     private int followingEntities = 0;
+    /**
+     * available actions for AI task & task
+     */
+    protected EntityActionHandler<?> entityActionHandler;
     protected EntityClassType entityclass;
     protected EntityActionTier entitytier;
 
@@ -275,11 +276,6 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     @Override
     public EntityActionTier getEntityTier() {
         return entitytier;
-    }
-
-    @Override
-    public List<IEntityAction> getAvailableActions() {
-        return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
     }
 
     /**

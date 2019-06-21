@@ -61,6 +61,10 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     private int bloodtimer = 100;
     private EntityAdvancedVampire advancedLeader = null;
     private int angryTimer = 0;
+    /**
+     * available actions for AI task & task
+     */
+    protected EntityActionHandler<?> entityActionHandler;
     protected EntityClassType entityclass;
     protected EntityActionTier entitytier;
 
