@@ -51,7 +51,7 @@ public abstract class EntityFactionVillager extends EntityVillagerVampirism impl
     }
 
     @Override
-    protected final void populateBuyingList() {
+    protected void populateBuyingList() {
         this.tradingLevel++;
 
         if (this.buyingList == null) {

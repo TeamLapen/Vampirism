@@ -58,7 +58,7 @@ public class BlockChurchAltar extends VampirismBlock {
         IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(player);
         ItemStack heldItem = player.getHeldItem(hand);
         if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
-            playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, world, (int) player.posX, (int) player.posY, (int) player.posZ);//TODO open Gui
+            player.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, world, (int) player.posX, (int) player.posY, (int) player.posZ);//TODO open Gui
             return true;
         } else if (!heldItem.isEmpty()) {
             if (ModItems.holy_salt_water.equals(heldItem.getItem())) {

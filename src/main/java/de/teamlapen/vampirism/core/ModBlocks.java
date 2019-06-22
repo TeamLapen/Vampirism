@@ -152,9 +152,5 @@ public class ModBlocks {
         registry.register(new BlockTotemBase());
     }
 
-    static void registerCraftingRecipes() {
-
-
-    }
 
 }

@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,8 +41,7 @@ public class BloodHelper {
      * Checks if the given stack can store blood
      */
     public static boolean canStoreBlood(@Nonnull ItemStack stack) {
-        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);//TODO .orElse/.orElseThrow/.orElseGet
-        return handler != null && handler.fill(new FluidStack(ModFluids.blood, 1000), false) > 0;
+        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, 1000), false) > 0).orElse(false);
     }
 
     /**
@@ -67,8 +65,7 @@ public class BloodHelper {
      * Returns the amount of blood stored in the given stack
      */
     public static int getBlood(@Nonnull ItemStack stack) {
-        FluidStack stack1 = FluidUtil.getFluidContained(stack);//TODO .orElse/.orElseThrow/.orElseGet
-        return stack1 == null ? 0 : stack1.amount;
+        return FluidUtil.getFluidContained(stack).map(s -> s.amount).orElse(0);
 
     }
 
@@ -88,20 +85,14 @@ public class BloodHelper {
         if (exact && doDrain) {
             if (drain(stack, amount, false, false) != amount) return 0;
         }
-        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);//TODO .orElse/.orElseThrow/.orElseGet
-        if (handler != null) {
+        return FluidUtil.getFluidHandler(stack).map(handler -> {
             FluidStack fluidStack = handler.drain(amount, doDrain);
             return fluidStack == null ? 0 : fluidStack.amount;
-        }
-        return 0;
+        }).orElse(0);
     }
 
     public static int fill(@Nonnull ItemStack stack, int amount, boolean doFill) {
-        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);//TODO .orElse/.orElseThrow/.orElseGet
-        if (handler != null) {
-            return handler.fill(new FluidStack(ModFluids.blood, amount), doFill);
-        }
-        return 0;
+        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, amount), doFill)).orElse(0);
     }
 
     /**
@@ -127,7 +118,7 @@ public class BloodHelper {
         }
         ItemStack glas = getGlassBottleInHotbar(player.inventory);
         if (!glas.isEmpty() && Configs.autoConvertGlasBottles) {
-            ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1, 0);//TODO BloodPotion
+            ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
             int filled = fill(bloodBottle, amt, true);
             if (filled == 0) {
                 LOGGER.warn("Failed to fill blood bottle with blood");

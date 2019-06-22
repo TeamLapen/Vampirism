@@ -47,16 +47,16 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
 
 
     AlchemicalCauldronRecipe(@Nonnull ItemStack output, ItemStack liquid, @Nonnull ItemStack ingredient) {
-        if (FluidLib.hasFluidItemCap(liquid)) {//TODO Maxanier
-            IFluidHandler handler = FluidLib.getFluidItemCap(liquid);//TODO .orElse/.orElseThrow/.orElseGet
+        IFluidHandler handler = FluidLib.getFluidItemCap(liquid).orElse(null);
+        if (handler != null) {
             FluidStack stack = handler.drain(Integer.MAX_VALUE, false);
             if (stack != null) {
-                LOGGER.debug("Replaced %s liquid item with %s fluid stack", liquid, stack);
+                LOGGER.debug("Replaced {} liquid item with {} fluid stack", liquid, stack);
                 fluidStack = stack;
                 fluidItem = ItemStack.EMPTY;
                 descriptiveStack = liquid;
             } else {
-                LOGGER.debug("Could not extract fluid from fluid container item %s", liquid);
+                LOGGER.debug("Could not extract fluid from fluid container item {}", liquid);
                 fluidStack = null;
                 fluidItem = liquid;
             }
@@ -83,9 +83,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     public boolean areSameIngredients(IAlchemicalCauldronRecipe recipe) {
         if (recipe instanceof AlchemicalCauldronRecipe) {
             AlchemicalCauldronRecipe r2 = (AlchemicalCauldronRecipe) recipe;
-            if (ItemStack.areItemStacksEqual(r2.fluidItem, fluidItem) && ItemStack.areItemStacksEqual(r2.ingredient, ingredient) && FluidLib.areFluidStacksEqual(r2.fluidStack, fluidStack)) {
-                return true;
-            }
+            return ItemStack.areItemStacksEqual(r2.fluidItem, fluidItem) && ItemStack.areItemStacksEqual(r2.ingredient, ingredient) && FluidLib.areFluidStacksEqual(r2.fluidStack, fluidStack);
         }
         return false;
 
@@ -155,15 +153,15 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     @Override
     public FluidStack isValidFluidItem(@Nonnull ItemStack stack) {
         if (fluidStack == null) return null;
-        if (FluidLib.hasFluidItemCap(stack)) {//TODO @Maxanier
-            IFluidHandler handler = FluidLib.getFluidItemCap(stack);//TODO .orElse/.orElseThrow/.orElseGet
+        return FluidLib.getFluidItemCap(stack).map(handler -> {
             FluidStack drained = handler.drain(fluidStack, false);
             if (drained == null || !drained.isFluidStackIdentical(fluidStack)) {
                 return null;
             }
             return fluidStack.copy();
-        }
-        return null;
+        }).orElse(null);
+
+
     }
 
     @Nullable

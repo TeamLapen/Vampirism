@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.items.ItemHunterIntel;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -17,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 
@@ -25,7 +25,6 @@ import javax.annotation.Nullable;
  * Container which handles hunter levelup at an hunter trainer
  */
 public class HunterTrainerContainer extends InventoryContainer {
-    private final static Item[] items = new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, ModItems.hunter_intel_0};
     private final EntityPlayer player;
     private boolean changed = false;
     private ItemStack missing = ItemStack.EMPTY;
@@ -45,7 +44,8 @@ public class HunterTrainerContainer extends InventoryContainer {
         HunterLevelingConf levelingConf = HunterLevelingConf.instance();
         if (!levelingConf.isLevelValidForTrainer(targetLevel)) return false;
         int[] req = levelingConf.getItemRequirementsForTrainer(targetLevel);
-        missing = InventoryHelper.checkItems(tile, items, new int[]{req[0], req[1], 1}, new int[]{OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE, levelingConf.getHunterIntelMetaForLevel(targetLevel) == 0 ? OreDictionary.WILDCARD_VALUE : -levelingConf.getHunterIntelMetaForLevel(targetLevel)});//TODO OreDict removed -> user other number (-1)?
+        int level = levelingConf.getHunterIntelMetaForLevel(targetLevel);
+        missing = InventoryHelper.checkItems(tile, new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, ItemHunterIntel.getIntelForLevel(level)}, new int[]{req[0], req[1], 1});
         return missing.isEmpty();
     }
 

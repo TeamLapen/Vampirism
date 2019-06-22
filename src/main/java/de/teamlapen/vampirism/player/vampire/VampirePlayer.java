@@ -23,7 +23,6 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.ItemHunterCoat;
-import de.teamlapen.vampirism.modcompat.SpongeModCompat;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
@@ -36,14 +35,11 @@ import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.Particles;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
@@ -63,7 +59,6 @@ import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.LogManager;
@@ -82,7 +77,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IVampirePlayer {//TODO Capability
+public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IVampirePlayer {
 
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
     @CapabilityInject(IVampirePlayer.class)
@@ -99,27 +94,28 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Don't call before the construction event of the player entity is finished
      */
     public static VampirePlayer get(EntityPlayer player) {
-        return (VampirePlayer) player.getCapability(CAP, null);
+        return (VampirePlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player"));
     }
 
     public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IVampirePlayer.class, new Storage(), VampirePlayerDefaultImpl.class);
+        CapabilityManager.INSTANCE.register(IVampirePlayer.class, new Storage(), VampirePlayerDefaultImpl::new);
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
             final IVampirePlayer inst = new VampirePlayer(player);
+            final LazyOptional<IVampirePlayer> opt = LazyOptional.of(() -> inst);
 
             @Override
             public void deserializeNBT(NBTTagCompound nbt) {
                 CAP.getStorage().readNBT(CAP, inst, null, nbt);
             }
 
+            @Nonnull
             @Override
             public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
-                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
+                return CAP.orEmpty(capability, opt);
             }
 
             @Override
@@ -566,11 +562,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             actionHandler.onActionsReactivated();
             ticksInSun = 0;
             if (wasDead) {
-                if (Loader.isModLoaded(SpongeModCompat.MODID)) {//TODO @Maxanier
-                    //Workaround for issue caused by https://github.com/SpongePowered/SpongeForge/issues/736 TODO remove?
-                    int level = getLevel();
-                    onLevelChanged(level, level);
-                }
                 player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 400, 4, true, false));
                 player.setHealth(player.getMaxHealth());
                 bloodStats.setBloodLevel(bloodStats.getMaxBlood());
@@ -582,7 +573,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void onLevelChanged(int newLevel, int oldLevel) {
         if (!isRemote()) {
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
-            checkAttributes(VReference.bloodExhaustion);
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE, 2, false);
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE, 2, false);
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE, 0, true);
@@ -624,7 +614,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onPlayerLoggedIn() {
-        if (getLevel() > 0 && FMLCommonHandler.instance().getSide().isServer()) {//TODO @Maxanier
+        if (getLevel() > 0 && !player.world.isRemote) {
             player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 200, 4, true, false));
         }
     }
@@ -1019,23 +1009,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return getLevel() > 0 && bloodStats.needsBlood();
     }
 
-    /**
-     * Check if the given attribute is currently registered, if not it registers it
-     * Only necessary because SpongeForge currently does not recreate the player on death but resets the attribute map
-     * TODO maybe remove once fixed
-     * https://github.com/SpongePowered/SpongeForge/issues/736
-     *
-     * @param attributes
-     */
-    protected void checkAttributes(IAttribute... attributes) {
-        for (IAttribute attribute : attributes) {
-            if (player.getAttribute(attribute) == null) {
-                applyEntityAttributes();
-                return;//apply entity attributes also readds all others
-            }
-        }
-
-    }
 
     @Override
     protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
@@ -1117,7 +1090,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * @param hunter Is the entity a hunter?
      */
     private void biteAttack(EntityLivingBase entity, boolean hunter) {
-        checkAttributes(VReference.biteDamage);
         float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getAttribute(VReference.biteDamage).getValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
         if ((entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) || entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) {
@@ -1138,29 +1110,33 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (getLevel() == 0) return;
         if (!bloodStats.needsBlood()) return;
 
-        int blood = 0;
         int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
         if (ModBlocks.blood_container.equals(blockState.getBlock())) {
-            if (tileEntity != null && tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) != null) {
-                IFluidHandler handler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);//TODO .orElse/.orElseThrow/.orElseGet
-                FluidStack drainable = handler.drain(new FluidStack(ModFluids.blood, need * VReference.FOOD_TO_FLUID_BLOOD), false);
-                if (drainable != null && drainable.amount >= VReference.FOOD_TO_FLUID_BLOOD) {
-                    FluidStack drained = handler.drain((drainable.amount / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, true);
-                    if (drained != null) {
-                        blood = drained.amount / VReference.FOOD_TO_FLUID_BLOOD;
+            if (tileEntity != null) {
+                tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).ifPresent(handler -> {
+                    int blood = 0;
+
+                    FluidStack drainable = handler.drain(new FluidStack(ModFluids.blood, need * VReference.FOOD_TO_FLUID_BLOOD), false);
+                    if (drainable != null && drainable.amount >= VReference.FOOD_TO_FLUID_BLOOD) {
+                        FluidStack drained = handler.drain((drainable.amount / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, true);
+                        if (drained != null) {
+                            blood = drained.amount / VReference.FOOD_TO_FLUID_BLOOD;
+                        }
                     }
-                }
+                    if (blood > 0) {
+                        drinkBlood(blood, IBloodStats.LOW_SATURATION);
+
+                        NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
+                        sync(updatePacket, true);
+
+
+                    }
+                });
+
             }
         }
 
-        if (blood > 0) {
-            drinkBlood(blood, IBloodStats.LOW_SATURATION);
 
-            NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
-            sync(updatePacket, true);
-
-
-        }
 
     }
 
@@ -1236,7 +1212,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             player.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 152, 0));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
-            checkAttributes(VReference.sunDamage);
             float damage = (float) (player.getAttribute(VReference.sunDamage).getValue());
             if (damage > 0) player.attackEntityFrom(VReference.SUNDAMAGE, damage);
         }
@@ -1262,7 +1237,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
             vec31 = vec31.add(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
 
-            player.world.addParticle(EnumParticleTypes.ITEM_CRACK, vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z, Item.getIdFromItem(Items.APPLE));//TODO cant find Particle
+            //TODO 1.13 check if there are still particle effects when eating an apple player.world.addParticle(EnumParticleTypes.ITEM_CRACK, vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z, Item.getIdFromItem(Items.APPLE));
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
         player.world.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);

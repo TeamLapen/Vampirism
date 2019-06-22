@@ -168,9 +168,10 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         return super.isIgnoringSundamage() || angryTimer > 0 && health < 0.7f || health < 0.3f;
     }
 
+
     @Override
-    public void onLivingUpdate() {
-        super.onLivingUpdate();
+    public void livingTick() {
+        super.livingTick();
         if (bloodtimer > 0) {
             bloodtimer--;
         }
@@ -251,8 +252,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.updateEntityAttributes();
     }
 

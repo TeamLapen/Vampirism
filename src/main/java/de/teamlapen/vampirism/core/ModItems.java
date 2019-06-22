@@ -28,9 +28,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -212,10 +209,7 @@ public class ModItems {
                 .addRecipe(ModItems.garlic_beacon_core_improved,
                         ModItems.holy_water_bottle_ultimate, ModItems.garlic_beacon_core)
                 .setRequirements(1, HunterSkills.garlic_beacon_improved).setExperience(2F);
-        cauldronCraftingManager
-                .addRecipe(new ItemStack(ModItems.pure_salt, 4),
-                        new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), null)//TODO Fluid
-                .setRequirements(1, HunterSkills.basic_alchemy).setCookingTime(20 * 60);
+        //cauldronCraftingManager.addRecipe(new ItemStack(ModItems.pure_salt, 4),new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), null).setRequirements(1, HunterSkills.basic_alchemy).setCookingTime(20 * 60); TODO 1.14 fluid
 
         // Brewing
         BrewingRecipeRegistry.addRecipe(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), PotionTypes.WATER), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));

@@ -29,6 +29,11 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
     }
 
     @Override
+    public Class<T> getFactionPlayerInterface() {
+        return super.getFactionEntityInterface();
+    }
+
+    @Override
     public int getHighestReachableLevel() {
         return highestLevel;
     }
@@ -40,7 +45,7 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
 
     @Override
     public T getPlayerCapability(EntityPlayer player) {
-        return player.getCapability(playerCapability, null);//TODO .orElse()/.orElseGet/.orElseThrow
+        return player.getCapability(playerCapability, null).orElseThrow(() -> new IllegalStateException("Cannot get Faction Capability"));
     }
 
     @Override

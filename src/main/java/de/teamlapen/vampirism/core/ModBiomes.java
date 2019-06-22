@@ -35,7 +35,7 @@ public class ModBiomes {
         if (!Configs.disable_vampireForest) {
 
             BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampireForest, Balance.general.VAMPIRE_FOREST_WEIGHT));
-            LOGGER.debug("Registered vampire forest with weight %d", Balance.general.VAMPIRE_FOREST_WEIGHT);
+            LOGGER.debug("Registered vampire forest with weight {}", Balance.general.VAMPIRE_FOREST_WEIGHT);
             VampirismAPI.sundamageRegistry().addNoSundamageBiome(ModBiomes.vampireForest.getClass());
         }
 
@@ -45,7 +45,7 @@ public class ModBiomes {
         if (Configs.disable_all_worldgen) return;
         if (!Configs.disable_hunter_camps) {
             for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
-                if (biome.getRegistryName().equals(new ResourceLocation("the_end")) || biome.getRegistryName().equals(new ResourceLocation("nether")))
+                if (new ResourceLocation("the_end").equals(biome.getRegistryName()) || new ResourceLocation("nether").equals(biome.getRegistryName()))
                     continue;
                 biome.addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, VampirismBiome.HUNTER_TENT_FEATURE);
             }

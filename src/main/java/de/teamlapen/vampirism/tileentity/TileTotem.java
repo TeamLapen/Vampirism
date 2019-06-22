@@ -361,11 +361,7 @@ public class TileTotem extends TileEntity implements ITickable {
         }
     }
 
-    @Override
-    public void invalidate() {//TODO ?
-        super.invalidate();
-        unregisterVampireArea();
-    }
+
 
     @Override
     public void markDirty() {
@@ -393,6 +389,8 @@ public class TileTotem extends TileEntity implements ITickable {
             v.removeTotemAndReset(this.pos);
         }
         updateBossinfoPlayers(null);
+        unregisterVampireArea();
+
         super.remove();
     }
 

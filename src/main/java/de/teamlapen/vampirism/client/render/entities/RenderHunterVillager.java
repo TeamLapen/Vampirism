@@ -14,7 +14,7 @@ public class RenderHunterVillager extends RenderVillager {
         super(renderManagerIn);
         this.layerRenderers.clear();
         this.mainModel = new ModelVillagerWithArms(0.0F);
-        this.addLayer(new LayerCustomHead(this.getMainModel().villagerHead)); //TODO not visible
+        this.addLayer(new LayerCustomHead(this.getMainModel().villagerHead));
         this.addLayer(new LayerHeldItemVillager(this));
     }
 }

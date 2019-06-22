@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -134,7 +133,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         if (i != null) {
             bloodValueMultiplier = i / 10F;
         }
-        final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.create(null);//TODO @maxanier
+        final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.apply(null);
         for (Map.Entry<Class<? extends EntityCreature>, IConvertingHandler> entry : convertibles.entrySet()) {
             ResourceLocation id = EntityType.getId(entry.getKey().cast(EntityCreature.class).getType());
             if (id == null) {

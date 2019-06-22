@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -10,6 +11,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.List;
 public class ItemHunterIntel extends VampirismItem {
 
 
+    private final static Logger LOGGER = LogManager.getLogger();
     private final static String name = "hunter_intel";
     private final int level;
 
@@ -54,5 +58,32 @@ public class ItemHunterIntel extends VampirismItem {
      */
     public int getLevel() {
         return level;
+    }
+
+    public static ItemHunterIntel getIntelForLevel(int level) {
+        switch (level) {
+            case 0:
+                return ModItems.hunter_intel_0;
+            case 1:
+                return ModItems.hunter_intel_1;
+            case 2:
+                return ModItems.hunter_intel_2;
+            case 3:
+                return ModItems.hunter_intel_3;
+            case 4:
+                return ModItems.hunter_intel_4;
+            case 5:
+                return ModItems.hunter_intel_5;
+            case 6:
+                return ModItems.hunter_intel_6;
+            case 7:
+                return ModItems.hunter_intel_7;
+            case 8:
+                return ModItems.hunter_intel_8;
+            default:
+                LOGGER.warn("HunterIntel of level {} does not exist", level);
+                return ModItems.hunter_intel_8;
+
+        }
     }
 }

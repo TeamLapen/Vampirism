@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.blocks.BlockAltarPillar;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.state.IBlockState;
@@ -47,9 +48,6 @@ import java.util.*;
 public class TileAltarInfusion extends InventoryTileEntity implements ITickable {
 
     private final static Logger LOGGER = LogManager.getLogger(TileAltarInfusion.class);
-    private static final Item[] items = new Item[]{
-            ModItems.pure_blood_0, ModItems.human_heart, ModItems.vampire_book
-    };
     private final int DURATION_TICK = 450;
     /**
      * Only available when running ({@link #runningTick}>0)
@@ -67,7 +65,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     private int targetLevel;
 
     public TileAltarInfusion() {
-        super(ModTiles.altar_infusion, new InventorySlot[]{new InventorySlot(items[0], 44, 34), new InventorySlot(items[1], 80, 34), new InventorySlot(items[2], 116, 34)});
+        super(ModTiles.altar_infusion, new InventorySlot[]{new InventorySlot(ItemPureBlood.class, 44, 34), new InventorySlot(ModItems.human_heart, 80, 34), new InventorySlot(ModItems.vampire_book, 116, 34)});
     }
 
     /**
@@ -326,7 +324,9 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     private boolean checkItemRequirements(EntityPlayer player, boolean messagePlayer) {
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
-        ItemStack missing = InventoryHelper.checkItems(this, items, new int[]{requirements.blood, requirements.heart, requirements.vampireBook}, new int[]{requirements.getBloodMetaForCheck(), OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE});
+        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{
+                ItemPureBlood.getBloodItemForLevel(requirements.pureBloodLevel), ModItems.human_heart, ModItems.vampire_book
+        }, new int[]{requirements.blood, requirements.heart, requirements.vampireBook});
         if (!missing.isEmpty()) {
             if (messagePlayer) {
                 ITextComponent item = missing.getItem().equals(ModItems.pure_blood_0) ? ModItems.pure_blood_0.getDisplayName(missing) : new TextComponentTranslation(missing.getTranslationKey() + ".name");
@@ -339,6 +339,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         return true;
 
     }
+
 
     /**
      * Determines the structure required for leveling up.

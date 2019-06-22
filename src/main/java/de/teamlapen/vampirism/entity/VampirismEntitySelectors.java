@@ -1,26 +1,19 @@
 package de.teamlapen.vampirism.entity;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
-
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.Entity;
+import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.command.arguments.EntityOptions;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.IEntitySelectorFactory;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Creates and adds custom entity selectors based on Vampirism's properties
@@ -33,21 +26,17 @@ public class VampirismEntitySelectors {//TODO @maxanier
     private static final String MIN_LEVEL = "vampirism:minLevel";
     private static final String MAX_LEVEL = "vampirism:maxLevel";
 
+    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208726_0_) -> new TextComponentTranslation("vampirism.argument.entity.options.faction.not_found", p_208726_0_));
 
-    private static void addFactionSelector(List<Predicate<Entity>> list, Map<String, String> arguments, ICommandSender sender) {
-        String faction = arguments.get(FACTION);
 
-        if (faction != null) {
-            final boolean invert = faction.startsWith("!");
-
-            if (invert) {
-                faction = faction.substring(1);
-            }
-
+    public static void registerSelectors() {
+        EntityOptions.register(FACTION, (parser) -> {
+            boolean invert = parser.shouldInvertValue();
+            String faction = parser.getReader().readString();
             IFaction[] factions = VampirismAPI.factionRegistry().getFactions();
             for (final IFaction f : factions) {
                 if (f.name().equalsIgnoreCase(faction)) {
-                    list.add(input -> {
+                    parser.addFilter(input -> {
                         if (input instanceof IFactionEntity) {
                             boolean flag1 = f.equals(((IFactionEntity) input).getFaction());
                             return invert != flag1;
@@ -60,61 +49,27 @@ public class VampirismEntitySelectors {//TODO @maxanier
                     return;
                 }
             }
-            //Prevents selection of all entities if mistyped
-            list.add(input -> false);
-            sender.sendMessage(new TextComponentString("Unknown faction: " + faction));
+            throw FACTION_NOT_FOUND.createWithContext(parser.getReader(), faction);
+        }, (parser) -> {
+            return true;
+        }, new TextComponentTranslation("vampirism.argument.entity.options.faction.desc"));
 
-        }
-    }
-
-    private static void addLevelSelector(List<Predicate<Entity>> list, Map<String, String> arguments) {
-        String level = arguments.get(LEVEL);
-        if (level != null) {
-            try {
-                final int l = Integer.parseInt(level);
-                list.add(input -> input instanceof EntityPlayer && FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() == l);
-            } catch (NumberFormatException e) {
-                LOGGER.warn("Failed to parse level (%s)", level);
-                list.add(input -> false);
+        EntityOptions.register(LEVEL, (parser) -> {
+            StringReader reader = parser.getReader();
+            MinMaxBounds.IntBound bound = MinMaxBounds.IntBound.fromReader(reader);
+            if ((bound.getMin() == null || bound.getMin() >= 0) && (bound.getMax() == null || bound.getMax() >= 0)) {
+                parser.addFilter(input -> {
+                    if (input instanceof EntityPlayer) {
+                        int level = FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel();
+                        return (bound.getMin() == null || bound.getMin() <= level) && (bound.getMax() == null || bound.getMax() >= level);
+                    }
+                    return false;
+                });
+            } else {
+                throw EntityOptions.NEGATIVE_LEVEL.createWithContext(reader);
             }
 
-        }
+        }, (parser) -> true, new TextComponentTranslation("vampirism.argument.entity.options.level.desc"));
 
-        String minLevel = arguments.get(MIN_LEVEL);
-        if (minLevel != null) {
-            try {
-                final int l = Integer.parseInt(minLevel);
-                list.add(input -> input instanceof EntityPlayer && FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() >= l);
-            } catch (NumberFormatException e) {
-                LOGGER.warn("Failed to parse level (%s)", level);
-                list.add(input -> false);
-            }
-
-        }
-
-        String maxLevel = arguments.get(MAX_LEVEL);
-        if (maxLevel != null) {
-            try {
-                final int l = Integer.parseInt(maxLevel);
-                list.add(input -> input instanceof EntityPlayer && FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() <= l);
-            } catch (NumberFormatException e) {
-                LOGGER.warn("Failed to parse level (%s)", level);
-                list.add(input -> false);
-            }
-
-        }
-    }
-
-    public static void registerSelectors() {
-        GameRegistry.registerEntitySelector(new IEntitySelectorFactory() {
-            @Nonnull
-            @Override
-            public List<Predicate<Entity>> createPredicates(Map<String, String> arguments, String mainSelector, ICommandSender sender, Vec3d position) {
-                List<Predicate<Entity>> list = Lists.newArrayList();
-                addFactionSelector(list, arguments, sender);
-                addLevelSelector(list, arguments);
-                return list;
-            }
-        }, FACTION, LEVEL, MIN_LEVEL, MAX_LEVEL);
     }
 }

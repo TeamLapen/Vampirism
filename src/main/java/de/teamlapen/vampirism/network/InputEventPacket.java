@@ -80,12 +80,6 @@ public class InputEventPacket implements IMessage {
     private String action;
 
 
-
-    public InputEventPacket(String action, String param) {
-        this.action = action;
-        this.param = param;
-    }
-
     public static void handle(final InputEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         Validate.notNull(msg.action);
@@ -93,147 +87,173 @@ public class InputEventPacket implements IMessage {
         Validate.notNull(player);
         ctx.enqueueWork(() -> {
             IFactionPlayer factionPlayer = FactionPlayerHandler.get(player).getCurrentFactionPlayer();
-            if (msg.action.equals(SUCKBLOOD)) {
-                int id = 0;
-                try {
-                    id = Integer.parseInt(msg.param);
-                } catch (NumberFormatException e) {
-                    LOGGER.error("Receiving invalid param {} for {}", msg.param, msg.action);
-                }
-                if (id != 0) {
-                    VampirePlayer.get(player).biteEntity(id);
-                }
-            } else if (msg.action.equals(ENDSUCKBLOOD)) {
-                VampirePlayer.get(player).endFeeding(true);
-            } else if (msg.action.equals(TOGGLEACTION)) {
-                ResourceLocation id = new ResourceLocation(msg.param);
-                if (factionPlayer != null) {
-                    IActionHandler actionHandler = factionPlayer.getActionHandler();
-                    IAction action = VampirismRegistries.ACTIONS.getValue(id);
-                    if (action != null) {
-                        IAction.PERM r = actionHandler.toggleAction(action);
-                        switch (r) {
-                            case NOT_UNLOCKED:
-                                player.sendMessage(new TextComponentTranslation("text.vampirism.action.not_unlocked"));
-                                break;
-                            case DISABLED:
-                                player.sendMessage(new TextComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));
-                                break;
-                            case COOLDOWN:
-                                player.sendMessage(new TextComponentTranslation("text.vampirism.action.cooldown_not_over"));
-                                break;
-                            default://Everything alright
-                        }
-                    } else {
-                        LOGGER.error("Failed to find action with id {}", id);
+            switch (msg.action) {
+                case SUCKBLOOD: {
+                    int id = 0;
+                    try {
+                        id = Integer.parseInt(msg.param);
+                    } catch (NumberFormatException e) {
+                        LOGGER.error("Receiving invalid param {} for {}", msg.param, msg.action);
                     }
-                } else {
-                    LOGGER.error("Player {} is in no faction, so he cannot use action {}", player, id);
+                    if (id != 0) {
+                        VampirePlayer.get(player).biteEntity(id);
+                    }
+                    break;
                 }
-
-
-            } else if (msg.action.equals(DRINK_BLOOD_BLOCK)) {
-                String[] coords = msg.param.split(":");
-                if (coords.length == 3) {
-                    BlockPos pos = new BlockPos(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
-                    VampirePlayer.get(player).biteBlock(pos);
-                } else {
-                    LOGGER.warn("Received invalid {} parameter", DRINK_BLOOD_BLOCK);
-                }
-            } else if (msg.action.equals(UNLOCKSKILL)) {
-                if (factionPlayer != null) {
-                    ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(msg.param));
-                    if (skill != null) {
-                        ISkillHandler skillHandler = factionPlayer.getSkillHandler();
-                        ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
-                        if (result == ISkillHandler.Result.OK) {
-                            skillHandler.enableSkill(skill);
-                            if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
-                                //TODO does this cause problems with addons?
-                                NBTTagCompound sync = new NBTTagCompound();
-                                ((SkillHandler) skillHandler).writeUpdateForClient(sync);
-                                HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
+                case ENDSUCKBLOOD:
+                    VampirePlayer.get(player).endFeeding(true);
+                    break;
+                case TOGGLEACTION: {
+                    ResourceLocation id = new ResourceLocation(msg.param);
+                    if (factionPlayer != null) {
+                        IActionHandler actionHandler = factionPlayer.getActionHandler();
+                        IAction action = VampirismRegistries.ACTIONS.getValue(id);
+                        if (action != null) {
+                            IAction.PERM r = actionHandler.toggleAction(action);
+                            switch (r) {
+                                case NOT_UNLOCKED:
+                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.not_unlocked"));
+                                    break;
+                                case DISABLED:
+                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));
+                                    break;
+                                case COOLDOWN:
+                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.cooldown_not_over"));
+                                    break;
+                                default://Everything alright
                             }
-
                         } else {
-                            LOGGER.warn("Skill {} cannot be activated for {} ({})", skill, player, result);
+                            LOGGER.error("Failed to find action with id {}", id);
                         }
                     } else {
-                        LOGGER.warn("Skill {} was not found so {} cannot activate it", msg.param, player);
+                        LOGGER.error("Player {} is in no faction, so he cannot use action {}", player, id);
                     }
-                } else {
-                    LOGGER.error("Player {} is in no faction, so he cannot unlock skills", player);
+
+
+                    break;
                 }
-
-
-            } else if (msg.action.equals(RESETSKILL)) {
-                if (factionPlayer != null) {
-                    ISkillHandler skillHandler = factionPlayer.getSkillHandler();
-                    skillHandler.resetSkills();
-                    if (!VampirismMod.inDev && !VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
-                        int l = factionPlayer.getLevel();
-                        if (l > 1) {
-                            FactionPlayerHandler.get(player).setFactionLevel(factionPlayer.getFaction(), l - 1);
-                        }
-                    }
-                    if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
-                        //TODO does this cause problems with addons?
-                        NBTTagCompound sync = new NBTTagCompound();
-                        ((SkillHandler) skillHandler).writeUpdateForClient(sync);
-                        HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
-                    }
-                    player.sendMessage(new TextComponentTranslation("text.vampirism.skill.skills_reset"));
-                } else {
-                    LOGGER.error("Player %s is in no faction, so he cannot reset skills");
-                }
-            } else if (msg.action.equals(TRAINERLEVELUP)) {
-                if (player.openContainer instanceof HunterTrainerContainer) {
-                    ((HunterTrainerContainer) player.openContainer).onLevelupClicked();
-                }
-            } else if (msg.action.equals(REVERTBACK)) {
-
-                FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
-                LOGGER.debug("Player {} left faction", player);
-                player.attackEntityFrom(DamageSource.MAGIC, 1000);
-
-            } else if (msg.action.equals(WAKEUP)) {
-                VampirePlayer.get(player).wakeUpPlayer(false, true, true);
-            } else if (msg.action.equals(VAMPIRE_VISION_TOGGLE)) {
-                VampirePlayer.get(player).switchVision();
-            } else if (msg.action.equals(CRAFT_BLOOD_POTION)) {
-                if (player.openContainer instanceof BloodPotionTableContainer) {
-                    ((BloodPotionTableContainer) player.openContainer).onCraftingClicked();
-                }
-            } else if (msg.action.equals(OPEN_BLOOD_POTION)) {
-
-                IHunterPlayer hunter = HunterPlayer.get(player);
-                if (hunter.getLevel() > 0) {
-                    if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_portable_crafting)) {
-                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                case DRINK_BLOOD_BLOCK:
+                    String[] coords = msg.param.split(":");
+                    if (coords.length == 3) {
+                        BlockPos pos = new BlockPos(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
+                        VampirePlayer.get(player).biteBlock(pos);
                     } else {
-                        player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));
+                        LOGGER.warn("Received invalid {} parameter", DRINK_BLOOD_BLOCK);
                     }
-                } else {
-                    player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(VReference.HUNTER_FACTION.getTranslationKey())));
-                }
-            } else if (msg.action.equals(BASICHUNTERLEVELUP)) {
-                if (player.openContainer instanceof HunterBasicContainer) {
-                    ((HunterBasicContainer) player.openContainer).onLevelUpClicked();
-                }
-            } else if (msg.action.equals(NAME_ITEM)) {
-                String name = msg.param;
-                if (VampirismVampireSword.DO_NOT_NAME_STRING.equals(name)) {
-                    ItemStack stack = player.getHeldItemMainhand();
-                    if (stack.getItem() instanceof VampirismVampireSword) {
-                        ((VampirismVampireSword) stack.getItem()).doNotName(stack);
+                    break;
+                case UNLOCKSKILL:
+                    if (factionPlayer != null) {
+                        ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(msg.param));
+                        if (skill != null) {
+                            ISkillHandler skillHandler = factionPlayer.getSkillHandler();
+                            ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
+                            if (result == ISkillHandler.Result.OK) {
+                                skillHandler.enableSkill(skill);
+                                if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
+                                    //TODO does this cause problems with addons?
+                                    NBTTagCompound sync = new NBTTagCompound();
+                                    ((SkillHandler) skillHandler).writeUpdateForClient(sync);
+                                    HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
+                                }
+
+                            } else {
+                                LOGGER.warn("Skill {} cannot be activated for {} ({})", skill, player, result);
+                            }
+                        } else {
+                            LOGGER.warn("Skill {} was not found so {} cannot activate it", msg.param, player);
+                        }
+                    } else {
+                        LOGGER.error("Player {} is in no faction, so he cannot unlock skills", player);
                     }
-                } else if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
-                    ItemStack stack = player.getHeldItemMainhand();
-                    stack.setDisplayName(new TextComponentString(name));
-                }
+
+
+                    break;
+                case RESETSKILL:
+                    if (factionPlayer != null) {
+                        ISkillHandler skillHandler = factionPlayer.getSkillHandler();
+                        skillHandler.resetSkills();
+                        if (!VampirismMod.inDev && !VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
+                            int l = factionPlayer.getLevel();
+                            if (l > 1) {
+                                FactionPlayerHandler.get(player).setFactionLevel(factionPlayer.getFaction(), l - 1);
+                            }
+                        }
+                        if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
+                            //TODO does this cause problems with addons?
+                            NBTTagCompound sync = new NBTTagCompound();
+                            ((SkillHandler) skillHandler).writeUpdateForClient(sync);
+                            HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
+                        }
+                        player.sendMessage(new TextComponentTranslation("text.vampirism.skill.skills_reset"));
+                    } else {
+                        LOGGER.error("Player %s is in no faction, so he cannot reset skills");
+                    }
+                    break;
+                case TRAINERLEVELUP:
+                    if (player.openContainer instanceof HunterTrainerContainer) {
+                        ((HunterTrainerContainer) player.openContainer).onLevelupClicked();
+                    }
+                    break;
+                case REVERTBACK:
+
+                    FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
+                    LOGGER.debug("Player {} left faction", player);
+                    player.attackEntityFrom(DamageSource.MAGIC, 1000);
+
+                    break;
+                case WAKEUP:
+                    VampirePlayer.get(player).wakeUpPlayer(false, true, true);
+                    break;
+                case VAMPIRE_VISION_TOGGLE:
+                    VampirePlayer.get(player).switchVision();
+                    break;
+                case CRAFT_BLOOD_POTION:
+                    if (player.openContainer instanceof BloodPotionTableContainer) {
+                        ((BloodPotionTableContainer) player.openContainer).onCraftingClicked();
+                    }
+                    break;
+                case OPEN_BLOOD_POTION:
+
+                    IHunterPlayer hunter = HunterPlayer.get(player);
+                    if (hunter.getLevel() > 0) {
+                        if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_portable_crafting)) {
+                            player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                        } else {
+                            player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));
+                        }
+                    } else {
+                        player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(VReference.HUNTER_FACTION.getTranslationKey())));
+                    }
+                    break;
+                case BASICHUNTERLEVELUP:
+                    if (player.openContainer instanceof HunterBasicContainer) {
+                        ((HunterBasicContainer) player.openContainer).onLevelUpClicked();
+                    }
+                    break;
+                case NAME_ITEM:
+                    String name = msg.param;
+                    if (VampirismVampireSword.DO_NOT_NAME_STRING.equals(name)) {
+                        ItemStack stack = player.getHeldItemMainhand();
+                        if (stack.getItem() instanceof VampirismVampireSword) {
+                            ((VampirismVampireSword) stack.getItem()).doNotName(stack);
+                        }
+                    } else if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
+                        ItemStack stack = player.getHeldItemMainhand();
+                        stack.setDisplayName(new TextComponentString(name));
+                    }
+                    break;
             }
             return null;
         });
+    }
+
+    public InputEventPacket(String action, String param) {
+        this.action = action;
+        this.param = param;
+    }
+
+    private InputEventPacket() {
+
     }
 
 }

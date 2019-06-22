@@ -15,6 +15,7 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -33,18 +34,21 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
     private int cooldownProcess = 0;
     private boolean active;
 
+    private final LazyOptional<IFluidHandler> cap;
+
     public TileSieve() {
         super(ModTiles.sieve);
         tank = new FilteringFluidTank(2 * Fluid.BUCKET_VOLUME).setListener(this);
         tank.setCanDrain(false);
+        cap = LazyOptional.of(() -> tank);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     @Nullable
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if ((facing == null || facing != EnumFacing.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-            return (T) tank;
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+        if ((facing != EnumFacing.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            return cap.cast();
         return super.getCapability(capability, facing);
     }
 
@@ -60,10 +64,6 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
         return nbt;
     }
 
-    @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return ((facing == null || facing != EnumFacing.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) || super.hasCapability(capability, facing);
-    }
 
     public boolean isActive() {
         return active;
@@ -106,8 +106,7 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
         if (--cooldownProcess < 0) {
             cooldownProcess = 15;
             if (tank.getFluidAmount() > 0) {
-                IFluidHandler handler = FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), EnumFacing.UP);
-                if (handler != null) {
+                FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), EnumFacing.UP).ifPresent(handler -> {
                     tank.setCanDrain(true);
                     FluidStack transferred = FluidUtil.tryFluidTransfer(handler, tank, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
                     tank.setCanDrain(false);
@@ -115,7 +114,7 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
                         cooldownProcess = 30;
                         setActive(true);
                     }
-                }
+                });
             } else if (active) {
                 setActive(false);
             }
@@ -123,10 +122,9 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
         //Pull new content. Cooldown is increased when liquid is filled into the tank (regardless of way)
         if (--cooldownPull < 0) {
             cooldownPull = 10;
-            IFluidHandler handler = FluidUtil.getFluidHandler(this.getWorld(), this.pos.up(), EnumFacing.DOWN);
-            if (handler != null) {
+            FluidUtil.getFluidHandler(this.getWorld(), this.pos.up(), EnumFacing.DOWN).ifPresent(handler -> {
                 FluidStack transferred = FluidUtil.tryFluidTransfer(tank, handler, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
-            }
+            });
         }
 
     }

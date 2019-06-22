@@ -8,9 +8,8 @@ import de.teamlapen.vampirism.world.gen.village.VillagePieceTrainer;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.MapGenBase;
+import net.minecraft.world.gen.ChunkGenSettings;
 import net.minecraft.world.gen.feature.structure.StructureIO;
-import net.minecraft.world.gen.structure.MapGenVillage;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -51,34 +50,25 @@ public class ModVillages {
         }
     }
 
-    public static void modifyVillageSize(MapGenBase mapGenVillage) {//TODO modify villagesize
-        if (mapGenVillage instanceof MapGenVillage) {
+    static void modifyVillageSize(ChunkGenSettings settings) {
 
 
             try {
-                ObfuscationReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_size, SRGNAMES.MapGenVillage_size);
+                ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, Configs.village_size, SRGNAMES.ChunkGenSettings_villageDistance);
             } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
-                LOGGER.error(e, "Could not modify field 'terrainType' in MapGenVillage");
+                LOGGER.error("Could not modify field 'villageDistance' in ChunkGenSettings", e);
             }
 
-            try {
-                ObfuscationReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_density, SRGNAMES.MapGenVillage_distance);
+
+        try {
+            ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, Configs.village_min_dist, SRGNAMES.ChunkGenSettings_villageSeparation);
             } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
-                LOGGER.error(e, "Could not modify field for village density in MapGenVillage");
-            }
-            try {
-                ObfuscationReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_min_dist, SRGNAMES.MapGenVillage_minTownSeperation);
-            } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
-                LOGGER.error(e, "Could not modify field for village min dist in MapGenVillage");
+            LOGGER.error("Could not modify field for villageSeparation in ChunkGenSettings", e);
             }
 
 
             LOGGER.debug("Modified MapGenVillage fields.");
 
-        } else {
-            //Should not be possible
-            LOGGER.error("VillageGen (%s) is not an instance of MapGenVillage, can't modify gen", mapGenVillage);
-        }
     }
 
     private static void registerTrades() {

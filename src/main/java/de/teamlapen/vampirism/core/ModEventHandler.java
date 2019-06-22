@@ -6,9 +6,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
-import de.teamlapen.vampirism.modcompat.IntegrationsNotifier;
-import de.teamlapen.vampirism.network.SyncConfigPacket;
 import de.teamlapen.vampirism.tileentity.TileTotem;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -16,7 +13,6 @@ import de.teamlapen.vampirism.world.ModWorldEventListener;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -24,10 +20,12 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.village.Village;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
+import net.minecraft.world.gen.ChunkGenSettings;
+import net.minecraft.world.gen.ChunkGeneratorOverworld;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -35,11 +33,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,43 +52,42 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
         event.addCapability(REFERENCE.VAMPIRISM_VILLAGE_KEY_NEW, VampirismVillage.createNewCapability(event.getObject()));
 
     }
+//  TODO 1.14 wait for https://github.com/MinecraftForge/MinecraftForge/issues/5536 or find a different solution
 
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public void onClientConnected(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        if (!UtilLib.isSameInstanceAsServer()) {
-            VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
-        }
-    }
+//    @OnlyIn(Dist.CLIENT)
+//    @SubscribeEvent
+//    public void onClientConnected(NetworkEvent.ClientConnectedToServerEvent event) {
+//        if (!UtilLib.isSameInstanceAsServer()) {
+//            VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
+//        }
+//    }
+//
+//    @OnlyIn(Dist.CLIENT)
+//    @SubscribeEvent
+//    public void onClientDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+//        if (!UtilLib.isSameInstanceAsServer()) {
+//            Configs.onDisconnectedFromServer();
+//            VampirismEntityRegistry.getBiteableEntryManager().resetDynamic();
+//        }
+//    }
 
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public void onClientDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-        if (!UtilLib.isSameInstanceAsServer()) {
-            Configs.onDisconnectedFromServer();
-            VampirismEntityRegistry.getBiteableEntryManager().resetDynamic();
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void on(WorldEvent.Load event) {
+        IChunkGenerator generator = event.getWorld().getChunkProvider().getChunkGenerator();
+        if (generator instanceof ChunkGeneratorOverworld) {
+            ChunkGenSettings settings = ((ChunkGeneratorOverworld) generator).getSettings();
+            ModVillages.modifyVillageSize(settings);
         }
     }
 
     @SubscribeEvent
     public void onConfigurationChanged(ConfigChangedEvent.OnConfigChangedEvent e) {
         if (e.getModID().equalsIgnoreCase(REFERENCE.MODID)) {
-            LOGGER.info("Configuration (%s) changed", e.getConfigID());
+            LOGGER.info("Configuration ({}) changed", e.getConfigID());
             Configs.onConfigurationChanged();
             Balance.onConfigurationChanged();
         }
     }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onInitMapGen(InitMapGenEvent event) {
-        if (event.getType().equals(InitMapGenEvent.EventType.VILLAGE) && Configs.village_modify) {
-            if (event.getNewGen() != event.getOriginalGen()) {
-                LOGGER.warn("VillageGen", "The village map generator was overwritten by another mod. There might be a problem! \n The new generator class is " + event.getNewGen().getClass().getCanonicalName());
-            }
-            ModVillages.modifyVillageSize(event.getNewGen());
-        }
-    }
-
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
@@ -114,7 +111,7 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
 
         }
         if (isAdminLikePlayer) {
-            List<String> mods = IntegrationsNotifier.shouldNotifyAboutIntegrations();
+            List<String> mods = Collections.emptyList();// TODO 1.14 IntegrationsNotifier.shouldNotifyAboutIntegrations();
             if (!mods.isEmpty()) {
                 event.getPlayer().sendMessage(new TextComponentTranslation("text.vampirism.integrations_available.first"));
                 event.getPlayer().sendMessage(new TextComponentString(TextFormatting.BLUE + TextFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + TextFormatting.RESET));
@@ -134,17 +131,14 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
             }
         }
 
-        if (!Configs.disable_config_sync) {
-            if (event.getPlayer() != null && (event.getPlayer() instanceof EntityPlayerMP)) {
-                LOGGER.debug("Sending configuration to client (%s)", event.getPlayer());
-                VampirismMod.dispatcher.sendTo(SyncConfigPacket.createSyncConfigPacket(), (EntityPlayerMP) event.getPlayer());//TODO Dispatcher
-            }
-        }
     }
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
-        event.getWorld().addEventListener(new ModWorldEventListener(event.getWorld().getDimension()));
+        IWorld world = event.getWorld();
+        if (world instanceof World) {
+            ((World) world).addEventListener(new ModWorldEventListener(event.getWorld().getDimension()));
+        }
     }
 
     @SubscribeEvent

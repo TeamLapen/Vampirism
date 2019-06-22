@@ -24,7 +24,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 import net.minecraftforge.registries.ObjectHolderRegistry;
@@ -65,20 +64,18 @@ public class RegistryManager implements IInitListener {//TODO Mod Loading proces
     public void onInitStep(Step step, ModLifecycleEvent event) {
 
         switch (step) {
-            case INIT:
-                ModBlocks.registerCraftingRecipes();
+            case COMMON_SETUP:
+                ModFluids.registerFluids();
+                ModEntities.registerConvertibles();
+                ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
                 ModItems.registerBloodConversionRates();
                 ModVillages.init();
                 ModAdvancements.registerAdvancements();
                 ModParticles.init();
+
                 break;
-            case PRE_INIT:
-                ModFluids.registerFluids();
-                ModEntities.registerConvertibles();
-                ModEntities.registerCustomExtendedCreatures();
-                break;
-            case POST_INIT:
+            case LOAD_COMPLETE:
                 if (ModPotions.checkNightVision()) {
                     ModPotions.fixNightVisionPotionTypes();
                 }
@@ -88,60 +85,13 @@ public class RegistryManager implements IInitListener {//TODO Mod Loading proces
         }
     }
 
-    @SubscribeEvent
-    public void onMissingMappingsEntity(RegistryEvent.MissingMappings<EntityEntry> event) {
-        for (RegistryEvent.MissingMappings.Mapping<EntityEntry> m : event.getMappings()) {
-            ModEntities.fixMapping(m);
-        }
-    }
-
-    @SubscribeEvent
-    public void onMissingMappingsBlock(RegistryEvent.MissingMappings<Block> event) {
-
-        for (RegistryEvent.MissingMappings.Mapping<Block> m : event.getMappings()) {
-            ModBlocks.fixMapping(m);
-        }
-    }
-
-    @SubscribeEvent
-    public void onMissingMappingsItem(RegistryEvent.MissingMappings<Item> event) {
-
-        for (RegistryEvent.MissingMappings.Mapping<Item> m : event.getMappings()) {
-            if (!ModItems.fixMapping(m)) {
-                ModBlocks.fixMappingItemBlock(m);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onMissingMappingsPotion(RegistryEvent.MissingMappings<Potion> event) {
-
-        for (RegistryEvent.MissingMappings.Mapping<Potion> m : event.getMappings()) {
-            ModPotions.fixMapping(m);
-        }
-    }
-
-    @SubscribeEvent
-    public void onMissingMappingsSkill(RegistryEvent.MissingMappings<ISkill> event) {
-        for (RegistryEvent.MissingMappings.Mapping<ISkill> m : event.getMappings()) {
-            VampireSkills.fixMapping(m);
-        }
-    }
-
-    @SubscribeEvent
-    public void onMissingMappingsSoundEvent(RegistryEvent.MissingMappings<SoundEvent> event) {
-
-        for (RegistryEvent.MissingMappings.Mapping<SoundEvent> m : event.getMappings()) {
-            m.ignore();
-        }
-    }
 
     @SubscribeEvent
     public void onRegisterActions(RegistryEvent.Register<IAction> event) {
 
         VampireActions.registerDefaultActions(event.getRegistry());
         HunterActions.registerDefaultActions(event.getRegistry());
-        ObjectHolderRegistry.INSTANCE.applyObjectHolders();
+        ObjectHolderRegistry.applyObjectHolders();
     }
 
     @SubscribeEvent
@@ -153,7 +103,7 @@ public class RegistryManager implements IInitListener {//TODO Mod Loading proces
     public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
 
         ModBiomes.registerBiomes(event.getRegistry());
-        ModBiomes.registerFeatures(event.getRegistry());
+        ModBiomes.registerFeatures();
     }
 
     @SubscribeEvent

@@ -80,7 +80,7 @@ public class GuiHunterTrainer extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        String string = container.getHunterTrainerInventory().hasCustomName() ? this.container.getHunterTrainerInventory().getName() : I18n.format(this.container.getHunterTrainerInventory().getName());
+        String string = container.getHunterTrainerInventory().hasCustomName() ? this.container.getHunterTrainerInventory().getName().getFormattedText() : this.container.getHunterTrainerInventory().getName().getFormattedText();
         this.fontRenderer.drawString(string, 8, 6, 0x404040);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 0x404040);
 

@@ -24,17 +24,21 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.LazyOptional;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Function;
+
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Extended entity property which every {@link EntityCreature} has
  */
-public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst, IExtendedCreatureVampirism {//TODO Capabilities
+public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst, IExtendedCreatureVampirism {
 
     @CapabilityInject(IExtendedCreatureVampirism.class)
-    public static final Capability<IExtendedCreatureVampirism> CAP = null;
+    public static final Capability<IExtendedCreatureVampirism> CAP = getNull();
     private static final String TAG = "ExtendedCreature";
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "maxBlood";
@@ -42,20 +46,20 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
 
     public static IExtendedCreatureVampirism get(EntityCreature mob) {
-        return mob.getCapability(CAP, null);
+        return mob.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get ExtendedCreature from EntityCreature"));
     }
 
 
     public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IExtendedCreatureVampirism.class, new Storage(), ExtendedCreatureDefaultImpl.class);
+        CapabilityManager.INSTANCE.register(IExtendedCreatureVampirism.class, new Storage(), ExtendedCreatureDefaultImpl::new);
     }
 
-    @SuppressWarnings("ConstantConditions")
-    public static <Q extends EntityCreature> ICapabilityProvider createNewCapability(final Q creature) {
+    static <Q extends EntityCreature> ICapabilityProvider createNewCapability(final Q creature) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
             Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.entityRegistry().getCustomExtendedCreatureConstructor(creature);
             IExtendedCreatureVampirism inst = constructor == null ? new ExtendedCreature(creature) : constructor.apply(creature);
+            LazyOptional<IExtendedCreatureVampirism> opt = LazyOptional.of(() -> inst);
 
 
             @Override
@@ -63,9 +67,10 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 CAP.getStorage().readNBT(CAP, inst, null, nbt);
             }
 
+            @Nonnull
             @Override
-            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
+            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+                return CAP.orEmpty(capability, opt);
             }
 
             @Override

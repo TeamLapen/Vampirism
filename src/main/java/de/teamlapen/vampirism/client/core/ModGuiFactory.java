@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.vampirism.client.gui.ModConfigGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,12 +12,12 @@ import java.util.Set;
 public class ModGuiFactory implements IModGuiFactory {
     @Override
     public GuiScreen createConfigGui(GuiScreen parentScreen) {
-        return new ModConfigGui(parentScreen);
-    }//TODO Gui
+        return null;
+    }
 
     @Override
     public boolean hasConfigGui() {
-        return true;
+        return false;
     }
 
     @Override

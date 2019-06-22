@@ -31,20 +31,19 @@ public class BlockBloodPotionTable extends VampirismBlock {
     }
 
 
-
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-
+    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
-            if (canUse(playerIn))
-                playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO OpenGui
+            if (canUse(player))
+                player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
             else {
-                playerIn.sendMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
+                player.sendMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
             }
         }
 
         return true;
     }
+
 
     private boolean canUse(EntityPlayer player) {
         IPlayableFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();

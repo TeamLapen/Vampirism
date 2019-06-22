@@ -12,6 +12,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
@@ -73,7 +74,7 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
                 UtilLib.spawnEntityInWorld(worldIn.getWorld(), box, hunter, 8, Collections.emptyList());
                 hunter.setCampArea(box.grow(4, 5, 4));
                 if (VampirismBiome.debug)
-                    LOGGER.info("Generated advanced hunter camp at %s", center);
+                    LOGGER.info("Generated advanced hunter camp at {}", center);
                 return true;
             }
             return false;
@@ -81,7 +82,7 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
             BlockPos pos = position.add(rand.nextInt(16), 0, rand.nextInt(16));
             boolean flag = placeTent(worldIn, rand, findSolidPos(worldIn, pos), EnumFacing.byHorizontalIndex(rand.nextInt(4)));
             if (flag && VampirismBiome.debug)
-                LOGGER.info("Generated normal hunter camp at %s", pos);
+                LOGGER.info("Generated normal hunter camp at {}", pos);
             return flag;
         }
     }
@@ -90,7 +91,7 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
         this.campfire_blockstate = state;
     }
 
-    boolean canCampSpawnAt(World world, Biome biome, int chunkX, int chunkZ) {
+    boolean canCampSpawnAt(World world, Biome biome, int chunkX, int chunkZ) { //TODO 1.13 why isn't this used anymore
         int distance = Math.max(1, Balance.general.HUNTER_CAMP_DENSITY);
         //Check Biome
         if (ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
@@ -116,7 +117,8 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
 
         int k = chunkX / distance;
         int l = chunkZ / distance;
-        Random random = world.setRandomSeed(k, l, 10387312);//TODO @Maxanier
+        SharedSeedRandom random = new SharedSeedRandom();
+        random.setFeatureSeed(world.getSeed(), chunkX, chunkZ);
         k = k * distance;
         l = l * distance;
         k = k + random.nextInt(distance - 2);

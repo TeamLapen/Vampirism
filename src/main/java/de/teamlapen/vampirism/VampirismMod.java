@@ -27,10 +27,6 @@ import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
-import de.teamlapen.vampirism.modcompat.IMCHandler;
-import de.teamlapen.vampirism.modcompat.SpongeModCompat;
-import de.teamlapen.vampirism.modcompat.guide.GuideAPICompat;
-import de.teamlapen.vampirism.modcompat.jei.JEIModCompat;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
@@ -46,7 +42,6 @@ import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
-import de.teamlapen.vampirism.tileentity.TileTent;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
@@ -58,11 +53,15 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -74,9 +73,9 @@ import java.io.File;
  * Main class for Vampirism TODO readd "required-after:teamlapen-lib;"
  */
 @Mod(value = REFERENCE.MODID)
-public class VampirismMod {//TODO MOD @maxanier
+public class VampirismMod {
 
-    private final static Logger log = LogManager.getLogger();
+    private final static Logger LOGGER = LogManager.getLogger();
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
     public static final ItemGroup creativeTab = new ItemGroup(REFERENCE.MODID) {
 
@@ -120,7 +119,12 @@ public class VampirismMod {//TODO MOD @maxanier
 
     public VampirismMod() {
         instance = this;
-
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+        MinecraftForge.EVENT_BUS.register(this);
         addModCompats();
         registryManager = new RegistryManager();
         MinecraftForge.EVENT_BUS.register(registryManager);
@@ -132,9 +136,41 @@ public class VampirismMod {//TODO MOD @maxanier
         return versionInfo;
     }
 
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
+    @SubscribeEvent
+    public void onServerStart(FMLServerStartingEvent event) {
+        new VampirismCommands(event.getCommandDispatcher());
+        new TestCommands(event.getCommandDispatcher());
+        VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
+        BloodValueLoader.onServerStarting(event.getServer());
+    }
 
+    @SubscribeEvent
+    public void onServerStarted(FMLServerStartedEvent event) {
+        if (!LootHandler.getInstance().checkAndResetInsertedAll()) {
+            LOGGER.warn("LootTables -------------------------------");
+            LOGGER.warn("LootTables Failed to inject all loottables");
+            LOGGER.warn("LootTables -------------------------------");
+        }
+    }
+
+    @SubscribeEvent
+    public void onServerStopping(FMLServerStoppingEvent event) {
+        BloodValueLoader.onServerStopping();
+    }
+
+    private void addModCompats() {
+
+    }
+
+    private void checkDevEnv() {
+        //TODO test
+        String launchTarget = System.getenv().get("target");
+        if (launchTarget != null && launchTarget.contains("dev")) {
+            inDev = true;
+        }
+    }
+
+    private void enqueueIMC(final InterModEnqueueEvent event) {
         finishAPI1();
 
         String currentVersion = "@VERSION@".equals(REFERENCE.VERSION) ? "0.0.0-test" : REFERENCE.VERSION;
@@ -146,7 +182,6 @@ public class VampirismMod {//TODO MOD @maxanier
 
         ModEventHandler eventHandler = new ModEventHandler();
         MinecraftForge.EVENT_BUS.register(eventHandler);
-        MinecraftForge.TERRAIN_GEN_BUS.register(eventHandler);
 
         MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
 
@@ -164,9 +199,6 @@ public class VampirismMod {//TODO MOD @maxanier
         BloodPotions.register();
         StructureManager.init();
         VampirismEntitySelectors.registerSelectors();
-        registryManager.onInitStep(IInitListener.Step.INIT, event);
-        proxy.onInitStep(IInitListener.Step.INIT, event);
-        modCompatLoader.onInitStep(IInitListener.Step.INIT, event);
 
         // Check for halloween special
         if (HalloweenSpecial.shouldEnable()) {
@@ -175,48 +207,21 @@ public class VampirismMod {//TODO MOD @maxanier
         }
     }
 
-    @Mod.EventHandler
-    public void interModComm(FMLInterModComms.IMCEvent event) {
-        IMCHandler.handleInterModMessage(event.getMessages());
+    private void loadComplete(final FMLLoadCompleteEvent event) {
+        registryManager.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
+        proxy.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
+        modCompatLoader.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
     }
 
-    @Mod.EventHandler
-    public void onServerStart(FMLServerStartingEvent event) {
-        new VampirismCommands(event.getCommandDispatcher());
-        new TestCommands(event.getCommandDispatcher());
-        VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
-        BloodValueLoader.onServerStarting(event.getServer());
-    }
-
-    @Mod.EventHandler
-    public void onServerStarted(FMLServerStartedEvent event) {
-        if (!LootHandler.getInstance().checkAndResetInsertedAll()) {
-            VampirismMod.log.w("LootTables", "-------------------------------");
-            VampirismMod.log.w("LootTables", "Failed to inject all loottables");
-            VampirismMod.log.w("LootTables", "-------------------------------");
-        }
-    }
-
-    @Mod.EventHandler
-    public void onServerStopping(FMLServerStoppingEvent event) {
-        BloodValueLoader.onServerStopping();
-    }
-
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
+    private void processIMC(final InterModProcessEvent event) {
         finishAPI2();
-        registryManager.onInitStep(IInitListener.Step.POST_INIT, event);
-        proxy.onInitStep(IInitListener.Step.POST_INIT, event);
-        modCompatLoader.onInitStep(IInitListener.Step.POST_INIT, event);
 
         if (inDev) {
             Tests.runBackgroundTests();
         }
-
     }
 
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
+    private void setup(final FMLCommonSetupEvent event) {
         checkDevEnv();
         HunterPlayer.registerCapability();
         VampirePlayer.registerCapability();
@@ -225,43 +230,26 @@ public class VampirismMod {//TODO MOD @maxanier
         VampirismVillage.registerCapability();
 
         setupAPI2();
-        Configs.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
-        Balance.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
-        BloodValueLoader.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID));
-        BloodGrinderValueLoader.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID));
-        modCompatLoader.onInitStep(IInitListener.Step.PRE_INIT, event);
+        File vampConfigDir = new File(FMLPaths.CONFIGDIR.get().toFile(), REFERENCE.MODID);
+        Configs.init(vampConfigDir, inDev);
+        Balance.init(vampConfigDir, inDev);
+        BloodValueLoader.init(vampConfigDir);
+        BloodGrinderValueLoader.init(vampConfigDir);
+        modCompatLoader.onInitStep(IInitListener.Step.COMMON_SETUP, event);
         setupAPI3();
-
-        // Data Fixer
-        ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(REFERENCE.MODID, 5);// Fixes that should have the id of the ModFix version when added.
-        // If adding new fixes to this, bump ModFix version and use the same one for the fixer
-        fixer.registerFix(FixTypes.ENTITY, ModEntities.getEntityIDFixer());
-        fixer.registerFix(FixTypes.BLOCK_ENTITY, ModBlocks.getTileEntityIDFixer());
-        fixer.registerFix(FixTypes.BLOCK_ENTITY, TileTent.getTentFixer());
-        fixer.registerFix(FixTypes.ENTITY, ModEntities.getEntityCapabilityFixer());
-        fixer.registerFix(FixTypes.PLAYER, ModEntities.getPlayerCapabilityFixer());
 
         dispatcher.registerPackets();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new ModGuiHandler());
-        registryManager.onInitStep(IInitListener.Step.PRE_INIT, event);
-        proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
+        registryManager.onInitStep(IInitListener.Step.COMMON_SETUP, event);
+        proxy.onInitStep(IInitListener.Step.COMMON_SETUP, event);
+
 
     }
 
-    private void addModCompats() {
-        modCompatLoader.addModCompat(new JEIModCompat());
-        modCompatLoader.addModCompat(new SpongeModCompat());
-        modCompatLoader.addModCompat(new GuideAPICompat());
-    }
-
-    private void checkDevEnv() {
-        if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
-            inDev = true;
-            log.setDebug(true);
-            if (FMLCommonHandler.instance().getSide().isClient()) {
-                log.displayModID();
-            }
-        }
+    private void setupClient(FMLClientSetupEvent event) {
+        registryManager.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
+        proxy.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
+        modCompatLoader.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
     }
 
     /**

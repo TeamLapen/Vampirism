@@ -24,6 +24,7 @@ import java.util.Random;
 
 /**
  * Extends the basic (JSON) baked blood container model, by the textured model that fits to the specified fluid and fluid level
+ * TODO 1.14 check
  */
 @OnlyIn(Dist.CLIENT)
 public class BakedBloodContainerModel implements IBakedModel {
@@ -77,7 +78,7 @@ public class BakedBloodContainerModel implements IBakedModel {
         List<BakedQuad> quads = new LinkedList<>();
 
         try {
-            String fluidName = state.getFluidState().getFluid();//TODO name of Fluid
+            String fluidName = state.getFluidState().getFluid().toString();//TODO name of Fluid
             int fluidLevel = state.getFluidState().getLevel();
 
             quads.addAll(baseModel.getQuads(state, side, rand));

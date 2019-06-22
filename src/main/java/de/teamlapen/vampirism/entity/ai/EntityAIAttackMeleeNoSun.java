@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 /**
- * Checks paths of {@link EntityAIAttackMelee} for sunny parts. Uses reflection twice each tick TODO
+ * Checks paths of {@link EntityAIAttackMelee} for sunny parts.
  */
 public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
 
@@ -32,12 +32,12 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
             }
             boolean avoidSun = false;
             if (attacker.getNavigator() instanceof PathNavigateGround) {
-                avoidSun = ((PathNavigateGround) attacker.getNavigator()).shouldAvoidSun;//TODO is private
+                avoidSun = ((PathNavigateGround) attacker.getNavigator()).shouldAvoidSun;
             }
 
             if (avoidSun) {
 
-                Path path = this.path;//TODO is private
+                Path path = this.path;
                 if (attacker.getEntityWorld().canSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
                     return false;
                 }

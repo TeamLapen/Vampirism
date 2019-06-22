@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
+import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +25,6 @@ import net.minecraftforge.registries.ForgeRegistries;
  */
 public class HunterTableContainer extends InventoryContainer {
 
-    public final static Item[] items = new Item[]{Items.BOOK, ModItems.vampire_fang, ModItems.pure_blood_0, ModItems.vampire_book};
     private final HunterTableInventory inventory;
     private final SlotResult slotResult;
     private final int hunterLevel;
@@ -32,7 +33,7 @@ public class HunterTableContainer extends InventoryContainer {
     private ItemStack missing = ItemStack.EMPTY;
 
     public HunterTableContainer(EntityPlayer player, BlockPos pos) {
-        super(player.inventory, new HunterTableInventory(items));
+        super(player.inventory, new HunterTableInventory(new InventorySlot.IItemSelector[]{((stack) -> Items.BOOK.equals(stack.getItem())), ((stack) -> ModItems.vampire_fang.equals(stack.getItem())), ((stack) -> stack.getItem() instanceof ItemPureBlood), (stack) -> ModItems.vampire_book.equals(stack.getItem())}));
         this.inventory = (HunterTableInventory) tile;
         inventory.setChangeListener(this);
         this.pos = pos;
@@ -100,15 +101,10 @@ public class HunterTableContainer extends InventoryContainer {
 
     /**
      * Checks if the given items are present
-     *
-     * @param fangs
-     * @param blood
-     * @param bloodMeta
-     * @param par3
-     * @return
+
      */
-    private ItemStack checkItems(int fangs, int blood, int bloodMeta, int par3) {
-        return InventoryHelper.checkItems(inventory, items, new int[]{1, fangs, blood, par3}, new int[]{OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE, bloodMeta == 0 ? OreDictionary.WILDCARD_VALUE : -bloodMeta, OreDictionary.WILDCARD_VALUE});//TODO OreDict removed -> user other number (-1)?
+    private ItemStack checkItems(int fangs, int blood, int bloodLevel, int par3) {
+        return InventoryHelper.checkItems(inventory, new Item[]{Items.BOOK, ModItems.vampire_fang, ItemPureBlood.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
     }
 
     private class SlotResult extends net.minecraft.inventory.Slot {

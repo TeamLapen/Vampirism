@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.inventory;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.inventory.SimpleInventory;
 import de.teamlapen.vampirism.core.ModBlocks;
-import net.minecraft.item.Item;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
@@ -14,7 +13,7 @@ import javax.annotation.Nullable;
  */
 public class HunterTableInventory extends SimpleInventory {
 
-    public HunterTableInventory(Item[] items) {
+    public HunterTableInventory(InventorySlot.IItemSelector[] items) {
         super(new InventorySlot[]{
                 new InventorySlot(items[0], 15, 28), new InventorySlot(items[1], 42, 28), new InventorySlot(items[2], 69, 28), new InventorySlot(items[3], 96, 28)
         });

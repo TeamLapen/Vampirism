@@ -10,7 +10,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
@@ -21,10 +20,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 
 public class BlockWeaponTable extends VampirismBlock {
@@ -46,28 +41,24 @@ public class BlockWeaponTable extends VampirismBlock {
             int lava = state.get(LAVA);
             boolean flag = false;
             ItemStack heldItem = player.getHeldItem(hand);
-            if (lava < MAX_LAVA) {
-                LazyOptional<IFluidHandlerItem> opt = FluidUtil.getFluidHandler(heldItem);
-                opt.ifPresent(fluidHandler -> {
-                    FluidStack missing = new FluidStack(Fluids.LAVA, (MAX_LAVA - lava) * MB_PER_META); //TODO Fluid
-                    FluidStack drainable = fluidHandler.drain(missing, false);
-                    if (drainable != null && drainable.amount >= MB_PER_META) {
-                        FluidStack drained = fluidHandler.drain(missing, true);
-                        if (drained != null) {
-                            IBlockState changed = state.with(LAVA, Math.min(MAX_LAVA, lava + drained.amount / MB_PER_META));
-                            world.setBlockState(pos, changed);
-                            player.setHeldItem(hand, fluidHandler.getContainer());
-                        }
-                    }
-                });
-                if (opt.isPresent()) {
-                    flag = true;
-                }
-
-
-
-
-            }
+//            if (lava < MAX_LAVA) { TODO 1.14 Fluid
+//                LazyOptional<IFluidHandlerItem> opt = FluidUtil.getFluidHandler(heldItem);
+//                opt.ifPresent(fluidHandler -> {
+//                    FluidStack missing = new FluidStack(Fluids.LAVA, (MAX_LAVA - lava) * MB_PER_META);
+//                    FluidStack drainable = fluidHandler.drain(missing, false);
+//                    if (drainable != null && drainable.amount >= MB_PER_META) {
+//                        FluidStack drained = fluidHandler.drain(missing, true);
+//                        if (drained != null) {
+//                            IBlockState changed = state.with(LAVA, Math.min(MAX_LAVA, lava + drained.amount / MB_PER_META));
+//                            world.setBlockState(pos, changed);
+//                            player.setHeldItem(hand, fluidHandler.getContainer());
+//                        }
+//                    }
+//                });
+//                if (opt.isPresent()) {
+//                    flag = true;
+//                }
+//            }
             if (!flag) {
 
                 if (canUse(player))

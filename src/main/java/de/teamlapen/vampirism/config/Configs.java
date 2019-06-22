@@ -8,13 +8,12 @@ import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -48,7 +47,6 @@ public class Configs {
 
 
     public static int village_size;
-    public static int village_density;
     public static int village_min_dist;
     public static boolean village_modify;
 
@@ -68,8 +66,6 @@ public class Configs {
     public static boolean disable_all_worldgen;
     public static boolean disable_halloween_special;
 
-    public static @Nonnull
-    Dimension[] worldGenDimensions = new Dimension[0];
 
     public static boolean autoConvertGlasBottles;
     private static Configuration main_config;
@@ -110,12 +106,12 @@ public class Configs {
                 continue;
             }
             try {
-                int dim = Integer.valueOf(t[0]);
+                int dimid = Integer.valueOf(t[0]);
                 boolean type = Integer.valueOf(t[1]) != 0;
+                DimensionType dim = DimensionType.getById(dimid);
                 ((SundamageRegistry) VampirismAPI.sundamageRegistry()).specifyConfiguredSundamageForDim(dim, type);
             } catch (NumberFormatException e) {
                 LOGGER.warn(LogUtil.CONFIG, "Cannot understand sundamage dimension line '{}'. Failed to convert numbers", s);
-                continue;
             }
         }
         String[] sundamageDisabledBiomes = main_config.getStringList("sundamage_disabled_biomes", CATEGORY_GENERAL, new String[0], "Specifiy biomes in which players should not get sundamage. Use e.g. 'minecraft:mesa' to disable sundamage in Mesa biome. Use '/vampirism-test biome' to find out the current biome id");
@@ -146,7 +142,6 @@ public class Configs {
 
         //Village
         village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
-        village_density = main_config.getInt("village_density", CATEGORY_VILLAGE, 18, 9, 1000, "Minecraft will try to generate 1 village per NxN chunk area. Vanilla: 32");
         village_min_dist = main_config.getInt("village_minimum_distance", CATEGORY_VILLAGE, 6, 1, 1000, "Village centers will be at least N chunks apart. Must be smaller than density. Vanilla: 8");
         village_size = main_config.getInt("village_size", CATEGORY_VILLAGE, 0, 0, 10, "A higher size increases the overall spawn weight of buildings.");
 
@@ -155,9 +150,6 @@ public class Configs {
         gui_level_offset_y = main_config.getInt("level_offset_y", CATEGORY_GUI, 47, 0, 270, "Y-Offset of the level indicator from the bottom in pixels");
         gui_skill_button_enable = main_config.getBoolean("skill_button_enable", CATEGORY_GUI, true, "If the skill button in inventory should be rendered");
 
-
-        //WorldGen
-        worldGenDimensions = main_config.get(CATEGORY_WORLDGEN, "world_gen_dimensions", new int[0], "List of dimensions ids Vampirism tries to execute worldgen besides DIM0").getIntList();
 
         //Disable
         disable_replaceVanillaNightVision = main_config.getBoolean("disable_replace_night_vision", CATEGORY_DISABLE, false, "Disable replacing vanilla night vision, if disabled the potion is shown to the player all the time");
