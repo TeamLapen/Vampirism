@@ -10,7 +10,9 @@
   ],
   "result": {
     "item": "vampirism:blood_bottle",
-    "data": 0
+    "nbt": {
+      "damage": 0
+    }
   },
   "pattern": [
     "   ",
@@ -20,8 +22,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "minecraft:glass",
-      "data": 32767
+      "item": "minecraft:glass"
     },
     "Y": {
       "item": "minecraft:rotten_flesh"

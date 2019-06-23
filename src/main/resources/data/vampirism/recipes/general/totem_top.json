@@ -13,10 +13,10 @@
       "item": "minecraft:glass"
     },
     "Y": {
-      "item": "minecraft:obsidian"
+      "tag": "forge:obsidian"
     },
     "Z": {
-      "item": "#IRONBLOCK"
+      "tag": "forge:storage_blocks/iron_block"
     }
   }
 }

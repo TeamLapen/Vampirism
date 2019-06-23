@@ -10,7 +10,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "#IRON"
+      "tag": "forge:ingot/iron"
     },
     "Y": {
       "item": "#STONEBRICK"

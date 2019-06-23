@@ -13,10 +13,10 @@
       "item": "minecraft:glass_bottle"
     },
     "Y": {
-      "item": "#PLANKS"
+      "tag": "minecraft:planks"
     },
     "Z": {
-      "item": "#IRON"
+      "tag": "forge:ingots/iron"
     }
   }
 }

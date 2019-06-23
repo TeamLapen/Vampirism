@@ -12,13 +12,13 @@
   "type": "vampirism:shaped_weapon_table_recipe",
   "key": {
     "X": {
-      "item": "#IRON"
+      "tag": "forge:ingots/iron"
     },
     "Y": {
-      "item": "vampirism:crossbow_arrow"
+      "item": "vampirism:crossbow_arrow_normal"
     },
     "Z": {
-      "item": "#PLANKS"
+      "tag": "minecraft:planks"
     }
   }
 }

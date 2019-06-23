@@ -13,7 +13,7 @@
       "item": "vampirism:vampire_book"
     },
     "Y": {
-      "item": "#PLANKS"
+      "tag": "minecraft:planks"
     }
   }
 }

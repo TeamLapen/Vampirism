@@ -1,9 +1,6 @@
 {
   "result": {
-    "item": "vampirism:crossbow_arrow",
-    "nbt": {
-      "type": "vampire_killer"
-    }
+    "item": "vampirism:crossbow_arrow_vampire_killer"
   },
   "lava": "1",
   "type": "vampirism:shaped_weapon_table_recipe",
@@ -18,10 +15,10 @@
       "item": "vampirism_item_garlic"
     },
     "Y": {
-      "item": "#GOLD"
+      "tag": "forge:ingots/gold"
     },
     "Z": {
-      "item": "#STICK"
+      "tag": "forge:rods/wooden"
     },
     "W": {
       "item": "minecraft:feather"

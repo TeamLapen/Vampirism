@@ -7,16 +7,16 @@
   ],
   "key": {
     "X": {
-      "item": "#IRON"
+      "tag": "forge:ingot/iron"
     },
     "Y": {
-      "item": "#PLANKS"
+      "tag": "minecraft:planks"
     },
     "Z": {
       "item": "minecraft:hopper"
     },
     "D": {
-      "item": "#DIAMOND"
+      "tag": "forge:gems/diamond"
     }
   },
   "result": {

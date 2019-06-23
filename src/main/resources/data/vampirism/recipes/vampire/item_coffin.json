@@ -10,11 +10,10 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "#PLANKS"
+      "tag": "minecraft:planks"
     },
     "Y": {
-      "item": "minecraft:wool",
-      "data": 32767
+      "tag": "minecraft:wool"
     }
   }
 }

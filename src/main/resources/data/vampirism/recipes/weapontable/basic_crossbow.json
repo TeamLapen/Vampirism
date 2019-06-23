@@ -11,13 +11,13 @@
   "type": "vampirism:shaped_weapon_table_recipe",
   "key": {
     "X": {
-      "item": "#IRON"
+      "tag": "forge:ingots/iron"
     },
     "Y": {
       "item": "minecraft:string"
     },
     "Z": {
-      "item": "#PLANKS"
+      "tag": "minecraft:planks"
     }
   }
 }

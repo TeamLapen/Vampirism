@@ -13,11 +13,10 @@
       "item": "minecraft:bucket"
     },
     "Y": {
-      "item": "#IRON"
+      "item": "forge:ingots/iron"
     },
     "Z": {
-      "type": "forge:ore_dict",
-      "ore": "blockIron"
+      "tag": "forge:storage_blocks/iron"
     }
   }
 }
