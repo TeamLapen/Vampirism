@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api;
 
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -168,7 +167,7 @@ public class VampirismAPI {
      * @return The respective {@link IFactionPlayerHandler}
      */
     public static IFactionPlayerHandler getFactionPlayerHandler(EntityPlayer player) {
-        return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);//TODO LazyOption.else() || LazyOption.elseThrow() || LazyOption.elseGet()
+        return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null).orElseThrow(() -> new IllegalStateException("Cannot get faction handler from player"));
     }
 
 
@@ -176,14 +175,14 @@ public class VampirismAPI {
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
      */
     public static IExtendedCreatureVampirism getExtendedCreatureVampirism(EntityCreature creature) {
-        return creature.getCapability(CAP_CREATURE, null);//TODO LazyOption.else() || LazyOption.elseThrow() || LazyOption.elseGet()
+        return creature.getCapability(CAP_CREATURE, null).orElseThrow(() -> new IllegalStateException("Cannot get extended creature from creature"));
     }
 
     /**
      * Get the {@link IVampirismVillage} instance for the given village
      */
     public static IVampirismVillage getVampirismVillage(Village village) {
-        return village.getCapability(CAP_VILLAGE, null);//TODO LazyOption.else() || LazyOption.elseThrow() || LazyOption.elseGet()
+        return village.getCapability(CAP_VILLAGE, null).orElseThrow(() -> new IllegalStateException("Cannot get vampirism village from village"));
     }
 
     /**

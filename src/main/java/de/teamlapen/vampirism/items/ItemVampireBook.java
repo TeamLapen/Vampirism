@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -75,7 +73,7 @@ public class ItemVampireBook extends VampirismItem {
             this.resolveContents(stack, playerIn);
         }
 
-        playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_VAMPIRE_BOOK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);//TODO GUI
+        //playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_VAMPIRE_BOOK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);//TODO 1.14
         return new ActionResult(EnumActionResult.SUCCESS, stack);
     }
 

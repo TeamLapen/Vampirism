@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -58,7 +56,7 @@ public class BlockChurchAltar extends VampirismBlock {
         IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(player);
         ItemStack heldItem = player.getHeldItem(hand);
         if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
-            player.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, world, (int) player.posX, (int) player.posY, (int) player.posZ);//TODO open Gui
+            //player.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, world, (int) player.posX, (int) player.posY, (int) player.posZ);//TODO 1.14
             return true;
         } else if (!heldItem.isEmpty()) {
             if (ModItems.holy_salt_water.equals(heldItem.getItem())) {

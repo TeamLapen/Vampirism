@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -61,8 +59,9 @@ public class BlockWeaponTable extends VampirismBlock {
 //            }
             if (!flag) {
 
-                if (canUse(player))
-                    player.openGui(VampirismMod.instance, ModGuiHandler.ID_WEAPON_TABLE, world, pos.getX(), pos.getY(), pos.getZ());//TODO open Gui
+                if (canUse(player)) {
+                    //player.openGui(VampirismMod.instance, ModGuiHandler.ID_WEAPON_TABLE, world, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
+                }
                 else {
                     player.sendMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
                 }

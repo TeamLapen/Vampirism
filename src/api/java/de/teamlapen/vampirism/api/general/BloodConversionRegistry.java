@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -86,7 +85,7 @@ public class BloodConversionRegistry {
         if (conv == 0) {
             return null;
         }
-        return new FluidStack(FluidRegistry.getFluid(VReference.FLUID_BLOOD_NAME), conv);//TODO Fluid
+        return null;//return new FluidStack(FluidRegistry.getFluid(VReference.FLUID_BLOOD_NAME), conv); TODO 1.14
     }
 
     /**

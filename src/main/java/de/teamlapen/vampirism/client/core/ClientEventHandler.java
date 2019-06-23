@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
 import de.teamlapen.vampirism.blocks.BlockBloodContainer;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
@@ -13,6 +12,7 @@ import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
@@ -35,13 +35,14 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -120,13 +121,16 @@ public class ClientEventHandler {
 
             //For each registered fluid: Replace the fluid model texture by fluid (still) texture and cache the retextured model
 
-            for (Map.Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet()) {//TODO Fluid
+            Set<Fluid> temp = new LinkedHashSet<>();
+            temp.add(ModFluids.blood);
+            temp.add(ModFluids.impure_blood);
+            for (Fluid f : temp) {//TODO 1.14 create for all fluids
                 for (int x = 0; x < containerFluidModels.length; x++) {
                     retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder<String, String>()
-                            .put("fluid", entry.getValue().getStill().toString())
+                            .put("fluid", f.getStill().toString())
                             .build());
 
-                    BakedBloodContainerModel.FLUID_MODELS[x].put(entry.getKey(), retexturedModel.bake(ModelLoader.defaultModelGetter(), ModelLoader.defaultTextureGetter(), retexturedModel.getDefaultState(), false, Attributes.DEFAULT_BAKED_FORMAT));
+                    BakedBloodContainerModel.FLUID_MODELS[x].put(f.getName(), retexturedModel.bake(ModelLoader.defaultModelGetter(), ModelLoader.defaultTextureGetter(), retexturedModel.getDefaultState(), false, Attributes.DEFAULT_BAKED_FORMAT));
 
                 }
             }

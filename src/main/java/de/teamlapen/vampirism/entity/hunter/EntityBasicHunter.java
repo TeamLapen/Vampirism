@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
@@ -18,7 +17,6 @@ import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.inventory.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.world.loot.LootHandler;
@@ -397,7 +395,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             if (!world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
                     if (trainee == null) {
-                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_BASIC, this.world, (int) posX, (int) posY, (int) posZ);//TODO Gui
+                        //player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_BASIC, this.world, (int) posX, (int) posY, (int) posZ);//TODO 1.14
                         trainee = player;
                     } else {
                         player.sendMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));

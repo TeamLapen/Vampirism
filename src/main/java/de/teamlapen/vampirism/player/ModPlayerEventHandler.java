@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -24,7 +23,6 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,7 +63,7 @@ public class ModPlayerEventHandler {
                 event.addCapability(REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.createNewCapability((EntityPlayer) event.getObject()));
                 event.addCapability(REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.createNewCapability((EntityPlayer) event.getObject()));
             } catch (Exception e) {
-                LOGGER.error("Failed to attach capabilities to player. Player: %s", event.getObject());
+                LOGGER.error("Failed to attach capabilities to player. Player: {}", event.getObject());
                 Throwables.propagate(e);
             }
         }
@@ -173,22 +171,26 @@ public class ModPlayerEventHandler {
                 boolean bloodBottle = ModItems.blood_bottle.equals(heldStack.getItem());
                 if (bloodBottle || (glasBottle && Configs.autoConvertGlasBottles)) {
                     Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
-
+                    IBlockState state = event.getWorld().getBlockState(event.getPos());
                     boolean convert = false;
-                    if (glasBottle && block instanceof ITileEntityProvider) {
+                    if (glasBottle && state.hasTileEntity()) {
                         TileEntity entity = event.getWorld().getTileEntity(event.getPos());
-                        if (entity != null && entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace()) != null) {
-                            net.minecraftforge.fluids.capability.IFluidHandler fluidHandler = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace());//TODO .orElse/.orElseThrow/.orElseGet
-                            FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.blood, 1000), false);
-                            if (drain != null && drain.amount >= BloodBottleFluidHandler.MULTIPLIER) {
-                                convert = true;
-                            }
-                            if (convert && block instanceof BlockAltarInspiration) {
-                                convert = false;
-                            }
-                            if (convert && block instanceof BlockBloodContainer) {
-                                convert = event.getEntityPlayer().isSneaking();
-                            }
+                        if (entity != null) {
+                            convert = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace()).map(fluidHandler -> {
+                                boolean flag = false;
+                                FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.blood, 1000), false);
+                                if (drain != null && drain.amount >= BloodBottleFluidHandler.MULTIPLIER) {
+                                    flag = true;
+                                }
+                                if (flag && block instanceof BlockAltarInspiration) {
+                                    flag = false;
+                                }
+                                if (flag && block instanceof BlockBloodContainer) {
+                                    flag = event.getEntityPlayer().isSneaking();
+                                }
+                                return flag;
+                            }).orElse(false);
+
                         }
                     }
                     if ((bloodBottle || convert) && block instanceof BlockBloodContainer) {

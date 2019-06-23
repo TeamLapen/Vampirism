@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.HunterTableContainer;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
@@ -53,7 +51,7 @@ public class BlockHunterTable extends VampirismBlock {
 
     @Override
     public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TABLE, world, pos.getX(), pos.getY(), pos.getZ());//TODO open Gui
+        //player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TABLE, world, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
         return true;
     }
 

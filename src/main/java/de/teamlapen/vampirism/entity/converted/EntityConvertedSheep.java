@@ -11,11 +11,12 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -52,9 +53,10 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
     }
 
     @Override
-    public boolean isShearable(ItemStack item, IBlockReader world, BlockPos pos) {
-        return !getSheared();
+    public boolean isShearable(@Nonnull ItemStack item, IWorldReader world, BlockPos pos) {
+        return !getSheared() && !isChild();
     }
+
 
     @Override
     public void baseTick() {

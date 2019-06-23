@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -72,6 +73,13 @@ public class BloodHelper {
     public static int getBlood(@Nonnull IFluidHandler cap) {
         FluidStack stack = cap.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), false);
         return stack == null ? 0 : stack.amount;
+    }
+
+    public static int getBlood(@Nonnull LazyOptional<IFluidHandler> opt) {
+        return opt.map(handler -> {
+            FluidStack stack = handler.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), false);
+            return stack == null ? 0 : stack.amount;
+        }).orElse(0);
     }
 
     /**

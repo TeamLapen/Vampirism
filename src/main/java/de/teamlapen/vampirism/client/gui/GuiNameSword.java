@@ -67,7 +67,7 @@ public class GuiNameSword extends GuiScreen {
                 if (!StringUtils.isBlank(nameField.getText())) {
                     ITextComponent name = new TextComponentString(nameField.getText());
                     GuiNameSword.this.sword.setDisplayName(name);
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, name));//TODO Dispatcher
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, name.getUnformattedComponentText()));
                 }
                 GuiNameSword.this.close();
             }
@@ -75,7 +75,7 @@ public class GuiNameSword extends GuiScreen {
         this.buttons.add(new GuiOptionButton(1, this.width / 2 - 155 + 160, this.height / 6 + 96, this.no) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));//TODO Dispatcher
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
                 GuiNameSword.this.close();
             }
         });

@@ -27,7 +27,6 @@ import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.player.actions.ActionManager;
@@ -62,7 +61,6 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -239,7 +237,6 @@ public class VampirismMod {
         setupAPI3();
 
         dispatcher.registerPackets();
-        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new ModGuiHandler());
         registryManager.onInitStep(IInitListener.Step.COMMON_SETUP, event);
         proxy.onInitStep(IInitListener.Step.COMMON_SETUP, event);
 

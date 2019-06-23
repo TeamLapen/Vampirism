@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.tileentity.TileGrinder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -52,7 +50,7 @@ public class BlockGrinder extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (world.isRemote) return true;
-        player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_GRINDER, world, pos.getX(), pos.getY(), pos.getZ());//TODO open Gui
+        //player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_GRINDER, world, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
         return true;
     }
 

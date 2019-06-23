@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.tests;
 
 import com.google.common.base.Stopwatch;
-
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.fluids.BloodHelper;
@@ -18,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -135,13 +135,14 @@ public class Tests {
     private static boolean bloodFluidHandler(TestInfo info) {
         info.world.setBlockState(info.pos, ModBlocks.blood_container.getDefaultState());
         TileEntity t = info.world.getTileEntity(info.pos);
-        IFluidHandler handler = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.random(info.world.rand));//TODO .orElse/.orELseThrow/.orElseGet
-        handler.fill(new FluidStack(ModFluids.blood, 10000000), true);
-        int blood = BloodHelper.getBlood(handler);
+        LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.random(info.world.rand));
+        opt.ifPresent(handler -> handler.fill(new FluidStack(ModFluids.blood, 10000000), true));
+        int blood = BloodHelper.getBlood(opt);
         assert blood > 0 : "Could not fill blood container";
 
         ItemStack bloodBottle1 = new ItemStack(ModItems.blood_bottle);
         ItemStack bloodBottle2 = new ItemStack(ModItems.blood_bottle);
+        IFluidHandler handler = opt.orElse(null);
         FluidActionResult result1 = FluidUtil.tryFillContainer(bloodBottle1, handler, Integer.MAX_VALUE, null, true);
         assert result1.isSuccess() : "Transaction 1 failed";
         bloodBottle1 = result1.getResult();

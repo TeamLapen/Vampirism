@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -67,7 +65,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
             TileAlchemicalCauldron tile = getTile(worldIn, pos);
             if (tile != null) {
                 if (tile.canUse(playerIn)) {
-                    playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALCHEMICAL_CAULDRON, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO OpenGui
+                    //playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALCHEMICAL_CAULDRON, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
                 }
             }
         }

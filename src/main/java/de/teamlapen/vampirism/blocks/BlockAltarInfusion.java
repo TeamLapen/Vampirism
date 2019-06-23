@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -64,12 +62,12 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
 
         }
         //If non empty hand or missing items -> open GUI
-        else if (!heldItem.isEmpty() || result == -4) {
+        if (!heldItem.isEmpty() || result == -4) {
             if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING) {
                 player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
                 return true;
             }
-            player.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO OpenGui
+            //player.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
             return true;
         }
         return true;

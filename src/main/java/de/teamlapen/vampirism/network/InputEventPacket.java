@@ -217,7 +217,7 @@ public class InputEventPacket implements IMessage {
                     IHunterPlayer hunter = HunterPlayer.get(player);
                     if (hunter.getLevel() > 0) {
                         if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_portable_crafting)) {
-                            player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                            //player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ()); TODO 1.14
                         } else {
                             player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));
                         }
@@ -243,7 +243,6 @@ public class InputEventPacket implements IMessage {
                     }
                     break;
             }
-            return null;
         });
     }
 

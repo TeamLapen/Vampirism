@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -8,7 +7,6 @@ import de.teamlapen.vampirism.entity.ai.HunterAILookAtTrainee;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -108,7 +106,7 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
                 if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
                     if (trainee == null) {
                         this.trainee = player;
-                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.getEntityWorld(), getPosition().getX(), getPosition().getY(), getPosition().getZ());//TODO Gui
+                        //player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.getEntityWorld(), getPosition().getX(), getPosition().getY(), getPosition().getZ());//TODO 1.14
                     } else {
                         player.sendMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));
                     }

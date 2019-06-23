@@ -38,9 +38,11 @@ public class VampirismTemplate extends Template {
                 }
             }
             if (!flag) {
-                LOGGER.warn("Loot Table (%s) specified but no chest found", lootTable);
+                LOGGER.warn("Loot Table ({}) specified but no chest found", lootTable);
             }
+            return true;
         }
+        return false;
     }
 
     public void setLootTable(ResourceLocation lootTable) {
