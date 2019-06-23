@@ -8,13 +8,6 @@ buildscript {
         }
     }
 
-    // This is only here while FG is under active development
-    configurations.classpath {
-        resolutionStrategy {
-            cacheDynamicVersionsFor 10, "seconds"
-            cacheChangingModulesFor 0, "seconds"
-        }
-    }
     
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
@@ -46,10 +39,14 @@ ext.type="test"
 
 sourceSets {
     api
-    lib
+    lib {
+        compileClasspath += configurations["minecraft"]
+    }
     main {
+         java{
+             exclude '**/modcompat/*'
+         }
         compileClasspath += sourceSets.lib.output
-        runtimeClasspath += sourceSets.lib.output
         compileClasspath += sourceSets.api.output
         runtimeClasspath += sourceSets.api.output
     }

@@ -17,22 +17,8 @@ issueTrackerURL="https://github.com/TeamLapen/Vampirism/issues"
         ordering="NONE"
         side="BOTH"
     [[dependencies.vampirism]]
-        modId="teamlapen-lib"
+        modId="teamlapenlib"
         mandatory=true
         versionRange="[${version},)"
-        ordering="NONE"
-        side="BOTH"
-[[mods]]
-    modId="teamlapen-lib"
-    namespace="teamlapen-lib"
-    version="${version}"
-    displayName="Teamlapen Library"
-    authors="Maxanier"
-    description="Required by Vampirism"
-    displayURL="https://minecraft.curseforge.com/projects/vampirism-become-a-vampire"
-    [[dependencies.teamlapen-lib]]
-        modId="forge"
-        mandatory=true
-        versionRange="[${forge_version},)"
         ordering="NONE"
         side="BOTH"
