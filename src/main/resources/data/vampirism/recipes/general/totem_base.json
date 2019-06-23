@@ -10,13 +10,13 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "#PLANKS"
+      "tag": "minecraft:planks"
     },
     "Y": {
-      "item": "minecraft:obsidian"
+      "tag": "forge:obsidian"
     },
     "Z": {
-      "item": "#IRON"
+      "tag": "forge:ingot/iron"
     }
   }
 }

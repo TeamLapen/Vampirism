@@ -7,17 +7,16 @@
   ],
   "key": {
     "X": {
-      "item": "#IRON"
+      "tag": "forge:ingot/iron"
     },
     "Y": {
-      "item": "#PLANKS"
+      "tag": "minecraft:planks"
     },
     "Z": {
       "item": "minecraft:cauldron"
     },
     "Q": {
-      "type": "forge:ore_dict",
-      "ore": "blockQuartz"
+      "tag": "forge:storage_blocks/quartz"
 
     }
   },

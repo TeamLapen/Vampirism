@@ -1,7 +1,6 @@
 {
   "result": {
-    "item": "vampirism:injection",
-    "data": 0
+    "item": "vampirism:injection_empty"
   },
   "pattern": [
     " X ",

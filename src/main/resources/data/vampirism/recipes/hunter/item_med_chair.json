@@ -10,11 +10,10 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "#IRON"
+      "tag": "forge:ingots/iron"
     },
     "Y": {
-      "item": "minecraft:wool",
-      "data": 32767
+      "tag": "minecraft:wool"
     },
     "Z": {
       "item": "minecraft:glass_bottle"

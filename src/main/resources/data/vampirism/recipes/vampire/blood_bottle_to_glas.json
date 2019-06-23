@@ -4,8 +4,7 @@
   },
   "ingredients": [
     {
-      "item": "vampirism:blood_bottle",
-      "data": 32767
+      "item": "vampirism:blood_bottle"
     }
   ],
   "type": "minecraft:crafting_shapeless"

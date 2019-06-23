@@ -10,17 +10,16 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "minecraft:obsidian"
+      "tag": "forge:obsidian"
     },
     "Y": {
-      "item": "#PLANKS"
+      "tag": "minecraft:planks"
     },
     "Z": {
-      "item": "vampirism:blood_bottle",
-      "data": 32767
+      "item": "vampirism:blood_bottle"
     },
     "G": {
-      "item": "#GOLD"
+      "tag": "forge:ingots/gold"
     }
   }
 }

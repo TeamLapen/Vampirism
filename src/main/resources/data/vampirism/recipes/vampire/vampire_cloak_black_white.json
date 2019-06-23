@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "vampirism:vampire_cloak",
+    "item": "vampirism:vampire_cloak_black_white",
     "data": 2
   },
   "pattern": [
@@ -11,21 +11,18 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "minecraft:wool",
-      "data": 0
+      "item": "minecraft:white_wool"
     },
     "Y": {
-      "item": "minecraft:wool",
-      "data": 15
+      "item": "minecraft:black_wool"
     }
     ,
     "Z": {
-      "item": "minecraft:diamond"
+      "tag": "forge:gems/diamond"
     }
     ,
     "A": {
-      "item": "vampirism:pure_blood",
-      "data": 32767
+      "item": "vampirism:pure_blood"
     }
   }
 }
