@@ -1,9 +1,0 @@
-{
-	"parent": "item/generated",
-	"texture": "vampirism:item/injection",
-	"overrides": [
-		{ "predicate": { "type": "meta_0" }, "model": "vampirism:item/injection" },
-		{ "predicate": { "type": "meta_1" }, "model": "vampirism:item/injection_garlic" },
-		{ "predicate": { "type": "meta_2" }, "model": "vampirism:item/injection_sanguinare" }
-	]
-}

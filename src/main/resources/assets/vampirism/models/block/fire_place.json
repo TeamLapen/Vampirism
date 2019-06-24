@@ -1,9 +1,9 @@
 {
   "__comment": "Designed by Maxanier ",
   "textures": {
-    "particle": "block/log_oak",
-    "texture": "block/log_oak",
-    "fire": "block/fire_layer_0",
+    "particle": "block/oak_log",
+    "texture": "block/oak_log",
+    "fire": "block/fire_0",
     "coal": "block/coal_block"
   },
   "elements": [

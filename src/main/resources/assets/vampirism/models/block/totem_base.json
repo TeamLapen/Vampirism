@@ -4,7 +4,7 @@
     "particle": "block/obsidian",
     "iron": "block/iron_block",
     "obsidian": "block/obsidian",
-    "wood": "block/planks_oak"
+    "wood": "block/oak_planks"
   },
   "elements": [
     {

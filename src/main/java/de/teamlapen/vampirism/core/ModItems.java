@@ -155,8 +155,14 @@ public class ModItems {
     public static final ItemHunterAxe hunter_axe_ultimate = getNull();
 
 
-    public static final ItemHeartSeeker heart_seeker = getNull();
-    public static final ItemHeartStriker heart_striker = getNull();
+    public static final ItemHeartSeeker heart_seeker_normal = getNull();
+    public static final ItemHeartSeeker heart_seeker_enhanced = getNull();
+    public static final ItemHeartSeeker heart_seeker_ultimate = getNull();
+
+    public static final ItemHeartStriker heart_striker_normal = getNull();
+    public static final ItemHeartStriker heart_striker_enhanced = getNull();
+    public static final ItemHeartStriker heart_striker_ultimate = getNull();
+
     public static final VampirismItem blood_infused_iron_ingot = getNull();
     public static final VampirismItem blood_infused_enhanced_iron_ingot = getNull();
     public static final VampirismItem soul_orb_vampire = getNull();
@@ -170,7 +176,7 @@ public class ModItems {
     public static final ItemSpawnEgg vampire_spawn_egg = getNull();
     public static final ItemSpawnEgg vampire_hunter_spawn_egg = getNull();
     public static final ItemSpawnEgg advanced_vampire_spawn_egg = getNull();
-    public static final ItemSpawnEgg advanced_hunter_spawn_egg = getNull();
+    public static final ItemSpawnEgg advanced_vampire_hunter_spawn_egg = getNull();
     public static final ItemSpawnEgg ghost_spawn_egg = getNull();
     public static final ItemSpawnEgg vampire_baron_spawn_egg = getNull();
     public static final ItemSpawnEgg hunter_trainer_spawn_egg = getNull();
@@ -402,7 +408,7 @@ public class ModItems {
         registry.register(new VampirismSpawnEgg(ModEntities.vampire, "vampire_spawn_egg"));
         registry.register(new VampirismSpawnEgg(ModEntities.vampire_hunter, "vampire_hunter_spawn_egg"));
         registry.register(new VampirismSpawnEgg(ModEntities.advanced_vampire, "advanced_vampire_spawn_egg"));
-        registry.register(new VampirismSpawnEgg(ModEntities.advanced_hunter, "advanced_hunter_spawn_egg"));
+        registry.register(new VampirismSpawnEgg(ModEntities.advanced_hunter, "advanced_vampire_hunter_spawn_egg"));
         registry.register(new VampirismSpawnEgg(ModEntities.vampire_baron, "vampire_baron_spawn_egg"));
         registry.register(new VampirismSpawnEgg(ModEntities.ghost, "ghost_spawn_egg"));
         registry.register(new VampirismSpawnEgg(ModEntities.hunter_trainer, "hunter_trainer_spawn_egg"));

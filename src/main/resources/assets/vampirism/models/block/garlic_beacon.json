@@ -4,7 +4,7 @@
   "textures": {
     "particle": "block/obsidian",
     "obsidian": "block/obsidian",
-    "wood": "block/planks_oak",
+    "wood": "block/oak_planks",
     "wood_garlic_symbol": "vampirism:block/garlic_beacon_top",
     "side": "vampirism:block/garlic_beacon_side",
     "garlic": "vampirism:block/garlic_beacon_inside"

@@ -1,9 +1,0 @@
-{
-	"parent": "vampirism:item/heart_striker_model",
-	"texture": "vampirism:item/heart_striker",
-	"overrides": [
-		{ "predicate": { "tier": "normal" }, "model": "vampirism:item/heart_striker" },
-		{ "predicate": { "tier": "enhanced" }, "model": "vampirism:item/heart_striker_enhanced" },
-		{ "predicate": { "tier": "ultimate" }, "model": "vampirism:item/heart_striker_ultimate" }
-	]
-}

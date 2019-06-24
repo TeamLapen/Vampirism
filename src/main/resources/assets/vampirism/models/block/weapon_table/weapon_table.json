@@ -1,9 +1,9 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "particle": "block/anvil_base",
-    "anvil": "block/anvil_base",
-    "anvil_top": "block/anvil_top_damaged_0",
+    "particle": "block/anvil",
+    "anvil": "block/anvil",
+    "anvil_top": "block/anvil_top",
     "cauldron": "block/cauldron_side",
     "hammer": "vampirism:block/weapon_table_hammer"
   },

@@ -4,8 +4,8 @@
     "particle": "vampirism:block/dark_steel",
     "texture": "vampirism:block/dark_steel",
     "coal": "block/coal_block",
-    "wood": "block/log_oak",
-    "stone": "block/stonebrick"
+    "wood": "block/oak_log",
+    "stone": "block/stone_bricks"
   },
   "elements": [
     {
