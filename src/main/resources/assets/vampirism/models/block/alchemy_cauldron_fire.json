@@ -1,8 +1,8 @@
 {
   "__comment": "Designed by Maxanier with Cubik Studio",
   "textures": {
-    "fire": "block/fire_layer_0",
-    "fire1": "block/fire_layer_1"
+    "fire": "block/fire_0",
+    "fire1": "block/fire_1"
   },
   "elements": [
     {

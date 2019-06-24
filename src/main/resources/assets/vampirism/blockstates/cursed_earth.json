@@ -1,15 +1,7 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "model": "cube_all",
-    "textures": {
-      "all": "vampirism:block/cursed_earth"
-    }
-  },
-  "variants": {
-    "normal": [
-      {
-      }
-    ]
+  "model": "cube_all",
+  "textures": {
+    "all": "vampirism:block/cursed_earth"
   }
 }

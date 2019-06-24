@@ -1,9 +1,9 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "light_wool": "block/wool_colored_white",
-    "dark_wool": "block/wool_colored_silver",
-    "particle": "block/wool_colored_white"
+    "light_wool": "block/white_wool",
+    "dark_wool": "block/silver_wool",
+    "particle": "block/white_wool"
   },
   "elements": [
     {
