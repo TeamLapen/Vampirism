@@ -35,6 +35,7 @@ import net.minecraftforge.registries.ObjectHolderRegistry;
  */
 public class RegistryManager implements IInitListener {//TODO Mod Loading process @maxanier
 
+
     /**
      * Delegate for some client side registrations
      */
@@ -56,7 +57,6 @@ public class RegistryManager implements IInitListener {//TODO Mod Loading proces
 
     @SubscribeEvent
     public void onBuildRegistries(RegistryEvent.NewRegistry event) {
-
         VampirismRegistries.init();
     }
 

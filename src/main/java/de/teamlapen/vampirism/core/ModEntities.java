@@ -193,6 +193,6 @@ public class ModEntities {
         EntityType.Builder<T> type = builder.tracker(80, 1, true);
         if (!spawnable)
             type.disableSummoning();
-        return type.build(REFERENCE.MODID + ":" + id);
+        return (EntityType<T>) type.build(REFERENCE.MODID + ":" + id).setRegistryName(REFERENCE.MODID, id);
     }
 }
