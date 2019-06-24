@@ -81,7 +81,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
     @CapabilityInject(IVampirePlayer.class)
-    public static final Capability<IVampirePlayer> CAP = getNull();
+    public static Capability<IVampirePlayer> CAP = getNull();
     private final static String TAG = "VampirePlayer";
     private final static String KEY_EYE = "eye_type";
     private final static String KEY_FANGS = "fang_type";

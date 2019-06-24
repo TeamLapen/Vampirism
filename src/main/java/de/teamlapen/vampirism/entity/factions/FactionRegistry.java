@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.NonNullSupplier;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -138,12 +139,12 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, Capability<T> playerCapabiltiy, int highestLevel) {
-        if (!UtilLib.isNonNull(name, entityInterface, playerCapabiltiy)) {
+    public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
+        if (!UtilLib.isNonNull(name, entityInterface, playerCapabilitySupplier)) {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
 
-        PlayableFaction<T> f = new PlayableFaction<>(name, entityInterface, color, key, playerCapabiltiy, highestLevel);
+        PlayableFaction<T> f = new PlayableFaction<>(name, entityInterface, color, key, playerCapabilitySupplier, highestLevel);
         addFaction(f);
         return f;
     }

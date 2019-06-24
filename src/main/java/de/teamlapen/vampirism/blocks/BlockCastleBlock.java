@@ -25,7 +25,7 @@ public class BlockCastleBlock extends VampirismBlock {
     private final EnumVariant variant;
 
     public BlockCastleBlock(EnumVariant variant) {
-        super(name + "_" + variant, Properties.create(Material.ROCK).hardnessAndResistance(2, 10).sound(SoundType.STONE));
+        super(name + "_" + variant.getName(), Properties.create(Material.ROCK).hardnessAndResistance(2, 10).sound(SoundType.STONE));
         this.variant = variant;
 
     }

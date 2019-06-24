@@ -37,7 +37,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  */
 public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapabilityInst, IFactionPlayerHandler {
     @CapabilityInject(IFactionPlayerHandler.class)
-    public final static Capability<IFactionPlayerHandler> CAP = getNull();
+    public static Capability<IFactionPlayerHandler> CAP = getNull();
     private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
 
     public static FactionPlayerHandler get(EntityPlayer player) {

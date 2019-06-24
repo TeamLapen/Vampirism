@@ -41,7 +41,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     private final Type type;
 
     public BlockGarlicBeacon(Type type) {
-        super(regName + "_" + type, Properties.create(Material.ROCK).hardnessAndResistance(3f).sound(SoundType.STONE));
+        super(regName + "_" + type.getName(), Properties.create(Material.ROCK).hardnessAndResistance(3f).sound(SoundType.STONE));
         this.type = type;
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, EnumFacing.NORTH));
 
@@ -156,7 +156,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     public enum Type implements IStringSerializable {
-        NORMAL("standard", 0), IMPROVED("improved", 1), WEAK("weak", 2);
+        NORMAL("normal", 0), IMPROVED("improved", 1), WEAK("weak", 2);
 
 
         private final String name;

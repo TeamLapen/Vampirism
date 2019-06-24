@@ -38,7 +38,7 @@ public class ItemVampireCloak extends ItemArmor {
 
     public ItemVampireCloak(EnumCloakColor color) {
         super(ArmorMaterial.LEATHER, EntityEquipmentSlot.CHEST, new Properties().defaultMaxDamage(0));
-        this.setRegistryName(REFERENCE.MODID, registeredName + "_" + color);
+        this.setRegistryName(REFERENCE.MODID, registeredName + "_" + color.getName());
         this.color = color;
     }
 

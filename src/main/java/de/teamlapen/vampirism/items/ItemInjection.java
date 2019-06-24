@@ -29,7 +29,7 @@ public class ItemInjection extends VampirismItem {
     private final TYPE type;
 
     public ItemInjection(TYPE type) {
-        super(regName + "_" + type, new Properties());
+        super(regName + "_" + type.getName(), new Properties());
         this.type = type;
     }
 

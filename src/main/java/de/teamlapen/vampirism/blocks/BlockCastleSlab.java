@@ -15,7 +15,7 @@ public class BlockCastleSlab extends BlockSlab {
         super(Properties.create(Material.ROCK).hardnessAndResistance(2, 10).sound(SoundType.STONE));
         this.variant = variant;
 
-        this.setRegistryName(REFERENCE.MODID, regName + "_" + variant);
+        this.setRegistryName(REFERENCE.MODID, regName + "_" + variant.getName());
     }
 
 

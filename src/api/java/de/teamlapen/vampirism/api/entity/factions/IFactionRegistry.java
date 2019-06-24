@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.NonNullSupplier;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
@@ -89,5 +90,5 @@ public interface IFactionRegistry {
      * @return The created faction
      */
     @ThreadSafeAPI
-    <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, Capability<T> playerCapability, int highestLevel);
+    <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
 }

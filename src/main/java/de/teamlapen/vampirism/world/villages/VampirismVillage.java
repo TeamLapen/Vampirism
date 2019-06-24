@@ -29,7 +29,7 @@ public class VampirismVillage implements IVampirismVillage {
 
     @CapabilityInject(IVampirismVillage.class)
     @Nonnull
-    private final static Capability<IVampirismVillage> CAP = getNull();
+    private static Capability<IVampirismVillage> CAP = getNull();
 
     public static VampirismVillage get(Village v) {
         return (VampirismVillage) v.getCapability(CAP).orElseThrow(() -> new IllegalStateException("Cannot get VampirismVillage from Village"));

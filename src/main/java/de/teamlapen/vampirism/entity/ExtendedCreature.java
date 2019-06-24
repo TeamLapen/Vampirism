@@ -38,7 +38,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst, IExtendedCreatureVampirism {
 
     @CapabilityInject(IExtendedCreatureVampirism.class)
-    public static final Capability<IExtendedCreatureVampirism> CAP = getNull();
+    public static Capability<IExtendedCreatureVampirism> CAP = getNull();
     private static final String TAG = "ExtendedCreature";
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "maxBlood";

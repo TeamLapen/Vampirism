@@ -30,7 +30,7 @@ public class ItemHolyWaterSplashBottle extends ItemHolyWaterBottle implements En
     public final static String regName = "holy_water_splash_bottle";
 
     public ItemHolyWaterSplashBottle(TIER tier) {
-        super(regName + "_" + tier, tier, new Properties());
+        super(regName + "_" + tier.getName(), tier, new Properties());
         setTranslation_key(regName);
     }
 

@@ -167,7 +167,7 @@ public class Configs {
         disable_all_worldgen = main_config.getBoolean("disable_all_worldgen", CATEGORY_DISABLE, false, "Disable all world gen. Does not affect vampire Forest");
         disable_halloween_special = main_config.getBoolean("disable_halloween_special", CATEGORY_DISABLE, false, "Disable halloween special event");
 
-        updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
+        updated_vampirism = false;//TODO 1.13 !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
         if (!dontSave && (main_config.hasChanged() || updated_vampirism)) {
             main_config.save();

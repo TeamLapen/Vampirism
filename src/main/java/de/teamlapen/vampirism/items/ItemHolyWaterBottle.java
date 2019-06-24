@@ -20,7 +20,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier 
     private final TIER tier;
 
     public ItemHolyWaterBottle(TIER tier) {
-        this(regName + "_" + tier, tier, new Properties());
+        this(regName + "_" + tier.getName(), tier, new Properties());
         setTranslation_key(regName);
     }
 

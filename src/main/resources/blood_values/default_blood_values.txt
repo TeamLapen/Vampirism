@@ -16,7 +16,3 @@ minecraft:polar_bear=10
 minecraft:rabbit=2
 minecraft:llama=8
 minecraft:chicken=0
-
-
-#MCA
-mca:EntityHuman=15

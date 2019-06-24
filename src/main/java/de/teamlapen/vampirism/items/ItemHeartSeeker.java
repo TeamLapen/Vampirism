@@ -25,7 +25,7 @@ public class ItemHeartSeeker extends VampirismVampireSword implements IItemWithT
     private final TIER tier;
 
     public ItemHeartSeeker(TIER tier) {
-        super(regName + "_" + tier, ItemTier.IRON, 0, 0.0f, new Properties());
+        super(regName + "_" + tier.getName(), ItemTier.IRON, 0, 0.0f, new Properties());
         this.tier = tier;
         this.setTranslation_key(regName);
     }

@@ -33,7 +33,7 @@ import net.minecraftforge.registries.ObjectHolderRegistry;
  * Handles registrations of all registrable things as well as a few additional
  * dependent things
  */
-public class RegistryManager implements IInitListener {//TODO Mod Loading process @maxanier
+public class RegistryManager implements IInitListener {
 
     /**
      * Delegate for some client side registrations
@@ -67,6 +67,7 @@ public class RegistryManager implements IInitListener {//TODO Mod Loading proces
             case COMMON_SETUP:
                 ModFluids.registerFluids();
                 ModEntities.registerConvertibles();
+                ModEntities.registerSpawns();
                 ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
                 ModItems.registerBloodConversionRates();

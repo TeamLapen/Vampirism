@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -27,7 +28,7 @@ public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossb
 
 
     public ItemCrossbowArrow(EnumArrowType type) {
-        super(regName + "_" + type.name, new Properties());
+        super(regName + "_" + type.getName(), new Properties());
         this.type = type;
     }
 
@@ -112,7 +113,7 @@ public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossb
     }
 
 
-    public enum EnumArrowType {
+    public enum EnumArrowType implements IStringSerializable {
         NORMAL("normal", 2.0, 0xFFFFFF), VAMPIRE_KILLER("vampire_killer", 0.5, 0x7A0073), SPITFIRE("spitfire", 0.5, 0xFF2211);
         public final int color;
         final String name;
@@ -122,6 +123,11 @@ public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossb
             this.name = name;
             this.baseDamage = baseDamage;
             this.color = color;
+        }
+
+        @Override
+        public String getName() {
+            return name;
         }
     }
 }
