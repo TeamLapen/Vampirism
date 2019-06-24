@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
@@ -44,6 +45,12 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
 
     private final int MAX_LEVEL = 1;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
+    /**
+     * available actions for AI task & task
+     */
+    protected EntityActionHandler<?> entityActionHandler;
+    protected EntityClassType entityclass;
+    protected EntityActionTier entitytier;
 
     public EntityAdvancedHunter(World world) {
         super(ModEntities.advanced_hunter, world, true);
@@ -54,8 +61,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
 
 
         this.setDontDropEquipment();
-        this.entitytier = EntityActionTier.High;
-        this.entityActionHandler = new EntityActionHandler<>(this);
+        setupEntityClassnTier();
     }
 
     @Override
@@ -124,6 +130,14 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
+    public void livingTick() {
+        super.livingTick();
+        if (entityActionHandler != null) {
+            entityActionHandler.handle();
+        }
+    }
+
+    @Override
     public void read(NBTTagCompound tagCompund) {
         super.read(tagCompund);
         if (tagCompund.contains("level")) {
@@ -134,7 +148,9 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
             getDataManager().set(NAME, tagCompund.getString("name"));
             getDataManager().set(TEXTURE, tagCompund.getString("texture"));
         }
-
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
+        }
     }
 
     @Override
@@ -159,6 +175,10 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
         nbt.putInt("type", getHunterType());
         nbt.putString("texture", getDataManager().get(TEXTURE));
         nbt.putString("name", getDataManager().get(NAME));
+        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
+        if (entityActionHandler != null) {
+            entityActionHandler.write(nbt);
+        }
     }
 
     @Override
@@ -218,5 +238,28 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH + Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH_PL * l);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE_PL * l);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_SPEED);
+    }
+
+    @Override
+    public EntityClassType getEntityClass() {
+        return entityclass;
+    }
+
+    @Override
+    public EntityActionTier getEntityTier() {
+        return entitytier;
+    }
+
+    /**
+     * sets entity Tier & Class, applies class modifier
+     */
+    @Nullable
+    protected void setupEntityClassnTier() {
+        this.entityActionHandler = new EntityActionHandler<>(this);
+        entitytier = EntityActionTier.High;
+        entityclass = EntityClassType.getRandomClass(this.getRNG());
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
     }
 }
