@@ -105,7 +105,6 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         this.setSize(0.6F, 1.95F);
         setupEntityClassnTier();
-        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Nullable
@@ -412,6 +411,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
      */
     @Nullable
     protected void setupEntityClassnTier() {
+        this.entityActionHandler = new EntityActionHandler<>(this);
         entitytier = EntityActionTier.Medium;
         entityclass = EntityClassType.getRandomClass(this.getRNG());
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());

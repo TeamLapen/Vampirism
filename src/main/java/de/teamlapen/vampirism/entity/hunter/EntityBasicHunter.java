@@ -115,7 +115,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         this.attackRange = new EntityAIAttackRangedCrossbow(this, this, 0.6, 60, 20);
         this.updateCombatTask();
         setupEntityClassnTier();
-        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -495,6 +494,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
      */
     @Nullable
     protected void setupEntityClassnTier() {
+        this.entityActionHandler = new EntityActionHandler<>(this);
         entitytier = EntityActionTier.Medium;
         entityclass = EntityClassType.getRandomClass(this.getRNG());
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());

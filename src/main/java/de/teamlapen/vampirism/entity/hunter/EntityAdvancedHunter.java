@@ -62,7 +62,6 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
 
         this.setDontDropEquipment();
         setupEntityClassnTier();
-        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -256,6 +255,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
      */
     @Nullable
     protected void setupEntityClassnTier() {
+        this.entityActionHandler = new EntityActionHandler<>(this);
         entitytier = EntityActionTier.High;
         entityclass = EntityClassType.getRandomClass(this.getRNG());
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());

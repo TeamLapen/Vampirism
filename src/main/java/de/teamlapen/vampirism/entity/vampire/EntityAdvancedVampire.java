@@ -67,7 +67,6 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         this.setDontDropEquipment();
         setupEntityClassnTier();
-        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -283,6 +282,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
      */
     @Nullable
     protected void setupEntityClassnTier() {
+        this.entityActionHandler = new EntityActionHandler<>(this);
         entitytier = EntityActionTier.High;
         entityclass = EntityClassType.getRandomClass(this.getRNG());
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
