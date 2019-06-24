@@ -24,7 +24,7 @@ public class ModBlocks {
     public static final BlockCastleBlock castle_block_dark_stone = getNull();
     public static final BlockCastleBlock castle_block_normal_brick = getNull();
     public static final BlockCursedEarth cursed_earth = getNull();
-    public static final VampirismFlower vampirism_flower_orchid = getNull();
+    public static final VampirismFlower vampirism_flower_vampire_orchid = getNull();
     public static final BlockTent tent = getNull();
     public static final BlockTentMain tent_main = getNull();
     public static final BlockCoffin block_coffin = getNull();
@@ -47,9 +47,9 @@ public class ModBlocks {
     public static final BlockGarlicBeacon garlic_beacon_weak = getNull();
     public static final BlockGarlicBeacon garlic_beacon_improved = getNull();
 
-    public static final BlockStairs castle_stairs_dark_brick = getNull();
+    public static final BlockStairs castle_stairs_dark = getNull();
     public static final BlockStairs castle_stairs_dark_stone = getNull();
-    public static final BlockStairs castle_stairs_purple_brick = getNull();
+    public static final BlockStairs castle_stairs_purple = getNull();
     public static final BlockCastleSlab castle_slab_dark_stone = getNull();
     public static final BlockCastleSlab castle_slab_dark_brick = getNull();
     public static final BlockCastleSlab castle_slab_purple_brick = getNull();
@@ -77,7 +77,7 @@ public class ModBlocks {
         registry.register(itemBlock(blood_container, new Item.Properties().maxStackSize(1)));
 
         registry.register(itemBlock(cursed_earth, new Item.Properties()));
-        registry.register(itemBlock(vampirism_flower_orchid, new Item.Properties()));
+        registry.register(itemBlock(vampirism_flower_vampire_orchid, new Item.Properties()));
         registry.register(itemBlock(altar_infusion, new Item.Properties()));
         registry.register(itemBlock(altar_pillar, new Item.Properties()));
         registry.register(itemBlock(altar_tip, new Item.Properties()));
@@ -93,9 +93,9 @@ public class ModBlocks {
         registry.register(itemBlock(garlic_beacon_improved, new Item.Properties()));
         registry.register(itemBlock(garlic_beacon_weak, new Item.Properties()));
 
-        registry.register(itemBlock(castle_stairs_dark_brick, new Item.Properties()));
+        registry.register(itemBlock(castle_stairs_dark, new Item.Properties()));
         registry.register(itemBlock(castle_stairs_dark_stone, new Item.Properties()));
-        registry.register(itemBlock(castle_stairs_purple_brick, new Item.Properties()));
+        registry.register(itemBlock(castle_stairs_purple, new Item.Properties()));
         registry.register(itemBlock(blood_pedestal, new Item.Properties()));
         registry.register(itemBlock(blood_grinder, new Item.Properties()));
         registry.register(itemBlock(blood_sieve, new Item.Properties()));
@@ -108,7 +108,12 @@ public class ModBlocks {
 
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
-        registry.register(new BlockCastleBlock(BlockCastleBlock.EnumVariant.DARK_BRICK));
+        BlockCastleBlock castleBlock_dark_brick = new BlockCastleBlock(BlockCastleBlock.EnumVariant.DARK_BRICK);
+        registry.register(castleBlock_dark_brick);
+        BlockCastleBlock castleBlock_dark_stone = new BlockCastleBlock(BlockCastleBlock.EnumVariant.DARK_STONE);
+        registry.register(castleBlock_dark_stone);
+        BlockCastleBlock castleBlock_purple_brick = new BlockCastleBlock(BlockCastleBlock.EnumVariant.PURPLE_BRICK);
+        registry.register(castleBlock_purple_brick);
         registry.register(new BlockCastleBlock(BlockCastleBlock.EnumVariant.DARK_BRICK_BLOODY));
         registry.register(new BlockCastleBlock(BlockCastleBlock.EnumVariant.DARK_STONE));
         registry.register(new BlockCastleBlock(BlockCastleBlock.EnumVariant.NORMAL_BRICK));
@@ -138,9 +143,9 @@ public class ModBlocks {
         registry.register(new BlockGarlicBeacon(BlockGarlicBeacon.Type.IMPROVED));
 
 
-        registry.register(new BlockCastleStairs(castle_block_dark_brick.getDefaultState(), "dark_brick"));
-        registry.register(new BlockCastleStairs(castle_block_dark_stone.getDefaultState(), "dark_stone"));
-        registry.register(new BlockCastleStairs(castle_block_purple_brick.getDefaultState(), "purple_brick"));
+        registry.register(new BlockCastleStairs(castleBlock_dark_brick.getDefaultState(), "dark"));
+        registry.register(new BlockCastleStairs(castleBlock_dark_stone.getDefaultState(), "dark_stone"));
+        registry.register(new BlockCastleStairs(castleBlock_purple_brick.getDefaultState(), "purple"));
         registry.register(new BlockCastleSlab(BlockCastleSlab.EnumVariant.DARK_BRICK));
         registry.register(new BlockCastleSlab(BlockCastleSlab.EnumVariant.PURPLE_BRICK));
         registry.register(new BlockCastleSlab(BlockCastleSlab.EnumVariant.DARK_STONE));

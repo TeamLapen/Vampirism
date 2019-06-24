@@ -40,7 +40,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHunterPlayer {
 
     @CapabilityInject(IHunterPlayer.class)
-    public final static Capability<IHunterPlayer> CAP = getNull();
+    public static Capability<IHunterPlayer> CAP = getNull();
 
     /**
      * Don't call before the construction event of the player entity is finished

@@ -1332,45 +1332,46 @@ public class Configuration {
     }
 
     public void save() {
-        if (PARENT != null && PARENT != this) {
-            PARENT.save();
-            return;
-        }
-
-        try {
-            if (file.getParentFile() != null) {
-                file.getParentFile().mkdirs();
-            }
-
-            if (!file.exists() && !file.createNewFile()) {
-                return;
-            }
-
-            if (file.canWrite()) {
-                FileOutputStream fos = new FileOutputStream(file);
-                BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(fos, defaultEncoding));
-
-                buffer.write("# Configuration file" + NEW_LINE + NEW_LINE);
-
-                if (this.definedConfigVersion != null)
-                    buffer.write(CONFIG_VERSION_MARKER + ": " + this.definedConfigVersion + NEW_LINE + NEW_LINE);
-
-                if (children.isEmpty()) {
-                    save(buffer);
-                } else {
-                    for (Entry<String, Configuration> entry : children.entrySet()) {
-                        buffer.write("START: \"" + entry.getKey() + "\"" + NEW_LINE);
-                        entry.getValue().save(buffer);
-                        buffer.write("END: \"" + entry.getKey() + "\"" + NEW_LINE + NEW_LINE);
-                    }
-                }
-
-                buffer.close();
-                fos.close();
-            }
-        } catch (IOException e) {
-            LOGGER.error("Error while saving config {}.", fileName, e);
-        }
+        //TODO 1.13
+//        if (PARENT != null && PARENT != this) {
+//            PARENT.save();
+//            return;
+//        }
+//
+//        try {
+//            if (file.getParentFile() != null) {
+//                file.getParentFile().mkdirs();
+//            }
+//
+//            if (!file.exists() && !file.createNewFile()) {
+//                return;
+//            }
+//
+//            if (file.canWrite()) {
+//                FileOutputStream fos = new FileOutputStream(file);
+//                BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(fos, defaultEncoding));
+//
+//                buffer.write("# Configuration file" + NEW_LINE + NEW_LINE);
+//
+//                if (this.definedConfigVersion != null)
+//                    buffer.write(CONFIG_VERSION_MARKER + ": " + this.definedConfigVersion + NEW_LINE + NEW_LINE);
+//
+//                if (children.isEmpty()) {
+//                    save(buffer);
+//                } else {
+//                    for (Entry<String, Configuration> entry : children.entrySet()) {
+//                        buffer.write("START: \"" + entry.getKey() + "\"" + NEW_LINE);
+//                        entry.getValue().save(buffer);
+//                        buffer.write("END: \"" + entry.getKey() + "\"" + NEW_LINE + NEW_LINE);
+//                    }
+//                }
+//
+//                buffer.close();
+//                fos.close();
+//            }
+//        } catch (IOException e) {
+//            LOGGER.error("Error while saving config {}.", fileName, e);
+//        }
     }
 
     /**

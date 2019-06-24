@@ -16,7 +16,7 @@ public class VampirismFlower extends BlockBush {
     public VampirismFlower(TYPE type) {
         super(Properties.create(Material.PLANTS).hardnessAndResistance(0).doesNotBlockMovement().sound(SoundType.PLANT));
         this.type = type;
-        setRegistryName(REFERENCE.MODID + "_" + type, regName);
+        setRegistryName(REFERENCE.MODID, regName + "_" + type.getName());
 
     }
 

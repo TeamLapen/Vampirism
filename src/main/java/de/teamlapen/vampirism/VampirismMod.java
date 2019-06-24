@@ -117,6 +117,8 @@ public class VampirismMod {
 
     public VampirismMod() {
         instance = this;
+        checkDevEnv();
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
@@ -125,8 +127,19 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(this);
         addModCompats();
         registryManager = new RegistryManager();
+        FMLJavaModLoadingContext.get().getModEventBus().register(registryManager);
         MinecraftForge.EVENT_BUS.register(registryManager);
+
         setupAPI1();
+        setupAPI2();
+
+
+        File vampConfigDir = new File(FMLPaths.CONFIGDIR.get().toFile(), REFERENCE.MODID);
+        Configs.init(vampConfigDir, inDev);
+        Balance.init(vampConfigDir, inDev);
+        BloodValueLoader.init(vampConfigDir);
+        BloodGrinderValueLoader.init(vampConfigDir);
+
     }
 
     public VersionChecker.VersionInfo getVersionInfo() {
@@ -220,19 +233,13 @@ public class VampirismMod {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        checkDevEnv();
         HunterPlayer.registerCapability();
         VampirePlayer.registerCapability();
         FactionPlayerHandler.registerCapability();
         ExtendedCreature.registerCapability();
         VampirismVillage.registerCapability();
 
-        setupAPI2();
-        File vampConfigDir = new File(FMLPaths.CONFIGDIR.get().toFile(), REFERENCE.MODID);
-        Configs.init(vampConfigDir, inDev);
-        Balance.init(vampConfigDir, inDev);
-        BloodValueLoader.init(vampConfigDir);
-        BloodGrinderValueLoader.init(vampConfigDir);
+
         modCompatLoader.onInitStep(IInitListener.Step.COMMON_SETUP, event);
         setupAPI3();
 
@@ -287,9 +294,9 @@ public class VampirismMod {
      * Setup API during pre-init before configs are loaded
      */
     private void setupAPI2() {
-        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
+        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, REFERENCE.VAMPIRE_PLAYER_KEY, () -> VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
         VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setTranslationKeys("text.vampirism.vampire", "text.vampirism.vampires");
-        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);
+        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), REFERENCE.HUNTER_PLAYER_KEY, () -> HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);
         VReference.HUNTER_FACTION.setChatColor(TextFormatting.DARK_BLUE).setTranslationKeys("text.vampirism.hunter", "text.vampirism.hunters");
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;

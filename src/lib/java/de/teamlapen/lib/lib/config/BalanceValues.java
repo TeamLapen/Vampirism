@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.lang.reflect.Field;
 
 /**
@@ -27,15 +26,16 @@ public abstract class BalanceValues {
      * @return
      */
     private static void reset(File f) {
-        LOGGER.info(LogUtil.CONFIG, "Resetting config file " + f.getName());
-        try {
-            PrintWriter writer = new PrintWriter(f);
-            writer.write("");
-            writer.flush();
-            writer.close();
-        } catch (Exception e) {
-            LOGGER.error(LogUtil.CONFIG, "Failed to reset config file");
-        }
+        //TODO 1.13
+//        LOGGER.info(LogUtil.CONFIG, "Resetting config file " + f.getName());
+//        try {
+//            PrintWriter writer = new PrintWriter(f);
+//            writer.write("");
+//            writer.flush();
+//            writer.close();
+//        } catch (Exception e) {
+//            LOGGER.error(LogUtil.CONFIG, "Failed to reset config file");
+//        }
     }
 
     private final String name;

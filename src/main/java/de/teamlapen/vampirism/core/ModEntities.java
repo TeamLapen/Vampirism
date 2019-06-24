@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.config.Balance;
@@ -126,8 +125,6 @@ public class ModEntities {
             e.getSpawns(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
             e.getSpawns(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
         }
-        //Spawns
-        registerSpawns();
     }
 
     static void registerSpawns() {
@@ -177,7 +174,7 @@ public class ModEntities {
                         }
                     }
                     if (!zombie) {
-                        LOGGER.debug("In biome %s no vampire will spawn", b);
+                        LOGGER.debug("In biome {} no vampire will spawn", b);
                         iterator.remove();
                     }
                 }
@@ -193,6 +190,8 @@ public class ModEntities {
         EntityType.Builder<T> type = builder.tracker(80, 1, true);
         if (!spawnable)
             type.disableSummoning();
-        return type.build(REFERENCE.MODID + ":" + id);
+        EntityType<T> entry = type.build(REFERENCE.MODID + ":" + id);
+        entry.setRegistryName(REFERENCE.MODID, id);
+        return entry;
     }
 }

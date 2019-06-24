@@ -10,6 +10,6 @@ import java.util.Random;
 public class FeatureVampireForestFlower extends AbstractFlowersFeature {
     @Override
     public IBlockState getRandomFlower(Random p_202355_1_, BlockPos p_202355_2_) {
-        return ModBlocks.vampirism_flower_orchid.getDefaultState();
+        return ModBlocks.vampirism_flower_vampire_orchid.getDefaultState();
     }
 }
