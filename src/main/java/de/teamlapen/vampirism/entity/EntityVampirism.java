@@ -1,15 +1,9 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.IEntityWithHome;
 import de.teamlapen.vampirism.api.entity.IVampirismEntity;
-import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -28,7 +22,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Base class for most vampirism mobs
@@ -38,10 +31,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     private final EntityAIBase moveTowardsRestriction;
     protected boolean hasArms = true;
     protected boolean peaceful = false;
-    /** available actions for AI task & task */
-    protected EntityActionHandler<?> entityActionHandler;
-    protected EntityClassType entityclass;
-    protected EntityActionTier entitytier;
+
     /**
      * Whether the home should be saved to nbt or not
      */
@@ -56,7 +46,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     public EntityVampirism(EntityType type, World world) {
         super(type, world);
-        setupEntityClass();
         moveTowardsRestriction = new EntityAIMoveTowardsRestriction(this, 1.0F);
     }
 
@@ -155,9 +144,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             this.updateArmSwingProgress();
         }
         super.livingTick();
-        if (entityActionHandler != null) {
-            entityActionHandler.handle();
-        }
     }
 
     @Override
@@ -179,14 +165,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             if (nbt.contains("homeMovePrio")) {
                 this.setMoveTowardsRestriction(nbt.getInt("moveHomePrio"), true);
             }
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.read(nbt);
-        }
-        if (nbt.contains("entityclasstype")) {
-            EntityClassType type = EntityClassType.getEntityClassType(nbt.getInt("entityclasstype"));
-            if (type != null)
-                entityclass = type;
         }
     }
 
@@ -210,10 +188,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
                 nbt.putInt("homeMovePrio", moveTowardsRestrictionPrio);
             }
         }
-        if (entityActionHandler != null) {
-            entityActionHandler.write(nbt);
-        }
-        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
     }
 
     @Override
@@ -352,35 +326,5 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             this.randomTickDivider = 70 + rand.nextInt(50);
             onRandomTick();
         }
-    }
-
-    /**
-     * gets all available actions for this entity.
-     * 
-     * @throws ClassCastException
-     *             if the entity isn't instanceof {@link IFactionEntity}
-     */
-    public List<IEntityAction> getAvailableActions() {
-        return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
-    }
-
-    public EntityClassType getEntityClass() {
-        return entityclass;
-    }
-
-    public EntityActionTier getEntityTier() {
-        return entitytier;
-    }
-
-    /**
-     * sets entity Tier & Class, applies class modifier
-     */
-    @Nullable
-    protected void setupEntityClass() {
-        entitytier = EntityActionTier.Default;
-        entityclass = EntityClassType.getRandomClass(this.getRNG());
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
     }
 }

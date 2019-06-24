@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
@@ -52,6 +53,12 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
      * Not guaranteed to be exact and not saved to nbt
      */
     private int followingEntities = 0;
+    /**
+     * available actions for AI task & task
+     */
+    protected EntityActionHandler<?> entityActionHandler;
+    protected EntityClassType entityclass;
+    protected EntityActionTier entitytier;
 
     public EntityAdvancedVampire(World world) {
         super(ModEntities.advanced_vampire, world, true);
@@ -59,8 +66,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.canSuckBloodFromPlayer = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         this.setDontDropEquipment();
-        this.entitytier = EntityActionTier.High;
-        this.entityActionHandler = new EntityActionHandler<>(this);
+        setupEntityClassnTier();
     }
 
     @Override
@@ -157,7 +163,14 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
             getDataManager().set(NAME, tagCompund.getString("name"));
             getDataManager().set(TEXTURE, tagCompund.getString("texture"));
         }
-
+        if (tagCompund.contains("entityclasstype")) {
+            EntityClassType type = EntityClassType.getEntityClassType(tagCompund.getInt("entityclasstype"));
+            if (type != null)
+                entityclass = type;
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
+        }
     }
 
     @Override
@@ -176,6 +189,18 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         nbt.putInt("type", getEyeType());
         nbt.putString("texture", getDataManager().get(TEXTURE));
         nbt.putString("name", getDataManager().get(NAME));
+        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
+        if (entityActionHandler != null) {
+            entityActionHandler.write(nbt);
+        }
+    }
+
+    @Override
+    public void livingTick() {
+        super.livingTick();
+        if (entityActionHandler != null) {
+            entityActionHandler.handle();
+        }
     }
 
     @Override
@@ -240,5 +265,28 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_SPEED);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(13);
+    }
+
+    @Override
+    public EntityClassType getEntityClass() {
+        return entityclass;
+    }
+
+    @Override
+    public EntityActionTier getEntityTier() {
+        return entitytier;
+    }
+
+    /**
+     * sets entity Tier & Class, applies class modifier
+     */
+    @Nullable
+    protected void setupEntityClassnTier() {
+        this.entityActionHandler = new EntityActionHandler<>(this);
+        entitytier = EntityActionTier.High;
+        entityclass = EntityClassType.getRandomClass(this.getRNG());
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
     }
 }

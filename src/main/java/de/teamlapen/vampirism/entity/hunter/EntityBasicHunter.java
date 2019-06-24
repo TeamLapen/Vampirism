@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
@@ -59,6 +60,12 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private final EntityAIAttackMelee attackMelee;
     private final EntityAIAttackRangedCrossbow attackRange;
+    /**
+     * available actions for AI task & task
+     */
+    protected EntityActionHandler<?> entityActionHandler;
+    protected EntityClassType entityclass;
+    protected EntityActionTier entitytier;
 
     /**
      * Player currently being trained otherwise null
@@ -107,8 +114,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         this.attackMelee = new EntityAIAttackMelee(this, 1.0, false);
         this.attackRange = new EntityAIAttackRangedCrossbow(this, this, 0.6, 60, 20);
         this.updateCombatTask();
-        this.entitytier = EntityActionTier.Medium;
-        this.entityActionHandler = new EntityActionHandler<>(this);
+        setupEntityClassnTier();
     }
 
     @Override
@@ -248,6 +254,9 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             }
 
         }
+        if (entityActionHandler != null) {
+            entityActionHandler.handle();
+        }
     }
 
     @Override
@@ -270,8 +279,14 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         } else if (tagCompund.contains("village_defense_area")) {
             this.defendVillage(UtilLib.intToBB(tagCompund.getIntArray("village_defense_area")));
         }
-
-
+        if (tagCompund.contains("entityclasstype")) {
+            EntityClassType type = EntityClassType.getEntityClassType(tagCompund.getInt("entityclasstype"));
+            if (type != null)
+                entityclass = type;
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
+        }
     }
 
     @Override
@@ -321,6 +336,10 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             nbt.putIntArray("village_attack_area", UtilLib.bbToInt(village_attack_area));
         } else if (village_defense_area != null) {
             nbt.putIntArray("village_defense_area", UtilLib.bbToInt(village_defense_area));
+        }
+        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
+        if (entityActionHandler != null) {
+            entityActionHandler.write(nbt);
         }
     }
 
@@ -457,5 +476,29 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     private void updateWatchedId(int id) {
         getDataManager().set(WATCHED_ID, id);
+    }
+
+
+    @Override
+    public EntityClassType getEntityClass() {
+        return entityclass;
+    }
+
+    @Override
+    public EntityActionTier getEntityTier() {
+        return entitytier;
+    }
+
+    /**
+     * sets entity Tier & Class, applies class modifier
+     */
+    @Nullable
+    protected void setupEntityClassnTier() {
+        this.entityActionHandler = new EntityActionHandler<>(this);
+        entitytier = EntityActionTier.Medium;
+        entityclass = EntityClassType.getRandomClass(this.getRNG());
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
     }
 }

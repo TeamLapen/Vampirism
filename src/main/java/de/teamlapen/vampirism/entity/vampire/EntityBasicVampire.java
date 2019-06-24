@@ -4,8 +4,11 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
+import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
@@ -43,6 +46,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Basic vampire mob.
@@ -57,6 +61,12 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     private int bloodtimer = 100;
     private EntityAdvancedVampire advancedLeader = null;
     private int angryTimer = 0;
+    /**
+     * available actions for AI task & task
+     */
+    protected EntityActionHandler<?> entityActionHandler;
+    protected EntityClassType entityclass;
+    protected EntityActionTier entitytier;
 
     private EntityAIBase tasks_avoidHunter;
 
@@ -94,8 +104,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         hasArms = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         this.setSize(0.6F, 1.95F);
-        this.entitytier = EntityActionTier.Medium;
-        this.entityActionHandler = new EntityActionHandler<>(this);
+        setupEntityClassnTier();
     }
 
     @Nullable
@@ -186,6 +195,9 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
                 this.addPotionEffect(new PotionEffect(ModPotions.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
             }
         }
+        if (entityActionHandler != null) {
+            entityActionHandler.handle();
+        }
     }
 
     @Override
@@ -207,7 +219,14 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         } else if (tagCompund.contains("village_defense_area")) {
             this.defendVillage(UtilLib.intToBB(tagCompund.getIntArray("village_defense_area")));
         }
-
+        if (tagCompund.contains("entityclasstype")) {
+            EntityClassType type = EntityClassType.getEntityClassType(tagCompund.getInt("entityclasstype"));
+            if (type != null)
+                entityclass = type;
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
+        }
     }
 
     @Override
@@ -248,6 +267,10 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
             nbt.putIntArray("village_attack_area", UtilLib.bbToInt(village_attack_area));
         } else if (village_defense_area != null) {
             nbt.putIntArray("village_defense_area", UtilLib.bbToInt(village_defense_area));
+        }
+        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
+        if (entityActionHandler != null) {
+            entityActionHandler.write(nbt);
         }
     }
 
@@ -366,5 +389,33 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MAX_HEALTH + Balance.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_SPEED);
+    }
+
+    @Override
+    public EntityClassType getEntityClass() {
+        return entityclass;
+    }
+
+    @Override
+    public EntityActionTier getEntityTier() {
+        return entitytier;
+    }
+
+    @Override
+    public List<IEntityAction> getAvailableActions() {
+        return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
+    }
+
+    /**
+     * sets entity Tier & Class, applies class modifier
+     */
+    @Nullable
+    protected void setupEntityClassnTier() {
+        this.entityActionHandler = new EntityActionHandler<>(this);
+        entitytier = EntityActionTier.Medium;
+        entityclass = EntityClassType.getRandomClass(this.getRNG());
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
     }
 }
