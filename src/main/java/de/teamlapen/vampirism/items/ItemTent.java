@@ -104,7 +104,7 @@ public class ItemTent extends VampirismItem {
                 }
             }
 
-            if (player != null || !player.isCreative()) {
+            if (player != null || !player.abilities.isCreativeMode) {
                 stack.shrink(1);
             }
         }

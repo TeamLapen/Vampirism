@@ -18,9 +18,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -40,6 +40,8 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     private int chargingTicks;
     private int bloodStored = 0;
     private int chargeRate = 30;
+
+    private final LazyOptional<IItemHandler> opt = LazyOptional.of(() -> this);
 
 
     public TilePedestal() {
@@ -63,12 +65,12 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
         return ItemStack.EMPTY;
     }
 
-    @SuppressWarnings("unchecked")
-    @Nullable
+
+    @Nonnull
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing != EnumFacing.DOWN)) {
-            return (T) this;
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing != EnumFacing.DOWN)) {
+            return opt.cast();
         }
         return super.getCapability(capability, facing);
     }
@@ -76,6 +78,11 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     @Override
     public int getSlotLimit(int slot) {
         return 1;
+    }
+
+    @Override
+    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+        return true;
     }
 
     @Override
@@ -111,13 +118,6 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
         return write(new NBTTagCompound());
     }
 
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing != EnumFacing.DOWN)) {
-            return true;
-        }
-        return super.hasCapability(capability, facing);
-    }
 
     public boolean hasStack() {
         return !this.internalStack.isEmpty();
@@ -220,8 +220,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     }
 
     private void drainBlood() {
-        IFluidHandler handler = FluidUtil.getFluidHandler(this.world, this.pos.down(), EnumFacing.UP);
-        if (handler != null) {
+        FluidUtil.getFluidHandler(this.world, this.pos.down(), EnumFacing.UP).ifPresent(handler -> {
             FluidStack drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), false);
             if (drained != null && drained.amount == VReference.FOOD_TO_FLUID_BLOOD) {
                 drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), true);
@@ -229,7 +228,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
                     bloodStored += drained.amount;
                 }
             }
-        }
+        });
     }
 
     /**

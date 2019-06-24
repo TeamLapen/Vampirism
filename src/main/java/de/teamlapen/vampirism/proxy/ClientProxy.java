@@ -64,14 +64,11 @@ public class ClientProxy extends CommonProxy {
         super.onInitStep(step, event);
         RegistryManager.getRegistryManagerClient().onInitStep(step, event);
         switch (step) {
-            case PRE_INIT:
+            case CLIENT_SETUP:
                 ModKeys.register();
                 registerSubscriptions();
                 break;
-            case INIT:
-
-                break;
-            case POST_INIT:
+            case LOAD_COMPLETE:
                 registerVampireEntityOverlays();
                 break;
         }
@@ -97,11 +94,11 @@ public class ClientProxy extends CommonProxy {
     private void registerVampireEntityOverlay(RenderManager manager, Class<? extends EntityCreature> clazz, ResourceLocation loc) {
         Render render = manager.getEntityClassRenderObject(clazz);
         if (render == null) {
-            LOGGER.error("Did not find renderer for %s", clazz);
+            LOGGER.error("Did not find renderer for {}", clazz);
             return;
         }
         if (!(render instanceof RenderLivingBase)) {
-            LOGGER.error("Renderer (%s) for %s does not extend RenderLivingEntity", clazz, render);
+            LOGGER.error("Renderer ({}) for {} does not extend RenderLivingEntity", clazz, render);
             return;
         }
         RenderLivingBase rendererLiving = (RenderLivingBase) render;

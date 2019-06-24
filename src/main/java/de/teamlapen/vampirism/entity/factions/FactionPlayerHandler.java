@@ -21,6 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.Event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,34 +41,30 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
 
     public static FactionPlayerHandler get(EntityPlayer player) {
-        return (FactionPlayerHandler) player.getCapability(CAP, null);
+        return (FactionPlayerHandler) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get FactionPlayerHandler from EntityPlayer"));
     }
 
 
     public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IFactionPlayerHandler.class, new Storage(), FactionPlayerHandlerDefaultImpl.class);
+        CapabilityManager.INSTANCE.register(IFactionPlayerHandler.class, new Storage(), FactionPlayerHandlerDefaultImpl::new);
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
             final IFactionPlayerHandler inst = new FactionPlayerHandler(player);
+            final LazyOptional<IFactionPlayerHandler> opt = LazyOptional.of(() -> inst);
 
             @Override
             public void deserializeNBT(NBTTagCompound nbt) {
                 CAP.getStorage().readNBT(CAP, inst, null, nbt);
             }
 
+            @Nonnull
             @Override
-            public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
 
-                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
-            }
-
-            @Override
-            public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-                return CAP.equals(capability);
+                return CAP.orEmpty(capability, opt);
             }
 
             @Override
@@ -187,7 +184,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         } else {
             currentFaction = getFactionFromKey(new ResourceLocation(f));
             if (currentFaction == null) {
-                LOGGER.error("Cannot find faction %s on client. You have to register factions on both sides!", f);
+                LOGGER.error("Cannot find faction {} on client. You have to register factions on both sides!", f);
                 currentLevel = 0;
             } else {
                 currentLevel = nbt.getInt("level");
@@ -230,12 +227,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         int oldLevel = currentLevel;
         if (currentFaction != null && (!currentFaction.equals(faction) || level == 0)) {
             if (!currentFaction.getPlayerCapability(player).canLeaveFaction()) {
-                LOGGER.info("You cannot leave faction %s, it is prevented by respective mod", currentFaction.getKey());
+                LOGGER.info("You cannot leave faction {}, it is prevented by respective mod", currentFaction.getKey());
                 return false;
             }
         }
         if (faction != null && (level < 0 || level > faction.getHighestReachableLevel())) {
-            LOGGER.warn("Level %d in faction %s cannot be reached", level, faction.getKey());
+            LOGGER.warn("Level {} in faction {} cannot be reached", level, faction.getKey());
             return false;
         }
         FactionEvent.ChangeLevelOrFaction event = new FactionEvent.ChangeLevelOrFaction(this, old, oldLevel, faction, faction == null ? 0 : level);
@@ -287,7 +284,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (nbt.contains("faction")) {
             currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
             if (currentFaction == null) {
-                LOGGER.warn("Could not find faction %s. Did mods change?", nbt.getString("faction"));
+                LOGGER.warn("Could not find faction {}. Did mods change?", nbt.getString("faction"));
             } else {
                 currentLevel = nbt.getInt("level");
                 notifyFaction(null, 0);
@@ -310,11 +307,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      */
     private void notifyFaction(IPlayableFaction oldFaction, int oldLevel) {
         if (oldFaction != null && !oldFaction.equals(currentFaction)) {
-            LOGGER.debug("Leaving faction %s", oldFaction.getKey());
+            LOGGER.debug("Leaving faction {}", oldFaction.getKey());
             oldFaction.getPlayerCapability(player).onLevelChanged(0, oldLevel);
         }
         if (currentFaction != null) {
-            LOGGER.debug("Changing to %s %d", currentFaction, currentLevel);
+            LOGGER.debug("Changing to {} {}", currentFaction, currentLevel);
             currentFaction.getPlayerCapability(player).onLevelChanged(currentLevel, Objects.equals(oldFaction, currentFaction) ? oldLevel : 0);
         }
         if (!Objects.equals(currentFaction, oldFaction)) {
@@ -327,7 +324,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * Called when the faction has changed
      */
     private void onChangedFaction() {
-        player.refreshDisplayName();
+        //TODO still needed?
+        //player.refreshDisplayName();
     }
 
     private void saveNBTData(NBTTagCompound nbt) {

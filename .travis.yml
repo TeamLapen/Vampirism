@@ -15,11 +15,12 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 branches:
-  except:
+  only:
     - 1.13
+    - 1.12
 before_install: chmod +x gradlew
 install:
-  - ./gradlew setupCIWorkspace -S
+  - ./gradlew
 script:
   - ./gradlew build
 

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import de.teamlapen.vampirism.blocks.VampirismBlockContainer;
-
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -27,7 +27,7 @@ abstract class VampirismTESR<T extends TileEntity> extends TileEntityRenderer<T>
         if (tile == null) return;
         EnumFacing dir = EnumFacing.NORTH;
         if (tile.getWorld() != null)
-            dir = tile.getWorld().getBlockState(tile.getPos()).getValue(VampirismBlockContainer.FACING);
+            dir = tile.getWorld().getBlockState(tile.getPos()).get(BlockHorizontal.HORIZONTAL_FACING);
         GlStateManager.rotatef((dir.getHorizontalIndex() - 2) * -90, 0.0F, 1.0F, 0.0F);
     }
 }

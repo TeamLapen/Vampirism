@@ -110,7 +110,7 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
     @Override
     protected void onElementSelected(IAction action) {
         if (action != fakeAction) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName().toString()));
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName().toString()));//TODO Dispatcher
         }
     }
 

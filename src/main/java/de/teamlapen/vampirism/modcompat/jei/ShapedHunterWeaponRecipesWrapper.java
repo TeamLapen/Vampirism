@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import de.teamlapen.vampirism.inventory.ShapedHunterWeaponRecipe;
 import mezz.jei.api.ingredients.IIngredients;
+
+import de.teamlapen.vampirism.inventory.ShapedHunterWeaponRecipe;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -11,7 +12,7 @@ import java.util.Arrays;
 /**
  * Wraps {@link ShapedHunterWeaponRecipe}. Draws info about the required level and skill as well as an lava bucket icon if lava is required.
  */
-public class ShapedHunterWeaponRecipesWrapper extends HunterWeaponRecipeWrapper {
+public class ShapedHunterWeaponRecipesWrapper extends WeaponTableRecipeWrapper {
 
     private
     @Nonnull

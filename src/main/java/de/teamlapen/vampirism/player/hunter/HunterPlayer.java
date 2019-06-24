@@ -26,6 +26,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import javax.annotation.Nonnull;
@@ -45,27 +46,27 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
      * Don't call before the construction event of the player entity is finished
      */
     public static HunterPlayer get(@Nonnull EntityPlayer player) {
-        return (HunterPlayer) player.getCapability(CAP, null);
+        return (HunterPlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get HunterPlayer from player"));
     }
 
     public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IHunterPlayer.class, new Storage(), HunterPlayerDefaultImpl.class);
+        CapabilityManager.INSTANCE.register(IHunterPlayer.class, new Storage(), HunterPlayerDefaultImpl::new);
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
-            IHunterPlayer inst = new HunterPlayer(player);
-
+            final IHunterPlayer inst = new HunterPlayer(player);
+            final LazyOptional<IHunterPlayer> opt = LazyOptional.of(() -> inst);
             @Override
             public void deserializeNBT(NBTTagCompound nbt) {
                 CAP.getStorage().readNBT(CAP, inst, null, nbt);
             }
 
+            @Nonnull
             @Override
-            public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
-                return capability == CAP ? CAP.<T>cast(inst) : null;
+            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+                return CAP.orEmpty(capability, opt);
             }
 
             @Override
@@ -157,9 +158,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (DamageSource.ON_FIRE.equals(src) || DamageSource.IN_FIRE.equals(src)) {
-            if (ItemObsidianArmor.isFullyEquipped(player)) {
-                return true;
-            }
+            return ItemObsidianArmor.isFullyEquipped(player);
         }
         return false;
     }

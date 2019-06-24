@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.SoundType;
@@ -20,10 +19,12 @@ import java.util.List;
 
 public class BlockCastleStairs extends BlockStairs {
     private final static String REGNAME_BASE = "castle_stairs_";
+    private final BlockCastleBlock.EnumVariant variant;
 
     public BlockCastleStairs(IBlockState state, String name) {
         super(state, Properties.create(Material.ROCK).hardnessAndResistance(2, 10).sound(SoundType.STONE));
         setRegistryName(REFERENCE.MODID, REGNAME_BASE + name);
+        variant = ((BlockCastleBlock) state.getBlock()).getVariant();
     }
 
 
@@ -31,7 +32,7 @@ public class BlockCastleStairs extends BlockStairs {
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader player, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(new TextComponentTranslation(ModBlocks.castle_block.getTranslationKey() + (this.equals(ModBlocks.castle_stairs_dark_stone) ? ".no_spawn" : ".vampire_spawn")).applyTextStyle(TextFormatting.ITALIC));
+        tooltip.add(new TextComponentTranslation(getTranslationKey() + (variant == BlockCastleBlock.EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).applyTextStyle(TextFormatting.ITALIC));
 
     }
 

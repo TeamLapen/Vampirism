@@ -14,6 +14,8 @@ import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
+import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -22,6 +24,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -83,6 +86,7 @@ public class ModEntityEventHandler {
         }
     }
 
+
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (!event.getWorld().isRemote && (event.getEntity() instanceof IAdjustableLevel)) {
@@ -105,7 +109,7 @@ public class ModEntityEventHandler {
         //Creeper AI changes for AvoidedByCreepers Skill
         if (!event.getWorld().isRemote && !Balance.vps.DISABLE_AVOIDED_BY_CREEPERS) {
             if (event.getEntity() instanceof EntityCreeper) {
-                ((EntityCreeper) event.getEntity()).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.getEntity(), EntityPlayer.class, input -> input != null && VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers, 20, 1.1, 1.3));
+                ((EntityCreeper) event.getEntity()).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.getEntity(), EntityPlayer.class, 20, 1.1, 1.3, input -> input != null && VampirePlayer.get((EntityPlayer) input).getSpecialAttributes().avoided_by_creepers));
 
                 EntityAIBase target = null;
                 for (EntityAITasks.EntityAITaskEntry t : ((EntityCreeper) event.getEntity()).targetTasks.taskEntries) {
@@ -128,6 +132,14 @@ public class ModEntityEventHandler {
 
         if (event.getEntity() instanceof IMinionLordWithSaveable) {
             ((IMinionLordWithSaveable) event.getEntity()).getSaveableMinionHandler().addLoadedMinions();
+        }
+
+
+        if (event.getEntity() instanceof EntityVillager && !event.getWorld().isRemote) {
+            VampirismVillage village = VampirismVillageHelper.getNearestVillage(event.getWorld(), event.getEntity().getPosition(), 5);
+            if (village != null && village.getControllingFaction() != null && village.getControllingFaction().equals(VReference.HUNTER_FACTION)) {
+                ExtendedCreature.get((EntityCreature) event.getEntity()).setPoisonousBlood(true);
+            }
         }
     }
 

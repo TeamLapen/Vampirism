@@ -20,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.util.EnumHandSide;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
@@ -170,21 +169,21 @@ public class UtilLib {
 
     }
 
-    public static Entity spawnEntityBehindEntity(EntityLivingBase p, ResourceLocation id) {
+    public static <T extends EntityLiving> Entity spawnEntityBehindEntity(EntityLivingBase entity, EntityType<T> toSpawn) {
 
-        BlockPos behind = getPositionBehindEntity(p, 2);
-        EntityLiving e = (EntityLiving) EntityType.create(p.getEntityWorld(), id);
+        BlockPos behind = getPositionBehindEntity(entity, 2);
+        EntityLiving e = toSpawn.create(entity.getEntityWorld());
 
-        e.setPosition(behind.getX(), p.posY, behind.getZ());
+        e.setPosition(behind.getX(), entity.posY, behind.getZ());
 
-        if (e.canSpawn(p.getEntityWorld(), false) && e.isNotColliding()) {
-            p.getEntityWorld().spawnEntity(e);
+        if (e.canSpawn(entity.getEntityWorld(), false) && e.isNotColliding()) {
+            entity.getEntityWorld().spawnEntity(e);
             return e;
         } else {
-            int y = p.getEntityWorld().getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, behind).getY();
+            int y = entity.getEntityWorld().getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, behind).getY();
             e.setPosition(behind.getX(), y, behind.getZ());
-            if (e.canSpawn(p.getEntityWorld(), false) && e.isNotColliding()) {
-                p.getEntityWorld().spawnEntity(e);
+            if (e.canSpawn(entity.getEntityWorld(), false) && e.isNotColliding()) {
+                entity.getEntityWorld().spawnEntity(e);
                 onInitialSpawn(e);
                 return e;
             }
@@ -214,12 +213,12 @@ public class UtilLib {
     /**
      * @param world           World
      * @param box             Area where the creature should spawn
-     * @param e               Entity
+     * @param e               Entity that has a EntityType<? extends EntityLiving>
      * @param maxTry          Max position tried
      * @param avoidedEntities Avoid being to close or seen by these entities. If no valid spawn location is found, this is ignored
      * @return Successful spawn
      */
-    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<EntityLivingBase> avoidedEntities) {
+    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<EntityLivingBase> avoidedEntities) {//TODO this method is only called for EntityLiving -> modify?
         if (!world.isAreaLoaded((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ, true)) {
             return false;
         }
@@ -228,7 +227,7 @@ public class UtilLib {
         BlockPos backupPos=null; //
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
-            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(e.getClass()), world, c)) {
+            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType((EntityType<? extends EntityLiving>) e.getType()), world, c, (EntityType<? extends EntityLiving>) e.getType())) {//TODO i see no other way
                 e.setPosition(c.getX(), c.getY() + 0.2, c.getZ());
                 if (!(e instanceof EntityLiving) || (((EntityLiving) e).canSpawn(world, false) && ((EntityLiving) e).isNotColliding())) {
                     backupPos = c; //Store the location in case we do not find a better one
@@ -258,14 +257,14 @@ public class UtilLib {
     /**
      * @param world           World
      * @param box             Area where the creature should spawn
-     * @param id              ID of entity to be created
+     * @param entityType      EntityType of entity to be created
      * @param maxTry          Max position tried
      * @param avoidedEntities Avoid being to close or seen by these entities. If no valid spawn location is found, this is ignored
      * @return The spawned creature or null if not successful
      */
     @Nullable
-    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, ResourceLocation id, int maxTry, @Nonnull List<EntityLivingBase> avoidedEntities) {
-        Entity e = EntityType.create(world, id);
+    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, EntityType entityType, int maxTry, @Nonnull List<EntityLivingBase> avoidedEntities) {
+        Entity e = entityType.create(world);
         if (spawnEntityInWorld(world, box, e, maxTry,avoidedEntities)) {
             return e;
         } else {

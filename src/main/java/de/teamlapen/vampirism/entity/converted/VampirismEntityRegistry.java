@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -10,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -133,9 +133,9 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         if (i != null) {
             bloodValueMultiplier = i / 10F;
         }
-        final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.create(null);
+        final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.apply(null);
         for (Map.Entry<Class<? extends EntityCreature>, IConvertingHandler> entry : convertibles.entrySet()) {
-            ResourceLocation id = EntityList.getKey(entry.getKey());
+            ResourceLocation id = EntityType.getId(entry.getKey().cast(EntityCreature.class).getType());
             if (id == null) {
                 LOGGER.warn("Cannot register convertible {} since there is no EntityString for it", entry.getKey());
                 continue;

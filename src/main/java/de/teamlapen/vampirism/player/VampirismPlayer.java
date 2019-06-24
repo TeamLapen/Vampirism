@@ -84,7 +84,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
     @Override
     public boolean isRemote() {
         if (player.getEntityWorld() == null) {
-            LOGGER.error(new Throwable("World not loaded").fillInStackTrace(), "Trying to check if remote, but world is not set yet");
+            LOGGER.error("Trying to check if remote, but world is not set yet", new Throwable("World not loaded").fillInStackTrace());
             return false;
         }
         return player.getEntityWorld().isRemote;

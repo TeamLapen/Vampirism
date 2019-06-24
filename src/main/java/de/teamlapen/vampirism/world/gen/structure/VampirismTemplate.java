@@ -23,7 +23,7 @@ public class VampirismTemplate extends Template {
     private ResourceLocation lootTable;
 
     @Override
-    public boolean addBlocksToWorld(IWorld worldIn, BlockPos pos, @Nullable ITemplateProcessor templateProcessor, PlacementSettings placementIn, int flags) {
+    public boolean addBlocksToWorld(IWorld worldIn, BlockPos pos, @Nullable ITemplateProcessor templateProcessor, PlacementSettings placementIn, int flags) {//TODO right return statement
         super.addBlocksToWorld(worldIn, pos, templateProcessor, placementIn, flags);
         if (lootTable != null) {
             boolean flag = false;
@@ -38,9 +38,11 @@ public class VampirismTemplate extends Template {
                 }
             }
             if (!flag) {
-                LOGGER.warn("Loot Table (%s) specified but no chest found", lootTable);
+                LOGGER.warn("Loot Table ({}) specified but no chest found", lootTable);
             }
+            return true;
         }
+        return false;
     }
 
     public void setLootTable(ResourceLocation lootTable) {

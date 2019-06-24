@@ -1,10 +1,9 @@
 package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.inventory.HunterTableContainer;
+import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -55,7 +54,7 @@ public class GuiHunterTable extends GuiContainer {
             text = I18n.format("text.vampirism.ritual_level_wrong");
         } else if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
-            ITextComponent item = missing.getItem().equals(ModItems.pure_blood) ? ModItems.pure_blood.getDisplayName(missing) : new TextComponentTranslation(missing.getTranslationKey() + ".name");
+            ITextComponent item = missing.getItem() instanceof ItemPureBlood ? missing.getDisplayName() : new TextComponentTranslation(missing.getTranslationKey() + ".name");
             text = I18n.format("text.vampirism.ritual_missing_items", missing.getCount(), item.getUnformattedComponentText());
         }
         if (text != null) this.fontRenderer.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);

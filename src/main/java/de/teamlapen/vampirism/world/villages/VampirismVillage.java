@@ -15,6 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,10 +29,10 @@ public class VampirismVillage implements IVampirismVillage {
 
     @CapabilityInject(IVampirismVillage.class)
     @Nonnull
-    public final static Capability<IVampirismVillage> CAP = getNull();
+    private final static Capability<IVampirismVillage> CAP = getNull();
 
     public static VampirismVillage get(Village v) {
-        return (VampirismVillage) v.getCapability(CAP, null);
+        return (VampirismVillage) v.getCapability(CAP).orElseThrow(() -> new IllegalStateException("Cannot get VampirismVillage from Village"));
     }
 
     public static void registerCapability() {
@@ -42,16 +43,17 @@ public class VampirismVillage implements IVampirismVillage {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
             IVampirismVillage inst = new VampirismVillage(village);
+            LazyOptional<IVampirismVillage> opt = LazyOptional.of(() -> inst);
 
             @Override
             public void deserializeNBT(NBTTagCompound nbt) {
                 CAP.getStorage().readNBT(CAP, inst, null, nbt);
             }
 
-            @Nullable
+            @Nonnull
             @Override
-            public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
+            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+                return CAP.orEmpty(capability, opt);
             }
 
             @Override
@@ -186,7 +188,7 @@ public class VampirismVillage implements IVampirismVillage {
         this.tickCounter = (int) worldTime;
 
         if (totemLocation != null && tickCounter % 1024 == 0) {
-            IBlockState state = village.world.getBlockState(totemLocation);//TODO world is private
+            IBlockState state = village.world.getBlockState(totemLocation);
             if (!state.getBlock().equals(ModBlocks.totem_top)) {
                 removeTotemAndReset(totemLocation);
             }

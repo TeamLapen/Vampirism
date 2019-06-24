@@ -82,8 +82,8 @@ public class BloodStats implements IBloodStats {
         FoodStats foodStats = player.getFoodStats();
         foodStats.setFoodLevel(10);
         EnumDifficulty enumDifficulty = player.getEntityWorld().getDifficulty();
-        float exhaustion = foodStats.foodExhaustionLevel;//TODO foodExhaustionLevel is not readable
-        foodStats.foodExhaustionLevel = 0;//TODO foodExhaustionLevel is only additive edible
+        float exhaustion = foodStats.foodExhaustionLevel;
+        foodStats.foodExhaustionLevel = 0;
         addExhaustion(exhaustion);
         this.prevBloodLevel = bloodLevel;
         if (this.bloodExhaustionLevel > 4.0F) {
@@ -174,7 +174,6 @@ public class BloodStats implements IBloodStats {
      * @param ignoreModifier If the entity exhaustion attribute {@link VReference#bloodExhaustion} should be ignored
      */
     void addExhaustion(float amount, boolean ignoreModifier) {
-        VampirePlayer.get(player).checkAttributes(VReference.bloodExhaustion);
         IAttributeInstance attribute = player.getAttribute(VReference.bloodExhaustion);
         float mult;
         if (ignoreModifier) {

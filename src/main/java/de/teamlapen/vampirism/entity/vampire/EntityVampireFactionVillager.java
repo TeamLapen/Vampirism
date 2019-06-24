@@ -33,7 +33,7 @@ public class EntityVampireFactionVillager extends EntityVampireFactionVillagerBa
                     new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood_2, 1), new PriceInfo(1, 1)),
                     new ItemsForHeart(new PriceInfo(1, 5), ModItems.item_coffin, new PriceInfo(1, 1))
             }, {
-            new ItemsForHeart(new PriceInfo(3, 12), new ItemStack(ModItems.blood_bottle, 1, 9), new PriceInfo(1, 15)),
+            new ItemsForHeart(new PriceInfo(3, 12), bloodBottle(1, 9), new PriceInfo(1, 15)),
             new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood_4, 1), new PriceInfo(1, 1)),
             new ItemsForHeart(new PriceInfo(20, 30), new ItemStack(ModItems.pure_blood_3, 1), new PriceInfo(1, 1))
             }, {
@@ -85,6 +85,13 @@ public class EntityVampireFactionVillager extends EntityVampireFactionVillagerBa
             return ArrayUtils.addAll(TRADES[1], TRADES[2]);
         }
         return TRADES[level];//Must not be >2
+    }
+
+    @Deprecated
+    private static ItemStack bloodBottle(int count, int damage) {
+        ItemStack bottle = new ItemStack(ModItems.blood_bottle, count);
+        bottle.setDamage(damage);
+        return bottle;
     }
 
     private static class ItemsForHeart implements ITradeList {

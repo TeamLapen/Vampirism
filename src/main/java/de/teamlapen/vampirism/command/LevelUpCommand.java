@@ -6,7 +6,6 @@ import com.mojang.brigadier.context.CommandContext;
 
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -27,7 +26,7 @@ public class LevelUpCommand extends BasicCommand {
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
                 .executes(context -> {
                     return levelUp(context, Lists.newArrayList(context.getSource().asPlayer()));
-                }).then(Commands.argument("player", EntityArgument.multiplePlayers())
+                }).then(Commands.argument("player", EntityArgument.entities())
                         .executes(context -> {
                             return levelUp(context, EntityArgument.getPlayers(context, "player"));
                         }));
@@ -42,7 +41,7 @@ public class LevelUpCommand extends BasicCommand {
                 context.getSource().sendFeedback(new TextComponentTranslation("command.vampirism.base.levelup.max"), true);
             } else {
                 if (handler.setFactionAndLevel(handler.getCurrentFaction(), handler.getCurrentLevel() + 1)) {
-                    context.getSource().sendFeedback(new TextComponentString(player.getName() + " " + new TextComponentTranslation("commands.vampirism.base.level.isnowa") + " " + handler.getCurrentFaction().getUnlocalizedName() + " " + new TextComponentTranslation("commands.vampirism.base.level.level") + " " + handler.getCurrentLevel()), true);
+                    context.getSource().sendFeedback(new TextComponentString(player.getName() + " " + new TextComponentTranslation("commands.vampirism.base.level.isnowa") + " " + handler.getCurrentFaction().getName() + " " + new TextComponentTranslation("commands.vampirism.base.level.level") + " " + handler.getCurrentLevel()), true);
                 } else {
                     context.getSource().sendErrorMessage(new TextComponentTranslation("commands.vampirism.failed_to_execute"));
                 }

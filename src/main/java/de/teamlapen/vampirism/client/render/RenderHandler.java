@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.render;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
-
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
@@ -17,7 +16,6 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.tileentity.TileTotem;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -43,7 +41,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -59,7 +58,7 @@ public class RenderHandler {
     private final int BLOOD_VISION_FADE_TICKS = 80;
 
     private final int VAMPIRE_BIOME_FADE_TICKS = 160;
-    private final String TAG = "RenderHandler";
+    private final Logger LOGGER = LogManager.getLogger();
     private final List<EntityLivingBase> renderedEntitiesWithBlood = Lists.newLinkedList();
     private final List<EntityLivingBase> renderedEntitiesWithoutBlood = Lists.newLinkedList();
     private final List<EntityLivingBase> renderedEntitiesWithGarlicInfused = Lists.newLinkedList();
@@ -153,7 +152,7 @@ public class RenderHandler {
             if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
                 PotionEffect pe = mc.player.getActivePotionEffect(ModPotions.saturation);
                 boolean active = pe != null && pe.getAmplifier() >= 2;
-                GameRenderer renderer = mc.entityRenderer;
+                GameRenderer renderer = mc.gameRenderer;
                 if (active && !renderer.isShaderActive()) {
                     renderer.loadShader(saturation1);
                 } else if (!active && renderer.isShaderActive() && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
@@ -162,7 +161,7 @@ public class RenderHandler {
             }
         }
 
-        if (shaderWarning) {
+        if (shaderWarning && mc.player != null) {
             shaderWarning = false;
             showedShaderWarning = true;
             mc.player.sendMessage(new TextComponentString("Blood vision does not work on your hardware, because shaders are not supported"));
@@ -416,7 +415,7 @@ public class RenderHandler {
 
             } catch (IOException | JsonSyntaxException ioexception) {
 
-                LOGGER.error(ioexception, "Failed to load shader: {%s}", resourcelocationOutline);
+                LOGGER.error("Failed to load shader", ioexception);
                 this.bloodVisionShader1 = null;
                 this.bloodVisionFrameBuffer1 = null;
                 this.bloodVisionShader2 = null;
@@ -499,7 +498,7 @@ public class RenderHandler {
             double d5 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) partialTicks;
 
             renderManager.setRenderPosition(d3, d4, d5);
-            this.mc.entityRenderer.enableLightmap();
+            this.mc.gameRenderer.enableLightmap();
 
             GlStateManager.depthFunc(519);
             GlStateManager.disableLighting();
@@ -532,7 +531,7 @@ public class RenderHandler {
             GlStateManager.depthFunc(515);
             GlStateManager.enableDepthTest();
             //GlStateManager.enableAlpha();
-            this.mc.entityRenderer.disableLightmap();
+            this.mc.gameRenderer.disableLightmap();
             renderingBloodVision = false;
         }
 

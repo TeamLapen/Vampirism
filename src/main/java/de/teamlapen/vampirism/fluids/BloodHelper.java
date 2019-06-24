@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.fluids;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
@@ -8,10 +7,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 
@@ -20,6 +21,7 @@ import javax.annotation.Nonnull;
  */
 public class BloodHelper {
 
+    private static final Logger LOGGER = LogManager.getLogger(BloodHelper.class);
 
     /**
      * Returns the first stack on the players hotbar that can store blood
@@ -40,8 +42,7 @@ public class BloodHelper {
      * Checks if the given stack can store blood
      */
     public static boolean canStoreBlood(@Nonnull ItemStack stack) {
-        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
-        return handler != null && handler.fill(new FluidStack(ModFluids.blood, 1000), false) > 0;
+        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, 1000), false) > 0).orElse(false);
     }
 
     /**
@@ -65,14 +66,20 @@ public class BloodHelper {
      * Returns the amount of blood stored in the given stack
      */
     public static int getBlood(@Nonnull ItemStack stack) {
-        FluidStack stack1 = FluidUtil.getFluidContained(stack);
-        return stack1 == null ? 0 : stack1.amount;
+        return FluidUtil.getFluidContained(stack).map(s -> s.amount).orElse(0);
 
     }
 
     public static int getBlood(@Nonnull IFluidHandler cap) {
         FluidStack stack = cap.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), false);
         return stack == null ? 0 : stack.amount;
+    }
+
+    public static int getBlood(@Nonnull LazyOptional<IFluidHandler> opt) {
+        return opt.map(handler -> {
+            FluidStack stack = handler.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), false);
+            return stack == null ? 0 : stack.amount;
+        }).orElse(0);
     }
 
     /**
@@ -86,20 +93,14 @@ public class BloodHelper {
         if (exact && doDrain) {
             if (drain(stack, amount, false, false) != amount) return 0;
         }
-        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
-        if (handler != null) {
+        return FluidUtil.getFluidHandler(stack).map(handler -> {
             FluidStack fluidStack = handler.drain(amount, doDrain);
             return fluidStack == null ? 0 : fluidStack.amount;
-        }
-        return 0;
+        }).orElse(0);
     }
 
     public static int fill(@Nonnull ItemStack stack, int amount, boolean doFill) {
-        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
-        if (handler != null) {
-            return handler.fill(new FluidStack(ModFluids.blood, amount), doFill);
-        }
-        return 0;
+        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, amount), doFill)).orElse(0);
     }
 
     /**
@@ -125,10 +126,10 @@ public class BloodHelper {
         }
         ItemStack glas = getGlassBottleInHotbar(player.inventory);
         if (!glas.isEmpty() && Configs.autoConvertGlasBottles) {
-            ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1, 0);
+            ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
             int filled = fill(bloodBottle, amt, true);
             if (filled == 0) {
-                VampirismMod.log.w("BloodHelper", "Failed to fill blood bottle with blood");
+                LOGGER.warn("Failed to fill blood bottle with blood");
             }
             glas.shrink(1);
             if (glas.isEmpty()) {

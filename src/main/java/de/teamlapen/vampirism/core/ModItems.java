@@ -16,6 +16,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemSpawnEgg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.item.crafting.Ingredient;
@@ -27,9 +28,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -169,6 +167,14 @@ public class ModItems {
     public static final ItemVampireCloak vampire_cloak_black_white = getNull();
     public static final ItemVampireCloak vampire_cloak_white_black = getNull();
 
+    public static final ItemSpawnEgg vampire_spawn_egg = getNull();
+    public static final ItemSpawnEgg vampire_hunter_spawn_egg = getNull();
+    public static final ItemSpawnEgg advanced_vampire_spawn_egg = getNull();
+    public static final ItemSpawnEgg advanced_hunter_spawn_egg = getNull();
+    public static final ItemSpawnEgg ghost_spawn_egg = getNull();
+    public static final ItemSpawnEgg vampire_baron_spawn_egg = getNull();
+    public static final ItemSpawnEgg hunter_trainer_spawn_egg = getNull();
+
 
 
 
@@ -203,10 +209,7 @@ public class ModItems {
                 .addRecipe(ModItems.garlic_beacon_core_improved,
                         ModItems.holy_water_bottle_ultimate, ModItems.garlic_beacon_core)
                 .setRequirements(1, HunterSkills.garlic_beacon_improved).setExperience(2F);
-        cauldronCraftingManager
-                .addRecipe(new ItemStack(ModItems.pure_salt, 4),
-                        new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), null)
-                .setRequirements(1, HunterSkills.basic_alchemy).setCookingTime(20 * 60);
+        //cauldronCraftingManager.addRecipe(new ItemStack(ModItems.pure_salt, 4),new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), null).setRequirements(1, HunterSkills.basic_alchemy).setCookingTime(20 * 60); TODO 1.14 fluid
 
         // Brewing
         BrewingRecipeRegistry.addRecipe(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), PotionTypes.WATER), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
@@ -396,7 +399,13 @@ public class ModItems {
         registry.register(new ItemVampireCloak(ItemVampireCloak.EnumCloakColor.BLACKWHITE));
         registry.register(new ItemVampireCloak(ItemVampireCloak.EnumCloakColor.WHITEBLACK));
 
-
+        registry.register(new VampirismSpawnEgg(ModEntities.vampire, "vampire_spawn_egg"));
+        registry.register(new VampirismSpawnEgg(ModEntities.vampire_hunter, "vampire_hunter_spawn_egg"));
+        registry.register(new VampirismSpawnEgg(ModEntities.advanced_vampire, "advanced_vampire_spawn_egg"));
+        registry.register(new VampirismSpawnEgg(ModEntities.advanced_hunter, "advanced_hunter_spawn_egg"));
+        registry.register(new VampirismSpawnEgg(ModEntities.vampire_baron, "vampire_baron_spawn_egg"));
+        registry.register(new VampirismSpawnEgg(ModEntities.ghost, "ghost_spawn_egg"));
+        registry.register(new VampirismSpawnEgg(ModEntities.hunter_trainer, "hunter_trainer_spawn_egg"));
     }
 
     static void registerBloodConversionRates() {

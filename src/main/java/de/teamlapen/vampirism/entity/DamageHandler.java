@@ -52,7 +52,7 @@ public class DamageHandler {
         if (strength == EnumStrength.NONE) return;
         EntityLivingBase entity = vampire.getRepresentingEntity();
         entity.addPotionEffect(new PotionEffect(ModPotions.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
-        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isCreative()) return;
+        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).abilities.isCreativeMode) return;
         entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
             entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (multiplier * 20), 1, ambient, false));

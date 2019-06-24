@@ -38,7 +38,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
         if (pos != null) {
             player.setPosition(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-            if (!player.getEntityWorld().getCollisionBoxes(player, player.getBoundingBox()).isEmpty() || player.getEntityWorld().containsAnyLiquid(player.getBoundingBox())) {
+            if (!(player.getEntityWorld().getCollisionBoxes(player, player.getBoundingBox()).findFirst().orElse(null) == null) || player.getEntityWorld().containsAnyLiquid(player.getBoundingBox())) {//TODO verify if true
                 pos = null;
             }
 
@@ -52,7 +52,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
         }
         if (player instanceof EntityPlayerMP) {
             EntityPlayerMP playerMp = (EntityPlayerMP) player;
-            playerMp.mountEntityAndWakeUp();
+            playerMp.disconnect();
             playerMp.setPositionAndUpdate(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
         EntityAreaParticleCloud particleCloud = new EntityAreaParticleCloud(player.getEntityWorld());

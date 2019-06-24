@@ -1,6 +1,5 @@
 package de.teamlapen.lib.lib.util;
 
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityType;
@@ -57,18 +56,10 @@ public abstract class SimpleSpawnerLogic {
     }
 
     public void readFromNbt(NBTTagCompound nbt) {
-        //Compat for 1.10 worlds
-        if (nbt.contains("entity_name")) {
-            String n = nbt.getString("entity_name");
-            if (n.contains("vampirism.")) {
-                entityName = new ResourceLocation(REFERENCE.MODID, n.replace("vampirism.", ""));
-            } else {
-                entityName = null;
-            }
-        } else {
-            String s = nbt.getString("id");
-            entityName = StringUtils.isNullOrEmpty(s) ? null : new ResourceLocation(s);
-        }
+
+        String s = nbt.getString("id");
+        entityName = StringUtils.isNullOrEmpty(s) ? null : new ResourceLocation(s);
+
         minSpawnDelay = nbt.getInt("min_delay");
         maxSpawnDelay = nbt.getInt("max_delay");
         maxNearbyEntities = nbt.getInt("max_nearby");
@@ -158,7 +149,7 @@ public abstract class SimpleSpawnerLogic {
                     }
 
                     if (limitType != null) {
-                        int total = this.getSpawnerWorld().countEntities(limitType, true);
+                        int total = this.getSpawnerWorld().countEntities(limitType.getClass(), limitType.getMaxNumberOfCreature() + 1);//TODO must verify
                         total = total * UtilLib.countPlayerLoadedChunks(this.getSpawnerWorld()) / MOB_COUNT_DIV;
                         if (total > limitType.getMaxNumberOfCreature()) {
                             this.resetTimer();

@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HelperRegistry {
     private final static Logger LOGGER = LogManager.getLogger();
 
-    private final static String TAG = "HelperRegistry";
     private static Map<ResourceLocation, Capability> syncablePlayerCaps = new ConcurrentHashMap<>();
     private static Map<ResourceLocation, Capability> syncableEntityCaps = new ConcurrentHashMap<>();
     private static Set<Capability> playerEventListenerCaps = new ConcurrentSet<>();

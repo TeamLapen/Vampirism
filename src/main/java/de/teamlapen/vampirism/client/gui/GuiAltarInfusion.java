@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -40,7 +39,7 @@ public class GuiAltarInfusion extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        String string = this.tileAltar.hasCustomName() ? this.tileAltar.getName() : I18n.format(this.tileAltar.getName());
+        String string = this.tileAltar.hasCustomName() ? this.tileAltar.getName().getString() : I18n.format(this.tileAltar.getName().getString());
         this.fontRenderer.drawString(string, this.xSize / 2 - this.fontRenderer.getStringWidth(string) / 2 + 6, 6, 4210752);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 4210752);
     }

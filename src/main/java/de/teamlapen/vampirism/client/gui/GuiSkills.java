@@ -17,7 +17,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
@@ -79,7 +79,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         super.confirmResult(result, id);
         if (id == 10) {
             if (result) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));//TODO Dispatcher
                 this.mc.displayGuiScreen(null);
             } else {
                 this.mc.displayGuiScreen(this);
@@ -263,7 +263,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         boolean retur = super.mouseClicked(mouseX, mouseY, mouseButton);
         if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && selected != null) {
             if (skillHandler.canSkillBeEnabled(selected) == ISkillHandler.Result.OK) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));//TODO Dispatcher
                 playSoundEffect(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.7F);
                 return true;
             } else {
@@ -547,7 +547,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     }
 
     private void playSoundEffect(SoundEvent event, float pitch) {
-        mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(event, 1.0F));
+        mc.getSoundHandler().play(SimpleSound.master(event, 1.0F));
     }
 
 }

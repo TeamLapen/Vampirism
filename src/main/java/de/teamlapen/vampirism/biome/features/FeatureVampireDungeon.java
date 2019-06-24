@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.biome.features;
 import de.teamlapen.vampirism.biome.VampirismBiome;
 import de.teamlapen.vampirism.biome.config.VampireDungeonConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
@@ -11,7 +12,7 @@ import de.teamlapen.vampirism.tileentity.TileBloodContainer;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
@@ -111,13 +112,13 @@ public class FeatureVampireDungeon extends Feature<VampireDungeonConfig> {
                         }
 
                         if (solidSides == 1) {
-                            worldIn.setBlockState(blockpos2, Blocks.CHEST.correctFacing(worldIn, blockpos2, Blocks.CHEST.getDefaultState()), 2);
+                            worldIn.setBlockState(blockpos2, Blocks.CHEST.getDefaultState(), 2);
                             TileEntity tileentity1 = worldIn.getTileEntity(blockpos2);
 
                             if (tileentity1 instanceof TileEntityChest) {
                                 ((TileEntityChest) tileentity1).setLootTable(LootHandler.STRUCTURE_VAMPIRE_DUNGEON, rand.nextLong());
                             } else {
-                                LOGGER.warn("Failed to generate dungeon chest at (%s)", VampirismBiome.debug ? blockpos2 : "hidden");
+                                LOGGER.warn("Failed to generate dungeon chest at ({})", VampirismBiome.debug ? blockpos2 : "hidden");
                             }
 
                             break;
@@ -147,7 +148,7 @@ public class FeatureVampireDungeon extends Feature<VampireDungeonConfig> {
                             if (tileentity1 instanceof TileBloodContainer) {
                                 ((TileBloodContainer) tileentity1).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (TileBloodContainer.CAPACITY * rand.nextFloat()))));
                             } else {
-                                LOGGER.warn("Failed to generate blood container in dungeon at (%s)", VampirismBiome.debug ? blockpos2 : "hidden");
+                                LOGGER.warn("Failed to generate blood container in dungeon at ({})", VampirismBiome.debug ? blockpos2 : "hidden");
                             }
 
                             break;
@@ -160,10 +161,10 @@ public class FeatureVampireDungeon extends Feature<VampireDungeonConfig> {
                     int j5 = position.getZ() + rand.nextInt(sizeZ * 2 + 1) - sizeZ;
                     BlockPos blockpos2 = new BlockPos(l4, i5, j5);
 
-                    if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, worldIn, blockpos2)) {
+                    if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, worldIn, blockpos2, ModEntities.vampire)) {
                         EntityAdvancedVampire vampire = new EntityAdvancedVampire(worldIn.getWorld());
                         vampire.setPosition(l4, i5 + 0.3, j5);
-                        if (vampire.getCanSpawnHere()) {
+                        if (vampire.canSpawn(worldIn, true)) {
                             worldIn.spawnEntity(vampire);
                             break;
                         } else {
@@ -174,15 +175,18 @@ public class FeatureVampireDungeon extends Feature<VampireDungeonConfig> {
             }
             worldIn.setBlockState(position, ModBlocks.altar_inspiration.getDefaultState(), 2);
             TileEntity tileentity = worldIn.getTileEntity(position);
-
-            if (tileentity instanceof TileAltarInspiration && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-                tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(new FluidStack(ModFluids.blood, (int) (TileAltarInspiration.CAPACITY * rand.nextFloat())), true);
+            if (tileentity instanceof TileAltarInspiration) {
+                tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
+                    handler.fill(new FluidStack(ModFluids.blood, (int) (TileAltarInspiration.CAPACITY * rand.nextFloat())), true);
+                });
                 VampirismWorldData.get(worldIn.getWorld()).addNewVampireDungeon(position);
+
             } else {
-                LOGGER.warn("Failed to generate altar of inspiration in dungeon at (%s)", VampirismBiome.debug ? position : "hidden");
+                LOGGER.warn("Failed to generate altar of inspiration in dungeon at ({})", VampirismBiome.debug ? position : "hidden");
             }
 
-            if (VampirismBiome.debug) LOGGER.info("Generated vampire dungeon at %s", position);
+
+            if (VampirismBiome.debug) LOGGER.info("Generated vampire dungeon at {}", position);
             return true;
         } else {
             return false;

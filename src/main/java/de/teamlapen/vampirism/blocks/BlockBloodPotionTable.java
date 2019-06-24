@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -31,20 +29,20 @@ public class BlockBloodPotionTable extends VampirismBlock {
     }
 
 
-
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-
+    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
-            if (canUse(playerIn))
-                playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            if (canUse(player)) {
+                //player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ()); 1.14
+            }
             else {
-                playerIn.sendMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
+                player.sendMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
             }
         }
 
         return true;
     }
+
 
     private boolean canUse(EntityPlayer player) {
         IPlayableFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();

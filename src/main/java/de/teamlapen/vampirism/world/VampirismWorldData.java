@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Lists;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.WorldSavedData;
 
 import javax.annotation.Nonnull;
@@ -24,11 +24,12 @@ public class VampirismWorldData extends WorldSavedData {
 
     public static @Nonnull
     VampirismWorldData get(@Nonnull World world) {
-        String s = fileNameForProvider(world.provider);
-        VampirismWorldData data = (VampirismWorldData) world.getPerWorldStorage().getOrLoadData(VampirismWorldData.class, s);
+        String s = fileNameForProvider(world.dimension);
+        DimensionType key = world.getDimension().getType().isVanilla() ? DimensionType.OVERWORLD : world.getDimension().getType();
+        VampirismWorldData data = world.getSavedData(key, VampirismWorldData::new, s);
         if (data == null) {
             data = new VampirismWorldData(world);
-            world.getPerWorldStorage().setData(s, data);
+            world.setSavedData(key, s, data);
         } else {
             data.world = world;
         }
@@ -36,7 +37,7 @@ public class VampirismWorldData extends WorldSavedData {
     }
 
     private static String fileNameForProvider(Dimension provider) {
-        return IDENTIFIER + provider.getDimensionType().getSuffix();
+        return IDENTIFIER + provider.getType().getSuffix();
     }
 
     private final List<BlockPos> vampireDungeons = Lists.newLinkedList();
@@ -47,7 +48,7 @@ public class VampirismWorldData extends WorldSavedData {
     }
 
     private VampirismWorldData(World world) {
-        this(fileNameForProvider(world.provider));
+        this(fileNameForProvider(world.dimension));
         this.world = world;
         this.markDirty();
     }
@@ -83,9 +84,9 @@ public class VampirismWorldData extends WorldSavedData {
         if (nbt.contains("vampire_dungeons")) {
             vampireDungeons.clear();
             NBTTagList dungeons = nbt.getList("vampire_dungeons", 10);
-            for (int i = 0; i < dungeons.tagCount(); i++) {
-                NBTTagCompound tag = dungeons.getCompoundTagAt(i);
-                vampireDungeons.add(NBTUtil.getPosFromTag(tag));
+            for (int i = 0; i < dungeons.size(); i++) {
+                NBTTagCompound tag = dungeons.getCompound(i);
+                vampireDungeons.add(NBTUtil.readBlockPos(tag));
             }
         }
     }
@@ -94,7 +95,7 @@ public class VampirismWorldData extends WorldSavedData {
     public NBTTagCompound write(NBTTagCompound compound) {
         NBTTagList dungeons = new NBTTagList();
         for (BlockPos pos : vampireDungeons) {
-            dungeons.appendTag(NBTUtil.createPosTag(pos));
+            dungeons.add(NBTUtil.writeBlockPos(pos));
         }
         compound.put("vampire_dungeons", dungeons);
         return compound;

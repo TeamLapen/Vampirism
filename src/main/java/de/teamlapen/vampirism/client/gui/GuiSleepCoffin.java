@@ -2,13 +2,11 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.InputEventPacket;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -50,6 +48,6 @@ public class GuiSleepCoffin extends GuiChat {
     }
 
     private void wakeFromSleep() {
-        VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.WAKEUP, ""));
+        VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.WAKEUP, ""));//TODO Dispatcher
     }
 }

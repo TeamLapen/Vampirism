@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.special;
 
-import com.google.common.base.Optional;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
@@ -22,10 +21,12 @@ import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.Heightmap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -36,7 +37,7 @@ import java.util.UUID;
 public class EntityDraculaHalloween extends EntityVampirism {
 
     private final static Logger LOGGER = LogManager.getLogger(EntityDraculaHalloween.class);
-    protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityTameable.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    protected static final DataParameter<java.util.Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityTameable.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private int seen = 0;
     private int hiding = 0;
     private boolean particle = false;
@@ -63,11 +64,11 @@ public class EntityDraculaHalloween extends EntityVampirism {
 
     @Nullable
     public UUID getOwnerId() {
-        return (UUID) ((Optional) this.dataManager.get(OWNER_UNIQUE_ID)).orNull();
+        return this.dataManager.get(OWNER_UNIQUE_ID).orElse(null);
     }
 
     public void setOwnerId(@Nullable UUID p_184754_1_) {
-        this.dataManager.set(OWNER_UNIQUE_ID, Optional.fromNullable(p_184754_1_));
+        this.dataManager.set(OWNER_UNIQUE_ID, Optional.ofNullable(p_184754_1_));
     }
 
     public boolean isParticle() {
@@ -178,7 +179,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
 
     protected void registerData() {
         super.registerData();
-        this.dataManager.register(OWNER_UNIQUE_ID, Optional.absent());
+        this.dataManager.register(OWNER_UNIQUE_ID, Optional.empty());
     }
 
     @Override
@@ -192,7 +193,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
         this.setPosition(behind.getX(), target.posY, behind.getZ());
 
         if (!this.isNotColliding()) {
-            int y = getEntityWorld().getHeight(behind).getY();
+            int y = getEntityWorld().getHeight(Heightmap.Type.WORLD_SURFACE, behind).getY();
             this.setPosition(behind.getX(), y, behind.getZ());
         }
     }

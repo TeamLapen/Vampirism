@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
-import de.teamlapen.vampirism.blocks.BlockBloodContainer;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.tileentity.TileBloodContainer;
 import net.minecraft.block.state.IBlockState;
@@ -16,7 +15,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.HashMap;
@@ -26,6 +24,7 @@ import java.util.Random;
 
 /**
  * Extends the basic (JSON) baked blood container model, by the textured model that fits to the specified fluid and fluid level
+ * TODO 1.14 check
  */
 @OnlyIn(Dist.CLIENT)
 public class BakedBloodContainerModel implements IBakedModel {
@@ -79,9 +78,8 @@ public class BakedBloodContainerModel implements IBakedModel {
         List<BakedQuad> quads = new LinkedList<>();
 
         try {
-            IExtendedBlockState extendedState = (IExtendedBlockState) state;
-            String fluidName = (extendedState == null) ? fluidNameItem : extendedState.getValue(BlockBloodContainer.FLUID_NAME);
-            int fluidLevel = (extendedState == null) ? fluidLevelItem : extendedState.getValue(BlockBloodContainer.FLUID_LEVEL);
+            String fluidName = state.getFluidState().getFluid().toString();//TODO name of Fluid
+            int fluidLevel = state.getFluidState().getLevel();
 
             quads.addAll(baseModel.getQuads(state, side, rand));
             if (fluidLevel > 0 && fluidLevel <= FLUID_LEVELS) {

@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.EntityPolarBear;
@@ -22,6 +23,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.*;
 import net.minecraft.init.Biomes;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -93,7 +95,8 @@ public class ModEntities {
 
     static void registerEntities(IForgeRegistry<EntityType<?>> registry) {
         //simply register EntityType
-        registry.register(prepareEntityType("blinding_bat", EntityType.Builder.create(EntityBlindingBat.class, EntityBlindingBat::new), false));
+        //TODO set right spawnables (if entity should be spawnable through console)
+        registry.register(prepareEntityType("blinding_bat", EntityType.Builder.create(EntityBlindingBat.class, EntityBlindingBat::new), true));
         registry.register(prepareEntityType("ghost", EntityType.Builder.create(EntityGhost.class, EntityGhost::new), true));
         registry.register(prepareEntityType("converted_creature", EntityType.Builder.create(EntityConvertedCreature.class, EntityConvertedCreature::new), false));
         registry.register(prepareEntityType("converted_sheep", EntityType.Builder.create(EntityConvertedSheep.class, EntityConvertedSheep::new), false));
@@ -108,12 +111,12 @@ public class ModEntities {
         registry.register(prepareEntityType("crossbow_arrow", EntityType.Builder.create(EntityCrossbowArrow.class, EntityCrossbowArrow::new), false));
         registry.register(prepareEntityType("particle_cloud", EntityType.Builder.create(EntityAreaParticleCloud.class, EntityAreaParticleCloud::new), false));
         registry.register(prepareEntityType("throwable_item", EntityType.Builder.create(EntityThrowableItem.class, EntityThrowableItem::new), false));
-        registry.register(prepareEntityType("special_dracula_halloween", EntityType.Builder.create(EntityDraculaHalloween.class, EntityDraculaHalloween::new), false));
+        registry.register(prepareEntityType("special_dracula_halloween", EntityType.Builder.create(EntityDraculaHalloween.class, EntityDraculaHalloween::new), true));
         registry.register(prepareEntityType("dark_blood_projectile", EntityType.Builder.create(EntityDarkBloodProjectile.class, EntityDarkBloodProjectile::new), false));
         registry.register(prepareEntityType("soul_orb", EntityType.Builder.create(EntitySoulOrb.class, EntitySoulOrb::new), false));
-        registry.register(prepareEntityType("villager_hunter_faction", EntityType.Builder.create(EntityHunterFactionVillager.class, EntityHunterFactionVillager::new), false));
-        registry.register(prepareEntityType("villager_vampire_faction", EntityType.Builder.create(EntityVampireFactionVillager.class, EntityVampireFactionVillager::new), false));
-        registry.register(prepareEntityType("hunter_trainer_dummy", EntityType.Builder.create(EntityHunterTrainerDummy.class, EntityHunterTrainerDummy::new), false));
+        registry.register(prepareEntityType("villager_hunter_faction", EntityType.Builder.create(EntityHunterFactionVillager.class, EntityHunterFactionVillager::new), true));
+        registry.register(prepareEntityType("villager_vampire_faction", EntityType.Builder.create(EntityVampireFactionVillager.class, EntityVampireFactionVillager::new), true));
+        registry.register(prepareEntityType("hunter_trainer_dummy", EntityType.Builder.create(EntityHunterTrainerDummy.class, EntityHunterTrainerDummy::new), true));
         //RegisterType and add it to biome spawns
         EntityType vampire = prepareEntityType("vampire", EntityType.Builder.create(EntityBasicVampire.class, EntityBasicVampire::new), true);
         EntityType advanced_vampire = prepareEntityType("advanced_vampire", EntityType.Builder.create(EntityAdvancedVampire.class, EntityAdvancedVampire::new), true);
@@ -123,6 +126,30 @@ public class ModEntities {
             e.getSpawns(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
             e.getSpawns(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
         }
+        //Spawns
+        registerSpawns();
+    }
+
+    static void registerSpawns() {
+        EntitySpawnPlacementRegistry.register(blinding_bat, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);//TODO AIR
+        EntitySpawnPlacementRegistry.register(ghost, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);//TODO new BlockTag#cursed_earth
+        EntitySpawnPlacementRegistry.register(converted_creature, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(converted_sheep, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(vampire_hunter, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(advanced_hunter, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(vampire_baron, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(vampire_minion_s, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(dummy_creature, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(villager_converted, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(villager_angry, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(special_dracula_halloween, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(soul_orb, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(villager_hunter_faction, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(villager_vampire_faction, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(hunter_trainer_dummy, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(vampire, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(advanced_vampire, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
+        EntitySpawnPlacementRegistry.register(hunter_trainer, EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
     }
 
     static Biome[] getZombieBiomes() {
@@ -163,7 +190,7 @@ public class ModEntities {
     }
 
     private static <T extends Entity> EntityType<T> prepareEntityType(String id, EntityType.Builder<T> builder, boolean spawnable) {
-        EntityType.Builder<T> type = builder.tracker(80, 1, true);//TODO check if spawn egg works & spawnplacement removed & is oldName needed?
+        EntityType.Builder<T> type = builder.tracker(80, 1, true);
         if (!spawnable)
             type.disableSummoning();
         return type.build(REFERENCE.MODID + ":" + id);

@@ -24,8 +24,13 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
     }
 
     @Override
+    public Class<T> getFactionEntityInterface() {
+        return super.getFactionEntityInterface();
+    }
+
+    @Override
     public Class<T> getFactionPlayerInterface() {
-        return entityInterface;
+        return super.getFactionEntityInterface();
     }
 
     @Override
@@ -40,7 +45,7 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
 
     @Override
     public T getPlayerCapability(EntityPlayer player) {
-        return player.getCapability(playerCapability, null);
+        return player.getCapability(playerCapability, null).orElseThrow(() -> new IllegalStateException("Cannot get Faction Capability"));
     }
 
     @Override

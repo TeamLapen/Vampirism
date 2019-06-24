@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.item.ItemSpawnEgg;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.EnumHand;
@@ -73,7 +73,7 @@ public class EntityHunterTrainerDummy extends EntityVampirism {
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
-        boolean flag = !stack.isEmpty() && stack.getItem() == Items.SPAWN_EGG;
+        boolean flag = !stack.isEmpty() && stack.getItem() instanceof ItemSpawnEgg;
 
         if (!flag && this.isAlive() && !player.isSneaking()) {
             if (!this.world.isRemote) {

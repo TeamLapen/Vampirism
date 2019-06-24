@@ -26,6 +26,8 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -124,7 +126,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     }
 
     @Override
-    public void onLivingUpdate() {
+    public void livingTick() {
         if (getOldVampireTexture() != -1 && this.ticksExisted > 50) {
             setOldVampireTexture(-1);
         }
@@ -136,7 +138,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
             List<EntityItem> list = this.world.getEntitiesWithinAABB(EntityItem.class, this.getBoundingBox().grow(1.0D, 0.0D, 1.0D));
 
             for (EntityItem entityitem : list) {
-                if (!entityitem.isDead && !(entityitem.getItem().isEmpty())) {
+                if (entityitem.isAlive() && !(entityitem.getItem().isEmpty())) {
                     ItemStack itemstack = entityitem.getItem();
                     if (activeCommand.shouldPickupItem(itemstack)) {
                         ItemStack stack1 = this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
@@ -153,7 +155,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
         if (Balance.mobProps.VAMPIRE_MINION_REGENERATE_SECS >= 0 && this.ticksExisted % (Balance.mobProps.VAMPIRE_MINION_REGENERATE_SECS * 20) == 0 && (this.getLastAttackedEntityTime() == 0 || this.getLastAttackedEntityTime() - ticksExisted > 100)) {
             this.heal(2F);
         }
-        super.onLivingUpdate();
+        super.livingTick();
     }
 
     @Override
@@ -164,16 +166,15 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
             this.activateMinionCommand(command);
         }
         if (nbt.contains("CustomName", 8) && nbt.getString("CustomName").length() > 0) {
-            this.tryToSetName(nbt.getString("CustomName"), null);
+            this.tryToSetName(new TextComponentString(nbt.getString("CustomName")), null);
         }
     }
 
     /**
-     * Does not nothing, since minions should not be named normaly. Use {@link #tryToSetName(String, EntityPlayer)} instead
+     * Does not nothing, since minions should not be named normaly. Use {@link #tryToSetName(ITextComponent, EntityPlayer)} instead
      */
     @Override
-    public void setCustomNameTag(String s) {
-
+    public void setCustomName(@Nullable ITextComponent name) {
     }
 
     public void setWantsBlood(boolean wantsBlood) {
@@ -181,15 +182,15 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     }
 
     /**
-     * Replaces {@link #setCustomNameTag(String)}.
+     * Replaces {@link #setCustomName(ITextComponent)}.
      *
      * @param name
      * @param player If this isn't null, checks if the player is the minions lord
      * @return success
      */
-    public boolean tryToSetName(String name, @Nullable EntityPlayer player) {
+    public boolean tryToSetName(ITextComponent name, @Nullable EntityPlayer player) {
         if (player == null || MinionHelper.isLordSafe(this, player)) {
-            super.setCustomNameTag(name);
+            super.setCustomName(name);
             return true;
         }
         return false;
@@ -215,8 +216,8 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     }
 
     @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
+    protected void registerAttributes() {
+        super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(30D);
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MAX_HEALTH);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_MINION_ATTACK_DAMAGE);

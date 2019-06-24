@@ -1,36 +1,37 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.inventory.ShapelessHunterWeaponRecipe;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
+
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.recipes.ShapelessWeaponTableRecipe;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
 
-public class ShapelessHunterWeaponRecipeHandler implements IRecipeHandler<ShapelessHunterWeaponRecipe> {
+public class ShapelessWeaponTableRecipeHandler implements IRecipeHandler<ShapelessWeaponTableRecipe> {
 
     @Nonnull
     @Override
-    public String getRecipeCategoryUid(@Nonnull ShapelessHunterWeaponRecipe recipe) {
+    public String getRecipeCategoryUid(@Nonnull ShapelessWeaponTableRecipe recipe) {
         return VampirismJEIPlugin.HUNTER_WEAPON_RECIPE_UID;
     }
 
     @Nonnull
     @Override
-    public Class<ShapelessHunterWeaponRecipe> getRecipeClass() {
-        return ShapelessHunterWeaponRecipe.class;
+    public Class<ShapelessWeaponTableRecipe> getRecipeClass() {
+        return ShapelessWeaponTableRecipe.class;
     }
 
     @Nonnull
     @Override
-    public IRecipeWrapper getRecipeWrapper(@Nonnull ShapelessHunterWeaponRecipe recipe) {
-        return new ShapelessHunterWeaponRecipeWrapper(recipe);
+    public IRecipeWrapper getRecipeWrapper(@Nonnull ShapelessWeaponTableRecipe recipe) {
+        return new ShapelessWeaponTableRecipeWrapper(recipe);
     }
 
     @Override
-    public boolean isRecipeValid(@Nonnull ShapelessHunterWeaponRecipe recipe) {
+    public boolean isRecipeValid(@Nonnull ShapelessWeaponTableRecipe recipe) {
         int inputCount = 0;
         for (Object input : recipe.recipeItems) {
             if (input instanceof ItemStack && !((ItemStack) input).isEmpty()) {

@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.fluids.FluidBlood;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 public class ModFluids {
     public static Fluid blood = new FluidBlood(VReference.FLUID_BLOOD_NAME);
@@ -12,8 +11,8 @@ public class ModFluids {
 
 
     static void registerFluids() {
-        FluidRegistry.registerFluid(blood);
-        FluidRegistry.registerFluid(impure_blood);
+        //FluidRegistry.registerFluid(blood); TODO 1.14
+        //FluidRegistry.registerFluid(impure_blood); TODO 1.14
         BloodConversionRegistry.registerFluidConversionRatio(VReference.FLUID_IMPURE_BLOOD_NAME, VReference.BLOOD_IMPURE_TO_PURE);
     }
 }

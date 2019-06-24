@@ -10,15 +10,16 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldEventListener;
+import net.minecraft.world.dimension.Dimension;
 
 /**
  * Added to every world
  */
 public class ModWorldEventListener implements IWorldEventListener {
 
-    private final int dimension;
+    private final Dimension dimension;
 
-    public ModWorldEventListener(int dimension) {
+    public ModWorldEventListener(Dimension dimension) {
         this.dimension = dimension;
     }
 

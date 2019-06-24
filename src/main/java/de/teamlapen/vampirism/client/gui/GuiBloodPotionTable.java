@@ -47,7 +47,7 @@ public class GuiBloodPotionTable extends GuiContainer {
         this.buttons.add(this.craftBtn = new GuiButton(0, this.width / 2 - 77, this.height / 2 - 78, 80, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create")) {
             @Override
             public void onClick(double mouseX, double mouseY) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.CRAFT_BLOOD_POTION, ""));
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.CRAFT_BLOOD_POTION, ""));//TODO Dispatcher
             }
         });
         craftBtn.enabled = false;

@@ -29,18 +29,17 @@ public class InventoryHelper {
      * @param inventory
      * @param items     Has to have the same size as the inventory
      * @param amounts   Has to have the same size as the inventory
-     * @param meta      Has to have the same size as the inventory. If any metadata is ok, set this to {@link OreDictionary#WILDCARD_VALUE}. If any value above (including)  a specific one is ok, set this to -(minLevel)
      * @return Null if all items are present otherwise an itemstack which represents the missing items
      */
-    public static ItemStack checkItems(InventorySlot.IInventorySlotInventory inventory, Item[] items, int[] amounts, int[] meta) {
-        if (inventory.getSizeInventory() != amounts.length || amounts.length != meta.length || items.length != amounts.length) {
+    public static ItemStack checkItems(InventorySlot.IInventorySlotInventory inventory, Item[] items, int[] amounts) {
+        if (inventory.getSizeInventory() != amounts.length || items.length != amounts.length) {
             throw new IllegalArgumentException("There has to be one amount and meta value for each slot");
         }
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
-            int actual = stack.isEmpty() ? 0 : (!stack.getItem().equals(items[i]) ? 0 : (meta[i] == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == meta[i] || (meta[i] < 0 && stack.getMetadata() >= (-meta[i]))) ? stack.getCount() : 0);
+            int actual = (!stack.isEmpty() && stack.getItem().equals(items[i])) ? stack.getCount() : 0;
             if (actual < amounts[i]) {
-                return new ItemStack(items[i], amounts[i] - actual, meta[i] == OreDictionary.WILDCARD_VALUE ? 0 : meta[i] < 0 ? -meta[i] : meta[i]);
+                return new ItemStack(items[i], amounts[i] - actual);
             }
         }
         return ItemStack.EMPTY;
