@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
+
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -32,7 +34,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
     private final TIER tier;
 
     public ItemArmorOfSwiftness(EntityEquipmentSlot equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), ArmorMaterial.LEATHER, equipmentSlotIn, new Item.Properties());
+        super(baseRegName, tier.getName(), ArmorMaterial.LEATHER, equipmentSlotIn, new Item.Properties().group(VampirismMod.creativeTab));
         this.tier = tier;
     }
 

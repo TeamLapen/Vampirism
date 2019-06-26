@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockAlchemicalFire;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.client.util.ITooltipFlag;
@@ -28,7 +29,7 @@ public class ItemAlchemicalFire extends VampirismItem {
     private static final String regName = "item_alchemical_fire";
 
     public ItemAlchemicalFire() {
-        super(regName, new Properties());
+        super(regName, new Properties().group(VampirismMod.creativeTab));
     }
 
 

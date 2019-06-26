@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.client.util.ITooltipFlag;
@@ -28,7 +29,7 @@ public class ItemHunterIntel extends VampirismItem {
     private final int level;
 
     public ItemHunterIntel(int level) {
-        super(name + "_" + level, new Properties());
+        super(name + "_" + level, new Properties().group(VampirismMod.creativeTab));
         this.level = level;
         setTranslation_key(name);
     }

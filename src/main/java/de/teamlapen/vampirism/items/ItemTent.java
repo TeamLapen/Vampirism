@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockTent;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.TileTent;
@@ -70,7 +71,7 @@ public class ItemTent extends VampirismItem {
     }
 
     public ItemTent(boolean spawner) {
-        super(spawner ? name : name_spawner, new Properties());
+        super(spawner ? name : name_spawner, new Properties().group(VampirismMod.creativeTab));
         this.spawner = spawner;
     }
 

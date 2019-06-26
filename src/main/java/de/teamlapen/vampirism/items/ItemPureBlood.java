@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -26,7 +27,7 @@ public class ItemPureBlood extends VampirismItem {
     private final int level;
 
     public ItemPureBlood(int level) {
-        super(name + "_" + level, new Properties());
+        super(name + "_" + level, new Properties().group(VampirismMod.creativeTab));
         this.level = level;
         this.setTranslation_key(name);
     }

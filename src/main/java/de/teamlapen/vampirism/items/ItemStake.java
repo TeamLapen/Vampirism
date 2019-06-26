@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.HunterActionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
@@ -26,7 +27,7 @@ public class ItemStake extends VampirismItemWeapon implements IVampireFinisher {
     private final static String regName = "stake";
 
     public ItemStake() {
-        super(regName, ItemTier.WOOD, 1, 0.12F, new Properties());
+        super(regName, ItemTier.WOOD, 1, 0.12F, new Properties().group(VampirismMod.creativeTab));
     }
 
 

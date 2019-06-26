@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockCoffin;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -21,7 +22,7 @@ public class ItemCoffin extends VampirismItem {
     public static final String name = "item_coffin";
 
     public ItemCoffin() {
-        super(name, new ItemInjection.Properties());
+        super(name, new ItemInjection.Properties().group(VampirismMod.creativeTab));
     }
 
 

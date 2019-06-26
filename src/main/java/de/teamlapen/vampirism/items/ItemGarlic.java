@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -18,7 +19,7 @@ public class ItemGarlic extends VampirismItem implements IPlantable {
     private final static String regName = "item_garlic";
 
     public ItemGarlic() {
-        super(regName, new Properties());
+        super(regName, new Properties().group(VampirismMod.creativeTab));
     }
 
     @Override

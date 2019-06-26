@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -37,7 +38,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @param maxDamage Max damage or 0 if unbreakable
      */
     public VampirismItemCrossbow(String regName, int maxDamage) {
-        super(regName, new Properties().maxStackSize(1).defaultMaxDamage(maxDamage));
+        super(regName, new Properties().maxStackSize(1).defaultMaxDamage(maxDamage).group(VampirismMod.creativeTab));
     }
 
     @Override

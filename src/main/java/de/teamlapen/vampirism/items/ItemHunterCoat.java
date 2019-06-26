@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -36,7 +37,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
     private final TIER tier;
 
     public ItemHunterCoat(EntityEquipmentSlot equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), ArmorMaterial.IRON, equipmentSlotIn, new Properties());
+        super(baseRegName, tier.getName(), ArmorMaterial.IRON, equipmentSlotIn, new Properties().group(VampirismMod.creativeTab));
         this.tier = tier;
     }
 

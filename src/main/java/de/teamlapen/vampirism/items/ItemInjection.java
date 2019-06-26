@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
@@ -29,7 +30,7 @@ public class ItemInjection extends VampirismItem {
     private final TYPE type;
 
     public ItemInjection(TYPE type) {
-        super(regName + "_" + type.getName(), new Properties());
+        super(regName + "_" + type.getName(), new Properties().group(VampirismMod.creativeTab));
         this.type = type;
     }
 

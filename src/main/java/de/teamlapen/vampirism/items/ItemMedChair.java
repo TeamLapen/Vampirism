@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockMedChair;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.Block;
@@ -22,7 +23,7 @@ public class ItemMedChair extends VampirismItem {
     private final static String regName = "item_med_chair";
 
     public ItemMedChair() {
-        super(regName, new Properties());
+        super(regName, new Properties().group(VampirismMod.creativeTab));
     }
 
 
