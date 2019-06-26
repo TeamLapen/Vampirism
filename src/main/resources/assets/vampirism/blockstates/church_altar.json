@@ -1,7 +1,7 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:block/church_altar"
+    "model": "vampirism:church_altar"
   },
   "variants": {
     "facing": {
