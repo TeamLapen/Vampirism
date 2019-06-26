@@ -2,9 +2,9 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "bottom": "vampirism:block/castle_block_dark_stone",
-      "top": "vampirism:block/castle_block_dark_stone",
-      "side": "vampirism:block/castle_block_dark_stone"
+      "bottom": "vampirism:block/castle_block_purple_brick",
+      "top": "vampirism:block/castle_block_purple_brick",
+      "side": "vampirism:block/castle_block_purple_brick"
     }
   },
   "variants": {
