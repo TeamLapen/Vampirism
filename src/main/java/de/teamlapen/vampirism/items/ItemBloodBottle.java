@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -35,7 +36,7 @@ public class ItemBloodBottle extends VampirismItem {
      * Set's the registry name and the unlocalized name
      */
     public ItemBloodBottle() {
-        super(name, new Properties().containerItem(Items.GLASS_BOTTLE).defaultMaxDamage(AMOUNT));
+        super(name, new Properties().containerItem(Items.GLASS_BOTTLE).defaultMaxDamage(AMOUNT).group(VampirismMod.creativeTab));
     }
 
 

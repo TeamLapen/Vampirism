@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -38,7 +39,7 @@ public class ItemVampireBook extends VampirismItem {
     }
 
     public ItemVampireBook() {
-        super(regName, new Properties().maxStackSize(1));
+        super(regName, new Properties().maxStackSize(1).group(VampirismMod.creativeTab));
     }
 
     @Override

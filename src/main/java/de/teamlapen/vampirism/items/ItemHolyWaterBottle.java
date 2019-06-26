@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
@@ -20,7 +21,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier 
     private final TIER tier;
 
     public ItemHolyWaterBottle(TIER tier) {
-        this(regName + "_" + tier.getName(), tier, new Properties());
+        this(regName + "_" + tier.getName(), tier, new Properties().group(VampirismMod.creativeTab));
         setTranslation_key(regName);
     }
 

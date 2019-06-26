@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -21,7 +22,7 @@ public class ItemVampireFang extends VampirismItem {
     private static final String name = "vampire_fang";
 
     public ItemVampireFang() {
-        super(name, new Properties());
+        super(name, new Properties().group(VampirismMod.creativeTab));
     }
 
     @Nonnull

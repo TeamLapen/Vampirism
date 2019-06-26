@@ -49,20 +49,20 @@ public class BloodPotions {
 
         //Special body boosts
         //IBloodPotionCategory specialBodyBoost = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_SPECIAL_BODY_BOOSTS, false, "text.vampirism.blood_potion.category.special_body_boost");
-        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "specialSpeed"), IBloodPotionRegistry.CATEGORY_SPECIAL_BODY_BOOSTS, false, MobEffects.SPEED, 15, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 2));
-        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "specialJump"), IBloodPotionRegistry.CATEGORY_SPECIAL_BODY_BOOSTS, false, MobEffects.JUMP_BOOST, 10, new IBloodPotionPropertyRandomizer.SimpleRandomizer(400, 1000, 2));
-        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "specialHealth"), IBloodPotionRegistry.CATEGORY_SPECIAL_BODY_BOOSTS, false, MobEffects.HEALTH_BOOST, 10, new IBloodPotionPropertyRandomizer.SimpleRandomizer(400, 1000, 2));
-        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "specialResistance"), IBloodPotionRegistry.CATEGORY_SPECIAL_BODY_BOOSTS, false, MobEffects.RESISTANCE, 15, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 2));
+        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "special_speed"), IBloodPotionRegistry.CATEGORY_SPECIAL_BODY_BOOSTS, false, MobEffects.SPEED, 15, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 2));
+        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "special_jump"), IBloodPotionRegistry.CATEGORY_SPECIAL_BODY_BOOSTS, false, MobEffects.JUMP_BOOST, 10, new IBloodPotionPropertyRandomizer.SimpleRandomizer(400, 1000, 2));
+        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "special_health"), IBloodPotionRegistry.CATEGORY_SPECIAL_BODY_BOOSTS, false, MobEffects.HEALTH_BOOST, 10, new IBloodPotionPropertyRandomizer.SimpleRandomizer(400, 1000, 2));
+        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "special_resistance"), IBloodPotionRegistry.CATEGORY_SPECIAL_BODY_BOOSTS, false, MobEffects.RESISTANCE, 15, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 2));
         registry.addItemsToCategory(false, IBloodPotionRegistry.CATEGORY_SPECIAL_BODY_BOOSTS, Items.GOLDEN_APPLE, Items.GOLDEN_CARROT);
 
         //Normal vampire skills
         //IBloodPotionCategory normalVampireSkills = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_NORMAL_VAMPIRE_SKILLS, false, "text.vampirism.blood_potion.category.normal_vampire_skills");
-        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "nightVision"), IBloodPotionRegistry.CATEGORY_NORMAL_VAMPIRE_SKILLS, false, MobEffects.NIGHT_VISION, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(600, 6000, 0));
+        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "night_vision"), IBloodPotionRegistry.CATEGORY_NORMAL_VAMPIRE_SKILLS, false, MobEffects.NIGHT_VISION, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(600, 6000, 0));
         registry.addItemsToCategory(false, IBloodPotionRegistry.CATEGORY_NORMAL_VAMPIRE_SKILLS, ModItems.vampire_fang, ModItems.blood_bottle, ModItems.item_coffin);
         //Special vampire skills
         //IBloodPotionCategory specialVampireSkills = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, "text.vampirism.blood_potion.category.special_vampire_skills");
         registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "disguise"), IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, ModPotions.disguise_as_vampire, 5, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 0));
-        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "specialNightVision"), IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, MobEffects.NIGHT_VISION, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(1000, 24000, 0));
+        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "special_night_vision"), IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, MobEffects.NIGHT_VISION, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(1000, 24000, 0));
         registry.addItemsToCategory(false, IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, ModItems.pure_blood_0, ModItems.pure_blood_1, ModItems.pure_blood_2, ModItems.pure_blood_3, ModItems.pure_blood_4);
 
         //Special other effects
@@ -72,12 +72,12 @@ public class BloodPotions {
         //Negative--------------------------------------------------
         //IBloodPotionCategory badOtherEffects = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_OTHERS, true, "text.vampirism.blood_potion.category.bad_others");
         registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "weakness"), IBloodPotionRegistry.CATEGORY_OTHERS, true, MobEffects.WEAKNESS, 30, new IBloodPotionPropertyRandomizer.SimpleRandomizer(600, 6000, 1));
-        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "shortNausea"), IBloodPotionRegistry.CATEGORY_OTHERS, true, MobEffects.NAUSEA, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(300, 700, 0));
+        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "short_nausea"), IBloodPotionRegistry.CATEGORY_OTHERS, true, MobEffects.NAUSEA, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(300, 700, 0));
         registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "slowness"), IBloodPotionRegistry.CATEGORY_OTHERS, true, MobEffects.SLOWNESS, 30, new IBloodPotionPropertyRandomizer.SimpleRandomizer(600, 5000, 0));
         registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "hunger"), IBloodPotionRegistry.CATEGORY_OTHERS, true, MobEffects.HUNGER, 25, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 5000, 0));
-        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "specialWeakness"), IBloodPotionRegistry.CATEGORY_OTHERS, true, MobEffects.WEAKNESS, 15, new IBloodPotionPropertyRandomizer.SimpleRandomizer(600, 1500, 2));
-        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "specialSlowness"), IBloodPotionRegistry.CATEGORY_OTHERS, true, MobEffects.SLOWNESS, 10, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1000, 2));
-        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "longNausea"), IBloodPotionRegistry.CATEGORY_OTHERS, true, MobEffects.NAUSEA, 2, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1000, 2));
+        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "special_weakness"), IBloodPotionRegistry.CATEGORY_OTHERS, true, MobEffects.WEAKNESS, 15, new IBloodPotionPropertyRandomizer.SimpleRandomizer(600, 1500, 2));
+        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "special_slowness"), IBloodPotionRegistry.CATEGORY_OTHERS, true, MobEffects.SLOWNESS, 10, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1000, 2));
+        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "long_nausea"), IBloodPotionRegistry.CATEGORY_OTHERS, true, MobEffects.NAUSEA, 2, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1000, 2));
 
     }
 

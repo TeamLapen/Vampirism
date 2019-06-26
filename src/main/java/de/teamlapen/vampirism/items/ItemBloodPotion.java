@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -29,7 +30,7 @@ public class ItemBloodPotion extends VampirismItem {
     private final static String regName = "blood_potion";
 
     public ItemBloodPotion() {
-        super(regName, new Properties().defaultMaxDamage(1));
+        super(regName, new Properties().defaultMaxDamage(1).group(VampirismMod.creativeTab));
     }
 
 

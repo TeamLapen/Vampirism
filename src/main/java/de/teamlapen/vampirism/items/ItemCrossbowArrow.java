@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
@@ -28,7 +29,7 @@ public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossb
 
 
     public ItemCrossbowArrow(EnumArrowType type) {
-        super(regName + "_" + type.getName(), new Properties());
+        super(regName + "_" + type.getName(), new Properties().group(VampirismMod.creativeTab));
         this.type = type;
     }
 

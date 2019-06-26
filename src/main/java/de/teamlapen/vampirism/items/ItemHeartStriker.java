@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.util.Helper;
@@ -25,7 +26,7 @@ public class ItemHeartStriker extends VampirismVampireSword implements IItemWith
     private final TIER tier;
 
     public ItemHeartStriker(TIER tier) {
-        super(regName + "_" + tier.getName(), ItemTier.IRON, 0, 0.0f, new Properties());
+        super(regName + "_" + tier.getName(), ItemTier.IRON, 0, 0.0f, new Properties().group(VampirismMod.creativeTab));
         this.tier = tier;
         this.setTranslation_key(regName);
     }

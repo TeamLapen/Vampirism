@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.ModelHunterHat;
 import net.minecraft.client.renderer.entity.model.ModelBiped;
 import net.minecraft.entity.Entity;
@@ -18,7 +19,7 @@ public class ItemHunterHat extends VampirismHunterArmor {
     private final int type;
 
     public ItemHunterHat(int type) {
-        super(baseRegName, "" + type, ArmorMaterial.IRON, EntityEquipmentSlot.HEAD, new Properties());
+        super(baseRegName, "" + type, ArmorMaterial.IRON, EntityEquipmentSlot.HEAD, new Properties().group(VampirismMod.creativeTab));
         this.type = type;
     }
 

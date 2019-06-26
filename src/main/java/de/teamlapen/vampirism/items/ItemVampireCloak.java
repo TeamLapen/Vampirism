@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.ModelCloak;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -37,7 +38,7 @@ public class ItemVampireCloak extends ItemArmor {
     private final EnumCloakColor color;
 
     public ItemVampireCloak(EnumCloakColor color) {
-        super(ArmorMaterial.LEATHER, EntityEquipmentSlot.CHEST, new Properties().defaultMaxDamage(0));
+        super(ArmorMaterial.LEATHER, EntityEquipmentSlot.CHEST, new Properties().defaultMaxDamage(0).group(VampirismMod.creativeTab));
         this.setRegistryName(REFERENCE.MODID, registeredName + "_" + color.getName());
         this.color = color;
     }

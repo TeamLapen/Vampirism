@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
@@ -27,7 +28,7 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
 
 
     public ItemHunterAxe(TIER tier) {
-        super(regName + "_" + tier.getName(), ItemTier.IRON, 0.37F, new Properties());
+        super(regName + "_" + tier.getName(), ItemTier.IRON, 0.37F, new Properties().group(VampirismMod.creativeTab));
         this.tier = tier;
         this.setTranslation_key(regName);
     }

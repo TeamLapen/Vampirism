@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.EntityThrowableItem;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,7 +31,7 @@ public class ItemHolyWaterSplashBottle extends ItemHolyWaterBottle implements En
     public final static String regName = "holy_water_splash_bottle";
 
     public ItemHolyWaterSplashBottle(TIER tier) {
-        super(regName + "_" + tier.getName(), tier, new Properties());
+        super(regName + "_" + tier.getName(), tier, new Properties().group(VampirismMod.creativeTab));
         setTranslation_key(regName);
     }
 
