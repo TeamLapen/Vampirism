@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
@@ -47,9 +48,9 @@ public class ModBlocks {
     public static final BlockGarlicBeacon garlic_beacon_weak = getNull();
     public static final BlockGarlicBeacon garlic_beacon_improved = getNull();
 
-    public static final BlockStairs castle_stairs_dark = getNull();
+    public static final BlockStairs castle_stairs_dark_brick = getNull();
     public static final BlockStairs castle_stairs_dark_stone = getNull();
-    public static final BlockStairs castle_stairs_purple = getNull();
+    public static final BlockStairs castle_stairs_purple_brick = getNull();
     public static final BlockCastleSlab castle_slab_dark_stone = getNull();
     public static final BlockCastleSlab castle_slab_dark_brick = getNull();
     public static final BlockCastleSlab castle_slab_purple_brick = getNull();
@@ -69,42 +70,42 @@ public class ModBlocks {
     }
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
-        registry.register(itemBlock(castle_block_dark_brick, new Item.Properties()));
-        registry.register(itemBlock(castle_block_dark_brick_bloody, new Item.Properties()));
-        registry.register(itemBlock(castle_block_dark_stone, new Item.Properties()));
-        registry.register(itemBlock(castle_block_normal_brick, new Item.Properties()));
-        registry.register(itemBlock(castle_block_purple_brick, new Item.Properties()));
+        registry.register(itemBlock(castle_block_dark_brick, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(castle_block_dark_brick_bloody, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(castle_block_dark_stone, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(castle_block_normal_brick, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(castle_block_purple_brick, new Item.Properties().group(VampirismMod.creativeTab)));
 
         registry.register(itemBlock(blood_container, new Item.Properties().maxStackSize(1)));
 
-        registry.register(itemBlock(cursed_earth, new Item.Properties()));
-        registry.register(itemBlock(vampirism_flower_vampire_orchid, new Item.Properties()));
-        registry.register(itemBlock(altar_infusion, new Item.Properties()));
-        registry.register(itemBlock(altar_pillar, new Item.Properties()));
-        registry.register(itemBlock(altar_tip, new Item.Properties()));
-        registry.register(itemBlock(hunter_table, new Item.Properties()));
-        registry.register(itemBlock(church_altar, new Item.Properties()));
-        registry.register(itemBlock(altar_inspiration, new Item.Properties()));
-        registry.register(itemBlock(fire_place, new Item.Properties()));
-        registry.register(itemBlock(weapon_table, new Item.Properties()));
-        registry.register(itemBlock(blood_potion_table, new Item.Properties()));
-        registry.register(itemBlock(sunscreen_beacon, new Item.Properties()));
-        registry.register(itemBlock(alchemical_cauldron, new Item.Properties()));
-        registry.register(itemBlock(garlic_beacon_normal, new Item.Properties()));
-        registry.register(itemBlock(garlic_beacon_improved, new Item.Properties()));
-        registry.register(itemBlock(garlic_beacon_weak, new Item.Properties()));
+        registry.register(itemBlock(cursed_earth, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(vampirism_flower_vampire_orchid, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(altar_infusion, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(altar_pillar, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(altar_tip, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(hunter_table, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(church_altar, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(altar_inspiration, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(fire_place, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(weapon_table, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(blood_potion_table, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(sunscreen_beacon, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(alchemical_cauldron, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(garlic_beacon_normal, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(garlic_beacon_improved, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(garlic_beacon_weak, new Item.Properties().group(VampirismMod.creativeTab)));
 
-        registry.register(itemBlock(castle_stairs_dark, new Item.Properties()));
-        registry.register(itemBlock(castle_stairs_dark_stone, new Item.Properties()));
-        registry.register(itemBlock(castle_stairs_purple, new Item.Properties()));
-        registry.register(itemBlock(blood_pedestal, new Item.Properties()));
-        registry.register(itemBlock(blood_grinder, new Item.Properties()));
-        registry.register(itemBlock(blood_sieve, new Item.Properties()));
-        registry.register(itemBlock(totem_base, new Item.Properties()));
-        registry.register(itemBlock(totem_top, new Item.Properties()));
-        registry.register(itemBlock(castle_slab_dark_brick, new Item.Properties()));
-        registry.register(itemBlock(castle_slab_dark_stone, new Item.Properties()));
-        registry.register(itemBlock(castle_slab_purple_brick, new Item.Properties()));
+        registry.register(itemBlock(castle_stairs_dark_brick, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(castle_stairs_dark_stone, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(castle_stairs_purple_brick, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(blood_pedestal, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(blood_grinder, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(blood_sieve, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(totem_base, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(totem_top, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(castle_slab_dark_brick, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(castle_slab_dark_stone, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(itemBlock(castle_slab_purple_brick, new Item.Properties().group(VampirismMod.creativeTab)));
     }
 
 
@@ -142,9 +143,9 @@ public class ModBlocks {
         registry.register(new BlockGarlicBeacon(BlockGarlicBeacon.Type.IMPROVED));
 
 
-        registry.register(new BlockCastleStairs(castleBlock_dark_brick.getDefaultState(), "dark"));
+        registry.register(new BlockCastleStairs(castleBlock_dark_brick.getDefaultState(), "dark_brick"));
         registry.register(new BlockCastleStairs(castleBlock_dark_stone.getDefaultState(), "dark_stone"));
-        registry.register(new BlockCastleStairs(castleBlock_purple_brick.getDefaultState(), "purple"));
+        registry.register(new BlockCastleStairs(castleBlock_purple_brick.getDefaultState(), "purple_brick"));
         registry.register(new BlockCastleSlab(BlockCastleSlab.EnumVariant.DARK_BRICK));
         registry.register(new BlockCastleSlab(BlockCastleSlab.EnumVariant.PURPLE_BRICK));
         registry.register(new BlockCastleSlab(BlockCastleSlab.EnumVariant.DARK_STONE));

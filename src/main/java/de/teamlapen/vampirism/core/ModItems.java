@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
@@ -147,16 +148,20 @@ public class ModItems {
     public static final ItemObsidianArmor obsidian_armor_legs_ultimate = getNull();
     public static final ItemObsidianArmor obsidian_armor_feet_ultimate = getNull();
 
-    public static final ItemHunterHat hunter_hat0_head = getNull();
-    public static final ItemHunterHat hunter_hat1_head = getNull();
+    public static final ItemHunterHat hunter_hat_head_0 = getNull();
+    public static final ItemHunterHat hunter_hat_head_1 = getNull();
 
     public static final ItemHunterAxe hunter_axe_normal = getNull();
     public static final ItemHunterAxe hunter_axe_enhanced = getNull();
     public static final ItemHunterAxe hunter_axe_ultimate = getNull();
 
 
-    public static final ItemHeartSeeker heart_seeker = getNull();
-    public static final ItemHeartStriker heart_striker = getNull();
+    public static final ItemHeartSeeker heart_seeker_normal = getNull();
+    public static final ItemHeartSeeker heart_seeker_enhanced = getNull();
+    public static final ItemHeartSeeker heart_seeker_ultimate = getNull();
+    public static final ItemHeartStriker heart_striker_normal = getNull();
+    public static final ItemHeartStriker heart_striker_enhanced = getNull();
+    public static final ItemHeartStriker heart_striker_ultimate = getNull();
     public static final VampirismItem blood_infused_iron_ingot = getNull();
     public static final VampirismItem blood_infused_enhanced_iron_ingot = getNull();
     public static final VampirismItem soul_orb_vampire = getNull();
@@ -170,7 +175,7 @@ public class ModItems {
     public static final ItemSpawnEgg vampire_spawn_egg = getNull();
     public static final ItemSpawnEgg vampire_hunter_spawn_egg = getNull();
     public static final ItemSpawnEgg advanced_vampire_spawn_egg = getNull();
-    public static final ItemSpawnEgg advanced_hunter_spawn_egg = getNull();
+    public static final ItemSpawnEgg advanced_vampire_hunter_spawn_egg = getNull();
     public static final ItemSpawnEgg ghost_spawn_egg = getNull();
     public static final ItemSpawnEgg vampire_baron_spawn_egg = getNull();
     public static final ItemSpawnEgg hunter_trainer_spawn_egg = getNull();
@@ -245,8 +250,8 @@ public class ModItems {
 
     static void registerItems(IForgeRegistry<Item> registry) {
         registry.register(new ItemVampireFang());
-        registry.register(new VampirismItemBloodFood("human_heart", 20, 1.2F, new Item.Properties()));
-        registry.register(new VampirismItemBloodFood("weak_human_heart", 10, 0.9F, new Item.Properties()));
+        registry.register(new VampirismItemBloodFood("human_heart", 20, 1.2F, new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(new VampirismItemBloodFood("weak_human_heart", 10, 0.9F, new Item.Properties().group(VampirismMod.creativeTab)));
         registry.register(new ItemBloodBottle());
         registry.register(new ItemTent(true));
         registry.register(new ItemTent(false));
@@ -293,7 +298,7 @@ public class ModItems {
         ItemTechCrossbow enhanced_tech_crossbow = new ItemTechCrossbow("enhanced_tech_crossbow", 1.7F, 4, 450);
         enhanced_tech_crossbow.setEnchantability(ItemTier.DIAMOND);
         registry.register(enhanced_tech_crossbow);
-        registry.register(new VampirismItem("tech_crossbow_ammo_package", new Item.Properties()) {
+        registry.register(new VampirismItem("tech_crossbow_ammo_package", new Item.Properties().group(VampirismMod.creativeTab)) {
 
             @OnlyIn(Dist.CLIENT)
             @Override
@@ -312,7 +317,7 @@ public class ModItems {
         registry.register(new ItemHolyWaterSplashBottle(IItemWithTier.TIER.ENHANCED));
         registry.register(new ItemHolyWaterSplashBottle(IItemWithTier.TIER.ULTIMATE));
 
-        registry.register(new VampirismItem("holy_salt", new Item.Properties()) {
+        registry.register(new VampirismItem("holy_salt", new Item.Properties().group(VampirismMod.creativeTab)) {
 
             @Override
             public boolean hasEffect(ItemStack stack) {
@@ -320,7 +325,7 @@ public class ModItems {
                 return true;
             }
         });
-        registry.register(new VampirismItem("pure_salt", new Item.Properties()));
+        registry.register(new VampirismItem("pure_salt", new Item.Properties().group(VampirismMod.creativeTab)));
 
         registry.register(new VampirismItem("holy_salt_water", new Item.Properties().maxStackSize(1)) {
 
@@ -331,9 +336,9 @@ public class ModItems {
             }
         });
         registry.register(new ItemAlchemicalFire());
-        registry.register(new VampirismItem("garlic_beacon_core", new Item.Properties()));
-        registry.register(new VampirismItem("garlic_beacon_core_improved", new Item.Properties()));
-        registry.register(new VampirismItem("purified_garlic", new Item.Properties()));
+        registry.register(new VampirismItem("garlic_beacon_core", new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(new VampirismItem("garlic_beacon_core_improved", new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(new VampirismItem("purified_garlic", new Item.Properties().group(VampirismMod.creativeTab)));
 
         registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.HEAD, IItemWithTier.TIER.NORMAL));
         registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.CHEST, IItemWithTier.TIER.NORMAL));
@@ -402,7 +407,7 @@ public class ModItems {
         registry.register(new VampirismSpawnEgg(ModEntities.vampire, "vampire_spawn_egg"));
         registry.register(new VampirismSpawnEgg(ModEntities.vampire_hunter, "vampire_hunter_spawn_egg"));
         registry.register(new VampirismSpawnEgg(ModEntities.advanced_vampire, "advanced_vampire_spawn_egg"));
-        registry.register(new VampirismSpawnEgg(ModEntities.advanced_hunter, "advanced_hunter_spawn_egg"));
+        registry.register(new VampirismSpawnEgg(ModEntities.advanced_hunter, "advanced_vampire_hunter_spawn_egg"));
         registry.register(new VampirismSpawnEgg(ModEntities.vampire_baron, "vampire_baron_spawn_egg"));
         registry.register(new VampirismSpawnEgg(ModEntities.ghost, "ghost_spawn_egg"));
         registry.register(new VampirismSpawnEgg(ModEntities.hunter_trainer, "hunter_trainer_spawn_egg"));
