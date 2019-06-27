@@ -1,8 +1,8 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "model": "vampirism:totem_top"
-  },
   "variants": {
+    "": {
+      "model": "vampirism:totem_top"
+    }
   }
 }

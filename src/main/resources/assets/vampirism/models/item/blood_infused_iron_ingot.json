@@ -1,4 +1,6 @@
 {
 	"parent": "item/generated",
-	"texture": "vampirism:item/blood_infused_iron_ingot"
+  "textures": {
+    "layer0": "vampirism:item/blood_infused_iron_ingot"
+  }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "block/crop",
+  "textures": {
+    "crop": "vampirism:block/garlic_stage_3"
+  }
+}

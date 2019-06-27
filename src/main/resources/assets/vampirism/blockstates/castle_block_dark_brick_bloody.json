@@ -1,12 +1,8 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "model": "cube_all",
-    "uvlock": true,
-    "textures": {
-      "all": "vampirism:block/castle_block_dark_brick_bloody"
-    }
-  },
   "variants": {
+    "": {
+      "model": "vampirism:castle_block_dark_brick_bloody"
+    }
   }
 }

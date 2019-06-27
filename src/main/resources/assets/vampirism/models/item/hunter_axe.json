@@ -1,7 +1,7 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "texture": "vampirism:item/hunter_axe"
+    "texture": "vampirism:item/hunter_axe_normal"
   },
   "elements": [
     {

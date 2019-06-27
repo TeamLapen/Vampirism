@@ -2,6 +2,6 @@
 	"parent": "item/generated",
 	"textures": {
           "layer0": "item/leather_chestplate",
-          "layer1": "vampirism:item/swiftness_chestplate_overlay"
+      "layer1": "vampirism:item/swiftness_chest_overlay"
     }
 }

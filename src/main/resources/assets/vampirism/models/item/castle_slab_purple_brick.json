@@ -1,8 +1,3 @@
 {
-  "parent": "block/slab",
-  "textures": {
-    "bottom": "vampirism:block/castle_block_purple_slab",
-    "top": "vampirism:block/castle_block_purple_slab",
-    "side": "vampirism:block/castle_block_purple_brick"
-  }
+  "parent": "vampirism:block/castle_slab_purple_brick"
 }

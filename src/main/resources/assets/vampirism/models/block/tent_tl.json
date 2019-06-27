@@ -3,7 +3,8 @@
   "textures": {
     "light_wool": "block/white_wool",
     "dark_wool": "block/silver_wool",
-    "particle": "block/white_wool"
+    "particle": "block/white_wool",
+    "floor": "vampirism:block/tent/floor_tl"
   },
   "elements": [
     {

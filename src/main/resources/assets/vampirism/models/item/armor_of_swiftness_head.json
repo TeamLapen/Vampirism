@@ -2,6 +2,6 @@
 	"parent": "item/generated",
 	"textures": {
           "layer0": "item/leather_helmet",
-          "layer1": "vampirism:item/swiftness_helmet_overlay"
+      "layer1": "vampirism:item/swiftness_head_overlay"
     }
 }

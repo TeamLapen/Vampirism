@@ -1,4 +1,6 @@
 {
 	"parent": "item/generated",
-	"texture": "vampirism:item/injection_sanguinare"
+  "textures": {
+    "layer0": "vampirism:item/injection_sanguinare"
+  }
 }

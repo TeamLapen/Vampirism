@@ -2,6 +2,7 @@
   "__comment": "Designed by Maxanier",
   "ambientocclusion": false,
   "textures": {
+    "texture": "vampirism:item/heart_seeker_normal"
   },
   "elements": [
     {

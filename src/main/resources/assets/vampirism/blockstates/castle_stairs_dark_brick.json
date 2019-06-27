@@ -1,12 +1,5 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "textures": {
-      "bottom": "vampirism:block/castle_block_dark_brick",
-      "top": "vampirism:block/castle_block_dark_brick",
-      "side": "vampirism:block/castle_block_dark_brick"
-    }
-  },
   "variants": {
     "facing": {
       "east": {
@@ -33,19 +26,19 @@
     },
     "shape": {
       "straight": {
-        "model": "stairs"
+        "model": "vampirism:castle_stairs_dark_brick"
       },
       "outer_right": {
-        "model": "outer_stairs"
+        "model": "vampirism:castle_stairs_dark_brick_outer"
       },
       "outer_left": {
-        "model": "outer_stairs"
+        "model": "vampirism:castle_stairs_dark_brick_outer"
       },
       "inner_right": {
-        "model": "inner_stairs"
+        "model": "vampirism:castle_stairs_dark_brick_inner"
       },
       "inner_left": {
-        "model": "inner_stairs"
+        "model": "vampirism:castle_stairs_dark_brick_inner"
       }
     }
   }

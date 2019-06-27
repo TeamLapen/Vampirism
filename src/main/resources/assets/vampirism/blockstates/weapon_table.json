@@ -3,8 +3,10 @@
   "defaults": {
     "model": "vampirism:weapon_table/weapon_table"
   },
-  "variant": {
+  "variants": {
     "lava": {
+      "0": {
+      },
       "1": {
         "submodel": "vampirism:weapon_table/weapon_table_lava1"
       },

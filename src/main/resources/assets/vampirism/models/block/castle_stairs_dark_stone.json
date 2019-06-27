@@ -1,0 +1,8 @@
+{
+  "parent": "block/stairs",
+  "textures": {
+    "bottom": "vampirism:block/castle_block_dark_stone",
+    "top": "vampirism:block/castle_block_dark_stone",
+    "side": "vampirism:block/castle_block_dark_stone"
+  }
+}

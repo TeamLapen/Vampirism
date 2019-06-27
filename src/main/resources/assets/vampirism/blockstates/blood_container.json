@@ -1,8 +1,8 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "model": "vampirism:blood_container/blood_container"
-  },
   "variants": {
+    "": {
+      "model": "vampirism:blood_container/blood_container"
+    }
   }
 }

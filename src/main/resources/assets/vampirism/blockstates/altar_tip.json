@@ -1,8 +1,8 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "model": "vampirism:altar_tip"
-  },
   "variants": {
+    "": {
+      "model": "vampirism:altar_tip"
+    }
   }
 }

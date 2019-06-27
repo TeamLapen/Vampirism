@@ -71,6 +71,10 @@ public class BlockGrinder extends VampirismBlockContainer {
         return EnumBlockRenderType.MODEL;
     }
 
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
 
 
     @Override

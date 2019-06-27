@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "vampirism:item/hunter_hat1"
+      "layer0": "vampirism:item/hunter_hat_1"
 	}
 }

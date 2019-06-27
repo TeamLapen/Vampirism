@@ -2,7 +2,8 @@
 	"__comment": "Designed by Maxanier",
 	"textures": {
       "texture": "block/stone_bricks",
-      "particle": "block/stone_bricks"
+      "particle": "block/stone_bricks",
+      "filler": "block/bone_block_side"
 	},
 	"elements": [
 		{

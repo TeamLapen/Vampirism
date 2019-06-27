@@ -1,7 +1,7 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "texture": "block/planks_spruce"
+    "texture": "block/spruce_planks"
   },
   "elements": [
     {

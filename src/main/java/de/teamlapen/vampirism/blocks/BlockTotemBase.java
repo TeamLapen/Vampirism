@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -35,5 +36,10 @@ public class BlockTotemBase extends VampirismBlock {
             ModBlocks.totem_top.dropBlockAsItemWithChance(state, world, pos, 1, 0); //Manually drop top, because block is only destroyed not harvested by #removedByPlayer
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 }

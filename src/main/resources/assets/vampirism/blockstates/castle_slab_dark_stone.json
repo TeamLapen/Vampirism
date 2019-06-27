@@ -1,19 +1,15 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "textures": {
-      "bottom": "vampirism:block/castle_block_dark_slab",
-      "top": "vampirism:block/castle_block_dark_slab",
-      "side": "vampirism:block/castle_block_dark_stone"
-    }
-  },
   "variants": {
     "type": {
       "bottom": {
-        "model": "slab"
+        "model": "vampirism:castle_slab_dark_stone"
       },
       "top": {
-        "model": "slab_top"
+        "model": "vampirism:castle_slab_dark_stone_top"
+      },
+      "double": {
+        "model": "vampirism:castle_slab_dark_stone_double"
       }
     }
   }

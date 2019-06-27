@@ -116,6 +116,11 @@ public class BlockMedChair extends VampirismBlock {
         builder.add(FACING, PART);
     }
 
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
 
     public enum EnumPart implements IStringSerializable {
         TOP("top", 0), BOTTOM("bottom", 1);

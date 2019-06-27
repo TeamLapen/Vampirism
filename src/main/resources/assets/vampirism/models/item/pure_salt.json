@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "vampirism:item/pure_salt"
+      "layer0": "vampirism:item/holy_salt"
 	}
 }

@@ -1,6 +1,3 @@
 {
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "vampirism:block/castle_block_purple_brick"
-  }
+  "parent": "vampirism:block/castle_block_purple_brick"
 }

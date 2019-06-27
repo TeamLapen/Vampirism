@@ -1,10 +1,7 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:garlic_beacon",
-    "textures": {
-      "garlic": "vampirism:block/garlic_beacon_inside_improved"
-    }
+    "model": "vampirism:garlic_beacon_improved"
   },
   "variants": {
     "facing": {

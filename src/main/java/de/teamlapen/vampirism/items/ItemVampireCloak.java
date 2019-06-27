@@ -60,7 +60,7 @@ public class ItemVampireCloak extends ItemArmor {
 
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s/%s_%s", registeredName, registeredName,
-                color + ".png");
+                color.getName() + ".png");
     }
 
     @Override
