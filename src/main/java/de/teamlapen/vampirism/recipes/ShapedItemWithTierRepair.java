@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -51,7 +50,10 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
     }
 
     public static class Serializer extends ShapedRecipe.Serializer {
-        private static final ResourceLocation NAME = new ResourceLocation(REFERENCE.MODID, "crafting_itemwithtier_repair");
+        public Serializer() {
+        }
+
+        private static final ResourceLocation NAME = new ResourceLocation(REFERENCE.MODID, "shaped_item_with_tier_repair");
         @Override
         public ShapedRecipe read(ResourceLocation recipeId, JsonObject json) {
             return new ShapedItemWithTierRepair(super.read(recipeId, json));

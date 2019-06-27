@@ -7,16 +7,16 @@
   ],
   "key": {
     "X": {
-      "tag": "forge:ingot/iron"
+      "constant": "vampirism:iron"
     },
     "Y": {
-      "tag": "minecraft:planks"
+      "constant": "vampirism:planks"
     },
     "Z": {
       "item": "minecraft:cauldron"
     },
     "Q": {
-      "tag": "forge:storage_blocks/quartz"
+      "constant": "vampirism:quartz"
 
     }
   },

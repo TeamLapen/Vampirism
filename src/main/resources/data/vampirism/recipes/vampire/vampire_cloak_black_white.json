@@ -1,7 +1,6 @@
 {
   "result": {
-    "item": "vampirism:vampire_cloak_black_white",
-    "data": 2
+    "item": "vampirism:vampire_cloak_black_white"
   },
   "pattern": [
     "YZY",
@@ -18,11 +17,11 @@
     }
     ,
     "Z": {
-      "tag": "forge:gems/diamond"
+      "constant": "vampirism:diamond"
     }
     ,
     "A": {
-      "item": "vampirism:pure_blood"
+      "constant": "vampirism:pure_blood"
     }
   }
 }

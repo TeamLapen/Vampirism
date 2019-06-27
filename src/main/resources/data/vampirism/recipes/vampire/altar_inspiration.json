@@ -16,7 +16,7 @@
       "item": "minecraft:glass_bottle"
     },
     "Z": {
-      "tag": "forge:ingots/iron"
+      "constant": "vampirism:iron"
     }
   }
 }

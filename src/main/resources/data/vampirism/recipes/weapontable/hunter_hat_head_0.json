@@ -1,18 +1,17 @@
 {
   "result": {
-    "item": "vampirism:hunter_hat1"
+    "item": "vampirism:hunter_hat_head_0"
   },
-  "lava": "1",
   "pattern": [
     "    ",
     " YY ",
-    " YY ",
-    "XXXX"
+    "XXXX",
+    "    "
   ],
   "type": "vampirism:shaped_weapon_table_recipe",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "constant": "vampirism:iron"
     },
     "Y": {
       "item": "minecraft:white_wool"

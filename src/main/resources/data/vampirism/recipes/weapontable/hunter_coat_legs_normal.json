@@ -2,7 +2,7 @@
   "result": {
     "item": "vampirism:hunter_coat_legs_normal"
   },
-  "lava": "2",
+  "lava": 2,
   "pattern": [
     "XXXX",
     "XZZX",
@@ -12,10 +12,7 @@
   "type": "vampirism:shaped_weapon_table_recipe",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
-    },
-    "Y": {
-      "item": "minecraft:leather"
+      "constant": "vampirism:iron"
     },
     "Z": {
       "item": "vampirism:item_garlic"

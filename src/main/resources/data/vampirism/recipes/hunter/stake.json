@@ -10,10 +10,10 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "tag": "forge:rods/wooden"
+      "constant": "vampirism:stick"
     },
     "Y": {
-      "tag": "minecraft:planks"
+      "constant": "vampirism:planks"
     }
   }
 }

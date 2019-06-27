@@ -322,7 +322,10 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
     }
 
     public static class Serializer implements IRecipeSerializer<ShapedWeaponTableRecipe> {
-        private static final ResourceLocation NAME = new ResourceLocation(REFERENCE.MODID, "crafting_weapontable");
+        public Serializer() {
+        }
+
+        private static final ResourceLocation NAME = new ResourceLocation(REFERENCE.MODID, "shaped_weapon_table_recipe");
         @Override
         public ShapedWeaponTableRecipe read(ResourceLocation recipeId, JsonObject json) {
             String group = JsonUtils.getString(json, "group", "");

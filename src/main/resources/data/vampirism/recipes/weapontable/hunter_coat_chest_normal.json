@@ -2,7 +2,7 @@
   "result": {
     "item": "vampirism:hunter_coat_chest_normal"
   },
-  "lava": "2",
+  "lava": 2,
   "pattern": [
     "XWWX",
     "XZZX",
@@ -12,7 +12,7 @@
   "type": "vampirism:shaped_weapon_table_recipe",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "constant": "vampirism:iron"
     },
     "Y": {
       "item": "minecraft:leather"

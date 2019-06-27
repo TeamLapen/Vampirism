@@ -10,10 +10,10 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "constant": "vampirism:iron"
     },
     "Y": {
-      "tag": "minecraft:wool"
+      "constant": "vampirism:wool"
     },
     "Z": {
       "item": "minecraft:glass_bottle"

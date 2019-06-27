@@ -5,13 +5,13 @@
   },
   "ingredients": [
     {
-      "tag": "forge:ingots/iron"
+      "constant": "vampirism:iron"
     },
     {
-      "tag": "forge:ingots/iron"
+      "constant": "vampirism:iron"
     },
     {
-      "tag": "forge:ingots/iron"
+      "constant": "vampirism:iron"
     },
     [
       {

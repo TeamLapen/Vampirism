@@ -2,7 +2,7 @@
   "result": {
     "item": "vampirism:crossbow_arrow_vampire_killer"
   },
-  "lava": "1",
+  "lava": 1,
   "type": "vampirism:shaped_weapon_table_recipe",
   "pattern": [
     " X  ",
@@ -12,13 +12,13 @@
   ],
   "key": {
     "X": {
-      "item": "vampirism_item_garlic"
+      "item": "vampirism:item_garlic"
     },
     "Y": {
-      "tag": "forge:ingots/gold"
+      "constant": "vampirism:gold"
     },
     "Z": {
-      "tag": "forge:rods/wooden"
+      "constant": "vampirism:stick"
     },
     "W": {
       "item": "minecraft:feather"

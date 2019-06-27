@@ -2,7 +2,7 @@
   "result": {
     "item": "vampirism:armor_of_swiftness_head_normal"
   },
-  "lava": "1",
+  "lava": 1,
   "pattern": [
     "XXXX",
     "XYYX",
@@ -18,7 +18,6 @@
       "item": "vampirism:item_garlic"
     },
     "Z": {
-      "type": "minecraft:item_nbt",
       "item": "minecraft:potion",
       "nbt": {
         "Potion": "minecraft:swiftness"

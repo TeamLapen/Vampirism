@@ -2,7 +2,7 @@
   "result": {
     "item": "vampirism:hunter_coat_feet_normal"
   },
-  "lava": "2",
+  "lava": 2,
   "pattern": [
     "    ",
     "X  X",

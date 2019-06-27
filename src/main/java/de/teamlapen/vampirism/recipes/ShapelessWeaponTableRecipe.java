@@ -142,7 +142,10 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
     }
 
     public static class Serializer implements IRecipeSerializer<ShapelessWeaponTableRecipe> {
-        private static final ResourceLocation NAME = new ResourceLocation(REFERENCE.MODID, "crafting_weapontable_shapeless");
+        public Serializer() {
+        }
+
+        private static final ResourceLocation NAME = new ResourceLocation(REFERENCE.MODID, "shapeless_weapon_table_recipe");
 
         @Override
         public ShapelessWeaponTableRecipe read(ResourceLocation recipeId, JsonObject json) {

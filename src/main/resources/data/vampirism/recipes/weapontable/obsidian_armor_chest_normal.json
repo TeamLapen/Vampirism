@@ -2,7 +2,7 @@
   "result": {
     "item": "vampirism:obsidian_armor_chest_normal"
   },
-  "lava": "5",
+  "lava": 5,
   "pattern": [
     "ZXXZ",
     "XYYX",
@@ -12,13 +12,13 @@
   "type": "vampirism:shaped_weapon_table_recipe",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
+      "constant": "vampirism:iron"
     },
     "Y": {
-      "tag": "forge:obsidian"
+      "constant": "vampirism:obsidian"
     },
     "Z": {
-      "item": "minecraft_leather"
+      "item": "minecraft:leather"
     }
   }
 }

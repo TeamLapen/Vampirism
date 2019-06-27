@@ -1,9 +1,11 @@
 {
   "result": {
-    "item": "vampirism:hunter_coatlegs_enhanced"
+    "item": "vampirism:hunter_coat_legs_enhanced"
   },
-  "lava": "5",
-  "skill": ["vampirism_enhanced_armor"],
+  "lava": 5,
+  "skill": [
+    "vampirism:enhanced_armor"
+  ],
   "pattern": [
     "XXXX",
     "XZZX",
@@ -13,10 +15,7 @@
   "type": "vampirism:shaped_weapon_table_recipe",
   "key": {
     "X": {
-      "tag": "forge:ingots/iron"
-    },
-    "Y": {
-      "item": "minecraft:leather"
+      "constant": "vampirism:iron"
     },
     "Z": {
       "item": "vampirism:item_garlic"

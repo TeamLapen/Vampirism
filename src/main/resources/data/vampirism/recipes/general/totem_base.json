@@ -10,13 +10,13 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "tag": "minecraft:planks"
+      "constant": "vampirism:planks"
     },
     "Y": {
-      "tag": "forge:obsidian"
+      "constant": "vampirism:obsidian"
     },
     "Z": {
-      "tag": "forge:ingot/iron"
+      "constant": "vampirism:iron"
     }
   }
 }

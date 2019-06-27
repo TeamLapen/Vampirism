@@ -27,10 +27,11 @@
       "item": "minecraft:stone"
     },
     {
-      "item": "minecraft:black_dye"
+      "item": "minecraft:ink_sac",
+      "__comment": "minecraft:black_dye in 1.14"
     },
     {
-      "item": "vampirism:vampirism_flower_orchid"
+      "item": "vampirism:vampirism_flower_vampire_orchid"
     }
   ]
 }

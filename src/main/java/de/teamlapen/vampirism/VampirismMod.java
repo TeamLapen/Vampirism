@@ -222,6 +222,7 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         proxy.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         modCompatLoader.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
+        ModRecipes.init();
     }
 
     private void processIMC(final InterModProcessEvent event) {
