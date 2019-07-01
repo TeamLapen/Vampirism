@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -55,8 +56,8 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
      * Used to store convertible handlers during init
      */
-    private final Map<Class<? extends EntityCreature>, IConvertingHandler> convertibles = new ConcurrentHashMap<>();
-    private final Map<Class<? extends EntityCreature>, String> convertibleOverlay = new ConcurrentHashMap<>();
+    private final Map<EntityType<? extends EntityCreature>, IConvertingHandler> convertibles = new ConcurrentHashMap<>();
+    private final Map<EntityType<? extends EntityCreature>, String> convertibleOverlay = new ConcurrentHashMap<>();
     /**
      * Stores custom extended creature constructors
      */
@@ -80,23 +81,23 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc) {
-        addConvertible(clazz, overlay_loc, (IConvertingHandler) null);
+    public void addConvertible(EntityType<? extends EntityCreature> type, String overlay_loc) {
+        addConvertible(type, overlay_loc, new DefaultConvertingHandler(null));
     }
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, IConvertingHandler.IDefaultHelper helper) {
-        addConvertible(clazz, overlay_loc, defaultConvertingHandlerCreator.apply(helper));
+    public void addConvertible(EntityType<? extends EntityCreature> type, String overlay_loc, IConvertingHandler.IDefaultHelper helper) {
+        addConvertible(type, overlay_loc, defaultConvertingHandlerCreator.apply(helper));
     }
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, @Nonnull IConvertingHandler handler) {
+    public void addConvertible(EntityType<? extends EntityCreature> type, String overlay_loc, @Nonnull IConvertingHandler handler) {
         if (finished) throw new IllegalStateException("Register convertibles during InterModEnqueueEvent");
-        convertibles.put(clazz, handler);
+        convertibles.put(type, (IConvertingHandler) handler);
         if (FMLEnvironment.dist.isClient() && overlay_loc != null) {
-            convertibleOverlay.put(clazz, overlay_loc);
+            convertibleOverlay.put(type, overlay_loc);
         }
     }
 
@@ -135,8 +136,8 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
             bloodValueMultiplier = i / 10F;
         }
         final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.apply(null);
-        for (Map.Entry<Class<? extends EntityCreature>, IConvertingHandler> entry : convertibles.entrySet()) {
-            ResourceLocation id = EntityType.getId(entry.getKey().cast(EntityCreature.class).getType());
+        for (Map.Entry<EntityType<? extends EntityCreature>, IConvertingHandler> entry : convertibles.entrySet()) {
+            ResourceLocation id = entry.getKey().getRegistryName();
             if (id == null) {
                 LOGGER.warn("Cannot register convertible {} since there is no EntityString for it", entry.getKey());
                 continue;
@@ -167,7 +168,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public Map<Class<? extends EntityCreature>, String> getConvertibleOverlay() {
+    public Map<EntityType<? extends EntityCreature>, String> getConvertibleOverlay() {
         return convertibleOverlay;
     }
 
