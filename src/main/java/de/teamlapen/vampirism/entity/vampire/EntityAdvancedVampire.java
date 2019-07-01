@@ -56,9 +56,9 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     /**
      * available actions for AI task & task
      */
-    protected EntityActionHandler<?> entityActionHandler;
-    protected EntityClassType entityclass;
-    protected EntityActionTier entitytier;
+    private final EntityActionHandler<?> entityActionHandler;
+    private final EntityClassType entityclass;
+    private final EntityActionTier entitytier;
 
     public EntityAdvancedVampire(World world) {
         super(ModEntities.advanced_vampire, world, true);
@@ -66,7 +66,10 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.canSuckBloodFromPlayer = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         this.setDontDropEquipment();
-        setupEntityClassnTier();
+        entitytier = EntityActionTier.High;
+        entityclass = EntityClassType.getRandomClass(this.getRNG());
+        IEntityActionUser.applyAttributes(this);
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -162,11 +165,6 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
             getDataManager().set(TYPE, tagCompund.getInt("type"));
             getDataManager().set(NAME, tagCompund.getString("name"));
             getDataManager().set(TEXTURE, tagCompund.getString("texture"));
-        }
-        if (tagCompund.contains("entityclasstype")) {
-            EntityClassType type = EntityClassType.getEntityClassType(tagCompund.getInt("entityclasstype"));
-            if (type != null)
-                entityclass = type;
         }
         if (entityActionHandler != null) {
             entityActionHandler.read(tagCompund);
@@ -277,16 +275,5 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         return entitytier;
     }
 
-    /**
-     * sets entity Tier & Class, applies class modifier
-     */
-    @Nullable
-    protected void setupEntityClassnTier() {
-        this.entityActionHandler = new EntityActionHandler<>(this);
-        entitytier = EntityActionTier.High;
-        entityclass = EntityClassType.getRandomClass(this.getRNG());
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
-    }
+
 }

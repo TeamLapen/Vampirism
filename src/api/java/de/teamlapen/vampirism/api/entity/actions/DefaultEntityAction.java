@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.api.entity.actions;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import javax.annotation.Nonnull;
+
 /**
  * Default implementation of {@link IEntityAction}
  */
@@ -10,7 +12,7 @@ public abstract class DefaultEntityAction extends ForgeRegistryEntry<IEntityActi
     private EntityClassType[] entityClassTypes;
     private EntityActionTier entityActionTier;
 
-    public DefaultEntityAction(EntityActionTier tier, EntityClassType... param) {
+    public DefaultEntityAction(@Nonnull EntityActionTier tier, EntityClassType... param) {
         entityActionTier = tier;
         entityClassTypes = param;
     }
@@ -27,7 +29,8 @@ public abstract class DefaultEntityAction extends ForgeRegistryEntry<IEntityActi
      * @return the actions {@link EntityActionTier}
      */
     @Override
-    public EntityActionTier getTier() {
+    public @Nonnull
+    EntityActionTier getTier() {
         return entityActionTier;
     }
 }

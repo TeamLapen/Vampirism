@@ -52,16 +52,19 @@ public class ModVillages {
 
     static void modifyVillageSize(ChunkGenSettings settings) {
 
-
+        if (!Configs.village_modify) {
+            LOGGER.trace("Not modifying village");
+            return;
+        }
             try {
-                ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, Configs.village_size, SRGNAMES.ChunkGenSettings_villageDistance);
+                ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, Configs.village_distance, SRGNAMES.ChunkGenSettings_villageDistance);
             } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
                 LOGGER.error("Could not modify field 'villageDistance' in ChunkGenSettings", e);
             }
 
 
         try {
-            ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, Configs.village_min_dist, SRGNAMES.ChunkGenSettings_villageSeparation);
+            ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, Configs.village_separation, SRGNAMES.ChunkGenSettings_villageSeparation);
             } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
             LOGGER.error("Could not modify field for villageSeparation in ChunkGenSettings", e);
             }

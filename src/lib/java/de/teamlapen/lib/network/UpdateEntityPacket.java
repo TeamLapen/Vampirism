@@ -14,7 +14,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkEvent;
-import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -91,39 +90,43 @@ public class UpdateEntityPacket implements IMessage {
     public static void handle(final UpdateEntityPacket message, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         EntityPlayer player = ctx.getSender();
-        Validate.notNull(player);
-        ctx.enqueueWork(() -> { //Execute on main thread
-            Entity e = player.getEntityWorld().getEntityByID(message.id);
-            if (e == null) {
-                LOGGER.error("Did not find entity {}", message.id);
-                if (message.playerItself) {
-                    LOGGER.error("Message is meant for player itself, but id mismatch {} {}. Loading anyway.", player.getEntityId(), message.id);
-                    e = player;
-                }
-            }
-            if (e != null) {
-                if (message.data != null) {
-                    ISyncable syncable;
-                    try {
-                        syncable = (ISyncable) e;
-                        syncable.loadUpdateFromNBT(message.data);
-
-                    } catch (ClassCastException ex) {
-                        LOGGER.warn("Target entity {} does not implement ISyncable ({})", e, ex);
+        if (player == null) {
+            LOGGER.error("Cannot handle update package because sending player entity is null. Message: {}", message);
+        } else {
+            ctx.enqueueWork(() -> { //Execute on main thread
+                Entity e = player.getEntityWorld().getEntityByID(message.id);
+                if (e == null) {
+                    LOGGER.error("Did not find entity {}", message.id);
+                    if (message.playerItself) {
+                        LOGGER.error("Message is meant for player itself, but id mismatch {} {}. Loading anyway.", player.getEntityId(), message.id);
+                        e = player;
                     }
                 }
-                if (message.caps != null) {
+                if (e != null) {
+                    if (message.data != null) {
+                        ISyncable syncable;
+                        try {
+                            syncable = (ISyncable) e;
+                            syncable.loadUpdateFromNBT(message.data);
 
-                    for (String key : message.caps.keySet()) {
-                        handleCapability(e, new ResourceLocation(key), message.caps.getCompound(key));
+                        } catch (ClassCastException ex) {
+                            LOGGER.warn("Target entity {} does not implement ISyncable ({})", e, ex);
+                        }
                     }
+                    if (message.caps != null) {
+
+                        for (String key : message.caps.keySet()) {
+                            handleCapability(e, new ResourceLocation(key), message.caps.getCompound(key));
+                        }
 
 
+                    }
                 }
-            }
 
-        });
-        ctx.setPacketHandled(true);
+            });
+            ctx.setPacketHandled(true);
+        }
+
     }
 
     /**

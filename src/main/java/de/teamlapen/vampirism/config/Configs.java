@@ -46,8 +46,8 @@ public class Configs {
     public static boolean playerCanTurnPlayer;
 
 
-    public static int village_size;
-    public static int village_min_dist;
+    public static int village_distance;
+    public static int village_separation;
     public static boolean village_modify;
 
     public static boolean disable_replaceVanillaNightVision;
@@ -142,8 +142,8 @@ public class Configs {
 
         //Village
         village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
-        village_min_dist = main_config.getInt("village_minimum_distance", CATEGORY_VILLAGE, 6, 1, 1000, "Village centers will be at least N chunks apart. Must be smaller than density. Vanilla: 8");
-        village_size = main_config.getInt("village_size", CATEGORY_VILLAGE, 0, 0, 10, "A higher size increases the overall spawn weight of buildings.");
+        village_separation = main_config.getInt("village_separation", CATEGORY_VILLAGE, 8, 1, 100, "Village centers will be at least N chunks apart. Must be smaller than density. Vanilla: 8");
+        village_distance = main_config.getInt("village_distance", CATEGORY_VILLAGE, 32, 1, 100, "");
 
         // Gui
         gui_level_offset_x = main_config.getInt("level_offset_x", CATEGORY_GUI, 0, -250, 250, "X-Offset of the level indicator from the center in pixels");

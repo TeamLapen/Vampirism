@@ -64,9 +64,9 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     /**
      * available actions for AI task & task
      */
-    protected EntityActionHandler<?> entityActionHandler;
-    protected EntityClassType entityclass;
-    protected EntityActionTier entitytier;
+    private final EntityActionHandler<?> entityActionHandler;
+    private final EntityClassType entityclass;
+    private final EntityActionTier entitytier;
 
     private EntityAIBase tasks_avoidHunter;
 
@@ -104,7 +104,10 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         hasArms = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         this.setSize(0.6F, 1.95F);
-        setupEntityClassnTier();
+        entitytier = EntityActionTier.Medium;
+        entityclass = EntityClassType.getRandomClass(this.getRNG());
+        IEntityActionUser.applyAttributes(this);
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Nullable
@@ -219,11 +222,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         } else if (tagCompund.contains("village_defense_area")) {
             this.defendVillage(UtilLib.intToBB(tagCompund.getIntArray("village_defense_area")));
         }
-        if (tagCompund.contains("entityclasstype")) {
-            EntityClassType type = EntityClassType.getEntityClassType(tagCompund.getInt("entityclasstype"));
-            if (type != null)
-                entityclass = type;
-        }
+
         if (entityActionHandler != null) {
             entityActionHandler.read(tagCompund);
         }
@@ -406,16 +405,5 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
     }
 
-    /**
-     * sets entity Tier & Class, applies class modifier
-     */
-    @Nullable
-    protected void setupEntityClassnTier() {
-        this.entityActionHandler = new EntityActionHandler<>(this);
-        entitytier = EntityActionTier.Medium;
-        entityclass = EntityClassType.getRandomClass(this.getRNG());
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
-    }
+
 }

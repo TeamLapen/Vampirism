@@ -47,7 +47,10 @@ public class EntityEventHandler {
 
         if (event.getEntity() instanceof EntityPlayer) {
             for (Capability listener : listeners) {
-                ((IPlayerEventListener) event.getEntity().getCapability(listener, null)).onJoinWorld();
+
+                (event.getEntity().getCapability(listener, null)).ifPresent(cap -> {
+                    ((IPlayerEventListener) cap).onJoinWorld();
+                });
             }
         }
 
@@ -57,7 +60,7 @@ public class EntityEventHandler {
     public void onLivingAttack(LivingAttackEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
             for (Capability listener : listeners) {
-                boolean cancel = ((IPlayerEventListener) event.getEntity().getCapability(listener, null)).onEntityAttacked(event.getSource(), event.getAmount());
+                boolean cancel = (boolean) event.getEntity().getCapability(listener, null).map(cap -> ((IPlayerEventListener) cap).onEntityAttacked(event.getSource(), event.getAmount())).orElse(false);
                 if (cancel) {
                     event.setCanceled(true);
                 }
@@ -69,7 +72,7 @@ public class EntityEventHandler {
     public void onLivingDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
             for (Capability listener : listeners) {
-                ((IPlayerEventListener) event.getEntity().getCapability(listener, null)).onDeath(event.getSource());
+                (event.getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onDeath(event.getSource()));
             }
         }
     }
@@ -78,7 +81,7 @@ public class EntityEventHandler {
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
             for (Capability listener : listeners) {
-                ((IPlayerEventListener) event.getEntity().getCapability(listener, null)).onUpdate();
+                event.getEntity().getCapability(listener, null).ifPresent(cap -> ((IPlayerEventListener) cap).onUpdate());
             }
         }
     }
@@ -86,7 +89,7 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
         for (Capability listener : listeners) {
-            ((IPlayerEventListener) event.getEntity().getCapability(listener, null)).onPlayerClone(event.getOriginal(), event.isWasDeath());
+            (event.getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onPlayerClone(event.getOriginal(), event.isWasDeath()));
         }
 
     }
@@ -94,21 +97,21 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
         for (Capability listener : listeners) {
-            ((IPlayerEventListener) event.getPlayer().getCapability(listener, null)).onPlayerLoggedIn();
+            (event.getPlayer().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onPlayerLoggedIn());
         }
     }
 
     @SubscribeEvent
     public void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event) {
         for (Capability listener : listeners) {
-            ((IPlayerEventListener) event.getPlayer().getCapability(listener, null)).onPlayerLoggedOut();
+            (event.getPlayer().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onPlayerLoggedOut());
         }
     }
 
     @SubscribeEvent
     public void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
         for (Capability listener : listeners) {
-            ((IPlayerEventListener) event.player.getCapability(listener, null)).onUpdatePlayer(event.phase);
+            (event.player.getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onUpdatePlayer(event.phase));
         }
     }
 

@@ -48,9 +48,9 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     /**
      * available actions for AI task & task
      */
-    protected EntityActionHandler<?> entityActionHandler;
-    protected EntityClassType entityclass;
-    protected EntityActionTier entitytier;
+    private final EntityActionHandler<?> entityActionHandler;
+    private final EntityClassType entityclass;
+    private final EntityActionTier entitytier;
 
     public EntityAdvancedHunter(World world) {
         super(ModEntities.advanced_hunter, world, true);
@@ -61,7 +61,10 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
 
 
         this.setDontDropEquipment();
-        setupEntityClassnTier();
+        entitytier = EntityActionTier.High;
+        entityclass = EntityClassType.getRandomClass(this.getRNG());
+        IEntityActionUser.applyAttributes(this);
+        this.entityActionHandler = new EntityActionHandler<>(this);
     }
 
     @Override
@@ -250,16 +253,4 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
         return entitytier;
     }
 
-    /**
-     * sets entity Tier & Class, applies class modifier
-     */
-    @Nullable
-    protected void setupEntityClassnTier() {
-        this.entityActionHandler = new EntityActionHandler<>(this);
-        entitytier = EntityActionTier.High;
-        entityclass = EntityClassType.getRandomClass(this.getRNG());
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entityclass.getHealthModifier());
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entityclass.getDamageModifier());
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entityclass.getSpeedModifier());
-    }
 }

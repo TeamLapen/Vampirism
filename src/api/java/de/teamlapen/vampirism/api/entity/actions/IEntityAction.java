@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.entity.EntityCreature;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import javax.annotation.Nonnull;
+
 /**
  * Actions that can be executed by some of vampirism's entities. Similar to the actions available to the player.
  * DON'T use this interface directly. Use either {@link IInstantAction} or {@link ILastingAction}
@@ -35,6 +37,7 @@ public interface IEntityAction extends IForgeRegistryEntry<IEntityAction> {
     /**
      * @return actions minimum {@link EntityActionTier} for usage
      */
+    @Nonnull
     EntityActionTier getTier();
 
     /**
