@@ -2,7 +2,7 @@
   "result": {
     "item": "vampirism:tech_crossbow_ammo_package"
   },
-  "lava": "1",
+  "lava": 1,
   "pattern": [
     " XZ ",
     "YYYY",
@@ -12,13 +12,13 @@
   "type": "vampirism:shaped_weapon_table_recipe",
   "key": {
     "X": {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     "Y": {
-      "item": "vampirism:crossbow_arrow"
+      "item": "vampirism:crossbow_arrow_normal"
     },
     "Z": {
-      "item": "#PLANKS"
+      "constant": "vampirism:planks"
     }
   }
 }

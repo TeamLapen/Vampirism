@@ -12,12 +12,12 @@
         {
           "type": "item",
           "name": "vampirism:vampire_blood_bottle",
-          "weight": 1
+          "weight": 4
         },
         {
           "type": "item",
           "name": "vampirism:item_garlic",
-          "weight": 1,
+          "weight": 4,
           "functions": [
             {
               "function": "looting_enchant",
@@ -30,23 +30,20 @@
         },
         {
           "type": "item",
-          "name": "vampirism:holy_water_bottle",
-          "weight": 1,
+          "name": "vampirism:holy_water_bottle_enhanced",
+          "weight": 3,
           "functions": [
             {
-              "function": "vampirism:set_item_tier",
-              "tier": "enhanced"
-            },
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate",
-              "conditions": [
-                {
-                  "condition": "random_chance",
-                  "chance": 0.25
-                }
-              ]
-            },
+              "function": "set_nbt",
+              "tag": "{\"splash\":true}"
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "name": "vampirism:holy_water_bottle_ultimate",
+          "weight": 1,
+          "functions": [
             {
               "function": "set_nbt",
               "tag": "{\"splash\":true}"
@@ -56,7 +53,7 @@
         {
           "type": "item",
           "name": "vampirism:holy_salt",
-          "weight": 1,
+          "weight": 4,
           "functions": [
             {
               "function": "set_count",

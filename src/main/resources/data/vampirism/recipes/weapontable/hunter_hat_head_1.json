@@ -1,0 +1,21 @@
+{
+  "result": {
+    "item": "vampirism:hunter_hat_head_1"
+  },
+  "lava": 1,
+  "pattern": [
+    "    ",
+    " YY ",
+    " YY ",
+    "XXXX"
+  ],
+  "type": "vampirism:shaped_weapon_table_recipe",
+  "key": {
+    "X": {
+      "constant": "vampirism:iron"
+    },
+    "Y": {
+      "item": "minecraft:white_wool"
+    }
+  }
+}

@@ -187,6 +187,7 @@ public class ModItems {
 
         // TODO CRAFTING
         //TODO 1.13 probably have to modifiy alchemical cauldron system with item groups /ingridients
+        //TODO 1.13 (rewrite alchemical cauldron recipes to register recipes through json)
         AlchemicalCauldronCraftingManager cauldronCraftingManager = AlchemicalCauldronCraftingManager.getInstance();
 
         // ItemHolyWaterBottle.registerSplashRecipes(holy_water_bottle,

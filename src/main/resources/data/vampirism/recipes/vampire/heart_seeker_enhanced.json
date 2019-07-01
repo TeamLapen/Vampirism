@@ -1,9 +1,6 @@
 {
   "result": {
-    "item": "vampirism:heart_seeker",
-    "nbt": {
-      "tier": "ENHANCED"
-    }
+    "item": "vampirism:heart_seeker_enhanced"
   },
   "pattern": [
     " X ",
@@ -16,7 +13,7 @@
       "item": "vampirism:blood_infused_enhanced_iron_ingot"
     },
     "Y": {
-      "item": "#STICK"
+      "constant": "vampirism:stick"
     }
   }
 }

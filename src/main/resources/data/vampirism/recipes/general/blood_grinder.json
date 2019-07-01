@@ -7,16 +7,16 @@
   ],
   "key": {
     "X": {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     "Y": {
-      "item": "#PLANKS"
+      "constant": "vampirism:planks"
     },
     "Z": {
       "item": "minecraft:hopper"
     },
     "D": {
-      "item": "#DIAMOND"
+      "constant": "vampirism:diamond"
     }
   },
   "result": {

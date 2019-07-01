@@ -1,6 +1,3 @@
 {
-  "parent": "beacon",
-  "textures": {
-    "beacon": "block/cursed_earth"
-  }
+  "parent": "vampirism:block/sunscreen_beacon"
 }

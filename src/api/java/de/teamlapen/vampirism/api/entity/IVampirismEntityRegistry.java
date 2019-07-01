@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,36 +35,36 @@ public interface IVampirismEntityRegistry {
     void addBloodValues(Map<ResourceLocation, Integer> values);
 
     /**
-     * Register a entity class which can be converted using Vampirism's default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
+     * Register a {@link EntityType} which can be converted using Vampirism's default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
      * Requires a blood value to be registered for that creature
      *
-     * @param clazz
+     * @param type
      * @param overlay_loc Location of the overlay texture file
      */
     @ThreadSafeAPI
-    void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc);
+    void addConvertible(EntityType<? extends EntityCreature> type, String overlay_loc);
 
     /**
-     * Register a entity class which can be converted using a default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
+     * Register a {@link EntityType} which can be converted using a default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
      * Requires a blood value to be registered for that creature
      *
-     * @param clazz
+     * @param type
      * @param helper      Helper instance for the DefaultHandler to specify some values for the converted creature
      * @param overlay_loc Location of the overlay texture file
      */
     @ThreadSafeAPI
-    void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, IConvertingHandler.IDefaultHelper helper);
+    void addConvertible(EntityType<? extends EntityCreature> type, String overlay_loc, IConvertingHandler.IDefaultHelper helper);
 
     /**
-     * Register a entity class which can be converted
+     * Register a {@link EntityType} which can be converted
      * Requires a blood value to be registered for that creature
      *
-     * @param clazz
+     * @param type
      * @param overlay_loc Location of the overlay texture file. Only required if Vampirism's default Converted Creature renderer is used, if you handle that stuff yourself, null is just fine.
      * @param handler     Handles the conversion
      */
     @ThreadSafeAPI
-    void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, IConvertingHandler handler);
+    void addConvertible(EntityType<? extends EntityCreature> type, String overlay_loc, IConvertingHandler handler);
 
     /**
      * Registers a custom {@link IExtendedCreatureVampirism} for a entity class
@@ -82,7 +83,7 @@ public interface IVampirismEntityRegistry {
      * @return A map mapping the overlay resource location string to e convertible entity's class
      */
     @OnlyIn(Dist.CLIENT)
-    Map<Class<? extends EntityCreature>, String> getConvertibleOverlay();
+    Map<EntityType<? extends EntityCreature>, String> getConvertibleOverlay();
 
     /**
      * @return The custom constructor registered for the given entity's class. Can be null if none is registered

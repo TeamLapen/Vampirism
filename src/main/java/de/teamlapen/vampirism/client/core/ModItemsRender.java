@@ -18,7 +18,7 @@ public class ModItemsRender {
 		// Swiftness armor
         Minecraft.getInstance().getItemColors().register((stack, tintIndex) -> {
 			if (tintIndex == 0) {
-                return -1;//TODO test if its right
+				return 10511680;
 			} else {
                 switch (((ItemArmorOfSwiftness) stack.getItem()).getVampirismTier()) {
 					case ENHANCED:

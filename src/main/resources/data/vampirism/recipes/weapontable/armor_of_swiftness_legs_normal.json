@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "vampirism:armor_of_swiftness_legs_normal"
+  },
+  "lava": 1,
+  "pattern": [
+    "XXXX",
+    "XYYX",
+    "XZZX",
+    "    "
+  ],
+  "type": "vampirism:shaped_weapon_table_recipe",
+  "key": {
+    "X": {
+      "item": "minecraft:leather"
+    },
+    "Y": {
+      "item": "vampirism:item_garlic"
+    },
+    "Z": {
+      "item": "minecraft:potion",
+      "nbt": {
+        "Potion": "minecraft:swiftness"
+      }
+    }
+  }
+}

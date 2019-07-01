@@ -5,17 +5,16 @@
   },
   "ingredients": [
     {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     {
-      "item": "vampirism:pure_blood",
-      "data": 4
+      "item": "vampirism:pure_blood_4"
     }
   ],
   "type": "minecraft:crafting_shapeless"

@@ -5,30 +5,26 @@
   },
   "ingredients": [
     {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     [
       {
-        "item": "vampirism:pure_blood",
-        "data": 0
+        "item": "vampirism:pure_blood_0"
       },
       {
-        "item": "vampirism:pure_blood",
-        "data": 1
+        "item": "vampirism:pure_blood_1"
       },
       {
-        "item": "vampirism:pure_blood",
-        "data": 2
+        "item": "vampirism:pure_blood_2"
       },
       {
-        "item": "vampirism:pure_blood",
-        "data": 3
+        "item": "vampirism:pure_blood_3"
       }
     ]
   ],

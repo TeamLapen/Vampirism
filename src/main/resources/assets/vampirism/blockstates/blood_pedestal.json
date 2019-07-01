@@ -1,12 +1,8 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "model": "vampirism:block/pedestal"
-  },
   "variants": {
-    "normal": [
-      {
-      }
-    ]
+    "": {
+      "model": "vampirism:blood_pedestal"
+    }
   }
 }

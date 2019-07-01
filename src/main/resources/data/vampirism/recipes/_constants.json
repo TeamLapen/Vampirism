@@ -1,60 +1,70 @@
 [
   {
-    "name": "PLANKS",
-    "ingredient": {
-      "type": "forge:ore_dict",
-      "ore": "plankWood"
-    }
+    "name": "vampirism:iron",
+    "tag": "forge:ingots/iron"
   },
   {
-    "name": "IRON",
-    "ingredient": {
-      "type": "forge:ore_dict",
-      "ore": "ingotIron"
-    }
+    "name": "vampirism:diamond",
+    "tag": "forge:gems/diamond"
   },
   {
-    "name": "IRONBLOCK",
-    "ingredient": {
-      "type": "forge:ore_dict",
-      "ore": "blockIron"
-    }
+    "name": "vampirism:quartz",
+    "tag": "forge:storage_blocks/quartz"
   },
   {
-    "name": "GOLD",
-    "ingredient": {
-      "type": "forge:ore_dict",
-      "ore": "ingotGold"
-    }
+    "name": "vampirism:coal",
+    "tag": "forge:storage_blocks/coal"
   },
   {
-    "name": "DIAMOND",
-    "ingredient": {
-      "type": "forge:ore_dict",
-      "ore": "gemDiamond"
-    }
+    "name": "vampirism:iron_block",
+    "tag": "forge:storage_blocks/iron"
   },
   {
-    "name": "STONEBRICK",
-    "ingredient": {
-      "type": "minecraft:item",
-      "item": "minecraft:stonebrick",
-      "data": 0
-    }
+    "name": "vampirism:stick",
+    "tag": "forge:rods/wooden"
   },
   {
-    "name": "STONE",
-    "ingredient": {
-      "type": "minecraft:item",
-      "item": "minecraft:stone",
-      "data": 0
-    }
+    "name": "vampirism:planks",
+    "tag": "minecraft:planks"
   },
   {
-    "name": "STICK",
-    "ingredient": {
-      "type": "forge:ore_dict",
-      "ore": "stickWood"
-    }
+    "name": "vampirism:logs",
+    "tag": "minecraft:logs"
+  },
+  {
+    "name": "vampirism:wool",
+    "tag": "minecraft:wool"
+  },
+  {
+    "name": "vampirism:gold",
+    "tag": "forge:ingots/gold"
+  },
+  {
+    "name": "vampirism:obsidian",
+    "items": [
+      {
+        "item": "minecraft:obsidian"
+      }
+    ]
+  },
+  {
+    "name": "vampirism:pure_blood",
+    "items": [
+      {
+        "item": "vampirism:pure_blood_0"
+      },
+      {
+        "item": "vampirism:pure_blood_1"
+      },
+      {
+        "item": "vampirism:pure_blood_2"
+      },
+      {
+        "item": "vampirism:pure_blood_3"
+      },
+      {
+        "item": "vampirism:pure_blood_4"
+      }
+    ]
   }
 ]

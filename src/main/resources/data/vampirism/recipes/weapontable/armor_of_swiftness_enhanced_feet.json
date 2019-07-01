@@ -1,11 +1,8 @@
 {
   "result": {
-    "item": "vampirism:armor_of_swiftness_feet",
-    "nbt": {
-      "type": "enhanced"
-    }
+    "item": "vampirism:armor_of_swiftness_feet_enhanced"
   },
-  "lava": "3",
+  "lava": 3,
   "skill": ["vampirism:enhanced_armor"],
   "pattern": [
     "    ",
@@ -22,7 +19,7 @@
       "item": "vampirism:item_garlic"
     },
     "Z": {
-      "item": "minecraft:gold_ingot"
+      "tag": "forge:ingots/gold"
     }
   }
 }

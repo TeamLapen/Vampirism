@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:block/altar_pillar_filled",
+  "textures": {
+    "filler": "block/gold_block"
+  }
+}

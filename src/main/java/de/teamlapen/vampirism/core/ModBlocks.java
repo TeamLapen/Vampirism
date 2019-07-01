@@ -76,8 +76,7 @@ public class ModBlocks {
         registry.register(itemBlock(castle_block_normal_brick, new Item.Properties().group(VampirismMod.creativeTab)));
         registry.register(itemBlock(castle_block_purple_brick, new Item.Properties().group(VampirismMod.creativeTab)));
 
-        registry.register(itemBlock(blood_container, new Item.Properties().maxStackSize(1)));
-
+        registry.register(itemBlock(blood_container, new Item.Properties().maxStackSize(1).group(VampirismMod.creativeTab)));
         registry.register(itemBlock(cursed_earth, new Item.Properties().group(VampirismMod.creativeTab)));
         registry.register(itemBlock(vampirism_flower_vampire_orchid, new Item.Properties().group(VampirismMod.creativeTab)));
         registry.register(itemBlock(altar_infusion, new Item.Properties().group(VampirismMod.creativeTab)));

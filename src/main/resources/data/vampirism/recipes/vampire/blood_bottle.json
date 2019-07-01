@@ -3,14 +3,16 @@
     {
       "type": "forge:not",
       "value": {
-        "type": "config",
+        "type": "vampirism:config_condition",
         "key": "auto_convert_blood_bottles"
       }
     }
   ],
   "result": {
     "item": "vampirism:blood_bottle",
-    "data": 0
+    "nbt": {
+      "damage": 0
+    }
   },
   "pattern": [
     "   ",
@@ -20,8 +22,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "minecraft:glass",
-      "data": 32767
+      "item": "minecraft:glass"
     },
     "Y": {
       "item": "minecraft:rotten_flesh"

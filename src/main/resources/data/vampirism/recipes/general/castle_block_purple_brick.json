@@ -1,0 +1,33 @@
+{
+  "result": {
+    "item": "vampirism:castle_block_purple_brick",
+    "count": 8
+  },
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "vampirism:castle_block_normal_brick"
+    },
+    {
+      "item": "vampirism:castle_block_normal_brick"
+    },
+    {
+      "item": "vampirism:castle_block_normal_brick"
+    },
+    {
+      "item": "vampirism:castle_block_normal_brick"
+    },
+    {
+      "item": "vampirism:castle_block_normal_brick"
+    },
+    {
+      "item": "vampirism:castle_block_normal_brick"
+    },
+    {
+      "item": "vampirism:castle_block_normal_brick"
+    },
+    {
+      "item": "vampirism:vampirism_flower_vampire_orchid"
+    }
+  ]
+}

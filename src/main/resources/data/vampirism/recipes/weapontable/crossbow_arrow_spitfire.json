@@ -1,22 +1,19 @@
 {
   "result": {
-    "item": "vampirism:crossbow_arrow",
-    "nbt": {
-      "type": "spitfire"
-    }
+    "item": "vampirism:crossbow_arrow_spitfire"
   },
-  "level": "1",
-  "lava": "2",
+  "level": 1,
+  "lava": 2,
   "type": "vampirism:shapeless_weapon_table_recipe",
   "ingredients": [
     {
-      "item": "vampirism:crossbow_arrow"
+      "item": "vampirism:crossbow_arrow_normal"
     },
     {
-      "item": "vampirism:alchemical_fire"
+      "item": "vampirism:item_alchemical_fire"
     },
     {
-      "item": "vampirism:crossbow_arrow"
+      "item": "vampirism:crossbow_arrow_normal"
     }
   ]
 }

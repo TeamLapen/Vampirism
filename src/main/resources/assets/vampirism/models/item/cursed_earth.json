@@ -1,3 +1,6 @@
 {
-  "parent": "vampirism:block/cursed_earth"
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "vampirism:block/cursed_earth"
+  }
 }

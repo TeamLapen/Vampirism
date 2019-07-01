@@ -1,11 +1,27 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:block/weapon_table/weapon_table"
+    "model": "vampirism:weapon_table/weapon_table"
   },
   "variants": {
-    "normal": [
-      {}
-    ]
+    "lava": {
+      "0": {
+      },
+      "1": {
+        "submodel": "vampirism:weapon_table/weapon_table_lava1"
+      },
+      "2": {
+        "submodel": "vampirism:weapon_table/weapon_table_lava2"
+      },
+      "3": {
+        "submodel": "vampirism:weapon_table/weapon_table_lava3"
+      },
+      "4": {
+        "submodel": "vampirism:weapon_table/weapon_table_lava4"
+      },
+      "5": {
+        "submodel": "vampirism:weapon_table/weapon_table_lava5"
+      }
+    }
   }
 }

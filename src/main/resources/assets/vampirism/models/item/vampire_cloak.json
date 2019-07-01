@@ -1,9 +1,0 @@
-{
-	"overrides": [
-		{ "predicate": { "color": "red_black" }, "model": "vampirism:item/vampire_cloak_red_black" },
-		{ "predicate": { "color": "black_red" }, "model": "vampirism:item/vampire_cloak_black_red" },
-		{ "predicate": { "color": "black_blue" }, "model": "vampirism:item/vampire_cloak_black_blue" },
-		{ "predicate": { "color": "white_black" }, "model": "vampirism:item/vampire_cloak_white_black" },
-		{ "predicate": { "color": "black_white" }, "model": "vampirism:item/vampire_cloak_black_white" }
-	]
-}

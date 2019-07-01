@@ -47,13 +47,9 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:hunter_axe",
+          "name": "vampirism:hunter_axe_ultimate",
           "weight": 10,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -75,13 +71,9 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_head",
+          "name": "vampirism:armor_of_swiftness_head_ultimate",
           "weight": 10,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -93,13 +85,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_chest",
+          "name": "vampirism:armor_of_swiftness_chest_ultimate",
           "weight": 10,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -111,13 +99,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_legs",
+          "name": "vampirism:armor_of_swiftness_legs_ultimate",
           "weight": 10,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -129,13 +113,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_feet",
+          "name": "vampirism:armor_of_swiftness_feet_ultimate",
           "weight": 10,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -157,13 +137,9 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:hunter_coat_head",
+          "name": "vampirism:hunter_coat_head_ultimate",
           "weight": 10,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -175,13 +151,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:hunter_coat_chest",
+          "name": "vampirism:hunter_coat_chest_ultimate",
           "weight": 10,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -193,13 +165,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:hunter_coat_legs",
+          "name": "vampirism:hunter_coat_legs_ultimate",
           "weight": 10,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -211,13 +179,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:hunter_coat_feet",
+          "name": "vampirism:hunter_coat_feet_ultimate",
           "weight": 10,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -239,13 +203,9 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_head",
+          "name": "vampirism:obsidian_armor_head_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -257,13 +217,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_chest",
+          "name": "vampirism:obsidian_armor_chest_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -275,13 +231,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_legs",
+          "name": "vampirism:obsidian_armor_legs_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -293,13 +245,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_feet",
+          "name": "vampirism:obsidian_armor_feet_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -326,39 +274,18 @@
         },
         {
           "type": "item",
-          "entryName": "vampirism:holy_water_bottle_normal",
-          "name": "vampirism:holy_water_bottle",
-          "weight": 20,
-          "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "normal"
-            }
-          ]
+          "name": "vampirism:holy_water_bottle_normal",
+          "weight": 20
         },
         {
           "type": "item",
-          "entryName": "vampirism:holy_water_bottle_enhanced",
-          "name": "vampirism:holy_water_bottle",
-          "weight": 20,
-          "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "enhanced"
-            }
-          ]
+          "name": "vampirism:holy_water_bottle_enhanced",
+          "weight": 20
         },
         {
           "type": "item",
-          "entryName": "vampirism:holy_water_bottle_ultimate",
-          "name": "vampirism:holy_water_bottle",
-          "weight": 10,
-          "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            }
-          ]
+          "name": "vampirism:holy_water_bottle_ultimate",
+          "weight": 10
         }
       ]
     }

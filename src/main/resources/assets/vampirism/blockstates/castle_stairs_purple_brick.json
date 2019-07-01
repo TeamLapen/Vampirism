@@ -1,0 +1,45 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "facing": {
+      "east": {
+      },
+      "west": {
+        "y": 180,
+        "uvlock": true
+      },
+      "south": {
+        "y": 90,
+        "uvlock": true
+      },
+      "north": {
+        "y": 270,
+        "uvlock": true
+      }
+    },
+    "half": {
+      "bottom": {
+      },
+      "top": {
+        "x": 180
+      }
+    },
+    "shape": {
+      "straight": {
+        "model": "vampirism:castle_stairs_purple_brick"
+      },
+      "outer_right": {
+        "model": "vampirism:castle_stairs_purple_brick_outer"
+      },
+      "outer_left": {
+        "model": "vampirism:castle_stairs_purple_brick_outer"
+      },
+      "inner_right": {
+        "model": "vampirism:castle_stairs_purple_brick_inner"
+      },
+      "inner_left": {
+        "model": "vampirism:castle_stairs_purple_brick_inner"
+      }
+    }
+  }
+}

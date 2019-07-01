@@ -16,8 +16,8 @@
           "weight": 30,
           "functions": [
             {
-              "function": "set_data",
-              "data": 9
+              "function": "set_damage",
+              "damage": 1.0
             }
           ]
         },
@@ -43,13 +43,9 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_head",
+          "name": "vampirism:armor_of_swiftness_head_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -61,13 +57,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_chest",
+          "name": "vampirism:armor_of_swiftness_chest_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -79,13 +71,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_legs",
+          "name": "vampirism:armor_of_swiftness_legs_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -97,13 +85,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_feet",
+          "name": "vampirism:armor_of_swiftness_feet_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -125,13 +109,9 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:hunter_coat_head",
+          "name": "vampirism:hunter_coat_head_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -143,13 +123,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:hunter_coat_chest",
+          "name": "vampirism:hunter_coat_chest_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -161,13 +137,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:hunter_coat_legs",
+          "name": "vampirism:hunter_coat_legs_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -179,13 +151,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:hunter_coat_feet",
+          "name": "vampirism:hunter_coat_feet_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {

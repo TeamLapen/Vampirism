@@ -1,0 +1,6 @@
+{
+  "parent": "block/beacon",
+  "textures": {
+    "beacon": "vampirism:block/cursed_earth"
+  }
+}

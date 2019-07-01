@@ -7,17 +7,16 @@
   ],
   "key": {
     "X": {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     "Y": {
-      "item": "#PLANKS"
+      "constant": "vampirism:planks"
     },
     "Z": {
       "item": "minecraft:cauldron"
     },
     "Q": {
-      "type": "forge:ore_dict",
-      "ore": "blockQuartz"
+      "constant": "vampirism:quartz"
 
     }
   },

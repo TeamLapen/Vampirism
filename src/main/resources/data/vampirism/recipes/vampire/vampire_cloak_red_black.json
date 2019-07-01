@@ -1,7 +1,6 @@
 {
   "result": {
-    "item": "vampirism:vampire_cloak",
-    "data": 0
+    "item": "vampirism:vampire_cloak_red_black"
   },
   "pattern": [
     "YZY",
@@ -11,21 +10,18 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "minecraft:wool",
-      "data": 15
+      "item": "minecraft:black_wool"
     },
     "Y": {
-      "item": "minecraft:wool",
-      "data": 14
+      "item": "minecraft:red_wool"
     }
     ,
     "Z": {
-      "item": "minecraft:diamond"
+      "constant": "vampirism:diamond"
     }
     ,
     "A": {
-      "item": "vampirism:pure_blood",
-      "data": 32767
+      "constant": "vampirism:pure_blood"
     }
   }
 }

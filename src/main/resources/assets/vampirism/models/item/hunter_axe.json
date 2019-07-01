@@ -1,7 +1,7 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "texture": "vampirism:item/hunter_axe"
+    "texture": "vampirism:item/hunter_axe_normal"
   },
   "elements": [
     {
@@ -397,10 +397,5 @@
         0.8
       ]
     }
-  },
-  "overrides": [
-		{ "predicate": { "tier": "normal" }, "model": "vampirism:item/hunter_axe" },
-		{ "predicate": { "tier": "enhanced" }, "model": "vampirism:item/hunter_axe" },
-		{ "predicate": { "tier": "ultimate" }, "model": "vampirism:item/hunter_axe" }
-	]
+  }
 }

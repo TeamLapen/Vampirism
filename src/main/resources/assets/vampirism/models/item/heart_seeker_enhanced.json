@@ -1,4 +1,6 @@
 {
 	"parent": "vampirism:item/heart_seeker_model",
-	"texture": "vampirism:item/heart_seeker_enhanced"
+  "textures": {
+    "texture": "vampirism:item/heart_seeker_enhanced"
+  }
 }

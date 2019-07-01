@@ -2,7 +2,7 @@
   "result": {
     "item": "vampirism:basic_tech_crossbow"
   },
-  "lava": "5",
+  "lava": 5,
   "skill": ["vampirism:tech_weapons"],
   "pattern": [
     "YXXY",
@@ -13,13 +13,13 @@
   "type": "vampirism:shaped_weapon_table_recipe",
   "key": {
     "X": {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     "Y": {
       "item": "minecraft:string"
     },
     "Z": {
-      "item": "#DIAMOND"
+      "constant": "vampirism:diamond"
     }
   }
 }

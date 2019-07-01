@@ -1,7 +1,6 @@
 {
   "result": {
-    "item": "vampirism:garlic_beacon",
-    "data": 1
+    "item": "vampirism:garlic_beacon_improved"
   },
   "pattern": [
     "XYX",
@@ -11,17 +10,16 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "#PLANKS"
+      "constant": "vampirism:planks"
     },
     "Y": {
-      "type": "forge:ore_dict",
-      "ore": "gemDiamond"
+      "constant": "vampirism:diamond"
     },
     "Z": {
       "item": "vampirism:garlic_beacon_core_improved"
     },
     "O": {
-      "item": "minecraft:obsidian"
+      "constant": "vampirism:obsidian"
     }
   }
 }

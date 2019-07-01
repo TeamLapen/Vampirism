@@ -1,4 +1,6 @@
 {
 	"parent": "item/generated",
-	"texture": "vampirism:item/alchemical_fire"
+  "textures": {
+    "layer0": "vampirism:item/alchemical_fire"
+  }
 }

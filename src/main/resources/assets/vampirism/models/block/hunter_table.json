@@ -1,13 +1,13 @@
 {
   "__comment": "Designed by Maxanier",
   "textures": {
-    "top": "block/planks_birch",
-    "material": "block/planks_birch",
-    "feet": "block/log_birch",
-    "potion": "vampirism:items/blood_bottle_9",
-    "garlic": "vampirism:items/garlic",
-    "hunterbook": "vampirism:items/hunter_table_book",
-    "particle": "block/planks_birch"
+    "top": "block/birch_planks",
+    "material": "block/birch_planks",
+    "feet": "block/birch_log",
+    "potion": "vampirism:item/blood_bottle_9",
+    "garlic": "vampirism:item/garlic",
+    "hunterbook": "vampirism:item/hunter_table_book",
+    "particle": "block/birch_planks"
   },
   "elements": [
     {

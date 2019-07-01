@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -79,6 +80,10 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
         return EnumBlockRenderType.MODEL;
     }
 
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
 
     @Override
     public boolean isFullCube(IBlockState state) {
@@ -126,5 +131,4 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
             }
         }
     }
-
 }

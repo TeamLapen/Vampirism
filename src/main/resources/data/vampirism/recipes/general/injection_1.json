@@ -1,12 +1,10 @@
 {
   "result": {
-    "item": "vampirism:injection",
-    "data": 1
+    "item": "vampirism:injection_garlic"
   },
   "ingredients": [
     {
-      "item": "vampirism:injection",
-      "data": 0
+      "item": "vampirism:injection_empty"
     },
     {
       "item": "vampirism:item_garlic"

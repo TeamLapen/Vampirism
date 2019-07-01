@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:block/tent",
+  "textures": {
+    "floor": "vampirism:block/tent/floor_tl"
+  }
+}

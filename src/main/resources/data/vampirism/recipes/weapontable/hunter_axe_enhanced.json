@@ -1,11 +1,8 @@
 {
   "result": {
-    "item": "vampirism:hunter_axe",
-    "nbt": {
-      "type": "enhanced"
-    }
+    "item": "vampirism:hunter_axe_enhanced"
   },
-  "lava": "5",
+  "lava": 5,
   "pattern": [
     "YZY ",
     "YZY ",
@@ -15,13 +12,13 @@
   "type": "vampirism:shaped_weapon_table_recipe",
   "key": {
     "X": {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     "Y": {
       "item": "minecraft:leather"
     },
     "Z": {
-      "item": "#DIAMOND"
+      "constant": "vampirism:diamond"
     }
   }
 }

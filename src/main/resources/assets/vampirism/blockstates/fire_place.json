@@ -1,12 +1,8 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "model": "vampirism:block/fire_place"
-  },
   "variants": {
-    "normal": [
-      {
-      }
-    ]
+    "": {
+      "model": "vampirism:fire_place"
+    }
   }
 }

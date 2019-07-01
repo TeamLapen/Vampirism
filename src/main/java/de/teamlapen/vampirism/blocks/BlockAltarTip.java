@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
@@ -30,6 +31,11 @@ public class BlockAltarTip extends VampirismBlock {
     @Override
     public boolean isFullCube(IBlockState state) {
         return false;
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
 

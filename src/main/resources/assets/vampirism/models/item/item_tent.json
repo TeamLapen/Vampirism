@@ -1,4 +1,6 @@
 {
 	"parent": "item/generated",
-	"texture": "vampirism:item/item_tent"
+  "textures": {
+    "layer0": "vampirism:item/item_tent"
+  }
 }

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.config.Balance;
@@ -17,9 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.monster.EntityPolarBear;
 import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.*;
 import net.minecraft.init.Biomes;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
@@ -81,15 +80,15 @@ public class ModEntities {
     static void registerConvertibles() {
         String base = REFERENCE.MODID + ":textures/entity/vanilla/%s_overlay.png";
         IVampirismEntityRegistry registry = VampirismAPI.entityRegistry();
-        registry.addConvertible(EntityCow.class, String.format(base, "cow"));
-        registry.addConvertible(EntityPig.class, String.format(base, "pig"));
-        registry.addConvertible(EntityOcelot.class, String.format(base, "cat"));
-        registry.addConvertible(EntityHorse.class, String.format(base, "horse"));
-        registry.addConvertible(EntityPolarBear.class, String.format(base, "polarbear"));
-        registry.addConvertible(EntityRabbit.class, String.format(base, "rabbit"));
-        registry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingHandler());
-        registry.addConvertible(EntityVillager.class, null, new EntityConvertedVillager.ConvertingHandler());
-        registry.addConvertible(EntityLlama.class, String.format(base, "llama"));
+        registry.addConvertible(EntityType.COW, String.format(base, "cow"));
+        registry.addConvertible(EntityType.PIG, String.format(base, "pig"));
+        registry.addConvertible(EntityType.OCELOT, String.format(base, "cat"));
+        registry.addConvertible(EntityType.HORSE, String.format(base, "horse"));
+        registry.addConvertible(EntityType.POLAR_BEAR, String.format(base, "polarbear"));
+        registry.addConvertible(EntityType.RABBIT, String.format(base, "rabbit"));
+        registry.addConvertible(EntityType.SHEEP, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingHandler());
+        registry.addConvertible(EntityType.VILLAGER, null, new EntityConvertedVillager.ConvertingHandler());
+        registry.addConvertible(EntityType.LLAMA, String.format(base, "llama"));
     }
 
     static void registerEntities(IForgeRegistry<EntityType<?>> registry) {

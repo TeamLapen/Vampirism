@@ -2,7 +2,7 @@
   "result": {
     "item": "vampirism:enhanced_crossbow"
   },
-  "lava": "2",
+  "lava": 2,
   "skill": ["vampirism:enhanced_crossbow"],
   "pattern": [
     "YXXY",
@@ -12,7 +12,7 @@
   "type": "vampirism:shaped_weapon_table_recipe",
   "key": {
     "X": {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     "Y": {
       "item": "minecraft:string"

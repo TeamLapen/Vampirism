@@ -13,10 +13,10 @@
       "item": "minecraft:glass"
     },
     "Y": {
-      "item": "minecraft:obsidian"
+      "constant": "vampirism:obsidian"
     },
     "Z": {
-      "item": "#IRONBLOCK"
+      "constant": "vampirism:iron_block"
     }
   }
 }

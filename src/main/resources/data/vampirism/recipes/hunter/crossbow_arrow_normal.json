@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "vampirism:crossbow_arrow_normal",
+    "count": 6
+  },
+  "pattern": [
+    "X",
+    "Y"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "constant": "vampirism:iron"
+    },
+    "Y": {
+      "constant": "vampirism:stick"
+    }
+  }
+}

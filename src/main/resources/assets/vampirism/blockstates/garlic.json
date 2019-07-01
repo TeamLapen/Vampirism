@@ -1,50 +1,28 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "crop"
-  },
   "variants": {
-    "age": {
-      "0": {
-        "textures": {
-          "crop": "vampirism:block/garlic_stage_0"
-        }
-      },
-      "1": {
-        "textures": {
-          "crop": "vampirism:block/garlic_stage_0"
-        }
-      },
-      "2": {
-        "textures": {
-          "crop": "vampirism:block/garlic_stage_1"
-        }
-      },
-      "3": {
-        "textures": {
-          "crop": "vampirism:block/garlic_stage_1"
-        }
-      },
-      "4": {
-        "textures": {
-          "crop": "vampirism:block/garlic_stage_2"
-        }
-      },
-      "5": {
-        "textures": {
-          "crop": "vampirism:block/garlic_stage_2"
-        }
-      },
-      "6": {
-        "textures": {
-          "crop": "vampirism:block/garlic_stage_2"
-        }
-      },
-      "7": {
-        "textures": {
-          "crop": "vampirism:block/garlic_stage_3"
-        }
-      }
+    "age=0": {
+      "model": "vampirism:block/garlic_stage_0"
+    },
+    "age=1": {
+      "model": "vampirism:block/garlic_stage_0"
+    },
+    "age=2": {
+      "model": "vampirism:block/garlic_stage_1"
+    },
+    "age=3": {
+      "model": "vampirism:block/garlic_stage_1"
+    },
+    "age=4": {
+      "model": "vampirism:block/garlic_stage_2"
+    },
+    "age=5": {
+      "model": "vampirism:block/garlic_stage_2"
+    },
+    "age=6": {
+      "model": "vampirism:block/garlic_stage_3"
+    },
+    "age=7": {
+      "model": "vampirism:block/garlic_stage_3"
     }
   }
 }

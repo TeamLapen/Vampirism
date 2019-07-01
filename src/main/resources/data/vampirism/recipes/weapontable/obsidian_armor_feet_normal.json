@@ -1,0 +1,21 @@
+{
+  "result": {
+    "item": "vampirism:obsidian_armor_feet_normal"
+  },
+  "lava": 5,
+  "pattern": [
+    "    ",
+    "X  X",
+    "XYYX",
+    "XYYX"
+  ],
+  "type": "vampirism:shaped_weapon_table_recipe",
+  "key": {
+    "X": {
+      "constant": "vampirism:iron"
+    },
+    "Y": {
+      "constant": "vampirism:obsidian"
+    }
+  }
+}

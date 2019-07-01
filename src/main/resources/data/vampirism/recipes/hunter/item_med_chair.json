@@ -10,11 +10,10 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     "Y": {
-      "item": "minecraft:wool",
-      "data": 32767
+      "constant": "vampirism:wool"
     },
     "Z": {
       "item": "minecraft:glass_bottle"

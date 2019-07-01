@@ -1,12 +1,8 @@
 {
   "forge_marker": 1,
-  "defaults": {
-    "model": "vampirism:block/altar_infusion"
-  },
   "variants": {
-    "normal": [
-      {
-      }
-    ]
+    "": {
+      "model": "vampirism:altar_infusion"
+    }
   }
 }

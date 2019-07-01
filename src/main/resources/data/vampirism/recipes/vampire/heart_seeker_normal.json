@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "vampirism:heart_seeker_normal"
+  },
+  "pattern": [
+    " X ",
+    " X ",
+    " Y "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "vampirism:blood_infused_iron_ingot"
+    },
+    "Y": {
+      "constant": "vampirism:stick"
+    }
+  }
+}

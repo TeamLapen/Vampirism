@@ -13,11 +13,10 @@
       "item": "minecraft:bucket"
     },
     "Y": {
-      "item": "#IRON"
+      "constant": "vampirism:iron"
     },
     "Z": {
-      "type": "forge:ore_dict",
-      "ore": "blockIron"
+      "constant": "vampirism:iron_block"
     }
   }
 }

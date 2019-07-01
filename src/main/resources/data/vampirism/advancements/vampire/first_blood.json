@@ -2,7 +2,9 @@
   "display": {
     "icon": {
       "item": "vampirism:blood_bottle",
-      "data": 9
+      "nbt": {
+        "damage": 1.0
+      }
     },
     "title": {
       "translate": "advancement.vampirism.sucking_blood"
