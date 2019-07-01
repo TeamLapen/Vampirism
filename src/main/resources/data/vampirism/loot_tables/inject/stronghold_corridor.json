@@ -27,13 +27,9 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_head",
+          "name": "vampirism:armor_of_swiftness_head_ultimate",
           "weight": 5,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -45,13 +41,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_chest",
+          "name": "vampirism:armor_of_swiftness_chest_ultimate",
           "weight": 5,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -63,13 +55,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_legs",
+          "name": "vampirism:armor_of_swiftness_legs_ultimate",
           "weight": 5,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -81,13 +69,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armor_of_swiftness_feet",
+          "name": "vampirism:armor_of_swiftness_feet_ultimate",
           "weight": 5,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -109,13 +93,9 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_head",
+          "name": "vampirism:obsidian_armor_head_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -127,13 +107,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_chest",
+          "name": "vampirism:obsidian_armor_chest_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -145,13 +121,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_legs",
+          "name": "vampirism:obsidian_armor_legs_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -163,13 +135,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_feet",
+          "name": "vampirism:obsidian_armor_feet_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -191,13 +159,9 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:heart_seeker",
+          "name": "vampirism:heart_seeker_enhanced",
           "weight": 10,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "enhanced"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -209,13 +173,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:heart_striker",
+          "name": "vampirism:heart_striker_enhanced",
           "weight": 10,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "enhanced"
-            },
             {
               "function": "set_damage",
               "damage": {

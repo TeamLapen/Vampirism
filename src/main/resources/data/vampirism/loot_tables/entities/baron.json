@@ -1,24 +1,102 @@
 {
   "pools": [
     {
-      "name": "pure_blood",
+      "name": "pure_blood_0",
       "conditions": [
         {
           "condition": "killed_by_player"
+        },
+        {
+          "condition": "vampirism:adjustable_level",
+          "level": 0
         }
       ],
       "rolls": 1,
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:pure_blood",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "vampirism:set_meta_from_level",
-              "max": 4
-            }
-          ]
+          "name": "vampirism:pure_blood_0",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "name": "pure_blood_1",
+      "conditions": [
+        {
+          "condition": "killed_by_player"
+        },
+        {
+          "condition": "vampirism:adjustable_level",
+          "level": 1
+        }
+      ],
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:pure_blood_1",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "name": "pure_blood_2",
+      "conditions": [
+        {
+          "condition": "killed_by_player"
+        },
+        {
+          "condition": "vampirism:adjustable_level",
+          "level": 2
+        }
+      ],
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:pure_blood_2",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "name": "pure_blood_3",
+      "conditions": [
+        {
+          "condition": "killed_by_player"
+        },
+        {
+          "condition": "vampirism:adjustable_level",
+          "level": 3
+        }
+      ],
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:pure_blood_3",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "name": "pure_blood_4",
+      "conditions": [
+        {
+          "condition": "killed_by_player"
+        },
+        {
+          "condition": "vampirism:adjustable_level",
+          "level": 4
+        }
+      ],
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:pure_blood_4",
+          "weight": 1
         }
       ]
     }

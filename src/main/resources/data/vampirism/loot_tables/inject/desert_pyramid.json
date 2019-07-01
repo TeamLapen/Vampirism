@@ -11,8 +11,8 @@
           "weight": 25,
           "functions": [
             {
-              "function": "set_data",
-              "data": 5
+              "function": "set_damage",
+              "damage": 0.6
             }
           ]
         },
@@ -38,13 +38,9 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_head",
+          "name": "vampirism:obsidian_armor_head_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -56,13 +52,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_chest",
+          "name": "vampirism:obsidian_armor_chest_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -74,13 +66,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_legs",
+          "name": "vampirism:obsidian_armor_legs_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
@@ -92,13 +80,9 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidian_armor_feet",
+          "name": "vampirism:obsidian_armor_feet_ultimate",
           "weight": 7,
           "functions": [
-            {
-              "function": "vampirism:set_item_tier",
-              "tier": "ultimate"
-            },
             {
               "function": "set_damage",
               "damage": {
