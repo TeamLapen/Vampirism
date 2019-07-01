@@ -80,7 +80,7 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultBoolean(value = true, name = "summon_bats_enabled")
     public boolean SUMMON_BAT_ENABLED;
 
-    @DefaultInt(value = 300, minValue = 1, name = "summon_bats_ooldown")
+    @DefaultInt(value = 300, minValue = 1, name = "summon_bats_cooldown")
     public int SUMMON_BAT_COOLDOWN;
 
     @DefaultInt(value = 16, minValue = 1, name = "summon_bats_count")
