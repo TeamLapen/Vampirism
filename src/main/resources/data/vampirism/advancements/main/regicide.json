@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "vampirism:pure_blood"
+      "item": "vampirism:pure_blood_0"
     },
     "title": {
       "translate": "advancement.vampirism.regicide"
