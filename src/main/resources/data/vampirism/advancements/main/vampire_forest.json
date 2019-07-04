@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "minecraft:log"
+      "item": "minecraft:oak_log"
     },
     "title": {
       "translate": "advancement.vampirism.vampire_forest"
