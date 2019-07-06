@@ -4,14 +4,12 @@ import de.teamlapen.vampirism.blocks.BlockCoffin;
 import de.teamlapen.vampirism.client.model.ModelCoffin;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 public class CoffinTESR extends VampirismTESR<TileCoffin> {
     private Logger LOGGER = LogManager.getLogger();
 
-    public static final String[] colors = new String[]{"black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange",
+    public static final String[] colors = new String[]{"black", "red", "green", "brown", "blue", "purple", "cyan", "light_gray", "gray", "pink", "lime", "yellow", "light_blue", "magenta", "orange",
             "white"};
     private final int maxLidPos = 61;
     private final ModelCoffin model;
@@ -31,7 +29,7 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
     public CoffinTESR() {
         this.model = new ModelCoffin();
         for (int i = 0; i < colors.length; i++) {
-            textures[i] = new ResourceLocation(REFERENCE.MODID, "textures/blocks/coffin/coffin_" + colors[i] + ".png");
+            textures[i] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + colors[i] + ".png");
         }
     }
 
