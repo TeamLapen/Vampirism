@@ -19,6 +19,7 @@ public class RegistryManagerClient implements IInitListener {
         if (step == Step.LOAD_COMPLETE) {
             ModBlocksRender.registerColors();
             ModItemsRender.registerColors();
+            ModBlocksRender.register();
         }
     }
 
