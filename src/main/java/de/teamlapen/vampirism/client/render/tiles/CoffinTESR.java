@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.client.model.ModelCoffin;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -20,16 +21,14 @@ import org.apache.logging.log4j.Logger;
 public class CoffinTESR extends VampirismTESR<TileCoffin> {
     private Logger LOGGER = LogManager.getLogger();
 
-    public static final String[] colors = new String[]{"black", "red", "green", "brown", "blue", "purple", "cyan", "light_gray", "gray", "pink", "lime", "yellow", "light_blue", "magenta", "orange",
-            "white"};
     private final int maxLidPos = 61;
     private final ModelCoffin model;
-    private final ResourceLocation[] textures = new ResourceLocation[16];
+    private final ResourceLocation[] textures = new ResourceLocation[EnumDyeColor.values().length];
 
     public CoffinTESR() {
         this.model = new ModelCoffin();
-        for (int i = 0; i < colors.length; i++) {
-            textures[i] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + colors[i] + ".png");
+        for (EnumDyeColor e : EnumDyeColor.values()) {
+            textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.getName() + ".png");
         }
     }
 
