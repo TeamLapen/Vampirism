@@ -63,10 +63,9 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     private boolean prevAttacking = false;
 
-    public EntityVampireBaron(World world) {
-        super(ModEntities.vampire_baron, world, true);
+    public EntityVampireBaron(EntityType<? extends EntityVampireBaron> type, World world) {
+        super(type, world, true);
         minionHandler = new SaveableMinionHandler<>(this);
-        this.setSize(0.6F, 1.95F);
 
 
         this.garlicResist = EnumStrength.MEDIUM;

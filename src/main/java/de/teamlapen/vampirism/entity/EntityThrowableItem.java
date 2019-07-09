@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.core.ModEntities;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.Item;
@@ -26,12 +26,12 @@ public class EntityThrowableItem extends ThrowableEntity {
     private final static Logger LOGGER = LogManager.getLogger(EntityThrowableItem.class);
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityThrowableItem.class, DataSerializers.ITEM_STACK);
 
-    public EntityThrowableItem(World worldIn) {
-        super(ModEntities.throwable_item, worldIn);
+    public EntityThrowableItem(EntityType<? extends EntityThrowableItem> type, World worldIn) {
+        super(type, worldIn);
     }
 
-    public EntityThrowableItem(World worldIn, LivingEntity thrower) {
-        super(ModEntities.throwable_item, thrower, worldIn);
+    public EntityThrowableItem(EntityType<? extends EntityThrowableItem> type, World worldIn, LivingEntity thrower) {
+        super(type, thrower, worldIn);
     }
 
     /**

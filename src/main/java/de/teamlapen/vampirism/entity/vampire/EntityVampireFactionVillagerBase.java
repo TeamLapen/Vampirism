@@ -11,6 +11,8 @@ import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.villager.IVillagerType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.world.World;
@@ -22,12 +24,12 @@ public class EntityVampireFactionVillagerBase extends EntityFactionVillager impl
     private boolean sundamageCache;
     private EnumStrength garlicCache = EnumStrength.NONE;
 
-    public EntityVampireFactionVillagerBase(World worldIn) {
-        super(worldIn);
+    public EntityVampireFactionVillagerBase(EntityType<? extends EntityVampireFactionVillagerBase> type, World worldIn) {
+        super(type, worldIn);
     }
 
-    public EntityVampireFactionVillagerBase(World worldIn, int professionId) {
-        super(worldIn, professionId);
+    public EntityVampireFactionVillagerBase(EntityType<? extends EntityVampireFactionVillagerBase> type, World worldIn, IVillagerType villagerType) {
+        super(type, worldIn, villagerType);
     }
 
     @Override

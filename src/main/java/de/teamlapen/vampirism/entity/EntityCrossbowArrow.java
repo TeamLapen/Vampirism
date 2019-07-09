@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
@@ -48,16 +48,16 @@ public class EntityCrossbowArrow extends AbstractArrowEntity implements IEntityC
     ItemStack arrowStack = new ItemStack(ModItems.crossbow_arrow_normal);
     private boolean ignoreHurtTimer = false;
 
-    public EntityCrossbowArrow(World world) {
-        super(ModEntities.crossbow_arrow, world);
+    public EntityCrossbowArrow(EntityType<? extends EntityCrossbowArrow> type, World world) {
+        super(type, world);
     }
 
 
     /**
      * @param arrow ItemStack of the represented arrow. Is copied.
      */
-    public EntityCrossbowArrow(World worldIn, double x, double y, double z, ItemStack arrow) {
-        this(worldIn);
+    public EntityCrossbowArrow(EntityType<? extends EntityCrossbowArrow> type, World worldIn, double x, double y, double z, ItemStack arrow) {
+        this(type, worldIn);
         this.setPosition(x, y, z);
         this.arrowStack = arrow.copy();
         arrowStack.setCount(1);

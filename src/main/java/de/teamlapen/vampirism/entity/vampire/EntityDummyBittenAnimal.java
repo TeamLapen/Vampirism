@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.passive.PigEntity;
@@ -16,8 +16,8 @@ import net.minecraft.world.World;
  * Just a simple dummy class, which makes it possible to spawn bitten mobs
  */
 public class EntityDummyBittenAnimal extends MobEntity {
-    public EntityDummyBittenAnimal(World p_i1595_1_) {
-        super(ModEntities.blinding_bat, p_i1595_1_);
+    public EntityDummyBittenAnimal(EntityType<? extends EntityDummyBittenAnimal> type, World world) {
+        super(type, world);
     }
 
     @Override

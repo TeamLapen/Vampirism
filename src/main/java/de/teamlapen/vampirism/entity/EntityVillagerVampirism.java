@@ -4,9 +4,11 @@ import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.villager.IVillagerType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;
@@ -29,12 +31,12 @@ public class EntityVillagerVampirism extends VillagerEntity {
      */
     private int randomTickDivider;
 
-    public EntityVillagerVampirism(World worldIn) {
-        super(worldIn);
+    public EntityVillagerVampirism(EntityType<? extends EntityVillagerVampirism> type, World worldIn) {
+        super(type, worldIn);
     }
 
-    public EntityVillagerVampirism(World worldIn, int professionId) {
-        super(worldIn, professionId);
+    public EntityVillagerVampirism(EntityType<? extends EntityVillagerVampirism> type, World worldIn, IVillagerType villagerType) {
+        super(type, worldIn, villagerType);
     }
 
     public boolean attackEntityAsMob(Entity entity) {

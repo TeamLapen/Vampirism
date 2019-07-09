@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.villager.IVillagerType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
@@ -20,12 +22,12 @@ public abstract class EntityFactionVillager extends EntityVillagerVampirism impl
 
     private int tradingLevel = 0;
 
-    public EntityFactionVillager(World worldIn) {
-        super(worldIn);
+    public EntityFactionVillager(EntityType<? extends EntityFactionVillager> type, World worldIn) {
+        super(type, worldIn);
     }
 
-    public EntityFactionVillager(World worldIn, int professionId) {
-        super(worldIn, professionId);
+    public EntityFactionVillager(EntityType<? extends EntityFactionVillager> type, World worldIn, IVillagerType villagerType) {
+        super(type, worldIn, villagerType);
     }
 
     @Override

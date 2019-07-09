@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.EffectType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -21,8 +22,8 @@ public class VampirismPotion extends Effect {
     @OnlyIn(Dist.CLIENT)
     private static final int ICON_TEXTURE_HEIGHT = 36;
 
-    public VampirismPotion(String name, boolean badEffect, int potionColor) {
-        super(badEffect, potionColor);
+    public VampirismPotion(String name, EffectType effectType, int potionColor) {
+        super(effectType, potionColor);
         this.setRegistryName(REFERENCE.MODID, name);
     }
 

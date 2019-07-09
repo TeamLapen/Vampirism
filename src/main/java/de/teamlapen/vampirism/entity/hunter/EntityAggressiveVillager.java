@@ -11,10 +11,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
 import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -51,8 +48,8 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
     }
 
 
-    public EntityAggressiveVillager(World worldIn) {
-        super(worldIn);
+    public EntityAggressiveVillager(EntityType<? extends EntityAggressiveVillager> type, World worldIn) {
+        super(type, worldIn);
         ((GroundPathNavigator) getNavigator()).setEnterDoors(true);
     }
 

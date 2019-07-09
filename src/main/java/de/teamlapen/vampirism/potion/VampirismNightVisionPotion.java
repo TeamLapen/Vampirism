@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.potion;
 
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.EffectType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,7 +13,7 @@ public class VampirismNightVisionPotion extends Effect {
 
     private final static Logger LOGGER = LogManager.getLogger(VampirismNightVisionPotion.class);
     public VampirismNightVisionPotion() {
-        super(false, 2039713);
+        super(EffectType.BENEFICIAL, 2039713);
         setIconIndex(4, 1);
         LOGGER.warn("-------Please ignore the following error!------");
         this.setRegistryName("minecraft", "night_vision");

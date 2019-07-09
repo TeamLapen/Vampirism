@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.init.Particles;
@@ -33,23 +33,23 @@ public class EntityDarkBloodProjectile extends DamagingProjectileEntity {
     private float motionFactor = 0.9f;
     private boolean excludeShooter = false;
 
-    public EntityDarkBloodProjectile(World worldIn) {
-        super(ModEntities.dark_blood_projectile, worldIn, 1.0F, 1.0F);
+    public EntityDarkBloodProjectile(EntityType<? extends EntityDarkBloodProjectile> type, World worldIn) {
+        super(type, worldIn);
     }
 
     /**
      * Copies the location from shooter.
      * Adds a small random to the motion
      */
-    public EntityDarkBloodProjectile(World worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
-        super(ModEntities.dark_blood_projectile, shooter, accelX, accelY, accelZ, worldIn, 1.0F, 1.0F);
+    public EntityDarkBloodProjectile(EntityType<? extends EntityDarkBloodProjectile> type, World worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
+        super(type, shooter, accelX, accelY, accelZ, worldIn);
     }
 
     /**
      * Does not add a small random to the motion
      */
-    public EntityDarkBloodProjectile(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
-        super(ModEntities.dark_blood_projectile, x, y, z, accelX, accelY, accelZ, worldIn, 1.0F, 1.0F);
+    public EntityDarkBloodProjectile(EntityType<? extends EntityDarkBloodProjectile> type, World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
+        super(type, x, y, z, accelX, accelY, accelZ, worldIn);
     }
 
     @Override
