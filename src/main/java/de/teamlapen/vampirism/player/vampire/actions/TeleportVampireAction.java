@@ -5,10 +5,10 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityAreaParticleCloud;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 
@@ -22,7 +22,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        EntityPlayer player = vampire.getRepresentingPlayer();
+        PlayerEntity player = vampire.getRepresentingPlayer();
         RayTraceResult target = UtilLib.getPlayerLookingSpot(player, Balance.vpa.TELEPORT_MAX_DISTANCE);
         double ox = player.posX;
         double oy = player.posY;
@@ -50,8 +50,8 @@ public class TeleportVampireAction extends DefaultVampireAction {
             player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM, 1, 1);
             return false;
         }
-        if (player instanceof EntityPlayerMP) {
-            EntityPlayerMP playerMp = (EntityPlayerMP) player;
+        if (player instanceof ServerPlayerEntity) {
+            ServerPlayerEntity playerMp = (ServerPlayerEntity) player;
             playerMp.disconnect();
             playerMp.setPositionAndUpdate(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }

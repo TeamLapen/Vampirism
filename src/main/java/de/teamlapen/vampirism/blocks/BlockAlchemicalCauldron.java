@@ -2,11 +2,12 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
@@ -27,7 +28,7 @@ import javax.annotation.Nullable;
 public class BlockAlchemicalCauldron extends VampirismBlockContainer {
 
     public final static String regName = "alchemical_cauldron";
-    public static final DirectionProperty FACING = BlockHorizontal.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
     /**
      * 0: No liquid,
@@ -40,7 +41,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
 
     public BlockAlchemicalCauldron() {
         super(regName, Block.Properties.create(Material.IRON).hardnessAndResistance(4f));
-        this.setDefaultState(this.stateContainer.getBaseState().with(LIQUID, 0).with(FACING, EnumFacing.NORTH).with(BURNING, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(LIQUID, 0).with(FACING, Direction.NORTH).with(BURNING, false));
     }
 
     @Override
@@ -48,28 +49,20 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
         return new TileAlchemicalCauldron();
     }
 
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
     @Nullable
     @Override
-    public IBlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.getDefaultState().with(FACING, context.getNearestLookingDirection());
     }
 
     @Override
-    public IBlockState mirror(IBlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
-    }
-
-    @Override
-    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!worldIn.isRemote) {
-            TileAlchemicalCauldron tile = getTile(worldIn, pos);
-            if (tile != null) {
-                if (tile.canUse(playerIn)) {
-                    //playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALCHEMICAL_CAULDRON, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
-                }
-            }
-        }
-        return true;
+    public boolean isFullCube(BlockState state) {
+        return false;
     }
 
     /*
@@ -89,36 +82,41 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
         return BlockRenderLayer.CUTOUT;
     }
 
-
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
 
     @Override
-    public IBlockState rotate(IBlockState state, Rotation rot) {
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, Direction side, float hitX, float hitY, float hitZ) {
+        if (!worldIn.isRemote) {
+            TileAlchemicalCauldron tile = getTile(worldIn, pos);
+            if (tile != null) {
+                if (tile.canUse(playerIn)) {
+                    //playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALCHEMICAL_CAULDRON, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        TileAlchemicalCauldron tile = getTile(worldIn, pos);
+        if (tile != null && placer instanceof PlayerEntity) {
+            tile.setOwner((PlayerEntity) placer);
+        }
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
-
-
     @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, LIQUID, BURNING);
-    }
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-        TileAlchemicalCauldron tile = getTile(worldIn, pos);
-        if (tile != null && placer instanceof EntityPlayer) {
-            tile.setOwner((EntityPlayer) placer);
-        }
     }
 
     @Nullable

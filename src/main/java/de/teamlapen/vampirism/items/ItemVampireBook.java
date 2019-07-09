@@ -3,19 +3,19 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.VampireBookManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemWritableBook;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.network.play.server.SPacketSetSlot;
+import net.minecraft.item.WritableBookItem;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
+import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,8 +27,8 @@ import java.util.Random;
 public class ItemVampireBook extends VampirismItem {
     private static final String regName = "vampire_book";
 
-    public static boolean validBookTagContents(NBTTagCompound nbt) {
-        if (!ItemWritableBook.isNBTValid(nbt)) {
+    public static boolean validBookTagContents(CompoundNBT nbt) {
+        if (!WritableBookItem.isNBTValid(nbt)) {
             return false;
         } else if (!nbt.contains("title")) {
             return false;
@@ -52,10 +52,10 @@ public class ItemVampireBook extends VampirismItem {
     @Override
     public ITextComponent getDisplayName(ItemStack stack) {
         if (stack.hasTag()) {
-            NBTTagCompound nbttagcompound = stack.getTag();
+            CompoundNBT nbttagcompound = stack.getTag();
             String s = nbttagcompound.getString("title");
             if (!StringUtils.isNullOrEmpty(s)) {
-                return new TextComponentString(s);
+                return new StringTextComponent(s);
             }
         }
         return super.getDisplayName(stack);
@@ -68,23 +68,23 @@ public class ItemVampireBook extends VampirismItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
             this.resolveContents(stack, playerIn);
         }
 
         //playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_VAMPIRE_BOOK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);//TODO 1.14
-        return new ActionResult(EnumActionResult.SUCCESS, stack);
+        return new ActionResult(ActionResultType.SUCCESS, stack);
     }
 
-    private void resolveContents(ItemStack stack, EntityPlayer player) {
+    private void resolveContents(ItemStack stack, PlayerEntity player) {
         if (!stack.isEmpty() && stack.getTag() != null) {
-            NBTTagCompound nbttagcompound = stack.getTag();
+            CompoundNBT nbttagcompound = stack.getTag();
             if (!nbttagcompound.getBoolean("resolved")) {
                 nbttagcompound.putBoolean("resolved", true);
                 if (validBookTagContents(nbttagcompound)) {
-                    NBTTagList nbttaglist = nbttagcompound.getList("pages", 8);
+                    ListNBT nbttaglist = nbttagcompound.getList("pages", 8);
 
                     for (int slot = 0; slot < nbttaglist.size(); ++slot) {
                         String s = nbttaglist.getString(slot);
@@ -94,16 +94,16 @@ public class ItemVampireBook extends VampirismItem {
                             ITextComponent var11 = ITextComponent.Serializer.fromJsonLenient(s);
                             lvt_7_1_ = TextComponentUtils.updateForEntity(null, var11, player);
                         } catch (Exception var9) {
-                            lvt_7_1_ = new TextComponentString(s);
+                            lvt_7_1_ = new StringTextComponent(s);
                         }
 
-                        nbttaglist.set(slot, new NBTTagString(ITextComponent.Serializer.toJson((ITextComponent) lvt_7_1_)));
+                        nbttaglist.set(slot, new StringNBT(ITextComponent.Serializer.toJson((ITextComponent) lvt_7_1_)));
                     }
 
                     nbttagcompound.put("pages", nbttaglist);
-                    if (player instanceof EntityPlayerMP && player.getHeldItemMainhand() == stack) {
+                    if (player instanceof ServerPlayerEntity && player.getHeldItemMainhand() == stack) {
                         Slot var10 = player.openContainer.getSlotFromInventory(player.inventory, player.inventory.currentItem);
-                        ((EntityPlayerMP) player).connection.sendPacket(new SPacketSetSlot(0, var10.slotNumber, stack));
+                        ((ServerPlayerEntity) player).connection.sendPacket(new SSetSlotPacket(0, var10.slotNumber, stack));
                     }
                 }
             }

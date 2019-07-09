@@ -2,7 +2,7 @@ package de.teamlapen.lib.proxy;
 
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.lib.util.ParticleHandler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -38,7 +38,7 @@ public interface IProxy {
 
     ParticleHandler getParticleHandler();
 
-    EntityPlayer getPlayerEntity(NetworkEvent.Context context);
+    PlayerEntity getPlayerEntity(NetworkEvent.Context context);
 
     /**
      * Uses font rendere on client side to wrap the given string to the given width

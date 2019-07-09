@@ -6,19 +6,19 @@ import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.MoveTowardsRestrictionGoal;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.EnumLightType;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -26,9 +26,9 @@ import javax.annotation.Nullable;
 /**
  * Base class for most vampirism mobs
  */
-public abstract class EntityVampirism extends EntityCreature implements IEntityWithHome, IVampirismEntity {//TODO move entityaction stuff to users @cheaterpaul
+public abstract class EntityVampirism extends CreatureEntity implements IEntityWithHome, IVampirismEntity {//TODO move entityaction stuff to users @cheaterpaul
 
-    private final EntityAIBase moveTowardsRestriction;
+    private final Goal moveTowardsRestriction;
     protected boolean hasArms = true;
     protected boolean peaceful = false;
 
@@ -46,15 +46,15 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     public EntityVampirism(EntityType type, World world) {
         super(type, world);
-        moveTowardsRestriction = new EntityAIMoveTowardsRestriction(this, 1.0F);
+        moveTowardsRestriction = new MoveTowardsRestrictionGoal(this, 1.0F);
     }
 
     public boolean attackEntityAsMob(Entity entity) {
         float f = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
         int i = 0;
 
-        if (entity instanceof EntityLivingBase) {
-            f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((EntityLivingBase) entity).getCreatureAttribute());
+        if (entity instanceof LivingEntity) {
+            f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((LivingEntity) entity).getCreatureAttribute());
             i += EnchantmentHelper.getKnockbackModifier(this);
         }
 
@@ -75,8 +75,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
             this.applyEnchantments(this, entity);
 
-            if (entity instanceof EntityLivingBase) {
-                this.attackedEntityAsMob((EntityLivingBase) entity);
+            if (entity instanceof LivingEntity) {
+                this.attackedEntityAsMob((LivingEntity) entity);
             }
         }
 
@@ -90,7 +90,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     @Override
     public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
-        return (peaceful || this.world.getDifficulty() != EnumDifficulty.PEACEFUL) && super.canSpawn(worldIn, fromSpawner);
+        return (peaceful || this.world.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, fromSpawner);
     }
 
     @Nullable
@@ -147,16 +147,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-        if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == EnumDifficulty.PEACEFUL) {
-            this.remove();
-        }
-    }
-
-    @Override
-    public void readAdditional(NBTTagCompound nbt) {
+    public void readAdditional(CompoundNBT nbt) {
         super.readAdditional(nbt);
         if (nbt.contains("home")) {
             saveHome = true;
@@ -165,6 +156,15 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             if (nbt.contains("homeMovePrio")) {
                 this.setMoveTowardsRestriction(nbt.getInt("moveHomePrio"), true);
             }
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == Difficulty.PEACEFUL) {
+            this.remove();
         }
     }
 
@@ -179,7 +179,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound nbt) {
+    public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
         if (saveHome && hasHome()) {
             int[] h = { (int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ };
@@ -199,7 +199,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     /**
      * Called after an EntityLivingBase has been attacked as mob
      */
-    protected void attackedEntityAsMob(EntityLivingBase entity) {
+    protected void attackedEntityAsMob(LivingEntity entity) {
     }
 
     @Override
@@ -244,7 +244,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected boolean isLowLightLevel() {
         BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
 
-        if (this.world.getLightFor(EnumLightType.SKY, blockpos) > this.rand.nextInt(32)) {
+        if (this.world.getLightFor(LightType.SKY, blockpos) > this.rand.nextInt(32)) {
             return false;
         } else {
             int i = this.world.getLight(blockpos);//TODO was getLightFromNeighbors(blockpos)
@@ -261,7 +261,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     /**
-     * Called every 70 to 120 ticks during {@link EntityCreature#updateAITasks()}
+     * Called every 70 to 120 ticks during {@link CreatureEntity#updateAITasks()}
      */
     protected void onRandomTick() {
 

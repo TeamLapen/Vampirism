@@ -4,10 +4,10 @@ import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
@@ -60,20 +60,20 @@ public class TileBloodContainer extends net.minecraftforge.fluids.capability.Til
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        NBTTagCompound nbtTag = new NBTTagCompound();
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        CompoundNBT nbtTag = new CompoundNBT();
         this.write(nbtTag);
-        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
-        return write(new NBTTagCompound());
+    public CompoundNBT getUpdateTag() {
+        return write(new CompoundNBT());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         FluidStack old = tank.getFluid();
         this.read(pkt.getNbtCompound());
         if (old != null && !old.isFluidStackIdentical(tank.getFluid()) || old == null && tank.getFluid() != null) {
@@ -87,7 +87,7 @@ public class TileBloodContainer extends net.minecraftforge.fluids.capability.Til
     public void onTankContentChanged() {
         FluidStack fluid = getTankInfo().fluid;
         if (fluid == null && lastSyncedAmount != Integer.MIN_VALUE || fluid != null && Math.abs(fluid.amount - lastSyncedAmount) >= VReference.FOOD_TO_FLUID_BLOOD) {
-            IBlockState state = this.world.getBlockState(this.pos);
+            BlockState state = this.world.getBlockState(this.pos);
             this.world.notifyBlockUpdate(pos, state, state, 3);
             this.markDirty();
             this.lastSyncedAmount = fluid == null ? Integer.MIN_VALUE : fluid.amount;

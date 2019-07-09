@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * Represents a entity faction (e.g. Vampires)
@@ -46,17 +46,17 @@ public interface IFaction<T extends IFactionEntity> {
      * @return Translation component of name in singular
      */
     default ITextComponent getName() {
-        return new TextComponentTranslation(getTranslationKey());
+        return new TranslationTextComponent(getTranslationKey());
     }
 
     /**
      * @return Translation component of name in plural
      */
     default ITextComponent getNamePlural() {
-        return new TextComponentTranslation(getTranslationKeyPlural());
+        return new TranslationTextComponent(getTranslationKeyPlural());
     }
 
-    boolean isEntityOfFaction(EntityCreature creature);
+    boolean isEntityOfFaction(CreatureEntity creature);
 
     String name();
 

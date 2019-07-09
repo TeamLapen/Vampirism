@@ -8,16 +8,16 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +26,7 @@ import org.apache.logging.log4j.Logger;
  * Converted creature class.
  * Contains (stores and syncs) a normal Entity for rendering purpose
  */
-public class EntityConvertedCreature<T extends EntityCreature> extends EntityVampireBase implements IConvertedCreature<T>, ISyncable {
+public class EntityConvertedCreature<T extends CreatureEntity> extends EntityVampireBase implements IConvertedCreature<T>, ISyncable {
     private final static Logger LOGGER = LogManager.getLogger(EntityConvertedCreature.class);
     private T entityCreature;
     private boolean entityChanged = false;
@@ -43,7 +43,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     @Override
     public ITextComponent getName() {
-        return new TextComponentString(new TextComponentTranslation("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName()));
+        return new StringTextComponent(new TranslationTextComponent("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName()));
     }
 
     public T getOldCreature() {
@@ -51,13 +51,13 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
-        if (forSpawnCount && type == EnumCreatureType.CREATURE) return true;
+    public boolean isCreatureType(EntityClassification type, boolean forSpawnCount) {
+        if (forSpawnCount && type == EntityClassification.CREATURE) return true;
         return super.isCreatureType(type, forSpawnCount);
     }
 
     @Override
-    public void loadUpdateFromNBT(NBTTagCompound nbt) {
+    public void loadUpdateFromNBT(CompoundNBT nbt) {
         if (nbt.contains("entity_old")) {
             setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), getEntityWorld()));
         }
@@ -123,7 +123,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public void readAdditional(NBTTagCompound nbt) {
+    public void readAdditional(CompoundNBT nbt) {
         super.readAdditional(nbt);
         if (nbt.contains("entity_old")) {
             setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), world));
@@ -173,7 +173,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound nbt) {
+    public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
         writeOldEntityToNBT(nbt);
         nbt.putBoolean("converter_canDespawn", canDespawn);
@@ -181,7 +181,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public void writeFullUpdateToNBT(NBTTagCompound nbt) {
+    public void writeFullUpdateToNBT(CompoundNBT nbt) {
         writeOldEntityToNBT(nbt);
 
     }
@@ -216,19 +216,19 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
-        this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityCreature.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
+        this.tasks.addTask(1, new AvoidEntityGoal(this, CreatureEntity.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
         //this.tasks.addTask(3, new VampireAIFleeSun(this, 1F));
-        this.tasks.addTask(4, new EntityAIRestrictSun(this));
+        this.tasks.addTask(4, new RestrictSunGoal(this));
         tasks.addTask(5, new EntityAIAttackMeleeNoSun(this, 0.9D, false));
         this.experienceValue = 2;
 
-        this.tasks.addTask(11, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(13, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-        this.tasks.addTask(15, new EntityAILookIdle(this));
+        this.tasks.addTask(11, new RandomWalkingGoal(this, 0.7));
+        this.tasks.addTask(13, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.tasks.addTask(15, new LookRandomlyGoal(this));
 
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
+        this.targetTasks.addTask(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetTasks.addTask(3, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
     protected boolean nil() {
@@ -255,10 +255,10 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
      *
      * @param nbt
      */
-    private void writeOldEntityToNBT(NBTTagCompound nbt) {
+    private void writeOldEntityToNBT(CompoundNBT nbt) {
         if (!nil()) {
             try {
-                NBTTagCompound entity = new NBTTagCompound();
+                CompoundNBT entity = new CompoundNBT();
                 entityCreature.removed = false;
                 entityCreature.writeUnlessPassenger(entity);
                 entityCreature.removed = true;

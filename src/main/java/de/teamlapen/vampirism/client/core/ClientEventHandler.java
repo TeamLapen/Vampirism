@@ -15,12 +15,12 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiButtonImage;
-import net.minecraft.client.gui.GuiSleepMP;
-import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.gui.screen.SleepInMultiplayerScreen;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -58,13 +58,13 @@ public class ClientEventHandler {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onActionPerformedPre(GuiScreenEvent.ActionPerformedEvent.Post event) {
-        if (Configs.gui_skill_button_enable && event.getGui() instanceof GuiInventory) {
+        if (Configs.gui_skill_button_enable && event.getGui() instanceof InventoryScreen) {
             if (event.getButton().id == SKILLBUTTONID) {
                 event.getGui().mc.displayGuiScreen(new GuiSkills());
             } else if (event.getButton().id == 10) {
-                for (GuiButton e : event.getButtonList()) {
+                for (Button e : event.getButtonList()) {
                     if (e.id == SKILLBUTTONID) {
-                        ((GuiButtonImage) e).setPosition(((GuiInventory) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22);
+                        ((ImageButton) e).setPosition(((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22);
                         break;
                     }
                 }
@@ -77,8 +77,8 @@ public class ClientEventHandler {
         if (event.phase == TickEvent.Phase.START) {
             Minecraft mc = Minecraft.getInstance();
             if (mc.world != null && mc.world != null) {
-                if ((mc.currentScreen == null || mc.currentScreen instanceof GuiSleepMP) && mc.player.isPlayerSleeping()) {
-                    IBlockState state = mc.player.getEntityWorld().getBlockState(mc.player.bedLocation);
+                if ((mc.currentScreen == null || mc.currentScreen instanceof SleepInMultiplayerScreen) && mc.player.isPlayerSleeping()) {
+                    BlockState state = mc.player.getEntityWorld().getBlockState(mc.player.bedLocation);
                     if (state.getBlock().equals(ModBlocks.block_coffin)) {
                         mc.displayGuiScreen(new GuiSleepCoffin());
                     }
@@ -93,8 +93,8 @@ public class ClientEventHandler {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onInitGuiEventPost(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (Configs.gui_skill_button_enable && event.getGui() instanceof GuiInventory && FactionPlayerHandler.get(event.getGui().mc.player).getCurrentFactionPlayer() != null) {
-            GuiButton button = new GuiButtonImage(SKILLBUTTONID, ((GuiInventory) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22, 20, 18, 178, 0, 19, INVENTORY_SKILLS) {
+        if (Configs.gui_skill_button_enable && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.get(event.getGui().mc.player).getCurrentFactionPlayer() != null) {
+            Button button = new ImageButton(SKILLBUTTONID, ((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22, 20, 18, 178, 0, 19, INVENTORY_SKILLS) {
                 @Override
                 public void onClick(double mouseX, double mouseY) {
                     // TODO Auto-generated method stub

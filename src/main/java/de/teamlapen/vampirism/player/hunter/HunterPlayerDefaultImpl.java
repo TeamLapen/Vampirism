@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -61,7 +61,7 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
     }
 
     @Override
-    public EntityLivingBase getMinionTarget() {
+    public LivingEntity getMinionTarget() {
         return null;
     }
 
@@ -71,12 +71,12 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
     }
 
     @Override
-    public EntityLivingBase getRepresentingEntity() {
+    public LivingEntity getRepresentingEntity() {
         return null;
     }
 
     @Override
-    public EntityPlayer getRepresentingPlayer() {
+    public PlayerEntity getRepresentingPlayer() {
         return null;
     }
 

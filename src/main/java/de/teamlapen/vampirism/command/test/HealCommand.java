@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 /**
  * 
@@ -22,7 +20,7 @@ public class HealCommand extends BasicCommand {
                 });
     }
 
-    private static int heal(EntityPlayerMP asPlayer) {
+    private static int heal(ServerPlayerEntity asPlayer) {
         asPlayer.heal(10000);
         return 0;
     }

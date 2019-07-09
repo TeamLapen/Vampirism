@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 
-public class VampireAIFleeSun<T extends EntityCreature & IVampire> extends EntityAIFlee {
+public class VampireAIFleeSun<T extends CreatureEntity & IVampire> extends EntityAIFlee {
     private final T vampire;
 
 

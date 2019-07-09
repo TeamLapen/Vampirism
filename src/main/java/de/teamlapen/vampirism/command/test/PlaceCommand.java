@@ -2,17 +2,15 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
 import de.teamlapen.vampirism.world.gen.structure.VampirismTemplate;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 
 /**
@@ -33,17 +31,17 @@ public class PlaceCommand extends BasicCommand {
                         }));
     }
 
-    private static int place(CommandSource commandSource, EntityPlayerMP asPlayer, String structure) {
+    private static int place(CommandSource commandSource, ServerPlayerEntity asPlayer, String structure) {
         try {
             StructureManager.Structure s = StructureManager.Structure.valueOf(structure);
             VampirismTemplate template = StructureManager.get(s);
             if (template == null) {
-                commandSource.sendErrorMessage(new TextComponentString("Structure " + s + " was not loaded"));
+                commandSource.sendErrorMessage(new StringTextComponent("Structure " + s + " was not loaded"));
             }
-            template.addBlocksToWorld(asPlayer.world, asPlayer.getPosition().offset(EnumFacing.NORTH), new PlacementSettings());
+            template.addBlocksToWorld(asPlayer.world, asPlayer.getPosition().offset(Direction.NORTH), new PlacementSettings());
 
         } catch (IllegalArgumentException e) {
-            commandSource.sendErrorMessage(new TextComponentString("Structure " + structure + " not found."));
+            commandSource.sendErrorMessage(new StringTextComponent("Structure " + structure + " not found."));
         }
         return 0;
     }

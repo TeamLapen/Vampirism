@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import org.apache.logging.log4j.LogManager;
@@ -40,10 +40,10 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
 
     public void printDebug(CommandSource sender) {
         for (Emitter e : emitterHashMap.values()) {
-            sender.sendFeedback(new TextComponentString("E: " + e.toString()), true);
+            sender.sendFeedback(new StringTextComponent("E: " + e.toString()), true);
         }
         for (Map.Entry e : strengthHashMap.entrySet()) {
-            sender.sendFeedback(new TextComponentString("S: " + e.toString()), true);
+            sender.sendFeedback(new StringTextComponent("S: " + e.toString()), true);
         }
     }
 

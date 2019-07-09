@@ -3,9 +3,9 @@ package de.teamlapen.lib.lib.client.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.client.renderer.entity.model.ModelRenderer;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.model.RendererModel;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,7 +18,7 @@ public class RenderUtil {
      *
      * @param brightness Between 0 and 255f
      */
-    public static <T extends EntityLivingBase> void renderGlowing(RenderLivingBase<T> render, ModelRenderer modelPart, ResourceLocation texture, float brightness, T entity, float scale) {
+    public static <T extends LivingEntity> void renderGlowing(LivingRenderer<T> render, RendererModel modelPart, ResourceLocation texture, float brightness, T entity, float scale) {
         render.bindTexture(texture);
 
         startGlowing(entity.isInvisible(), brightness);
@@ -32,7 +32,7 @@ public class RenderUtil {
      *
      * @param brightness Between 0 and 255f
      */
-    public static <T extends EntityLivingBase> void renderGlowing(RenderLivingBase<T> render, ResourceLocation texture, float brightness, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public static <T extends LivingEntity> void renderGlowing(LivingRenderer<T> render, ResourceLocation texture, float brightness, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         render.bindTexture(texture);
         render.bindTexture(texture);
         startGlowing(entity.isInvisible(), brightness);

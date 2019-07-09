@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.ai.EntityAIMoveIndoors;
 import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.Village;
@@ -12,13 +12,13 @@ import net.minecraft.village.VillageDoorInfo;
 /**
  * Same as vanilla {@link EntityAIMoveIndoors}, but executes during day and not night
  */
-public class EntityAIMoveIndoorsDay extends EntityAIBase {
-    private final EntityCreature entityObj;
+public class EntityAIMoveIndoorsDay extends Goal {
+    private final CreatureEntity entityObj;
     private VillageDoorInfo doorInfo;
     private int insidePosX = -1;
     private int insidePosZ = -1;
 
-    public EntityAIMoveIndoorsDay(EntityCreature entityObjIn) {
+    public EntityAIMoveIndoorsDay(CreatureEntity entityObjIn) {
         this.entityObj = entityObjIn;
         this.setMutexBits(1);
     }

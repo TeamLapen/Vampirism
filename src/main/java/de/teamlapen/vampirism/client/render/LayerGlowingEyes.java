@@ -1,10 +1,9 @@
 package de.teamlapen.vampirism.client.render;
 
 import de.teamlapen.lib.lib.client.render.RenderUtil;
-
-import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,12 +12,12 @@ import javax.annotation.Nonnull;
 
 
 @OnlyIn(Dist.CLIENT)
-public class LayerGlowingEyes<T extends EntityLivingBase> implements LayerRenderer<T> {
+public class LayerGlowingEyes<T extends LivingEntity> implements LayerRenderer<T> {
     private final ResourceLocation RESOURCE_LOCATION;
-    private final RenderLivingBase<T> render;
+    private final LivingRenderer<T> render;
     private float brightness = 120f;
 
-    public LayerGlowingEyes(RenderLivingBase<T> render, ResourceLocation eyes) {
+    public LayerGlowingEyes(LivingRenderer<T> render, ResourceLocation eyes) {
         this.render = render;
         this.RESOURCE_LOCATION = eyes;
     }

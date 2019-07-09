@@ -3,17 +3,18 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -30,7 +31,7 @@ public class EntitySoulOrb extends Entity {
 
     public static final DataParameter<String> TYPE_PARAMETER = EntityDataManager.createKey(EntitySoulOrb.class, DataSerializers.STRING);
     private int delayBeforePickup;
-    private EntityPlayer player;
+    private PlayerEntity player;
     private int age;
     @Nullable
     private ItemStack soulItemStack;
@@ -93,7 +94,7 @@ public class EntitySoulOrb extends Entity {
     }
 
     @Override
-    public boolean isInvisibleToPlayer(@Nonnull EntityPlayer player) {
+    public boolean isInvisibleToPlayer(@Nonnull PlayerEntity player) {
         switch (getVariant()) {
             case VAMPIRE:
                 return !Helper.isHunter(player) || player.isSpectator();
@@ -103,7 +104,7 @@ public class EntitySoulOrb extends Entity {
     }
 
     @Override
-    public void onCollideWithPlayer(EntityPlayer entityIn) {
+    public void onCollideWithPlayer(PlayerEntity entityIn) {
         if (!this.world.isRemote) {
             if (delayBeforePickup == 0) {
                 if (Helper.isHunter(entityIn)) {
@@ -140,7 +141,7 @@ public class EntitySoulOrb extends Entity {
         this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
 
         if (this.age % 10 == 5 & (this.player == null || !this.player.isAlive() || this.player.getDistanceSq(this) > 64)) {
-            this.player = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 8, EntitySelectors.NOT_SPECTATING.and(Helper::isHunter));
+            this.player = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 8, EntityPredicates.NOT_SPECTATING.and(Helper::isHunter));
         }
 
         if (this.player != null) {
@@ -164,7 +165,7 @@ public class EntitySoulOrb extends Entity {
 
         if (this.onGround) {
             BlockPos underPos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getBoundingBox().minY) - 1, MathHelper.floor(this.posZ));
-            net.minecraft.block.state.IBlockState underState = this.world.getBlockState(underPos);
+            BlockState underState = this.world.getBlockState(underPos);
             f = underState.getBlock().getSlipperiness(underState, this.world, underPos, this) * 0.98F;
         }
 
@@ -190,7 +191,7 @@ public class EntitySoulOrb extends Entity {
     }
 
     @Override
-    protected void readAdditional(NBTTagCompound compound) {
+    protected void readAdditional(CompoundNBT compound) {
         this.setVariant(VARIANT.valueOf(compound.getString("type")));
         this.age = compound.getInt("age");
         soulItemStack = null;//Reset item just in case a item of a different type has been created beforehand
@@ -202,7 +203,7 @@ public class EntitySoulOrb extends Entity {
     }
 
     @Override
-    protected void writeAdditional(NBTTagCompound compound) {
+    protected void writeAdditional(CompoundNBT compound) {
         compound.putString("type", this.getVariant().name());
         compound.putInt("age", age);
     }

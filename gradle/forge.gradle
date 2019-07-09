@@ -43,7 +43,7 @@ dependencies {
 }
 
 minecraft {
-    mappings channel: "stable", version: "${project.mcp_mappings}".toString()
+    mappings channel: "${project.mcp_channel}".toString(), version: "${project.mcp_mappings}".toString()
     accessTransformer = file('src/main/resources/META-INF/vampirism_at.cfg')
 
     runs {

@@ -8,15 +8,15 @@ import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
@@ -36,7 +36,7 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
     public static final int CAPACITY = 100 * VReference.FOOD_TO_FLUID_BLOOD;
     private final int RITUAL_TIME = 60;
     private int ritualTicksLeft = 0;
-    private EntityPlayer ritualPlayer;
+    private PlayerEntity ritualPlayer;
 
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
 
@@ -62,14 +62,14 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
     }
 
     @Nonnull
     @Override
-    public NBTTagCompound getUpdateTag() {
-        return write(new NBTTagCompound());
+    public CompoundNBT getUpdateTag() {
+        return write(new CompoundNBT());
     }
 
     @Override
@@ -81,7 +81,7 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         FluidStack old = tank.getFluid();
         this.read(pkt.getNbtCompound());
         if (old != null && !old.isFluidStackIdentical(tank.getFluid()) || old == null && tank.getFluid() != null) {
@@ -89,19 +89,19 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
         }
     }
 
-    public void startRitual(EntityPlayer p) {
+    public void startRitual(PlayerEntity p) {
         if (ritualTicksLeft > 0) return;
         VampirePlayer player = VampirePlayer.get(p);
         int targetLevel = player.getLevel() + 1;
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
             if (p.world.isRemote)
-                p.sendMessage(new TextComponentTranslation("text.vampirism.ritual_level_wrong"));
+                p.sendMessage(new TranslationTextComponent("text.vampirism.ritual_level_wrong"));
             return;
         }
         int neededBlood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
         if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
-            if (p.world.isRemote) p.sendMessage(new TextComponentTranslation("text.vampirism.not_enough_blood"));
+            if (p.world.isRemote) p.sendMessage(new TranslationTextComponent("text.vampirism.not_enough_blood"));
             return;
         }
         if (!p.world.isRemote) {
@@ -121,7 +121,7 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
         if (!world.isRemote) {
             switch (ritualTicksLeft) {
                 case 5:
-                    world.addWeatherEffect(new EntityLightningBolt(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), true));
+                    world.addWeatherEffect(new LightningBoltEntity(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), true));
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
                     VampirePlayer.get(ritualPlayer).drinkBlood(100, 0);
 
@@ -133,7 +133,7 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
                     int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
                     ((InternalTank) tank).doDrain(blood, true);
 
-                    ritualPlayer.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, targetLevel * 10 * 20));
+                    ritualPlayer.addPotionEffect(new EffectInstance(Effects.REGENERATION, targetLevel * 10 * 20));
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
                     VampirePlayer.get(ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false);
                     markDirty();

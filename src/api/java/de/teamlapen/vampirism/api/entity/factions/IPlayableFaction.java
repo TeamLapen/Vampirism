@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -25,7 +25,7 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
      * @param player
      * @return The "<? extends IFactionPlayer>" of this faction for the given player
      */
-    T getPlayerCapability(EntityPlayer player);
+    T getPlayerCapability(PlayerEntity player);
 
     /**
      * @return If the level should be rendered

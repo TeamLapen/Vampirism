@@ -5,11 +5,11 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.TileTotem;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
@@ -30,7 +30,7 @@ public class VillagePieceTotem extends VillagePieces.Village {
     public VillagePieceTotem() {
     }
 
-    public VillagePieceTotem(VillagePieces.Start start, int type, MutableBoundingBox boundingBox, EnumFacing facing, boolean forceHunter) {
+    public VillagePieceTotem(VillagePieces.Start start, int type, MutableBoundingBox boundingBox, Direction facing, boolean forceHunter) {
         super(start, type);
         this.setCoordBaseMode(facing);//Set facing
         this.boundingBox = boundingBox;
@@ -49,16 +49,16 @@ public class VillagePieceTotem extends VillagePieces.Village {
             this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.maxY + 4 - 1, 0);
         }
 
-        IBlockState sand_path = getBiomeSpecificBlockState(Blocks.SANDSTONE.getDefaultState());
-        IBlockState grass_path = this.getBiomeSpecificBlockState(Blocks.GRASS_PATH.getDefaultState());
-        IBlockState plank_path = this.getBiomeSpecificBlockState(Blocks.OAK_PLANKS.getDefaultState()); //TODO possible needs more planks reference
-        IBlockState cobble = this.getBiomeSpecificBlockState(Blocks.COBBLESTONE.getDefaultState());
+        BlockState sand_path = getBiomeSpecificBlockState(Blocks.SANDSTONE.getDefaultState());
+        BlockState grass_path = this.getBiomeSpecificBlockState(Blocks.GRASS_PATH.getDefaultState());
+        BlockState plank_path = this.getBiomeSpecificBlockState(Blocks.OAK_PLANKS.getDefaultState()); //TODO possible needs more planks reference
+        BlockState cobble = this.getBiomeSpecificBlockState(Blocks.COBBLESTONE.getDefaultState());
 
 
         for (int x = 0; x < 3; ++x) {
             for (int z = 0; z < 3; ++z) {
                 this.clearCurrentPositionBlocksUpwards(worldIn, x, 0, z, structureBoundingBoxIn);
-                IBlockState old = this.getBlockStateFromPos(worldIn, x, -1, z, structureBoundingBoxIn);
+                BlockState old = this.getBlockStateFromPos(worldIn, x, -1, z, structureBoundingBoxIn);
                 if (old.getMaterial().isLiquid()) {
                     this.setBlockState(worldIn, plank_path, x, -1, z, structureBoundingBoxIn);
                 } else if (old.getBlock() == Blocks.GRASS || old.getBlock() == Blocks.DIRT) {
@@ -96,7 +96,7 @@ public class VillagePieceTotem extends VillagePieces.Village {
     }
 
     @Override
-    protected void readAdditional(NBTTagCompound tagCompound, TemplateManager p_143011_2_) {
+    protected void readAdditional(CompoundNBT tagCompound, TemplateManager p_143011_2_) {
         super.readAdditional(tagCompound, p_143011_2_);
         if (tagCompound.contains("force_hunter")) {
             forceHunter = tagCompound.getBoolean("force_hunter");
@@ -104,7 +104,7 @@ public class VillagePieceTotem extends VillagePieces.Village {
     }
 
     @Override
-    protected void writeAdditional(NBTTagCompound tagCompound) {
+    protected void writeAdditional(CompoundNBT tagCompound) {
         super.writeAdditional(tagCompound);
         tagCompound.putBoolean("force_hunter", forceHunter);
     }
@@ -112,7 +112,7 @@ public class VillagePieceTotem extends VillagePieces.Village {
     public static class CreationHandler implements VillagerRegistry.IVillageCreationHandler {
 
         @Override
-        public VillagePieces.Village buildComponent(VillagePieces.PieceWeight villagePiece, VillagePieces.Start startPiece, List<StructurePiece> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
+        public VillagePieces.Village buildComponent(VillagePieces.PieceWeight villagePiece, VillagePieces.Start startPiece, List<StructurePiece> pieces, Random random, int p1, int p2, int p3, Direction facing, int p5) {
             MutableBoundingBox structureBoundingBox = MutableBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 2, 4, 2, facing);
             boolean forceHunter = false;
             for (StructurePiece c : pieces) {

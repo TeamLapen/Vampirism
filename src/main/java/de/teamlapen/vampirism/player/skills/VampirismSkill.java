@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -31,7 +31,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
 
     @Override
     public ITextComponent getDescription() {
-        return description == null ? null : new TextComponentTranslation(description);
+        return description == null ? null : new TranslationTextComponent(description);
     }
 
     @Override

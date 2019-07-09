@@ -1,15 +1,14 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
-
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -27,7 +26,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
 
     private final TIER tier;
 
-    public static boolean isFullyEquipped(EntityPlayer player) {
+    public static boolean isFullyEquipped(PlayerEntity player) {
         for (ItemStack stack : player.inventory.armorInventory) {
             if (stack.isEmpty() || !(stack.getItem() instanceof ItemObsidianArmor)) {
                 return false;
@@ -42,7 +41,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
 
     private final float[] SPEED_REDUCTION = new float[]{-0.025F, -0.1F, -0.05F, -0.025F};
 
-    public ItemObsidianArmor(EntityEquipmentSlot equipmentSlotIn, TIER tier) {
+    public ItemObsidianArmor(EquipmentSlotType equipmentSlotIn, TIER tier) {
         super(baseRegName, tier.getName(), ArmorMaterial.IRON, equipmentSlotIn, new Properties().group(VampirismMod.creativeTab));
         this.tier = tier;
     }
@@ -55,7 +54,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         switch (getVampirismTier()) {
             case ENHANCED:
                 return getTextureLocation("obsidian_armor_of_hell_enhanced", slot, type);
@@ -68,7 +67,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
     }
 
     @Override
-    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
         Multimap<String, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
         if (slot == this.armorType) {
             map.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Speed modifier", this.getSpeedReduction(slot.getIndex()), 2));

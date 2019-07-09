@@ -5,9 +5,9 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
@@ -65,7 +65,7 @@ public class HalloweenSpecial {
      *
      * @param target
      */
-    public static void triggerOverlay(EntityPlayer target) {
+    public static void triggerOverlay(PlayerEntity target) {
 
         render_overlay = 150;
         VampLib.proxy.getParticleHandler().spawnParticle(target.getEntityWorld(), ModParticles.HALLOWEEN, target.posX, target.posY, target.posZ);
@@ -95,7 +95,7 @@ public class HalloweenSpecial {
         if (enabled) {
             tickTimer++;
             if (tickTimer % 200 == 99) {
-                for (EntityPlayerMP p : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
+                for (ServerPlayerEntity p : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
                     UUID u = p.getUniqueID();
                     if (!blacklist.contains(u)) {
                         EntityDraculaHalloween draculaHalloween = new EntityDraculaHalloween(p.getEntityWorld());
@@ -116,8 +116,8 @@ public class HalloweenSpecial {
     @SubscribeEvent
     public void onSleepInBed(PlayerSleepInBedEvent event) {
         if (enabled) {
-            event.setResult(EntityPlayer.SleepResult.NOT_POSSIBLE_NOW);
-            event.getEntityPlayer().sendStatusMessage(new TextComponentString("You cannot sleep on Halloween!"), false);
+            event.setResult(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
+            event.getEntityPlayer().sendStatusMessage(new StringTextComponent("You cannot sleep on Halloween!"), false);
         }
     }
 

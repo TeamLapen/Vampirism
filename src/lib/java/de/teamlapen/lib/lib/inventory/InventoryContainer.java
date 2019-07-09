@@ -1,9 +1,10 @@
 package de.teamlapen.lib.lib.inventory;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -18,7 +19,7 @@ public class InventoryContainer extends Container {
 
     protected InventorySlot.IInventorySlotInventory tile;
 
-    public InventoryContainer(InventoryPlayer invPlayer, InventorySlot.IInventorySlotInventory te) {
+    public InventoryContainer(PlayerInventory invPlayer, InventorySlot.IInventorySlotInventory te) {
         tile = te;
         InventorySlot[] slots = tile.getSlots();
         for (int i = 0; i < slots.length; i++) {
@@ -28,11 +29,11 @@ public class InventoryContainer extends Container {
         int i;
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new net.minecraft.inventory.Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
         for (i = 0; i < 9; ++i) {
-            this.addSlot(new net.minecraft.inventory.Slot(invPlayer, i, 8 + i * 18, 142));
+            this.addSlot(new Slot(invPlayer, i, 8 + i * 18, 142));
         }
 
         onInventoryChanged();
@@ -40,7 +41,7 @@ public class InventoryContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(PlayerEntity player) {
         return tile.isUsableByPlayer(player);
     }
 
@@ -53,9 +54,9 @@ public class InventoryContainer extends Container {
 
     @Nonnull
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int slot) {
         ItemStack stack = ItemStack.EMPTY;
-        net.minecraft.inventory.Slot slotObject = inventorySlots.get(slot);
+        Slot slotObject = inventorySlots.get(slot);
 
         // null checks and checks if the item can be stacked (maxStackSize > 1)
         ItemStack stackInSlot;
@@ -93,7 +94,7 @@ public class InventoryContainer extends Container {
         return result;
     }
 
-    public static class FilterSlot extends net.minecraft.inventory.Slot {
+    public static class FilterSlot extends Slot {
         InventorySlot.IItemSelector selector;
 
         public FilterSlot(IInventory inventory, int index, int xPosition, int yPosition, InventorySlot.IItemSelector selector) {

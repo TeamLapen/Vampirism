@@ -11,8 +11,8 @@ import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -37,7 +37,7 @@ public class EntityVampireFactionVillagerBase extends EntityFactionVillager impl
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
+        this.addPotionEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
     }
 
     @Nonnull
@@ -81,7 +81,7 @@ public class EntityVampireFactionVillagerBase extends EntityFactionVillager impl
             if (isAlive() && isInWater()) {
                 setAir(300);
                 if (ticksExisted % 16 == 4) {
-                    addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 80, 0));
+                    addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
                 }
             }
         }
@@ -90,7 +90,7 @@ public class EntityVampireFactionVillagerBase extends EntityFactionVillager impl
 
     @Override
     public boolean useBlood(int amt, boolean allowPartial) {
-        this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, amt * 20));
+        this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
         return true;
     }
 

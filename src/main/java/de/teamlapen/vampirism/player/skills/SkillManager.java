@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player.skills;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -11,7 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.core.VampirismRegistries;
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -94,7 +93,7 @@ public class SkillManager implements ISkillManager {
      */
     public void printSkills(IPlayableFaction faction, CommandSource sender) {
         for (ISkill s : getSkillsForFaction(faction)) {
-            sender.sendFeedback(new TextComponentString("ID: " + VampirismRegistries.SKILLS.getKey(s) + " Skill: " + s), true);
+            sender.sendFeedback(new StringTextComponent("ID: " + VampirismRegistries.SKILLS.getKey(s) + " Skill: " + s), true);
         }
     }
 

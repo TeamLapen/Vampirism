@@ -2,7 +2,7 @@ package de.teamlapen.lib.util;
 
 
 import net.minecraft.client.particle.Particle;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,7 +42,7 @@ public abstract class ParticleHandler {
     /**
      * Client side only
      */
-    public void spawnParticle(World world, ResourceLocation particle, double posX, double posY, double posZ, NBTTagCompound nbt) {
+    public void spawnParticle(World world, ResourceLocation particle, double posX, double posY, double posZ, CompoundNBT nbt) {
 
     }
 
@@ -50,7 +50,7 @@ public abstract class ParticleHandler {
 
     /**
      */
-    public void spawnParticles(World world, ResourceLocation particle, double posX, double posY, double posZ, int count, double maxDist, Random random, NBTTagCompound nbt) {
+    public void spawnParticles(World world, ResourceLocation particle, double posX, double posY, double posZ, int count, double maxDist, Random random, CompoundNBT nbt) {
 
     }
 
@@ -69,7 +69,7 @@ public abstract class ParticleHandler {
         Particle createParticle(World world, double posX, double posY, double posZ, Object... param);
 
         @Nonnull
-        NBTTagCompound createParticleInfo(Object... param);
+        CompoundNBT createParticleInfo(Object... param);
 
         /**
          * Reverse of {@link ICustomParticleFactory#createParticleInfo(Object...)}.
@@ -81,7 +81,7 @@ public abstract class ParticleHandler {
          */
         @OnlyIn(Dist.CLIENT)
         @Nonnull
-        Object[] readParticleInfo(NBTTagCompound nbt);
+        Object[] readParticleInfo(CompoundNBT nbt);
     }
 
 

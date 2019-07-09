@@ -7,11 +7,11 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
 
 import javax.annotation.Nonnull;
 
-public abstract class HunterEntityAction<T extends EntityCreature & IEntityActionUser> extends DefaultEntityAction implements IEntityAction {
+public abstract class HunterEntityAction<T extends CreatureEntity & IEntityActionUser> extends DefaultEntityAction implements IEntityAction {
 
     public HunterEntityAction(@Nonnull EntityActionTier tier, EntityClassType[] param) {
         super(tier, param);

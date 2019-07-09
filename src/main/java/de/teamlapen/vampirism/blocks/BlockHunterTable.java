@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.inventory.HunterTableContainer;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -21,16 +21,16 @@ import javax.annotation.Nullable;
  */
 public class BlockHunterTable extends VampirismBlock {
     public static final String name = "hunter_table";
-    public static final DirectionProperty FACING = BlockHorizontal.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
 
-    public static HunterTableContainer createInventoryContainer(EntityPlayer player, BlockPos pos) {
+    public static HunterTableContainer createInventoryContainer(PlayerEntity player, BlockPos pos) {
         return new HunterTableContainer(player, pos);
     }
 
     public BlockHunterTable() {
         super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.5f));
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, EnumFacing.NORTH));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -40,34 +40,33 @@ public class BlockHunterTable extends VampirismBlock {
 
     @Nullable
     @Override
-    public IBlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.getDefaultState().with(FACING, context.getNearestLookingDirection());
     }
 
     @Override
-    public IBlockState mirror(IBlockState state, Mirror mirrorIn) {
+    public boolean isFullCube(BlockState state) {
+        return false;
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
 
     @Override
-    public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
         //player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TABLE, world, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
         return true;
     }
 
     @Override
-    public IBlockState rotate(IBlockState state, Rotation rot) {
+    public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
-
     @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 

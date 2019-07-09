@@ -3,19 +3,19 @@ package de.teamlapen.vampirism.client.render.entities;
 import de.teamlapen.vampirism.client.model.ModelBasicHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainerDummy;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.renderer.entity.RenderBiped;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.BipedRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class RenderHunterTrainerDummy extends RenderBiped<EntityHunterTrainerDummy> {
+public class RenderHunterTrainerDummy extends BipedRenderer<EntityHunterTrainerDummy> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base1.png");
 
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_extra.png");
 
-    public RenderHunterTrainerDummy(RenderManager renderManagerIn) {
+    public RenderHunterTrainerDummy(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new ModelBasicHunter(), 0.5F);
     }
 

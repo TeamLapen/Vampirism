@@ -2,22 +2,22 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiAltarInfusion extends GuiContainer {
+public class GuiAltarInfusion extends ContainerScreen {
 
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/altar4.png");
 
     private TileAltarInfusion tileAltar;
 
-    public GuiAltarInfusion(InventoryPlayer inv, TileAltarInfusion tile) {
+    public GuiAltarInfusion(PlayerInventory inv, TileAltarInfusion tile) {
         super(tile.getNewInventoryContainer(inv));
         tileAltar = tile;
     }

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
@@ -11,7 +10,7 @@ import de.teamlapen.vampirism.api.items.IBloodPotionPropertyRandomizer;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
+import net.minecraft.potion.Effect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
 import org.apache.commons.lang3.tuple.Triple;
@@ -106,7 +105,7 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
 
     @ThreadSafeAPI
     @Override
-    public void registerPotionEffect(ResourceLocation id, ResourceLocation categoryId, boolean isBad, Potion potion, int weight, IBloodPotionPropertyRandomizer propertyRandomizer) {
+    public void registerPotionEffect(ResourceLocation id, ResourceLocation categoryId, boolean isBad, Effect potion, int weight, IBloodPotionPropertyRandomizer propertyRandomizer) {
         BloodPotionEffect effect = new BloodPotionEffect(id, potion, isBad, weight, propertyRandomizer);
         potionsEffectsQueue.add(Triple.of(categoryId, isBad, effect));
     }

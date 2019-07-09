@@ -1,7 +1,7 @@
 package de.teamlapen.lib.lib.inventory;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -25,7 +25,7 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(PlayerEntity player) {
 
     }
 
@@ -93,7 +93,7 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(PlayerEntity player) {
         return true;
     }
 
@@ -103,7 +103,7 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(PlayerEntity player) {
 
     }
 

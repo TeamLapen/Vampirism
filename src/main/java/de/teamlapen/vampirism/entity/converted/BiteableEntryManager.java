@@ -3,11 +3,10 @@ package de.teamlapen.vampirism.entity.converted;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.config.Configs;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.apache.logging.log4j.LogManager;
@@ -82,12 +81,12 @@ public class BiteableEntryManager {
      * @return The created/existing entry or null
      */
     public @Nullable
-    BiteableEntry calculate(EntityCreature creature) {
+    BiteableEntry calculate(CreatureEntity creature) {
         ResourceLocation id = new ResourceLocation(creature.getEntityString());
         if (blacklist.contains(id)) return null;
         BiteableEntry entry = get(id);
         if (entry != null) return entry;
-        if (!Configs.autoCalculateEntityBlood || !(creature instanceof EntityAnimal)) {
+        if (!Configs.autoCalculateEntityBlood || !(creature instanceof AnimalEntity)) {
             blacklist.add(id);
             return null;
         }

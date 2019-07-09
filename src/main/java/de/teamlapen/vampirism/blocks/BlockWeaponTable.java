@@ -5,18 +5,18 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 
@@ -34,7 +34,17 @@ public class BlockWeaponTable extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean isFullCube(BlockState state) {
+        return false;
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             int lava = state.get(LAVA);
             boolean flag = false;
@@ -63,7 +73,7 @@ public class BlockWeaponTable extends VampirismBlock {
                     //player.openGui(VampirismMod.instance, ModGuiHandler.ID_WEAPON_TABLE, world, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
                 }
                 else {
-                    player.sendMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
+                    player.sendMessage(new TranslationTextComponent("tile.vampirism." + regName + ".cannot_use"));
                 }
             }
         }
@@ -71,18 +81,7 @@ public class BlockWeaponTable extends VampirismBlock {
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-
-    @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(LAVA);
     }
 
@@ -91,7 +90,7 @@ public class BlockWeaponTable extends VampirismBlock {
     /**
      * @return If the given player is allowed to use this.
      */
-    private boolean canUse(EntityPlayer player) {
+    private boolean canUse(PlayerEntity player) {
         IPlayableFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
         if (faction != null && faction.equals(VReference.HUNTER_FACTION)) {
             return faction.getPlayerCapability(player).getSkillHandler().isSkillEnabled(HunterSkills.weapon_table);

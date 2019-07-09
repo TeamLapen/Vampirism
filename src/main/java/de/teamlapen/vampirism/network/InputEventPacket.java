@@ -21,15 +21,15 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
@@ -83,7 +83,7 @@ public class InputEventPacket implements IMessage {
     public static void handle(final InputEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         Validate.notNull(msg.action);
-        EntityPlayer player = ctx.getSender();
+        PlayerEntity player = ctx.getSender();
         Validate.notNull(player);
         ctx.enqueueWork(() -> {
             IFactionPlayer factionPlayer = FactionPlayerHandler.get(player).getCurrentFactionPlayer();
@@ -112,13 +112,13 @@ public class InputEventPacket implements IMessage {
                             IAction.PERM r = actionHandler.toggleAction(action);
                             switch (r) {
                                 case NOT_UNLOCKED:
-                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.not_unlocked"));
+                                    player.sendMessage(new TranslationTextComponent("text.vampirism.action.not_unlocked"));
                                     break;
                                 case DISABLED:
-                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));
+                                    player.sendMessage(new TranslationTextComponent("text.vampirism.action.deactivated_by_serveradmin"));
                                     break;
                                 case COOLDOWN:
-                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.cooldown_not_over"));
+                                    player.sendMessage(new TranslationTextComponent("text.vampirism.action.cooldown_not_over"));
                                     break;
                                 default://Everything alright
                             }
@@ -151,7 +151,7 @@ public class InputEventPacket implements IMessage {
                                 skillHandler.enableSkill(skill);
                                 if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
                                     //TODO does this cause problems with addons?
-                                    NBTTagCompound sync = new NBTTagCompound();
+                                    CompoundNBT sync = new CompoundNBT();
                                     ((SkillHandler) skillHandler).writeUpdateForClient(sync);
                                     HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                                 }
@@ -180,11 +180,11 @@ public class InputEventPacket implements IMessage {
                         }
                         if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
                             //TODO does this cause problems with addons?
-                            NBTTagCompound sync = new NBTTagCompound();
+                            CompoundNBT sync = new CompoundNBT();
                             ((SkillHandler) skillHandler).writeUpdateForClient(sync);
                             HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                         }
-                        player.sendMessage(new TextComponentTranslation("text.vampirism.skill.skills_reset"));
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"));
                     } else {
                         LOGGER.error("Player %s is in no faction, so he cannot reset skills");
                     }
@@ -219,10 +219,10 @@ public class InputEventPacket implements IMessage {
                         if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_portable_crafting)) {
                             //player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ()); TODO 1.14
                         } else {
-                            player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));
+                            player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));
                         }
                     } else {
-                        player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(VReference.HUNTER_FACTION.getTranslationKey())));
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", new TranslationTextComponent(VReference.HUNTER_FACTION.getTranslationKey())));
                     }
                     break;
                 case BASICHUNTERLEVELUP:
@@ -239,7 +239,7 @@ public class InputEventPacket implements IMessage {
                         }
                     } else if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
                         ItemStack stack = player.getHeldItemMainhand();
-                        stack.setDisplayName(new TextComponentString(name));
+                        stack.setDisplayName(new StringTextComponent(name));
                     }
                     break;
             }

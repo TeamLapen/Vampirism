@@ -5,11 +5,11 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -46,17 +46,17 @@ public class ItemHeartSeeker extends VampirismVampireSword implements IItemWithT
 
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (target.getHealth() <= 0.0f && Helper.isVampire(attacker)) {
             float trained = getTrained(stack, attacker);
-            int exp = target instanceof EntityPlayer ? 10 : (attacker instanceof EntityPlayer ? (Helper.getExperiencePoints(target, (EntityPlayer) attacker)) : 5);
+            int exp = target instanceof PlayerEntity ? 10 : (attacker instanceof PlayerEntity ? (Helper.getExperiencePoints(target, (PlayerEntity) attacker)) : 5);
             trained += exp / 5f * (1.0f - trained) / 15f;
             setTrained(stack, attacker, trained);
         }
         float charged = getCharged(stack);
         charged -= Balance.general.HEART_SEEKER_USAGE_FACTOR * (getVampirismTier().ordinal() + 2) / 2f;
         setCharged(stack, charged);
-        attacker.setHeldItem(EnumHand.MAIN_HAND, stack);
+        attacker.setHeldItem(Hand.MAIN_HAND, stack);
         return super.hitEntity(stack, target, attacker);
     }
 

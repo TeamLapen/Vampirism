@@ -1,20 +1,20 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.player.PlayerEntity;
 
 /**
  * Makes the hunter trainer look at his trainee
  */
-public class HunterAILookAtTrainee<T extends EntityLiving & HunterAILookAtTrainee.ITrainer> extends EntityAIWatchClosest {
+public class HunterAILookAtTrainee<T extends MobEntity & HunterAILookAtTrainee.ITrainer> extends LookAtGoal {
     private final T theTrainer;
 
     /**
      * @param theTrainer Has to be instance of ITrainer
      */
     public HunterAILookAtTrainee(T theTrainer) {
-        super(theTrainer, EntityPlayer.class, 8.0F);
+        super(theTrainer, PlayerEntity.class, 8.0F);
         this.theTrainer = theTrainer;
         this.setMutexBits(5);
     }
@@ -38,6 +38,6 @@ public class HunterAILookAtTrainee<T extends EntityLiving & HunterAILookAtTraine
         /**
          * @return The player currently being trained or null
          */
-        EntityPlayer getTrainee();
+        PlayerEntity getTrainee();
     }
 }

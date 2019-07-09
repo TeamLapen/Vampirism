@@ -3,7 +3,7 @@ package de.teamlapen.lib.lib.client.gui;
 
 import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.lib.util.UtilLib;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * @author maxanier
  */
 @OnlyIn(Dist.CLIENT)
-public abstract class GuiPieMenu<T> extends GuiScreen {
+public abstract class GuiPieMenu<T> extends Screen {
     private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie_menu_bg.png");
     private final static ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie_menu_center.png");
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");

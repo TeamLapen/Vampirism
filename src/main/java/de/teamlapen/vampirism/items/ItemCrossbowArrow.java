@@ -8,11 +8,11 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IStringSerializable;
@@ -44,7 +44,7 @@ public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossb
      * @return An arrow entity at the players position using the given itemstack
      */
     @Override
-    public EntityCrossbowArrow createEntity(ItemStack stack, World world, EntityPlayer player, double heightOffset, double centerOffset, boolean rightHand) {
+    public EntityCrossbowArrow createEntity(ItemStack stack, World world, PlayerEntity player, double heightOffset, double centerOffset, boolean rightHand) {
         EntityCrossbowArrow entity = EntityCrossbowArrow.createWithShooter(world, player, heightOffset, centerOffset, rightHand, stack);
         entity.setDamage(type.baseDamage);
         if (this.type == EnumArrowType.SPITFIRE) {
@@ -78,7 +78,7 @@ public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossb
                 for (int dy = -2; dy < 2; dy++) {
                     for (int dz = -1; dz < 2; dz++) {
                         BlockPos pos = blockPos.add(dx, dy, dz);
-                        IBlockState blockState = entity.getEntityWorld().getBlockState(pos);
+                        BlockState blockState = entity.getEntityWorld().getBlockState(pos);
                         if (blockState.getMaterial().isReplaceable()
                                 && entity.getEntityWorld().getBlockState(pos.down()).isTopSolid() && (entity).getRNG().nextInt(4) != 0) {
                             entity.getEntityWorld().setBlockState(pos, ModBlocks.alchemical_fire.getDefaultState());
@@ -98,12 +98,12 @@ public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossb
      * @param shootingEntity The shooting entity. Can be the arrow entity itself
      */
     @Override
-    public void onHitEntity(ItemStack arrow, EntityLivingBase entity, IEntityCrossbowArrow arrowEntity, Entity shootingEntity) {
+    public void onHitEntity(ItemStack arrow, LivingEntity entity, IEntityCrossbowArrow arrowEntity, Entity shootingEntity) {
         if (type == EnumArrowType.VAMPIRE_KILLER) {
             if (entity instanceof IVampireMob) {
                 float max = entity.getMaxHealth();
                 if (max < Balance.general.ARROW_VAMPIRE_KILLER_MAX_HEALTH) {
-                    entity.attackEntityFrom(DamageSource.causeArrowDamage((EntityArrow) arrowEntity, shootingEntity), max);
+                    entity.attackEntityFrom(DamageSource.causeArrowDamage((AbstractArrowEntity) arrowEntity, shootingEntity), max);
                 }
             }
         }

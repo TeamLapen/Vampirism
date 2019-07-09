@@ -4,9 +4,9 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockStairs;
+import net.minecraft.block.StairsBlock;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -48,9 +48,9 @@ public class ModBlocks {
     public static final BlockGarlicBeacon garlic_beacon_weak = getNull();
     public static final BlockGarlicBeacon garlic_beacon_improved = getNull();
 
-    public static final BlockStairs castle_stairs_dark_brick = getNull();
-    public static final BlockStairs castle_stairs_dark_stone = getNull();
-    public static final BlockStairs castle_stairs_purple_brick = getNull();
+    public static final StairsBlock castle_stairs_dark_brick = getNull();
+    public static final StairsBlock castle_stairs_dark_stone = getNull();
+    public static final StairsBlock castle_stairs_purple_brick = getNull();
     public static final BlockCastleSlab castle_slab_dark_stone = getNull();
     public static final BlockCastleSlab castle_slab_dark_brick = getNull();
     public static final BlockCastleSlab castle_slab_purple_brick = getNull();
@@ -62,9 +62,9 @@ public class ModBlocks {
 
 
     private static @Nonnull
-    ItemBlock itemBlock(@Nonnull Block block, @Nonnull Item.Properties props) {
+    BlockItem itemBlock(@Nonnull Block block, @Nonnull Item.Properties props) {
         assert block != null;
-        ItemBlock item = new ItemBlock(block, props);
+        BlockItem item = new BlockItem(block, props);
         item.setRegistryName(block.getRegistryName());
         return item;
     }

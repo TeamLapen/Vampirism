@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.entity.minions;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 
 import java.util.UUID;
 
@@ -25,14 +25,14 @@ public interface IMinionLord<T extends IMinion> {
     /**
      * @return The target the lord's minions should attack, can be null
      */
-    EntityLivingBase getMinionTarget();
+    LivingEntity getMinionTarget();
 
     /**
      * The Entity representing this lord. Can be the same as this object (e.g. VampireLord) or something else (e.g. VampirePlayer)
      *
      * @return
      */
-    EntityLivingBase getRepresentingEntity();
+    LivingEntity getRepresentingEntity();
 
     /**
      * @param e

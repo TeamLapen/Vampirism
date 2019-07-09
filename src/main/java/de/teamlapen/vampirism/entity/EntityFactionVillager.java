@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
@@ -41,7 +41,7 @@ public abstract class EntityFactionVillager extends EntityVillagerVampirism impl
     }
 
     @Override
-    public EntityLivingBase getRepresentingEntity() {
+    public LivingEntity getRepresentingEntity() {
         return this;
     }
 
@@ -58,7 +58,7 @@ public abstract class EntityFactionVillager extends EntityVillagerVampirism impl
             this.buyingList = new MerchantRecipeList();
         }
         ITradeList[] trades = this.getTrades(tradingLevel - 1);
-        for (EntityVillager.ITradeList trade : trades) {
+        for (VillagerEntity.ITradeList trade : trades) {
             trade.addMerchantRecipe(this, this.buyingList, this.rand);
         }
 

@@ -2,16 +2,14 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.Hand;
+import net.minecraft.util.text.StringTextComponent;
 
 /**
  * 
@@ -28,14 +26,14 @@ public class SetSwordTrainedCommand extends BasicCommand {
                         }));
     }
 
-    private static int setSwordCharged(CommandSource commandSource, EntityPlayerMP asPlayer, float train) {
+    private static int setSwordCharged(CommandSource commandSource, ServerPlayerEntity asPlayer, float train) {
         ItemStack held = asPlayer.getHeldItemMainhand();
 
         if (held.getItem() instanceof VampirismVampireSword) {
             ((VampirismVampireSword) held.getItem()).setTrained(held, asPlayer, train);
-            asPlayer.setHeldItem(EnumHand.MAIN_HAND, held);
+            asPlayer.setHeldItem(Hand.MAIN_HAND, held);
         } else {
-            commandSource.sendFeedback(new TextComponentString("You have to hold a vampire sword in your main hand"), true);
+            commandSource.sendFeedback(new StringTextComponent("You have to hold a vampire sword in your main hand"), true);
         }
         return 0;
     }

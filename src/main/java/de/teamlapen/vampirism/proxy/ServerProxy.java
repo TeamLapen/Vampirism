@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nullable;
 
@@ -17,7 +17,7 @@ public class ServerProxy extends CommonProxy {
     }
 
     @Override
-    public boolean isPlayerThePlayer(EntityPlayer player) {
+    public boolean isPlayerThePlayer(PlayerEntity player) {
         return false;
     }
 

@@ -2,16 +2,15 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.util.REFERENCE;
-
-import net.minecraft.client.renderer.entity.RenderBiped;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.model.ModelBiped;
+import net.minecraft.client.renderer.entity.BipedRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class RenderBasicVampire extends RenderBiped<EntityBasicVampire> {
+public class RenderBasicVampire extends BipedRenderer<EntityBasicVampire> {
 
     private static final ResourceLocation[] textures = {
             new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png"),
@@ -24,8 +23,8 @@ public class RenderBasicVampire extends RenderBiped<EntityBasicVampire> {
         return textures[entityId % textures.length];
     }
 
-    public RenderBasicVampire(RenderManager renderManagerIn) {
-        super(renderManagerIn, new ModelBiped(0F, 0F, 64, 64), 0.5F);
+    public RenderBasicVampire(EntityRendererManager renderManagerIn) {
+        super(renderManagerIn, new BipedModel(0F, 0F, 64, 64), 0.5F);
     }
 
     @Override

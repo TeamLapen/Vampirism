@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
+import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -18,13 +18,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Almost the same as {@link EntityAIMoveThroughVillage},
- * but I had to reimplement the whole class since {@link EntityAIMoveThroughVillage#resizeDoorList()}
+ * Almost the same as {@link MoveThroughVillageGoal},
+ * but I had to reimplement the whole class since {@link MoveThroughVillageGoal#resizeDoorList()}
  * only works for villages with more than 15 doors and is private.
  */
-public class EntityAIMoveThroughVillageCustom extends EntityAIBase {
+public class EntityAIMoveThroughVillageCustom extends Goal {
     private final int randomTicksToResize;
-    private final EntityCreature theEntity;
+    private final CreatureEntity theEntity;
     private double movementSpeed;
     /**
      * The PathNavigate of our entity.
@@ -41,14 +41,14 @@ public class EntityAIMoveThroughVillageCustom extends EntityAIBase {
      * @param isNocturnalIn       If true, the task won't execute during daytime
      * @param randomTicksToResize How often the list of blacklisted doors is shrinked. (Indirectly affects how often this tasks is executed)
      */
-    public EntityAIMoveThroughVillageCustom(EntityCreature theEntityIn, double movementSpeedIn, boolean isNocturnalIn, int randomTicksToResize) {
+    public EntityAIMoveThroughVillageCustom(CreatureEntity theEntityIn, double movementSpeedIn, boolean isNocturnalIn, int randomTicksToResize) {
         this.theEntity = theEntityIn;
         this.movementSpeed = movementSpeedIn;
         this.isNocturnal = isNocturnalIn;
         this.randomTicksToResize = randomTicksToResize;
         this.setMutexBits(1);
 
-        if (!(theEntityIn.getNavigator() instanceof PathNavigateGround)) {
+        if (!(theEntityIn.getNavigator() instanceof GroundPathNavigator)) {
             throw new IllegalArgumentException("Unsupported mob for MoveThroughVillageGoal");
         }
     }
@@ -97,7 +97,7 @@ public class EntityAIMoveThroughVillageCustom extends EntityAIBase {
                 if (this.doorInfo == null) {
                     return false;
                 } else {
-                    PathNavigateGround pathnavigateground = (PathNavigateGround) this.theEntity.getNavigator();
+                    GroundPathNavigator pathnavigateground = (GroundPathNavigator) this.theEntity.getNavigator();
                     boolean flag = pathnavigateground.getEnterDoors();
                     pathnavigateground.setBreakDoors(false);
                     this.entityPathNavigate = pathnavigateground.getPathToPos(this.doorInfo.getDoorBlockPos());

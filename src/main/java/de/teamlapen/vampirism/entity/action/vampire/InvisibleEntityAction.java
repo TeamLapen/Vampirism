@@ -7,11 +7,11 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModParticles;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.init.Particles;
 import net.minecraft.util.math.Vec3d;
 
-public class InvisibleEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
+public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
 
     public InvisibleEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -53,7 +53,7 @@ public class InvisibleEntityAction<T extends EntityCreature & IEntityActionUser>
     }
 
     @Override
-    public int getWeight(EntityCreature entity) {
+    public int getWeight(CreatureEntity entity) {
         double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).length();
         if (distanceToTarget > 4) {
             return 3;

@@ -2,7 +2,7 @@ package de.teamlapen.lib.lib.network;
 
 import de.teamlapen.lib.network.IMessage;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -49,7 +49,7 @@ public abstract class AbstractPacketDispatcher {
     /**
      * Send this message to the specified player.
      */
-    public final void sendTo(IMessage message, EntityPlayerMP player) {
+    public final void sendTo(IMessage message, ServerPlayerEntity player) {
         dispatcher.send(PacketDistributor.PLAYER.with(() -> player), message);
         dispatcher.sendTo(message, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
     }

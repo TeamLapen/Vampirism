@@ -4,11 +4,11 @@ import de.teamlapen.lib.util.ParticleHandler;
 import de.teamlapen.vampirism.client.render.particle.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.CloudParticle;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleCloud;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Particles;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -46,8 +46,8 @@ public class ModParticles {
 
             @Nonnull
             @Override
-            public NBTTagCompound createParticleInfo(Object... param) {
-                NBTTagCompound nbt = new NBTTagCompound();
+            public CompoundNBT createParticleInfo(Object... param) {
+                CompoundNBT nbt = new CompoundNBT();
                 nbt.putInt("0", (Integer) param[0]);
                 nbt.putInt("1", (Integer) param[1]);
                 nbt.putInt("2", (Integer) param[2]);
@@ -59,7 +59,7 @@ public class ModParticles {
 
             @Nonnull
             @Override
-            public Object[] readParticleInfo(NBTTagCompound nbt) {
+            public Object[] readParticleInfo(CompoundNBT nbt) {
                 Object[] data = new Object[nbt.contains("3") ? 4 : 3];
                 data[0] = nbt.getInt("0");
                 data[1] = nbt.getInt("1");
@@ -83,8 +83,8 @@ public class ModParticles {
 
             @Nonnull
             @Override
-            public NBTTagCompound createParticleInfo(Object... param) {
-                NBTTagCompound nbt = new NBTTagCompound();
+            public CompoundNBT createParticleInfo(Object... param) {
+                CompoundNBT nbt = new CompoundNBT();
                 nbt.putDouble("0", (Double) param[0]);
                 nbt.putDouble("1", (Double) param[1]);
                 nbt.putDouble("2", (Double) param[2]);
@@ -98,7 +98,7 @@ public class ModParticles {
             @Nonnull
             @OnlyIn(Dist.CLIENT)
             @Override
-            public Object[] readParticleInfo(NBTTagCompound nbt) {
+            public Object[] readParticleInfo(CompoundNBT nbt) {
                 Object[] data = new Object[nbt.contains("4") ? 5 : 4];
                 data[0] = nbt.getDouble("0");
                 data[1] = nbt.getDouble("1");
@@ -119,8 +119,8 @@ public class ModParticles {
 
             @Nonnull
             @Override
-            public NBTTagCompound createParticleInfo(Object... param) {
-                NBTTagCompound nbt = new NBTTagCompound();
+            public CompoundNBT createParticleInfo(Object... param) {
+                CompoundNBT nbt = new CompoundNBT();
                 nbt.putInt("0", ((Entity) param[0]).getEntityId());
                 nbt.putBoolean("1", (Boolean) param[1]);
                 return nbt;
@@ -129,7 +129,7 @@ public class ModParticles {
             @Nonnull
             @OnlyIn(Dist.CLIENT)
             @Override
-            public Object[] readParticleInfo(NBTTagCompound nbt) {
+            public Object[] readParticleInfo(CompoundNBT nbt) {
                 int i = nbt.getInt("0");
                 World world = Minecraft.getInstance().world;
                 if (world == null) return null;
@@ -151,13 +151,13 @@ public class ModParticles {
 
             @Nonnull
             @Override
-            public NBTTagCompound createParticleInfo(Object... param) {
-                return new NBTTagCompound();
+            public CompoundNBT createParticleInfo(Object... param) {
+                return new CompoundNBT();
             }
 
             @Nonnull
             @Override
-            public Object[] readParticleInfo(NBTTagCompound nbt) {
+            public Object[] readParticleInfo(CompoundNBT nbt) {
                 return new Object[0];
             }
         });
@@ -171,14 +171,14 @@ public class ModParticles {
 
             @Nonnull
             @Override
-            public NBTTagCompound createParticleInfo(Object... param) {
-                return new NBTTagCompound();
+            public CompoundNBT createParticleInfo(Object... param) {
+                return new CompoundNBT();
             }
 
             @Nonnull
             @OnlyIn(Dist.CLIENT)
             @Override
-            public Object[] readParticleInfo(NBTTagCompound nbt) {
+            public Object[] readParticleInfo(CompoundNBT nbt) {
                 return new Object[0];
             }
         });
@@ -188,13 +188,13 @@ public class ModParticles {
             @OnlyIn(Dist.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new ParticleCloud.Factory().makeParticle(Particles.CLOUD, world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
+                return new CloudParticle.Factory().makeParticle(Particles.CLOUD, world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
             }
 
             @Nonnull
             @Override
-            public NBTTagCompound createParticleInfo(Object... param) {
-                NBTTagCompound nbt = new NBTTagCompound();
+            public CompoundNBT createParticleInfo(Object... param) {
+                CompoundNBT nbt = new CompoundNBT();
                 nbt.putDouble("0", (Double) param[0]);
                 nbt.putDouble("1", (Double) param[1]);
                 nbt.putDouble("2", (Double) param[2]);
@@ -204,7 +204,7 @@ public class ModParticles {
             @OnlyIn(Dist.CLIENT)
             @Nonnull
             @Override
-            public Object[] readParticleInfo(NBTTagCompound nbt) {
+            public Object[] readParticleInfo(CompoundNBT nbt) {
                 Object[] data = new Object[3];
                 data[0] = nbt.getDouble("0");
                 data[1] = nbt.getDouble("1");

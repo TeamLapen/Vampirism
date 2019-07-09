@@ -12,13 +12,13 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.dimension.EndDimension;
 
 import java.util.UUID;
@@ -35,7 +35,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
      *
      * @param player
      */
-    public static void updatePlayerBatSize(EntityPlayer player) {
+    public static void updatePlayerBatSize(PlayerEntity player) {
         float width = BAT_WIDTH;
         float height = BAT_HEIGHT;
         if (player.isSneaking()) {
@@ -65,7 +65,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        EntityPlayer player = vampire.getRepresentingPlayer();
+        PlayerEntity player = vampire.getRepresentingPlayer();
         float oldMax = player.getMaxHealth();
         float oldHealth = player.getHealth();
         setModifier(player, true);
@@ -76,8 +76,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         player.setHealth(newHealth);
         setPlayerBat(player, true);
         ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
-        if (player instanceof EntityPlayerMP) {
-            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.BAT);
+        if (player instanceof ServerPlayerEntity) {
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.BAT);
         }
         return true;
     }
@@ -125,7 +125,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
-        EntityPlayer player = vampire.getRepresentingPlayer();
+        PlayerEntity player = vampire.getRepresentingPlayer();
         float oldMax = player.getMaxHealth();
         float oldHealth = player.getHealth();
         setModifier(player, false);
@@ -134,7 +134,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         float newHealth = mult * oldHealth;
         player.setHealth(newHealth);
         if (!player.onGround) {
-            player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 20, 100, false, false));
+            player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 20, 100, false, false));
         }
         //player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 0, false, false));
         setPlayerBat(player, false);
@@ -151,13 +151,13 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
         if (vampire.isGettingSundamage() && !vampire.isRemote()) {
-            vampire.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_day"));
+            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_day"));
             return true;
         } else if (vampire.isGettingGarlicDamage() != EnumStrength.NONE && !vampire.isRemote()) {
-            vampire.getRepresentingEntity().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_garlic"));
+            vampire.getRepresentingEntity().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_garlic"));
             return true;
         } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().getEntityWorld().dimension instanceof EndDimension) {
-            vampire.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_end"));
+            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_end"));
             return true;
         } else return vampire.getRepresentingPlayer().isInWater();
     }
@@ -165,11 +165,11 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     /**
      * Set's flightspeed capability
      */
-    private void setFlightSpeed(EntityPlayer player, float speed) {
+    private void setFlightSpeed(PlayerEntity player, float speed) {
         player.abilities.setFlySpeed(speed);
     }
 
-    private void setModifier(EntityPlayer player, boolean enabled) {
+    private void setModifier(PlayerEntity player, boolean enabled) {
         if (enabled) {
 
             IAttributeInstance health = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
@@ -206,7 +206,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
      * @param player
      * @param bat
      */
-    private void setPlayerBat(EntityPlayer player, boolean bat) {
+    private void setPlayerBat(PlayerEntity player, boolean bat) {
         if (bat) updatePlayerBatSize(player);
         if (bat) player.setPosition(player.posX, player.posY + (PLAYER_HEIGHT - BAT_HEIGHT), player.posZ);
         //player.eyeHeight = (bat ? BAT_EYE_HEIGHT : player.getDefaultEyeHeight()); TODO 1.14

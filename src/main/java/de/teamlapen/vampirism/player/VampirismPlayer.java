@@ -7,9 +7,9 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,9 +22,9 @@ import java.util.UUID;
 public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener, IMinionLord {
 
     private final static Logger LOGGER = LogManager.getLogger(VampirismPlayer.class);
-    protected final EntityPlayer player;
+    protected final PlayerEntity player;
 
-    public VampirismPlayer(EntityPlayer player) {
+    public VampirismPlayer(PlayerEntity player) {
         this.player = player;
     }
 
@@ -44,7 +44,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
     }
 
     @Override
-    public EntityLivingBase getMinionTarget() {
+    public LivingEntity getMinionTarget() {
         return null;
     }
 
@@ -55,12 +55,12 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
      * @return
      */
     @Override
-    public EntityLivingBase getRepresentingEntity() {
+    public LivingEntity getRepresentingEntity() {
         return player;
     }
 
     @Override
-    public EntityPlayer getRepresentingPlayer() {
+    public PlayerEntity getRepresentingPlayer() {
         return player;
     }
 
@@ -97,12 +97,12 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
 
 
     @Override
-    public final void loadUpdateFromNBT(NBTTagCompound nbt) {
+    public final void loadUpdateFromNBT(CompoundNBT nbt) {
         loadUpdate(nbt);
     }
 
     @Override
-    public void onPlayerClone(EntityPlayer original, boolean wasDeath) {
+    public void onPlayerClone(PlayerEntity original, boolean wasDeath) {
         copyFrom(original);
     }
 
@@ -117,7 +117,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
     }
 
     @Override
-    public final void writeFullUpdateToNBT(NBTTagCompound nbt) {
+    public final void writeFullUpdateToNBT(CompoundNBT nbt) {
         writeFullUpdate(nbt);
     }
 
@@ -127,7 +127,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
      * @param old
      * @return
      */
-    protected abstract VampirismPlayer copyFromPlayer(EntityPlayer old);
+    protected abstract VampirismPlayer copyFromPlayer(PlayerEntity old);
 
 
     /**
@@ -135,7 +135,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
      *
      * @param nbt
      */
-    protected void loadUpdate(NBTTagCompound nbt) {
+    protected void loadUpdate(CompoundNBT nbt) {
     }
 
 
@@ -145,7 +145,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
      * @param data
      * @param all  Whether all tracking players should receive this packet or only the representing player
      */
-    protected void sync(NBTTagCompound data, boolean all) {
+    protected void sync(CompoundNBT data, boolean all) {
         HelperLib.sync(this, data, player, all);
     }
 
@@ -154,10 +154,10 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
      *
      * @param nbt
      */
-    protected void writeFullUpdate(NBTTagCompound nbt) {
+    protected void writeFullUpdate(CompoundNBT nbt) {
     }
 
-    private void copyFrom(EntityPlayer old) {
+    private void copyFrom(PlayerEntity old) {
         VampirismPlayer p = copyFromPlayer(old);
     }
 }

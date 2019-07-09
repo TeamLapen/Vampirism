@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.api.entity;
 
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 
 /**
- * Extends {@link EntityCreature} home system with a way to set more accurate home positions
+ * Extends {@link CreatureEntity} home system with a way to set more accurate home positions
  * Implemented by EntityVampirism and thereby by most of Vampirism's.
  */
 public interface IEntityWithHome {

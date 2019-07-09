@@ -1,23 +1,23 @@
 package de.teamlapen.vampirism.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Particles;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReaderBase;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,7 +39,7 @@ public class BlockAlchemicalFire extends VampirismBlock {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void animateTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (rand.nextInt(24) == 0) {
             worldIn.playSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F), (double) ((float) pos.getZ() + 0.5F), SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
         }
@@ -55,7 +55,7 @@ public class BlockAlchemicalFire extends VampirismBlock {
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, BlockState state, BlockPos pos, Direction face) {
         return BlockFaceShape.UNDEFINED;
     }
 
@@ -66,13 +66,12 @@ public class BlockAlchemicalFire extends VampirismBlock {
     }
 
     @Override
-    public boolean isBurning(IBlockState state, IBlockReader world, BlockPos pos) {
+    public boolean isBurning(BlockState state, IBlockReader world, BlockPos pos) {
         return true;
     }
 
-    @Override
-    public boolean isValidPosition(IBlockState state, IWorldReaderBase worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).isTopSolid();
+    public boolean isFullCube(BlockState state) {
+        return false;
     }
 
 
@@ -81,23 +80,24 @@ public class BlockAlchemicalFire extends VampirismBlock {
         return false;
     }
 
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(BlockState state) {
         return false;
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.down()).isTopSolid();
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!isValidPosition(state, worldIn, pos)) {
             worldIn.removeBlock(pos);
         }
     }
 
     @Override
-    public int quantityDropped(IBlockState state, Random random) {
+    public int quantityDropped(BlockState state, Random random) {
         return 0;
     }
 
@@ -108,12 +108,12 @@ public class BlockAlchemicalFire extends VampirismBlock {
      * @param pos
      * @param state
      */
-    public void setBurningInfinite(World worldIn, BlockPos pos, IBlockState state) {
+    public void setBurningInfinite(World worldIn, BlockPos pos, BlockState state) {
         worldIn.setBlockState(pos, state.with(AGE, 15), 4);
     }
 
     @Override
-    public void tick(IBlockState state, World worldIn, BlockPos pos, Random random) {
+    public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
         if (!this.isValidPosition(state, worldIn, pos)) {
             worldIn.removeBlock(pos);
         }
@@ -132,12 +132,12 @@ public class BlockAlchemicalFire extends VampirismBlock {
     }
 
     @Override
-    public int tickRate(IWorldReaderBase worldIn) {
+    public int tickRate(IWorldReader worldIn) {
         return 30;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(AGE);
     }
 

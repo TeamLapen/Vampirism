@@ -4,13 +4,13 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.HunterTableContainer;
 import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -18,7 +18,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Gui for the hunter table
  */
 @OnlyIn(Dist.CLIENT)
-public class GuiHunterTable extends GuiContainer {
+public class GuiHunterTable extends ContainerScreen {
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_table.png");
     private final HunterTableContainer container;
 
@@ -54,7 +54,7 @@ public class GuiHunterTable extends GuiContainer {
             text = I18n.format("text.vampirism.ritual_level_wrong");
         } else if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
-            ITextComponent item = missing.getItem() instanceof ItemPureBlood ? missing.getDisplayName() : new TextComponentTranslation(missing.getTranslationKey() + ".name");
+            ITextComponent item = missing.getItem() instanceof ItemPureBlood ? missing.getDisplayName() : new TranslationTextComponent(missing.getTranslationKey() + ".name");
             text = I18n.format("text.vampirism.ritual_missing_items", missing.getCount(), item.getUnformattedComponentText());
         }
         if (text != null) this.fontRenderer.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);

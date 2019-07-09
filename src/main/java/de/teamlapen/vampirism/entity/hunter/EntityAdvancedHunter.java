@@ -13,23 +13,23 @@ import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
+import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -55,7 +55,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     public EntityAdvancedHunter(World world) {
         super(ModEntities.advanced_hunter, world, true);
         saveHome = true;
-        ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
+        ((GroundPathNavigator) this.getNavigator()).setEnterDoors(true);
 
         this.setSize(0.6F, 1.95F);
 
@@ -71,7 +71,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     public boolean attackEntityAsMob(Entity entity) {
         boolean flag = super.attackEntityAsMob(entity);
         if (flag && this.getHeldItemMainhand() == null) {
-            this.swingArm(EnumHand.MAIN_HAND);  //Swing stake if nothing else is held
+            this.swingArm(Hand.MAIN_HAND);  //Swing stake if nothing else is held
         }
         return flag;
     }
@@ -92,15 +92,9 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    public void setLevel(int level) {
-        if (level >= 0) {
-            getDataManager().set(LEVEL, level);
-            this.updateEntityAttributes();
-            if (level == 1) {
-                this.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1000000, 1));
-            }
-
-        }
+    public ITextComponent getName() {
+        String senderName = this.getDataManager().get(NAME);
+        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
     }
 
     @Override
@@ -109,9 +103,19 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    public ITextComponent getName() {
-        String senderName = this.getDataManager().get(NAME);
-        return "none".equals(senderName) ? super.getName() : new TextComponentString(senderName);
+    public void read(CompoundNBT tagCompund) {
+        super.read(tagCompund);
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
+        }
+        if (tagCompund.contains("type")) {
+            getDataManager().set(TYPE, tagCompund.getInt("type"));
+            getDataManager().set(NAME, tagCompund.getString("name"));
+            getDataManager().set(TEXTURE, tagCompund.getString("texture"));
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
+        }
     }
 
     @Nullable
@@ -141,18 +145,14 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    public void read(NBTTagCompound tagCompund) {
-        super.read(tagCompund);
-        if (tagCompund.contains("level")) {
-            setLevel(tagCompund.getInt("level"));
-        }
-        if (tagCompund.contains("type")) {
-            getDataManager().set(TYPE, tagCompund.getInt("type"));
-            getDataManager().set(NAME, tagCompund.getString("name"));
-            getDataManager().set(TEXTURE, tagCompund.getString("texture"));
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
+    public void setLevel(int level) {
+        if (level >= 0) {
+            getDataManager().set(LEVEL, level);
+            this.updateEntityAttributes();
+            if (level == 1) {
+                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 1));
+            }
+
         }
     }
 
@@ -172,7 +172,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound nbt) {
+    public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
         nbt.putInt("level", getLevel());
         nbt.putInt("type", getHunterType());
@@ -208,7 +208,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     }
 
     @Override
-    protected int getExperiencePoints(EntityPlayer player) {
+    protected int getExperiencePoints(PlayerEntity player) {
         return 10 * (1 + getLevel());
     }
 
@@ -222,18 +222,18 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     protected void initEntityAI() {
         super.initEntityAI();
 
-        this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
-        this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0, false));
+        this.tasks.addTask(1, new OpenDoorGoal(this, true));
+        this.tasks.addTask(2, new MeleeAttackGoal(this, 1.0, false));
 
-        this.tasks.addTask(6, new EntityAIWander(this, 0.7, 50));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
-        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.tasks.addTask(6, new RandomWalkingGoal(this, 0.7, 50));
+        this.tasks.addTask(8, new LookAtGoal(this, PlayerEntity.class, 13F));
+        this.tasks.addTask(8, new LookAtGoal(this, EntityVampireBase.class, 17F));
+        this.tasks.addTask(8, new LookRandomlyGoal(this));
 
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
 
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetTasks.addTask(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetTasks.addTask(3, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
     protected void updateEntityAttributes() {

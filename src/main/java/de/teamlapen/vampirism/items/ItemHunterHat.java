@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.ModelHunterHat;
-import net.minecraft.client.renderer.entity.model.ModelBiped;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,20 +19,20 @@ public class ItemHunterHat extends VampirismHunterArmor {
     private final int type;
 
     public ItemHunterHat(int type) {
-        super(baseRegName, "" + type, ArmorMaterial.IRON, EntityEquipmentSlot.HEAD, new Properties().group(VampirismMod.creativeTab));
+        super(baseRegName, "" + type, ArmorMaterial.IRON, EquipmentSlotType.HEAD, new Properties().group(VampirismMod.creativeTab));
         this.type = type;
     }
 
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default) {
+    public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
         return type == 0 ? ModelHunterHat.hat0 : ModelHunterHat.hat1;
     }
 
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         return "vampirism:textures/entity/vampire_hunter_extra.png";
     }
 

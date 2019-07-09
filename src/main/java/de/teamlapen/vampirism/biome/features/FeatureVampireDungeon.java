@@ -11,17 +11,17 @@ import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import de.teamlapen.vampirism.tileentity.TileBloodContainer;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import de.teamlapen.vampirism.world.loot.LootHandler;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.WorldEntitySpawner;
-import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +35,7 @@ public class FeatureVampireDungeon extends Feature<VampireDungeonConfig> {
     private static final Logger LOGGER = LogManager.getLogger(FeatureVampireDungeon.class);
 
     @Override
-    public boolean place(IWorld worldIn, IChunkGenerator generator, Random rand, BlockPos position, VampireDungeonConfig config) {
+    public boolean place(IWorld worldIn, ChunkGenerator generator, Random rand, BlockPos position, VampireDungeonConfig config) {
         int sizeX = rand.nextInt(2) + 2;
         int lx = -sizeX - 1;//Lowest x offset
         int hx = sizeX + 1; //Highest x offset
@@ -105,7 +105,7 @@ public class FeatureVampireDungeon extends Feature<VampireDungeonConfig> {
                     if (worldIn.isAirBlock(blockpos2)) {
                         int solidSides = 0;
 
-                        for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL) {
+                        for (Direction enumfacing : Direction.Plane.HORIZONTAL) {
                             if (worldIn.getBlockState(blockpos2.offset(enumfacing)).getMaterial().isSolid()) {
                                 ++solidSides;
                             }
@@ -115,8 +115,8 @@ public class FeatureVampireDungeon extends Feature<VampireDungeonConfig> {
                             worldIn.setBlockState(blockpos2, Blocks.CHEST.getDefaultState(), 2);
                             TileEntity tileentity1 = worldIn.getTileEntity(blockpos2);
 
-                            if (tileentity1 instanceof TileEntityChest) {
-                                ((TileEntityChest) tileentity1).setLootTable(LootHandler.STRUCTURE_VAMPIRE_DUNGEON, rand.nextLong());
+                            if (tileentity1 instanceof ChestTileEntity) {
+                                ((ChestTileEntity) tileentity1).setLootTable(LootHandler.STRUCTURE_VAMPIRE_DUNGEON, rand.nextLong());
                             } else {
                                 LOGGER.warn("Failed to generate dungeon chest at ({})", VampirismBiome.debug ? blockpos2 : "hidden");
                             }
@@ -134,7 +134,7 @@ public class FeatureVampireDungeon extends Feature<VampireDungeonConfig> {
                     if (worldIn.isAirBlock(blockpos2)) {
                         int solidSides = 0;
 
-                        for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL) {
+                        for (Direction enumfacing : Direction.Plane.HORIZONTAL) {
                             if (worldIn.getBlockState(blockpos2.offset(enumfacing)).getMaterial().isSolid()) {
                                 ++solidSides;
                             }

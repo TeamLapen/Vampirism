@@ -8,18 +8,18 @@ import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
 import de.teamlapen.vampirism.items.ItemTent;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.fluids.IFluidBlock;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +34,7 @@ import java.util.Random;
 public class FeatureHunterCamp extends Feature<HunterTentConfig> {
 
     private static final Logger LOGGER = LogManager.getLogger(FeatureHunterCamp.class);
-    private IBlockState campfire_blockstate;
+    private BlockState campfire_blockstate;
 
 
     public FeatureHunterCamp() {
@@ -49,7 +49,7 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
      * @return
      */
     @Override
-    public boolean place(IWorld worldIn, IChunkGenerator generator, Random rand, BlockPos position, HunterTentConfig config) {
+    public boolean place(IWorld worldIn, ChunkGenerator generator, Random rand, BlockPos position, HunterTentConfig config) {
         if (worldIn.getWorld().getBiome(position).getScale() < 0.3 && rand.nextInt(6) == 0) {
             int r = rand.nextInt(2);
             int r1 = rand.nextInt(2);
@@ -65,10 +65,10 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
 
             boolean place = dif < 8 && placeFire(worldIn, findSolidPos(worldIn, center));
             if (place) {
-                placeTent(worldIn, rand, pos1, EnumFacing.EAST);
-                placeTent(worldIn, rand, pos2, EnumFacing.WEST);
-                placeTent(worldIn, rand, pos3, EnumFacing.NORTH);
-                placeTent(worldIn, rand, pos4, EnumFacing.SOUTH);
+                placeTent(worldIn, rand, pos1, Direction.EAST);
+                placeTent(worldIn, rand, pos2, Direction.WEST);
+                placeTent(worldIn, rand, pos3, Direction.NORTH);
+                placeTent(worldIn, rand, pos4, Direction.SOUTH);
                 EntityAdvancedHunter hunter = new EntityAdvancedHunter(worldIn.getWorld());
                 AxisAlignedBB box = new AxisAlignedBB(center.add(-7, 0, -10), center.add(7, 1, 7));
                 UtilLib.spawnEntityInWorld(worldIn.getWorld(), box, hunter, 8, Collections.emptyList());
@@ -80,14 +80,14 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
             return false;
         } else {
             BlockPos pos = position.add(rand.nextInt(16), 0, rand.nextInt(16));
-            boolean flag = placeTent(worldIn, rand, findSolidPos(worldIn, pos), EnumFacing.byHorizontalIndex(rand.nextInt(4)));
+            boolean flag = placeTent(worldIn, rand, findSolidPos(worldIn, pos), Direction.byHorizontalIndex(rand.nextInt(4)));
             if (flag && VampirismBiome.debug)
                 LOGGER.info("Generated normal hunter camp at {}", pos);
             return flag;
         }
     }
 
-    public void setCampfireBlockstate(IBlockState state) {
+    public void setCampfireBlockstate(BlockState state) {
         this.campfire_blockstate = state;
     }
 
@@ -129,9 +129,9 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
 
     }
 
-    private boolean checkGroundAndPos(IWorld worldIn, BlockPos position, IBlockState ground) {
+    private boolean checkGroundAndPos(IWorld worldIn, BlockPos position, BlockState ground) {
         if (worldIn.getBlockState(position).getMaterial().isLiquid()) return false;
-        IBlockState b = worldIn.getBlockState(position.down());
+        BlockState b = worldIn.getBlockState(position.down());
         if (b.getMaterial().isLiquid() || b.getBlock() instanceof IFluidBlock) return false;
         if (ground != null && b.getMaterial().isReplaceable()) {
             worldIn.setBlockState(position.down(), ground, 2);
@@ -144,7 +144,7 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
         Material material;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, position).up(30));
         while (((material = world.getBlockState(pos).getMaterial()) == Material.LEAVES || material == Material.PLANTS || world.isAirBlock(pos)) && pos.getY() > 50) {
-            pos.move(EnumFacing.DOWN);
+            pos.move(Direction.DOWN);
         }
         return pos.up();
     }
@@ -158,9 +158,9 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
         return false;
     }
 
-    private boolean placeTent(IWorld worldIn, Random rand, BlockPos position, EnumFacing facing) {
+    private boolean placeTent(IWorld worldIn, Random rand, BlockPos position, Direction facing) {
 
-        IBlockState ground = worldIn.getBlockState(position.down());
+        BlockState ground = worldIn.getBlockState(position.down());
         if (ground.isTopSolid()) {
 
             BlockPos tl = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, position.offset(facing).offset(facing.rotateYCCW()));

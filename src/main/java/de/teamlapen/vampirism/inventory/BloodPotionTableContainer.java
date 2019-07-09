@@ -8,12 +8,16 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.*;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -32,11 +36,11 @@ public class BloodPotionTableContainer extends Container {
     private final World world;
     private final int max_crafting_time;
     private final boolean portable;
-    private final IInventory inventory = new InventoryBasic(new TextComponentString("vampirism.blood_potion_table"), 4);
+    private final IInventory inventory = new Inventory(new StringTextComponent("vampirism.blood_potion_table"), 4);
     private int craftingTimer = 0;
     private int prevCraftingTimer = 0;
 
-    public BloodPotionTableContainer(InventoryPlayer playerInventory, BlockPos pos, World world) {
+    public BloodPotionTableContainer(PlayerInventory playerInventory, BlockPos pos, World world) {
 
         this.pos = pos;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
@@ -73,7 +77,7 @@ public class BloodPotionTableContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(PlayerEntity playerIn) {
         return playerIn.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
@@ -117,7 +121,7 @@ public class BloodPotionTableContainer extends Container {
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer playerIn) {
+    public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
 
         if (!this.world.isRemote) {
@@ -161,7 +165,7 @@ public class BloodPotionTableContainer extends Container {
     }
 
     @Nonnull
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 

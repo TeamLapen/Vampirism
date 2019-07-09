@@ -1,10 +1,10 @@
 package de.teamlapen.lib.lib.entity;
 
+import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.EntityType;
 import net.minecraft.init.Particles;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -13,13 +13,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 /**
- * Only spawns particles, similar to {@link EntityAreaEffectCloud}
+ * Only spawns particles, similar to {@link AreaEffectCloudEntity}
  */
 public class BasicEntityAreaParticleCloud extends Entity {
 
     private static final DataParameter<Float> RADIUS = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> HEIGHT = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
-    private static final DataParameter<IParticleData> PARTICLE = EntityDataManager.createKey(EntityAreaEffectCloud.class, DataSerializers.PARTICLE_DATA);
+    private static final DataParameter<IParticleData> PARTICLE = EntityDataManager.createKey(AreaEffectCloudEntity.class, DataSerializers.PARTICLE_DATA);
     private static final DataParameter<Float> SPAWN_RATE = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
 
     private static final DataParameter<Integer> COLOR = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.VARINT);
@@ -162,17 +162,17 @@ public class BasicEntityAreaParticleCloud extends Entity {
     }
 
     @Override
-    public boolean writeUnlessPassenger(NBTTagCompound compound) {
+    public boolean writeUnlessPassenger(CompoundNBT compound) {
         return false;
     }
 
     @Override
-    public boolean writeUnlessRemoved(NBTTagCompound compound) {
+    public boolean writeUnlessRemoved(CompoundNBT compound) {
         return false;
     }
 
     @Override
-    protected void readAdditional(NBTTagCompound compound) {
+    protected void readAdditional(CompoundNBT compound) {
 
     }
 
@@ -187,7 +187,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
     }
 
     @Override
-    protected void writeAdditional(NBTTagCompound compound) {
+    protected void writeAdditional(CompoundNBT compound) {
 
     }
 }

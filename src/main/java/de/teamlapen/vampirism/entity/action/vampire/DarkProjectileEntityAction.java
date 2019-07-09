@@ -6,11 +6,11 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityDarkBloodProjectile;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Vec3d;
 
-public class DarkProjectileEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
+public class DarkProjectileEntityAction<T extends CreatureEntity & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
 
     public DarkProjectileEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -23,7 +23,7 @@ public class DarkProjectileEntityAction<T extends EntityCreature & IEntityAction
 
     @Override
     public boolean activate(T entity) {
-        EntityLivingBase shooter = entity.getRepresentingEntity();
+        LivingEntity shooter = entity.getRepresentingEntity();
 
         Vec3d vec3dd = new Vec3d(entity.getAttackTarget().posX - entity.posX, entity.getAttackTarget().posY - entity.posY, entity.getAttackTarget().posZ - entity.posZ);
         vec3dd.normalize();
@@ -37,7 +37,7 @@ public class DarkProjectileEntityAction<T extends EntityCreature & IEntityAction
     }
 
     @Override
-    public int getWeight(EntityCreature entity) {
+    public int getWeight(CreatureEntity entity) {
         double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).length();
         if (distanceToTarget > 20) {
             return 3;

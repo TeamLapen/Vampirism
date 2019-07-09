@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
@@ -63,7 +63,7 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
      */
     Predicate<Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise);
 
-    EntityPlayer getRepresentingPlayer();
+    PlayerEntity getRepresentingPlayer();
 
     /**
      * You can also use {@link IFactionPlayer#getDisguisedAs()} to get the faction the player looks like

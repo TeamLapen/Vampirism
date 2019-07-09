@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.api.entity.minions;
 
+import net.minecraft.entity.CreatureEntity;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
  * Interface for an entity that can serve as minion for a {@link IMinionLord}
- * The implementing class has to be an {@link net.minecraft.entity.EntityCreature}
+ * The implementing class has to be an {@link CreatureEntity}
  */
 public interface IMinion {
 

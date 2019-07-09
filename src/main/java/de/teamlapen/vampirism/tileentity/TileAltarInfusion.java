@@ -15,25 +15,25 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.MobEffects;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.init.Particles;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ITickable;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -45,14 +45,14 @@ import java.util.*;
 /**
  * TODO make ritual survive load/save
  */
-public class TileAltarInfusion extends InventoryTileEntity implements ITickable {
+public class TileAltarInfusion extends InventoryTileEntity implements ITickableTileEntity {
 
     private final static Logger LOGGER = LogManager.getLogger(TileAltarInfusion.class);
     private final int DURATION_TICK = 450;
     /**
      * Only available when running ({@link #runningTick}>0)
      */
-    private EntityPlayer player;
+    private PlayerEntity player;
     /**
      * Only available when running ({@link #runningTick}>0)
      */
@@ -75,26 +75,26 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
      * @param messagePlayer If the player should be notified on fail
      * @return 1 if it can start, 0 if still running, -1 if wrong level, -2 if night only, -3 if structure wrong, -4 if items missing
      */
-    public int canActivate(EntityPlayer player, boolean messagePlayer) {
+    public int canActivate(PlayerEntity player, boolean messagePlayer) {
         if (runningTick > 0) {
             if (messagePlayer)
-                player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
+                player.sendMessage(new TranslationTextComponent("text.vampirism.ritual_still_running"));
 
             return 0;
         }
         this.player = null;
         if (player.getEntityWorld().isDaytime()) {
-            if (messagePlayer) player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_night_only"));
+            if (messagePlayer) player.sendMessage(new TranslationTextComponent("text.vampirism.ritual_night_only"));
             return -2;
         }
         targetLevel = VampirePlayer.get(player).getLevel() + 1;
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
-            if (messagePlayer) player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_level_wrong"));
+            if (messagePlayer) player.sendMessage(new TranslationTextComponent("text.vampirism.ritual_level_wrong"));
             return -1;
         } else if (!checkStructureLevel(requiredLevel)) {
             if (messagePlayer)
-                player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_structure_wrong"));
+                player.sendMessage(new TranslationTextComponent("text.vampirism.ritual_structure_wrong"));
             tips = null;
             return -3;
         } else if (!checkItemRequirements(player, messagePlayer)) {
@@ -137,7 +137,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     @Override
     public ITextComponent getName() {
-        return new TextComponentString("tile.vampirism.altar_infusion.name");
+        return new StringTextComponent("tile.vampirism.altar_infusion.name");
     }
 
 
@@ -146,7 +146,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
      *
      * @return
      */
-    public EntityPlayer getPlayer() {
+    public PlayerEntity getPlayer() {
         if (this.runningTick <= 1)
             return null;
         return this.player;
@@ -175,23 +175,23 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     @Nullable
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
-        return write(new NBTTagCompound());
+    public CompoundNBT getUpdateTag() {
+        return write(new CompoundNBT());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         this.read(pkt.getNbtCompound());
     }
 
     @Override
-    public void read(NBTTagCompound tagCompound) {
+    public void read(CompoundNBT tagCompound) {
         super.read(tagCompound);
         int tick = tagCompound.getInt("tick");
         if (tick > 0 && player == null) {
@@ -215,9 +215,9 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     /**
      * Starts the ritual.
-     * ONLY call if {@link TileAltarInfusion#canActivate(EntityPlayer, boolean)} returned 1
+     * ONLY call if {@link TileAltarInfusion#canActivate(PlayerEntity, boolean)} returned 1
      */
-    public void startRitual(EntityPlayer player) {
+    public void startRitual(PlayerEntity player) {
         LOGGER.debug("Starting ritual for {}", player);
         this.player = player;
         runningTick = DURATION_TICK;
@@ -232,10 +232,10 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 //                    data.setInteger("age", 100);
 //                    VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
 //                }
-            IBlockState state = this.getWorld().getBlockState(getPos());
+            BlockState state = this.getWorld().getBlockState(getPos());
             this.getWorld().notifyBlockUpdate(getPos(), state, state, 3); //Notify client about started ritual
         }
-        player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, DURATION_TICK, 10));
+        player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, DURATION_TICK, 10));
         this.markDirty();
     }
 
@@ -292,23 +292,23 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 }
                 handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
                 VampirePlayer.get(player).drinkBlood(Integer.MAX_VALUE, 0, false);
-                if (player instanceof EntityPlayerMP) {
-                    ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);
+                if (player instanceof ServerPlayerEntity) {
+                    ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);
                 }
             } else {
                 this.world.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
                 this.world.addParticle(Particles.EXPLOSION, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);//TODO was Explosion_huge
             }
 
-            player.addPotionEffect(new PotionEffect(ModPotions.saturation, 400, 2));
-            player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 400, 2));
-            player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 400, 2));
+            player.addPotionEffect(new EffectInstance(ModPotions.saturation, 400, 2));
+            player.addPotionEffect(new EffectInstance(Effects.REGENERATION, 400, 2));
+            player.addPotionEffect(new EffectInstance(Effects.STRENGTH, 400, 2));
         }
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
-        NBTTagCompound nbt = super.write(compound);
+    public CompoundNBT write(CompoundNBT compound) {
+        CompoundNBT nbt = super.write(compound);
         nbt.putInt("tick", runningTick);
         if (player != null) {
             nbt.putString("playerUUID", player.getUniqueID().toString());
@@ -321,7 +321,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
      *
      * @param messagePlayer If the player should be notified about missing ones
      */
-    private boolean checkItemRequirements(EntityPlayer player, boolean messagePlayer) {
+    private boolean checkItemRequirements(PlayerEntity player, boolean messagePlayer) {
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
         ItemStack missing = InventoryHelper.checkItems(this, new Item[]{
@@ -329,8 +329,8 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         }, new int[]{requirements.blood, requirements.heart, requirements.vampireBook});
         if (!missing.isEmpty()) {
             if (messagePlayer) {
-                ITextComponent item = missing.getItem().equals(ModItems.pure_blood_0) ? ModItems.pure_blood_0.getDisplayName(missing) : new TextComponentTranslation(missing.getTranslationKey() + ".name");
-                ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", missing.getCount(), item);
+                ITextComponent item = missing.getItem().equals(ModItems.pure_blood_0) ? ModItems.pure_blood_0.getDisplayName(missing) : new TranslationTextComponent(missing.getTranslationKey() + ".name");
+                ITextComponent main = new TranslationTextComponent("text.vampirism.ritual_missing_items", missing.getCount(), item);
                 player.sendMessage(main);
             }
 
@@ -372,7 +372,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             BlockPos pPos = tips[i];
             int j = 0;
             BlockAltarPillar.EnumPillarType type = null;
-            IBlockState temp;
+            BlockState temp;
             while ((temp = getWorld().getBlockState(pPos.add(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
                 BlockAltarPillar.EnumPillarType t = temp.get(BlockAltarPillar.TYPE_PROPERTY);
                 if (type == null) {

@@ -6,11 +6,11 @@ import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -22,13 +22,13 @@ import javax.annotation.Nullable;
  * Result slot for the hunter weapon crafting table
  */
 public class HunterWeaponTableCraftingSlot extends Slot {
-    private final EntityPlayer player;
+    private final PlayerEntity player;
     private final World world;
     private final BlockPos pos;
-    private final InventoryCrafting craftMatrix;
+    private final CraftingInventory craftMatrix;
     private int amountCrafted = 0;
 
-    public HunterWeaponTableCraftingSlot(EntityPlayer player, World world, BlockPos pos, InventoryCrafting craftingInventory, IInventory inventoryIn, int index, int xPosition, int yPosition) {
+    public HunterWeaponTableCraftingSlot(PlayerEntity player, World world, BlockPos pos, CraftingInventory craftingInventory, IInventory inventoryIn, int index, int xPosition, int yPosition) {
         super(inventoryIn, index, xPosition, yPosition);
         this.player = player;
         this.craftMatrix = craftingInventory;
@@ -52,10 +52,10 @@ public class HunterWeaponTableCraftingSlot extends Slot {
 
 
     @Override
-    public ItemStack onTake(EntityPlayer playerIn, ItemStack stack) {
+    public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
         this.onCrafting(stack);
         int lava = 0;
-        IBlockState blockState = world.getBlockState(pos);
+        BlockState blockState = world.getBlockState(pos);
         if (blockState.getBlock() instanceof BlockWeaponTable) {
             lava = blockState.get(BlockWeaponTable.LAVA);
         }
@@ -97,7 +97,7 @@ public class HunterWeaponTableCraftingSlot extends Slot {
         return stack;
     }
 
-    protected IWeaponTableRecipe findMatchingRecipe(EntityPlayer playerIn, IFactionPlayer<?> factionPlayer, int lava) {
+    protected IWeaponTableRecipe findMatchingRecipe(PlayerEntity playerIn, IFactionPlayer<?> factionPlayer, int lava) {
         IWeaponTableRecipe recipe = (IWeaponTableRecipe) playerIn.getEntityWorld().getServer().getRecipeManager().getRecipe(this.craftMatrix, playerIn.getEntityWorld(), ModRecipes.WEAPONTABLE_CRAFTING_TYPE);
         if (factionPlayer.getLevel() >= recipe.getRequiredLevel() && lava >= recipe.getRequiredLavaUnits() && Helper.areSkillsEnabled(factionPlayer.getSkillHandler(), recipe.getRequiredSkills())) {
             return recipe;

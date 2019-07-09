@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.api.entity;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
 
 import javax.annotation.Nullable;
 
 /**
- * Interface for Vampirism's capability every {@link EntityCreature} has attached
+ * Interface for Vampirism's capability every {@link CreatureEntity} has attached
  */
 public interface IExtendedCreatureVampirism extends IBiteableEntity {
     /**
@@ -29,7 +29,7 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
     /**
      * @return the representing entity
      */
-    EntityCreature getEntity();
+    CreatureEntity getEntity();
 
     /**
      * @return Max blood level

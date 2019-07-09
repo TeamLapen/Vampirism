@@ -5,11 +5,11 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockAlchemicalFire;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -42,18 +42,18 @@ public class ItemAlchemicalFire extends VampirismItem {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemUseContext ctx) {
+    public ActionResultType onItemUse(ItemUseContext ctx) {
         BlockPos pos = ctx.getPos().offset(ctx.getFace());
 
         if (ctx.getPlayer() != null && !ctx.getPlayer().canPlayerEdit(pos, ctx.getFace(), ctx.getItem())) {
-            return EnumActionResult.FAIL;
+            return ActionResultType.FAIL;
         } else {
             if (ctx.getWorld().isAirBlock(pos)) {
                 ctx.getWorld().playSound(ctx.getPlayer(), pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, ctx.getPlayer().getRNG().nextFloat() * 0.4F + 0.8F);
                 ctx.getWorld().setBlockState(pos, ModBlocks.alchemical_fire.getDefaultState().with(BlockAlchemicalFire.AGE, 15), 11);
             }
 
-            return EnumActionResult.SUCCESS;
+            return ActionResultType.SUCCESS;
         }
     }
 

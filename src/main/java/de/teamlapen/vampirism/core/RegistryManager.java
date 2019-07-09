@@ -15,7 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
-import net.minecraft.potion.Potion;
+import net.minecraft.potion.Effect;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.biome.Biome;
@@ -138,7 +138,7 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterPotions(RegistryEvent.Register<Potion> event) {
+    public void onRegisterPotions(RegistryEvent.Register<Effect> event) {
 
         ModPotions.registerPotions(event.getRegistry());
     }

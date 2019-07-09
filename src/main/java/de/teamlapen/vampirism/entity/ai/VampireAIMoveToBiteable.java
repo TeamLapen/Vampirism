@@ -3,24 +3,24 @@ package de.teamlapen.vampirism.entity.ai;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.util.EntityPredicates;
 
 import java.util.List;
 
 
-public class VampireAIMoveToBiteable<T extends EntityLiving & IVampireMob> extends EntityAIBase {
+public class VampireAIMoveToBiteable<T extends MobEntity & IVampireMob> extends Goal {
 
 
     private final T vampire;
     private final double movementSpeed;
-    private EntityCreature target;
+    private CreatureEntity target;
     private int timeout;
 
     /**
-     * @param vampire       Has to be a {@link EntityLiving}
+     * @param vampire       Has to be a {@link MobEntity}
      * @param movementSpeed
      */
     public VampireAIMoveToBiteable(T vampire, double movementSpeed) {
@@ -47,8 +47,8 @@ public class VampireAIMoveToBiteable<T extends EntityLiving & IVampireMob> exten
             return false;
         }
         if (!vampire.wantsBlood()) return false;
-        List<EntityCreature> list = vampire.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, vampire.getBoundingBox().grow(10, 3, 10), EntitySelectors.NOT_SPECTATING.and((entity) -> entity != vampire && entity.isAlive()));
-        for (EntityCreature o : list) {
+        List<CreatureEntity> list = vampire.getEntityWorld().getEntitiesWithinAABB(CreatureEntity.class, vampire.getBoundingBox().grow(10, 3, 10), EntityPredicates.NOT_SPECTATING.and((entity) -> entity != vampire && entity.isAlive()));
+        for (CreatureEntity o : list) {
             IExtendedCreatureVampirism creature = ExtendedCreature.get(o);
             if (creature.canBeBitten(vampire) && !o.hasCustomName() && !creature.hasPoisonousBlood()) {
                 target = o;

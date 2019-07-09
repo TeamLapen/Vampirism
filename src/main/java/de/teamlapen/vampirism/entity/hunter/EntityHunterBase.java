@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.entity.EntityVampirism;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.world.World;
 
 /**
@@ -26,19 +26,19 @@ public abstract class EntityHunterBase extends EntityVampirism implements IHunte
     }
 
     @Override
-    public EntityLivingBase getRepresentingEntity() {
+    public LivingEntity getRepresentingEntity() {
         return this;
     }
 
     @Override
-    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
-        if (forSpawnCount && countAsMonster && type == EnumCreatureType.MONSTER) return true;
+    public boolean isCreatureType(EntityClassification type, boolean forSpawnCount) {
+        if (forSpawnCount && countAsMonster && type == EntityClassification.MONSTER) return true;
         return super.isCreatureType(type, forSpawnCount);
     }
 
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
-        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(0, new SwimGoal(this));
     }
 }

@@ -9,12 +9,13 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -32,12 +33,12 @@ public class HunterTableContainer extends InventoryContainer {
     private final BlockPos pos;
     private ItemStack missing = ItemStack.EMPTY;
 
-    public HunterTableContainer(EntityPlayer player, BlockPos pos) {
+    public HunterTableContainer(PlayerEntity player, BlockPos pos) {
         super(player.inventory, new HunterTableInventory(new InventorySlot.IItemSelector[]{((stack) -> Items.BOOK.equals(stack.getItem())), ((stack) -> ModItems.vampire_fang.equals(stack.getItem())), ((stack) -> stack.getItem() instanceof ItemPureBlood), (stack) -> ModItems.vampire_book.equals(stack.getItem())}));
         this.inventory = (HunterTableInventory) tile;
         inventory.setChangeListener(this);
         this.pos = pos;
-        slotResult = new SlotResult(this, new InventoryCraftResult() {
+        slotResult = new SlotResult(this, new CraftResultInventory() {
             @Override
             public int getInventoryStackLimit() {
                 return 1;
@@ -47,7 +48,7 @@ public class HunterTableContainer extends InventoryContainer {
         hunterLevel = FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION);
     }
 
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(PlayerEntity playerIn) {
         return playerIn.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
@@ -63,7 +64,7 @@ public class HunterTableContainer extends InventoryContainer {
         return levelingConf.isLevelValidForTable(hunterLevel + 1);
     }
 
-    public void onContainerClosed(EntityPlayer playerIn) {
+    public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
 
         if (!playerIn.getEntityWorld().isRemote) {
@@ -107,7 +108,7 @@ public class HunterTableContainer extends InventoryContainer {
         return InventoryHelper.checkItems(inventory, new Item[]{Items.BOOK, ModItems.vampire_fang, ItemPureBlood.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
     }
 
-    private class SlotResult extends net.minecraft.inventory.Slot {
+    private class SlotResult extends Slot {
 
         private final HunterTableContainer container;
 
@@ -122,7 +123,7 @@ public class HunterTableContainer extends InventoryContainer {
         }
 
         @Override
-        public ItemStack onTake(EntityPlayer playerIn, ItemStack stack) {
+        public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
             container.onPickupResult();
             return stack;
         }

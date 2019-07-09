@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.inventory.crafting;
 
 import com.google.gson.JsonObject;
-
 import de.teamlapen.vampirism.config.Configs;
-import net.minecraft.util.JsonUtils;
+import net.minecraft.util.JSONUtils;
 import net.minecraftforge.common.crafting.IConditionSerializer;
 
 import java.util.function.BooleanSupplier;
@@ -18,7 +17,7 @@ public class ConfigEntryConditionSerializer implements IConditionSerializer {
 
     @Override
     public BooleanSupplier parse(JsonObject json) {
-        String key = JsonUtils.getString(json, "key");
+        String key = JSONUtils.getString(json, "key");
         switch (key) {
             case "auto_convert_blood_bottles":
                 return () -> Configs.autoConvertGlasBottles;

@@ -6,18 +6,18 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -41,11 +41,11 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     }
 
 
-    protected static List<EntityItem> getCaptureItems(World worldIn, BlockPos pos) {
+    protected static List<ItemEntity> getCaptureItems(World worldIn, BlockPos pos) {
         int posX = pos.getX();
         int posY = pos.getY();
         int posZ = pos.getZ();
-        return worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(posX, posY + 0.5D, posZ, posX + 1D, posY + 1.5D, posZ + 1D), EntitySelectors.IS_ALIVE);
+        return worldIn.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(posX, posY + 0.5D, posZ, posX + 1D, posY + 1.5D, posZ + 1D), EntityPredicates.IS_ALIVE);
     }
 
     private int cooldownPull = 0;
@@ -60,8 +60,8 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
-        if ((side != EnumFacing.DOWN) && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if ((side != Direction.DOWN) && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemHandlerOptional.cast();
         }
         return super.getCapability(cap, side);
@@ -70,12 +70,12 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
 
     @Override
     public ITextComponent getName() {
-        return new TextComponentTranslation("tile.vampirism.blood_grinder.name");
+        return new TranslationTextComponent("tile.vampirism.blood_grinder.name");
     }
 
 
     @Override
-    public void read(NBTTagCompound tagCompound) {
+    public void read(CompoundNBT tagCompound) {
         super.read(tagCompound);
         cooldownPull = tagCompound.getInt("cooldown_pull");
         cooldownProcess = tagCompound.getInt("cooldown_process");
@@ -100,14 +100,14 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         compound.putInt("cooldown_pull", cooldownPull);
         compound.putInt("cooldown_process", cooldownProcess);
         return super.write(compound);
     }
 
     private boolean pullItems() {
-        Pair<IItemHandler, TileEntity> pair = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(this.world, this.pos.up(), EnumFacing.DOWN).orElse(null);
+        Pair<IItemHandler, TileEntity> pair = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(this.world, this.pos.up(), Direction.DOWN).orElse(null);
         if (pair != null) {
             IItemHandler handler = pair.getLeft();
             for (int i = 0; i < handler.getSlots(); i++) {
@@ -125,7 +125,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
             }
 
         }
-        for (EntityItem entityItem : getCaptureItems(this.world, this.pos)) {
+        for (ItemEntity entityItem : getCaptureItems(this.world, this.pos)) {
             ItemStack stack = entityItem.getItem();
             for (int i = 0; i < itemHandler.getSlots(); i++) {
                 ItemStack stack2 = itemHandler.insertItem(i, stack, true);
@@ -152,7 +152,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
                 int blood = BloodConversionRegistry.getImpureBloodValue(stack);
                 if (blood > 0) {
                     FluidStack fluid = new FluidStack(ModFluids.impure_blood, blood);
-                    FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), EnumFacing.UP).ifPresent(handler -> {
+                    FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), Direction.UP).ifPresent(handler -> {
                         int filled = handler.fill(fluid, false);
                         if (filled >= 0.9f * blood) {
                             ItemStack extractedStack = itemHandler.extractItem(slot, 1, false);

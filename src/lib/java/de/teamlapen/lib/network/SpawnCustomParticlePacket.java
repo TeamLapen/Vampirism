@@ -1,7 +1,7 @@
 package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.VampLib;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -24,12 +24,12 @@ public class SpawnCustomParticlePacket implements IMessage {
 
     public static void handle(final SpawnCustomParticlePacket pkt, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-        NBTTagCompound nbt = pkt.nbt;
+        CompoundNBT nbt = pkt.nbt;
         double posX = nbt.getDouble("x");
         double posY = nbt.getDouble("y");
         double posZ = nbt.getDouble("z");
         ResourceLocation particle = new ResourceLocation(nbt.getString("id"));
-        NBTTagCompound data = nbt.getCompound("data");
+        CompoundNBT data = nbt.getCompound("data");
         int count = nbt.getInt("count"); //Defaults to 0
         double maxDist = nbt.getDouble("maxdist"); //Defaults to 0
         Validate.notNull(ctx.getSender());
@@ -46,20 +46,20 @@ public class SpawnCustomParticlePacket implements IMessage {
     }
 
 
-    private NBTTagCompound nbt;
+    private CompoundNBT nbt;
 
-    private SpawnCustomParticlePacket(NBTTagCompound tag) {
+    private SpawnCustomParticlePacket(CompoundNBT tag) {
         this.nbt = tag;
     }
 
-    public SpawnCustomParticlePacket(ResourceLocation particle, double posX, double posY, double posZ, NBTTagCompound param, int count, double maxdist) {
+    public SpawnCustomParticlePacket(ResourceLocation particle, double posX, double posY, double posZ, CompoundNBT param, int count, double maxdist) {
         this(particle, posX, posY, posZ, param);
         nbt.putInt("count", count);
         nbt.putDouble("maxdist", maxdist);
     }
 
-    public SpawnCustomParticlePacket(ResourceLocation particle, double posX, double posY, double posZ, NBTTagCompound param) {
-        nbt = new NBTTagCompound();
+    public SpawnCustomParticlePacket(ResourceLocation particle, double posX, double posY, double posZ, CompoundNBT param) {
+        nbt = new CompoundNBT();
         nbt.putDouble("x", posX);
         nbt.putDouble("y", posY);
         nbt.putDouble("z", posZ);

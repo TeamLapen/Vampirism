@@ -7,13 +7,13 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
-import net.minecraft.init.Enchantments;
-import net.minecraft.init.Items;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
@@ -210,16 +210,16 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
 
     private void addFluidStackDescription(ItemStack stack, FluidStack fluidStack) {
 
-        NBTTagCompound nbt = stack.getTag();
-        if (nbt == null) nbt = new NBTTagCompound();
-        NBTTagCompound display = nbt.contains("display", 10) ? nbt.getCompound("display") : new NBTTagCompound();
-        NBTTagList lore = nbt.contains("Lore", 0) ? nbt.getList("Lore", 9) : new NBTTagList();
-        lore.add(new NBTTagString(UtilLib.translate("text.vampirism.liquid_container")));
+        CompoundNBT nbt = stack.getTag();
+        if (nbt == null) nbt = new CompoundNBT();
+        CompoundNBT display = nbt.contains("display", 10) ? nbt.getCompound("display") : new CompoundNBT();
+        ListNBT lore = nbt.contains("Lore", 0) ? nbt.getList("Lore", 9) : new ListNBT();
+        lore.add(new StringNBT(UtilLib.translate("text.vampirism.liquid_container")));
         display.put("Lore", lore);
         nbt.put("display", display);
         stack.setTag(nbt);
 
         stack.addEnchantment(Enchantments.UNBREAKING, 1);
-        stack.setDisplayName(new TextComponentString(fluidStack.getLocalizedName() + ": " + fluidStack.amount + "mB"));
+        stack.setDisplayName(new StringTextComponent(fluidStack.getLocalizedName() + ": " + fluidStack.amount + "mB"));
     }
 }

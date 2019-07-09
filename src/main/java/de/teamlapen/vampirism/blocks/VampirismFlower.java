@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.BlockBush;
+import net.minecraft.block.BushBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.IStringSerializable;
@@ -9,7 +9,7 @@ import net.minecraft.util.IStringSerializable;
 /**
  * Vampirism's flowers. To add one add it to {@link TYPE}
  */
-public class VampirismFlower extends BlockBush {
+public class VampirismFlower extends BushBlock {
     private final static String regName = "vampirism_flower";
     private final TYPE type;
 

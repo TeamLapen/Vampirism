@@ -17,13 +17,13 @@ import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
+import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
@@ -97,8 +97,8 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     @Override
     public boolean attackEntityAsMob(Entity entity) {
-        if (canSuckBloodFromPlayer && !world.isRemote && entity instanceof EntityPlayer && !UtilLib.canReallySee((EntityLivingBase) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
-            int amt = VampirePlayer.get((EntityPlayer) entity).onBite(this);
+        if (canSuckBloodFromPlayer && !world.isRemote && entity instanceof PlayerEntity && !UtilLib.canReallySee((LivingEntity) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
+            int amt = VampirePlayer.get((PlayerEntity) entity).onBite(this);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
             return true;
         }
@@ -124,7 +124,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
+        this.addPotionEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
     }
 
     public enum SpawnRestriction {
@@ -163,13 +163,13 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
-    public EntityLivingBase getRepresentingEntity() {
+    public LivingEntity getRepresentingEntity() {
         return this;
     }
 
     @Override
-    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
-        if (forSpawnCount && countAsMonsterForSpawn && type == EnumCreatureType.MONSTER) return true;
+    public boolean isCreatureType(EntityClassification type, boolean forSpawnCount) {
+        if (forSpawnCount && countAsMonsterForSpawn && type == EntityClassification.MONSTER) return true;
         return super.isCreatureType(type, forSpawnCount);
     }
 
@@ -194,21 +194,6 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
-    public void onDeath(DamageSource cause) {
-        super.onDeath(cause);
-        if (cause.getImmediateSource() instanceof EntityCrossbowArrow && Helper.isHunter(cause.getTrueSource())) {
-            dropSoul = true;
-        } else if (cause.getImmediateSource() instanceof EntityPlayer && Helper.isHunter(cause.getImmediateSource())) {
-            ItemStack weapon = ((EntityPlayer) cause.getImmediateSource()).getHeldItemMainhand();
-            if (!weapon.isEmpty() && weapon.getItem() instanceof IVampireFinisher) {
-                dropSoul = true;
-            }
-        } else {
-            dropSoul = false;//In case a previous death has been canceled somehow
-        }
-    }
-
-    @Override
     public void livingTick() {
         if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
             isGettingGarlicDamage(true);
@@ -229,7 +214,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
             if (isAlive() && isInWater()) {
                 setAir(300);
                 if (ticksExisted % 16 == 4) {
-                    addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 80, 0));
+                    addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
                 }
             }
         }
@@ -237,8 +222,23 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        if (cause.getImmediateSource() instanceof EntityCrossbowArrow && Helper.isHunter(cause.getTrueSource())) {
+            dropSoul = true;
+        } else if (cause.getImmediateSource() instanceof PlayerEntity && Helper.isHunter(cause.getImmediateSource())) {
+            ItemStack weapon = ((PlayerEntity) cause.getImmediateSource()).getHeldItemMainhand();
+            if (!weapon.isEmpty() && weapon.getItem() instanceof IVampireFinisher) {
+                dropSoul = true;
+            }
+        } else {
+            dropSoul = false;//In case a previous death has been canceled somehow
+        }
+    }
+
+    @Override
     public boolean useBlood(int amt, boolean allowPartial) {
-        this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, amt * 20));
+        this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
         return true;
     }
 
@@ -266,7 +266,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
-        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(0, new SwimGoal(this));
     }
 
     @Override
@@ -286,7 +286,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     private boolean getCanSpawnHereRestricted() {
         boolean vampireBiome = ModBiomes.vampireForest.equals(this.world.getBiome(this.getPosition()));
         if (!vampireBiome) return isLowLightLevel();
-        IBlockState iblockstate = this.world.getBlockState((new BlockPos(this)).down());
+        BlockState iblockstate = this.world.getBlockState((new BlockPos(this)).down());
         return ModBlocks.cursed_earth.equals(iblockstate.getBlock());
     }
 }

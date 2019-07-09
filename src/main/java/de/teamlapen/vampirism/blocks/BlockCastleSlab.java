@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.BlockSlab;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.IStringSerializable;
 
-public class BlockCastleSlab extends BlockSlab {
+public class BlockCastleSlab extends SlabBlock {
 
     private static final String regName = "castle_slab";
     private final EnumVariant variant;

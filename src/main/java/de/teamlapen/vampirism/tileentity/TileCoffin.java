@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.vampirism.blocks.BlockCoffin;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.DyeColor;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 /**
  * TileEntity for coffins. Handles coffin lid position and color
  */
-public class TileCoffin extends TileEntity implements ITickable {
+public class TileCoffin extends TileEntity implements ITickableTileEntity {
     public int lidPos;
     public int color = 15;
 
@@ -29,7 +29,7 @@ public class TileCoffin extends TileEntity implements ITickable {
         super(ModTiles.coffin);
     }
 
-    public void changeColor(EnumDyeColor color) {
+    public void changeColor(DyeColor color) {
         this.color = color.getId();
         markDirty();
         //TODO
@@ -42,13 +42,13 @@ public class TileCoffin extends TileEntity implements ITickable {
 
     @Nullable
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(this.getPos(), 1, getUpdateTag());
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(this.getPos(), 1, getUpdateTag());
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
-        return write(new NBTTagCompound());
+    public CompoundNBT getUpdateTag() {
+        return write(new CompoundNBT());
     }
 
     @Override
@@ -60,12 +60,12 @@ public class TileCoffin extends TileEntity implements ITickable {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
         read(packet.getNbtCompound());
     }
 
     @Override
-    public void read(NBTTagCompound par1NBTTagCompound) {
+    public void read(CompoundNBT par1NBTTagCompound) {
         super.read(par1NBTTagCompound);
 
         this.color = par1NBTTagCompound.getInt("color");
@@ -89,8 +89,8 @@ public class TileCoffin extends TileEntity implements ITickable {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
-        NBTTagCompound nbt = super.write(compound);
+    public CompoundNBT write(CompoundNBT compound) {
+        CompoundNBT nbt = super.write(compound);
         nbt.putInt("color", color);
         return nbt;
     }

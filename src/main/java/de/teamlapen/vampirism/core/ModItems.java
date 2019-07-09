@@ -11,17 +11,13 @@ import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.init.PotionTypes;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemSpawnEgg;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -172,13 +168,13 @@ public class ModItems {
     public static final ItemVampireCloak vampire_cloak_black_white = getNull();
     public static final ItemVampireCloak vampire_cloak_white_black = getNull();
 
-    public static final ItemSpawnEgg vampire_spawn_egg = getNull();
-    public static final ItemSpawnEgg vampire_hunter_spawn_egg = getNull();
-    public static final ItemSpawnEgg advanced_vampire_spawn_egg = getNull();
-    public static final ItemSpawnEgg advanced_vampire_hunter_spawn_egg = getNull();
-    public static final ItemSpawnEgg ghost_spawn_egg = getNull();
-    public static final ItemSpawnEgg vampire_baron_spawn_egg = getNull();
-    public static final ItemSpawnEgg hunter_trainer_spawn_egg = getNull();
+    public static final SpawnEggItem vampire_spawn_egg = getNull();
+    public static final SpawnEggItem vampire_hunter_spawn_egg = getNull();
+    public static final SpawnEggItem advanced_vampire_spawn_egg = getNull();
+    public static final SpawnEggItem advanced_vampire_hunter_spawn_egg = getNull();
+    public static final SpawnEggItem ghost_spawn_egg = getNull();
+    public static final SpawnEggItem vampire_baron_spawn_egg = getNull();
+    public static final SpawnEggItem hunter_trainer_spawn_egg = getNull();
 
 
 
@@ -218,7 +214,7 @@ public class ModItems {
         //cauldronCraftingManager.addRecipe(new ItemStack(ModItems.pure_salt, 4),new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), null).setRequirements(1, HunterSkills.basic_alchemy).setCookingTime(20 * 60); TODO 1.14 fluid
 
         // Brewing
-        BrewingRecipeRegistry.addRecipe(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), PotionTypes.WATER), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
+        BrewingRecipeRegistry.addRecipe(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
 
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new ItemStack(holy_water_bottle_normal), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_normal)) {
 
@@ -341,18 +337,18 @@ public class ModItems {
         registry.register(new VampirismItem("garlic_beacon_core_improved", new Item.Properties().group(VampirismMod.creativeTab)));
         registry.register(new VampirismItem("purified_garlic", new Item.Properties().group(VampirismMod.creativeTab)));
 
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.HEAD, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.CHEST, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.LEGS, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.FEET, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.HEAD, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.CHEST, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.LEGS, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.FEET, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.HEAD, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.CHEST, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.LEGS, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.FEET, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.HEAD, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.CHEST, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.LEGS, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.FEET, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.HEAD, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.CHEST, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.LEGS, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.FEET, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.HEAD, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.CHEST, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemArmorOfSwiftness(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
 
         registry.register(new ItemHunterHat(0));
         registry.register(new ItemHunterHat(1));
@@ -362,31 +358,31 @@ public class ModItems {
         registry.register(new ItemHunterAxe(IItemWithTier.TIER.ULTIMATE));
 
 
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.HEAD, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.CHEST, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.LEGS, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.FEET, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.HEAD, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.CHEST, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.LEGS, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.FEET, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.HEAD, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.CHEST, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.LEGS, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ItemHunterCoat(EntityEquipmentSlot.FEET, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.HEAD, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.CHEST, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.LEGS, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.FEET, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.HEAD, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.CHEST, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.LEGS, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.FEET, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.HEAD, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.CHEST, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemHunterCoat(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
 
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.HEAD, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.CHEST, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.LEGS, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.FEET, IItemWithTier.TIER.NORMAL));
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.HEAD, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.CHEST, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.LEGS, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.FEET, IItemWithTier.TIER.ENHANCED));
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.HEAD, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.CHEST, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.LEGS, IItemWithTier.TIER.ULTIMATE));
-        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.FEET, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.HEAD, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.CHEST, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.LEGS, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.FEET, IItemWithTier.TIER.NORMAL));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.HEAD, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.CHEST, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.LEGS, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.FEET, IItemWithTier.TIER.ENHANCED));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.HEAD, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.CHEST, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.LEGS, IItemWithTier.TIER.ULTIMATE));
+        registry.register(new ItemObsidianArmor(EquipmentSlotType.FEET, IItemWithTier.TIER.ULTIMATE));
 
         registry.register(new ItemHeartSeeker(IItemWithTier.TIER.NORMAL));
         registry.register(new ItemHeartStriker(IItemWithTier.TIER.NORMAL));

@@ -2,10 +2,9 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronContainer;
-
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,13 +12,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 
 @OnlyIn(Dist.CLIENT)
-public class GuiAlchemicalCauldron extends GuiContainer {
+public class GuiAlchemicalCauldron extends ContainerScreen {
     private static final ResourceLocation BACKGROUND = new ResourceLocation("vampirism:textures/gui/alchemical_cauldron.png");
 
     private final IInventory cauldron;
-    private final InventoryPlayer playerInventory;
+    private final PlayerInventory playerInventory;
 
-    public GuiAlchemicalCauldron(InventoryPlayer inventoryPlayer, InventorySlot.IInventorySlotInventory tile) {
+    public GuiAlchemicalCauldron(PlayerInventory inventoryPlayer, InventorySlot.IInventorySlotInventory tile) {
         super(new AlchemicalCauldronContainer(inventoryPlayer, tile));
         cauldron = tile;
         playerInventory = inventoryPlayer;

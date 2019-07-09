@@ -1,13 +1,12 @@
 package de.teamlapen.vampirism.client.render;
 
 import de.teamlapen.vampirism.util.IPlayerFace;
-
-import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.client.renderer.entity.model.ModelBiped;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -19,11 +18,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * @param <Q> Has to be the same as T
  */
 @OnlyIn(Dist.CLIENT)
-public class LayerPlayerFaceOverlay<T extends EntityCreature, Q extends IPlayerFace> implements LayerRenderer<T> {
+public class LayerPlayerFaceOverlay<T extends CreatureEntity, Q extends IPlayerFace> implements LayerRenderer<T> {
 
-    private final RenderBiped<T> renderBiped;
+    private final BipedRenderer<T> renderBiped;
 
-    public LayerPlayerFaceOverlay(RenderBiped<T> renderBiped) {
+    public LayerPlayerFaceOverlay(BipedRenderer<T> renderBiped) {
         this.renderBiped = renderBiped;
     }
 
@@ -31,15 +30,15 @@ public class LayerPlayerFaceOverlay<T extends EntityCreature, Q extends IPlayerF
     public void render(T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
         String name = ((Q) entitylivingbaseIn).getPlayerFaceName();
-        ResourceLocation loc = name == null ? null : AbstractClientPlayer.getLocationSkin(name);
-        AbstractClientPlayer.getDownloadImageSkin(loc, name);
+        ResourceLocation loc = name == null ? null : AbstractClientPlayerEntity.getLocationSkin(name);
+        AbstractClientPlayerEntity.getDownloadImageSkin(loc, name);
         if (loc != null) {
             renderBiped.bindTexture(loc);
             GlStateManager.pushMatrix();
             if (entitylivingbaseIn.isSneaking()) {
                 GlStateManager.translatef(0.0F, 0.2F, 0.0F);
             }
-            ((ModelBiped) this.renderBiped.getMainModel()).bipedHead.render(scale);
+            ((BipedModel) this.renderBiped.getMainModel()).bipedHead.render(scale);
             GlStateManager.popMatrix();
         }
 

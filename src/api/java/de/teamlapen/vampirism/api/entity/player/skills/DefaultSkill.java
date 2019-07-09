@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -104,7 +104,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     protected void onEnabled(T player) {
     }
 
-    private void applyAttributesModifiersToEntity(EntityPlayer player) {
+    private void applyAttributesModifiersToEntity(PlayerEntity player) {
         for (Map.Entry<IAttribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
             IAttributeInstance iattributeinstance = player.getAttributeMap().getAttributeInstance(entry.getKey());
 
@@ -127,7 +127,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
         return collection;
     }
 
-    private void removeAttributesModifiersFromEntity(EntityPlayer player) {
+    private void removeAttributesModifiersFromEntity(PlayerEntity player) {
         for (Map.Entry<IAttribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
             IAttributeInstance iattributeinstance = player.getAttributeMap().getAttributeInstance(entry.getKey());
 

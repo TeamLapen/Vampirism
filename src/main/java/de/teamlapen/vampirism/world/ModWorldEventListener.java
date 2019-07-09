@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.world;
 
 import de.teamlapen.vampirism.util.DaySleepHelper;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -34,7 +34,7 @@ public class ModWorldEventListener implements IWorldEventListener {
     }
 
     @Override
-    public void notifyBlockUpdate(IBlockReader worldIn, BlockPos pos, IBlockState oldState, IBlockState newState, int flags) {
+    public void notifyBlockUpdate(IBlockReader worldIn, BlockPos pos, BlockState oldState, BlockState newState, int flags) {
 
     }
 
@@ -45,16 +45,16 @@ public class ModWorldEventListener implements IWorldEventListener {
 
     @Override
     public void onEntityAdded(Entity entityIn) {
-        if (entityIn instanceof EntityPlayer) DaySleepHelper.updateAllPlayersSleeping(entityIn.getEntityWorld());
+        if (entityIn instanceof PlayerEntity) DaySleepHelper.updateAllPlayersSleeping(entityIn.getEntityWorld());
     }
 
     @Override
     public void onEntityRemoved(Entity entityIn) {
-        if (entityIn instanceof EntityPlayer) DaySleepHelper.updateAllPlayersSleeping(entityIn.getEntityWorld());
+        if (entityIn instanceof PlayerEntity) DaySleepHelper.updateAllPlayersSleeping(entityIn.getEntityWorld());
     }
 
     @Override
-    public void playEvent(EntityPlayer player, int type, BlockPos blockPosIn, int data) {
+    public void playEvent(PlayerEntity player, int type, BlockPos blockPosIn, int data) {
 
     }
 
@@ -64,7 +64,7 @@ public class ModWorldEventListener implements IWorldEventListener {
     }
 
     @Override
-    public void playSoundToAllNearExcept(EntityPlayer player, SoundEvent soundIn, SoundCategory category, double x, double y, double z, float volume, float pitch) {
+    public void playSoundToAllNearExcept(PlayerEntity player, SoundEvent soundIn, SoundCategory category, double x, double y, double z, float volume, float pitch) {
 
     }
 

@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.potion;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 
 
 public class PotionThirst extends VampirismPotion {
@@ -19,9 +19,9 @@ public class PotionThirst extends VampirismPotion {
     }
 
     @Override
-    public void performEffect(EntityLivingBase entity, int amplifier) {
-        if (entity instanceof EntityPlayer) {
-            VampirePlayer.get((EntityPlayer) entity).addExhaustion(0.005F * (amplifier + 1));
+    public void performEffect(LivingEntity entity, int amplifier) {
+        if (entity instanceof PlayerEntity) {
+            VampirePlayer.get((PlayerEntity) entity).addExhaustion(0.005F * (amplifier + 1));
         }
     }
 }

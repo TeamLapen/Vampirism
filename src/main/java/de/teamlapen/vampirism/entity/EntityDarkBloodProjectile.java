@@ -5,15 +5,15 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityFireball;
-import net.minecraft.init.MobEffects;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.init.Particles;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -25,7 +25,7 @@ import java.util.List;
  * <p>
  * Damages directly hit entities but also has a small area of effect damage
  */
-public class EntityDarkBloodProjectile extends EntityFireball {
+public class EntityDarkBloodProjectile extends DamagingProjectileEntity {
 
     protected float directDamage = 4;
     protected float indirecDamage = 2;
@@ -41,7 +41,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
      * Copies the location from shooter.
      * Adds a small random to the motion
      */
-    public EntityDarkBloodProjectile(World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ) {
+    public EntityDarkBloodProjectile(World worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
         super(ModEntities.dark_blood_projectile, shooter, accelX, accelY, accelZ, worldIn, 1.0F, 1.0F);
     }
 
@@ -88,7 +88,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     }
 
     @Override
-    public void readAdditional(NBTTagCompound compound) {
+    public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.directDamage = compound.getFloat("direct_damage");
         this.indirecDamage = compound.getFloat("indirect_damage");
@@ -112,7 +112,7 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound compound) {
+    public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putFloat("direct_damage", directDamage);
         compound.putFloat("indirect_damage", indirecDamage);
@@ -158,11 +158,11 @@ public class EntityDarkBloodProjectile extends EntityFireball {
 
             if (result.entity != null) {
                 result.entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), directDamage);
-                if (result.entity instanceof EntityLivingBase) {
+                if (result.entity instanceof LivingEntity) {
                     if (this.rand.nextInt(3) == 0) {
-                        ((EntityLivingBase) result.entity).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100));
-                        ((EntityLivingBase) result.entity).knockBack(this, 1f, -this.motionX, -this.motionZ);
-                        ((EntityLivingBase) result.entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
+                        ((LivingEntity) result.entity).addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100));
+                        ((LivingEntity) result.entity).knockBack(this, 1f, -this.motionX, -this.motionZ);
+                        ((LivingEntity) result.entity).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
 
                     }
                 }
@@ -170,14 +170,14 @@ public class EntityDarkBloodProjectile extends EntityFireball {
 
             }
 
-            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(2), EntitySelectors.IS_ALIVE.and(EntitySelectors.NOT_SPECTATING));
+            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(2), EntityPredicates.IS_ALIVE.and(EntityPredicates.NOT_SPECTATING));
             for (Entity e : list) {
                 if (excludeShooter && e == shootingEntity) {
                     continue;
                 }
-                if (e instanceof EntityLivingBase && e.getDistanceSq(this) < 4) {
-                    EntityLivingBase entity = (EntityLivingBase) e;
-                    entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
+                if (e instanceof LivingEntity && e.getDistanceSq(this) < 4) {
+                    LivingEntity entity = (LivingEntity) e;
+                    entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
                     if (entity != result.entity)
                         entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), indirecDamage);
 

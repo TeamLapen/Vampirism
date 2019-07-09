@@ -4,15 +4,15 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.EntitySelectors;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.List;
 
-public class VampireAIBiteNearbyEntity<T extends EntityLiving & IVampireMob> extends EntityAIBase {
+public class VampireAIBiteNearbyEntity<T extends MobEntity & IVampireMob> extends Goal {
     private final T vampire;
     private IExtendedCreatureVampirism creature;
     private int timer;
@@ -36,12 +36,12 @@ public class VampireAIBiteNearbyEntity<T extends EntityLiving & IVampireMob> ext
     @Override
     public boolean shouldExecute() {
         if (vampire.wantsBlood()) {
-            List<EntityCreature> list = vampire.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, getBiteBoundingBox(), EntitySelectors.NOT_SPECTATING.and((entity) -> entity != vampire && entity.isAlive()));
+            List<CreatureEntity> list = vampire.getEntityWorld().getEntitiesWithinAABB(CreatureEntity.class, getBiteBoundingBox(), EntityPredicates.NOT_SPECTATING.and((entity) -> entity != vampire && entity.isAlive()));
             if (list.size() > 1) {
                 list.sort((o1, o2) -> (int) (vampire.getDistanceSq(o1) - vampire.getDistanceSq(o2)));
             }
 
-            for (EntityCreature o : list) {
+            for (CreatureEntity o : list) {
                 if (!vampire.getEntitySenses().canSee(o) || o.hasCustomName()) {
                         continue;
                     }
@@ -64,7 +64,7 @@ public class VampireAIBiteNearbyEntity<T extends EntityLiving & IVampireMob> ext
 
     @Override
     public void tick() {
-        EntityCreature e = creature.getEntity();
+        CreatureEntity e = creature.getEntity();
         vampire.getLookHelper().setLookPosition(e.posX, e.posY + (double) e.getEyeHeight(), e.posZ, 10.0F, (float) vampire.getVerticalFaceSpeed());
 
 

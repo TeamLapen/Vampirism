@@ -2,13 +2,12 @@ package de.teamlapen.vampirism.client.model;
 
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
-
-import net.minecraft.client.renderer.entity.model.ModelRenderer;
+import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.Hand;
+import net.minecraft.util.HandSide;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -17,7 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class ModelBasicHunter extends ModelBipedCloaked {
-    private ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, secondHead, hatTop2, hatRim2, hatRim3;
+    private RendererModel hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, secondHead, hatTop2, hatRim2, hatRim3;
     private boolean targetingLeft = false;
     private boolean targetingRight = false;
     private float xAngle = 0;
@@ -26,67 +25,67 @@ public class ModelBasicHunter extends ModelBipedCloaked {
         super(0.0F, 0.0F, 64, 64, 0, 32);
         this.bipedHeadwear.isHidden = true;
 
-        hatTop2 = new ModelRenderer(this, 0, 31);
+        hatTop2 = new RendererModel(this, 0, 31);
         hatTop2.addBox(-4F, -12F, -4F, 8, 3, 8);
         hatTop2.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
         hatTop2.setTextureSize(128, 64);
         hatTop2.mirror = true;
 
-        hatRim2 = new ModelRenderer(this, 0, 31);
+        hatRim2 = new RendererModel(this, 0, 31);
         hatRim2.addBox(-8F, -9F, -8F, 16, 1, 16);
         hatRim2.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
         hatRim2.setTextureSize(128, 64);
         hatRim2.mirror = true;
 
-        hatRim3 = new ModelRenderer(this, 0, 37);
+        hatRim3 = new RendererModel(this, 0, 37);
         hatRim3.addBox(-5F, -6F, -5F, 10, 1, 10);
         hatRim3.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
         hatRim3.setTextureSize(128, 64);
         hatRim3.mirror = true;
 
-        hatTop = new ModelRenderer(this, 0, 31);
+        hatTop = new RendererModel(this, 0, 31);
         hatTop.addBox(-4F, -14F, -4F, 8, 5, 8);
         hatTop.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
         hatTop.setTextureSize(128, 64);
         hatTop.mirror = true;
 
-        hatRim = new ModelRenderer(this, 0, 35);
+        hatRim = new RendererModel(this, 0, 35);
         hatRim.addBox(-6F, -9F, -6F, 12, 1, 12);
         hatRim.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
         hatRim.setTextureSize(128, 64);
         hatRim.mirror = true;
 
-        axeShaft = new ModelRenderer(this, 16, 48);
+        axeShaft = new RendererModel(this, 16, 48);
         axeShaft.addBox(-2F, 8F, -17F, 1, 1, 15);
         axeShaft.setRotationPoint(super.bipedRightArm.rotationPointX, super.bipedRightArm.rotationPointY, super.bipedRightArm.rotationPointZ);
         axeShaft.setTextureSize(128, 64);
         axeShaft.mirror = true;
 
-        axeBlade1 = new ModelRenderer(this, 0, 53);
+        axeBlade1 = new RendererModel(this, 0, 53);
         axeBlade1.addBox(-2F, 4F, -16F, 1, 4, 7);
         axeBlade1.setRotationPoint(super.bipedRightArm.rotationPointX, super.bipedRightArm.rotationPointY, super.bipedRightArm.rotationPointZ);
         axeBlade1.setTextureSize(128, 64);
         axeBlade1.mirror = true;
 
-        axeBlade2 = new ModelRenderer(this, 0, 53);
+        axeBlade2 = new RendererModel(this, 0, 53);
         axeBlade2.addBox(-2F, 9F, -16F, 1, 4, 7);
         axeBlade2.setRotationPoint(super.bipedRightArm.rotationPointX, super.bipedRightArm.rotationPointY, super.bipedRightArm.rotationPointZ);
         axeBlade2.setTextureSize(128, 64);
         axeBlade2.mirror = true;
 
-        stake = new ModelRenderer(this, 16, 48);
+        stake = new RendererModel(this, 16, 48);
         stake.addBox(1F, 8F, -8F, 1, 1, 6);
         stake.setRotationPoint(super.bipedLeftArm.rotationPointX, super.bipedLeftArm.rotationPointY, super.bipedLeftArm.rotationPointZ);
         stake.setTextureSize(128, 64);
         stake.mirror = true;
 
-        stakeRight = new ModelRenderer(this, 16, 48);
+        stakeRight = new RendererModel(this, 16, 48);
         stakeRight.addBox(-2F, 8F, -8, 1, 1, 6);
         stakeRight.setRotationPoint(super.bipedRightArm.rotationPointX, super.bipedRightArm.rotationPointY, super.bipedRightArm.rotationPointZ);
         stakeRight.setTextureSize(128, 64);
         stakeRight.mirror = true;
 
-        secondHead = new ModelRenderer(this, 0, 0);
+        secondHead = new RendererModel(this, 0, 0);
         secondHead.setTextureSize(64, 32);
         secondHead.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F);
         secondHead.setRotationPoint(0.0F, 0.0F + 0.0F, 0.0F);
@@ -144,12 +143,12 @@ public class ModelBasicHunter extends ModelBipedCloaked {
     }
 
     @Override
-    public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
+    public void setLivingAnimations(LivingEntity entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
         this.targetingRight = false;
         this.targetingLeft = false;
-        ItemStack itemStack = entitylivingbaseIn.getHeldItem(EnumHand.MAIN_HAND);
+        ItemStack itemStack = entitylivingbaseIn.getHeldItem(Hand.MAIN_HAND);
         if (!itemStack.isEmpty() && itemStack.getItem() instanceof VampirismItemCrossbow && entitylivingbaseIn instanceof EntityBasicHunter && ((EntityBasicHunter) entitylivingbaseIn).isSwingingArms()) {
-            if (entitylivingbaseIn.getPrimaryHand() == EnumHandSide.RIGHT) {
+            if (entitylivingbaseIn.getPrimaryHand() == HandSide.RIGHT) {
                 this.targetingRight = true;
             } else {
                 this.targetingLeft = true;

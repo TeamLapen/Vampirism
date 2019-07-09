@@ -9,14 +9,14 @@ import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.core.RegistryManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.api.distmarker.Dist;
@@ -81,7 +81,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public boolean isPlayerThePlayer(EntityPlayer player) {
+    public boolean isPlayerThePlayer(PlayerEntity player) {
         return Minecraft.getInstance().player.equals(player);
     }
 
@@ -92,30 +92,30 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
     }
 
-    private void registerVampireEntityOverlay(RenderManager manager, EntityType<? extends EntityCreature> type, ResourceLocation loc) {
-        Render render = manager.getEntityClassRenderObject(type.getEntityClass());
+    private void registerVampireEntityOverlay(EntityRendererManager manager, EntityType<? extends CreatureEntity> type, ResourceLocation loc) {
+        EntityRenderer render = manager.getEntityClassRenderObject(type.getEntityClass());
         if (render == null) {
             LOGGER.error("Did not find renderer for {}", type.getEntityClass());
             return;
         }
-        if (!(render instanceof RenderLivingBase)) {
+        if (!(render instanceof LivingRenderer)) {
             LOGGER.error("Renderer ({}) for {} does not extend RenderLivingEntity", type.getEntityClass(), render);
             return;
         }
-        RenderLivingBase rendererLiving = (RenderLivingBase) render;
+        LivingRenderer rendererLiving = (LivingRenderer) render;
         rendererLiving.addLayer(new LayerVampireEntity(rendererLiving, loc, true));
     }
 
     private void registerVampireEntityOverlays() {
-        RenderManager manager = Minecraft.getInstance().getRenderManager();
+        EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
         registerVampirePlayerHead(manager);
-        for (Map.Entry<EntityType<? extends EntityCreature>, String> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
+        for (Map.Entry<EntityType<? extends CreatureEntity>, String> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
             registerVampireEntityOverlay(manager, entry.getKey(), new ResourceLocation(entry.getValue()));
         }
     }
 
-    private void registerVampirePlayerHead(RenderManager manager) {
-        for (RenderPlayer renderPlayer : manager.getSkinMap().values()) {
+    private void registerVampirePlayerHead(EntityRendererManager manager) {
+        for (PlayerRenderer renderPlayer : manager.getSkinMap().values()) {
             renderPlayer.addLayer(new LayerVampirePlayerHead(renderPlayer));
         }
     }

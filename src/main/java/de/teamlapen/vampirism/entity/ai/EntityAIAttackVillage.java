@@ -3,23 +3,23 @@ package de.teamlapen.vampirism.entity.ai;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.entity.EntityVampirism;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAITarget;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.TargetGoal;
 
 import java.util.List;
 
 
-public class EntityAIAttackVillage<T extends EntityVampirism & IVillageCaptureEntity> extends EntityAITarget {
+public class EntityAIAttackVillage<T extends EntityVampirism & IVillageCaptureEntity> extends TargetGoal {
 
     private final T attacker;
-    private final EntityAINearestAttackableTarget.Sorter sorter;
-    private EntityLivingBase targetEntity;
+    private final NearestAttackableTargetGoal.Sorter sorter;
+    private LivingEntity targetEntity;
 
     public EntityAIAttackVillage(T creature) {
         super(creature, false, false);
         this.attacker = creature;
-        this.sorter = new EntityAINearestAttackableTarget.Sorter(creature);
+        this.sorter = new NearestAttackableTargetGoal.Sorter(creature);
 
     }
 
@@ -28,7 +28,7 @@ public class EntityAIAttackVillage<T extends EntityVampirism & IVillageCaptureEn
         if (!attacker.isAttackingVillage()) {
             return false;
         }
-        List<EntityLivingBase> list = this.attacker.world.getEntitiesWithinAABB(EntityLivingBase.class, attacker.getTargetVillageArea(), VampirismAPI.factionRegistry().getPredicate(attacker.getFaction(), false).and(entity -> entity instanceof EntityLivingBase && isSuitableTarget((EntityLivingBase) entity, false)));
+        List<LivingEntity> list = this.attacker.world.getEntitiesWithinAABB(LivingEntity.class, attacker.getTargetVillageArea(), VampirismAPI.factionRegistry().getPredicate(attacker.getFaction(), false).and(entity -> entity instanceof LivingEntity && isSuitableTarget((LivingEntity) entity, false)));
         if (list.isEmpty()) {
             return false;
         } else {

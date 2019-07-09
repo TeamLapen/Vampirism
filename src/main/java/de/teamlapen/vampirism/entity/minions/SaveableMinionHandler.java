@@ -7,10 +7,10 @@ import de.teamlapen.vampirism.api.entity.minions.ISaveableMinionHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.MinionHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +28,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
     private final static Logger LOGGER = LogManager.getLogger(SaveableMinionHandler.class);
     private final List<T> minions;
     private final IMinionLord lord;
-    private final Predicate<EntityLivingBase> entityPredicate;
+    private final Predicate<LivingEntity> entityPredicate;
     private List<T> loadedMinions;
 
     public SaveableMinionHandler(IMinionLord lord) {
@@ -86,13 +86,13 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
      *
      * @return
      */
-    public NBTTagList getMinionsToSave() {
-        NBTTagList list = new NBTTagList();
+    public ListNBT getMinionsToSave() {
+        ListNBT list = new ListNBT();
         for (IMinion m : minions) {
             Entity e = MinionHelper.entity(m);
             boolean removed = !e.isAlive();
             e.removed = false;
-            NBTTagCompound nbt = new NBTTagCompound();
+            CompoundNBT nbt = new CompoundNBT();
             e.writeUnlessRemoved(nbt);
             list.add(nbt);
             if (removed)
@@ -103,14 +103,14 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
     }
 
     @Override
-    public java.util.function.Predicate<EntityLivingBase> getNonMinionSelector() {
+    public java.util.function.Predicate<LivingEntity> getNonMinionSelector() {
         return entityPredicate;
     }
 
     @Override
     public void killMinions(boolean instant) {
         for (T m : minions) {
-            EntityLivingBase e = MinionHelper.entity(m);
+            LivingEntity e = MinionHelper.entity(m);
             if (instant) {
                 e.remove();
             } else {
@@ -124,14 +124,14 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
      *
      * @param list
      */
-    public void loadMinions(NBTTagList list) {
+    public void loadMinions(ListNBT list) {
         if (list == null || list.size() == 0) {
             LOGGER.debug("Empty minion list to load");
             return;
         }
         loadedMinions = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            NBTTagCompound nbttagcompound = list.getCompound(i);
+            CompoundNBT nbttagcompound = list.getCompound(i);
             Entity entity = EntityType.create(nbttagcompound, lord.getRepresentingEntity().world);
             if (entity != null && entity instanceof ISaveableMinion) {
                 entity.posY = entity.posY + entity.height;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.common.ToolType;
 
@@ -18,18 +18,18 @@ public class BlockAltarTip extends VampirismBlock {
     }
 
     @Override
-    public int getHarvestLevel(IBlockState p_getHarvestLevel_1_) {
+    public int getHarvestLevel(BlockState p_getHarvestLevel_1_) {
         return 1;
     }
 
     @Nullable
     @Override
-    public ToolType getHarvestTool(IBlockState p_getHarvestTool_1_) {
+    public ToolType getHarvestTool(BlockState p_getHarvestTool_1_) {
         return ToolType.PICKAXE;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(BlockState state) {
         return false;
     }
 

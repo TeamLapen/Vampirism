@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.util.VampireBookManager;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 /**
  * 
@@ -23,7 +21,7 @@ public class VampireBookCommand extends BasicCommand {
                 });
     }
 
-    private static int vampireBook(EntityPlayerMP asPlayer) {
+    private static int vampireBook(ServerPlayerEntity asPlayer) {
         asPlayer.inventory.addItemStackToInventory(VampireBookManager.getInstance().getRandomBook(asPlayer.getRNG()));
         return 0;
     }

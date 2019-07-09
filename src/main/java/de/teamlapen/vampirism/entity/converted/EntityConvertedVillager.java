@@ -18,17 +18,20 @@ import de.teamlapen.vampirism.entity.ai.VampireAIMoveToBiteable;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.RestrictSunGoal;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
@@ -41,7 +44,7 @@ import java.util.Random;
 /**
  * Vampire Villager
  */
-public class EntityConvertedVillager extends EntityVillagerVampirism implements IConvertedCreature<EntityVillager> {
+public class EntityConvertedVillager extends EntityVillagerVampirism implements IConvertedCreature<VillagerEntity> {
 
     private EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
@@ -54,8 +57,8 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
 
     @Override
     public boolean attackEntityAsMob(Entity entity) {
-        if (!world.isRemote && entity instanceof EntityPlayer && !UtilLib.canReallySee((EntityLivingBase) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
-            int amt = VampirePlayer.get((EntityPlayer) entity).onBite(this);
+        if (!world.isRemote && entity instanceof PlayerEntity && !UtilLib.canReallySee((LivingEntity) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
+            int amt = VampirePlayer.get((PlayerEntity) entity).onBite(this);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
             return true;
         }
@@ -69,12 +72,12 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
-        this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
+        this.addPotionEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
         bloodTimer = -1200 - rand.nextInt(1200);
     }
 
     @Override
-    public MerchantRecipeList getRecipes(EntityPlayer player) {
+    public MerchantRecipeList getRecipes(PlayerEntity player) {
         MerchantRecipeList list = super.getRecipes(player);
         if (!addedAdditionalRecipes) {
             addAdditionalRecipes(list);
@@ -85,7 +88,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
-    public EntityLivingBase getRepresentingEntity() {
+    public LivingEntity getRepresentingEntity() {
         return this;
     }
 
@@ -119,7 +122,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         }
         if (!world.isRemote) {
             if (isGettingSundamage() && ticksExisted % 40 == 11) {
-                this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 42));
+                this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 42));
             }
             if (isGettingGarlicDamage() != EnumStrength.NONE) {
                 DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(), this.ticksExisted);
@@ -130,7 +133,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
-    public void readAdditional(NBTTagCompound compound) {
+    public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         if (compound.contains("addedAdditionalRecipes")) {
             addedAdditionalRecipes = compound.getBoolean("addedAdditionalRecipes");
@@ -139,7 +142,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
 
     @Override
     public boolean useBlood(int amt, boolean allowPartial) {
-        this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, amt * 20));
+        this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
         bloodTimer = 0;
         return true;
     }
@@ -150,7 +153,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound compound) {
+    public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putBoolean("addedAdditionalRecipes", addedAdditionalRecipes);
     }
@@ -161,16 +164,16 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
 
         this.tasks.taskEntries.removeIf(entry -> entry.action instanceof EntityAIMoveIndoors || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem);
 
-        tasks.addTask(0, new EntityAIRestrictSun(this));
-        tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, 10, 0.45F, 0.55F, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, false, VReference.HUNTER_FACTION)));
+        tasks.addTask(0, new RestrictSunGoal(this));
+        tasks.addTask(1, new AvoidEntityGoal<>(this, CreatureEntity.class, 10, 0.45F, 0.55F, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, false, VReference.HUNTER_FACTION)));
         tasks.addTask(2, new EntityAIMoveIndoorsDay(this));
         tasks.addTask(5, new VampireAIFleeSun<>(this, 0.6F, true));
-        tasks.addTask(6, new EntityAIAttackMelee(this, 0.6F, false));
+        tasks.addTask(6, new MeleeAttackGoal(this, 0.6F, false));
         tasks.addTask(7, new VampireAIBiteNearbyEntity<>(this));
         tasks.addTask(9, new VampireAIMoveToBiteable<>(this, 0.55F));
 
 
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
 
     }
 
@@ -203,11 +206,11 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         }
     }
 
-    public static class ConvertingHandler implements IConvertingHandler<EntityVillager> {
+    public static class ConvertingHandler implements IConvertingHandler<VillagerEntity> {
 
         @Override
-        public IConvertedCreature<EntityVillager> createFrom(EntityVillager entity) {
-            NBTTagCompound nbt = new NBTTagCompound();
+        public IConvertedCreature<VillagerEntity> createFrom(VillagerEntity entity) {
+            CompoundNBT nbt = new CompoundNBT();
             entity.writeWithoutTypeId(nbt);
             EntityConvertedVillager converted = new EntityConvertedVillager(entity.world);
             converted.read(nbt);

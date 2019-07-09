@@ -8,16 +8,16 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.EntityAreaParticleCloud;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.util.HalloweenSpecial;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityTameable;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SPacketSoundEffect;
+import net.minecraft.network.play.server.SPlaySoundEffectPacket;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -37,7 +37,7 @@ import java.util.UUID;
 public class EntityDraculaHalloween extends EntityVampirism {
 
     private final static Logger LOGGER = LogManager.getLogger(EntityDraculaHalloween.class);
-    protected static final DataParameter<java.util.Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityTameable.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    protected static final DataParameter<java.util.Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(TameableEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private int seen = 0;
     private int hiding = 0;
     private boolean particle = false;
@@ -53,7 +53,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
     }
 
     @Nullable
-    public EntityLivingBase getOwner() {
+    public LivingEntity getOwner() {
         try {
             UUID uuid = this.getOwnerId();
             return uuid == null ? null : this.world.getPlayerEntityByUUID(uuid);
@@ -95,14 +95,14 @@ public class EntityDraculaHalloween extends EntityVampirism {
             this.remove();
         }
         if (this.world.isRemote) {
-            EntityLivingBase owner = getOwner();
-            if (owner != null && !isInvisible() && !VampirismMod.proxy.isPlayerThePlayer((EntityPlayer) owner)) {
+            LivingEntity owner = getOwner();
+            if (owner != null && !isInvisible() && !VampirismMod.proxy.isPlayerThePlayer((PlayerEntity) owner)) {
                 this.setInvisible(true);
                 LOGGER.info("Setting invisible on other client");
             }
             return;
         }
-        EntityLivingBase owner = getOwner();
+        LivingEntity owner = getOwner();
         if (owner == null) {
             this.remove();
             return;
@@ -117,8 +117,8 @@ public class EntityDraculaHalloween extends EntityVampirism {
             if (UtilLib.canReallySee(owner, this, true)) {
                 seen++;
                 if (seen == 1) {
-                    if (owner instanceof EntityPlayerMP) {
-                        ((EntityPlayerMP) owner).connection.sendPacket(new SPacketSoundEffect(ModSounds.entity_vampire_scream, SoundCategory.NEUTRAL, posX, posY, posZ, 2, 1));
+                    if (owner instanceof ServerPlayerEntity) {
+                        ((ServerPlayerEntity) owner).connection.sendPacket(new SPlaySoundEffectPacket(ModSounds.entity_vampire_scream, SoundCategory.NEUTRAL, posX, posY, posZ, 2, 1));
                     }
                 }
             } else if (this.getDistanceSq(owner) > 5) {
@@ -162,13 +162,13 @@ public class EntityDraculaHalloween extends EntityVampirism {
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    public void readAdditional(NBTTagCompound compound) {
+    public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.remove();
     }
 
     @Override
-    public NBTTagCompound writeWithoutTypeId(NBTTagCompound compound) {
+    public CompoundNBT writeWithoutTypeId(CompoundNBT compound) {
         return super.writeWithoutTypeId(compound);
     }
 
@@ -185,10 +185,10 @@ public class EntityDraculaHalloween extends EntityVampirism {
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
-        this.tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, 10, 1));
+        this.tasks.addTask(1, new LookAtGoal(this, PlayerEntity.class, 10, 1));
     }
 
-    private void teleportBehind(EntityLivingBase target) {
+    private void teleportBehind(LivingEntity target) {
         BlockPos behind = UtilLib.getPositionBehindEntity(target, 1.5F);
         this.setPosition(behind.getX(), target.posY, behind.getZ());
 

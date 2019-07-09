@@ -4,11 +4,11 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.FoodStats;
-import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.Difficulty;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class BloodStats implements IBloodStats {
     private final static Logger LOGGER = LogManager.getLogger(BloodStats.class);
-    private final EntityPlayer player;
+    private final PlayerEntity player;
     private int maxBlood = 20;
     private int bloodLevel = 20;
     private float bloodSaturationLevel = 5.0F;
@@ -28,7 +28,7 @@ public class BloodStats implements IBloodStats {
     private int prevBloodLevel = 20;
     private boolean changed = false;
 
-    BloodStats(EntityPlayer player) {
+    BloodStats(PlayerEntity player) {
         this.player = player;
     }
 
@@ -81,7 +81,7 @@ public class BloodStats implements IBloodStats {
     public boolean onUpdate() {
         FoodStats foodStats = player.getFoodStats();
         foodStats.setFoodLevel(10);
-        EnumDifficulty enumDifficulty = player.getEntityWorld().getDifficulty();
+        Difficulty enumDifficulty = player.getEntityWorld().getDifficulty();
         float exhaustion = foodStats.foodExhaustionLevel;
         foodStats.foodExhaustionLevel = 0;
         addExhaustion(exhaustion);
@@ -90,7 +90,7 @@ public class BloodStats implements IBloodStats {
             this.bloodExhaustionLevel -= 4.0F;
             if (bloodSaturationLevel > 0) {
                 bloodSaturationLevel = Math.max(bloodSaturationLevel - 1F, 0F);
-            } else if (enumDifficulty != EnumDifficulty.PEACEFUL || Balance.vp.BLOOD_USAGE_PEACEFUL) {
+            } else if (enumDifficulty != Difficulty.PEACEFUL || Balance.vp.BLOOD_USAGE_PEACEFUL) {
                 this.bloodLevel = Math.max(bloodLevel - 1, 0);
             }
         }
@@ -115,7 +115,7 @@ public class BloodStats implements IBloodStats {
             ++this.bloodTimer;
 
             if (this.bloodTimer >= 80) {
-                if (player.getHealth() > 10.0F || enumDifficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F && enumDifficulty == EnumDifficulty.NORMAL) {
+                if (player.getHealth() > 10.0F || enumDifficulty == Difficulty.HARD || player.getHealth() > 1.0F && enumDifficulty == Difficulty.NORMAL) {
                     player.attackEntityFrom(DamageSource.STARVE, 1.5F);
                 }
 
@@ -132,11 +132,11 @@ public class BloodStats implements IBloodStats {
     }
 
     /**
-     * Reads nbt written by either {@link #writeNBTBlood(NBTTagCompound)} or {@link #writeNBT(NBTTagCompound)}
+     * Reads nbt written by either {@link #writeNBTBlood(CompoundNBT)} or {@link #writeNBT(CompoundNBT)}
      *
      * @param nbt
      */
-    public void readNBT(NBTTagCompound nbt) {
+    public void readNBT(CompoundNBT nbt) {
         if (nbt.contains("bloodLevel")) {
             bloodLevel = nbt.getInt("bloodLevel");
             if (nbt.contains("bloodTimer")) {
@@ -191,7 +191,7 @@ public class BloodStats implements IBloodStats {
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * mult, 40F);
     }
 
-    void loadUpdate(NBTTagCompound nbt) {
+    void loadUpdate(CompoundNBT nbt) {
         if (nbt.contains("maxBlood")) {
             setMaxBlood(nbt.getInt("maxBlood"));
         }
@@ -216,7 +216,7 @@ public class BloodStats implements IBloodStats {
      *
      * @param nbt
      */
-    void writeNBT(NBTTagCompound nbt) {
+    void writeNBT(CompoundNBT nbt) {
         writeNBTBlood(nbt);
         nbt.putInt("bloodTimer", bloodTimer);
         nbt.putFloat("bloodSaturation", bloodSaturationLevel);
@@ -229,11 +229,11 @@ public class BloodStats implements IBloodStats {
      *
      * @param nbt
      */
-    void writeNBTBlood(NBTTagCompound nbt) {
+    void writeNBTBlood(CompoundNBT nbt) {
         nbt.putInt("bloodLevel", bloodLevel);
     }
 
-    NBTTagCompound writeUpdate(NBTTagCompound nbt) {
+    CompoundNBT writeUpdate(CompoundNBT nbt) {
         nbt.putInt("bloodLevel", bloodLevel);
         nbt.putInt("maxBlood", maxBlood);
         return nbt;

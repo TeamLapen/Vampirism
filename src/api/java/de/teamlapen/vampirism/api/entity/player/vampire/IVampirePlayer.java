@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
@@ -40,7 +40,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * @return The bite type which would be applied to the give entity
      */
-    BITE_TYPE determineBiteType(EntityLivingBase entity);
+    BITE_TYPE determineBiteType(LivingEntity entity);
 
     /**
      * @return The players vampire skill handler
@@ -83,7 +83,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @param pos
      * @return
      */
-    EntityPlayer.SleepResult trySleep(BlockPos pos);
+    PlayerEntity.SleepResult trySleep(BlockPos pos);
 
     /**
      * Locks the vision again, preventing the player from using it
@@ -110,6 +110,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn);
 
     enum BITE_TYPE {
-        ATTACK, ATTACK_HUNTER, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD_HUNTER_PLAYER, SUCK_BLOOD, NONE, HUNTER_CREATURE;
+        ATTACK, ATTACK_HUNTER, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD_HUNTER_PLAYER, SUCK_BLOOD, NONE, HUNTER_CREATURE
     }
 }

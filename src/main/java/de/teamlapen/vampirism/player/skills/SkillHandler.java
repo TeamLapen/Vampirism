@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.VampirismRegistries;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -142,7 +142,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         return enabledSkills.contains(skill);
     }
 
-    public void loadFromNbt(NBTTagCompound nbt) {
+    public void loadFromNbt(CompoundNBT nbt) {
         if (!nbt.contains("skills")) return;
         for (String id : nbt.getCompound("skills").keySet()) {
             ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(id));
@@ -156,7 +156,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
 
     }
 
-    public void readUpdateFromServer(NBTTagCompound nbt) {
+    public void readUpdateFromServer(CompoundNBT nbt) {
         if (!nbt.contains("skills")) return;
         List<ISkill> old = (List<ISkill>) enabledSkills.clone();
         for (String id : nbt.getCompound("skills").keySet()) {
@@ -184,8 +184,8 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         //TODO make this cost something
     }
 
-    public void saveToNbt(NBTTagCompound nbt) {
-        NBTTagCompound skills = new NBTTagCompound();
+    public void saveToNbt(CompoundNBT nbt) {
+        CompoundNBT skills = new CompoundNBT();
         for (ISkill skill : enabledSkills) {
             skills.putBoolean(skill.getRegistryName().toString(), true);
         }
@@ -193,8 +193,8 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
 
     }
 
-    public void writeUpdateForClient(NBTTagCompound nbt) {
-        NBTTagCompound skills = new NBTTagCompound();
+    public void writeUpdateForClient(CompoundNBT nbt) {
+        CompoundNBT skills = new CompoundNBT();
         for (ISkill skill : enabledSkills) {
             skills.putBoolean(skill.getRegistryName().toString(), true);
         }

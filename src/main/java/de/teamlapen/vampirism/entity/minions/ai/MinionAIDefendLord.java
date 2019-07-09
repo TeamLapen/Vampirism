@@ -3,19 +3,19 @@ package de.teamlapen.vampirism.entity.minions.ai;
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.util.MinionHelper;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAITarget;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.TargetGoal;
 
 /**
  * TargetTask for minions which fight for their bosses
  *
  * @author maxanier
  */
-public class MinionAIDefendLord extends EntityAITarget {
+public class MinionAIDefendLord extends TargetGoal {
 
     protected IMinion minion;
 
-    protected EntityLivingBase target;
+    protected LivingEntity target;
 
     protected int lastUpdate = 0;
 

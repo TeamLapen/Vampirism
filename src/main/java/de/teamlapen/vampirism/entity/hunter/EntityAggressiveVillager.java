@@ -11,17 +11,17 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
 import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
@@ -40,33 +40,33 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
      * @param villager Is not modified
      * @return
      */
-    public static EntityAggressiveVillager makeHunter(EntityVillager villager) {
+    public static EntityAggressiveVillager makeHunter(VillagerEntity villager) {
         EntityAggressiveVillager hunter = new EntityAggressiveVillager(villager.world);
-        NBTTagCompound nbt = new NBTTagCompound();
+        CompoundNBT nbt = new CompoundNBT();
         villager.writeWithoutTypeId(nbt);
         hunter.read(nbt);
         hunter.setUniqueId(MathHelper.getRandomUUID(hunter.rand));
-        hunter.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.pitchfork));
+        hunter.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
         return hunter;
     }
 
 
     public EntityAggressiveVillager(World worldIn) {
         super(worldIn);
-        ((PathNavigateGround) getNavigator()).setEnterDoors(true);
+        ((GroundPathNavigator) getNavigator()).setEnterDoors(true);
     }
 
 
 
     @Override
-    public EntityLivingBase getRepresentingEntity() {
+    public LivingEntity getRepresentingEntity() {
         return this;
     }
 
     @Override
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata, @Nullable NBTTagCompound itemNbt) {
-        IEntityLivingData data = super.onInitialSpawn(difficulty, livingdata, itemNbt);
-        this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.pitchfork));
+    public ILivingEntityData onInitialSpawn(DifficultyInstance difficulty, ILivingEntityData livingdata, @Nullable CompoundNBT itemNbt) {
+        ILivingEntityData data = super.onInitialSpawn(difficulty, livingdata, itemNbt);
+        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
         return data;
     }
 
@@ -111,8 +111,8 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
 
     @Override
     public void stopVillageAttackDefense() {
-        EntityVillager villager = new EntityVillager(this.world);
-        NBTTagCompound nbt = new NBTTagCompound();
+        VillagerEntity villager = new VillagerEntity(this.world);
+        CompoundNBT nbt = new CompoundNBT();
         this.writeWithoutTypeId(nbt);
         villager.read(nbt);
         villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
@@ -123,15 +123,15 @@ public class EntityAggressiveVillager extends EntityVillagerVampirism implements
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
-        this.tasks.taskEntries.removeIf(entry -> entry.action instanceof EntityAITradePlayer || entry.action instanceof EntityAILookAtTradePlayer || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem);
-        this.tasks.addTask(6, new EntityAIAttackMelee(this, 0.6, false));
+        this.tasks.taskEntries.removeIf(entry -> entry.action instanceof TradeWithPlayerGoal || entry.action instanceof LookAtCustomerGoal || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem);
+        this.tasks.addTask(6, new MeleeAttackGoal(this, 0.6, false));
         this.tasks.addTask(8, new EntityAIMoveThroughVillageCustom(this, 0.55, false, 400));
 
 
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
+        this.targetTasks.addTask(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
         this.targetTasks.addTask(3, new EntityAIDefendVillage<>(this));
-        this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<EntityCreature>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
+        this.targetTasks.addTask(4, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
 
             @Override
             protected double getTargetDistance() {

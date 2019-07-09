@@ -2,8 +2,7 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
-
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -11,24 +10,24 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.ai.goal.GoalSelector;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.init.Particles;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
-import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -82,7 +81,7 @@ public class UtilLib {
      * @param restriction Max distance or 0 for player reach distance or -1 for not restricted
      * @return The position as a MovingObjectPosition, null if not existent cf: https ://github.com/bspkrs/bspkrsCore/blob/master/src/main/java/bspkrs /util/CommonUtils.java
      */
-    public static RayTraceResult getPlayerLookingSpot(EntityPlayer player, double restriction) {
+    public static RayTraceResult getPlayerLookingSpot(PlayerEntity player, double restriction) {
         float scale = 1.0F;
         float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * scale;
         float yaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * scale;
@@ -97,8 +96,8 @@ public class UtilLib {
         float pitchAdjustedSinYaw = sinYaw * cosPitch;
         float pitchAdjustedCosYaw = cosYaw * cosPitch;
         double distance = 500D;
-        if (restriction == 0 && player instanceof EntityPlayerMP) {
-            distance = player.getAttribute(EntityPlayer.REACH_DISTANCE).getValue();
+        if (restriction == 0 && player instanceof ServerPlayerEntity) {
+            distance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
         } else if (restriction > 0) {
             distance = restriction;
         }
@@ -129,7 +128,7 @@ public class UtilLib {
         List<ChunkPos> chunks = Lists.newArrayList();
         int i = 0;
 
-        for (EntityPlayer entityplayer : world.playerEntities) {
+        for (PlayerEntity entityplayer : world.playerEntities) {
             if (!entityplayer.isSpectator()) {
                 int x = MathHelper.floor(entityplayer.posX / 16.0D);
                 int z = MathHelper.floor(entityplayer.posZ / 16.0D);
@@ -160,19 +159,19 @@ public class UtilLib {
      * @return Absolute position in the world
      */
     public static @Nonnull
-    Vec3d getItemPosition(EntityLivingBase entity, boolean mainHand) {
-        boolean left = (mainHand ? entity.getPrimaryHand() : entity.getPrimaryHand().opposite()) == EnumHandSide.LEFT;
-        boolean firstPerson = entity instanceof EntityPlayer && ((EntityPlayer) entity).isUser() && Minecraft.getInstance().gameSettings.thirdPersonView == 0;
+    Vec3d getItemPosition(LivingEntity entity, boolean mainHand) {
+        boolean left = (mainHand ? entity.getPrimaryHand() : entity.getPrimaryHand().opposite()) == HandSide.LEFT;
+        boolean firstPerson = entity instanceof PlayerEntity && ((PlayerEntity) entity).isUser() && Minecraft.getInstance().gameSettings.thirdPersonView == 0;
         Vec3d dir = firstPerson ? entity.getForward() : Vec3d.fromPitchYaw(new Vec2f(entity.rotationPitch, entity.renderYawOffset));
         dir = dir.rotateYaw((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
         return dir.add(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
 
     }
 
-    public static <T extends EntityLiving> Entity spawnEntityBehindEntity(EntityLivingBase entity, EntityType<T> toSpawn) {
+    public static <T extends MobEntity> Entity spawnEntityBehindEntity(LivingEntity entity, EntityType<T> toSpawn) {
 
         BlockPos behind = getPositionBehindEntity(entity, 2);
-        EntityLiving e = toSpawn.create(entity.getEntityWorld());
+        MobEntity e = toSpawn.create(entity.getEntityWorld());
 
         e.setPosition(behind.getX(), entity.posY, behind.getZ());
 
@@ -193,15 +192,15 @@ public class UtilLib {
     }
 
     /**
-     * Call {@link EntityLiving#onInitialSpawn(DifficultyInstance, IEntityLivingData, NBTTagCompound)} if applicable
+     * Call {@link MobEntity#onInitialSpawn(DifficultyInstance, ILivingEntityData, CompoundNBT)} if applicable
      */
     private static void onInitialSpawn(Entity e) {
-        if (e instanceof EntityLiving) {
-            ((EntityLiving) e).onInitialSpawn(e.getEntityWorld().getDifficultyForLocation(e.getPosition()), null, null);
+        if (e instanceof MobEntity) {
+            ((MobEntity) e).onInitialSpawn(e.getEntityWorld().getDifficultyForLocation(e.getPosition()), null, null);
         }
     }
 
-    public static BlockPos getPositionBehindEntity(EntityLivingBase p, float distance) {
+    public static BlockPos getPositionBehindEntity(LivingEntity p, float distance) {
         float yaw = p.rotationYawHead;
         float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
@@ -218,7 +217,7 @@ public class UtilLib {
      * @param avoidedEntities Avoid being to close or seen by these entities. If no valid spawn location is found, this is ignored
      * @return Successful spawn
      */
-    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<EntityLivingBase> avoidedEntities) {//TODO this method is only called for EntityLiving -> modify?
+    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<LivingEntity> avoidedEntities) {//TODO this method is only called for EntityLiving -> modify?
         if (!world.isAreaLoaded((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ, true)) {
             return false;
         }
@@ -227,11 +226,11 @@ public class UtilLib {
         BlockPos backupPos=null; //
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
-            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType((EntityType<? extends EntityLiving>) e.getType()), world, c, (EntityType<? extends EntityLiving>) e.getType())) {//TODO i see no other way
+            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(e.getType()), world, c, e.getType())) {//TODO i see no other way
                 e.setPosition(c.getX(), c.getY() + 0.2, c.getZ());
-                if (!(e instanceof EntityLiving) || (((EntityLiving) e).canSpawn(world, false) && ((EntityLiving) e).isNotColliding())) {
+                if (!(e instanceof MobEntity) || (((MobEntity) e).canSpawn(world, false) && ((MobEntity) e).isNotColliding())) {
                     backupPos = c; //Store the location in case we do not find a better one
-                    for (EntityLivingBase p : avoidedEntities) {
+                    for (LivingEntity p : avoidedEntities) {
 
                         if (!(p.getDistanceSq(e) < 500 && p.canEntityBeSeen(e))) {
                             flag = true;
@@ -263,7 +262,7 @@ public class UtilLib {
      * @return The spawned creature or null if not successful
      */
     @Nullable
-    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, EntityType entityType, int maxTry, @Nonnull List<EntityLivingBase> avoidedEntities) {
+    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, EntityType entityType, int maxTry, @Nonnull List<LivingEntity> avoidedEntities) {
         Entity e = entityType.create(world);
         if (spawnEntityInWorld(world, box, e, maxTry,avoidedEntities)) {
             return e;
@@ -285,7 +284,7 @@ public class UtilLib {
      * @param sound  If a teleport sound should be played
      * @return Wether the teleport was successful or not
      */
-    public static boolean teleportTo(EntityLiving entity, double x, double y, double z, boolean sound) {
+    public static boolean teleportTo(MobEntity entity, double x, double y, double z, boolean sound) {
         double d3 = entity.posX;
         double d4 = entity.posY;
         double d5 = entity.posZ;
@@ -300,7 +299,7 @@ public class UtilLib {
             boolean flag1 = false;
 
             while (!flag1 && blockPos.getY() > 0) {
-                IBlockState blockState = entity.getEntityWorld().getBlockState(blockPos.down());
+                BlockState blockState = entity.getEntityWorld().getBlockState(blockPos.down());
                 if (blockState.getMaterial().blocksMovement())
                     flag1 = true;
                 else {
@@ -359,7 +358,7 @@ public class UtilLib {
         }
     }
 
-    public static void spawnParticlesAroundEntity(EntityLivingBase e, IParticleData particle, double maxDistance, int amount) {
+    public static void spawnParticlesAroundEntity(LivingEntity e, IParticleData particle, double maxDistance, int amount) {
 
 
         short short1 = (short) amount;
@@ -382,10 +381,10 @@ public class UtilLib {
      * @param player
      * @param message
      */
-    public static void sendMessageToAllExcept(EntityPlayer player, ITextComponent message) {
+    public static void sendMessageToAllExcept(PlayerEntity player, ITextComponent message) {
         for (Object o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
             if (!o.equals(player)) {
-                ((EntityPlayer) o).sendMessage(message);
+                ((PlayerEntity) o).sendMessage(message);
             }
         }
     }
@@ -402,7 +401,7 @@ public class UtilLib {
      * @param alsoRaytrace Raytraces first
      * @return
      */
-    public static boolean canReallySee(EntityLivingBase entity, EntityLivingBase target, boolean alsoRaytrace) {
+    public static boolean canReallySee(LivingEntity entity, LivingEntity target, boolean alsoRaytrace) {
         if (alsoRaytrace && !entity.canEntityBeSeen(target)) {
             return false;
         }
@@ -435,26 +434,26 @@ public class UtilLib {
 
     /**
      * Stores the given pos with in the tagcompound using base.
-     * Can be retrieved again with {@link UtilLib#readPos(NBTTagCompound, String)}
+     * Can be retrieved again with {@link UtilLib#readPos(CompoundNBT, String)}
      *
      * @param nbt
      * @param base
      * @param pos
      */
-    public static void write(NBTTagCompound nbt, String base, BlockPos pos) {
+    public static void write(CompoundNBT nbt, String base, BlockPos pos) {
         nbt.putInt(base + "_x", pos.getX());
         nbt.putInt(base + "_y", pos.getY());
         nbt.putInt(base + "_z", pos.getZ());
     }
 
     /**
-     * Reads a position written by {@link UtilLib#write(NBTTagCompound, String, BlockPos)}.
+     * Reads a position written by {@link UtilLib#write(CompoundNBT, String, BlockPos)}.
      *
      * @param nbt
      * @param base
      * @return
      */
-    public static BlockPos readPos(NBTTagCompound nbt, String base) {
+    public static BlockPos readPos(CompoundNBT nbt, String base) {
         return new BlockPos(nbt.getInt(base + "_x"), nbt.getInt(base + "_y"), nbt.getInt(base + "_z"));
     }
 
@@ -563,7 +562,7 @@ public class UtilLib {
         return null;
     }
 
-    public static boolean isPlayerOp(EntityPlayer player) {
+    public static boolean isPlayerOp(PlayerEntity player) {
         return ServerLifecycleHooks.getCurrentServer().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
     }
 
@@ -587,13 +586,12 @@ public class UtilLib {
      * @return
      */
     public static ITextComponent translated(String key, Object... format) {
-        return new TextComponentTranslation(key, format);
+        return new TranslationTextComponent(key, format);
     }
 
 
-
-    public static String aiTaskListToStringDebug(EntityAITasks tasks) {
-        Collection c = ObfuscationReflectionHelper.getPrivateValue(EntityAITasks.class, tasks, "executingTaskEntries");
+    public static String aiTaskListToStringDebug(GoalSelector tasks) {
+        Collection c = ObfuscationReflectionHelper.getPrivateValue(GoalSelector.class, tasks, "executingTaskEntries");
         Iterator var1 = c.iterator();
         if (!var1.hasNext()) {
             return "[]";
@@ -603,7 +601,7 @@ public class UtilLib {
 
             while (true) {
                 Object var3 = var1.next();
-                var2.append(var3 == c ? "(this Collection)" : ((EntityAITasks.EntityAITaskEntry) var3).action);
+                var2.append(var3 == c ? "(this Collection)" : ((GoalSelector.EntityAITaskEntry) var3).action);
                 if (!var1.hasNext()) {
                     return var2.append(']').toString();
                 }
@@ -619,9 +617,9 @@ public class UtilLib {
      * @param stack
      * @return The stacks NBT Tag
      */
-    public static NBTTagCompound checkNBT(ItemStack stack) {
+    public static CompoundNBT checkNBT(ItemStack stack) {
         if (!stack.hasTag()) {
-            stack.setTag(new NBTTagCompound());
+            stack.setTag(new CompoundNBT());
         }
         return stack.getTag();
     }

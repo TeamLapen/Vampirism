@@ -7,18 +7,18 @@ import com.google.gson.JsonSyntaxException;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.JsonUtils;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.conditions.LootCondition;
-import net.minecraft.world.storage.loot.functions.LootFunction;
+import net.minecraft.world.storage.loot.conditions.ILootCondition;
+import net.minecraft.world.storage.loot.functions.ILootFunction;
 
 import java.util.Random;
 
 /**
  * Function to set the charge of any {@link de.teamlapen.vampirism.api.items.IBloodChargeable}
  */
-class SetItemBloodCharge extends LootFunction {
+class SetItemBloodCharge extends ILootFunction {
 
     /**
      * In blood mB. Used if minCharge and maxCharge are -1
@@ -36,7 +36,7 @@ class SetItemBloodCharge extends LootFunction {
     /**
      * Either charge or (minCharge and maxCharge) should be -1
      */
-    private SetItemBloodCharge(LootCondition[] conditionsIn, int charge, int minCharge, int maxCharge) {
+    private SetItemBloodCharge(ILootCondition[] conditionsIn, int charge, int minCharge, int maxCharge) {
         super(conditionsIn);
         this.charge = charge;
         this.minCharge = minCharge;
@@ -53,20 +53,20 @@ class SetItemBloodCharge extends LootFunction {
         return stack;
     }
 
-    public static class Serializer extends LootFunction.Serializer<SetItemBloodCharge> {
+    public static class Serializer extends ILootFunction.Serializer<SetItemBloodCharge> {
 
         protected Serializer() {
             super(new ResourceLocation(REFERENCE.MODID, "set_item_blood_charge"), SetItemBloodCharge.class);
         }
 
         @Override
-        public SetItemBloodCharge deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootCondition[] conditionsIn) {
+        public SetItemBloodCharge deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditionsIn) {
             if (object.has("charge")) {
-                int value = JsonUtils.getInt(object, "charge");
+                int value = JSONUtils.getInt(object, "charge");
                 return new SetItemBloodCharge(conditionsIn, Math.max(0, value), -1, -1);
             } else if (object.has("min_charge") && object.has("max_charge")) {
-                int l = JsonUtils.getInt(object, "min_charge");
-                int u = JsonUtils.getInt(object, "max_charge");
+                int l = JSONUtils.getInt(object, "min_charge");
+                int u = JSONUtils.getInt(object, "max_charge");
                 return new SetItemBloodCharge(conditionsIn, -1, Math.max(0, l), Math.max(0, u));
             } else {
                 throw new JsonSyntaxException("Need charge property for vampirism:set_item_blood_charge");

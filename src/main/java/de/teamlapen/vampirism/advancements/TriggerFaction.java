@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.advancements.criterion.AbstractCriterionInstance;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.advancements.criterion.CriterionInstance;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,14 +54,14 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
     /**
      * Trigger this criterion
      */
-    public void trigger(EntityPlayerMP playerMP, IPlayableFaction faction, int level) {
+    public void trigger(ServerPlayerEntity playerMP, IPlayableFaction faction, int level) {
         Listeners listeners = (Listeners) this.listenersForPlayers.get(playerMP.getAdvancements());
         if (listeners != null) {
             listeners.trigger(faction, level);
         }
     }
 
-    static class Instance extends AbstractCriterionInstance {
+    static class Instance extends CriterionInstance {
         @Nullable
         private final IPlayableFaction faction;
         private final int level;

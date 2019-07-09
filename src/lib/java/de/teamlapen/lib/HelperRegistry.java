@@ -5,9 +5,10 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.util.ThreadSafeLibAPI;
 import io.netty.util.internal.ConcurrentSet;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import org.apache.logging.log4j.LogManager;
@@ -28,11 +29,11 @@ public class HelperRegistry {
     private static Set<Capability> playerEventListenerCaps = new ConcurrentSet<>();
     private static Capability[] playerEventListenerCapsFinal;
     /**
-     * Stores syncable capabilities for {@link EntityPlayer}
+     * Stores syncable capabilities for {@link PlayerEntity}
      */
     private static ImmutableMap<ResourceLocation, Capability> syncablePlayerCapsFinal;
     /**
-     * Stores syncable capabilities for {@link EntityLiving}
+     * Stores syncable capabilities for {@link MobEntity}
      */
     private static ImmutableMap<ResourceLocation, Capability> syncableEntityCapsFinal;
 
@@ -62,9 +63,9 @@ public class HelperRegistry {
 
     /**
      * Register a entity {@link Capability} which instances should be synced on world join
-     * Only works for entities extending {@link net.minecraft.entity.EntityCreature}
+     * Only works for entities extending {@link CreatureEntity}
      *
-     * @param clz Class of the object returned, when {@link EntityPlayer#getCapability(Capability, EnumFacing)} is called on the entity with the given capability
+     * @param clz Class of the object returned, when {@link PlayerEntity#getCapability(Capability, Direction)} is called on the entity with the given capability
      * @param key Unique key for the capability. Preferably the key the cap was registered with.
      *            Has to be called before post init.
      */
@@ -81,7 +82,7 @@ public class HelperRegistry {
      * Register a player {@link Capability} which instances should be synced on world join
      *
      * @param key Unique key for the capability. Preferably the key the cap was registered with.
-     * @param clz Class of the object returned, when {@link EntityPlayer#getCapability(Capability, EnumFacing)} is called on the player with the given capability
+     * @param clz Class of the object returned, when {@link PlayerEntity#getCapability(Capability, Direction)} is called on the player with the given capability
      *            Has to be called before post init.
      */
     @ThreadSafeLibAPI
@@ -98,7 +99,7 @@ public class HelperRegistry {
      * Has to be called before post init.
      *
      * @param capability
-     * @param clz        Class of the object returned, when {@link EntityPlayer#getCapability(Capability, EnumFacing)} is called on the player with the given capability
+     * @param clz        Class of the object returned, when {@link PlayerEntity#getCapability(Capability, Direction)} is called on the player with the given capability
      */
     @ThreadSafeLibAPI
     public static void registerPlayerEventReceivingCapability(Capability capability, Class<? extends IPlayerEventListener> clz) {

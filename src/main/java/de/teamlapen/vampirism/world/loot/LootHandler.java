@@ -2,11 +2,10 @@ package de.teamlapen.vampirism.world.loot;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;
-import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraft.world.storage.loot.conditions.ILootCondition;
 import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.event.LootTableLoadEvent;
@@ -40,7 +39,7 @@ public class LootHandler {
 
     private static ResourceLocation register(String s) {
         ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, s);
-        LootTableList.register(loc);
+        LootTables.register(loc);
         return loc;
     }
 
@@ -53,14 +52,14 @@ public class LootHandler {
         String rs_id = "structure/" + name;
         STRUCTURE_TABLES.add(rs_id);
         ResourceLocation id = new ResourceLocation(rs_id);
-        LootTableList.register(id);
+        LootTables.register(id);
         return id;
     }
     private int injected = 0;
 
     private LootHandler() {
         for (String s : INJECTION_TABLES) {
-            LootTableList.register(new ResourceLocation(REFERENCE.MODID, s));
+            LootTables.register(new ResourceLocation(REFERENCE.MODID, s));
         }
 
         LootFunctionManager.registerFunction(new AddBookNbt.Serializer());
@@ -98,12 +97,12 @@ public class LootHandler {
 
     }
 
-    private LootEntryTable getInjectEntry(String name, int weight) {
-        return new LootEntryTable(new ResourceLocation(REFERENCE.MODID, "inject/" + name), weight, 0, new LootCondition[0], "vampirism_inject_entry");
+    private TableLootEntry getInjectEntry(String name, int weight) {
+        return new TableLootEntry(new ResourceLocation(REFERENCE.MODID, "inject/" + name), weight, 0, new ILootCondition[0], "vampirism_inject_entry");
     }
 
     private LootPool getInjectPool(String entryName) {
-        return new LootPool(new LootEntry[]{getInjectEntry(entryName, 1)}, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(0, 1), "vampirism_inject_pool");
+        return new LootPool(new ILootGenerator[]{getInjectEntry(entryName, 1)}, new ILootCondition[0], new RandomValueRange(1), new RandomValueRange(0, 1), "vampirism_inject_pool");
     }
 }
 

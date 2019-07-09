@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.command.test;
 
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -10,8 +9,8 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.util.List;
 
@@ -33,14 +32,14 @@ public class ResetActionsCommand extends BasicCommand {
                         }));
     }
 
-    private static int resetActions(CommandSource commandSource, List<EntityPlayerMP> players) {
-        for (EntityPlayerMP player : players) {
+    private static int resetActions(CommandSource commandSource, List<ServerPlayerEntity> players) {
+        for (ServerPlayerEntity player : players) {
             IFactionPlayer<?> factionPlayer = FactionPlayerHandler.get(player).getCurrentFactionPlayer();
             if (factionPlayer != null) {
                 IActionHandler<?> handler = factionPlayer.getActionHandler();
                 if (handler != null) {
                     handler.resetTimers();
-                    commandSource.sendFeedback(new TextComponentString("Reset Timers"), true);
+                    commandSource.sendFeedback(new StringTextComponent("Reset Timers"), true);
                 }
             }
         }

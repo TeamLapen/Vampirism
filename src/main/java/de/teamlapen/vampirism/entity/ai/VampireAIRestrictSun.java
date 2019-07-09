@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.entity.ai;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.tileentity.TileTotem;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.world.biome.Biome;
 
 
-public class VampireAIRestrictSun<T extends EntityCreature & IVampire> extends EntityAIBase {
+public class VampireAIRestrictSun<T extends CreatureEntity & IVampire> extends Goal {
     private final T vampire;
     private boolean cache = false;
 
@@ -19,7 +19,7 @@ public class VampireAIRestrictSun<T extends EntityCreature & IVampire> extends E
     }
 
     public void resetTask() {
-        ((PathNavigateGround) this.vampire.getNavigator()).setAvoidSun(false);
+        ((GroundPathNavigator) this.vampire.getNavigator()).setAvoidSun(false);
     }
 
     @Override
@@ -32,6 +32,6 @@ public class VampireAIRestrictSun<T extends EntityCreature & IVampire> extends E
     }
 
     public void startExecuting() {
-        ((PathNavigateGround) this.vampire.getNavigator()).setAvoidSun(true);
+        ((GroundPathNavigator) this.vampire.getNavigator()).setAvoidSun(true);
     }
 }

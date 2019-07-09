@@ -6,9 +6,9 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -36,15 +36,15 @@ public class ItemPureBlood extends VampirismItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TextComponentTranslation("text.vampirism.purity").appendText(": " + (level + 1 + "/" + COUNT)).applyTextStyle(TextFormatting.RED));
+        tooltip.add(new TranslationTextComponent("text.vampirism.purity").appendText(": " + (level + 1 + "/" + COUNT)).applyTextStyle(TextFormatting.RED));
 
     }
 
 
     @Override
     public ITextComponent getDisplayName(ItemStack stack) {
-        ITextComponent t = new TextComponentTranslation(getTranslationKey() + ".name");
-        t.appendSibling(new TextComponentString(" ")).appendSibling(new TextComponentTranslation("text.vampirism.purity")).appendSibling(new TextComponentString(" " + (level + 1)));
+        ITextComponent t = new TranslationTextComponent(getTranslationKey() + ".name");
+        t.appendSibling(new StringTextComponent(" ")).appendSibling(new TranslationTextComponent("text.vampirism.purity")).appendSibling(new StringTextComponent(" " + (level + 1)));
         return t;
     }
 

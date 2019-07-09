@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.core.ModEntities;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  *
  * @author maxanier
  */
-public class EntityThrowableItem extends EntityThrowable {
+public class EntityThrowableItem extends ThrowableEntity {
 
     private final static Logger LOGGER = LogManager.getLogger(EntityThrowableItem.class);
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityThrowableItem.class, DataSerializers.ITEM_STACK);
@@ -30,7 +30,7 @@ public class EntityThrowableItem extends EntityThrowable {
         super(ModEntities.throwable_item, worldIn);
     }
 
-    public EntityThrowableItem(World worldIn, EntityLivingBase thrower) {
+    public EntityThrowableItem(World worldIn, LivingEntity thrower) {
         super(ModEntities.throwable_item, thrower, worldIn);
     }
 
@@ -56,7 +56,7 @@ public class EntityThrowableItem extends EntityThrowable {
     }
 
     @Override
-    public void readAdditional(NBTTagCompound compound) {
+    public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         ItemStack stack = ItemStack.read(compound.getCompound("thrownItem"));
         if (stack.isEmpty()) {
@@ -67,11 +67,11 @@ public class EntityThrowableItem extends EntityThrowable {
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound compound) {
+    public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         ItemStack stack = getItem();
         if (!stack.isEmpty()) {
-            compound.put("thrownItem", stack.write(new NBTTagCompound()));
+            compound.put("thrownItem", stack.write(new CompoundNBT()));
         }
     }
 

@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.entity.minions.ai;
 
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.util.MinionHelper;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 
-public class MinionAIHurtByTarget extends EntityAIHurtByTarget {
+public class MinionAIHurtByTarget extends HurtByTargetGoal {
     final IMinion minion;
 
     public MinionAIHurtByTarget(IMinion minion, boolean p_i1660_2_) {
@@ -14,7 +14,7 @@ public class MinionAIHurtByTarget extends EntityAIHurtByTarget {
     }
 
     @Override
-    protected boolean isSuitableTarget(EntityLivingBase target, boolean p_75296_2_) {
+    protected boolean isSuitableTarget(LivingEntity target, boolean p_75296_2_) {
         if (MinionHelper.isLordSafe(minion, target)) return false;
         return super.isSuitableTarget(target, p_75296_2_);
     }

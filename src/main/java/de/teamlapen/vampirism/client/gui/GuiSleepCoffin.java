@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.InputEventPacket;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,12 +13,12 @@ import org.lwjgl.glfw.GLFW;
  * Very similar to GuiSleepMP, but for coffin sleep
  */
 @OnlyIn(Dist.CLIENT)
-public class GuiSleepCoffin extends GuiChat {
+public class GuiSleepCoffin extends ChatScreen {
 
     @Override
     public void initGui() {
         super.initGui();
-        this.buttons.add(new GuiButton(1, this.width / 2 - 100, this.height - 40, I18n.format("multiplayer.stopSleeping")) {
+        this.buttons.add(new Button(1, this.width / 2 - 100, this.height - 40, I18n.format("multiplayer.stopSleeping")) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 GuiSleepCoffin.this.wakeFromSleep();

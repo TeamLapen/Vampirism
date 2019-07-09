@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.client.gui;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.inventory.HunterWeaponTableContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,7 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Gui for the weapon table. Only draws the background and the lava status
  */
 @OnlyIn(Dist.CLIENT)
-public class GuiHunterWeaponTable extends GuiContainer {
+public class GuiHunterWeaponTable extends ContainerScreen {
 
     private static final ResourceLocation TABLE_GUI_TEXTURES = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table.png");
     private static final ResourceLocation TABLE_GUI_TEXTURES_LAVA = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_lava.png");
@@ -27,7 +27,7 @@ public class GuiHunterWeaponTable extends GuiContainer {
     private int lava = 0;
     private boolean isMissingLava = false;
 
-    public GuiHunterWeaponTable(InventoryPlayer inventoryPlayer, World world, BlockPos pos) {
+    public GuiHunterWeaponTable(PlayerInventory inventoryPlayer, World world, BlockPos pos) {
         super(new HunterWeaponTableContainer(inventoryPlayer, world, pos));
         this.xSize = 196;
         this.ySize = 191;
@@ -45,7 +45,7 @@ public class GuiHunterWeaponTable extends GuiContainer {
     @Override
     public void tick() {
         super.tick();
-        IBlockState blockState = this.world.getBlockState(pos);
+        BlockState blockState = this.world.getBlockState(pos);
         if (blockState.getBlock() instanceof BlockWeaponTable) {
             lava = blockState.get(BlockWeaponTable.LAVA);
             if (world.getGameTime() % 10 == 4) {

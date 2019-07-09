@@ -4,16 +4,16 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumAction;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Items;
+import net.minecraft.item.UseAction;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -41,7 +41,7 @@ public class ItemBloodBottle extends VampirismItem {
 
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, EntityPlayer player) {
+    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
         TileEntity t = world.getTileEntity(pos);
         return t != null && t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).isPresent();
     }
@@ -49,8 +49,8 @@ public class ItemBloodBottle extends VampirismItem {
 
 
     @Override
-    public EnumAction getUseAction(ItemStack stack) {
-        return EnumAction.DRINK;
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.DRINK;
     }
 
     @Override
@@ -60,33 +60,33 @@ public class ItemBloodBottle extends VampirismItem {
 
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
         return new BloodBottleFluidHandler(stack, capacity);
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
         VampirePlayer vampire = VampirePlayer.get(playerIn);
-        if (vampire.getLevel() == 0) return new ActionResult<>(EnumActionResult.PASS, stack);
+        if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
 
 
         if (vampire.getBloodStats().needsBlood()) {
             playerIn.setActiveHand(handIn);
-            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+            return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
 
-        return new ActionResult<>(EnumActionResult.PASS, stack);
+        return new ActionResult<>(ActionResultType.PASS, stack);
     }
 
     @Override
-    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
-        if (!(player instanceof EntityPlayer)) {
+    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
+        if (!(player instanceof PlayerEntity)) {
             player.stopActiveHand();
             return;
         }
         int blood = BloodHelper.getBlood(stack);
-        VampirePlayer vampire = VampirePlayer.get((EntityPlayer) player);
+        VampirePlayer vampire = VampirePlayer.get((PlayerEntity) player);
         if (vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
             player.stopActiveHand();
             return;
@@ -94,7 +94,7 @@ public class ItemBloodBottle extends VampirismItem {
 
 
         if (blood > 0 && count == 1) {
-            EnumHand activeHand = player.getActiveHand();
+            Hand activeHand = player.getActiveHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
             if (BloodHelper.drain(stack, drink, true, true) > 0) {
                 vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false);

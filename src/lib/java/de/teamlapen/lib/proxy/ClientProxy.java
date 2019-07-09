@@ -7,7 +7,7 @@ import de.teamlapen.lib.util.ParticleHandlerClient;
 import de.teamlapen.lib.util.SoundReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public EntityPlayer getPlayerEntity(NetworkEvent.Context ctx) {
+    public PlayerEntity getPlayerEntity(NetworkEvent.Context ctx) {
         //Need to double check the side for some reason
         return (EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().player : super.getPlayerEntity(ctx));
     }

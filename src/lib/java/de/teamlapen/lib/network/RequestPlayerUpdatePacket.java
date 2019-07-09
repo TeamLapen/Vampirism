@@ -2,7 +2,7 @@ package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.network.ISyncable;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -26,7 +26,7 @@ public class RequestPlayerUpdatePacket implements IMessage {
     public static void handle(final RequestPlayerUpdatePacket pkt, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> { //Execute on main thread
-            EntityPlayerMP player = ctx.getSender();
+            ServerPlayerEntity player = ctx.getSender();
             if (player != null) {
                 UpdateEntityPacket update = UpdateEntityPacket.createJoinWorldPacket(player);
                 if (update != null) {

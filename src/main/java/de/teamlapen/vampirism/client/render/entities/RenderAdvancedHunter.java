@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.client.render.LayerPlayerFaceOverlay;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.renderer.entity.RenderBiped;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.BipedRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -16,12 +16,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Similar to {@link RenderBasicHunter}
  */
 @OnlyIn(Dist.CLIENT)
-public class RenderAdvancedHunter extends RenderBiped<EntityAdvancedHunter> {
+public class RenderAdvancedHunter extends BipedRenderer<EntityAdvancedHunter> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base1.png");
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_extra.png");
 
 
-    public RenderAdvancedHunter(RenderManager renderManagerIn) {
+    public RenderAdvancedHunter(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new ModelBasicHunter(), 0.5F);
         if (!Configs.disable_advancedMobPlayerFaces) {
             this.addLayer(new LayerPlayerFaceOverlay<EntityAdvancedHunter, EntityAdvancedHunter>(this));

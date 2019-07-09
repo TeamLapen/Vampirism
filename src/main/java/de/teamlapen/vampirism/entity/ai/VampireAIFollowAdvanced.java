@@ -2,14 +2,14 @@ package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
-import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.goal.Goal;
 
 import java.util.List;
 
 /**
  * Makes the basic hunter follow a nearby advanced vampires
  */
-public class VampireAIFollowAdvanced extends EntityAIBase {
+public class VampireAIFollowAdvanced extends Goal {
 
     protected final EntityBasicVampire entity;
     protected final double speed;

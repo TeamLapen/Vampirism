@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
@@ -19,7 +18,7 @@ public interface IWeaponTableRecipe extends IRecipe {
     /**
      * Returns an Item that is the result of this recipe
      */
-    default ItemStack getCraftingResult(InventoryCrafting inv) {
+    default ItemStack getCraftingResult(CraftingInventory inv) {
         return getRecipeOutput().copy();
     }
 

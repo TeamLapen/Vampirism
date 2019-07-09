@@ -11,13 +11,13 @@ import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.ItemHunterIntel;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.item.Items;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nullable;
 
@@ -25,11 +25,11 @@ import javax.annotation.Nullable;
  * Container which handles hunter levelup at an hunter trainer
  */
 public class HunterTrainerContainer extends InventoryContainer {
-    private final EntityPlayer player;
+    private final PlayerEntity player;
     private boolean changed = false;
     private ItemStack missing = ItemStack.EMPTY;
 
-    public HunterTrainerContainer(EntityPlayer player) {
+    public HunterTrainerContainer(PlayerEntity player) {
         super(player.inventory, new HunterTrainerInventory());
         ((HunterTrainerInventory) this.tile).setChangeListener(this);
         this.player = player;
@@ -72,7 +72,7 @@ public class HunterTrainerContainer extends InventoryContainer {
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer playerIn) {
+    public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         if (!playerIn.getEntityWorld().isRemote) {
             for (int i = 0; i < tile.getSizeInventory(); ++i) {
@@ -99,7 +99,7 @@ public class HunterTrainerContainer extends InventoryContainer {
             FactionPlayerHandler.get(player).setFactionLevel(VReference.HUNTER_FACTION, old + 1);
             int[] req = HunterLevelingConf.instance().getItemRequirementsForTrainer(old + 1);
             InventoryHelper.removeItems(tile, new int[]{req[0], req[1], 1});
-            player.addPotionEffect(new PotionEffect(ModPotions.saturation, 400, 2));
+            player.addPotionEffect(new EffectInstance(ModPotions.saturation, 400, 2));
         }
     }
 
@@ -113,7 +113,7 @@ public class HunterTrainerContainer extends InventoryContainer {
 
         @Override
         public ITextComponent getName() {
-            return new TextComponentString("entity.vampirism." + ModEntities.hunter_trainer.getName() + ".name");
+            return new StringTextComponent("entity.vampirism." + ModEntities.hunter_trainer.getName() + ".name");
         }
 
         @Override

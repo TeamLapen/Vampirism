@@ -15,22 +15,22 @@ import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.client.gui.screen.ConfirmScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -46,7 +46,7 @@ import java.util.Random;
  * Inspired by Minecraft's old GuiAchievement
  */
 @OnlyIn(Dist.CLIENT)
-public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
+public class GuiSkills extends Screen implements GuiYesNoCallback {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills_window.png");
     private static final ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills.png");
     private final static int ICON_TEXTURE_WIDTH = 256;
@@ -194,18 +194,18 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
             addToList(skillNodes, skillHandler.getRootNode());
         }
         this.buttons.clear();
-        this.buttons.add(new GuiButton(1, this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done")) {
+        this.buttons.add(new Button(1, this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done")) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 GuiSkills.this.close();
             }
         });
         if (display) {
-            GuiButton resetSkills = new GuiButton(2, (this.width - display_width) / 2 + 24, this.height / 2 + 74, 125, 20, UtilLib.translate("text.vampirism.skill.resetall")) {
+            Button resetSkills = new Button(2, (this.width - display_width) / 2 + 24, this.height / 2 + 74, 125, 20, UtilLib.translate("text.vampirism.skill.resetall")) {
                 @Override
                 public void onClick(double mouseX, double mouseY) {
                     boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
-                    GuiYesNo resetGui = new GuiYesNo(GuiSkills.this, UtilLib.translate("gui.vampirism.reset_skills.title"), UtilLib.translate("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")), 10);
+                    ConfirmScreen resetGui = new ConfirmScreen(GuiSkills.this, UtilLib.translate("gui.vampirism.reset_skills.title"), UtilLib.translate("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")), 10);
                     Minecraft.getInstance().displayGuiScreen(resetGui);
                 }
             };
@@ -360,7 +360,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
                     textureatlassprite = this.getTexture(block);
                 }
 
-                this.mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+                this.mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
                 this.drawTexturedModalRect(x * 16 - i2, y * 16 - j2, textureatlassprite, 16, 16);
             }
         }
@@ -538,7 +538,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     }
 
 
-    private TextureAtlasSprite getTexture(IBlockState blockstate) {
+    private TextureAtlasSprite getTexture(BlockState blockstate) {
         return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(blockstate);
     }
 

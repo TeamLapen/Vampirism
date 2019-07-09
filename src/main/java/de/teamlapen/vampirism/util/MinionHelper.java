@@ -4,10 +4,10 @@ package de.teamlapen.vampirism.util;
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -99,7 +99,7 @@ public class MinionHelper {
      * @param l Lord
      * @return
      */
-    public static boolean isLordSafe(@Nullable EntityLivingBase e, @Nonnull IMinionLord l) {
+    public static boolean isLordSafe(@Nullable LivingEntity e, @Nonnull IMinionLord l) {
         if (e == null) return false;
         if (e instanceof IMinion) {
             return l.equals(((IMinion) e).getLord());
@@ -130,28 +130,28 @@ public class MinionHelper {
         if (message == null || message.length < 1)
             return;
         IMinionLord l = m.getLord();
-        if (l != null && l.getRepresentingEntity() instanceof EntityPlayer) {
-            EntityLivingBase entity = entity(m);
+        if (l != null && l.getRepresentingEntity() instanceof PlayerEntity) {
+            LivingEntity entity = entity(m);
             ITextComponent c1;
             if (entity.hasCustomName()) {
                 c1 = entity.getCustomName();
             } else {
-                c1 = new TextComponentTranslation("text.vampirism.minion");
+                c1 = new TranslationTextComponent("text.vampirism.minion");
             }
 
             c1.appendText(": ");
             c1.getStyle().setColor((TextFormatting.GREEN));
-            TextComponentBase c2;
+            TextComponent c2;
             if (message[0].startsWith("\\")) {
-                c2 = new TextComponentString(message[0].replace("\\", ""));
+                c2 = new StringTextComponent(message[0].replace("\\", ""));
             } else {
-                c2 = new TextComponentTranslation(message[0]);
+                c2 = new TranslationTextComponent(message[0]);
             }
             for (int i = 1; i < message.length; i++) {
                 if (message[i].startsWith("\\")) {
-                    c2.appendSibling(new TextComponentString(message[i].replace("\\", "")));
+                    c2.appendSibling(new StringTextComponent(message[i].replace("\\", "")));
                 } else {
-                    c2.appendSibling(new TextComponentTranslation(message[i]));
+                    c2.appendSibling(new TranslationTextComponent(message[i]));
                 }
 
             }
@@ -163,14 +163,14 @@ public class MinionHelper {
 
     /**
      * Simply casts the given minion to EntityLivingBase.
-     * Throws an illegal state exception if the minion does not extend {@link EntityCreature} to inform the modder about that mistake
+     * Throws an illegal state exception if the minion does not extend {@link CreatureEntity} to inform the modder about that mistake
      *
      * @param minion
      * @return
      */
-    public static EntityCreature entity(@Nonnull IMinion minion) {
+    public static CreatureEntity entity(@Nonnull IMinion minion) {
         try {
-            return (EntityCreature) minion;
+            return (CreatureEntity) minion;
         } catch (ClassCastException e) {
             LOGGER.error("All classes that implement IMinion have to extend EntityCreature. {} does not. This is a implementation fault.", minion.getClass());
             throw e;

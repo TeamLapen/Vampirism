@@ -2,7 +2,7 @@ package de.teamlapen.lib.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,7 +35,7 @@ public class ParticleHandlerClient extends ParticleHandler {
     }
 
     @Override
-    public void spawnParticle(World world, ResourceLocation particle, double posX, double posY, double posZ, NBTTagCompound nbt) {
+    public void spawnParticle(World world, ResourceLocation particle, double posX, double posY, double posZ, CompoundNBT nbt) {
         Object[] data = getParticleParam(particle, nbt);
         if (data != null) {
             this.spawnParticle(world, particle, posX, posY, posZ, data);
@@ -51,7 +51,7 @@ public class ParticleHandlerClient extends ParticleHandler {
     }
 
     @Override
-    public void spawnParticles(World world, ResourceLocation particle, double posX, double posY, double posZ, int count, double maxDist, Random random, NBTTagCompound nbt) {
+    public void spawnParticles(World world, ResourceLocation particle, double posX, double posY, double posZ, int count, double maxDist, Random random, CompoundNBT nbt) {
         Object[] data = getParticleParam(particle, nbt);
         if (data != null) {
             this.spawnParticles(world, particle, posX, posY, posZ, count, maxDist, random, data);
@@ -65,7 +65,7 @@ public class ParticleHandlerClient extends ParticleHandler {
 
     private
     @Nullable
-    Object[] getParticleParam(ResourceLocation particle, NBTTagCompound data) {
+    Object[] getParticleParam(ResourceLocation particle, CompoundNBT data) {
         ICustomParticleFactory factory = factories.get(particle);
         if (factory == null) {
             LOGGER.warn("Particle {} is not registered", particle);

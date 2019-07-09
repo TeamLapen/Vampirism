@@ -12,19 +12,19 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.ModWorldEventListener;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.Village;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkGenSettings;
-import net.minecraft.world.gen.ChunkGeneratorOverworld;
-import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.OverworldChunkGenerator;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -73,9 +73,9 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void on(WorldEvent.Load event) {
-        IChunkGenerator generator = event.getWorld().getChunkProvider().getChunkGenerator();
-        if (generator instanceof ChunkGeneratorOverworld) {
-            ChunkGenSettings settings = ((ChunkGeneratorOverworld) generator).getSettings();
+        ChunkGenerator generator = event.getWorld().getChunkProvider().getChunkGenerator();
+        if (generator instanceof OverworldChunkGenerator) {
+            ChunkGenSettings settings = ((OverworldChunkGenerator) generator).getSettings();
             ModVillages.modifyVillageSize(settings);
         }
     }
@@ -90,47 +90,15 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
-        if (!versionInfo.isChecked()) LOGGER.warn("Version check is not finished yet");
-
-        boolean isAdminLikePlayer = !ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.getPlayer());
-
-        if (!Configs.disable_versionCheck && versionInfo.isNewVersionAvailable()) {
-            if (isAdminLikePlayer || event.getPlayer().getRNG().nextInt(5) == 0) {
-                if (event.getPlayer().getRNG().nextInt(4) == 0) {
-                    VersionChecker.Version newVersion = versionInfo.getNewVersion();
-                    //Inspired by @Vazikii's useful message
-                    event.getPlayer().sendMessage(new TextComponentTranslation("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name));
-                    String template = UtilLib.translate("text.vampirism.update_message");
-                    template = template.replaceAll("@download@", newVersion.getUrl() == null ? versionInfo.getHomePage() : newVersion.getUrl()).replaceAll("@forum@", versionInfo.getHomePage());
-                    ITextComponent component = ITextComponent.Serializer.fromJson(template);
-                    event.getPlayer().sendMessage(component);
+    public void onHarvestDrops(BlockEvent.HarvestDropsEvent event) {
+        if (event.getState().getBlock().equals(Blocks.OAK_LEAVES)) {
+            if (ModBiomes.vampireForest.equals(event.getWorld().getBiome(event.getPos()))) {
+                PlayerEntity p = event.getHarvester();
+                if (p != null && p.getRNG().nextInt(Balance.general.DROP_ORCHID_FROM_LEAVES_CHANCE) == 0) {
+                    event.getDrops().add(new ItemStack(ModBlocks.vampirism_flower_vampire_orchid, 1));
                 }
             }
-
         }
-        if (isAdminLikePlayer) {
-            List<String> mods = Collections.emptyList();// TODO 1.14 IntegrationsNotifier.shouldNotifyAboutIntegrations();
-            if (!mods.isEmpty()) {
-                event.getPlayer().sendMessage(new TextComponentTranslation("text.vampirism.integrations_available.first"));
-                event.getPlayer().sendMessage(new TextComponentString(TextFormatting.BLUE + TextFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + TextFormatting.RESET));
-                String template = UtilLib.translate("text.vampirism.integrations_available.second");
-                template = template.replaceAll("@download@", REFERENCE.INTEGRATIONS_LINK);
-                event.getPlayer().sendMessage(ITextComponent.Serializer.fromJson(template));
-            }
-
-        }
-        if (Configs.updated_vampirism) {
-            if (!ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.getPlayer())) {
-
-
-                event.getPlayer().sendMessage(new TextComponentString("It looks like you have updated Vampirism"));
-                event.getPlayer().sendMessage(new TextComponentString("Please consider resetting the balance values to the updated ones, using " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance all'" + TextFormatting.RESET));
-                event.getPlayer().sendMessage(new TextComponentString("For more information use " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance help'" + TextFormatting.RESET));
-            }
-        }
-
     }
 
     @SubscribeEvent
@@ -156,14 +124,46 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
     }
 
     @SubscribeEvent
-    public void onHarvestDrops(BlockEvent.HarvestDropsEvent event) {
-        if (event.getState().getBlock().equals(Blocks.OAK_LEAVES)) {
-            if (ModBiomes.vampireForest.equals(event.getWorld().getBiome(event.getPos()))) {
-                EntityPlayer p = event.getHarvester();
-                if (p != null && p.getRNG().nextInt(Balance.general.DROP_ORCHID_FROM_LEAVES_CHANCE) == 0) {
-                    event.getDrops().add(new ItemStack(ModBlocks.vampirism_flower_vampire_orchid, 1));
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
+        if (!versionInfo.isChecked()) LOGGER.warn("Version check is not finished yet");
+
+        boolean isAdminLikePlayer = !ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.getPlayer());
+
+        if (!Configs.disable_versionCheck && versionInfo.isNewVersionAvailable()) {
+            if (isAdminLikePlayer || event.getPlayer().getRNG().nextInt(5) == 0) {
+                if (event.getPlayer().getRNG().nextInt(4) == 0) {
+                    VersionChecker.Version newVersion = versionInfo.getNewVersion();
+                    //Inspired by @Vazikii's useful message
+                    event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name));
+                    String template = UtilLib.translate("text.vampirism.update_message");
+                    template = template.replaceAll("@download@", newVersion.getUrl() == null ? versionInfo.getHomePage() : newVersion.getUrl()).replaceAll("@forum@", versionInfo.getHomePage());
+                    ITextComponent component = ITextComponent.Serializer.fromJson(template);
+                    event.getPlayer().sendMessage(component);
                 }
             }
+
         }
+        if (isAdminLikePlayer) {
+            List<String> mods = Collections.emptyList();// TODO 1.14 IntegrationsNotifier.shouldNotifyAboutIntegrations();
+            if (!mods.isEmpty()) {
+                event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.integrations_available.first"));
+                event.getPlayer().sendMessage(new StringTextComponent(TextFormatting.BLUE + TextFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + TextFormatting.RESET));
+                String template = UtilLib.translate("text.vampirism.integrations_available.second");
+                template = template.replaceAll("@download@", REFERENCE.INTEGRATIONS_LINK);
+                event.getPlayer().sendMessage(ITextComponent.Serializer.fromJson(template));
+            }
+
+        }
+        if (Configs.updated_vampirism) {
+            if (!ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.getPlayer())) {
+
+
+                event.getPlayer().sendMessage(new StringTextComponent("It looks like you have updated Vampirism"));
+                event.getPlayer().sendMessage(new StringTextComponent("Please consider resetting the balance values to the updated ones, using " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance all'" + TextFormatting.RESET));
+                event.getPlayer().sendMessage(new StringTextComponent("For more information use " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance help'" + TextFormatting.RESET));
+            }
+        }
+
     }
 }

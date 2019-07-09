@@ -2,9 +2,8 @@ package de.teamlapen.vampirism.client.render.tiles;
 
 import de.teamlapen.vampirism.tileentity.TileTotem;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
+import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -38,9 +37,9 @@ public class TotemTESR extends VampirismTESR<TileTotem> {
             if (captureProgress > 0) {
                 float[] overtakeColors = te.getCapturingColors();
                 offset = (captureProgress * HEIGHT) / 100;
-                TileEntityBeaconRenderer.renderBeamSegment(x, y, z, partialTicks, textureScale, totalWorldTime, 0, offset, overtakeColors, 0.2D, 0.25D);
+                BeaconTileEntityRenderer.renderBeamSegment(x, y, z, partialTicks, textureScale, totalWorldTime, 0, offset, overtakeColors, 0.2D, 0.25D);
             }
-            TileEntityBeaconRenderer.renderBeamSegment(x, y, z, partialTicks, textureScale, totalWorldTime, offset, HEIGHT - offset, baseColors, 0.2D, 0.25D);
+            BeaconTileEntityRenderer.renderBeamSegment(x, y, z, partialTicks, textureScale, totalWorldTime, offset, HEIGHT - offset, baseColors, 0.2D, 0.25D);
         }
     }
 

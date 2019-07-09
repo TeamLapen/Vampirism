@@ -17,12 +17,12 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.*;
@@ -45,7 +45,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     /**
      * Don't call before the construction event of the player entity is finished
      */
-    public static HunterPlayer get(@Nonnull EntityPlayer player) {
+    public static HunterPlayer get(@Nonnull PlayerEntity player) {
         return (HunterPlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get HunterPlayer from player " + player));
     }
 
@@ -53,25 +53,25 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         CapabilityManager.INSTANCE.register(IHunterPlayer.class, new Storage(), HunterPlayerDefaultImpl::new);
     }
 
-    public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
-        return new ICapabilitySerializable<NBTTagCompound>() {
+    public static ICapabilityProvider createNewCapability(final PlayerEntity player) {
+        return new ICapabilitySerializable<CompoundNBT>() {
 
             final IHunterPlayer inst = new HunterPlayer(player);
             final LazyOptional<IHunterPlayer> opt = LazyOptional.of(() -> inst);
             @Override
-            public void deserializeNBT(NBTTagCompound nbt) {
+            public void deserializeNBT(CompoundNBT nbt) {
                 CAP.getStorage().readNBT(CAP, inst, null, nbt);
             }
 
             @Nonnull
             @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
                 return CAP.orEmpty(capability, opt);
             }
 
             @Override
-            public NBTTagCompound serializeNBT() {
-                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
+            public CompoundNBT serializeNBT() {
+                return (CompoundNBT) CAP.getStorage().writeNBT(CAP, inst, null);
             }
         };
     }
@@ -80,7 +80,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     private final SkillHandler<IHunterPlayer> skillHandler;
     private final HunterPlayerSpecialAttribute specialAttributes;
 
-    public HunterPlayer(EntityPlayer player) {
+    public HunterPlayer(PlayerEntity player) {
         super(player);
         actionHandler = new ActionHandler<>(this);
         skillHandler = new SkillHandler<>(this);
@@ -140,7 +140,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         return player.isPotionActive(ModPotions.disguise_as_vampire);
     }
 
-    public void loadData(NBTTagCompound compound) {
+    public void loadData(CompoundNBT compound) {
         actionHandler.loadFromNbt(compound);
         skillHandler.loadFromNbt(compound);
     }
@@ -177,7 +177,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE, 2, false);
             if (level > 0) {
-                if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection != null) {
+                if (player instanceof ServerPlayerEntity && ((ServerPlayerEntity) player).connection != null) {
                     //When loading from NBT the playerNetServerHandler is not always initialized, but that's required for achievements. So checking here
                     //TODO player.addStat(Achievements.becomingAHunter, 1);
                 }
@@ -217,7 +217,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             if (level > 0) {
                 boolean sync = false;
                 boolean syncToAll = false;
-                NBTTagCompound syncPacket = new NBTTagCompound();
+                CompoundNBT syncPacket = new CompoundNBT();
                 if (actionHandler.updateActions()) {
                     sync = true;
                     syncToAll = true;
@@ -244,41 +244,41 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     }
 
-    public void saveData(NBTTagCompound compound) {
+    public void saveData(CompoundNBT compound) {
         actionHandler.saveToNbt(compound);
         skillHandler.saveToNbt(compound);
     }
 
     @Override
-    protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
+    protected VampirismPlayer copyFromPlayer(PlayerEntity old) {
         HunterPlayer oldHunter = get(old);
-        NBTTagCompound nbt = new NBTTagCompound();
+        CompoundNBT nbt = new CompoundNBT();
         oldHunter.saveData(nbt);
         this.loadData(nbt);
         return oldHunter;
     }
 
     @Override
-    protected void loadUpdate(NBTTagCompound nbt) {
+    protected void loadUpdate(CompoundNBT nbt) {
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
     }
 
     @Override
-    protected void writeFullUpdate(NBTTagCompound nbt) {
+    protected void writeFullUpdate(CompoundNBT nbt) {
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
     }
 
     private static class Storage implements Capability.IStorage<IHunterPlayer> {
         @Override
-        public void readNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, EnumFacing side, INBTBase nbt) {
-            ((HunterPlayer) instance).loadData((NBTTagCompound) nbt);
+        public void readNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, Direction side, INBT nbt) {
+            ((HunterPlayer) instance).loadData((CompoundNBT) nbt);
         }
 
         @Override
-        public INBTBase writeNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, EnumFacing side) {
-            NBTTagCompound nbt = new NBTTagCompound();
+        public INBT writeNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, Direction side) {
+            CompoundNBT nbt = new CompoundNBT();
             ((HunterPlayer) instance).saveData(nbt);
             return nbt;
         }

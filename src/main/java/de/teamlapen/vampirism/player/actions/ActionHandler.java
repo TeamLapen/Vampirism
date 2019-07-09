@@ -1,17 +1,16 @@
 package de.teamlapen.vampirism.player.actions;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.core.VampirismRegistries;
-import net.minecraft.nbt.NBTTagCompound;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -121,7 +120,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     /**
      * Should only be called by the corresponding Capability instance
      **/
-    public void loadFromNbt(NBTTagCompound nbt) {
+    public void loadFromNbt(CompoundNBT nbt) {
         //If loading from save we want to clear everything beforehand.
         //NBT only contains actions that are active/cooldown
         activeTimers.clear();
@@ -149,7 +148,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      *
      * Attention: nbt is modified in the process
      **/
-    public void readUpdateFromServer(NBTTagCompound nbt) {
+    public void readUpdateFromServer(CompoundNBT nbt) {
         /*
          * This happens client side
          * We want to:
@@ -163,7 +162,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
          *
          */
         if (nbt.contains("actions_active")) {
-            NBTTagCompound active = nbt.getCompound("actions_active");
+            CompoundNBT active = nbt.getCompound("actions_active");
             for (ObjectIterator<Object2IntMap.Entry<ResourceLocation>> it = activeTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
                 Object2IntMap.Entry<ResourceLocation> client_active = it.next();
                 String key = client_active.getKey().toString();
@@ -225,7 +224,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      *
      * @param nbt
      */
-    public void saveToNbt(NBTTagCompound nbt) {
+    public void saveToNbt(CompoundNBT nbt) {
 
         nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
         nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
@@ -328,12 +327,12 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      *
      * @param nbt
      */
-    public void writeUpdateForClient(NBTTagCompound nbt) {
+    public void writeUpdateForClient(CompoundNBT nbt) {
         nbt.put("actions_active", writeTimersToNBT(activeTimers.object2IntEntrySet()));
         nbt.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
     }
 
-    private void loadTimerMapFromNBT(NBTTagCompound nbt, Object2IntMap<ResourceLocation> map) {
+    private void loadTimerMapFromNBT(CompoundNBT nbt, Object2IntMap<ResourceLocation> map) {
         for (String key : nbt.keySet()) {
             ResourceLocation id = new ResourceLocation(key);
             IAction action = VampirismRegistries.ACTIONS.getValue(id);
@@ -345,8 +344,8 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         }
     }
 
-    private NBTTagCompound writeTimersToNBT(ObjectSet<Object2IntMap.Entry<ResourceLocation>> set) {
-        NBTTagCompound nbt = new NBTTagCompound();
+    private CompoundNBT writeTimersToNBT(ObjectSet<Object2IntMap.Entry<ResourceLocation>> set) {
+        CompoundNBT nbt = new CompoundNBT();
         for (Object2IntMap.Entry<ResourceLocation> entry : set) {
             nbt.putInt(entry.getKey().toString(), entry.getIntValue());
         }

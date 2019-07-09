@@ -4,16 +4,16 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Item's implementing this can only be used by players that match the requirements.
- * Currently only affects {@link EntityPlayer#attackTargetEntityWithCurrentItem(Entity)} and {@link EntityPlayer#setActiveHand(EnumHand)}
+ * Currently only affects {@link PlayerEntity#attackTargetEntityWithCurrentItem(Entity)} and {@link PlayerEntity#setActiveHand(Hand)}
  */
 public interface IFactionLevelItem<T extends IFactionPlayer> {
 

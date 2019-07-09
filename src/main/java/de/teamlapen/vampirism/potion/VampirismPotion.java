@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.potion;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 /**
  * Base class for Vampirism's potions
  */
-public class VampirismPotion extends Potion {
+public class VampirismPotion extends Effect {
 
     private static final ResourceLocation ICONS = new ResourceLocation(REFERENCE.MODID, "textures/gui/potions.png");
     @OnlyIn(Dist.CLIENT)
@@ -34,7 +34,7 @@ public class VampirismPotion extends Potion {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderHUDEffect(PotionEffect effect, Gui gui, int x, int y, float z, float alpha) {
+    public void renderHUDEffect(EffectInstance effect, AbstractGui gui, int x, int y, float z, float alpha) {
         int index = getStatusIconIndex();
         if (index >= 0) {
             Minecraft.getInstance().getTextureManager().bindTexture(ICONS);
@@ -46,7 +46,7 @@ public class VampirismPotion extends Potion {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderInventoryEffect(PotionEffect effect, Gui gui, int x, int y, float z) {
+    public void renderInventoryEffect(EffectInstance effect, AbstractGui gui, int x, int y, float z) {
         int index = getStatusIconIndex();
         if (index >= 0) {
             Minecraft.getInstance().getTextureManager().bindTexture(ICONS);

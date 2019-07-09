@@ -5,8 +5,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagCompound;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,13 +26,13 @@ public class VampireBookManager {
         return ourInstance;
     }
 
-    private NBTTagCompound[] bookTags = null;
+    private CompoundNBT[] bookTags = null;
 
     private VampireBookManager() {
     }
 
     public void applyRandomBook(ItemStack stack, Random rnd) {
-        NBTTagCompound nbt = (bookTags == null || bookTags.length == 0) ? new NBTTagCompound() : bookTags[rnd.nextInt(bookTags.length)];
+        CompoundNBT nbt = (bookTags == null || bookTags.length == 0) ? new CompoundNBT() : bookTags[rnd.nextInt(bookTags.length)];
         stack.setTag(nbt);
     }
 
@@ -77,12 +77,12 @@ public class VampireBookManager {
 
     private void parseBooks(String data) throws CommandSyntaxException {
 
-        ArrayList<NBTTagCompound> books = new ArrayList<>();
+        ArrayList<CompoundNBT> books = new ArrayList<>();
         String[] lines = data.split("\n");
         for (String line : lines) {
-            NBTTagCompound nbt = JsonToNBT.getTagFromJson(line);
+            CompoundNBT nbt = JsonToNBT.getTagFromJson(line);
             books.add(nbt);
         }
-        bookTags = books.toArray(new NBTTagCompound[books.size()]);
+        bookTags = books.toArray(new CompoundNBT[books.size()]);
     }
 }

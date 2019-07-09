@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.entity.ai;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAITarget;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.ai.goal.TargetGoal;
 
 
-public class EntityAIDefendVillage<T extends EntityCreature & IVillageCaptureEntity> extends EntityAITarget {
+public class EntityAIDefendVillage<T extends CreatureEntity & IVillageCaptureEntity> extends TargetGoal {
 
     private T creature;
 

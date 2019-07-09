@@ -4,25 +4,25 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySheep;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.passive.CowEntity;
+import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.world.World;
 
 /**
  * Just a simple dummy class, which makes it possible to spawn bitten mobs
  */
-public class EntityDummyBittenAnimal extends EntityLiving {
+public class EntityDummyBittenAnimal extends MobEntity {
     public EntityDummyBittenAnimal(World p_i1595_1_) {
         super(ModEntities.blinding_bat, p_i1595_1_);
     }
 
     @Override
-    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
-        return type == EnumCreatureType.CREATURE;
+    public boolean isCreatureType(EntityClassification type, boolean forSpawnCount) {
+        return type == EntityClassification.CREATURE;
     }
 
 
@@ -30,17 +30,17 @@ public class EntityDummyBittenAnimal extends EntityLiving {
     public void livingTick() {
         super.livingTick();
         if (this.ticksExisted > 4 && !this.getEntityWorld().isRemote) {
-            EntityCreature entity;
+            CreatureEntity entity;
             int rand = this.rand.nextInt(3);
             switch (rand) {
                 case 0:
-                    entity = new EntityPig(world);
+                    entity = new PigEntity(world);
                     break;
                 case 1:
-                    entity = new EntitySheep(world);
+                    entity = new SheepEntity(world);
                     break;
                 default:
-                    entity = new EntityCow(world);
+                    entity = new CowEntity(world);
                     break;
             }
             entity.copyLocationAndAnglesFrom(this);

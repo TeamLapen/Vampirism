@@ -6,7 +6,7 @@ import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -194,7 +194,7 @@ public class Configs {
     }
 
 
-    public static void writeToNBTServer(NBTTagCompound nbt) {
+    public static void writeToNBTServer(CompoundNBT nbt) {
         if (renderVampireForestFogEnforce) {
             nbt.putBoolean("vampire_forest_fog", renderVampireForestFog);
         }
@@ -202,7 +202,7 @@ public class Configs {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static void readFromNBTClient(NBTTagCompound nbt) {
+    public static void readFromNBTClient(CompoundNBT nbt) {
         overriddenByServer = true;
         if (nbt.contains("vampire_forest_fog")) {
             renderVampireForestFog = nbt.getBoolean("vampire_forest_fog");

@@ -4,8 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import it.unimi.dsi.fastutil.ints.IntList;
-
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -15,7 +13,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JsonUtils;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -49,27 +47,20 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
         this.isSimple = ingredients.stream().allMatch(Ingredient::isSimple);
     }
 
-    @Override
-    public boolean matches(IInventory inv, World worldIn) {
-        RecipeItemHelper recipeitemhelper = new RecipeItemHelper();
-        java.util.List<ItemStack> inputs = new java.util.ArrayList<>();
-        int i = 0;
-
-        for (int j = 0; j < inv.getHeight(); ++j) {
-            for (int k = 0; k < inv.getWidth(); ++k) {
-                ItemStack itemstack = inv.getStackInSlot(k + j * inv.getWidth());
-                if (!itemstack.isEmpty()) {
-                    ++i;
-                    if (isSimple)
-                        recipeitemhelper.accountStack(new ItemStack(itemstack.getItem()));
-                    else
-                        inputs.add(itemstack);
-                }
+    private static ISkill[] deserializeSkills(JsonArray jsonObject) {
+        if (jsonObject == null || jsonObject.size() == 0)
+            return null;
+        ISkill[] skills = new ISkill[jsonObject.size()];
+        for (int i = 0; i < skills.length; ++i) {
+            String s = JSONUtils.getString(jsonObject.get(i), "skill[" + i + "]");
+            ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(s));
+            if (skill == null) {
+                throw new JsonSyntaxException("Unknown skill '" + s + "'");
+            } else {
+                skills[i] = skill;
             }
         }
-
-        return i == this.recipeItems.size() && (isSimple ? recipeitemhelper.canCraft(this, (IntList) null) : net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs, this.recipeItems) != null);
-
+        return skills;
     }
 
     @Override
@@ -125,20 +116,27 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
         return ModRecipes.WEAPONTABLE_CRAFTING_TYPE;
     }
 
-    private static ISkill[] deserializeSkills(JsonArray jsonObject) {
-        if (jsonObject == null || jsonObject.size() == 0)
-            return null;
-        ISkill[] skills = new ISkill[jsonObject.size()];
-        for (int i = 0; i < skills.length; ++i) {
-            String s = JsonUtils.getString(jsonObject.get(i), "skill[" + i + "]");
-            ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(s));
-            if (skill == null) {
-                throw new JsonSyntaxException("Unknown skill '" + s + "'");
-            } else {
-                skills[i] = skill;
+    @Override
+    public boolean matches(IInventory inv, World worldIn) {
+        RecipeItemHelper recipeitemhelper = new RecipeItemHelper();
+        java.util.List<ItemStack> inputs = new java.util.ArrayList<>();
+        int i = 0;
+
+        for (int j = 0; j < inv.getHeight(); ++j) {
+            for (int k = 0; k < inv.getWidth(); ++k) {
+                ItemStack itemstack = inv.getStackInSlot(k + j * inv.getWidth());
+                if (!itemstack.isEmpty()) {
+                    ++i;
+                    if (isSimple)
+                        recipeitemhelper.accountStack(new ItemStack(itemstack.getItem()));
+                    else
+                        inputs.add(itemstack);
+                }
             }
         }
-        return skills;
+
+        return i == this.recipeItems.size() && (isSimple ? recipeitemhelper.canCraft(this, null) : net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs, this.recipeItems) != null);
+
     }
 
     public static class Serializer implements IRecipeSerializer<ShapelessWeaponTableRecipe> {
@@ -149,17 +147,17 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
 
         @Override
         public ShapelessWeaponTableRecipe read(ResourceLocation recipeId, JsonObject json) {
-            String group = JsonUtils.getString(json, "group", "");
-            NonNullList<Ingredient> ingredients = readIngredients(JsonUtils.getJsonArray(json, "ingredients"));
-            int level = JsonUtils.getInt(json, "level", 1);
-            ISkill[] skills = ShapelessWeaponTableRecipe.deserializeSkills(JsonUtils.getJsonArray(json, "skill", null));
-            int lava = JsonUtils.getInt(json, "lava", 0);
+            String group = JSONUtils.getString(json, "group", "");
+            NonNullList<Ingredient> ingredients = readIngredients(JSONUtils.getJsonArray(json, "ingredients"));
+            int level = JSONUtils.getInt(json, "level", 1);
+            ISkill[] skills = ShapelessWeaponTableRecipe.deserializeSkills(JSONUtils.getJsonArray(json, "skill", null));
+            int lava = JSONUtils.getInt(json, "lava", 0);
             if (ingredients.isEmpty()) {
                 throw new JsonParseException("No ingredients for shapeless recipe");
             } else if (ingredients.size() > ShapelessWeaponTableRecipe.MAX_WIDTH * ShapelessWeaponTableRecipe.MAX_HEIGHT) {
                 throw new JsonParseException("Too many ingredients for shapeless recipe the max is " + (ShapelessWeaponTableRecipe.MAX_WIDTH * ShapelessWeaponTableRecipe.MAX_HEIGHT));
             } else {
-                ItemStack result = ShapedRecipe.deserializeItem(JsonUtils.getJsonObject(json, "result"));
+                ItemStack result = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
                 return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, skills);
             }
         }

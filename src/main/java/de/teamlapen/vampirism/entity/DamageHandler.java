@@ -12,10 +12,10 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 
 /**
  * Centralizes the calculation and appliance of different sorts of damages or similar.
@@ -50,14 +50,14 @@ public class DamageHandler {
 
     private static void affectVampireGarlic(IVampire vampire, EnumStrength strength, float multiplier, boolean ambient) {
         if (strength == EnumStrength.NONE) return;
-        EntityLivingBase entity = vampire.getRepresentingEntity();
-        entity.addPotionEffect(new PotionEffect(ModPotions.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
-        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).abilities.isCreativeMode) return;
-        entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
+        LivingEntity entity = vampire.getRepresentingEntity();
+        entity.addPotionEffect(new EffectInstance(ModPotions.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
+        if (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.isCreativeMode) return;
+        entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
-            entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (multiplier * 20), 1, ambient, false));
+            entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, (int) (multiplier * 20), 1, ambient, false));
             if (strength == EnumStrength.STRONG) {
-                entity.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, (int) (multiplier / 2 * 20), 0, ambient, false));
+                entity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, (int) (multiplier / 2 * 20), 0, ambient, false));
             }
         }
         if (vampire instanceof IVampirePlayer) {
@@ -90,7 +90,7 @@ public class DamageHandler {
      * @param distSq    The squared distance from the center point
      * @param directHit If the entity was hit directly
      */
-    public static void affectEntityHolyWaterSplash(EntityLivingBase entity, EnumStrength strength, double distSq, boolean directHit) {
+    public static void affectEntityHolyWaterSplash(LivingEntity entity, EnumStrength strength, double distSq, boolean directHit) {
         boolean vampire = Helper.isVampire(entity);
         if (entity.canBeHitWithPotion() && (vampire || CreatureAttribute.UNDEAD.equals(entity.getCreatureAttribute()))) {
             if (distSq < 16.0D) {
@@ -105,15 +105,15 @@ public class DamageHandler {
 
 
                 double amount = (affect * (Balance.general.HOLY_WATER_SPLASH_DAMAGE * (strength == EnumStrength.WEAK ? 1 : strength == EnumStrength.MEDIUM ? Balance.general.HOLY_WATER_TIER_DAMAGE_INC : (Balance.general.HOLY_WATER_TIER_DAMAGE_INC * Balance.general.HOLY_WATER_TIER_DAMAGE_INC))) + 0.5D);
-                if (entity instanceof EntityPlayer) {
-                    int l = VampirePlayer.get((EntityPlayer) entity).getLevel();
+                if (entity instanceof PlayerEntity) {
+                    int l = VampirePlayer.get((PlayerEntity) entity).getLevel();
                     amount = scaleDamageWithLevel(l, amount * 0.8, amount * 1.1);
                 }
                 entity.attackEntityFrom(VReference.HOLY_WATER, (float) amount);
             }
         }
-        if (vampire && entity instanceof EntityPlayer) {
-            IActionHandler<IVampirePlayer> actionHandler = VampirePlayer.get((EntityPlayer) entity).getActionHandler();
+        if (vampire && entity instanceof PlayerEntity) {
+            IActionHandler<IVampirePlayer> actionHandler = VampirePlayer.get((PlayerEntity) entity).getActionHandler();
             if (actionHandler.isActionActive(VampireActions.disguise_vampire)) {
                 actionHandler.toggleAction(VampireActions.disguise_vampire);
             }

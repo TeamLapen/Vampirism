@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.village.Village;
 
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ public class VampirismVillageDefaultImpl implements IVampirismVillage {
 
     @Nullable
     @Override
-    public IFactionEntity findNearestVillageAggressor(@Nonnull EntityLivingBase entity) {
+    public IFactionEntity findNearestVillageAggressor(@Nonnull LivingEntity entity) {
         return null;
     }
 }

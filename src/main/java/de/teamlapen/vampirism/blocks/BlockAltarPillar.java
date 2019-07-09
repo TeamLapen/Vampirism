@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
@@ -31,7 +31,7 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     @Override
-    public void getDrops(IBlockState state, NonNullList<ItemStack> drops, World world, BlockPos pos, int fortune) {
+    public void getDrops(BlockState state, NonNullList<ItemStack> drops, World world, BlockPos pos, int fortune) {
         drops.add(new ItemStack(this.asItem(), 1));
         EnumPillarType type = state.get(TYPE_PROPERTY);
         if (type != EnumPillarType.NONE) {
@@ -40,28 +40,28 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     @Override
-    public int getHarvestLevel(IBlockState p_getHarvestLevel_1_) {
+    public int getHarvestLevel(BlockState p_getHarvestLevel_1_) {
         return 0;
     }
 
     @Nullable
     @Override
-    public ToolType getHarvestTool(IBlockState p_getHarvestTool_1_) {
+    public ToolType getHarvestTool(BlockState p_getHarvestTool_1_) {
         return ToolType.PICKAXE;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(BlockState state) {
         return false;
     }
 
     @Override
-    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer playerIn, EnumHand hand, EnumFacing p_196250_6_, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, Direction p_196250_6_, float hitX, float hitY, float hitZ) {
         EnumPillarType type = state.get(TYPE_PROPERTY);
         ItemStack heldItem = playerIn.getHeldItem(hand);
         if (type != EnumPillarType.NONE && heldItem.isEmpty()) {
             if (!playerIn.abilities.isCreativeMode) {
-                playerIn.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, new ItemStack(Item.getItemFromBlock(type.fillerBlock)));
+                playerIn.setItemStackToSlot(hand == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND, new ItemStack(Item.getItemFromBlock(type.fillerBlock)));
             }
 
             worldIn.setBlockState(pos, state.with(TYPE_PROPERTY, EnumPillarType.NONE));
@@ -83,7 +83,7 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> p_206840_1_) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> p_206840_1_) {
         p_206840_1_.add(TYPE_PROPERTY);
     }
 

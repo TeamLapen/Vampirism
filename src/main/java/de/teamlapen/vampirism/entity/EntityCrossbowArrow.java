@@ -4,21 +4,21 @@ import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
 
 
-public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowArrow {
+public class EntityCrossbowArrow extends AbstractArrowEntity implements IEntityCrossbowArrow {
 
     /**
      * Create a entity arrow for a shooting entity (with offset)
@@ -28,7 +28,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
      * @param arrow        ItemStack of the represented arrow. Is copied.
      * @param centerOffset An offset from the center of the entity
      */
-    public static EntityCrossbowArrow createWithShooter(World world, EntityLivingBase shooter, double heightOffset, double centerOffset, boolean rightHanded, ItemStack arrow) {
+    public static EntityCrossbowArrow createWithShooter(World world, LivingEntity shooter, double heightOffset, double centerOffset, boolean rightHanded, ItemStack arrow) {
         double yaw = ((shooter.rotationYaw - 90)) / 180 * Math.PI;
         if (rightHanded) {
             yaw += Math.PI;
@@ -37,8 +37,8 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
         double posZ = shooter.posZ + Math.cos(yaw) * centerOffset;
         EntityCrossbowArrow entityArrow = new EntityCrossbowArrow(world, posX, shooter.posY + (double) shooter.getEyeHeight() - 0.10000000149011612D + heightOffset, posZ, arrow);
         entityArrow.shootingEntity = shooter.getUniqueID();
-        if (shooter instanceof EntityPlayer) {
-            entityArrow.pickupStatus = EntityArrow.PickupStatus.ALLOWED;
+        if (shooter instanceof PlayerEntity) {
+            entityArrow.pickupStatus = AbstractArrowEntity.PickupStatus.ALLOWED;
         }
         return entityArrow;
     }
@@ -68,7 +68,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
     }
 
     @Override
-    public void readAdditional(NBTTagCompound compound) {
+    public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         arrowStack.deserializeNBT(compound.getCompound("arrowStack"));
     }
@@ -81,20 +81,20 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound compound) {
+    public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
-        compound.put("arrowStack", arrowStack.write(new NBTTagCompound()));
+        compound.put("arrowStack", arrowStack.write(new CompoundNBT()));
     }
 
     @Override
-    protected void arrowHit(EntityLivingBase living) {
+    protected void arrowHit(LivingEntity living) {
         super.arrowHit(living);
         Item item = arrowStack.getItem();
         if (item instanceof IVampirismCrossbowArrow) {
             if (ignoreHurtTimer && living.hurtResistantTime > 0) {
                 living.hurtResistantTime = 0;
             }
-            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.world instanceof WorldServer ? ((WorldServer) this.world).getEntityFromUuid(this.shootingEntity) : null); //TODO nonnull server only
+            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityFromUuid(this.shootingEntity) : null); //TODO nonnull server only
         }
     }
 
@@ -108,7 +108,7 @@ public class EntityCrossbowArrow extends EntityArrow implements IEntityCrossbowA
         if (raytraceResultIn.entity == null) {
             Item item = arrowStack.getItem();
             if (item instanceof IVampirismCrossbowArrow) {
-                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.world instanceof WorldServer ? ((WorldServer) this.world).getEntityFromUuid(this.shootingEntity) : null);//TODO nonnull server only
+                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityFromUuid(this.shootingEntity) : null);//TODO nonnull server only
             }
         }
         super.onHit(raytraceResultIn);

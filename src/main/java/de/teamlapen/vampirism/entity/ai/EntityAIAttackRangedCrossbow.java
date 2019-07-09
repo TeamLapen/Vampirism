@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.entity.ai;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import de.teamlapen.vampirism.entity.EntityVampirism;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  *
  * @author maxanier
  */
-public class EntityAIAttackRangedCrossbow extends EntityAIBase {
+public class EntityAIAttackRangedCrossbow extends Goal {
     private final EntityVampirism entity;
     private final double moveSpeedAmp;
     private final float maxAttackDistance;
@@ -64,7 +64,7 @@ public class EntityAIAttackRangedCrossbow extends EntityAIBase {
     }
 
     public void updateTask() {
-        EntityLivingBase entitylivingbase = this.entity.getAttackTarget();
+        LivingEntity entitylivingbase = this.entity.getAttackTarget();
 
         if (entitylivingbase != null) {
             double d0 = this.entity.getDistanceSq(entitylivingbase.posX, entitylivingbase.getBoundingBox().minY, entitylivingbase.posZ);
@@ -122,7 +122,7 @@ public class EntityAIAttackRangedCrossbow extends EntityAIBase {
         }
     }
 
-    protected void attackWithCrossbow(EntityLivingBase target) {
+    protected void attackWithCrossbow(LivingEntity target) {
         ItemStack arrows = attacker.getArrowStackForAttack(target);
         EntityCrossbowArrow entityArrow = EntityCrossbowArrow.createWithShooter(entity.getEntityWorld(), entity, 0, 0.3F, !entity.isLeftHanded(), arrows);
         double sx = target.posX - entityArrow.posX;
@@ -136,7 +136,7 @@ public class EntityAIAttackRangedCrossbow extends EntityAIBase {
 
     public interface IAttackWithCrossbow {
         @Nonnull
-        ItemStack getArrowStackForAttack(EntityLivingBase target);
+        ItemStack getArrowStackForAttack(LivingEntity target);
 
         boolean isCrossbowInMainhand();
 

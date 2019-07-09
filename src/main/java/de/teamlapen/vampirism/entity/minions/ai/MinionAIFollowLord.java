@@ -4,13 +4,13 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.util.MinionHelper;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-public class MinionAIFollowLord extends EntityAIBase {
+public class MinionAIFollowLord extends Goal {
     /**
      * Min dist for execution
      */
@@ -23,7 +23,7 @@ public class MinionAIFollowLord extends EntityAIBase {
      * The child that is following its parent.
      */
     IMinion minion;
-    EntityCreature minionEntity;
+    CreatureEntity minionEntity;
     IMinionLord boss;
     double speed;
     private int timer;
@@ -88,7 +88,7 @@ public class MinionAIFollowLord extends EntityAIBase {
             this.timer = 10;
             minionEntity.getNavigator().tryMoveToEntityLiving(this.boss.getRepresentingEntity(), this.speed);
             if (this.minionEntity.getDistanceSq(boss.getRepresentingEntity()) > TELEPORT_DIST) {
-                EntityLivingBase lord = boss.getRepresentingEntity();
+                LivingEntity lord = boss.getRepresentingEntity();
                 BlockPos pos = lord.getPosition().add(-4, 0, -4);
 
 

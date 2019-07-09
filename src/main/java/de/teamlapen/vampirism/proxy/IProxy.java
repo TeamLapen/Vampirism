@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nullable;
 
@@ -18,13 +18,13 @@ public interface IProxy extends IInitListener {
     boolean isClientPlayerNull();
 
     /**
-     * Probably just check {@link EntityPlayer#isUser()}
+     * Probably just check {@link PlayerEntity#isUser()}
      *
      * @param player
      * @return
      */
     @Deprecated
-    boolean isPlayerThePlayer(EntityPlayer player);
+    boolean isPlayerThePlayer(PlayerEntity player);
 
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
 

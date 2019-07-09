@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.model;
 
-import net.minecraft.client.renderer.entity.model.ModelBiped;
-import net.minecraft.client.renderer.entity.model.ModelRenderer;
+import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -10,8 +10,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * ModelBiped with a cloak
  */
 @OnlyIn(Dist.CLIENT)
-public class ModelBipedCloaked extends ModelBiped {
-    protected ModelRenderer bipedCloak;
+public class ModelBipedCloaked extends BipedModel {
+    protected RendererModel bipedCloak;
     private boolean skipCloakOnce = false;
 
     public ModelBipedCloaked(float f1, float f2, int texWidth, int texHeight) {
@@ -20,7 +20,7 @@ public class ModelBipedCloaked extends ModelBiped {
 
     public ModelBipedCloaked(float f1, float f2, int texWidth, int texHeight, int capeX, int capeY) {
         super(f1, f2, texWidth, texHeight);
-        bipedCloak = new ModelRenderer(this, capeX, capeY);
+        bipedCloak = new RendererModel(this, capeX, capeY);
         bipedCloak.addBox(-7.0F, 0.0F, 0.4F, 14, 20, 1);
         bipedCloak.setRotationPoint(0, 0, 2);
     }

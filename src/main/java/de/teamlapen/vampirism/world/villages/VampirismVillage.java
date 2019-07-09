@@ -5,13 +5,13 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraftforge.common.capabilities.*;
@@ -40,25 +40,25 @@ public class VampirismVillage implements IVampirismVillage {
     }
 
     public static ICapabilityProvider createNewCapability(@Nonnull final Village village) {
-        return new ICapabilitySerializable<NBTTagCompound>() {
+        return new ICapabilitySerializable<CompoundNBT>() {
 
             IVampirismVillage inst = new VampirismVillage(village);
             LazyOptional<IVampirismVillage> opt = LazyOptional.of(() -> inst);
 
             @Override
-            public void deserializeNBT(NBTTagCompound nbt) {
+            public void deserializeNBT(CompoundNBT nbt) {
                 CAP.getStorage().readNBT(CAP, inst, null, nbt);
             }
 
             @Nonnull
             @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
                 return CAP.orEmpty(capability, opt);
             }
 
             @Override
-            public NBTTagCompound serializeNBT() {
-                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
+            public CompoundNBT serializeNBT() {
+                return (CompoundNBT) CAP.getStorage().writeNBT(CAP, inst, null);
             }
         };
     }
@@ -137,17 +137,13 @@ public class VampirismVillage implements IVampirismVillage {
         this.underAttack = attack;
     }
 
-    public void read(NBTTagCompound nbt) {
-
-    }
-
     @Override
     public void addOrRenewAggressor(@Nullable Entity entity) {
         IFactionEntity factionEntity = null;
         if (entity instanceof IFactionEntity) {
             factionEntity = (IFactionEntity) entity;
-        } else if (entity instanceof EntityPlayer) {
-            factionEntity = FactionPlayerHandler.get((EntityPlayer) entity).getCurrentFactionPlayer();
+        } else if (entity instanceof PlayerEntity) {
+            factionEntity = FactionPlayerHandler.get((PlayerEntity) entity).getCurrentFactionPlayer();
         }
         if (factionEntity == null || factionEntity.getFaction() == this.controllingFaction) return;
         for (VillageAggressor aggressor : this.villageAggressors) {
@@ -161,7 +157,7 @@ public class VampirismVillage implements IVampirismVillage {
 
     @Override
     @Nullable
-    public IFactionEntity findNearestVillageAggressor(@Nonnull EntityLivingBase entity) {
+    public IFactionEntity findNearestVillageAggressor(@Nonnull LivingEntity entity) {
         double d0 = Double.MAX_VALUE;
         VillageAggressor nearestAggressor = null;
 
@@ -177,6 +173,10 @@ public class VampirismVillage implements IVampirismVillage {
         return nearestAggressor != null ? nearestAggressor.factionEntity : null;
     }
 
+    public void read(CompoundNBT nbt) {
+
+    }
+
     public void setControllingFaction(IFaction faction) {
         if (faction != null && faction != this.controllingFaction) {
             this.villageAggressors.clear();
@@ -188,7 +188,7 @@ public class VampirismVillage implements IVampirismVillage {
         this.tickCounter = (int) worldTime;
 
         if (totemLocation != null && tickCounter % 1024 == 0) {
-            IBlockState state = village.world.getBlockState(totemLocation);
+            BlockState state = village.world.getBlockState(totemLocation);
             if (!state.getBlock().equals(ModBlocks.totem_top)) {
                 removeTotemAndReset(totemLocation);
             }
@@ -203,27 +203,27 @@ public class VampirismVillage implements IVampirismVillage {
 
     }
 
-    public void write(NBTTagCompound nbt) {
+    public void write(CompoundNBT nbt) {
 
     }
 
     private static class Storage implements Capability.IStorage<IVampirismVillage> {
 
         @Override
-        public void readNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, EnumFacing side, INBTBase nbt) {
-            ((VampirismVillage) instance).read((NBTTagCompound) nbt);
+        public void readNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, Direction side, INBT nbt) {
+            ((VampirismVillage) instance).read((CompoundNBT) nbt);
         }
 
         @Override
-        public INBTBase writeNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, EnumFacing side) {
-            NBTTagCompound nbt = new NBTTagCompound();
+        public INBT writeNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, Direction side) {
+            CompoundNBT nbt = new CompoundNBT();
             ((VampirismVillage) instance).write(nbt);
             return nbt;
         }
     }
 
     private class VillageAggressor {
-        public final EntityLivingBase creature;
+        public final LivingEntity creature;
         public final IFactionEntity factionEntity;
         public int aggressionTime;
 

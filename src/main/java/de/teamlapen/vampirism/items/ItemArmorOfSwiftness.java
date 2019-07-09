@@ -1,20 +1,19 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
-
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -33,7 +32,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
 
     private final TIER tier;
 
-    public ItemArmorOfSwiftness(EntityEquipmentSlot equipmentSlotIn, TIER tier) {
+    public ItemArmorOfSwiftness(EquipmentSlotType equipmentSlotIn, TIER tier) {
         super(baseRegName, tier.getName(), ArmorMaterial.LEATHER, equipmentSlotIn, new Item.Properties().group(VampirismMod.creativeTab));
         this.tier = tier;
     }
@@ -46,7 +45,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         if (type == null) {
             return getTextureLocationLeather(slot);
         }
@@ -66,7 +65,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
     }
 
     @Override
-    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot equipmentSlot, ItemStack stack) {
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack) {
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
         if (equipmentSlot == this.armorType) {
@@ -77,10 +76,10 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
     }
 
     @Override
-    public void onArmorTick(ItemStack itemStack, World world, EntityPlayer player) {
+    public void onArmorTick(ItemStack itemStack, World world, PlayerEntity player) {
         super.onArmorTick(itemStack, world, player);
         if (player.ticksExisted % 45 == 3) {
-            if (this.armorType == EntityEquipmentSlot.CHEST) {
+            if (this.armorType == EquipmentSlotType.CHEST) {
                 boolean flag = true;
                 int boost = Integer.MAX_VALUE;
                 for (ItemStack stack : player.inventory.armorInventory) {
@@ -95,7 +94,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
                     }
                 }
                 if (flag && boost > -1) {
-                    player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 50, boost, false, false));
+                    player.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, 50, boost, false, false));
                 }
             }
         }
@@ -143,8 +142,8 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
         }
     }
 
-    private String getTextureLocationLeather(EntityEquipmentSlot slot) {
-        return String.format("minecraft:textures/models/armor/leather_layer_%d.png", slot == EntityEquipmentSlot.LEGS ? 2 : 1);
+    private String getTextureLocationLeather(EquipmentSlotType slot) {
+        return String.format("minecraft:textures/models/armor/leather_layer_%d.png", slot == EquipmentSlotType.LEGS ? 2 : 1);
     }
 
 

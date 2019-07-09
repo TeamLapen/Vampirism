@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.minions.ai.MinionAIFollowLord;
 import de.teamlapen.vampirism.entity.minions.commands.DefendLordCommand;
-import net.minecraft.entity.ai.EntityAIFleeSun;
+import net.minecraft.entity.ai.goal.FleeSunGoal;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -138,7 +138,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
     protected void initEntityAI() {
         super.initEntityAI();
         this.tasks.addTask(7, new MinionAIFollowLord(this, 1.0D));
-        this.tasks.addTask(14, new EntityAIFleeSun(this, 0.9F));
+        this.tasks.addTask(14, new FleeSunGoal(this, 0.9F));
         this.tasks.addTask(14, new VampireAIFleeGarlic(this, 0.9F, false));
     }
 }

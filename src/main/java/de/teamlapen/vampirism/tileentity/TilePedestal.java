@@ -6,13 +6,13 @@ import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModTiles;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
@@ -68,8 +68,8 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing != EnumFacing.DOWN)) {
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing != Direction.DOWN)) {
             return opt.cast();
         }
         return super.getCapability(capability, facing);
@@ -108,14 +108,14 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
 
     @Nullable
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
     }
 
     @Nonnull
     @Override
-    public NBTTagCompound getUpdateTag() {
-        return write(new NBTTagCompound());
+    public CompoundNBT getUpdateTag() {
+        return write(new CompoundNBT());
     }
 
 
@@ -140,17 +140,17 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
 
     public void markDirtyAndUpdateClient() {
         super.markDirty();
-        IBlockState block = this.world.getBlockState(this.pos);
+        BlockState block = this.world.getBlockState(this.pos);
         world.notifyBlockUpdate(pos, block, block, 3);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         handleUpdateTag(pkt.getNbtCompound());
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         if (compound.contains("item")) {
             this.internalStack = ItemStack.read(compound.getCompound("item"));
         } else {
@@ -210,7 +210,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
 
     @Nonnull
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         if (hasStack()) {
             compound.put("item", this.internalStack.serializeNBT());
         }
@@ -220,7 +220,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     }
 
     private void drainBlood() {
-        FluidUtil.getFluidHandler(this.world, this.pos.down(), EnumFacing.UP).ifPresent(handler -> {
+        FluidUtil.getFluidHandler(this.world, this.pos.down(), Direction.UP).ifPresent(handler -> {
             FluidStack drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), false);
             if (drained != null && drained.amount == VReference.FOOD_TO_FLUID_BLOOD) {
                 drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), true);

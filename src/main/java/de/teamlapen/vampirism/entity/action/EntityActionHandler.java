@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.entity.action;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.actions.*;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
 
@@ -19,7 +18,7 @@ import java.util.List;
  * Usage for every {@link IFactionEntity} like Hunter/Vampire entities,
  * is used with {@link EntityActionHandler#handle()} in UpdateLiving in an EntityVampirism
  */
-public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
+public class EntityActionHandler<T extends CreatureEntity & IEntityActionUser> {
 
     private T entity;
     private List<IEntityAction> availableActions;
@@ -141,29 +140,9 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         }
     }
 
-    /**
-     * elevates the chance of the actions, based on the entity and its target
-     */
-    @Nullable
-    private IEntityAction chooseNewAction() {
-        List<EntityActionEntry> entry = Lists.newArrayList();
-        int weightsum = 0;
-        for (IEntityAction e : availableActions) {
-            int weight = ((DefaultEntityAction) e).getWeight(entity);
-            if (weight > 0) {
-                entry.add(new EntityActionEntry(weight, e));
-                weightsum += weight;
-            }
-        }
-        if (weightsum > 0) {
-            return WeightedRandom.getRandomItem(entity.getRNG(), entry, weightsum).getAction();
-        }
-        return null;
-    }
-
     public void handle() {
         if (availableActions != null && !availableActions.isEmpty()) {
-            if (entity.getAttackTarget() instanceof EntityPlayer) {
+            if (entity.getAttackTarget() instanceof PlayerEntity) {
                 if (isPlayerTarget) {
                     updateHandler();
                 } else {
@@ -179,6 +158,13 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         }
     }
 
+    public void read(CompoundNBT nbt) {
+        if (nbt.contains("activeAction")) {
+            deactivateAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation(nbt.getString("activeAction"))));
+            isPlayerTarget = true;
+        }
+    }
+
     public IEntityAction getAction() {
         return action;
     }
@@ -187,17 +173,30 @@ public class EntityActionHandler<T extends EntityCreature & IEntityActionUser> {
         return isPlayerTarget;
     }
 
-    public void read(NBTTagCompound nbt) {
-        if (nbt.contains("activeAction")) {
-            deactivateAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation(nbt.getString("activeAction"))));
-            isPlayerTarget = true;
-        }
-    }
-
-    public void write(NBTTagCompound nbt) {
+    public void write(CompoundNBT nbt) {
         if (isPlayerTarget() && getAction() != null) {
             nbt.putString("activeAction", action.getRegistryName().toString());
         }
+    }
+
+    /**
+     * elevates the chance of the actions, based on the entity and its target
+     */
+    @Nullable
+    private IEntityAction chooseNewAction() {
+        List<EntityActionEntry> entry = Lists.newArrayList();
+        int weightsum = 0;
+        for (IEntityAction e : availableActions) {
+            int weight = e.getWeight(entity);
+            if (weight > 0) {
+                entry.add(new EntityActionEntry(weight, e));
+                weightsum += weight;
+            }
+        }
+        if (weightsum > 0) {
+            return WeightedRandom.getRandomItem(entity.getRNG(), entry, weightsum).getAction();
+        }
+        return null;
     }
 
     /**

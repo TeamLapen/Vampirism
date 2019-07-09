@@ -9,25 +9,25 @@ import de.teamlapen.vampirism.entity.minions.ai.MinionAIHurtByTarget;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.MinionHelper;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.RandomWalkingGoal;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.Particles;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -108,21 +108,9 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     }
 
     @Override
-    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
+    public boolean isCreatureType(EntityClassification type, boolean forSpawnCount) {
         //Don't count as entity for spawning
         return !forSpawnCount && super.isCreatureType(type, forSpawnCount);
-    }
-
-    @Override
-    public void onKillEntity(EntityLivingBase entity) {
-
-
-        if (this.getLord() != null && this.getLord() instanceof EntityVampireBaron) {
-            ((EntityVampireBaron) this.getLord()).onKillEntity(entity);
-        } else {
-            super.onKillEntity(entity);
-        }
-
     }
 
     @Override
@@ -135,17 +123,17 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
         }
         if (!this.world.isRemote && !this.dead) {
 
-            List<EntityItem> list = this.world.getEntitiesWithinAABB(EntityItem.class, this.getBoundingBox().grow(1.0D, 0.0D, 1.0D));
+            List<ItemEntity> list = this.world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(1.0D, 0.0D, 1.0D));
 
-            for (EntityItem entityitem : list) {
+            for (ItemEntity entityitem : list) {
                 if (entityitem.isAlive() && !(entityitem.getItem().isEmpty())) {
                     ItemStack itemstack = entityitem.getItem();
                     if (activeCommand.shouldPickupItem(itemstack)) {
-                        ItemStack stack1 = this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+                        ItemStack stack1 = this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
                         if (!stack1.isEmpty()) {
                             this.entityDropItem(stack1, 0.0F);
                         }
-                        this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, itemstack);
+                        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack);
                         entityitem.remove();
                     }
 
@@ -159,19 +147,31 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     }
 
     @Override
-    public void readAdditional(NBTTagCompound nbt) {
+    public void onKillEntity(LivingEntity entity) {
+
+
+        if (this.getLord() != null && this.getLord() instanceof EntityVampireBaron) {
+            ((EntityVampireBaron) this.getLord()).onKillEntity(entity);
+        } else {
+            super.onKillEntity(entity);
+        }
+
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT nbt) {
         super.readAdditional(nbt);
         IMinionCommand command = this.getCommand(nbt.getInt("command_id"));
         if (command != null) {
             this.activateMinionCommand(command);
         }
         if (nbt.contains("CustomName", 8) && nbt.getString("CustomName").length() > 0) {
-            this.tryToSetName(new TextComponentString(nbt.getString("CustomName")), null);
+            this.tryToSetName(new StringTextComponent(nbt.getString("CustomName")), null);
         }
     }
 
     /**
-     * Does not nothing, since minions should not be named normaly. Use {@link #tryToSetName(ITextComponent, EntityPlayer)} instead
+     * Does not nothing, since minions should not be named normaly. Use {@link #tryToSetName(ITextComponent, PlayerEntity)} instead
      */
     @Override
     public void setCustomName(@Nullable ITextComponent name) {
@@ -188,7 +188,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
      * @param player If this isn't null, checks if the player is the minions lord
      * @return success
      */
-    public boolean tryToSetName(ITextComponent name, @Nullable EntityPlayer player) {
+    public boolean tryToSetName(ITextComponent name, @Nullable PlayerEntity player) {
         if (player == null || MinionHelper.isLordSafe(this, player)) {
             super.setCustomName(name);
             return true;
@@ -202,13 +202,13 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound nbt) {
+    public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
         nbt.putInt("command_id", getActiveCommand().getId());
     }
 
     @Override
-    public boolean writeUnlessPassenger(NBTTagCompound nbt) {
+    public boolean writeUnlessPassenger(CompoundNBT nbt) {
         if (this instanceof ISaveableMinion) {
             return false;
         }
@@ -253,9 +253,9 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
-        this.tasks.addTask(6, new EntityAIAttackMelee(this, 1.0, false));
-        this.tasks.addTask(15, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(16, new EntityAIWatchClosest(this, EntityPlayer.class, 10));
+        this.tasks.addTask(6, new MeleeAttackGoal(this, 1.0, false));
+        this.tasks.addTask(15, new RandomWalkingGoal(this, 0.7));
+        this.tasks.addTask(16, new LookAtGoal(this, PlayerEntity.class, 10));
 
         this.targetTasks.addTask(8, new MinionAIHurtByTarget(this, false));
     }

@@ -7,10 +7,10 @@ import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 /**
  * Tile entity which spawns hunters for tents
  */
-public class TileTent extends TileEntity implements ITickable {
+public class TileTent extends TileEntity implements ITickableTileEntity {
 
 
     private SimpleSpawnerLogic spawnerLogic = new SimpleSpawnerLogic() {
@@ -73,14 +73,14 @@ public class TileTent extends TileEntity implements ITickable {
 
     @Nullable
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
+    public SUpdateTileEntityPacket getUpdatePacket() {
         return null;//new SPacketUpdateTileEntity(this.getPos(), 1, getUpdateTag());
     }
 
     @Nonnull
     @Override
-    public NBTTagCompound getUpdateTag() {
-        return this.write(new NBTTagCompound());
+    public CompoundNBT getUpdateTag() {
+        return this.write(new CompoundNBT());
     }
 
     @Override
@@ -93,7 +93,7 @@ public class TileTent extends TileEntity implements ITickable {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
+    public void read(CompoundNBT nbt) {
         super.read(nbt);
         if (nbt.contains("spawner_logic")) {
             spawnerLogic.readFromNbt(nbt.getCompound("spawner_logic"));
@@ -127,9 +127,9 @@ public class TileTent extends TileEntity implements ITickable {
 
     @Nonnull
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
-        NBTTagCompound nbt = super.write(compound);
-        NBTTagCompound logic = new NBTTagCompound();
+    public CompoundNBT write(CompoundNBT compound) {
+        CompoundNBT nbt = super.write(compound);
+        CompoundNBT logic = new CompoundNBT();
         spawnerLogic.writeToNbt(logic);
         nbt.put("spawner_logic", logic);
         nbt.putBoolean("spawn", spawn);

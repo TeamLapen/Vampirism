@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
-import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -42,18 +42,18 @@ public abstract class VampirismVillageEvent extends Event {
          * Used as a "seed" villager to get a valid spawn point.
          */
         private final @Nonnull
-        EntityVillager seedVillager;
+        VillagerEntity seedVillager;
         private @Nullable
-        EntityVillager newVillager;
+        VillagerEntity newVillager;
         private boolean willBeVampire;
 
-        public SpawnNewVillager(@Nonnull IVampirismVillage village, @Nonnull EntityVillager seedVillager, boolean willBeVampire) {
+        public SpawnNewVillager(@Nonnull IVampirismVillage village, @Nonnull VillagerEntity seedVillager, boolean willBeVampire) {
             super(village);
             this.seedVillager = seedVillager;
             this.willBeVampire = willBeVampire;
         }
 
-        public EntityVillager getNewVillager() {
+        public VillagerEntity getNewVillager() {
             return newVillager;
         }
 
@@ -63,7 +63,7 @@ public abstract class VampirismVillageEvent extends Event {
          *
          * @param newVillager
          */
-        public void setNewVillager(EntityVillager newVillager) {
+        public void setNewVillager(VillagerEntity newVillager) {
             this.newVillager = newVillager;
         }
 
@@ -73,7 +73,7 @@ public abstract class VampirismVillageEvent extends Event {
          * @return
          */
         @Nonnull
-        public EntityVillager getSeedVillager() {
+        public VillagerEntity getSeedVillager() {
             return seedVillager;
         }
 
@@ -101,11 +101,11 @@ public abstract class VampirismVillageEvent extends Event {
     @Cancelable
     public static class MakeAggressive extends VampirismVillageEvent {
 
-        private final EntityVillager oldVillager;
+        private final VillagerEntity oldVillager;
         private @Nullable
         IVillageCaptureEntity captureVillager;
 
-        public MakeAggressive(@Nullable IVampirismVillage village, @Nonnull EntityVillager villager) {
+        public MakeAggressive(@Nullable IVampirismVillage village, @Nonnull VillagerEntity villager) {
             super(village);
             this.oldVillager = villager;
         }
@@ -118,7 +118,7 @@ public abstract class VampirismVillageEvent extends Event {
         /**
          * @return The villager which should be made aggressive
          */
-        public EntityVillager getOldVillager() {
+        public VillagerEntity getOldVillager() {
             return oldVillager;
         }
 
@@ -127,7 +127,7 @@ public abstract class VampirismVillageEvent extends Event {
          * Event has to be canceled for this to take effect
          *
          */
-        public <T extends EntityVillager & IVillageCaptureEntity> void setAgressiveVillager(@Nullable T captureVillager) {
+        public <T extends VillagerEntity & IVillageCaptureEntity> void setAgressiveVillager(@Nullable T captureVillager) {
             this.captureVillager = captureVillager;
         }
     }

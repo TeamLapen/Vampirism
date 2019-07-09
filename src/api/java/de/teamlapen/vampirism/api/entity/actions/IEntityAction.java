@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.api.entity.actions;
 
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -47,7 +47,7 @@ public interface IEntityAction extends IForgeRegistryEntry<IEntityAction> {
      *
      * @return weight of this action
      */
-    default int getWeight(EntityCreature entity) {
+    default int getWeight(CreatureEntity entity) {
         return 1;
     }
 }

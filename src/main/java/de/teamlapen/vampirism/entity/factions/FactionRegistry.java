@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -52,8 +52,8 @@ public class FactionRegistry implements IFactionRegistry {
     IFaction getFaction(Entity entity) {
         if (entity instanceof IFactionEntity) {
             return ((IFactionEntity) entity).getFaction();
-        } else if (entity instanceof EntityPlayer) {
-            return VampirismAPI.getFactionPlayerHandler(((EntityPlayer) entity)).getCurrentFaction();
+        } else if (entity instanceof PlayerEntity) {
+            return VampirismAPI.getFactionPlayerHandler(((PlayerEntity) entity)).getCurrentFaction();
         }
         return null;
     }

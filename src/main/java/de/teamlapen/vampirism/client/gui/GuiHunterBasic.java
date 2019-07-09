@@ -5,26 +5,26 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.HunterBasicContainer;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 
 @OnlyIn(Dist.CLIENT)
-public class GuiHunterBasic extends GuiContainer {
+public class GuiHunterBasic extends ContainerScreen {
     private static final ResourceLocation guiTexture = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_basic.png");
 
-    private GuiButton buttonLevelup;
+    private Button buttonLevelup;
     private HunterBasicContainer container;
     private int missing = 0;
     private int timer = 0;
 
-    public GuiHunterBasic(EntityPlayer player) {
+    public GuiHunterBasic(PlayerEntity player) {
         super(new HunterBasicContainer(player.inventory));
         this.container = (HunterBasicContainer) inventorySlots;
     }
@@ -42,7 +42,7 @@ public class GuiHunterBasic extends GuiContainer {
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         String name = I18n.format("text.vampirism.level_up");
-        buttons.add(buttonLevelup = new GuiButton(1, i + 37, j + 55, 100, 20, name) {
+        buttons.add(buttonLevelup = new Button(1, i + 37, j + 55, 100, 20, name) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BASICHUNTERLEVELUP, ""));//TODO Dispatcher

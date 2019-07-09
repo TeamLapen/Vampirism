@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
+import net.minecraft.potion.Effect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
 
@@ -88,7 +88,7 @@ public interface IBloodPotionRegistry {
      * @param propertyRandomizer randomizer for duration and amplifier
      */
     @ThreadSafeAPI
-    void registerPotionEffect(ResourceLocation id, ResourceLocation categoryId, boolean isBad, Potion potion, int weight, IBloodPotionPropertyRandomizer propertyRandomizer);
+    void registerPotionEffect(ResourceLocation id, ResourceLocation categoryId, boolean isBad, Effect potion, int weight, IBloodPotionPropertyRandomizer propertyRandomizer);
 
     class WeightedEffect extends WeightedRandom.Item {
         public final IBloodPotionEffect effect;

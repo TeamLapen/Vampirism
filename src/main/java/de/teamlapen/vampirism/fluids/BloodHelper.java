@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.fluids;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -29,8 +29,8 @@ public class BloodHelper {
      * @param inventory
      * @return
      */
-    public static ItemStack getBloodContainerInHotbar(InventoryPlayer inventory) {
-        int hotbarSize = InventoryPlayer.getHotbarSize();
+    public static ItemStack getBloodContainerInHotbar(PlayerInventory inventory) {
+        int hotbarSize = PlayerInventory.getHotbarSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (!stack.isEmpty() && canStoreBlood(stack)) return stack;
@@ -51,8 +51,8 @@ public class BloodHelper {
      * @param inventory
      * @return
      */
-    public static ItemStack getGlassBottleInHotbar(InventoryPlayer inventory) {
-        int hotbarSize = InventoryPlayer.getHotbarSize();
+    public static ItemStack getGlassBottleInHotbar(PlayerInventory inventory) {
+        int hotbarSize = PlayerInventory.getHotbarSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack itemStack = inventory.getStackInSlot(i);
             if (!itemStack.isEmpty() && itemStack.getItem().equals(Items.GLASS_BOTTLE)) {
@@ -110,7 +110,7 @@ public class BloodHelper {
      * @param amt    Fluid amount in mB
      * @return Blood amount that could not be filled
      */
-    public static int fillBloodIntoInventory(EntityPlayer player, int amt) {
+    public static int fillBloodIntoInventory(PlayerEntity player, int amt) {
         if (amt <= 0) return 0;
         ItemStack stack = getBloodContainerInHotbar(player.inventory);
         if (!stack.isEmpty()) {

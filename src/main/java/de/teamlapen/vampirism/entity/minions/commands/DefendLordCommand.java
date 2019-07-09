@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.entity.minions.commands;
 
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.minions.ai.MinionAIDefendLord;
-import net.minecraft.entity.ai.EntityAITarget;
+import net.minecraft.entity.ai.goal.TargetGoal;
 
 public class DefendLordCommand extends DefaultMinionCommand {
 
     protected final IMinion m;
-    protected final EntityAITarget defend;
+    protected final TargetGoal defend;
     protected final int aiPrio;
 
     /**

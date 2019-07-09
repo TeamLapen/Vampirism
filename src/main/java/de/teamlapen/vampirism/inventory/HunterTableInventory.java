@@ -4,7 +4,7 @@ import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.inventory.SimpleInventory;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +23,7 @@ public class HunterTableInventory extends SimpleInventory {
 
     @Override
     public ITextComponent getName() {
-        return new TextComponentTranslation(ModBlocks.hunter_table.getTranslationKey());
+        return new TranslationTextComponent(ModBlocks.hunter_table.getTranslationKey());
     }
 
     @Nullable

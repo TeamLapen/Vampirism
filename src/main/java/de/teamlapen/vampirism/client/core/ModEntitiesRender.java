@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderBat;
+import net.minecraft.client.renderer.entity.BatRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -25,7 +25,7 @@ public class ModEntitiesRender {
 
 
     public static void registerEntityRenderer() {
-        RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, RenderBat::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, BatRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, RenderGhost::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityConvertedCreature.class, RenderConvertedCreature::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityBasicHunter.class, RenderBasicHunter::new);

@@ -3,14 +3,18 @@ package de.teamlapen.vampirism.entity.converted;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.config.Balance;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.monster.EntityPolarBear;
-import net.minecraft.entity.passive.*;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.passive.CowEntity;
+import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.passive.PolarBearEntity;
+import net.minecraft.entity.passive.RabbitEntity;
+import net.minecraft.entity.passive.horse.HorseEntity;
+import net.minecraft.entity.passive.horse.LlamaEntity;
+import net.minecraft.item.Items;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 
 import javax.annotation.Nullable;
 
@@ -19,7 +23,7 @@ import javax.annotation.Nullable;
  * Used for some vanilla entities, but can also be used for third party entities.
  * Converts the entity into a {@link EntityConvertedCreature}
  */
-public class DefaultConvertingHandler<T extends EntityCreature> implements IConvertingHandler<T> {
+public class DefaultConvertingHandler<T extends CreatureEntity> implements IConvertingHandler<T> {
 
     /**
      * Used if no helper is specified
@@ -28,8 +32,8 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
 
 
         @Override
-        public void dropConvertedItems(EntityCreature converted, EntityCreature entity, boolean recentlyHit, int looting) {
-            if (entity instanceof EntityCow) {
+        public void dropConvertedItems(CreatureEntity converted, CreatureEntity entity, boolean recentlyHit, int looting) {
+            if (entity instanceof CowEntity) {
                 int j = converted.getRNG().nextInt(3) + converted.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
@@ -41,21 +45,21 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
                     converted.entityDropItem(Items.ROTTEN_FLESH, 1);
                 }
 
-            } else if (entity instanceof EntityPig || entity instanceof EntityHorse) {
+            } else if (entity instanceof PigEntity || entity instanceof HorseEntity) {
                 int j = converted.getRNG().nextInt(2) + converted.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
                     converted.entityDropItem(Items.ROTTEN_FLESH, 1);
                 }
-            } else if (entity instanceof EntityLlama) {
+            } else if (entity instanceof LlamaEntity) {
                 int j = converted.getRNG().nextInt(3);
                 if (j > 0) converted.entityDropItem(Items.LEATHER, j);
-            } else if (entity instanceof EntityPolarBear) {
+            } else if (entity instanceof PolarBearEntity) {
                 int j = converted.getRNG().nextInt(3);
                 if (j > 0) converted.entityDropItem(Items.PUFFERFISH, j);
                 int k = converted.getRNG().nextInt(2);
                 if (k > 0) converted.entityDropItem(Items.ROTTEN_FLESH, k);
-            } else if (entity instanceof EntityRabbit) {
+            } else if (entity instanceof RabbitEntity) {
                 int j = converted.getRNG().nextInt(2);
                 if (j > 0) converted.entityDropItem(Items.RABBIT_HIDE, j);
             } else {
@@ -66,7 +70,7 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
 
 
         @Override
-        public double getConvertedDMG(EntityCreature entity) {
+        public double getConvertedDMG(CreatureEntity entity) {
             IAttributeInstance dmg = entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
             if (dmg != null) {
                 return dmg.getBaseValue() * 1.3;
@@ -76,17 +80,17 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
         }
 
         @Override
-        public double getConvertedKnockbackResistance(EntityCreature entity) {
+        public double getConvertedKnockbackResistance(CreatureEntity entity) {
             return entity.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).getBaseValue();
         }
 
         @Override
-        public double getConvertedMaxHealth(EntityCreature entity) {
+        public double getConvertedMaxHealth(CreatureEntity entity) {
             return entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue() * 1.5;
         }
 
         @Override
-        public double getConvertedSpeed(EntityCreature entity) {
+        public double getConvertedSpeed(CreatureEntity entity) {
             return Math.min(entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 1.2, 2.9D);
         }
     };
@@ -108,7 +112,7 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
     public IConvertedCreature<T> createFrom(T entity) {
         EntityConvertedCreature<T> convertedCreature = new EntityConvertedCreature<>(entity.getEntityWorld());
         copyImportantStuff(convertedCreature, entity);
-        convertedCreature.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 200, 2));
+        convertedCreature.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
         return convertedCreature;
     }
 

@@ -2,14 +2,14 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.core.ModEntities;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.entity.passive.SheepEntity;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -23,7 +23,7 @@ import java.util.List;
  * {@link IConvertedCreature} for sheep
  * Allows converted sheep to be sheared
  */
-public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> implements IShearable {
+public class EntityConvertedSheep extends EntityConvertedCreature<SheepEntity> implements IShearable {
 
 
     private final static DataParameter<Byte> COAT = EntityDataManager.createKey(EntityConvertedSheep.class, DataSerializers.BYTE);
@@ -33,8 +33,8 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
         super(ModEntities.converted_sheep, world);
     }
 
-    public EnumDyeColor getFleeceColor() {
-        return nil() ? EnumDyeColor.WHITE : this.getOldCreature().getFleeceColor();
+    public DyeColor getFleeceColor() {
+        return nil() ? DyeColor.WHITE : this.getOldCreature().getFleeceColor();
     }
 
 
@@ -77,20 +77,20 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
 
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
         for (int j = 0; j < i; ++j)
-            ret.add(new ItemStack(EntitySheep.WOOL_BY_COLOR.get(this.getFleeceColor())));//TODO make public (is static final)
+            ret.add(new ItemStack(SheepEntity.WOOL_BY_COLOR.get(this.getFleeceColor())));//TODO make public (is static final)
 
         this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
         return ret;
     }
 
     @Override
-    public void readAdditional(NBTTagCompound nbt) {
+    public void readAdditional(CompoundNBT nbt) {
         super.readAdditional(nbt);
         this.setSheared(nbt.getBoolean("Sheared"));
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound nbt) {
+    public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
         nbt.putBoolean("Sheared", this.getSheared());
     }
@@ -102,13 +102,13 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
         this.dataManager.register(COAT, (byte) 0);
     }
 
-    public static class ConvertingHandler extends DefaultConvertingHandler<EntitySheep> {
+    public static class ConvertingHandler extends DefaultConvertingHandler<SheepEntity> {
         public ConvertingHandler() {
             super(null);
         }
 
         @Override
-        public EntityConvertedCreature createFrom(EntitySheep entity) {
+        public EntityConvertedCreature createFrom(SheepEntity entity) {
             EntityConvertedSheep creature = new EntityConvertedSheep(entity.getEntityWorld());
             this.copyImportantStuff(creature, entity);
             creature.setSheared(entity.getSheared());

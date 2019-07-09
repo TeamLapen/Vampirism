@@ -14,8 +14,8 @@ import de.teamlapen.vampirism.api.items.IAlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
@@ -166,7 +166,7 @@ public class VampirismAPI {
      * @param player
      * @return The respective {@link IFactionPlayerHandler}
      */
-    public static IFactionPlayerHandler getFactionPlayerHandler(EntityPlayer player) {
+    public static IFactionPlayerHandler getFactionPlayerHandler(PlayerEntity player) {
         return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null).orElseThrow(() -> new IllegalStateException("Cannot get faction handler from player"));
     }
 
@@ -174,7 +174,7 @@ public class VampirismAPI {
     /**
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
      */
-    public static IExtendedCreatureVampirism getExtendedCreatureVampirism(EntityCreature creature) {
+    public static IExtendedCreatureVampirism getExtendedCreatureVampirism(CreatureEntity creature) {
         return creature.getCapability(CAP_CREATURE, null).orElseThrow(() -> new IllegalStateException("Cannot get extended creature from creature"));
     }
 

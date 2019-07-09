@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +53,7 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public BITE_TYPE determineBiteType(EntityLivingBase entity) {
+    public BITE_TYPE determineBiteType(LivingEntity entity) {
         return null;
     }
 
@@ -119,7 +119,7 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public EntityLivingBase getMinionTarget() {
+    public LivingEntity getMinionTarget() {
         return null;
     }
 
@@ -129,12 +129,12 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public EntityLivingBase getRepresentingEntity() {
+    public LivingEntity getRepresentingEntity() {
         return null;
     }
 
     @Override
-    public EntityPlayer getRepresentingPlayer() {
+    public PlayerEntity getRepresentingPlayer() {
         return null;
     }
 
@@ -216,7 +216,7 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public EntityPlayer.SleepResult trySleep(BlockPos pos) {
+    public PlayerEntity.SleepResult trySleep(BlockPos pos) {
         return null;
     }
 

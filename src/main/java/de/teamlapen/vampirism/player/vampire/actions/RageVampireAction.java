@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 
 public class RageVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
@@ -15,8 +15,8 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(MobEffects.SPEED, getDuration(vampire.getLevel()), 2, false, false));
-        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(MobEffects.STRENGTH, getDuration(vampire.getLevel()), 0, false, false));
+        vampire.getRepresentingPlayer().addPotionEffect(new EffectInstance(Effects.SPEED, getDuration(vampire.getLevel()), 2, false, false));
+        vampire.getRepresentingPlayer().addPotionEffect(new EffectInstance(Effects.STRENGTH, getDuration(vampire.getLevel()), 0, false, false));
         return true;
     }
 
@@ -62,8 +62,8 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().removePotionEffect(MobEffects.SPEED);
-        vampire.getRepresentingPlayer().removePotionEffect(MobEffects.STRENGTH);
+        vampire.getRepresentingPlayer().removePotionEffect(Effects.SPEED);
+        vampire.getRepresentingPlayer().removePotionEffect(Effects.STRENGTH);
     }
 
     @Override

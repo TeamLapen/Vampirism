@@ -4,7 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.LogicalSide;
@@ -28,12 +28,12 @@ public class DifficultyCalculator {
      */
     private static
     @Nullable
-    Difficulty calculateDifficulty(List<? extends EntityPlayer> playerList) {
+    Difficulty calculateDifficulty(List<? extends PlayerEntity> playerList) {
         if (playerList == null || playerList.isEmpty()) return null;
         int min = Integer.MAX_VALUE;
         int max = 0;
         int sum = 0;
-        for (EntityPlayer p : playerList) {
+        for (PlayerEntity p : playerList) {
             IFactionPlayerHandler handler = FactionPlayerHandler.get(p);
             if (handler.getCurrentLevel() == 0) {
                 min = 0;
@@ -68,7 +68,7 @@ public class DifficultyCalculator {
      */
     public static Difficulty getLocalDifficulty(World w, BlockPos center, int radius) {
 
-        List<EntityPlayer> list = w.getEntitiesWithinAABB(EntityPlayer.class, UtilLib.createBB(center, radius, true));
+        List<PlayerEntity> list = w.getEntitiesWithinAABB(PlayerEntity.class, UtilLib.createBB(center, radius, true));
         return calculateDifficulty(list);
     }
 

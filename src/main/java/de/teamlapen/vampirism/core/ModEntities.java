@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.config.Balance;
@@ -15,12 +14,12 @@ import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.init.Biomes;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -121,8 +120,8 @@ public class ModEntities {
         registry.register(vampire);
         registry.register(advanced_vampire);
         for (Biome e : getZombieBiomes()) {
-            e.getSpawns(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
-            e.getSpawns(EnumCreatureType.MONSTER).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
+            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
+            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
         }
     }
 
@@ -164,10 +163,10 @@ public class ModEntities {
             Biome b = iterator.next();
             if (b != null) {
                 if (!b.getClass().getName().startsWith("net.minecraft.") && !b.getClass().getName().startsWith("de.teamlapen.")) {
-                    Iterator<Biome.SpawnListEntry> iterator2 = b.getSpawns(EnumCreatureType.MONSTER).iterator();
+                    Iterator<Biome.SpawnListEntry> iterator2 = b.getSpawns(EntityClassification.MONSTER).iterator();
                     boolean zombie = false;
                     while (iterator2.hasNext()) {
-                        if (iterator2.next().getClass().equals(EntityZombie.class)) {
+                        if (iterator2.next().getClass().equals(ZombieEntity.class)) {
                             zombie = true;
                             break;
                         }

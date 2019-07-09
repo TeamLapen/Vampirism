@@ -8,10 +8,10 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -22,14 +22,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiBloodPotionTable extends GuiContainer {
+public class GuiBloodPotionTable extends ContainerScreen {
 
     private final ResourceLocation TABLE_GUI_TEXTURES = new ResourceLocation(REFERENCE.MODID, "textures/gui/blood_potion_table.png");
     private final BloodPotionTableContainer container;
-    private GuiButton craftBtn;
+    private Button craftBtn;
     private ISound sound;
 
-    public GuiBloodPotionTable(InventoryPlayer playerInv, BlockPos pos, World world) {
+    public GuiBloodPotionTable(PlayerInventory playerInv, BlockPos pos, World world) {
         super(new BloodPotionTableContainer(playerInv, pos, world));
         this.container = (BloodPotionTableContainer) inventorySlots;
     }
@@ -44,7 +44,7 @@ public class GuiBloodPotionTable extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        this.buttons.add(this.craftBtn = new GuiButton(0, this.width / 2 - 77, this.height / 2 - 78, 80, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create")) {
+        this.buttons.add(this.craftBtn = new Button(0, this.width / 2 - 77, this.height / 2 - 78, 80, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create")) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.CRAFT_BLOOD_POTION, ""));//TODO Dispatcher

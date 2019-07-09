@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 
 /**
  * @author cheaterpaul
@@ -67,9 +67,9 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
          * Since we cannot determine what added what, current solution is to only remove the potion effect if the remaining duration is shorter than the maximum duration of this skill.
          * It is not ideal because it might seem somewhat inconsistent to the player, but at least it definitively removes the slowness effect added by this skill and at the same time does not allow to cancel long lasting effects.
          */
-        if (player.getRepresentingPlayer().isPotionActive(MobEffects.SLOWNESS)) {
-            if (player.getRepresentingPlayer().getActivePotionEffect(MobEffects.SLOWNESS).getDuration() < getDuration(player.getLevel())) {
-                player.getRepresentingPlayer().removePotionEffect(MobEffects.SLOWNESS);
+        if (player.getRepresentingPlayer().isPotionActive(Effects.SLOWNESS)) {
+            if (player.getRepresentingPlayer().getActivePotionEffect(Effects.SLOWNESS).getDuration() < getDuration(player.getLevel())) {
+                player.getRepresentingPlayer().removePotionEffect(Effects.SLOWNESS);
             }
         }
     }
@@ -89,7 +89,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     protected boolean activate(IVampirePlayer playerIn) {
         ((VampirePlayer) playerIn).getSpecialAttributes().half_invulnerable = true;
         playerIn.getRepresentingPlayer().addPotionEffect(
-                new PotionEffect(MobEffects.SLOWNESS, getDuration(playerIn.getLevel()) - 1, 1, false, false));
+                new EffectInstance(Effects.SLOWNESS, getDuration(playerIn.getLevel()) - 1, 1, false, false));
         return true;
     }
 

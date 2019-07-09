@@ -4,13 +4,13 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.network.InputEventPacket;
-import net.minecraft.client.gui.GuiOptionButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.OptionButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiNameSword extends GuiScreen {
+public class GuiNameSword extends Screen {
     /**
      * Suggested sword names.
      * Credits to http://www.fantasynamegenerators.com
@@ -32,7 +32,7 @@ public class GuiNameSword extends GuiScreen {
     private final String text1;
     private final String text2;
     private final ItemStack sword;
-    private GuiTextField nameField;
+    private TextFieldWidget nameField;
 
     public GuiNameSword(ItemStack sword) {
         this.yes = UtilLib.translate("gui.yes");
@@ -61,25 +61,25 @@ public class GuiNameSword extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
-        this.buttons.add(new GuiOptionButton(0, this.width / 2 - 155, this.height / 6 + 96, this.yes) {
+        this.buttons.add(new OptionButton(0, this.width / 2 - 155, this.height / 6 + 96, this.yes) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 if (!StringUtils.isBlank(nameField.getText())) {
-                    ITextComponent name = new TextComponentString(nameField.getText());
+                    ITextComponent name = new StringTextComponent(nameField.getText());
                     GuiNameSword.this.sword.setDisplayName(name);
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, name.getUnformattedComponentText()));
                 }
                 GuiNameSword.this.close();
             }
         });
-        this.buttons.add(new GuiOptionButton(1, this.width / 2 - 155 + 160, this.height / 6 + 96, this.no) {
+        this.buttons.add(new OptionButton(1, this.width / 2 - 155 + 160, this.height / 6 + 96, this.no) {
             @Override
             public void onClick(double mouseX, double mouseY) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
                 GuiNameSword.this.close();
             }
         });
-        this.nameField = new GuiTextField(2, this.fontRenderer, this.width / 2 - 155 + 77, this.height / 6 + 70, 155, 12);
+        this.nameField = new TextFieldWidget(2, this.fontRenderer, this.width / 2 - 155 + 77, this.height / 6 + 70, 155, 12);
         this.nameField.setTextColor(-1);
         this.nameField.setDisabledTextColour(-1);
         this.nameField.setEnableBackgroundDrawing(true);

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.items;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import java.util.Random;
 
@@ -14,7 +14,7 @@ public interface IBloodPotionPropertyRandomizer {
      * @param rnd Used for random generation
      * @return A nbt tag containing all properties which can be used to store the effect with the item
      */
-    NBTTagCompound getRandomProperties(Random rnd);
+    CompoundNBT getRandomProperties(Random rnd);
 
     /**
      * Simple implementation
@@ -29,8 +29,8 @@ public interface IBloodPotionPropertyRandomizer {
         }
 
         @Override
-        public NBTTagCompound getRandomProperties(Random rnd) {
-            NBTTagCompound nbt = new NBTTagCompound();
+        public CompoundNBT getRandomProperties(Random rnd) {
+            CompoundNBT nbt = new CompoundNBT();
             nbt.putInt("duration", (minDuration + rnd.nextInt(maxDuration - minDuration) + 1));
             nbt.putInt("amplifier", amplifier);
             return nbt;

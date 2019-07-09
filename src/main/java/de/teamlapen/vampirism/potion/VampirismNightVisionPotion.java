@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.potion;
 
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
  * Potion which replaces the vanilla night vision one.
  */
-public class VampirismNightVisionPotion extends Potion {
+public class VampirismNightVisionPotion extends Effect {
 
     private final static Logger LOGGER = LogManager.getLogger(VampirismNightVisionPotion.class);
     public VampirismNightVisionPotion() {
@@ -20,7 +20,7 @@ public class VampirismNightVisionPotion extends Potion {
     }
 
     @Override
-    public boolean shouldRender(PotionEffect effect) {
+    public boolean shouldRender(EffectInstance effect) {
         return !(effect instanceof VampireNightVisionEffect) && super.shouldRender(effect);
     }
 }

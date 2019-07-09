@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,7 +19,7 @@ public class AlchemicalCauldronContainer extends InventoryContainer {
     private int furnaceBurnTime;
     private int currentItemBurnTime;
 
-    public AlchemicalCauldronContainer(InventoryPlayer invPlayer, InventorySlot.IInventorySlotInventory te) {
+    public AlchemicalCauldronContainer(PlayerInventory invPlayer, InventorySlot.IInventorySlotInventory te) {
         super(invPlayer, te);
     }
 

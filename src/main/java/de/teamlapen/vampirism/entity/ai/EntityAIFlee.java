@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -11,8 +11,8 @@ import java.util.Random;
 /**
  * Basic Flee from anything ai
  */
-public abstract class EntityAIFlee extends EntityAIBase {
-    private final EntityCreature theCreature;
+public abstract class EntityAIFlee extends Goal {
+    private final CreatureEntity theCreature;
     private final double movementSpeed;
     private final World world;
     private final boolean restrictToHome;
@@ -20,7 +20,7 @@ public abstract class EntityAIFlee extends EntityAIBase {
     private double shelterY;
     private double shelterZ;
 
-    public EntityAIFlee(EntityCreature theCreature, double movementSpeed, boolean restrictToHome) {
+    public EntityAIFlee(CreatureEntity theCreature, double movementSpeed, boolean restrictToHome) {
         this.theCreature = theCreature;
         this.movementSpeed = movementSpeed;
         this.restrictToHome = restrictToHome;

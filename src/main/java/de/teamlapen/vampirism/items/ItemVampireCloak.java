@@ -6,17 +6,17 @@ import de.teamlapen.vampirism.client.model.ModelCloak;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.model.ModelBiped;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -32,13 +32,13 @@ import java.util.List;
  *
  * @author cheaterpaul
  */
-public class ItemVampireCloak extends ItemArmor {
+public class ItemVampireCloak extends ArmorItem {
 
     private final String registeredName = "vampire_cloak";
     private final EnumCloakColor color;
 
     public ItemVampireCloak(EnumCloakColor color) {
-        super(ArmorMaterial.LEATHER, EntityEquipmentSlot.CHEST, new Properties().defaultMaxDamage(0).group(VampirismMod.creativeTab));
+        super(ArmorMaterial.LEATHER, EquipmentSlotType.CHEST, new Properties().defaultMaxDamage(0).group(VampirismMod.creativeTab));
         this.setRegistryName(REFERENCE.MODID, registeredName + "_" + color.getName());
         this.color = color;
     }
@@ -54,21 +54,21 @@ public class ItemVampireCloak extends ItemArmor {
     @Nullable
     @OnlyIn(Dist.CLIENT)
     @Override
-    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default) {
+    public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
         return new ModelCloak();
     }
 
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s/%s_%s", registeredName, registeredName,
                 color.getName() + ".png");
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, World world, EntityPlayer player) {
+    public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
         super.onArmorTick(stack, world, player);
         if (player.ticksExisted % 16 == 8) {
             if (Helper.isHunter(player)) {
-                player.addPotionEffect(new PotionEffect(MobEffects.POISON, 20, 1));
+                player.addPotionEffect(new EffectInstance(Effects.POISON, 20, 1));
             }
         }
     }

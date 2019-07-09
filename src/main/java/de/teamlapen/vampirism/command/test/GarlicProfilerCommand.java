@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import java.util.List;
@@ -27,9 +25,9 @@ public class GarlicProfilerCommand extends BasicCommand {
     }
 
     private static int garlicProfiler(CommandSource commandSource) {
-        commandSource.sendFeedback(new TextComponentString("Tick"), true);
+        commandSource.sendFeedback(new StringTextComponent("Tick"), true);
         print(commandSource, "tick");
-        commandSource.sendFeedback(new TextComponentString("Garlic"), true);
+        commandSource.sendFeedback(new StringTextComponent("Garlic"), true);
         print(commandSource, "vampirism_checkGarlic");
 		return 0;
 	}
@@ -37,7 +35,7 @@ public class GarlicProfilerCommand extends BasicCommand {
 	private static void print(CommandSource source, String id) {
         List<Profiler.Result> l = ServerLifecycleHooks.getCurrentServer().profiler.getProfilingData(id);
         for (Profiler.Result r : l) {
-            source.sendFeedback(new TextComponentString("" + r.profilerName + ": " + r.usePercentage + "|" + r.totalUsePercentage),true);
+            source.sendFeedback(new StringTextComponent("" + r.profilerName + ": " + r.usePercentage + "|" + r.totalUsePercentage), true);
         }
     }
 }

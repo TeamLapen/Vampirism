@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.List;
@@ -88,10 +88,10 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     private boolean nearbyVampire(IHunterPlayer player) {
-        List<EntityLivingBase> entities = player.getRepresentingEntity().getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(player.getRepresentingEntity().posX - Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posY
+        List<LivingEntity> entities = player.getRepresentingEntity().getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(player.getRepresentingEntity().posX - Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posY
                 - Balance.hpa.AWARENESS_RADIUS + 1, player.getRepresentingEntity().posZ
                         - Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posX + Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posY + Balance.hpa.AWARENESS_RADIUS + 1, player.getRepresentingEntity().posZ + Balance.hpa.AWARENESS_RADIUS));
-        for (EntityLivingBase e : entities) {
+        for (LivingEntity e : entities) {
             if (Helper.isVampire(e))
                 return true;
         }

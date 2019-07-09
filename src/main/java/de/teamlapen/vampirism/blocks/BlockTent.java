@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -18,7 +18,7 @@ import net.minecraft.world.World;
  * Position property contains the position within the 4 block arrangement
  */
 public class BlockTent extends VampirismBlock {
-    public static final DirectionProperty FACING = BlockHorizontal.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final IntegerProperty POSITION = IntegerProperty.create("position", 0, 3);
     private static final String name = "tent";
 
@@ -28,15 +28,25 @@ public class BlockTent extends VampirismBlock {
 
     protected BlockTent(String name) {
         super(name, Properties.create(Material.CLOTH).hardnessAndResistance(0.6f).sound(SoundType.CLOTH));
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, EnumFacing.NORTH).with(POSITION, 0));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POSITION, 0));
+    }
+
+    @Override
+    public boolean isFullCube(BlockState state) {
+        return false;
     }
 
 
     @Override
-    public void onReplaced(IBlockState state, World world, BlockPos pos, IBlockState newState, boolean isMoving) {
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         super.onReplaced(state, world, pos, newState, isMoving);
         if (newState.getBlock() != state.getBlock()) {
-            EnumFacing dir = state.get(FACING);
+            Direction dir = state.get(FACING);
             int p = state.get(POSITION);
             if (p == 0) {
                 dir = dir.getOpposite();
@@ -56,21 +66,8 @@ public class BlockTent extends VampirismBlock {
 
     }
 
-
-
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, POSITION);
     }
 }

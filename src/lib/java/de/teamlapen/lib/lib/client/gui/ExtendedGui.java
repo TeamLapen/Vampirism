@@ -1,6 +1,6 @@
 package de.teamlapen.lib.lib.client.gui;
 
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Adds additional methods to vanilla Gui
  */
 @OnlyIn(Dist.CLIENT)
-public class ExtendedGui extends Gui {
+public class ExtendedGui extends AbstractGui {
 
     /**
      * Draws a rectangle with a vertical gradient between the specified colors (ARGB format). Args : x1, y1, x2, y2,

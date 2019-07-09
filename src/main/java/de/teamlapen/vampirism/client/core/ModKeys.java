@@ -13,11 +13,11 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -107,7 +107,7 @@ public class ModKeys {
         if (!suckKeyDown && keyPressed == KEY.SUCK) {
             RayTraceResult mouseOver = Minecraft.getInstance().objectMouseOver;
             suckKeyDown = true;
-            EntityPlayer player = Minecraft.getInstance().player;
+            PlayerEntity player = Minecraft.getInstance().player;
             if (mouseOver != null && !player.isSpectator() && FactionPlayerHandler.get(player).isInFaction(VReference.VAMPIRE_FACTION) && !VampirePlayer.get(player).getActionHandler().isActionActive(VampireActions.bat)) {
                 if (mouseOver.entity != null) {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entity.getEntityId()));
@@ -119,12 +119,12 @@ public class ModKeys {
                 }
             }
         } else if (keyPressed == KEY.ACTION) {
-            EntityPlayer player = Minecraft.getInstance().player;
+            PlayerEntity player = Minecraft.getInstance().player;
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
                 //player.openGui(VampirismMod.instance, ModGuiHandler.ID_ACTION, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ()); TODO 1.14
             }
         } else if (keyPressed == KEY.SKILL) {
-            EntityPlayer player = Minecraft.getInstance().player;
+            PlayerEntity player = Minecraft.getInstance().player;
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
                 //openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ()); TODO 1.14
             }
@@ -175,13 +175,13 @@ public class ModKeys {
     private void toggleBoundAction(@Nullable IFactionPlayer player, @Nullable ResourceLocation key) {
         if (player != null) {
             if (key == null) {
-                player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
+                player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
             } else {
                 IAction action = VampirismAPI.actionManager().getRegistry().getValue(key);
                 if (action == null) {
                     LOGGER.info("Bound action {} not found", key);
                 } else if (!action.getFaction().equals(player.getFaction())) {
-                    player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.only_faction", UtilLib.translate(action.getFaction().getTranslationKey())), true);
+                    player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.only_faction", UtilLib.translate(action.getFaction().getTranslationKey())), true);
                 } else {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + key));
                 }

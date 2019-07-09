@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
-import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
 import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.inventory.HunterBasicContainer;
@@ -23,25 +22,25 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
@@ -58,7 +57,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     private static final DataParameter<Integer> WATCHED_ID = EntityDataManager.createKey(EntityBasicHunter.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 3;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
-    private final EntityAIAttackMelee attackMelee;
+    private final MeleeAttackGoal attackMelee;
     private final EntityAIAttackRangedCrossbow attackRange;
     /**
      * available actions for AI task & task
@@ -71,7 +70,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
      * Player currently being trained otherwise null
      */
     private @Nullable
-    EntityPlayer trainee;
+    PlayerEntity trainee;
 
     private @Nullable
     IVampirismVillage cachedVillage;
@@ -104,14 +103,14 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     public EntityBasicHunter(World world) {
         super(ModEntities.vampire_hunter, world, true);
         saveHome = true;
-        ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
+        ((GroundPathNavigator) this.getNavigator()).setEnterDoors(true);
 
         this.setSize(0.6F, 1.95F);
 
 
         this.setDontDropEquipment();
 
-        this.attackMelee = new EntityAIAttackMelee(this, 1.0, false);
+        this.attackMelee = new MeleeAttackGoal(this, 1.0, false);
         this.attackRange = new EntityAIAttackRangedCrossbow(this, this, 0.6, 60, 20);
         this.updateCombatTask();
         entitytier = EntityActionTier.Medium;
@@ -124,14 +123,14 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     public boolean attackEntityAsMob(Entity entity) {
         boolean flag = super.attackEntityAsMob(entity);
         if (flag && this.getHeldItemMainhand().isEmpty()) {
-            this.swingArm(EnumHand.MAIN_HAND);  //Swing stake if nothing else is held
+            this.swingArm(Hand.MAIN_HAND);  //Swing stake if nothing else is held
         }
         return flag;
     }
 
     @Override
     public @Nonnull
-    ItemStack getArrowStackForAttack(EntityLivingBase target) {
+    ItemStack getArrowStackForAttack(LivingEntity target) {
         return new ItemStack(ModItems.crossbow_arrow_normal);
     }
 
@@ -147,14 +146,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    public void setLevel(int level) {
-        if (level >= 0) {
-            getDataManager().set(LEVEL, level);
-            this.updateEntityAttributes();
-            if (level == 3) {
-                this.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1000000, 1));
-            }
-        }
+    public PlayerEntity getTrainee() {
+        return trainee;
     }
 
     @Override
@@ -169,8 +162,36 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    public EntityPlayer getTrainee() {
-        return trainee;
+    public void livingTick() {
+        super.livingTick();
+        if (trainee != null && !(trainee.openContainer instanceof HunterBasicContainer)) {
+            this.trainee = null;
+        }
+        if (!world.isRemote) {
+            LivingEntity target = getAttackTarget();
+            int id = target == null ? 0 : target.getEntityId();
+            this.updateWatchedId(id);
+        } else {
+            targetAngle = 0;
+            if (isSwingingArms()) {
+                int id = getWatchedId();
+                if (id != 0) {
+                    Entity target = world.getEntityByID(id);
+                    if (target instanceof LivingEntity) {
+
+                        double dx = target.posX - (this).posX;
+                        double dy = target.posY - this.posY;
+                        double dz = target.posZ - this.posZ;
+                        float dist = MathHelper.sqrt(dx * dx + dz * dz);
+                        targetAngle = (float) Math.atan(dy / dist);
+                    }
+                }
+            }
+
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.handle();
+        }
     }
 
 
@@ -213,13 +234,13 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     @Nullable
     @Override
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata, @Nullable NBTTagCompound itemNbt) {
+    public ILivingEntityData onInitialSpawn(DifficultyInstance difficulty, @Nullable ILivingEntityData livingdata, @Nullable CompoundNBT itemNbt) {
         livingdata = super.onInitialSpawn(difficulty, livingdata, itemNbt);
 
         if (this.getRNG().nextInt(4) == 0) {
             this.setLeftHanded(true);
             Item crossBow = getLevel() > 1 ? ModItems.enhanced_crossbow : ModItems.basic_crossbow;
-            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(crossBow));
+            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(crossBow));
 
         } else {
             this.setLeftHanded(false);
@@ -230,40 +251,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if (trainee != null && !(trainee.openContainer instanceof HunterBasicContainer)) {
-            this.trainee = null;
-        }
-        if (!world.isRemote) {
-            EntityLivingBase target = getAttackTarget();
-            int id = target == null ? 0 : target.getEntityId();
-            this.updateWatchedId(id);
-        } else {
-            targetAngle = 0;
-            if (isSwingingArms()) {
-                int id = getWatchedId();
-                if (id != 0) {
-                    Entity target = world.getEntityByID(id);
-                    if (target instanceof EntityLivingBase) {
-
-                        double dx = target.posX - (this).posX;
-                        double dy = target.posY - this.posY;
-                        double dz = target.posZ - this.posZ;
-                        float dist = MathHelper.sqrt(dx * dx + dz * dz);
-                        targetAngle = (float) Math.atan(dy / dist);
-                    }
-                }
-            }
-
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.handle();
-        }
-    }
-
-    @Override
-    public void read(NBTTagCompound tagCompund) {
+    public void read(CompoundNBT tagCompund) {
         super.read(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
@@ -271,10 +259,10 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
         if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
             this.setLeftHanded(true);
-            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.basic_crossbow));
+            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.basic_crossbow));
         } else {
             this.setLeftHanded(false);
-            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
+            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
         }
         this.updateCombatTask();
         if (tagCompund.contains("village_attack_area")) {
@@ -285,6 +273,17 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
         if (entityActionHandler != null) {
             entityActionHandler.read(tagCompund);
+        }
+    }
+
+    @Override
+    public void setLevel(int level) {
+        if (level >= 0) {
+            getDataManager().set(LEVEL, level);
+            this.updateEntityAttributes();
+            if (level == 3) {
+                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 1));
+            }
         }
     }
 
@@ -327,7 +326,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound nbt) {
+    public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
         nbt.putInt("level", getLevel());
         nbt.putBoolean("crossbow", isCrossbowInMainhand());
@@ -364,7 +363,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    protected int getExperiencePoints(EntityPlayer player) {
+    protected int getExperiencePoints(PlayerEntity player) {
         return 6 + getLevel();
     }
 
@@ -383,31 +382,31 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     protected void initEntityAI() {
         super.initEntityAI();
 
-        this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
+        this.tasks.addTask(1, new OpenDoorGoal(this, true));
         //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
         this.tasks.addTask(3, new HunterAILookAtTrainee(this));
         this.tasks.addTask(5, new EntityAIMoveThroughVillageCustom(this, 0.7F, false, 300));
-        this.tasks.addTask(6, new EntityAIWander(this, 0.7, 50));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
-        this.tasks.addTask(8, new EntityAILookIdle(this));
+        this.tasks.addTask(6, new RandomWalkingGoal(this, 0.7, 50));
+        this.tasks.addTask(8, new LookAtGoal(this, PlayerEntity.class, 13F));
+        this.tasks.addTask(8, new LookAtGoal(this, EntityVampireBase.class, 17F));
+        this.tasks.addTask(8, new LookRandomlyGoal(this));
 
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
         this.targetTasks.addTask(2, new EntityAIAttackVillage<>(this));
         this.targetTasks.addTask(2, new EntityAIDefendVillage<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<EntityCreature>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
+        this.targetTasks.addTask(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetTasks.addTask(5, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
             @Override
             protected double getTargetDistance() {
                 return super.getTargetDistance() / 2;
             }
         });
-        this.targetTasks.addTask(6, new EntityAINearestAttackableTarget<>(this, EntityZombie.class, true, true));
+        this.targetTasks.addTask(6, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, true, true));
         //Also check the priority of tasks that are dynamically added. See top of class
     }
 
     @Override
-    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+    protected boolean processInteract(PlayerEntity player, Hand hand) {
         int hunterLevel = HunterPlayer.get(player).getLevel();
         if (this.isAlive() && !player.isSneaking()) {
             if (!world.isRemote) {
@@ -416,10 +415,10 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
                         //player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_BASIC, this.world, (int) posX, (int) posY, (int) posZ);//TODO 1.14
                         trainee = player;
                     } else {
-                        player.sendMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"));
                     }
                 } else if (hunterLevel > 0) {
-                    player.sendMessage(new TextComponentTranslation("text.vampirism.basic_hunter.cannot_train_you_any_further"));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"));
                 }
             }
             return true;

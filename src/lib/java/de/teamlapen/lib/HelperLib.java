@@ -4,8 +4,8 @@ import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.lib.network.UpdateEntityPacket;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 
 /**
  * General Helper library
@@ -32,7 +32,7 @@ public class HelperLib {
      *
      * @param entity
      */
-    public static void sync(Entity entity, NBTTagCompound data) {
+    public static void sync(Entity entity, CompoundNBT data) {
         if (!entity.getEntityWorld().isRemote) {
             IMessage m = UpdateEntityPacket.create(entity, data);
             VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
@@ -52,9 +52,9 @@ public class HelperLib {
     public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, Entity entity, boolean all) {
         if (!entity.getEntityWorld().isRemote) {
             IMessage m = UpdateEntityPacket.create(cap);
-            if (entity instanceof EntityPlayerMP && !all) {
-                if (((EntityPlayerMP) entity).connection != null) {
-                    VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
+            if (entity instanceof ServerPlayerEntity && !all) {
+                if (((ServerPlayerEntity) entity).connection != null) {
+                    VampLib.dispatcher.sendTo(m, (ServerPlayerEntity) entity);
                 }
 
             } else {
@@ -73,12 +73,12 @@ public class HelperLib {
      *
      * @param entity
      */
-    public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, NBTTagCompound data, Entity entity, boolean all) {
+    public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, CompoundNBT data, Entity entity, boolean all) {
         if (!entity.getEntityWorld().isRemote) {
             IMessage m = UpdateEntityPacket.create(cap, data);
-            if (entity instanceof EntityPlayerMP && !all) {
-                if (((EntityPlayerMP) entity).connection != null) {
-                    VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
+            if (entity instanceof ServerPlayerEntity && !all) {
+                if (((ServerPlayerEntity) entity).connection != null) {
+                    VampLib.dispatcher.sendTo(m, (ServerPlayerEntity) entity);
                 }
             } else {
                 VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);

@@ -7,17 +7,12 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
 import de.teamlapen.vampirism.world.loot.LootHandler;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockFenceGate;
-import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockTorchWall;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItemFrame;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
@@ -35,7 +30,7 @@ public class VillagePieceTrainer extends VillagePieces.Village {
     public VillagePieceTrainer() {
     }
 
-    public VillagePieceTrainer(VillagePieces.Start start, int type, MutableBoundingBox boundingBox, EnumFacing facing) {
+    public VillagePieceTrainer(VillagePieces.Start start, int type, MutableBoundingBox boundingBox, Direction facing) {
         super(start, type);
         this.setCoordBaseMode(facing);//Set facing
         this.boundingBox = boundingBox;
@@ -43,11 +38,11 @@ public class VillagePieceTrainer extends VillagePieces.Village {
 
     @Override
     public boolean addComponentParts(IWorld worldIn, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos p_74875_4_) {
-        IBlockState oak_planks = Blocks.OAK_PLANKS.getDefaultState();
-        IBlockState sprucePlanks = Blocks.SPRUCE_PLANKS.getDefaultState();
-        IBlockState cobblestone = Blocks.COBBLESTONE.getDefaultState();
-        IBlockState air = Blocks.AIR.getDefaultState();
-        IBlockState glass_pane = Blocks.GLASS_PANE.getDefaultState();
+        BlockState oak_planks = Blocks.OAK_PLANKS.getDefaultState();
+        BlockState sprucePlanks = Blocks.SPRUCE_PLANKS.getDefaultState();
+        BlockState cobblestone = Blocks.COBBLESTONE.getDefaultState();
+        BlockState air = Blocks.AIR.getDefaultState();
+        BlockState glass_pane = Blocks.GLASS_PANE.getDefaultState();
         if (this.averageGroundLvl < 0) {
             this.averageGroundLvl = this.getAverageGroundLevel(worldIn, structureBoundingBoxIn);
 
@@ -77,10 +72,10 @@ public class VillagePieceTrainer extends VillagePieces.Village {
         this.setBlockState(worldIn, oak_planks, 8, 4, 2, structureBoundingBoxIn);
         this.setBlockState(worldIn, oak_planks, 8, 4, 3, structureBoundingBoxIn);
         this.setBlockState(worldIn, oak_planks, 8, 4, 4, structureBoundingBoxIn);
-        IBlockState rotatedStairs = Blocks.OAK_STAIRS.getDefaultState().with(BlockStairs.FACING, EnumFacing.NORTH);
-        IBlockState rotatedStairs1 = Blocks.OAK_STAIRS.getDefaultState().with(BlockStairs.FACING, EnumFacing.SOUTH);
-        IBlockState rotatedStairs2 = Blocks.OAK_STAIRS.getDefaultState().with(BlockStairs.FACING, EnumFacing.WEST);
-        IBlockState rotatedStairs3 = Blocks.OAK_STAIRS.getDefaultState().with(BlockStairs.FACING, EnumFacing.EAST);
+        BlockState rotatedStairs = Blocks.OAK_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.NORTH);
+        BlockState rotatedStairs1 = Blocks.OAK_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.SOUTH);
+        BlockState rotatedStairs2 = Blocks.OAK_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.WEST);
+        BlockState rotatedStairs3 = Blocks.OAK_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.EAST);
         for (int k = -1; k <= 2; ++k) {
             for (int l = 0; l <= 8; ++l) {
                 this.setBlockState(worldIn, rotatedStairs, l, 4 + k, k, structureBoundingBoxIn);
@@ -114,7 +109,7 @@ public class VillagePieceTrainer extends VillagePieces.Village {
                 this.setBlockState(worldIn, rotatedStairs2, j2, 12 - j2, j1, structureBoundingBoxIn);
             }
         }
-        IBlockState spruceLog = Blocks.SPRUCE_LOG.getDefaultState();
+        BlockState spruceLog = Blocks.SPRUCE_LOG.getDefaultState();
         this.setBlockState(worldIn, spruceLog, 0, 2, 1, structureBoundingBoxIn);
         this.setBlockState(worldIn, spruceLog, 0, 2, 4, structureBoundingBoxIn);
         this.setBlockState(worldIn, glass_pane, 0, 2, 2, structureBoundingBoxIn);
@@ -140,30 +135,30 @@ public class VillagePieceTrainer extends VillagePieces.Village {
         this.setBlockState(worldIn, oak_planks, 5, 5, 10, structureBoundingBoxIn);
         this.setBlockState(worldIn, air, 2, 1, 0, structureBoundingBoxIn);
         this.setBlockState(worldIn, air, 2, 2, 0, structureBoundingBoxIn);
-        this.setBlockState(worldIn, Blocks.WALL_TORCH.getDefaultState().with(BlockTorchWall.HORIZONTAL_FACING, EnumFacing.NORTH), 2, 3, 1, structureBoundingBoxIn); //TODO WALL_TORCH was TORCH
-        this.setBlockState(worldIn, Blocks.OAK_DOOR.getDefaultState().with(BlockDoor.FACING, EnumFacing.NORTH), 2, 1, 0, structureBoundingBoxIn);
-        this.setBlockState(worldIn, Blocks.OAK_DOOR.getDefaultState().with(BlockDoor.FACING, EnumFacing.NORTH).with(BlockDoor.HALF, DoubleBlockHalf.UPPER), 2, 2, 0, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.WALL_TORCH.getDefaultState().with(WallTorchBlock.HORIZONTAL_FACING, Direction.NORTH), 2, 3, 1, structureBoundingBoxIn); //TODO WALL_TORCH was TORCH
+        this.setBlockState(worldIn, Blocks.OAK_DOOR.getDefaultState().with(DoorBlock.FACING, Direction.NORTH), 2, 1, 0, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.OAK_DOOR.getDefaultState().with(DoorBlock.FACING, Direction.NORTH).with(DoorBlock.HALF, DoubleBlockHalf.UPPER), 2, 2, 0, structureBoundingBoxIn);
         this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, -1, 3, 2, -1, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
         //Place decoration etc
-        this.setBlockState(worldIn, ModBlocks.hunter_table.getDefaultState().with(BlockHunterTable.FACING, EnumFacing.NORTH), 5, 1, 7, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.hunter_table.getDefaultState().with(BlockHunterTable.FACING, Direction.NORTH), 5, 1, 7, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.BOOKSHELF.getDefaultState(), 7, 1, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.BOOKSHELF.getDefaultState(), 7, 2, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.BOOKSHELF.getDefaultState(), 3, 1, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.BOOKSHELF.getDefaultState(), 3, 2, 9, structureBoundingBoxIn);
 
 
-        EnumFacing medChairFacing = EnumFacing.WEST;
+        Direction medChairFacing = Direction.WEST;
         this.setBlockState(worldIn, ModBlocks.med_chair.getDefaultState().with(BlockMedChair.PART, BlockMedChair.EnumPart.TOP).with(BlockMedChair.FACING, medChairFacing), 7, 1, 3, structureBoundingBoxIn);
         this.setBlockState(worldIn, ModBlocks.med_chair.getDefaultState().with(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).with(BlockMedChair.FACING, medChairFacing), 6, 1, 3, structureBoundingBoxIn);
 
         this.generateChest(worldIn, structureBoundingBoxIn, randomIn, 7, 1, 2, LootHandler.STRUCTURE_VILLAGE_TRAINER);
 
-        this.setBlockState(worldIn, Blocks.WALL_TORCH.getDefaultState().with(BlockTorchWall.HORIZONTAL_FACING, EnumFacing.SOUTH), 6, 2, 9, structureBoundingBoxIn);
-        this.setBlockState(worldIn, Blocks.WALL_TORCH.getDefaultState().with(BlockTorchWall.HORIZONTAL_FACING, EnumFacing.SOUTH), 4, 2, 9, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.WALL_TORCH.getDefaultState().with(WallTorchBlock.HORIZONTAL_FACING, Direction.SOUTH), 6, 2, 9, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.WALL_TORCH.getDefaultState().with(WallTorchBlock.HORIZONTAL_FACING, Direction.SOUTH), 4, 2, 9, structureBoundingBoxIn);
         //Place itemframe
         BlockPos itemFramePos = new BlockPos(getXWithOffset(1, -1), getYWithOffset(2), getZWithOffset(1, -1));
         if (structureBoundingBoxIn.isVecInside(itemFramePos)) {
-            EntityItemFrame itemFrame = new EntityItemFrame(worldIn.getWorld(), itemFramePos, getCoordBaseMode().getOpposite());
+            ItemFrameEntity itemFrame = new ItemFrameEntity(worldIn.getWorld(), itemFramePos, getCoordBaseMode().getOpposite());
             itemFrame.setDisplayedItem(new ItemStack(ModItems.vampire_fang));
             worldIn.spawnEntity(itemFrame);
         }
@@ -182,7 +177,7 @@ public class VillagePieceTrainer extends VillagePieces.Village {
         this.setBlockState(worldIn, Blocks.OAK_FENCE.getDefaultState(), 0, 0, 8, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.OAK_FENCE.getDefaultState(), 0, 0, 10, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.OAK_FENCE.getDefaultState(), 1, 0, 10, structureBoundingBoxIn);
-        this.setBlockState(worldIn, Blocks.OAK_FENCE_GATE.getDefaultState().with(BlockFenceGate.HORIZONTAL_FACING, EnumFacing.WEST), 0, 0, 9, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.OAK_FENCE_GATE.getDefaultState().with(FenceGateBlock.HORIZONTAL_FACING, Direction.WEST), 0, 0, 9, structureBoundingBoxIn);
 
         for (int x = 0; x < 2; x++) {
             for (int z = 6; z < 11; z++) {
@@ -192,7 +187,7 @@ public class VillagePieceTrainer extends VillagePieces.Village {
         }
 
         if (this.getBlockStateFromPos(worldIn, 2, 0, -1, structureBoundingBoxIn).getMaterial() == Material.AIR && this.getBlockStateFromPos(worldIn, 2, -1, -1, structureBoundingBoxIn).getMaterial() != Material.AIR) {
-            this.setBlockState(worldIn, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(BlockStairs.FACING, EnumFacing.NORTH), 2, 0, -1, structureBoundingBoxIn);//TODO was simply Blocks.STONE_STAIRS
+            this.setBlockState(worldIn, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.NORTH), 2, 0, -1, structureBoundingBoxIn);//TODO was simply Blocks.STONE_STAIRS
         }
 
 
@@ -235,7 +230,7 @@ public class VillagePieceTrainer extends VillagePieces.Village {
     public static class CreationHandler implements VillagerRegistry.IVillageCreationHandler {
 
         @Override
-        public VillagePieces.Village buildComponent(VillagePieces.PieceWeight villagePiece, VillagePieces.Start startPiece, List<StructurePiece> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
+        public VillagePieces.Village buildComponent(VillagePieces.PieceWeight villagePiece, VillagePieces.Start startPiece, List<StructurePiece> pieces, Random random, int p1, int p2, int p3, Direction facing, int p5) {
             MutableBoundingBox structureboundingbox = MutableBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 9, 7, 12, facing);
             return canVillageGoDeeper(structureboundingbox) && StructurePiece.findIntersecting(pieces, structureboundingbox) == null ? new VillagePieceTrainer(startPiece, p5, structureboundingbox, facing) : null;
         }

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,13 +8,12 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -47,7 +45,7 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
                     this.renderBeam(x, y, z, cX, cY, cZ, tip.getX() + 0.5, tip.getY() + 0.5, tip.getZ() + 0.5, te.getRunningTick() + partialTicks, false);
                 }
                 if (phase == TileAltarInfusion.PHASE.BEAM2) {
-                    EntityPlayer p = te.getPlayer();
+                    PlayerEntity p = te.getPlayer();
                     if (p != null) {
                         double rX = 0, rZ = 0;
                         double rY = 1D;//-0.3;

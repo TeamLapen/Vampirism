@@ -7,10 +7,10 @@ import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.potion.EffectInstance;
 
-public class IgnoreSunDamageEntityAction<T extends EntityCreature & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
+public class IgnoreSunDamageEntityAction<T extends CreatureEntity & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
 
     public IgnoreSunDamageEntityAction(EntityActionTier tier, EntityClassType... param) {
         super(tier, param);
@@ -39,12 +39,12 @@ public class IgnoreSunDamageEntityAction<T extends EntityCreature & IEntityActio
 
     @Override
     public void activate(T entity) {
-        entity.addPotionEffect(new PotionEffect(ModPotions.sunscreen, getDuration(entity.getLevel()), 0));
+        entity.addPotionEffect(new EffectInstance(ModPotions.sunscreen, getDuration(entity.getLevel()), 0));
 
     }
 
     @Override
-    public int getWeight(EntityCreature entity) {
+    public int getWeight(CreatureEntity entity) {
         if (!entity.getEntityWorld().isDaytime() || entity.getEntityWorld().isRaining()) {//Not perfectly accurate (the actual sundamage checks for celestial angle and also might exclude certain dimensions and biomes
             return 0;
         }

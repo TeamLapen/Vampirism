@@ -6,8 +6,8 @@ import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.advancements.criterion.AbstractCriterionInstance;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.advancements.criterion.CriterionInstance;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,7 +47,7 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
         return new Instance(action);
     }
 
-    public void trigger(EntityPlayerMP player, Action action) {
+    public void trigger(ServerPlayerEntity player, Action action) {
         Listeners listeners = (Listeners) this.listenersForPlayers.get(player.getAdvancements());
         if (listeners != null) {
             listeners.trigger(action);
@@ -58,7 +58,7 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
         SNIPED_IN_BAT, POISONOUS_BITE, PERFORM_RITUAL_INFUSION, BAT, SUCK_BLOOD, NONE
     }
 
-    static class Instance extends AbstractCriterionInstance {
+    static class Instance extends CriterionInstance {
         private final @Nonnull
         Action action;
 

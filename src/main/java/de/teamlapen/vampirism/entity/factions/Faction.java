@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.util.text.TextFormatting;
 
 /**
@@ -69,7 +69,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public boolean isEntityOfFaction(EntityCreature creature) {
+    public boolean isEntityOfFaction(CreatureEntity creature) {
         return entityInterface.isInstance(creature);
     }
 

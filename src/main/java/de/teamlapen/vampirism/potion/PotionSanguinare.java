@@ -6,13 +6,13 @@ import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,10 +24,10 @@ public class PotionSanguinare extends VampirismPotion {
      * @param entity
      * @param player Whether to use the player effect duration or the mob duration
      */
-    public static void addRandom(EntityLivingBase entity, boolean player) {
+    public static void addRandom(LivingEntity entity, boolean player) {
         int avgDuration = 20 * (player ? Balance.vp.SANGUINARE_AVG_DURATION : Balance.mobProps.SANGUINARE_AVG_DURATION);
         int duration = (int) ((entity.getRNG().nextFloat() + 0.5F) * avgDuration);
-        PotionEffect effect = new PotionSanguinareEffect(ModPotions.sanguinare, duration);
+        EffectInstance effect = new PotionSanguinareEffect(ModPotions.sanguinare, duration);
         if (!Balance.general.CAN_CANCEL_SANGUINARE) {
             effect.setCurativeItems(new ArrayList<>());
         }
@@ -46,20 +46,20 @@ public class PotionSanguinare extends VampirismPotion {
     }
 
     @Override
-    public void performEffect(EntityLivingBase entity, int p_76394_2_) {
+    public void performEffect(LivingEntity entity, int p_76394_2_) {
 
-        if (entity instanceof EntityCreature) {
-            IExtendedCreatureVampirism creature = ExtendedCreature.get((EntityCreature) entity);
+        if (entity instanceof CreatureEntity) {
+            IExtendedCreatureVampirism creature = ExtendedCreature.get((CreatureEntity) entity);
             creature.makeVampire();
         }
-        if (entity instanceof EntityPlayer) {
-            VampirePlayer.get((EntityPlayer) entity).onSanguinareFinished();
+        if (entity instanceof PlayerEntity) {
+            VampirePlayer.get((PlayerEntity) entity).onSanguinareFinished();
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderInventoryEffect(PotionEffect effect, Gui gui, int x, int y, float z) {
+    public void renderInventoryEffect(EffectInstance effect, AbstractGui gui, int x, int y, float z) {
 //        https://github.com/MinecraftForge/MinecraftForge/issues/2473
         String s1 = I18n.format(getName());
 
@@ -71,7 +71,7 @@ public class PotionSanguinare extends VampirismPotion {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public boolean shouldRenderInvText(PotionEffect effect) {
+    public boolean shouldRenderInvText(EffectInstance effect) {
         return false;
     }
 }

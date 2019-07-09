@@ -4,20 +4,19 @@ import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.client.model.ModelBipedShrinkable;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderBiped;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.BipedRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class RenderVampireMinion extends RenderBiped<EntityVampireMinionBase> {
+public class RenderVampireMinion extends BipedRenderer<EntityVampireMinionBase> {
 
     private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png");
 
-    public RenderVampireMinion(RenderManager renderManagerIn) {
+    public RenderVampireMinion(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new ModelBipedShrinkable(0F, 0F, 64, 64), 0.35F);
     }
 

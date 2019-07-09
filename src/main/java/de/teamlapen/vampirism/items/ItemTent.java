@@ -6,14 +6,14 @@ import de.teamlapen.vampirism.blocks.BlockTent;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorld;
@@ -34,20 +34,20 @@ public class ItemTent extends VampirismItem {
 
     private final boolean spawner;
 
-    public static boolean placeAt(IWorld world, BlockPos pos, EnumFacing dir, boolean force, boolean spawner) {
+    public static boolean placeAt(IWorld world, BlockPos pos, Direction dir, boolean force, boolean spawner) {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        int x1 = x + (dir == EnumFacing.SOUTH ? 1 : (dir == EnumFacing.NORTH ? -1 : 0));
-        int z1 = z + (dir == EnumFacing.WEST ? 1 : (dir == EnumFacing.EAST ? -1 : 0));
-        int x2 = x + (dir == EnumFacing.WEST ? -1 : (dir == EnumFacing.NORTH ? -1 : 1));
-        int z2 = z + (dir == EnumFacing.SOUTH || dir == EnumFacing.WEST ? 1 : -1);
-        int x3 = x + (dir == EnumFacing.WEST ? -1 : (dir == EnumFacing.EAST ? 1 : 0));
-        int z3 = z + (dir == EnumFacing.SOUTH ? 1 : (dir == EnumFacing.NORTH ? -1 : 0));
+        int x1 = x + (dir == Direction.SOUTH ? 1 : (dir == Direction.NORTH ? -1 : 0));
+        int z1 = z + (dir == Direction.WEST ? 1 : (dir == Direction.EAST ? -1 : 0));
+        int x2 = x + (dir == Direction.WEST ? -1 : (dir == Direction.NORTH ? -1 : 1));
+        int z2 = z + (dir == Direction.SOUTH || dir == Direction.WEST ? 1 : -1);
+        int x3 = x + (dir == Direction.WEST ? -1 : (dir == Direction.EAST ? 1 : 0));
+        int z3 = z + (dir == Direction.SOUTH ? 1 : (dir == Direction.NORTH ? -1 : 0));
 
         Block tent = ModBlocks.tent;
         Block main = ModBlocks.tent_main;
-        IBlockState mainState = main.getDefaultState();
+        BlockState mainState = main.getDefaultState();
         if (force || canPlaceAt(mainState, tent, world, x, y, z) && canPlaceAt(mainState, tent, world, x1, y, z1) && canPlaceAt(mainState, tent, world, x2, y, z2) && canPlaceAt(mainState, tent, world, x3, y, z3)) {
             boolean flag = world.setBlockState(pos, main.getDefaultState().with(BlockTent.FACING, dir.getOpposite()), 3);
             if (flag) {
@@ -66,7 +66,7 @@ public class ItemTent extends VampirismItem {
         return false;
     }
 
-    private static boolean canPlaceAt(IBlockState state, Block block, IWorld world, int x, int y, int z) {
+    private static boolean canPlaceAt(BlockState state, Block block, IWorld world, int x, int y, int z) {
         return block.isValidPosition(state, world, new BlockPos(x, y, z));
     }
 
@@ -87,15 +87,15 @@ public class ItemTent extends VampirismItem {
 
 
     @Override
-    public EnumActionResult onItemUse(ItemUseContext ctx) {
-        if (ctx.getFace() != EnumFacing.UP)
-            return EnumActionResult.PASS;
-        if (ctx.getWorld().isRemote) return EnumActionResult.PASS;
+    public ActionResultType onItemUse(ItemUseContext ctx) {
+        if (ctx.getFace() != Direction.UP)
+            return ActionResultType.PASS;
+        if (ctx.getWorld().isRemote) return ActionResultType.PASS;
 
         ItemStack stack = ctx.getItem();
-        EntityPlayer player = ctx.getPlayer();
+        PlayerEntity player = ctx.getPlayer();
 
-        EnumFacing dir = player == null ? EnumFacing.NORTH : EnumFacing.fromAngle(ctx.getPlayer().rotationYaw);
+        Direction dir = player == null ? Direction.NORTH : Direction.fromAngle(ctx.getPlayer().rotationYaw);
         boolean flag = placeAt(ctx.getWorld(), ctx.getPos().up(), dir, false, false);
         if (flag) {
             TileEntity tile = ctx.getWorld().getTileEntity(ctx.getPos().up());
@@ -109,6 +109,6 @@ public class ItemTent extends VampirismItem {
                 stack.shrink(1);
             }
         }
-        return flag ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+        return flag ? ActionResultType.SUCCESS : ActionResultType.FAIL;
     }
 }

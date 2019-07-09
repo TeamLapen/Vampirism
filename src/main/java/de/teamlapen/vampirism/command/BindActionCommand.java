@@ -4,16 +4,14 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +31,7 @@ public class BindActionCommand extends BasicCommand {
                                 })));
     }
 
-    private static int bindAction(CommandContext<CommandSource> context, EntityPlayerMP asPlayer, int number, String actionID) {
+    private static int bindAction(CommandContext<CommandSource> context, ServerPlayerEntity asPlayer, int number, String actionID) {
         @Nullable
         ResourceLocation id = new ResourceLocation(actionID);
         if (actionID.equals("null")) {
@@ -45,9 +43,9 @@ public class BindActionCommand extends BasicCommand {
             } else if (number == 2) {
                 FactionPlayerHandler.get(asPlayer).setBoundAction2(id, true);
             }
-            context.getSource().sendFeedback(new TextComponentTranslation("command.vampirism.base.bind_action.success", actionID, number), true);
+            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.success", actionID, number), true);
         } else {
-            context.getSource().sendErrorMessage(new TextComponentTranslation("command.vampirism.base.bind_action.not_existing"));
+            context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.base.bind_action.not_existing"));
         }
         return 0;
     }

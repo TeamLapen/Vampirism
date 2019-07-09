@@ -6,15 +6,15 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Enchantments;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -36,7 +36,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
      * @return The loaded arrows or -1 if infinite
      */
     private static int getArrowsLeft(@Nonnull ItemStack bowStack) {
-        NBTTagCompound nbt = bowStack.getTag();
+        CompoundNBT nbt = bowStack.getTag();
         if (nbt == null || !nbt.contains("arrows")) return 0;
         return nbt.getInt("arrows");
 
@@ -48,7 +48,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
      */
     private static ItemStack setArrowsLeft(@Nonnull ItemStack bowStack, int arrows) {
         int i = Math.max(-1, Math.min(MAX_ARROW_COUNT, arrows));
-        NBTTagCompound nbt = bowStack.hasTag() ? bowStack.getTag() : new NBTTagCompound();
+        CompoundNBT nbt = bowStack.hasTag() ? bowStack.getTag() : new CompoundNBT();
         nbt.putInt("arrows", i);
         bowStack.setTag(nbt);
         return bowStack;
@@ -61,7 +61,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
      * @return If there was an arrow
      */
     private static boolean reduceArrowCount(@Nonnull ItemStack bowStack, Random rnd) {
-        NBTTagCompound nbt = bowStack.getTag();
+        CompoundNBT nbt = bowStack.getTag();
         if (nbt == null || !nbt.contains("arrows")) return false;
         int count = nbt.getInt("arrows");
         if (count == -1) return true;
@@ -107,12 +107,12 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         int arrows = getArrowsLeft(stack);
         if (arrows == -1) {
-            tooltip.add(new TextComponentTranslation(Enchantments.INFINITY.getName()).applyTextStyle(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslationTextComponent(Enchantments.INFINITY.getName()).applyTextStyle(TextFormatting.DARK_GRAY));
         } else if (arrows == 0) {
-            tooltip.add(new TextComponentTranslation("text.vampirism.crossbow.not_loaded").applyTextStyle(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.not_loaded").applyTextStyle(TextFormatting.DARK_GRAY));
 
         } else {
-            tooltip.add(new TextComponentTranslation("text.vampirism.crossbow.loaded_arrow_count", arrows).applyTextStyle(TextFormatting.DARK_GRAY));
+            tooltip.add(new TranslationTextComponent("text.vampirism.crossbow.loaded_arrow_count", arrows).applyTextStyle(TextFormatting.DARK_GRAY));
         }
     }
 
@@ -136,7 +136,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
 
     @Nonnull
     @Override
-    protected ItemStack findAmmo(EntityPlayer player, ItemStack bowStack) {
+    protected ItemStack findAmmo(PlayerEntity player, ItemStack bowStack) {
         boolean arrow = reduceArrowCount(bowStack, player.getRNG());
         if (!arrow) {
             for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
@@ -161,12 +161,12 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
     }
 
     @Override
-    protected int getCooldown(EntityPlayer player, ItemStack stack) {
+    protected int getCooldown(PlayerEntity player, ItemStack stack) {
         return 2;
     }
 
     @Override
-    protected boolean isCrossbowInfinite(ItemStack stack, EntityPlayer player) {
+    protected boolean isCrossbowInfinite(ItemStack stack, PlayerEntity player) {
         return false;
     }
 
@@ -175,7 +175,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
         return false;
     }
 
-    private int getReloadCooldown(EntityPlayer player, ItemStack bowStack) {
+    private int getReloadCooldown(PlayerEntity player, ItemStack bowStack) {
         return 100;
     }
 

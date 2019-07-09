@@ -3,23 +3,22 @@ package de.teamlapen.vampirism.world.loot;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.JsonUtils;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.conditions.LootCondition;
-import net.minecraft.world.storage.loot.functions.LootFunction;
+import net.minecraft.world.storage.loot.conditions.ILootCondition;
+import net.minecraft.world.storage.loot.functions.ILootFunction;
 
 import java.util.Random;
 
-public class SetMetaBasedOnLevel extends LootFunction {
+public class SetMetaBasedOnLevel extends ILootFunction {
     private final int max;
 
-    protected SetMetaBasedOnLevel(LootCondition[] conditionsIn, int max) {
+    protected SetMetaBasedOnLevel(ILootCondition[] conditionsIn, int max) {
         super(conditionsIn);
         this.max = max;
     }
@@ -37,15 +36,15 @@ public class SetMetaBasedOnLevel extends LootFunction {
         return stack;
     }
 
-    public static class Serializer extends LootFunction.Serializer<SetMetaBasedOnLevel> {
+    public static class Serializer extends ILootFunction.Serializer<SetMetaBasedOnLevel> {
 
         protected Serializer() {
             super(new ResourceLocation(REFERENCE.MODID, "set_meta_from_level"), SetMetaBasedOnLevel.class);
         }
 
         @Override
-        public SetMetaBasedOnLevel deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootCondition[] conditionsIn) {
-            return new SetMetaBasedOnLevel(conditionsIn, object.has("max") ? JsonUtils.getInt(object, "max") : -1);
+        public SetMetaBasedOnLevel deserialize(JsonObject object, JsonDeserializationContext deserializationContext, ILootCondition[] conditionsIn) {
+            return new SetMetaBasedOnLevel(conditionsIn, object.has("max") ? JSONUtils.getInt(object, "max") : -1);
         }
 
         @Override

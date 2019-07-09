@@ -2,10 +2,9 @@ package de.teamlapen.vampirism.world.gen.structure;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.world.loot.LootHandler;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +36,7 @@ public class StructureManager {
             return;
         }
         try {
-            NBTTagCompound data = CompressedStreamTools.readCompressed(input);
+            CompoundNBT data = CompressedStreamTools.readCompressed(input);
             VampirismTemplate template = new VampirismTemplate();
             template.read(data);
             templates.put(structure, template);

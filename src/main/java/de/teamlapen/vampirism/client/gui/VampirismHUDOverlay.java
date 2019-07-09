@@ -20,17 +20,17 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.HalloweenSpecial;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -131,21 +131,21 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 IBiteableEntity biteable = null;
                 if (entity instanceof IBiteableEntity) {
                     biteable = (IBiteableEntity) entity;
-                } else if (entity instanceof EntityCreature) {
-                    biteable = ExtendedCreature.get((EntityCreature) entity);
-                } else if (entity instanceof EntityPlayer) {
-                    biteable = VampirePlayer.get((EntityPlayer) entity);
+                } else if (entity instanceof CreatureEntity) {
+                    biteable = ExtendedCreature.get((CreatureEntity) entity);
+                } else if (entity instanceof PlayerEntity) {
+                    biteable = VampirePlayer.get((PlayerEntity) entity);
                 }
                 if (biteable != null && biteable.canBeBitten(player)) {
                     int color = 0xFF0000;
-                    if (entity instanceof EntityHunterBase || (entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()))
+                    if (entity instanceof EntityHunterBase || (entity instanceof CreatureEntity && ExtendedCreature.get((CreatureEntity) entity).hasPoisonousBlood()))
                         color = 0x099022;
                     renderBloodFangs(this.mc.mainWindow.getScaledWidth(), this.mc.mainWindow.getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                     event.setCanceled(true);
                 }
             }
         } else if (p != null && p.type == RayTraceResult.Type.BLOCK) {
-            IBlockState block = Minecraft.getInstance().world.getBlockState(p.getBlockPos());
+            BlockState block = Minecraft.getInstance().world.getBlockState(p.getBlockPos());
             if (ModBlocks.blood_container.equals(block.getBlock())) {
                 IVampirePlayer player = VampirePlayer.get(mc.player);
                 if (player.wantsBlood()) {
@@ -228,7 +228,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                         drawTexturedModalRect(x, top, 18, 0, 9, 9);
                     }
                 }
-                this.mc.getTextureManager().bindTexture(Gui.ICONS);
+                this.mc.getTextureManager().bindTexture(AbstractGui.ICONS);
                 GlStateManager.disableBlend();
             }
         }
@@ -341,7 +341,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             screenColor = 0xfff00000;
             fullScreen = false;
         } else if ((screenPercentage = vampire.getTicksInSun() / 2) > 0) {
-            PotionEffect effect = mc.player.getActivePotionEffect(ModPotions.sunscreen);
+            EffectInstance effect = mc.player.getActivePotionEffect(ModPotions.sunscreen);
             if (effect == null || effect.getAmplifier() < 5) {
                 screenColor = 0xfffff755;
                 fullScreen = false;

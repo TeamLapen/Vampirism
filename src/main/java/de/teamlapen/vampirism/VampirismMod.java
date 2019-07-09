@@ -47,7 +47,7 @@ import de.teamlapen.vampirism.world.gen.structure.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -88,13 +88,13 @@ public class VampirismMod {
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumCreatureType.create("VAMPIRISM_HUNTER", IHunterMob.class, 25, false, false);
+    private final static EntityClassification HUNTER_CREATURE_TYPE = EntityClassification.create("VAMPIRISM_HUNTER", IHunterMob.class, 25, false, false);
     /**
      * Vampire creatures are of this creature type. Use the instance in
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private static final EnumCreatureType VAMPIRE_CREATURE_TYPE = EnumCreatureType.create("VAMPIRISM_VAMPIRE", IVampireMob.class, 30, false, false);
+    private static final EntityClassification VAMPIRE_CREATURE_TYPE = EntityClassification.create("VAMPIRISM_VAMPIRE", IVampireMob.class, 30, false, false);
     /**
      * Vampire creatures have this attribute Vampire creatures are of this creature
      * type. Use the instance in {@link VReference} instead of this one. This is

@@ -7,13 +7,13 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -21,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 
-public class TileGarlicBeacon extends TileEntity implements ITickable {
+public class TileGarlicBeacon extends TileEntity implements ITickableTileEntity {
     private int id;
     private EnumStrength strength = EnumStrength.MEDIUM;
     private EnumStrength defaultStrength = EnumStrength.MEDIUM;
@@ -40,13 +40,13 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
 
     @Nullable
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
-        return this.write(new NBTTagCompound());
+    public CompoundNBT getUpdateTag() {
+        return this.write(new CompoundNBT());
     }
 
 
@@ -61,14 +61,14 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
     @Override
     public void markDirty() {
         super.markDirty();
-        IBlockState state = world.getBlockState(pos);
+        BlockState state = world.getBlockState(pos);
         this.world.notifyBlockUpdate(pos, state, state, 3);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        NBTTagCompound nbt = pkt.getNbtCompound();
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        CompoundNBT nbt = pkt.getNbtCompound();
         handleUpdateTag(nbt);
     }
 
@@ -77,7 +77,7 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
         this.markDirty();
     }
 
-    public void onTouched(EntityPlayer player) {
+    public void onTouched(PlayerEntity player) {
         VampirePlayer vampire = VampirePlayer.get(player);
         if (vampire.getLevel() > 0) {
             DamageHandler.affectVampireGarlicDirect(vampire, strength);
@@ -85,7 +85,7 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
         r = compound.getInt("radius");
         defaultStrength = EnumStrength.getFromStrenght(compound.getInt("strength"));
@@ -129,7 +129,7 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         compound.putInt("radius", r);
         compound.putInt("strength", defaultStrength.getStrength());

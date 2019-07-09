@@ -3,15 +3,13 @@ package de.teamlapen.vampirism.command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * 
@@ -27,11 +25,11 @@ public class EyeCommand extends BasicCommand {
                         }));
     }
 
-    private static int setEye(CommandContext<CommandSource> context, EntityPlayer player, int type) {
+    private static int setEye(CommandContext<CommandSource> context, PlayerEntity player, int type) {
         if (VampirePlayer.get(player).setEyeType(type)) {
-            context.getSource().sendFeedback(new TextComponentTranslation("command.vampirism.base.eye.success", type), true);
+            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.eye.success", type), true);
         } else {
-            context.getSource().sendErrorMessage(new TextComponentTranslation("command.vampirism.base.eye.types", REFERENCE.EYE_TYPE_COUNT - 1));
+            context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.base.eye.types", REFERENCE.EYE_TYPE_COUNT - 1));
         }
         return type;
     }

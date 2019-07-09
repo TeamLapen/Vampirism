@@ -7,11 +7,10 @@ import de.teamlapen.vampirism.items.ItemVampireBook;
 import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import de.teamlapen.vampirism.tileentity.TileGrinder;
-
 import net.minecraft.client.gui.GuiScreenBook;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
@@ -35,7 +34,7 @@ public class ModGuiHandler implements IGuiHandler {
     public final static int ID_BLOOD_GRINDER = 12;
 
     @Override
-    public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
+    public Object getClientGuiElement(int id, PlayerEntity player, World world, int x, int y, int z) {
 
         switch (id) {
             case ID_ACTION:
@@ -59,9 +58,9 @@ public class ModGuiHandler implements IGuiHandler {
             case ID_HUNTER_BASIC:
                 return new GuiHunterBasic(player);
             case ID_VAMPIRE_BOOK:
-                ItemStack itemStack = player.getHeldItem(EnumHand.MAIN_HAND);
+                ItemStack itemStack = player.getHeldItem(Hand.MAIN_HAND);
                 if (!itemStack.isEmpty() && itemStack.getItem() instanceof ItemVampireBook) {
-                    return new GuiScreenBook(player, itemStack, false, EnumHand.MAIN_HAND);
+                    return new GuiScreenBook(player, itemStack, false, Hand.MAIN_HAND);
                 }
                 return null;
             case ID_ALCHEMICAL_CAULDRON:
@@ -79,7 +78,7 @@ public class ModGuiHandler implements IGuiHandler {
     }
 
     @Override
-    public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
+    public Object getServerGuiElement(int id, PlayerEntity player, World world, int x, int y, int z) {
         if (id == ID_ALTAR_INFUSION) {
             TileAltarInfusion tile = (TileAltarInfusion) world.getTileEntity(new BlockPos(x, y, z));
             if (tile != null) return tile.getNewInventoryContainer(player.inventory);

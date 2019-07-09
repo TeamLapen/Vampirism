@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.entity.minions;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 
 import java.util.function.Predicate;
 
@@ -33,7 +33,7 @@ public interface ISaveableMinionHandler<T extends ISaveableMinion> {
      *
      * @return
      */
-    Predicate<EntityLivingBase> getNonMinionSelector();
+    Predicate<LivingEntity> getNonMinionSelector();
 
     /**
      * Kills all minions.

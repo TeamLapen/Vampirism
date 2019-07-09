@@ -10,12 +10,12 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 
@@ -26,7 +26,7 @@ public class HunterBasicContainer extends InventoryContainer {
 
     private final IHunterPlayer player;
 
-    public HunterBasicContainer(InventoryPlayer invPlayer) {
+    public HunterBasicContainer(PlayerInventory invPlayer) {
         super(invPlayer, new HunterBasicInventory());
         player = HunterPlayer.get(invPlayer.player);
 
@@ -50,7 +50,7 @@ public class HunterBasicContainer extends InventoryContainer {
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer playerIn) {
+    public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         if (!playerIn.getEntityWorld().isRemote) {
             for (int i = 0; i < this.tile.getSizeInventory(); ++i) {
@@ -68,7 +68,7 @@ public class HunterBasicContainer extends InventoryContainer {
         int target = player.getLevel() + 1;
         this.tile.decrStackSize(0, HunterLevelingConf.instance().getVampireBloodCountForBasicHunter(target));
         FactionPlayerHandler.get(player.getRepresentingPlayer()).setFactionLevel(VReference.HUNTER_FACTION, target);
-        player.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.basic_hunter.levelup"));
+        player.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.levelup"));
         player.getRepresentingPlayer().closeScreen();
 
     }
@@ -82,7 +82,7 @@ public class HunterBasicContainer extends InventoryContainer {
 
         @Override
         public ITextComponent getName() {
-            return new TextComponentString("entity.vampirism." + ModEntities.vampire_hunter.getName() + ".name");
+            return new StringTextComponent("entity.vampirism." + ModEntities.vampire_hunter.getName() + ".name");
         }
 
         @Nullable

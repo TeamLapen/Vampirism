@@ -4,17 +4,17 @@ import com.google.common.base.Stopwatch;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.fluids.BloodHelper;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.item.Items;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
@@ -41,13 +41,14 @@ import java.util.concurrent.TimeUnit;
 public class Tests {
 
     private final static Logger LOGGER = LogManager.getLogger(Tests.class);
-    public static void runTests(World world, EntityPlayer player) {
+
+    public static void runTests(World world, PlayerEntity player) {
         sendMsg(player, "Starting tests");
         log("Clearing area");
         clearArea(world);
         boolean wasCreative = player.isCreative();
         player.setGameType(GameType.SURVIVAL);
-        player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 40, 100));
+        player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 40, 100));
         player.attemptTeleport(0, 5, 0);
         TestInfo info = new TestInfo(world, player, new BlockPos(-20, 2, -20), "BloodFluidHandler");
 
@@ -72,7 +73,7 @@ public class Tests {
         sendMsg(info.player, info.name + " test " + (result ? "§2was successful§r" : "§4failed§r"));
     }
 
-    private static void runLightTest(LightTester tester, String name, @Nullable EntityPlayer player) {
+    private static void runLightTest(LightTester tester, String name, @Nullable PlayerEntity player) {
         boolean result;
         try {
             result = tester.run();
@@ -135,7 +136,7 @@ public class Tests {
     private static boolean bloodFluidHandler(TestInfo info) {
         info.world.setBlockState(info.pos, ModBlocks.blood_container.getDefaultState());
         TileEntity t = info.world.getTileEntity(info.pos);
-        LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.random(info.world.rand));
+        LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.random(info.world.rand));
         opt.ifPresent(handler -> handler.fill(new FluidStack(ModFluids.blood, 10000000), true));
         int blood = BloodHelper.getBlood(opt);
         assert blood > 0 : "Could not fill blood container";
@@ -165,8 +166,8 @@ public class Tests {
     private static boolean blockWeaponTableFluids(TestInfo info) {
         info.world.setBlockState(info.pos, ModBlocks.weapon_table.getDefaultState());
         info.player.setHeldItem(info.player.getActiveHand(), new ItemStack(Items.LAVA_BUCKET));
-        IBlockState block = info.world.getBlockState(info.pos);
-        block.getBlock().onBlockActivated(block, info.world, info.pos, info.player, info.player.getActiveHand(), EnumFacing.random(info.world.rand), 0, 0, 0);
+        BlockState block = info.world.getBlockState(info.pos);
+        block.getBlock().onBlockActivated(block, info.world, info.pos, info.player, info.player.getActiveHand(), Direction.random(info.world.rand), 0, 0, 0);
         block = info.world.getBlockState(info.pos);
         assert info.player.getHeldItem(info.player.getActiveHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
         log("Block lava level: %s", block.get(BlockWeaponTable.LAVA));
@@ -178,15 +179,15 @@ public class Tests {
         LOGGER.warn(msg, format);
     }
 
-    private static void sendMsg(EntityPlayer player, String msg) {
-        player.sendMessage(new TextComponentString("§1[V-TEST]§r " + msg));
+    private static void sendMsg(PlayerEntity player, String msg) {
+        player.sendMessage(new StringTextComponent("§1[V-TEST]§r " + msg));
     }
 
     private static void clearArea(World world) {
         for (int x = -21; x < 22; x++) {
             for (int y = 1; y < 22; y++) {
                 for (int z = -21; z < 22; z++) {
-                    IBlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castle_block_dark_stone.getDefaultState() : Blocks.AIR.getDefaultState();
+                    BlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castle_block_dark_stone.getDefaultState() : Blocks.AIR.getDefaultState();
                     world.setBlockState(new BlockPos(x, y, z), s);
                 }
             }
@@ -217,11 +218,11 @@ public class Tests {
 
     private static class TestInfo {
         final World world;
-        final EntityPlayer player;
+        final PlayerEntity player;
         BlockPos pos;
         String name;
 
-        private TestInfo(World world, EntityPlayer player, BlockPos pos, String name) {
+        private TestInfo(World world, PlayerEntity player, BlockPos pos, String name) {
             this.world = world;
             this.player = player;
             this.pos = pos;

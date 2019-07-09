@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 
 /**
  * Should be implemented (through the subclasses) by any faction entity
@@ -16,5 +16,5 @@ public interface IFactionEntity {
      *
      * @return The EntityLivingBase represented by this object.
      */
-    EntityLivingBase getRepresentingEntity();
+    LivingEntity getRepresentingEntity();
 }

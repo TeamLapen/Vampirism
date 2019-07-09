@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 public class TileSunscreenBeacon extends TileEntity implements ITickable {
 
     private BlockPos oldPos;
-    private Predicate<EntityPlayer> selector;
+    private Predicate<PlayerEntity> selector;
 
     public TileSunscreenBeacon() {
         super(ModTiles.sunscreen_beacon);
@@ -44,11 +44,11 @@ public class TileSunscreenBeacon extends TileEntity implements ITickable {
                 };
             }
 
-            List<EntityPlayer> list = this.world.getPlayers(EntityPlayer.class, selector::test);
+            List<PlayerEntity> list = this.world.getPlayers(PlayerEntity.class, selector::test);
 
-            for (EntityPlayer entityplayer : list) {
+            for (PlayerEntity entityplayer : list) {
                 if (VampirePlayer.get(entityplayer).getLevel() > 0) {
-                    entityplayer.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 160, 5, true, false));
+                    entityplayer.addPotionEffect(new EffectInstance(ModPotions.sunscreen, 160, 5, true, false));
                 }
             }
         }

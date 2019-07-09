@@ -3,7 +3,7 @@ package de.teamlapen.lib.proxy;
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.lib.util.ParticleHandler;
 import de.teamlapen.lib.util.ParticleHandlerServer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -47,7 +47,7 @@ public class CommonProxy implements IProxy {
     }
 
     @Override
-    public EntityPlayer getPlayerEntity(NetworkEvent.Context ctx) {
+    public PlayerEntity getPlayerEntity(NetworkEvent.Context ctx) {
         return ctx.getSender();
     }
 

@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.tileentity.TileTent;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +33,7 @@ public class BlockTentMain extends BlockTent implements ITileEntityProvider {
     }
 
     @Override
-    public void getDrops(IBlockState state, NonNullList<ItemStack> drops, World world, BlockPos pos, int fortune) {
+    public void getDrops(BlockState state, NonNullList<ItemStack> drops, World world, BlockPos pos, int fortune) {
         TileTent tile = (TileTent) world.getTileEntity(pos);
         if (tile != null && tile.isSpawner()) {
             ItemStack stack;

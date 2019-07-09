@@ -6,11 +6,11 @@ import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.BlockSieve;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -46,20 +46,20 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
     @SuppressWarnings("unchecked")
     @Override
     @Nullable
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if ((facing != EnumFacing.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
+        if ((facing != Direction.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return cap.cast();
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
-        NBTTagCompound nbt = new NBTTagCompound();
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT nbt = new CompoundNBT();
         nbt.putBoolean("active", isActive());
         return nbt;
     }
@@ -78,7 +78,7 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         boolean old = active;
         active = pkt.getNbtCompound().getBoolean("active");
         if (active != old)
@@ -93,7 +93,7 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
         tank.readFromNBT(tag);
         cooldownProcess = tag.getInt("cooldown_process");
@@ -106,7 +106,7 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
         if (--cooldownProcess < 0) {
             cooldownProcess = 15;
             if (tank.getFluidAmount() > 0) {
-                FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), EnumFacing.UP).ifPresent(handler -> {
+                FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), Direction.UP).ifPresent(handler -> {
                     tank.setCanDrain(true);
                     FluidStack transferred = FluidUtil.tryFluidTransfer(handler, tank, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
                     tank.setCanDrain(false);
@@ -122,7 +122,7 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
         //Pull new content. Cooldown is increased when liquid is filled into the tank (regardless of way)
         if (--cooldownPull < 0) {
             cooldownPull = 10;
-            FluidUtil.getFluidHandler(this.getWorld(), this.pos.up(), EnumFacing.DOWN).ifPresent(handler -> {
+            FluidUtil.getFluidHandler(this.getWorld(), this.pos.up(), Direction.DOWN).ifPresent(handler -> {
                 FluidStack transferred = FluidUtil.tryFluidTransfer(tank, handler, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
             });
         }
@@ -130,7 +130,7 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         tag = super.write(tag);
         tank.writeToNBT(tag);
         cooldownProcess = tag.getInt("cooldown_process");

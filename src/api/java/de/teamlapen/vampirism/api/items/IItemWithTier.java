@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api.items;
 
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -18,7 +18,7 @@ public interface IItemWithTier {
     default void addTierInformation(List<ITextComponent> tooltip) {
         TIER t = getVampirismTier();
         if (t != TIER.NORMAL) {
-            tooltip.add(new TextComponentTranslation("text.vampirism.item.tier." + t.getName().toLowerCase()).applyTextStyle(TextFormatting.AQUA));
+            tooltip.add(new TranslationTextComponent("text.vampirism.item.tier." + t.getName().toLowerCase()).applyTextStyle(TextFormatting.AQUA));
         }
     }
 

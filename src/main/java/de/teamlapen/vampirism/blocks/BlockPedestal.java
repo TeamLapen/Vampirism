@@ -2,16 +2,16 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.tileentity.TilePedestal;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -23,7 +23,7 @@ public class BlockPedestal extends VampirismBlockContainer {
 
     public final static String regName = "blood_pedestal";
 
-    private static void takeItemPlayer(EntityPlayer player, EnumHand hand, ItemStack stack) {
+    private static void takeItemPlayer(PlayerEntity player, Hand hand, ItemStack stack) {
         player.setHeldItem(hand, stack);
         if (stack.getItem() instanceof VampirismVampireSword) {
             if (((VampirismVampireSword) stack.getItem()).isFullyCharged(stack)) {
@@ -43,18 +43,38 @@ public class BlockPedestal extends VampirismBlockContainer {
     }
 
     @Override
-    public int getHarvestLevel(IBlockState p_getHarvestLevel_1_) {
+    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, BlockState state, BlockPos pos, Direction face) {
+        return face == Direction.DOWN ? BlockFaceShape.CENTER_BIG : BlockFaceShape.UNDEFINED;
+    }
+
+    @Override
+    public int getHarvestLevel(BlockState p_getHarvestLevel_1_) {
         return 2;
     }
 
     @Nullable
     @Override
-    public ToolType getHarvestTool(IBlockState p_getHarvestTool_1_) {
+    public ToolType getHarvestTool(BlockState p_getHarvestTool_1_) {
         return ToolType.PICKAXE;
     }
 
     @Override
-    public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public boolean isFullCube(BlockState state) {
+        return false;
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
         if (world.isRemote) return true;
         TilePedestal tile = getTileEntity(world, pos);
         if (tile == null) return false;
@@ -77,27 +97,7 @@ public class BlockPedestal extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
-        return face == EnumFacing.DOWN ? BlockFaceShape.CENTER_BIG : BlockFaceShape.UNDEFINED;
-    }
-
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public void onReplaced(IBlockState state, World world, BlockPos pos, IBlockState newState, boolean isMoving) {
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!world.isRemote && state.getBlock() != newState.getBlock()) {
             TilePedestal tile = getTileEntity(world, pos);
             if (tile != null && tile.hasStack()) {

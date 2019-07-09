@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.recipes;
 
 import com.google.gson.JsonObject;
-
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -9,12 +8,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * This recipe copies the {@link NBTTagCompound} from the first found {@link IItemWithTier} and inserts it into the manufacturing result with damage = 0
+ * This recipe copies the {@link CompoundNBT} from the first found {@link IItemWithTier} and inserts it into the manufacturing result with damage = 0
  * 
  * @author Cheaterpaul
  */

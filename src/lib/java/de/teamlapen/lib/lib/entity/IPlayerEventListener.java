@@ -1,7 +1,7 @@
 package de.teamlapen.lib.lib.entity;
 
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.Capability;
@@ -26,19 +26,19 @@ public interface IPlayerEventListener {
 
     void onJoinWorld();
 
-    void onPlayerClone(EntityPlayer original, boolean wasDeath);
+    void onPlayerClone(PlayerEntity original, boolean wasDeath);
 
     void onPlayerLoggedIn();
 
     void onPlayerLoggedOut();
 
     /**
-     * Called during EntityLiving Update. Somewhere in the middle of {@link EntityPlayer}'s onUpdate
+     * Called during EntityLiving Update. Somewhere in the middle of {@link PlayerEntity}'s onUpdate
      */
     void onUpdate();
 
     /**
-     * Called at the beginning and at the end of {@link EntityPlayer}'s onUpdate. {@link IPlayerEventListener#onUpdate()} is called in between.
+     * Called at the beginning and at the end of {@link PlayerEntity}'s onUpdate. {@link IPlayerEventListener#onUpdate()} is called in between.
      * Should only be used for stuff that requires to run at the beginning or end
      *
      * @param phase

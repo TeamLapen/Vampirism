@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 
 /**
  * 
@@ -24,9 +22,9 @@ public class BiomeCommand extends BasicCommand {
                 });
     }
 
-    private static int biome(CommandSource commandSource, EntityPlayerMP asPlayer) {
+    private static int biome(CommandSource commandSource, ServerPlayerEntity asPlayer) {
         ResourceLocation res = asPlayer.getEntityWorld().getBiome(asPlayer.getPosition()).getRegistryName();
-        commandSource.sendFeedback(new TextComponentString(res.toString()), true);
+        commandSource.sendFeedback(new StringTextComponent(res.toString()), true);
         return 0;
     }
 }

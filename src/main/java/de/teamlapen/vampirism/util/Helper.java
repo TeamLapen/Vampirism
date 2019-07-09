@@ -15,10 +15,10 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.tileentity.TileTotem;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -48,9 +48,9 @@ public class Helper {
      * @param entity
      * @return
      */
-    public static boolean gettingSundamge(EntityLivingBase entity) {
+    public static boolean gettingSundamge(LivingEntity entity) {
         entity.getEntityWorld().profiler.startSection("vampirism_checkSundamage");
-        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator()) return false;
+        if (entity instanceof PlayerEntity && entity.isSpectator()) return false;
         if (VampirismAPI.sundamageRegistry().getSundamageInDim(entity.getEntityWorld().getDimension().getType())) {
             if (!entity.getEntityWorld().isRaining()) {
                 float angle = entity.getEntityWorld().getCelestialAngle(1.0F);
@@ -95,7 +95,7 @@ public class Helper {
             } else {
                 int liquidBlocks = 0;
                 for (blockpos = blockpos.down(); blockpos.getY() > pos.getY(); blockpos = blockpos.down()) {
-                    IBlockState iblockstate = world.getBlockState(blockpos);
+                    BlockState iblockstate = world.getBlockState(blockpos);
                     if (iblockstate.getBlock().getOpacity(iblockstate, world, blockpos) > 0) {
                         if (iblockstate.getMaterial().isLiquid()) {
                             liquidBlocks++;
@@ -124,11 +124,11 @@ public class Helper {
         return VampirismAPI.getGarlicChunkHandler(world).getStrengthAtChunk(new ChunkPos(pos));
     }
 
-    public static boolean canBecomeVampire(EntityPlayer player) {
+    public static boolean canBecomeVampire(PlayerEntity player) {
         return FactionPlayerHandler.get(player).canJoin(VReference.VAMPIRE_FACTION);
     }
 
-    public static boolean canTurnPlayer(IVampire biter, @Nullable EntityPlayer target) {
+    public static boolean canTurnPlayer(IVampire biter, @Nullable PlayerEntity target) {
         if (biter instanceof IVampirePlayer) {
             return Permissions.canPlayerTurnPlayer(((IVampirePlayer) biter).getRepresentingPlayer());
         } else {
@@ -184,10 +184,10 @@ public class Helper {
         return !(requiredSkill != null && (playerHandler.getCurrentFactionPlayer() == null || !playerHandler.getCurrentFactionPlayer().getSkillHandler().isSkillEnabled(requiredSkill)));
     }
 
-    public static int getExperiencePoints(EntityLivingBase entity, EntityPlayer player) {
+    public static int getExperiencePoints(LivingEntity entity, PlayerEntity player) {
         try {
             if (reflectionMethodExperiencePoints == null) {
-                reflectionMethodExperiencePoints = ObfuscationReflectionHelper.findMethod(EntityLivingBase.class, SRGNAMES.EntityLivingBase_getExperiencePoints, EntityPlayer.class);
+                reflectionMethodExperiencePoints = ObfuscationReflectionHelper.findMethod(LivingEntity.class, SRGNAMES.EntityLivingBase_getExperiencePoints, PlayerEntity.class);
             }
             return (int) reflectionMethodExperiencePoints.invoke(entity, player);
         } catch (Exception e) {

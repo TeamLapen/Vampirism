@@ -1,22 +1,22 @@
 package de.teamlapen.lib.lib.util;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.MobSpawnerBaseLogic;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.spawner.AbstractSpawner;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 
 /**
- * Simple mob spawning logic. More configurable than {@link MobSpawnerBaseLogic} but less functional.
+ * Simple mob spawning logic. More configurable than {@link AbstractSpawner} but less functional.
  */
 public abstract class SimpleSpawnerLogic {
 
@@ -34,7 +34,7 @@ public abstract class SimpleSpawnerLogic {
     private int spawnedToday = 0;
     private long spawnedLast = 0L;
     private boolean flag = true;
-    private EnumCreatureType limitType;
+    private EntityClassification limitType;
 
     @Nullable
     public ResourceLocation getEntityName() {
@@ -55,7 +55,7 @@ public abstract class SimpleSpawnerLogic {
         return this.getSpawnerWorld().isAnyPlayerWithinRangeAt((double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D, (double) this.activateRange);
     }
 
-    public void readFromNbt(NBTTagCompound nbt) {
+    public void readFromNbt(CompoundNBT nbt) {
 
         String s = nbt.getString("id");
         entityName = StringUtils.isNullOrEmpty(s) ? null : new ResourceLocation(s);
@@ -88,7 +88,7 @@ public abstract class SimpleSpawnerLogic {
     /**
      * Checks if any more creatures of the given type are allowed in the world before spawning
      */
-    public void setLimitTotalEntities(EnumCreatureType creatureType) {
+    public void setLimitTotalEntities(EntityClassification creatureType) {
         limitType = creatureType;
     }
 
@@ -171,7 +171,7 @@ public abstract class SimpleSpawnerLogic {
         }
     }
 
-    public void writeToNbt(NBTTagCompound nbt) {
+    public void writeToNbt(CompoundNBT nbt) {
         if (entityName != null) nbt.putString("id", entityName.toString());
         nbt.putInt("min_delay", minSpawnDelay);
         nbt.putInt("max_delay", maxSpawnDelay);
@@ -194,8 +194,8 @@ public abstract class SimpleSpawnerLogic {
     protected abstract void onReset();
 
     protected void onSpawned(Entity e) {
-        if (e instanceof EntityLiving) {
-            ((EntityLiving) e).spawnExplosionParticle();
+        if (e instanceof MobEntity) {
+            ((MobEntity) e).spawnExplosionParticle();
         }
     }
 

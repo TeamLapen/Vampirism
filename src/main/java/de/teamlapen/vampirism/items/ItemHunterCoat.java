@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -21,7 +21,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
 
     private final static String baseRegName = "hunter_coat";
 
-    public static boolean isFullyEquipped(EntityPlayer player) {
+    public static boolean isFullyEquipped(PlayerEntity player) {
         for (ItemStack stack : player.inventory.armorInventory) {
             if (stack.isEmpty() || !(stack.getItem() instanceof ItemHunterCoat)) {
                 return false;
@@ -36,7 +36,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
 
     private final TIER tier;
 
-    public ItemHunterCoat(EntityEquipmentSlot equipmentSlotIn, TIER tier) {
+    public ItemHunterCoat(EquipmentSlotType equipmentSlotIn, TIER tier) {
         super(baseRegName, tier.getName(), ArmorMaterial.IRON, equipmentSlotIn, new Properties().group(VampirismMod.creativeTab));
         this.tier = tier;
     }
@@ -50,7 +50,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
 
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         switch (getVampirismTier()) {
             case ENHANCED:
                 return getTextureLocation("hunter_coat_enhanced", slot, type);

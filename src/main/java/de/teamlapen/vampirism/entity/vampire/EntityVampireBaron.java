@@ -18,20 +18,20 @@ import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
@@ -75,22 +75,22 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     @Override
     public boolean attackEntityAsMob(Entity entity) {
         boolean flag = super.attackEntityAsMob(entity);
-        if (flag && entity instanceof EntityLivingBase) {
+        if (flag && entity instanceof LivingEntity) {
             float tm = 1f;
             int mr = 1;
-            if (entity instanceof EntityPlayer) {
-                float pld = (this.getLevel() + 1) - VampirePlayer.get((EntityPlayer) entity).getLevel() / 3f;
+            if (entity instanceof PlayerEntity) {
+                float pld = (this.getLevel() + 1) - VampirePlayer.get((PlayerEntity) entity).getLevel() / 3f;
                 tm = pld + 1;
                 mr = pld < 1.5f ? 1 : (pld < 3 ? 2 : 3);
-                if (ItemHunterCoat.isFullyEquipped((EntityPlayer) entity)) {
+                if (ItemHunterCoat.isFullyEquipped((PlayerEntity) entity)) {
                     tm *= 0.5F;
                 }
             }
             if (entity instanceof EntityVampireBaron) {
-                ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 40, 5));
+                ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.STRENGTH, 40, 5));
             }
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (200 * tm), rand.nextInt(mr)));
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (100 * tm), rand.nextInt(mr)));
+            ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.WEAKNESS, (int) (200 * tm), rand.nextInt(mr)));
+            ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.SLOWNESS, (int) (100 * tm), rand.nextInt(mr)));
             attackDecisionCounter = 0;
         }
         return flag;
@@ -158,18 +158,18 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public EntityLivingBase getMinionTarget() {
+    public LivingEntity getMinionTarget() {
         return this.getAttackTarget();
     }
 
     @Nonnull
     @Override
     public ITextComponent getName() {
-        return super.getName().appendText(" " + new TextComponentTranslation("text.vampirism.entity_level") + " " + (getLevel() + 1));
+        return super.getName().appendText(" " + new TranslationTextComponent("text.vampirism.entity_level") + " " + (getLevel() + 1));
     }
 
     @Override
-    public EntityLivingBase getRepresentingEntity() {
+    public LivingEntity getRepresentingEntity() {
         return this;
     }
 
@@ -194,14 +194,6 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public void onKillEntity(EntityLivingBase entity) {
-        super.onKillEntity(entity);
-        if (entity instanceof EntityVampireBaron) {
-            this.setHealth(this.getMaxHealth());
-        }
-    }
-
-    @Override
     public void livingTick() {
         if (!prevAttacking && this.getAttackTarget() != null) {
             prevAttacking = true;
@@ -222,7 +214,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             IVampireMinion.Saveable m = null;
 
             if (i == 1) {
-                EntityLiving e = new EntityVampireMinionSaveable(world);
+                MobEntity e = new EntityVampireMinionSaveable(world);
                 if (e == null) {
                     LOGGER.warn("Failed to create saveable minion");
                 } else {
@@ -257,14 +249,22 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 }
             }
             if (getLevel() > 3 && this.rand.nextInt(9) == 0) {
-                this.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 60));
+                this.addPotionEffect(new EffectInstance(Effects.INVISIBILITY, 60));
             }
         }
         super.livingTick();
     }
 
     @Override
-    public void readAdditional(NBTTagCompound nbt) {
+    public void onKillEntity(LivingEntity entity) {
+        super.onKillEntity(entity);
+        if (entity instanceof EntityVampireBaron) {
+            this.setHealth(this.getMaxHealth());
+        }
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT nbt) {
         super.readAdditional(nbt);
         setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
         minionHandler.loadMinions(nbt.getList("minions", 10));
@@ -294,7 +294,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound nbt) {
+    public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
         nbt.putInt("level", getLevel());
         nbt.put("minions", minionHandler.getMinionsToSave());
@@ -318,7 +318,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    protected int getExperiencePoints(EntityPlayer player) {
+    protected int getExperiencePoints(PlayerEntity player) {
         return 20 + 5 * getLevel();
     }
 
@@ -334,14 +334,14 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         this.tasks.addTask(4, new VampireAIFleeGarlic(this, 0.9F, false));
         this.tasks.addTask(5, new BaronAIAttackMelee(this, 1.0F));
         this.tasks.addTask(6, new BaronAIAttackRanged(this, 60, 64, 6, 4));
-        this.tasks.addTask(6, new EntityAIAvoidEntity<>(this, EntityPlayer.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel((EntityPlayer) input)));//TODO Works only partially. Pathfinding somehow does not find escape routes
-        this.tasks.addTask(7, new EntityAIWander(this, 0.2));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 10.0F));
-        this.tasks.addTask(10, new EntityAILookIdle(this));
+        this.tasks.addTask(6, new AvoidEntityGoal<>(this, PlayerEntity.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel((PlayerEntity) input)));//TODO Works only partially. Pathfinding somehow does not find escape routes
+        this.tasks.addTask(7, new RandomWalkingGoal(this, 0.2));
+        this.tasks.addTask(9, new LookAtGoal(this, PlayerEntity.class, 10.0F));
+        this.tasks.addTask(10, new LookRandomlyGoal(this));
 
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 10, true, false, input -> input != null && isLowerLevel(input)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityVampireBaron.class, true, false));
+        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
+        this.targetTasks.addTask(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, input -> input != null && isLowerLevel(input)));
+        this.targetTasks.addTask(3, new NearestAttackableTargetGoal<>(this, EntityVampireBaron.class, true, false));
     }
 
     /**
@@ -373,14 +373,14 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 .setBaseValue(Balance.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
     }
 
-    private boolean isLowerLevel(EntityPlayer player) {
+    private boolean isLowerLevel(PlayerEntity player) {
         int playerLevel = FactionPlayerHandler.get(player).getCurrentLevel();
         return (playerLevel - 8) / 2F - EntityVampireBaron.this.getLevel() <= 0;
     }
 
-    private class BaronAIAttackMelee extends EntityAIAttackMelee {
+    private class BaronAIAttackMelee extends MeleeAttackGoal {
 
-        BaronAIAttackMelee(EntityCreature creature, double speedIn) {
+        BaronAIAttackMelee(CreatureEntity creature, double speedIn) {
             super(creature, speedIn, false);
         }
 

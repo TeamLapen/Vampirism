@@ -11,13 +11,13 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.INBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.*;
@@ -40,7 +40,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     public static Capability<IFactionPlayerHandler> CAP = getNull();
     private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
 
-    public static FactionPlayerHandler get(EntityPlayer player) {
+    public static FactionPlayerHandler get(PlayerEntity player) {
         return (FactionPlayerHandler) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get FactionPlayerHandler from EntityPlayer " + player));
     }
 
@@ -49,32 +49,32 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         CapabilityManager.INSTANCE.register(IFactionPlayerHandler.class, new Storage(), FactionPlayerHandlerDefaultImpl::new);
     }
 
-    public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
-        return new ICapabilitySerializable<NBTTagCompound>() {
+    public static ICapabilityProvider createNewCapability(final PlayerEntity player) {
+        return new ICapabilitySerializable<CompoundNBT>() {
 
             final IFactionPlayerHandler inst = new FactionPlayerHandler(player);
             final LazyOptional<IFactionPlayerHandler> opt = LazyOptional.of(() -> inst);
 
             @Override
-            public void deserializeNBT(NBTTagCompound nbt) {
+            public void deserializeNBT(CompoundNBT nbt) {
                 CAP.getStorage().readNBT(CAP, inst, null, nbt);
             }
 
             @Nonnull
             @Override
-            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+            public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
 
                 return CAP.orEmpty(capability, opt);
             }
 
             @Override
-            public NBTTagCompound serializeNBT() {
-                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
+            public CompoundNBT serializeNBT() {
+                return (CompoundNBT) CAP.getStorage().writeNBT(CAP, inst, null);
             }
         };
     }
 
-    private final EntityPlayer player;
+    private final PlayerEntity player;
     private IPlayableFaction currentFaction = null;
     private int currentLevel = 0;
 
@@ -83,7 +83,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Nullable
     private ResourceLocation boundAction2;
 
-    private FactionPlayerHandler(EntityPlayer player) {
+    private FactionPlayerHandler(PlayerEntity player) {
         this.player = player;
     }
 
@@ -102,7 +102,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentFaction == null || currentFaction.getPlayerCapability(player).canLeaveFaction();
     }
 
-    public void copyFrom(EntityPlayer old) {
+    public void copyFrom(PlayerEntity old) {
         FactionPlayerHandler oldP = get(old);
         currentFaction = oldP.currentFaction;
         currentLevel = oldP.currentLevel;
@@ -152,7 +152,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public EntityPlayer getPlayer() {
+    public PlayerEntity getPlayer() {
         return player;
     }
 
@@ -174,7 +174,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public void loadUpdateFromNBT(NBTTagCompound nbt) {
+    public void loadUpdateFromNBT(CompoundNBT nbt) {
         IPlayableFaction old = currentFaction;
         int oldLevel = currentLevel;
         String f = nbt.getString("faction");
@@ -202,8 +202,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (Configs.pvp_only_between_factions && src instanceof EntityDamageSource) {
-            if (src.getTrueSource() instanceof EntityPlayer) {
-                FactionPlayerHandler other = get((EntityPlayer) src.getTrueSource());
+            if (src.getTrueSource() instanceof PlayerEntity) {
+                FactionPlayerHandler other = get((PlayerEntity) src.getTrueSource());
                 return this.currentFaction == null || !this.currentFaction.equals(other.currentFaction);
             }
         }
@@ -251,8 +251,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         else if (currentLevel == 0) currentFaction = null;
         notifyFaction(old, oldLevel);
         sync(!Objects.equals(old, currentFaction));
-        if (player instanceof EntityPlayerMP) {
-            ModAdvancements.TRIGGER_FACTION.trigger((EntityPlayerMP) player, currentFaction, currentLevel);
+        if (player instanceof ServerPlayerEntity) {
+            ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel);
         }
         return true;
 
@@ -264,7 +264,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public void writeFullUpdateToNBT(NBTTagCompound nbt) {
+    public void writeFullUpdateToNBT(CompoundNBT nbt) {
         nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getKey().toString());
         nbt.putInt("level", currentLevel);
         if (getBoundAction1() != null) nbt.putString("bound1", getBoundAction1().toString());
@@ -280,7 +280,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return null;
     }
 
-    private void loadNBTData(NBTTagCompound nbt) {
+    private void loadNBTData(CompoundNBT nbt) {
         if (nbt.contains("faction")) {
             currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
             if (currentFaction == null) {
@@ -328,7 +328,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         //player.refreshDisplayName();
     }
 
-    private void saveNBTData(NBTTagCompound nbt) {
+    private void saveNBTData(CompoundNBT nbt) {
         //Don't forget to also add things to copyFrom
         if (currentFaction != null) {
             nbt.putString("faction", currentFaction.getKey().toString());
@@ -346,13 +346,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     private static class Storage implements Capability.IStorage<IFactionPlayerHandler> {
 
         @Override
-        public void readNBT(Capability<IFactionPlayerHandler> capability, IFactionPlayerHandler instance, EnumFacing side, INBTBase nbt) {
-            ((FactionPlayerHandler) instance).loadNBTData((NBTTagCompound) nbt);
+        public void readNBT(Capability<IFactionPlayerHandler> capability, IFactionPlayerHandler instance, Direction side, INBT nbt) {
+            ((FactionPlayerHandler) instance).loadNBTData((CompoundNBT) nbt);
         }
 
         @Override
-        public INBTBase writeNBT(Capability<IFactionPlayerHandler> capability, IFactionPlayerHandler instance, EnumFacing side) {
-            NBTTagCompound nbt = new NBTTagCompound();
+        public INBT writeNBT(Capability<IFactionPlayerHandler> capability, IFactionPlayerHandler instance, Direction side) {
+            CompoundNBT nbt = new CompoundNBT();
             ((FactionPlayerHandler) instance).saveNBTData(nbt);
             return nbt;
         }

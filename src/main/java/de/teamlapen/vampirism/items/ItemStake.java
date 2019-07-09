@@ -13,9 +13,9 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.util.DamageSource;
@@ -32,13 +32,13 @@ public class ItemStake extends VampirismItemWeapon implements IVampireFinisher {
 
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (!attacker.getEntityWorld().isRemote) {
             if (target instanceof IVampireMob) {
                 boolean instaKillFromBehind = false;
                 boolean instaKillLowHealth = false;
-                if (attacker instanceof EntityPlayer) {
-                    IFactionPlayer factionPlayer = FactionPlayerHandler.get((EntityPlayer) attacker).getCurrentFactionPlayer();
+                if (attacker instanceof PlayerEntity) {
+                    IFactionPlayer factionPlayer = FactionPlayerHandler.get((PlayerEntity) attacker).getCurrentFactionPlayer();
                     if (factionPlayer != null && factionPlayer.getFaction().equals(VReference.HUNTER_FACTION)) {
                         ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                         if (skillHandler.isSkillEnabled(HunterSkills.stake2)) {
@@ -53,7 +53,7 @@ public class ItemStake extends VampirismItemWeapon implements IVampireFinisher {
                 }
                 boolean instaKill = false;
                 if (instaKillFromBehind && !UtilLib.canReallySee(target, attacker, true)) {
-                    if (!(Balance.hps.INSTANT_KILL_SKILL_2_ONLY_NPC && target instanceof EntityPlayer) && target.getMaxHealth() < Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH) {
+                    if (!(Balance.hps.INSTANT_KILL_SKILL_2_ONLY_NPC && target instanceof PlayerEntity) && target.getMaxHealth() < Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH) {
                         instaKill = true;
                     }
                 } else if (instaKillLowHealth && target.getHealth() <= (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * target.getMaxHealth())) {
@@ -64,10 +64,10 @@ public class ItemStake extends VampirismItemWeapon implements IVampireFinisher {
                 }
 
                 if (instaKill) {
-                    DamageSource dmg = attacker instanceof EntityPlayer ? DamageSource.causePlayerDamage((EntityPlayer) attacker) : DamageSource.causeMobDamage(attacker);
+                    DamageSource dmg = attacker instanceof PlayerEntity ? DamageSource.causePlayerDamage((PlayerEntity) attacker) : DamageSource.causeMobDamage(attacker);
                     target.attackEntityFrom(dmg, 10000F);
-                    if (attacker instanceof EntityPlayerMP) {
-                        ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((EntityPlayerMP) attacker, HunterActionTrigger.Action.STAKE);
+                    if (attacker instanceof ServerPlayerEntity) {
+                        ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((ServerPlayerEntity) attacker, HunterActionTrigger.Action.STAKE);
                     }
                 }
 

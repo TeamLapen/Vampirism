@@ -3,13 +3,13 @@ package de.teamlapen.lib.lib.tile;
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
@@ -45,7 +45,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(PlayerEntity player) {
 
     }
 
@@ -70,7 +70,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         return 64;
     }
 
-    public Container getNewInventoryContainer(InventoryPlayer inv) {
+    public Container getNewInventoryContainer(PlayerInventory inv) {
         return new InventoryContainer(inv, this);
     }
 
@@ -120,24 +120,24 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(PlayerEntity player) {
         return player.getDistanceSq(getPos()) < MAX_DIST_SQRT;
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(PlayerEntity player) {
 
     }
 
     @Override
-    public void read(NBTTagCompound tagCompound) {
+    public void read(CompoundNBT tagCompound) {
         super.read(tagCompound);
         for (InventorySlot slot1 : slots) {
             slot1.stack = ItemStack.EMPTY;
         }
-        NBTTagList tagList = tagCompound.getList("Inventory", 10);
+        ListNBT tagList = tagCompound.getList("Inventory", 10);
         for (int i = 0; i < tagList.size(); i++) {
-            NBTTagCompound tag = tagList.getCompound(i);
+            CompoundNBT tag = tagList.getCompound(i);
             byte slot = tag.getByte("Slot");
             if (slot >= 0 && slot < slots.length) {
                 slots[slot].stack = ItemStack.read(tag);
@@ -172,14 +172,14 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
-        NBTTagCompound nbt = super.write(compound);
+    public CompoundNBT write(CompoundNBT compound) {
+        CompoundNBT nbt = super.write(compound);
 
-        NBTTagList itemList = new NBTTagList();
+        ListNBT itemList = new ListNBT();
         for (int i = 0; i < slots.length; i++) {
             ItemStack stack = slots[i].stack;
             if (!stack.isEmpty()) {
-                NBTTagCompound tag = new NBTTagCompound();
+                CompoundNBT tag = new CompoundNBT();
                 tag.putByte("Slot", (byte) i);
                 stack.write(tag);
                 itemList.add(tag);

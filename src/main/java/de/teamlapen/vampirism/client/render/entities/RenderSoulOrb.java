@@ -1,22 +1,21 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.EntitySoulOrb;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderSprite;
-import net.minecraft.init.Items;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 
 @OnlyIn(Dist.CLIENT)
-public class RenderSoulOrb extends RenderSprite<EntitySoulOrb> {
+public class RenderSoulOrb extends SpriteRenderer<EntitySoulOrb> {
 
-    public RenderSoulOrb(RenderManager renderManager, ItemRenderer renderItem) {
+    public RenderSoulOrb(EntityRendererManager renderManager, ItemRenderer renderItem) {
         super(renderManager, Items.SNOWBALL, renderItem);
     }
 

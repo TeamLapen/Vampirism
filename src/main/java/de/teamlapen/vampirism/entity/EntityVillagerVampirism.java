@@ -4,12 +4,12 @@ import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 /**
  * Villager extended with the ability to attack and some other things
  */
-public class EntityVillagerVampirism extends EntityVillager {
+public class EntityVillagerVampirism extends VillagerEntity {
 
     protected boolean peaceful = false;
     protected
@@ -41,8 +41,8 @@ public class EntityVillagerVampirism extends EntityVillager {
         float f = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
         int i = 0;
 
-        if (entity instanceof EntityLivingBase) {
-            f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((EntityLivingBase) entity).getCreatureAttribute());
+        if (entity instanceof LivingEntity) {
+            f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((LivingEntity) entity).getCreatureAttribute());
             i += EnchantmentHelper.getKnockbackModifier(this);
         }
 
@@ -75,8 +75,8 @@ public class EntityVillagerVampirism extends EntityVillager {
             return false;
         } else if (super.attackEntityFrom(src, p_70097_2_)) {
             Entity entity = src.getTrueSource();
-            if (entity instanceof EntityLivingBase) {
-                this.setAttackTarget((EntityLivingBase) entity);
+            if (entity instanceof LivingEntity) {
+                this.setAttackTarget((LivingEntity) entity);
             }
             if (cachedVillage != null) {
                 cachedVillage.addOrRenewAggressor(entity);
@@ -88,7 +88,7 @@ public class EntityVillagerVampirism extends EntityVillager {
 
     @Override
     public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
-        return (peaceful || this.world.getDifficulty() != EnumDifficulty.PEACEFUL) && super.canSpawn(worldIn, fromSpawner);
+        return (peaceful || this.world.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, fromSpawner);
     }
 
     @Nullable
@@ -106,7 +106,7 @@ public class EntityVillagerVampirism extends EntityVillager {
     public void tick() {
         super.tick();
 
-        if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == EnumDifficulty.PEACEFUL) {
+        if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == Difficulty.PEACEFUL) {
             this.remove();
         }
     }

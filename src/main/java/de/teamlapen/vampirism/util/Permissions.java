@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.config.Configs;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 /**
@@ -12,7 +12,7 @@ public class Permissions {
         return true;
     }
 
-    public static boolean getPermission(String permission, EntityPlayer player) {
+    public static boolean getPermission(String permission, PlayerEntity player) {
         if ("pvp".equals(permission)) {
             if (!player.getEntityWorld().isRemote) {
                 return ServerLifecycleHooks.getCurrentServer().isPVPEnabled();
@@ -21,7 +21,7 @@ public class Permissions {
         return true;
     }
 
-    public static boolean canPlayerTurnPlayer(EntityPlayer player) {
+    public static boolean canPlayerTurnPlayer(PlayerEntity player) {
         return Configs.playerCanTurnPlayer;
     }
 }

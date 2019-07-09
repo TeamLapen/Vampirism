@@ -4,15 +4,15 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModVillages;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.IMerchant;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.merchant.IMerchant;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Hand;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
@@ -26,7 +26,7 @@ import java.util.Random;
 
 public class EntityVampireFactionVillager extends EntityVampireFactionVillagerBase implements IVampire {
 
-    private final static EntityVillager.ITradeList[][] TRADES = {
+    private final static VillagerEntity.ITradeList[][] TRADES = {
             {
                     new ItemsForHeart(new PriceInfo(10, 15), new ItemStack(ModItems.pure_blood_0, 1), new PriceInfo(1, 1)),
                     new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.pure_blood_1, 1), new PriceInfo(1, 1)),
@@ -52,18 +52,18 @@ public class EntityVampireFactionVillager extends EntityVampireFactionVillagerBa
 
     @Nullable
     @Override
-    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata, @Nullable NBTTagCompound itemNbt) {
+    public ILivingEntityData onInitialSpawn(DifficultyInstance difficulty, @Nullable ILivingEntityData livingdata, @Nullable CompoundNBT itemNbt) {
         this.setProfession(ModVillages.profession_vampire_expert);
         return this.finalizeMobSpawn(difficulty, livingdata, itemNbt, false);
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+    public boolean processInteract(PlayerEntity player, Hand hand) {
         if (player.isCreative() || Helper.isVampire(player)) {
             return super.processInteract(player, hand);
         } else {
             if (player.world.isRemote) {
-                player.sendStatusMessage(new TextComponentTranslation(Helper.isHunter(player) ? "text.vampirism.vampire_villager.decline_trade_vampire" : "text.vampirism.vampire_villager.decline_trade_normal"), false);
+                player.sendStatusMessage(new TranslationTextComponent(Helper.isHunter(player) ? "text.vampirism.vampire_villager.decline_trade_vampire" : "text.vampirism.vampire_villager.decline_trade_normal"), false);
             }
             return true;
         }
@@ -72,9 +72,9 @@ public class EntityVampireFactionVillager extends EntityVampireFactionVillagerBa
     @Override
     public void useRecipe(MerchantRecipe recipe) {
         super.useRecipe(recipe);
-        EntityPlayer player = getCustomer();
+        PlayerEntity player = getCustomer();
         if (player != null) {
-            player.sendStatusMessage(new TextComponentTranslation("text.vampirism.vampire_villager.trade_successful"), false);
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.vampire_villager.trade_successful"), false);
         }
     }
 

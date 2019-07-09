@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.recipes;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.*;
-
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -16,7 +15,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JsonUtils;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -231,7 +230,6 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
     private static int firstNonSpace(String str) {
         int i;
         for (i = 0; i < str.length() && str.charAt(i) == ' '; ++i) {
-            ;
         }
 
         return i;
@@ -240,7 +238,6 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
     private static int lastNonSpace(String str) {
         int i;
         for (i = str.length() - 1; i >= 0 && str.charAt(i) == ' '; --i) {
-            ;
         }
 
         return i;
@@ -254,7 +251,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
             throw new JsonSyntaxException("Invalid pattern: empty pattern not allowed");
         } else {
             for (int i = 0; i < astring.length; ++i) {
-                String s = JsonUtils.getString(jsonArr.get(i), "pattern[" + i + "]");
+                String s = JSONUtils.getString(jsonArr.get(i), "pattern[" + i + "]");
                 if (s.length() > MAX_WIDTH) {
                     throw new JsonSyntaxException("Invalid pattern: too many columns, " + MAX_WIDTH + " is maximum");
                 }
@@ -278,7 +275,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
 
         for (Entry<String, JsonElement> entry : json.entrySet()) {
             if (entry.getKey().length() != 1) {
-                throw new JsonSyntaxException("Invalid key entry: '" + (String) entry.getKey() + "' is an invalid symbol (must be 1 character only).");
+                throw new JsonSyntaxException("Invalid key entry: '" + entry.getKey() + "' is an invalid symbol (must be 1 character only).");
             }
 
             if (" ".equals(entry.getKey())) {
@@ -293,14 +290,14 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
     }
 
     private static ItemStack deserializeItem(JsonObject p_199798_0_) {
-        String s = JsonUtils.getString(p_199798_0_, "item");
+        String s = JSONUtils.getString(p_199798_0_, "item");
         Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(s));
         if (item == null) {
             throw new JsonSyntaxException("Unknown item '" + s + "'");
         } else if (p_199798_0_.has("data")) {
             throw new JsonParseException("Disallowed data tag found");
         } else {
-            int i = JsonUtils.getInt(p_199798_0_, "count", 1);
+            int i = JSONUtils.getInt(p_199798_0_, "count", 1);
             return new ItemStack(item, i);
         }
     }
@@ -310,7 +307,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
             return null;
         ISkill[] skills = new ISkill[jsonObject.size()];
         for (int i = 0; i < skills.length; ++i) {
-            String s = JsonUtils.getString(jsonObject.get(i), "skill[" + i + "]");
+            String s = JSONUtils.getString(jsonObject.get(i), "skill[" + i + "]");
             ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(s));
             if (skill == null) {
                 throw new JsonSyntaxException("Unknown skill '" + s + "'");
@@ -328,16 +325,16 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
         private static final ResourceLocation NAME = new ResourceLocation(REFERENCE.MODID, "shaped_weapon_table_recipe");
         @Override
         public ShapedWeaponTableRecipe read(ResourceLocation recipeId, JsonObject json) {
-            String group = JsonUtils.getString(json, "group", "");
-            Map<String, Ingredient> map = ShapedWeaponTableRecipe.deserializeKey(JsonUtils.getJsonObject(json, "key"));
-            String[] astring = ShapedWeaponTableRecipe.shrink(ShapedWeaponTableRecipe.patternFromJson(JsonUtils.getJsonArray(json, "pattern")));
+            String group = JSONUtils.getString(json, "group", "");
+            Map<String, Ingredient> map = ShapedWeaponTableRecipe.deserializeKey(JSONUtils.getJsonObject(json, "key"));
+            String[] astring = ShapedWeaponTableRecipe.shrink(ShapedWeaponTableRecipe.patternFromJson(JSONUtils.getJsonArray(json, "pattern")));
             int height = astring[0].length();
             int length = astring.length;
             NonNullList<Ingredient> ingredients = ShapedWeaponTableRecipe.deserializeIngredients(astring, map, height, length);
-            ItemStack result = ShapedWeaponTableRecipe.deserializeItem(JsonUtils.getJsonObject(json, "result"));
-            int level = JsonUtils.getInt(json, "level", 1);
-            ISkill[] skill = ShapedWeaponTableRecipe.deserializeSkills(JsonUtils.getJsonArray(json, "skill", null));
-            int lava = JsonUtils.getInt(json, "lava", 0);
+            ItemStack result = ShapedWeaponTableRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+            int level = JSONUtils.getInt(json, "level", 1);
+            ISkill[] skill = ShapedWeaponTableRecipe.deserializeSkills(JSONUtils.getJsonArray(json, "skill", null));
+            int lava = JSONUtils.getInt(json, "lava", 0);
 
             return new ShapedWeaponTableRecipe(recipeId, group, height, length, ingredients, result, level, skill, lava);
         }

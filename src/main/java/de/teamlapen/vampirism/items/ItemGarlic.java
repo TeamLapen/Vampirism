@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModBlocks;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.EnumPlantType;
@@ -23,7 +23,7 @@ public class ItemGarlic extends VampirismItem implements IPlantable {
     }
 
     @Override
-    public IBlockState getPlant(IBlockReader world, BlockPos pos) {
+    public BlockState getPlant(IBlockReader world, BlockPos pos) {
         return ModBlocks.garlic.getDefaultState();
     }
 
@@ -34,19 +34,19 @@ public class ItemGarlic extends VampirismItem implements IPlantable {
 
 
     @Override
-    public EnumActionResult onItemUse(ItemUseContext ctx) {
+    public ActionResultType onItemUse(ItemUseContext ctx) {
         ItemStack stack = ctx.getItem();
         BlockPos pos = ctx.getPos();
-        if (ctx.getFace() != EnumFacing.UP) {
-            return EnumActionResult.FAIL;
+        if (ctx.getFace() != Direction.UP) {
+            return ActionResultType.FAIL;
         } else if (ctx.getPlayer() != null && !ctx.getPlayer().canPlayerEdit(pos.offset(ctx.getFace()), ctx.getFace(), stack)) {
-            return EnumActionResult.FAIL;
-        } else if (ctx.getWorld().getBlockState(pos).getBlock().canSustainPlant(ctx.getWorld().getBlockState(pos), ctx.getWorld(), pos, EnumFacing.UP, this) && ctx.getWorld().isAirBlock(pos.up())) {
+            return ActionResultType.FAIL;
+        } else if (ctx.getWorld().getBlockState(pos).getBlock().canSustainPlant(ctx.getWorld().getBlockState(pos), ctx.getWorld(), pos, Direction.UP, this) && ctx.getWorld().isAirBlock(pos.up())) {
             ctx.getWorld().setBlockState(pos.up(), getPlant(ctx.getWorld(), pos));
             stack.shrink(1);
-            return EnumActionResult.SUCCESS;
+            return ActionResultType.SUCCESS;
         } else {
-            return EnumActionResult.FAIL;
+            return ActionResultType.FAIL;
         }
     }
 }

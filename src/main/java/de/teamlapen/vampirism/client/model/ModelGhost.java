@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.model;
 
-import net.minecraft.client.renderer.entity.model.ModelBase;
-import net.minecraft.client.renderer.entity.model.ModelRenderer;
+import net.minecraft.client.renderer.entity.model.RendererModel;
+import net.minecraft.client.renderer.model.Model;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -11,50 +11,50 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * @author WILLIAM
  */
 @OnlyIn(Dist.CLIENT)
-public class ModelGhost extends ModelBase {
+public class ModelGhost extends Model {
     // fields
-    private ModelRenderer head;
-    private ModelRenderer body;
-    private ModelRenderer rightarm;
-    private ModelRenderer leftarm;
-    private ModelRenderer rightleg;
-    private ModelRenderer leftleg;
+    private RendererModel head;
+    private RendererModel body;
+    private RendererModel rightarm;
+    private RendererModel leftarm;
+    private RendererModel rightleg;
+    private RendererModel leftleg;
 
     public ModelGhost() {
         textureWidth = 64;
         textureHeight = 64;
 
-        head = new ModelRenderer(this, 0, 0);
+        head = new RendererModel(this, 0, 0);
         head.addBox(-3F, -7F, -3F, 6, 6, 6);
         head.setRotationPoint(0F, 0F, 0F);
         head.setTextureSize(64, 64);
         head.mirror = true;
         setRotation(head, 0F, 0F, 0F);
-        body = new ModelRenderer(this, 16, 16);
+        body = new RendererModel(this, 16, 16);
         body.addBox(-2F, 0F, -2F, 4, 12, 4);
         body.setRotationPoint(0F, 0F, 0F);
         body.setTextureSize(64, 64);
         body.mirror = true;
         setRotation(body, 0F, 45F, 0F);
-        rightarm = new ModelRenderer(this, 40, 16);
+        rightarm = new RendererModel(this, 40, 16);
         rightarm.addBox(-2F, -2F, -2F, 2, 12, 3);
         rightarm.setRotationPoint(-4F, 2F, 0F);
         rightarm.setTextureSize(64, 64);
         rightarm.mirror = true;
         setRotation(rightarm, 0F, 0F, 0F);
-        leftarm = new ModelRenderer(this, 40, 16);
+        leftarm = new RendererModel(this, 40, 16);
         leftarm.addBox(-1F, -2F, -2F, 2, 12, 3);
         leftarm.setRotationPoint(5F, 2F, 1F);
         leftarm.setTextureSize(64, 64);
         leftarm.mirror = true;
         setRotation(leftarm, 0F, 0F, 0F);
-        rightleg = new ModelRenderer(this, 0, 16);
+        rightleg = new RendererModel(this, 0, 16);
         rightleg.addBox(-1F, 0F, -1F, 2, 11, 2);
         rightleg.setRotationPoint(-2F, 13F, 0F);
         rightleg.setTextureSize(64, 64);
         rightleg.mirror = true;
         setRotation(rightleg, 0F, 0F, 0F);
-        leftleg = new ModelRenderer(this, 0, 16);
+        leftleg = new RendererModel(this, 0, 16);
         leftleg.addBox(-1F, 0F, -1F, 2, 11, 2);
         leftleg.setRotationPoint(2F, 13F, 0F);
         leftleg.setTextureSize(64, 64);
@@ -96,7 +96,7 @@ public class ModelGhost extends ModelBase {
         this.leftarm.rotateAngleX -= MathHelper.sin(f2 * 0.067F) * 0.05F;
     }
 
-    private void setRotation(ModelRenderer model, float x, float y, float z) {
+    private void setRotation(RendererModel model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;
         model.rotateAngleZ = z;

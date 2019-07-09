@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,14 +53,14 @@ public class PredicateFaction implements Predicate<Entity> {
 
     @Override
     public boolean apply(@Nullable Entity input) {
-        if (input == null || !(input instanceof EntityLivingBase)) return false;
+        if (input == null || !(input instanceof LivingEntity)) return false;
         if (nonPlayer && input instanceof IFactionEntity) {
             IFaction other = ((IFactionEntity) input).getFaction();
             return !thisFaction.equals(other) && (otherFaction == null || otherFaction.equals(other));
 
         }
-        if (player && input instanceof EntityPlayer) {
-            IFactionPlayer fp = VampirismAPI.getFactionPlayerHandler((EntityPlayer) input).getCurrentFactionPlayer();
+        if (player && input instanceof PlayerEntity) {
+            IFactionPlayer fp = VampirismAPI.getFactionPlayerHandler((PlayerEntity) input).getCurrentFactionPlayer();
             IFaction f = fp == null ? null : (ignoreDisguise ? fp.getFaction() : fp.getDisguisedAs());
             if (f == null) {
                 return neutralPlayer;

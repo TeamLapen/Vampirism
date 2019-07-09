@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.command.arguments.EntityOptions;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +26,7 @@ public class VampirismEntitySelectors {//TODO @maxanier
     private static final String MIN_LEVEL = "vampirism:minLevel";
     private static final String MAX_LEVEL = "vampirism:maxLevel";
 
-    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208726_0_) -> new TextComponentTranslation("vampirism.argument.entity.options.faction.not_found", p_208726_0_));
+    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208726_0_) -> new TranslationTextComponent("vampirism.argument.entity.options.faction.not_found", p_208726_0_));
 
 
     public static void registerSelectors() {
@@ -40,8 +40,8 @@ public class VampirismEntitySelectors {//TODO @maxanier
                         if (input instanceof IFactionEntity) {
                             boolean flag1 = f.equals(((IFactionEntity) input).getFaction());
                             return invert != flag1;
-                        } else if (f instanceof IPlayableFaction && input instanceof EntityPlayer) {
-                            boolean flag1 = FactionPlayerHandler.get((EntityPlayer) input).isInFaction((IPlayableFaction) f);
+                        } else if (f instanceof IPlayableFaction && input instanceof PlayerEntity) {
+                            boolean flag1 = FactionPlayerHandler.get((PlayerEntity) input).isInFaction((IPlayableFaction) f);
                             return invert != flag1;
                         }
                         return invert;
@@ -52,15 +52,15 @@ public class VampirismEntitySelectors {//TODO @maxanier
             throw FACTION_NOT_FOUND.createWithContext(parser.getReader(), faction);
         }, (parser) -> {
             return true;
-        }, new TextComponentTranslation("vampirism.argument.entity.options.faction.desc"));
+        }, new TranslationTextComponent("vampirism.argument.entity.options.faction.desc"));
 
         EntityOptions.register(LEVEL, (parser) -> {
             StringReader reader = parser.getReader();
             MinMaxBounds.IntBound bound = MinMaxBounds.IntBound.fromReader(reader);
             if ((bound.getMin() == null || bound.getMin() >= 0) && (bound.getMax() == null || bound.getMax() >= 0)) {
                 parser.addFilter(input -> {
-                    if (input instanceof EntityPlayer) {
-                        int level = FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel();
+                    if (input instanceof PlayerEntity) {
+                        int level = FactionPlayerHandler.get((PlayerEntity) input).getCurrentLevel();
                         return (bound.getMin() == null || bound.getMin() <= level) && (bound.getMax() == null || bound.getMax() >= level);
                     }
                     return false;
@@ -69,7 +69,7 @@ public class VampirismEntitySelectors {//TODO @maxanier
                 throw EntityOptions.NEGATIVE_LEVEL.createWithContext(reader);
             }
 
-        }, (parser) -> true, new TextComponentTranslation("vampirism.argument.entity.options.level.desc"));
+        }, (parser) -> true, new TranslationTextComponent("vampirism.argument.entity.options.level.desc"));
 
     }
 }

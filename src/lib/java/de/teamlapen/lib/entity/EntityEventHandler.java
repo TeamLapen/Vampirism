@@ -6,10 +6,10 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.network.RequestPlayerUpdatePacket;
 import de.teamlapen.lib.network.UpdateEntityPacket;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -40,12 +40,12 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getEntity().getEntityWorld().isRemote) {
-            if ((event.getEntity() instanceof EntityPlayerSP && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
+            if ((event.getEntity() instanceof ClientPlayerEntity && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
                 VampLib.dispatcher.sendToServer(new RequestPlayerUpdatePacket());
             }
         }
 
-        if (event.getEntity() instanceof EntityPlayer) {
+        if (event.getEntity() instanceof PlayerEntity) {
             for (Capability listener : listeners) {
 
                 (event.getEntity().getCapability(listener, null)).ifPresent(cap -> {
@@ -58,7 +58,7 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onLivingAttack(LivingAttackEvent event) {
-        if (event.getEntity() instanceof EntityPlayer) {
+        if (event.getEntity() instanceof PlayerEntity) {
             for (Capability listener : listeners) {
                 boolean cancel = (boolean) event.getEntity().getCapability(listener, null).map(cap -> ((IPlayerEventListener) cap).onEntityAttacked(event.getSource(), event.getAmount())).orElse(false);
                 if (cancel) {
@@ -70,7 +70,7 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
-        if (event.getEntity() instanceof EntityPlayer) {
+        if (event.getEntity() instanceof PlayerEntity) {
             for (Capability listener : listeners) {
                 (event.getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onDeath(event.getSource()));
             }
@@ -79,7 +79,7 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (event.getEntity() instanceof EntityPlayer) {
+        if (event.getEntity() instanceof PlayerEntity) {
             for (Capability listener : listeners) {
                 event.getEntity().getCapability(listener, null).ifPresent(cap -> ((IPlayerEventListener) cap).onUpdate());
             }
@@ -117,9 +117,9 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onStartTracking(PlayerEvent.StartTracking event) {
-        if ((event.getTarget() instanceof EntityCreature && HelperRegistry.getSyncableEntityCaps().size() > 0) || event.getTarget() instanceof ISyncable || (event.getTarget() instanceof EntityPlayer && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
+        if ((event.getTarget() instanceof CreatureEntity && HelperRegistry.getSyncableEntityCaps().size() > 0) || event.getTarget() instanceof ISyncable || (event.getTarget() instanceof PlayerEntity && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
             UpdateEntityPacket packet = UpdateEntityPacket.createJoinWorldPacket(event.getTarget());
-            VampLib.dispatcher.sendTo(packet, (EntityPlayerMP) event.getEntityPlayer());
+            VampLib.dispatcher.sendTo(packet, (ServerPlayerEntity) event.getEntityPlayer());
         }
     }
 }

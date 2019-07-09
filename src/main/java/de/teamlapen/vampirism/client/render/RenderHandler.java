@@ -21,21 +21,21 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.client.shader.Shader;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.client.shader.ShaderLinkHelper;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.BatEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
@@ -59,10 +59,10 @@ public class RenderHandler {
 
     private final int VAMPIRE_BIOME_FADE_TICKS = 160;
     private final Logger LOGGER = LogManager.getLogger();
-    private final List<EntityLivingBase> renderedEntitiesWithBlood = Lists.newLinkedList();
-    private final List<EntityLivingBase> renderedEntitiesWithoutBlood = Lists.newLinkedList();
-    private final List<EntityLivingBase> renderedEntitiesWithGarlicInfused = Lists.newLinkedList();
-    private EntityBat entityBat;
+    private final List<LivingEntity> renderedEntitiesWithBlood = Lists.newLinkedList();
+    private final List<LivingEntity> renderedEntitiesWithoutBlood = Lists.newLinkedList();
+    private final List<LivingEntity> renderedEntitiesWithGarlicInfused = Lists.newLinkedList();
+    private BatEntity entityBat;
     /**
      * Fog fade counter
      * Between 0 and {@link #BLOOD_VISION_FADE_TICKS}
@@ -150,7 +150,7 @@ public class RenderHandler {
 
         if (OpenGlHelper.areShadersSupported() && doSaturationShader) {
             if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
-                PotionEffect pe = mc.player.getActivePotionEffect(ModPotions.saturation);
+                EffectInstance pe = mc.player.getActivePotionEffect(ModPotions.saturation);
                 boolean active = pe != null && pe.getAmplifier() >= 2;
                 GameRenderer renderer = mc.gameRenderer;
                 if (active && !renderer.isShaderActive()) {
@@ -164,8 +164,8 @@ public class RenderHandler {
         if (shaderWarning && mc.player != null) {
             shaderWarning = false;
             showedShaderWarning = true;
-            mc.player.sendMessage(new TextComponentString("Blood vision does not work on your hardware, because shaders are not supported"));
-            mc.player.sendMessage(new TextComponentString("If you are running on recent hardware and use updated drivers, but this still shows up, please contact the author of Vampirism"));
+            mc.player.sendMessage(new StringTextComponent("Blood vision does not work on your hardware, because shaders are not supported"));
+            mc.player.sendMessage(new StringTextComponent("If you are running on recent hardware and use updated drivers, but this still shows up, please contact the author of Vampirism"));
         }
 
 
@@ -173,7 +173,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onFogDensity(EntityViewRenderEvent.FogDensity event) {
-        if (event.getEntity() instanceof EntityPlayer) {
+        if (event.getEntity() instanceof PlayerEntity) {
             if (vampireBiomeTicks > 10 || bloodVisionTicks > 0) {
                 event.setDensity(1.0F);
                 event.setCanceled(true);
@@ -195,13 +195,13 @@ public class RenderHandler {
             Entity entity = event.getEntity();
 
             boolean flag = true;
-            if (entity instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) entity)) flag = false;
+            if (entity instanceof PlayerEntity && ItemHunterCoat.isFullyEquipped((PlayerEntity) entity)) flag = false;
 
             if (mc.player.getDistanceSq(entity) > Balance.vps.BLOOD_VISION_DISTANCE_SQUARED) {
                 flag = false;
             }
             if (flag) {
-                IExtendedCreatureVampirism creature = entity instanceof EntityCreature ? ExtendedCreature.get((EntityCreature) entity) : null;
+                IExtendedCreatureVampirism creature = entity instanceof CreatureEntity ? ExtendedCreature.get((CreatureEntity) entity) : null;
                 if (creature != null && creature.getBlood() > 0 && !creature.hasPoisonousBlood()) {
                     renderedEntitiesWithBlood.add(event.getEntity());
 
@@ -218,8 +218,8 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderLivingSpecialPre(RenderLivingEvent.Specials.Pre event) {
-        EntityLivingBase entity = event.getEntity();
-        if (entity instanceof EntityPlayer && HunterPlayer.get((EntityPlayer) entity).getSpecialAttributes().isDisguised()) {
+        LivingEntity entity = event.getEntity();
+        if (entity instanceof PlayerEntity && HunterPlayer.get((PlayerEntity) entity).getSpecialAttributes().isDisguised()) {
             if (entity.getDistanceSq(this.mc.player) > 4) {
                 event.setCanceled(true);
             }
@@ -228,18 +228,18 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
-        EntityPlayer player = event.getEntityPlayer();
+        PlayerEntity player = event.getEntityPlayer();
         VampirePlayerSpecialAttributes vampireAttributes = VampirePlayer.get(player).getSpecialAttributes();
         HunterPlayerSpecialAttribute hunterAttributes = HunterPlayer.get(player).getSpecialAttributes();
         if (vampireAttributes.bat) {
             event.setCanceled(true);
             if (entityBat == null) {
-                entityBat = new EntityBat(event.getEntity().getEntityWorld());
+                entityBat = new BatEntity(event.getEntity().getEntityWorld());
                 entityBat.setIsBatHanging(false);
             }
 
             float parTick = event.getPartialRenderTick();
-            Render renderer = mc.getRenderManager().getEntityRenderObject(entityBat);
+            EntityRenderer renderer = mc.getRenderManager().getEntityRenderObject(entityBat);
 
             // Copy values
             entityBat.prevRenderYawOffset = player.prevRenderYawOffset;
@@ -486,7 +486,7 @@ public class RenderHandler {
     }
 
     private boolean renderEntityOutlines(List<? extends Entity> entities, ShaderGroup shader, Framebuffer framebuffer, float partialTicks) {
-        RenderManager renderManager = mc.getRenderManager();
+        EntityRendererManager renderManager = mc.getRenderManager();
         mc.world.profiler.startSection("bloodVision");
         framebuffer.framebufferClear();
         boolean flag = !entities.isEmpty();

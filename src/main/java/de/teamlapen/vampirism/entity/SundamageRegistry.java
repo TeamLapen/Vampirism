@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
@@ -82,17 +82,17 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     @Override
-    public boolean isGettingSundamage(EntityLivingBase entity) {
+    public boolean isGettingSundamage(LivingEntity entity) {
         return Helper.gettingSundamge(entity);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void readClient(NBTTagCompound nbt) {
+    public void readClient(CompoundNBT nbt) {
         if (nbt.contains("sundamage")) {
-            NBTTagCompound sundamage = nbt.getCompound("sundamage");
+            CompoundNBT sundamage = nbt.getCompound("sundamage");
             defaultSundamage = sundamage.getBoolean("default");
             sundamageConfiguredDims.clear();
-            NBTTagCompound dimensions = sundamage.getCompound("dimensions");
+            CompoundNBT dimensions = sundamage.getCompound("dimensions");
             for (String s : dimensions.keySet()) {
                 try {
                     ResourceLocation dim = new ResourceLocation(s);
@@ -103,7 +103,7 @@ public class SundamageRegistry implements ISundamageRegistry {
                 }
             }
             noSundamageConfiguredBiomesIDs.clear();
-            NBTTagCompound biomes = sundamage.getCompound("biomes");
+            CompoundNBT biomes = sundamage.getCompound("biomes");
             for (String s : biomes.keySet()) {
                 ResourceLocation res = new ResourceLocation(s);
                 addNoSundamageBiomeConfigured(res);
@@ -143,14 +143,14 @@ public class SundamageRegistry implements ISundamageRegistry {
         sundamageDims.put(dimension, sundamage);
     }
 
-    public void writeServer(NBTTagCompound nbt) {
-        NBTTagCompound sundamage = new NBTTagCompound();
-        NBTTagCompound dimensions = new NBTTagCompound();
+    public void writeServer(CompoundNBT nbt) {
+        CompoundNBT sundamage = new CompoundNBT();
+        CompoundNBT dimensions = new CompoundNBT();
         for (Map.Entry<DimensionType, Boolean> entry : sundamageConfiguredDims.entrySet()) {
             dimensions.putBoolean(DimensionType.getKey(entry.getKey()).toString(), entry.getValue());
         }
         sundamage.put("dimensions", dimensions);
-        NBTTagCompound biomes = new NBTTagCompound();
+        CompoundNBT biomes = new CompoundNBT();
         for (ResourceLocation s : noSundamageConfiguredBiomesIDs) {
             biomes.putBoolean(s.toString(), true);
         }

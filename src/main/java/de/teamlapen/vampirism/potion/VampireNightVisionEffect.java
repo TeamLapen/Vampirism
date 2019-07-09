@@ -1,24 +1,24 @@
 package de.teamlapen.vampirism.potion;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.MobEffects;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 
 import java.util.ArrayList;
 
 /**
  * Night vision effect for vampire players which is not displayed
  */
-public class VampireNightVisionEffect extends PotionEffect {
+public class VampireNightVisionEffect extends EffectInstance {
 
     public VampireNightVisionEffect() {
-        super(MobEffects.NIGHT_VISION, 10000, 0, false, false);
+        super(Effects.NIGHT_VISION, 10000, 0, false, false);
         setCurativeItems(new ArrayList<>());
     }
 
     @Override
-    public boolean combine(PotionEffect other) {
+    public boolean combine(EffectInstance other) {
         //Don't change anything
         return false;
     }
@@ -39,16 +39,16 @@ public class VampireNightVisionEffect extends PotionEffect {
     }
 
     @Override
-    public boolean tick(EntityLivingBase entityIn) {
+    public void performEffect(LivingEntity entityIn) {
+    }
+
+    @Override
+    public boolean tick(LivingEntity entityIn) {
         return true;
     }
 
     @Override
-    public void performEffect(EntityLivingBase entityIn) {
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound nbt) {
+    public CompoundNBT write(CompoundNBT nbt) {
         return nbt;
     }
 }

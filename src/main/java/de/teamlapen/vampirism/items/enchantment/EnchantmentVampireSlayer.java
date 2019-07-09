@@ -3,20 +3,20 @@ package de.teamlapen.vampirism.items.enchantment;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.items.ItemPitchfork;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentDamage;
-import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 
 
 public class EnchantmentVampireSlayer extends Enchantment {
     public EnchantmentVampireSlayer(Rarity rarityIn) {
-        super(rarityIn, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[]{EntityEquipmentSlot.MAINHAND});
+        super(rarityIn, EnchantmentType.WEAPON, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
         this.setRegistryName(REFERENCE.MODID, "vampireslayer");
     }
 
@@ -42,7 +42,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
 
     @Override
     public boolean canApplyTogether(Enchantment ench) {
-        return super.canApplyTogether(ench) && !(ench instanceof EnchantmentDamage);
+        return super.canApplyTogether(ench) && !(ench instanceof DamageEnchantment);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
     }
 
     @Override
-    public void onEntityDamaged(EntityLivingBase user, Entity target, int level) {
+    public void onEntityDamaged(LivingEntity user, Entity target, int level) {
         super.onEntityDamaged(user, target, level);
         //Cannot damage players until https://github.com/MinecraftForge/MinecraftForge/pull/4052
     }

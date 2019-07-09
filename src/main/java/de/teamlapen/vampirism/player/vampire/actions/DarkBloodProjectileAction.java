@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityDarkBloodProjectile;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
 public class DarkBloodProjectileAction extends DefaultVampireAction {
@@ -41,7 +41,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
 
     @Override
     protected boolean activate(IVampirePlayer player) {
-        EntityPlayer shooter = player.getRepresentingPlayer();
+        PlayerEntity shooter = player.getRepresentingPlayer();
 
         Vec3d vec3d = shooter.getLook(1.0F);
 

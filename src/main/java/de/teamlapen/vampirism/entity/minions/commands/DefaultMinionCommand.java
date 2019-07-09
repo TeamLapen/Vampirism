@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.minions.commands;
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.api.entity.minions.IMinionCommand;
 import de.teamlapen.vampirism.util.MinionHelper;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public abstract class DefaultMinionCommand implements IMinionCommand {
 
 
-    protected final EntityCreature minionEntity;
+    protected final CreatureEntity minionEntity;
     protected final IMinion minion;
     private final int id;
 

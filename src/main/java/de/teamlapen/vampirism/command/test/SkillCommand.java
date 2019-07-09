@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -11,13 +10,12 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.VampirismRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.skills.SkillManager;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 
 /**
  * 
@@ -40,10 +38,10 @@ public class SkillCommand extends BasicCommand {
         				}));
     }
 
-    private static int skill(CommandSource commandSource, EntityPlayerMP asPlayer, String type) {
+    private static int skill(CommandSource commandSource, ServerPlayerEntity asPlayer, String type) {
 		IFactionPlayer factionPlayer = FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer();
 		if (factionPlayer == null) {
-            commandSource.sendFeedback(new TextComponentString("You have to be in a faction"), true);
+            commandSource.sendFeedback(new StringTextComponent("You have to be in a faction"), true);
             return 0;
         }
         if ("list".equals(type)) {
@@ -56,20 +54,20 @@ public class SkillCommand extends BasicCommand {
         }
         ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(type));
         if (skill == null) {
-            commandSource.sendFeedback(new TextComponentString("Skill with id " + type + " could not be found for faction " + factionPlayer.getFaction().name()), true);
+            commandSource.sendFeedback(new StringTextComponent("Skill with id " + type + " could not be found for faction " + factionPlayer.getFaction().name()), true);
             return 0;
         }
         if (factionPlayer.getSkillHandler().isSkillEnabled(skill)) {
             factionPlayer.getSkillHandler().disableSkill(skill);
-            commandSource.sendFeedback(new TextComponentString("Disabled skill"), true);
+            commandSource.sendFeedback(new StringTextComponent("Disabled skill"), true);
             return 0;
         }
         ISkillHandler.Result result = factionPlayer.getSkillHandler().canSkillBeEnabled(skill);
         if (result == ISkillHandler.Result.OK) {
             factionPlayer.getSkillHandler().enableSkill(skill);
-            commandSource.sendFeedback(new TextComponentString("Enabled skill"), true);
+            commandSource.sendFeedback(new StringTextComponent("Enabled skill"), true);
         } else {
-            commandSource.sendFeedback(new TextComponentString("Could not enable skill " + result), true);
+            commandSource.sendFeedback(new StringTextComponent("Could not enable skill " + result), true);
         }
         return 0;
 	}

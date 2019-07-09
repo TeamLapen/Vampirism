@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.api.entity.actions;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.MobEntity;
 
 /**
  * {@link IEntityAction} that takes several ticks to execute.
  */
-public interface ILastingAction<T extends EntityCreature & IEntityActionUser> extends IEntityAction {
+public interface ILastingAction<T extends CreatureEntity & IEntityActionUser> extends IEntityAction {
 
     /**
      * @param level
@@ -24,7 +24,7 @@ public interface ILastingAction<T extends EntityCreature & IEntityActionUser> ex
     void deactivate(T entity);
 
     /**
-     * (should be) called every LivingUpdate of {@link EntityLiving}
+     * (should be) called every LivingUpdate of {@link MobEntity}
      *
      * @param entity
      *            entity whose action is to be updated

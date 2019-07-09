@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.potion.blood;
 
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
 import de.teamlapen.vampirism.api.items.IBloodPotionPropertyRandomizer;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -16,12 +16,12 @@ import java.util.Random;
 class BloodPotionEffect implements IBloodPotionEffect {
 
     private final ResourceLocation id;
-    private final Potion potion;
+    private final Effect potion;
     private final boolean isBad;
     private final int weight;
     private final IBloodPotionPropertyRandomizer propertyRandomizer;
 
-    BloodPotionEffect(ResourceLocation id, Potion potion, boolean isBad, int weight, IBloodPotionPropertyRandomizer propertyRandomizer) {
+    BloodPotionEffect(ResourceLocation id, Effect potion, boolean isBad, int weight, IBloodPotionPropertyRandomizer propertyRandomizer) {
         this.id = id;
         this.potion = potion;
         this.isBad = isBad;
@@ -44,12 +44,12 @@ class BloodPotionEffect implements IBloodPotionEffect {
     }
 
     @Override
-    public ITextComponent getLocName(NBTTagCompound properties) {
+    public ITextComponent getLocName(CompoundNBT properties) {
         return potion.getDisplayName();
     }
 
     @Override
-    public NBTTagCompound getRandomProperties(Random rng) {
+    public CompoundNBT getRandomProperties(Random rng) {
         return propertyRandomizer.getRandomProperties(rng);
     }
 
@@ -63,8 +63,8 @@ class BloodPotionEffect implements IBloodPotionEffect {
     }
 
     @Override
-    public void onActivated(EntityLivingBase hunter, NBTTagCompound nbt, float durationMult) {
-        hunter.addPotionEffect(new PotionEffect(potion, (int) (nbt.getInt("duration") * durationMult), nbt.getInt("amplifier")));
+    public void onActivated(LivingEntity hunter, CompoundNBT nbt, float durationMult) {
+        hunter.addPotionEffect(new EffectInstance(potion, (int) (nbt.getInt("duration") * durationMult), nbt.getInt("amplifier")));
     }
 
     @Override

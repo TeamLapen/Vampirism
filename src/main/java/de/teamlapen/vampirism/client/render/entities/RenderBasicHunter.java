@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.client.render.entities;
 import de.teamlapen.vampirism.client.model.ModelBasicHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.renderer.entity.RenderBiped;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.BipedRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Hunter as of level 1 look all the same, but have different weapons
  */
 @OnlyIn(Dist.CLIENT)
-public class RenderBasicHunter extends RenderBiped<EntityBasicHunter> {
+public class RenderBasicHunter extends BipedRenderer<EntityBasicHunter> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base1.png");
     private final ResourceLocation[] textures = {
             new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base2.png"),
@@ -25,7 +25,7 @@ public class RenderBasicHunter extends RenderBiped<EntityBasicHunter> {
     };
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_extra.png");
 
-    public RenderBasicHunter(RenderManager renderManagerIn) {
+    public RenderBasicHunter(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new ModelBasicHunter(), 0.5F);
     }
 

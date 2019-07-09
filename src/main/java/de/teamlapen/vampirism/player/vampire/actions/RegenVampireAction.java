@@ -4,9 +4,9 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 
 
 public class RegenVampireAction extends DefaultVampireAction {
@@ -17,10 +17,10 @@ public class RegenVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        EntityPlayer player = vampire.getRepresentingPlayer();
+        PlayerEntity player = vampire.getRepresentingPlayer();
         int dur = Balance.vpa.REGEN_DURATION * 20;
-        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, dur, 0));
-        player.addPotionEffect(new PotionEffect(ModPotions.thirst, dur, 2));
+        player.addPotionEffect(new EffectInstance(Effects.REGENERATION, dur, 0));
+        player.addPotionEffect(new EffectInstance(ModPotions.thirst, dur, 2));
         return true;
     }
 

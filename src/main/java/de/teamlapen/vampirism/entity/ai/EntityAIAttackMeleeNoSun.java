@@ -1,21 +1,21 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 /**
- * Checks paths of {@link EntityAIAttackMelee} for sunny parts.
+ * Checks paths of {@link MeleeAttackGoal} for sunny parts.
  */
-public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
+public class EntityAIAttackMeleeNoSun extends MeleeAttackGoal {
 
 
-    public EntityAIAttackMeleeNoSun(EntityCreature creature, double speedIn, boolean useLongMemory) {
+    public EntityAIAttackMeleeNoSun(CreatureEntity creature, double speedIn, boolean useLongMemory) {
         super(creature, speedIn, useLongMemory);
     }
 
@@ -23,7 +23,7 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
     public boolean shouldExecute() {
         boolean flag = super.shouldExecute();
         if (flag) {
-            EntityLivingBase entitylivingbase = this.attacker.getAttackTarget();
+            LivingEntity entitylivingbase = this.attacker.getAttackTarget();
             if (entitylivingbase != null) {
                 double distance = this.attacker.getDistanceSq(entitylivingbase.posX, entitylivingbase.getBoundingBox().minY, entitylivingbase.posZ);
                 if (distance <= this.getAttackReachSqr(entitylivingbase)) {
@@ -31,8 +31,8 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
                 }
             }
             boolean avoidSun = false;
-            if (attacker.getNavigator() instanceof PathNavigateGround) {
-                avoidSun = ((PathNavigateGround) attacker.getNavigator()).shouldAvoidSun;
+            if (attacker.getNavigator() instanceof GroundPathNavigator) {
+                avoidSun = ((GroundPathNavigator) attacker.getNavigator()).shouldAvoidSun;
             }
 
             if (avoidSun) {

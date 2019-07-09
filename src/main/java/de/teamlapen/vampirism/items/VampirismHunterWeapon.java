@@ -10,16 +10,16 @@ import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -51,10 +51,10 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (getUsingFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
             TextFormatting color = Minecraft.getInstance().player != null && Helper.canUseFactionItem(stack, this, FactionPlayerHandler.get(Minecraft.getInstance().player)) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
-            tooltip.add(new TextComponentTranslation(getUsingFaction(stack) == null ? "text.vampirism.all" : getUsingFaction(stack).getTranslationKeyPlural()).appendText(":" + getMinLevel(stack)).applyTextStyle(color));
+            tooltip.add(new TranslationTextComponent(getUsingFaction(stack) == null ? "text.vampirism.all" : getUsingFaction(stack).getTranslationKeyPlural()).appendText(":" + getMinLevel(stack)).applyTextStyle(color));
             ISkill reqSkill = this.getRequiredSkill(stack);
             if (reqSkill != null) {
-                tooltip.add(new TextComponentTranslation("text.vampirism.required_skill", new TextComponentTranslation(reqSkill.getTranslationKey())).applyTextStyle(color));
+                tooltip.add(new TranslationTextComponent("text.vampirism.required_skill", new TranslationTextComponent(reqSkill.getTranslationKey())).applyTextStyle(color));
             }
         }
     }
@@ -92,7 +92,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
         }
 
         @Override
-        public float getDestroySpeed(ItemStack stack, IBlockState state) {
+        public float getDestroySpeed(ItemStack stack, BlockState state) {
             Block block = state.getBlock();
 
             if (block == Blocks.COBWEB) {

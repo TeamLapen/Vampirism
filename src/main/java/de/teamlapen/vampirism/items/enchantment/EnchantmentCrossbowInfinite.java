@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.items.ItemTechCrossbow;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
  */
 public class EnchantmentCrossbowInfinite extends Enchantment {
     public EnchantmentCrossbowInfinite(Rarity rarityIn) {
-        super(rarityIn, VReference.CROSSBOW_ENCHANTMENT, new EntityEquipmentSlot[]{EntityEquipmentSlot.MAINHAND});
+        super(rarityIn, VReference.CROSSBOW_ENCHANTMENT, new EquipmentSlotType[]{EquipmentSlotType.MAINHAND});
         this.setRegistryName(REFERENCE.MODID, "crossbowinfinite");
 
     }

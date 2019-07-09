@@ -16,16 +16,16 @@ import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIAvoidEntity;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.GoalSelector;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -50,17 +50,33 @@ public class ModEntityEventHandler {
     private boolean warnAboutCreeper = true;
 
     @SubscribeEvent
+    public void baseTick(LivingEvent.LivingUpdateEvent event) {
+        if (event.getEntity() instanceof CreatureEntity) {
+            event.getEntity().getEntityWorld().profiler.startSection("vampirism_extended_creature");
+            ExtendedCreature.get((CreatureEntity) event.getEntity()).tick();
+            event.getEntity().getEntityWorld().profiler.endSection();
+
+        } else if (!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) event.getEntity();
+            if (player.openContainer instanceof BloodPotionTableContainer) {
+                ((BloodPotionTableContainer) player.openContainer).tick();
+            }
+        }
+
+    }
+
+    @SubscribeEvent
     public void onAttachCapabilityEntity(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof EntityCreature) {
-            event.addCapability(REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.createNewCapability((EntityCreature) event.getObject()));
+        if (event.getObject() instanceof CreatureEntity) {
+            event.addCapability(REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.createNewCapability((CreatureEntity) event.getObject()));
         }
     }
 
     @SubscribeEvent
     public void onEntityAttacked(LivingAttackEvent event) {
         //Probably not a very "clean" solution, but the only one I found
-        if (!skipAttackDamageOnce && "player".equals(event.getSource().getDamageType()) && event.getSource().getTrueSource() instanceof EntityPlayer) {
-            ItemStack stack = ((EntityPlayer) event.getSource().getTrueSource()).getHeldItemMainhand();
+        if (!skipAttackDamageOnce && "player".equals(event.getSource().getDamageType()) && event.getSource().getTrueSource() instanceof PlayerEntity) {
+            ItemStack stack = ((PlayerEntity) event.getSource().getTrueSource()).getHeldItemMainhand();
             if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem) {
                 IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
                 IFaction faction = VampirismAPI.factionRegistry().getFaction(event.getEntity());
@@ -78,14 +94,13 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityCheckSpawn(LivingSpawnEvent.CheckSpawn event) {
-        IBlockState blockState = event.getWorld().getBlockState(new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down());
+        BlockState blockState = event.getWorld().getBlockState(new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down());
         if (blockState.getBlock().equals(ModBlocks.castle_block_dark_stone) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
             event.setResult(Event.Result.DENY);
         } else if (blockState.getBlock().equals(ModBlocks.castle_stairs_dark_stone) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
             event.setResult(Event.Result.DENY);
         }
     }
-
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -100,26 +115,26 @@ public class ModEntityEventHandler {
                     event.setCanceled(true);
                 }
                 entity.setLevel(l);
-                if (entity instanceof EntityCreature) {
-                    ((EntityCreature) entity).setHealth(((EntityCreature) entity).getMaxHealth());
+                if (entity instanceof CreatureEntity) {
+                    ((CreatureEntity) entity).setHealth(((CreatureEntity) entity).getMaxHealth());
                 }
             }
         }
 
         //Creeper AI changes for AvoidedByCreepers Skill
         if (!event.getWorld().isRemote && !Balance.vps.DISABLE_AVOIDED_BY_CREEPERS) {
-            if (event.getEntity() instanceof EntityCreeper) {
-                ((EntityCreeper) event.getEntity()).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.getEntity(), EntityPlayer.class, 20, 1.1, 1.3, input -> input != null && VampirePlayer.get((EntityPlayer) input).getSpecialAttributes().avoided_by_creepers));
+            if (event.getEntity() instanceof CreeperEntity) {
+                ((CreeperEntity) event.getEntity()).tasks.addTask(3, new AvoidEntityGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 20, 1.1, 1.3, input -> input != null && VampirePlayer.get((PlayerEntity) input).getSpecialAttributes().avoided_by_creepers));
 
-                EntityAIBase target = null;
-                for (EntityAITasks.EntityAITaskEntry t : ((EntityCreeper) event.getEntity()).targetTasks.taskEntries) {
-                    if (t.action instanceof EntityAINearestAttackableTarget && t.priority == 1) {
+                Goal target = null;
+                for (GoalSelector.EntityAITaskEntry t : ((CreeperEntity) event.getEntity()).targetTasks.taskEntries) {
+                    if (t.action instanceof NearestAttackableTargetGoal && t.priority == 1) {
                         target = t.action;
                     }
                 }
                 if (target != null) {
-                    ((EntityCreeper) event.getEntity()).targetTasks.removeTask(target);
-                    ((EntityCreeper) event.getEntity()).targetTasks.addTask(1, new EntityAINearestAttackableTarget<>((EntityCreeper) event.getEntity(), EntityPlayer.class, 10, true, false, input -> input != null && !VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers));
+                    ((CreeperEntity) event.getEntity()).targetTasks.removeTask(target);
+                    ((CreeperEntity) event.getEntity()).targetTasks.addTask(1, new NearestAttackableTargetGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 10, true, false, input -> input != null && !VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers));
                 } else {
                     if (warnAboutCreeper) {
                         LOGGER.warn("Could not replace creeper target task");
@@ -135,28 +150,12 @@ public class ModEntityEventHandler {
         }
 
 
-        if (event.getEntity() instanceof EntityVillager && !event.getWorld().isRemote) {
+        if (event.getEntity() instanceof VillagerEntity && !event.getWorld().isRemote) {
             VampirismVillage village = VampirismVillageHelper.getNearestVillage(event.getWorld(), event.getEntity().getPosition(), 5);
             if (village != null && village.getControllingFaction() != null && village.getControllingFaction().equals(VReference.HUNTER_FACTION)) {
-                ExtendedCreature.get((EntityCreature) event.getEntity()).setPoisonousBlood(true);
+                ExtendedCreature.get((CreatureEntity) event.getEntity()).setPoisonousBlood(true);
             }
         }
-    }
-
-    @SubscribeEvent
-    public void baseTick(LivingEvent.LivingUpdateEvent event) {
-        if (event.getEntity() instanceof EntityCreature) {
-            event.getEntity().getEntityWorld().profiler.startSection("vampirism_extended_creature");
-            ExtendedCreature.get((EntityCreature) event.getEntity()).tick();
-            event.getEntity().getEntityWorld().profiler.endSection();
-
-        } else if (!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) event.getEntity();
-            if (player.openContainer instanceof BloodPotionTableContainer) {
-                ((BloodPotionTableContainer) player.openContainer).tick();
-            }
-        }
-
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)

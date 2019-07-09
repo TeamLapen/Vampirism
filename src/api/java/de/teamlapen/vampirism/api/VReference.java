@@ -5,9 +5,9 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
-import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.util.DamageSource;
@@ -56,15 +56,15 @@ public class VReference {
     /**
      * Enchantment type for crossbows
      */
-    public static final EnumEnchantmentType CROSSBOW_ENCHANTMENT = EnumEnchantmentType.create("VAMPIRISM_CROSSBOW", input -> input instanceof IVampirismCrossbow);
+    public static final EnchantmentType CROSSBOW_ENCHANTMENT = EnchantmentType.create("VAMPIRISM_CROSSBOW", input -> input instanceof IVampirismCrossbow);
     /**
-     * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
+     * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EntityClassification#MONSTER}
      */
-    public static EnumCreatureType HUNTER_CREATURE_TYPE;
+    public static EntityClassification HUNTER_CREATURE_TYPE;
     /**
-     * Vampire creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
+     * Vampire creatures are of this creature type. But when they are counted for spawning they belong to {@link EntityClassification#MONSTER}
      */
-    public static EnumCreatureType VAMPIRE_CREATURE_TYPE;
+    public static EntityClassification VAMPIRE_CREATURE_TYPE;
     /**
      * Vampire creatures have this creature attribute.
      * Don't know why this exists alongside EnumCreatureType, but this is used by enchanments

@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
-import net.minecraft.util.registry.IRegistry;
+import net.minecraft.util.registry.Registry;
 
 /**
  * Base class for most of Vampirism's items
@@ -27,7 +27,7 @@ public class VampirismItem extends Item {
     @Override
     protected String getDefaultTranslationKey() {
         if (this.translation_key == null) {
-            this.translation_key = Util.makeTranslationKey("item", IRegistry.ITEM.getKey(this));
+            this.translation_key = Util.makeTranslationKey("item", Registry.ITEM.getKey(this));
         }
 
         return this.translation_key;

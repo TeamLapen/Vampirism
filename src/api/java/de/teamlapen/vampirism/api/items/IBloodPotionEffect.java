@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.items;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -26,14 +26,14 @@ public interface IBloodPotionEffect {
     /**
      * @return The localized name
      */
-    ITextComponent getLocName(NBTTagCompound properties);
+    ITextComponent getLocName(CompoundNBT properties);
 
     /**
      * Randomly selects duration and amplifier etc
      *
      * @return A nbt tag containing all properties which can be used to store the effect with the item
      */
-    NBTTagCompound getRandomProperties(Random rng);
+    CompoundNBT getRandomProperties(Random rng);
 
     boolean isBad();
 
@@ -43,7 +43,7 @@ public interface IBloodPotionEffect {
      * @param propertyNbt  The nbt tag created in {@link IBloodPotionEffect#getRandomProperties(Random)}
      * @param durationMult The duration should be multiplied with this value
      */
-    void onActivated(EntityLivingBase hunter, NBTTagCompound propertyNbt, float durationMult);
+    void onActivated(LivingEntity hunter, CompoundNBT propertyNbt, float durationMult);
 
 
 }

@@ -4,23 +4,22 @@ import de.teamlapen.lib.lib.client.render.RenderUtil;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
-
-import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class LayerVampirePlayerHead implements LayerRenderer<AbstractClientPlayer> {
-    private final RenderPlayer playerRenderer;
+public class LayerVampirePlayerHead implements LayerRenderer<AbstractClientPlayerEntity> {
+    private final PlayerRenderer playerRenderer;
 
     private final ResourceLocation[] eyeOverlays;
     private final ResourceLocation[] fangOverlays;
 
-    public LayerVampirePlayerHead(RenderPlayer playerRendererIn) {
+    public LayerVampirePlayerHead(PlayerRenderer playerRendererIn) {
         this.playerRenderer = playerRendererIn;
         eyeOverlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < eyeOverlays.length; i++) {
@@ -33,7 +32,7 @@ public class LayerVampirePlayerHead implements LayerRenderer<AbstractClientPlaye
     }
 
     @Override
-    public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(AbstractClientPlayerEntity player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if (Configs.disable_vampireEyes) return;
         VampirePlayer vampirePlayer = VampirePlayer.get(player);
         if (vampirePlayer.getLevel() > 0 && !vampirePlayer.isDisguised() && !player.isInvisible()) {

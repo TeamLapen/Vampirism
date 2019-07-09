@@ -8,16 +8,16 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemSpawnEgg;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.EnumHand;
+import net.minecraft.item.SpawnEggItem;
+import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 /**
@@ -25,13 +25,13 @@ import net.minecraft.world.World;
  */
 public class EntityHunterTrainer extends EntityHunterBase implements HunterAILookAtTrainee.ITrainer {
     private final int MOVE_TO_RESTRICT_PRIO = 3;
-    private EntityPlayer trainee;
+    private PlayerEntity trainee;
 
     public EntityHunterTrainer(World world) {
         super(ModEntities.hunter_trainer, world, false);
         saveHome = true;
         hasArms = true;
-        ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
+        ((GroundPathNavigator) this.getNavigator()).setEnterDoors(true);
 
         this.setSize(0.6F, 1.95F);
         this.setDontDropEquipment();
@@ -46,7 +46,7 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
      * @return The player which has the trainings gui open. Can be null
      */
     @Override
-    public EntityPlayer getTrainee() {
+    public PlayerEntity getTrainee() {
         return trainee;
     }
 
@@ -81,25 +81,25 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
-        this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
-        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0, false));
+        this.tasks.addTask(1, new OpenDoorGoal(this, true));
+        this.tasks.addTask(4, new MeleeAttackGoal(this, 1.0, false));
         this.tasks.addTask(5, new HunterAILookAtTrainee(this));
-        this.tasks.addTask(6, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
-        this.tasks.addTask(10, new EntityAILookIdle(this));
+        this.tasks.addTask(6, new RandomWalkingGoal(this, 0.7));
+        this.tasks.addTask(8, new LookAtGoal(this, PlayerEntity.class, 13F));
+        this.tasks.addTask(9, new LookAtGoal(this, EntityVampireBase.class, 17F));
+        this.tasks.addTask(10, new LookRandomlyGoal(this));
 
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
 
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetTasks.addTask(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetTasks.addTask(3, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
 
     @Override
-    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+    protected boolean processInteract(PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
-        boolean flag = !stack.isEmpty() && stack.getItem() instanceof ItemSpawnEgg;
+        boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
         if (!flag && this.isAlive() && !player.isSneaking()) {
             if (!this.world.isRemote) {
@@ -108,11 +108,11 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
                         this.trainee = player;
                         //player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.getEntityWorld(), getPosition().getX(), getPosition().getY(), getPosition().getZ());//TODO 1.14
                     } else {
-                        player.sendMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"));
                     }
 
                 } else {
-                    player.sendMessage(new TextComponentTranslation("text.vampirism.trainer_level_wrong"));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_level_wrong"));
                 }
 
             }

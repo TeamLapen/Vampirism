@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.model;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.model.ModelBiped;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * @author Maxanier
  */
 @OnlyIn(Dist.CLIENT)
-public class ModelBipedShrinkable extends ModelBiped {
+public class ModelBipedShrinkable extends BipedModel {
 
     private float size = 1F;
 

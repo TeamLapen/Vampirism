@@ -1,16 +1,14 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.tileentity.TileTotem;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 import java.util.List;
 
@@ -28,9 +26,9 @@ public class MakeVillagerAgressiveCommand extends BasicCommand {
                 });
     }
 
-    private static int makeVillagerAgressive(EntityPlayerMP asPlayer) {
-        List<EntityVillager> l = asPlayer.getEntityWorld().getEntitiesWithinAABB(EntityVillager.class, asPlayer.getBoundingBox().grow(3, 2, 3));
-        for (EntityVillager v : l) {
+    private static int makeVillagerAgressive(ServerPlayerEntity asPlayer) {
+        List<VillagerEntity> l = asPlayer.getEntityWorld().getEntitiesWithinAABB(VillagerEntity.class, asPlayer.getBoundingBox().grow(3, 2, 3));
+        for (VillagerEntity v : l) {
             if (v instanceof IHunter || v instanceof IVampire) continue;
             TileTotem.makeAggressive(v, null);
 
