@@ -235,6 +235,14 @@ public class ModItems {
                 .addRecipe(new ItemStack(ModItems.item_alchemical_fire, 4),
                         ModItems.holy_water_bottle.getStack(IItemWithTier.TIER.NORMAL), Items.GUNPOWDER)
                 .setRequirements(1, HunterSkills.basic_alchemy);
+        cauldronCraftingManager
+                .addRecipe(new ItemStack(ModItems.item_alchemical_fire, 5),
+                        ModItems.holy_water_bottle.getStack(IItemWithTier.TIER.ENHANCED), Items.GUNPOWDER)
+                .setRequirements(1, HunterSkills.basic_alchemy);
+        cauldronCraftingManager
+                .addRecipe(new ItemStack(ModItems.item_alchemical_fire, 6),
+                        ModItems.holy_water_bottle.getStack(IItemWithTier.TIER.ULTIMATE), Items.GUNPOWDER)
+                .setRequirements(1, HunterSkills.basic_alchemy);
         cauldronCraftingManager.addRecipe(new ItemStack(ModItems.purified_garlic, 2),
                 ModItems.holy_water_bottle.getStack(IItemWithTier.TIER.NORMAL), new ItemStack(ModItems.item_garlic, 4))
                 .setRequirements(1, HunterSkills.purified_garlic);
