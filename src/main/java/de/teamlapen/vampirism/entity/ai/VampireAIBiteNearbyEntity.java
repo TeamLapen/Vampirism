@@ -6,29 +6,19 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
-public class VampireAIBiteNearbyEntity extends EntityAIBase {
-    private final IVampireMob vampire;
-    private final EntityLivingBase vampireEntity;
-    /**
-     * Shouldn't be null, but it isn't guaranteed as IVampireMob currently does not require an EntityLiving
-     */
-    @Nullable
-    private final EntityLiving vampireEntityLiving;
+public class VampireAIBiteNearbyEntity<T extends EntityLiving & IVampireMob> extends EntityAIBase {
+    private final T vampire;
     private IExtendedCreatureVampirism creature;
     private int timer;
 
-    public VampireAIBiteNearbyEntity(IVampireMob vampire) {
+    public VampireAIBiteNearbyEntity(T vampire) {
         this.vampire = vampire;
-        this.vampireEntity = vampire.getRepresentingEntity();
-        this.vampireEntityLiving = vampireEntity instanceof EntityLiving ? (EntityLiving) vampireEntity : null;//TODO add getEntityLiving method to IVampireMob
         this.setMutexBits(3);
     }
 
@@ -46,17 +36,16 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
         if (vampire.wantsBlood()) {
-            List<EntityCreature> list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, getBiteBoundingBox(), EntitySelectors.NOT_SPECTATING.and((entity) -> entity != vampireEntity && entity.isAlive()));
+            List<EntityCreature> list = vampire.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, getBiteBoundingBox(), EntitySelectors.NOT_SPECTATING.and((entity) -> entity != vampire && entity.isAlive()));
             if (list.size() > 1) {
-                list.sort((o1, o2) -> (int) (vampireEntity.getDistanceSq(o1) - vampireEntity.getDistanceSq(o2)));
+                list.sort((o1, o2) -> (int) (vampire.getDistanceSq(o1) - vampire.getDistanceSq(o2)));
             }
 
             for (EntityCreature o : list) {
-                if (vampireEntityLiving != null) {
-                    if (!vampireEntityLiving.getEntitySenses().canSee(o) || o.hasCustomName()) {
+                if (!vampire.getEntitySenses().canSee(o) || o.hasCustomName()) {
                         continue;
                     }
-                }
+
                 creature = ExtendedCreature.get(o);
                 if (creature.canBeBitten(vampire) && !creature.hasPoisonousBlood()) {
                     return true;
@@ -70,25 +59,24 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
 
     @Override
     public void startExecuting() {
-        timer = 20 + vampireEntity.getRNG().nextInt(20);
+        timer = 20 + vampire.getRNG().nextInt(20);
     }
 
     @Override
     public void tick() {
         EntityCreature e = creature.getEntity();
-        if (vampireEntity instanceof EntityLiving) {
-            ((EntityLiving) vampireEntity).getLookHelper().setLookPosition(e.posX, e.posY + (double) e.getEyeHeight(), e.posZ, 10.0F, (float) ((EntityLiving) vampireEntity).getVerticalFaceSpeed());
+        vampire.getLookHelper().setLookPosition(e.posX, e.posY + (double) e.getEyeHeight(), e.posZ, 10.0F, (float) vampire.getVerticalFaceSpeed());
 
-        }
+
         timer--;
         if (timer == 1) {
             int amount = creature.onBite(vampire);
-            vampireEntity.playSound(ModSounds.player_bite, 1, 1);
+            vampire.playSound(ModSounds.player_bite, 1, 1);
             vampire.drinkBlood(amount, creature.getBloodSaturation());
         }
     }
 
     protected AxisAlignedBB getBiteBoundingBox() {
-        return vampireEntity.getBoundingBox().grow(0.5, 0.7, 0.5);
+        return vampire.getBoundingBox().grow(0.5, 0.7, 0.5);
     }
 }

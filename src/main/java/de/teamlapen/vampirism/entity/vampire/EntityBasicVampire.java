@@ -362,13 +362,13 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         }
         this.tasks_avoidHunter = new EntityAIAvoidEntity<>(this, EntityCreature.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION));
         this.tasks.addTask(2, this.tasks_avoidHunter);
-        this.tasks.addTask(2, new VampireAIRestrictSun(this));
-        this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
+        this.tasks.addTask(2, new VampireAIRestrictSun<>(this));
+        this.tasks.addTask(3, new VampireAIFleeSun<>(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
         this.tasks.addTask(4, new EntityAIAttackMeleeNoSun(this, 1.0, false));
-        this.tasks.addTask(5, new VampireAIBiteNearbyEntity(this));
+        this.tasks.addTask(5, new VampireAIBiteNearbyEntity<>(this));
         this.tasks.addTask(6, new VampireAIFollowAdvanced(this, 1.0));
-        this.tasks.addTask(7, new VampireAIMoveToBiteable(this, 0.75));
+        this.tasks.addTask(7, new VampireAIMoveToBiteable<>(this, 0.75));
         this.tasks.addTask(8, new EntityAIMoveThroughVillageCustom(this, 0.6, true, 600));
         this.tasks.addTask(9, new EntityAIWander(this, 0.7));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityPlayer.class, 20F, 0.6F));

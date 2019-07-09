@@ -107,8 +107,8 @@ public class EntityVampireFactionVillagerBase extends EntityFactionVillager impl
     
     @Override
     protected void initEntityAI() {
-    	this.tasks.addTask(1, new VampireAIRestrictSun(this));
-        this.tasks.addTask(1, new VampireAIFleeSun(this, 0.9, false));
+        this.tasks.addTask(1, new VampireAIRestrictSun<>(this));
+        this.tasks.addTask(1, new VampireAIFleeSun<>(this, 0.9, false));
     	super.initEntityAI();
     }
 }

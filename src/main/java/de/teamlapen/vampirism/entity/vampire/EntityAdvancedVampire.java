@@ -243,8 +243,8 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
             this.tasks.addTask(1, new EntityAIBreakDoor(this));
             ((PathNavigateGround) this.getNavigator()).setBreakDoors(true);
         }
-        this.tasks.addTask(2, new VampireAIRestrictSun(this));
-        this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
+        this.tasks.addTask(2, new VampireAIRestrictSun<>(this));
+        this.tasks.addTask(3, new VampireAIFleeSun<>(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
         this.tasks.addTask(4, new EntityAIAttackMeleeNoSun(this, 1.0, false));
         this.tasks.addTask(8, new EntityAIWander(this, 0.9, 25));

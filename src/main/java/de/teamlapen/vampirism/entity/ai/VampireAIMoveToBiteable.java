@@ -11,11 +11,10 @@ import net.minecraft.util.EntitySelectors;
 import java.util.List;
 
 
-public class VampireAIMoveToBiteable extends EntityAIBase {
+public class VampireAIMoveToBiteable<T extends EntityLiving & IVampireMob> extends EntityAIBase {
 
 
-    private final IVampireMob vampire;
-    private final EntityLiving vampireEntity;
+    private final T vampire;
     private final double movementSpeed;
     private EntityCreature target;
     private int timeout;
@@ -24,9 +23,8 @@ public class VampireAIMoveToBiteable extends EntityAIBase {
      * @param vampire       Has to be a {@link EntityLiving}
      * @param movementSpeed
      */
-    public VampireAIMoveToBiteable(IVampireMob vampire, double movementSpeed) {
+    public VampireAIMoveToBiteable(T vampire, double movementSpeed) {
         this.vampire = vampire;
-        this.vampireEntity = (EntityLiving) vampire.getRepresentingEntity();
         this.movementSpeed = movementSpeed;
         this.setMutexBits(1);
     }
@@ -34,12 +32,12 @@ public class VampireAIMoveToBiteable extends EntityAIBase {
     @Override
     public void resetTask() {
         target = null;
-        timeout = (vampireEntity.getRNG().nextInt(5) == 0 ? 80 : 3);
+        timeout = (vampire.getRNG().nextInt(5) == 0 ? 80 : 3);
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        return (!this.vampireEntity.getNavigator().noPath() && target.isAlive());
+        return (!this.vampire.getNavigator().noPath() && target.isAlive());
     }
 
     @Override
@@ -49,7 +47,7 @@ public class VampireAIMoveToBiteable extends EntityAIBase {
             return false;
         }
         if (!vampire.wantsBlood()) return false;
-        List<EntityCreature> list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, vampireEntity.getBoundingBox().grow(10, 3, 10), EntitySelectors.NOT_SPECTATING.and((entity) -> entity != vampireEntity && entity.isAlive()));
+        List<EntityCreature> list = vampire.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, vampire.getBoundingBox().grow(10, 3, 10), EntitySelectors.NOT_SPECTATING.and((entity) -> entity != vampire && entity.isAlive()));
         for (EntityCreature o : list) {
             IExtendedCreatureVampirism creature = ExtendedCreature.get(o);
             if (creature.canBeBitten(vampire) && !o.hasCustomName() && !creature.hasPoisonousBlood()) {
@@ -63,6 +61,6 @@ public class VampireAIMoveToBiteable extends EntityAIBase {
 
     @Override
     public void startExecuting() {
-        vampireEntity.getNavigator().tryMoveToEntityLiving(target, 1.0);
+        vampire.getNavigator().tryMoveToEntityLiving(target, 1.0);
     }
 }
