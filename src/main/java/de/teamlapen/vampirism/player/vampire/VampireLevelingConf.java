@@ -36,7 +36,7 @@ public class VampireLevelingConf {
         INSPIRATION_MIN_LEVEL = 2;
         INSPIRATION_MAX_LEVEL = 4;
         INFUSION_MIN_LEVEL = 5;
-        INFUSION_MAX_LEVEL = 14;
+        INFUSION_MAX_LEVEL = 15;
         altarInfusionRequirementsHashMap = Maps.newHashMap();
         altarInfusionRequirementsHashMap.put(5, new AltarInfusionRequirements(0, 0, 5, 1));
         altarInfusionRequirementsHashMap.put(6, new AltarInfusionRequirements(0, 1, 5, 1));
@@ -48,6 +48,8 @@ public class VampireLevelingConf {
         altarInfusionRequirementsHashMap.put(12, new AltarInfusionRequirements(3, 1, 20, 1));
         altarInfusionRequirementsHashMap.put(13, new AltarInfusionRequirements(3, 2, 20, 1));
         altarInfusionRequirementsHashMap.put(14, new AltarInfusionRequirements(4, 2, 25, 1));
+        altarInfusionRequirementsHashMap.put(15, new AltarInfusionRequirements(5, 1, 64, 1));
+
 
         assert altarInfusionRequirementsHashMap.size() == INFUSION_MAX_LEVEL - INFUSION_MIN_LEVEL + 1;
     }
@@ -66,6 +68,7 @@ public class VampireLevelingConf {
     }
 
     public int getRequiredStructureLevelAltarInfusion(int targetLevel) {
+        if (targetLevel == 15) return 18;
         int t = (targetLevel - 4) / 2;
         return (int) (8 + (54 - 8) * t / 5f);
     }

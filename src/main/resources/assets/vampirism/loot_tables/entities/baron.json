@@ -16,7 +16,7 @@
           "functions": [
             {
               "function": "vampirism:set_meta_from_level",
-              "max": 4
+              "max": 5
             }
           ]
         }

@@ -11,7 +11,7 @@ public class REFERENCE {
     public static final String VERSION = "@VERSION@";
     public static final String MINECRAFT_VERSION = "@MVERSION@";
     public static final String FORGE_VERSION_MIN = "14.23.1.2554";
-    public static final int HIGHEST_VAMPIRE_LEVEL = 14;
+    public static final int HIGHEST_VAMPIRE_LEVEL = 15;
     public static final int HIGHEST_HUNTER_LEVEL = 14;
     public static final String FORGE_VERSION = "@FVERSION@";
     public static final String VERSION_UPDATE_FILE_FORGE = "http://maxanier.de/projects/vampirism/versions.json";

@@ -27,6 +27,11 @@
         "textures": {
           "filler": "blocks/bone_block_side"
         }
+      },
+      "end": {
+        "textures": {
+          "filler": "blocks/end_bricks"
+        }
       }
     }
   }

@@ -30,6 +30,11 @@
         "textures": {
           "layer0": "vampirism:items/pure_blood_4"
         }
+      },
+      "meta_5": {
+        "textures": {
+          "layer0": "vampirism:items/pure_blood_4"
+        }
       }
     }
   }

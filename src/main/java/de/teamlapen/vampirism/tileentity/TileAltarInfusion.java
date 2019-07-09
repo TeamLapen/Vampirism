@@ -31,6 +31,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -89,6 +90,11 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         }
         targetLevel = VampirePlayer.get(player).getLevel() + 1;
         int requiredLevel = checkRequiredLevel();
+        if (targetLevel == 15) {
+            if (!checkCloak(player)) {
+                requiredLevel = -1;
+            }
+        }
         if (requiredLevel == -1) {
             if (messagePlayer) player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_level_wrong"));
             return -1;
@@ -97,12 +103,29 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_structure_wrong"));
             tips = null;
             return -3;
+        } else if (targetLevel == 15 && !checkAllEndStone()) {
+            player.sendMessage(new TextComponentString("These pillars look pretty boring"));
+            return -3;
         } else if (!checkItemRequirements(player, messagePlayer)) {
             tips = null;
             return -4;
         }
         return 1;
 
+    }
+
+    private boolean checkAllEndStone() {
+        BlockPos[] tips = findTips();
+        for (BlockPos pPos : tips) {
+            int j = 0;
+            IBlockState temp;
+            while ((temp = getWorld().getBlockState(pPos.add(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
+                BlockAltarPillar.EnumPillarType t = temp.getValue(BlockAltarPillar.typeProperty);
+                if (t != BlockAltarPillar.EnumPillarType.ENDBRICK) return false;
+                j++;
+            }
+        }
+        return true;
     }
 
     /**
@@ -397,6 +420,15 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
         return found >= required * 10;
 
+    }
+
+    private boolean checkCloak(EntityPlayer player) {
+        for (ItemStack stack : player.getArmorInventoryList()) {
+            if (ModItems.vampire_cloak.equals(stack.getItem())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

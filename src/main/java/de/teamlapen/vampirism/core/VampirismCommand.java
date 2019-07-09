@@ -118,8 +118,11 @@ public class VampirismCommand extends BasicCommand {
                         if (level == 0 && !handler.canLeaveFaction()) {
                             throw new CommandException("command.vampirism.base.level.cant_leave", new TextComponentTranslation(handler.getCurrentFaction().getUnlocalizedName()));
                         }
-                        if (level > newFaction.getHighestReachableLevel()) {
-                            level = newFaction.getHighestReachableLevel();
+                        //if (level > newFaction.getHighestReachableLevel()) {
+                        //    level = newFaction.getHighestReachableLevel();
+                        //}
+                        if (level > 14) {
+                            level = 14;
                         }
                         if (handler.setFactionAndLevel(newFaction, level)) {
                             ITextComponent msg = player.getDisplayName().appendSibling(new TextComponentString(" is now a " + pfaction_names[i] + " level " + level));

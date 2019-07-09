@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ItemPureBlood extends VampirismItem {
 
-    public static final int COUNT = 5;
+    public static final int COUNT = 6;
     private final static String name = "pure_blood";
 
     public ItemPureBlood() {
@@ -49,7 +49,7 @@ public class ItemPureBlood extends VampirismItem {
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         if (isInCreativeTab(tab)) {
-            for (int i = 0; i < COUNT; i++) {
+            for (int i = 0; i < 5; i++) {
                 items.add(new ItemStack(this, 1, i));
             }
         }

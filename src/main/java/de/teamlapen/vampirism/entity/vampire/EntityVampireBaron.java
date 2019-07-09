@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampireMinion;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackRangedDarkBlood;
 import de.teamlapen.vampirism.entity.ai.EntityAIWatchClosestVisible;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
@@ -24,12 +25,14 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -46,7 +49,7 @@ import java.util.UUID;
 public class EntityVampireBaron extends EntityVampireBase implements IVampireBaron {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityVampireBaron.class, DataSerializers.VARINT);
     private final SaveableMinionHandler<IVampireMinion.Saveable> minionHandler;
-    private final int MAX_LEVEL = 4;
+    private final int MAX_LEVEL = 5;
 
     /**
      * Used for ranged vs melee attack decision
@@ -269,25 +272,18 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     @Override
     public int suggestLevel(Difficulty d) {
-        int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
-        int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
-        int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
+        return Math.min(4, suggestLevelInt(d));
+    }
 
-        switch (rand.nextInt(7)) {
-            case 0:
-                return min;
-            case 1:
-                return max + 1;
-            case 2:
-                return avg;
-            case 3:
-                return avg + 1;
-            case 4:
-            case 5:
-                return rand.nextInt(MAX_LEVEL + 1);
-            default:
-                return rand.nextInt(max + 2 - min) + min;
+    @Override
+    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if (getLevel() == 4 && ModItems.pure_blood.equals(stack.getItem()) && stack.getMetadata() == 4) {
+            this.setLevel(MAX_LEVEL);
+            player.setHeldItem(hand, ItemStack.EMPTY);
+            this.setHealth(this.getMaxHealth());
         }
+        return super.processInteract(player, hand);
     }
 
     @Override
@@ -401,6 +397,28 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         @Override
         public boolean shouldExecute() {
             return EntityVampireBaron.this.getAttackTarget() != null && (EntityVampireBaron.this.rangedAttack || !EntityVampireBaron.this.hasPath());
+        }
+    }
+
+    private int suggestLevelInt(Difficulty d) {
+        int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
+        int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
+        int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
+
+        switch (rand.nextInt(7)) {
+            case 0:
+                return min;
+            case 1:
+                return max + 1;
+            case 2:
+                return avg;
+            case 3:
+                return avg + 1;
+            case 4:
+            case 5:
+                return rand.nextInt(MAX_LEVEL + 1);
+            default:
+                return rand.nextInt(max + 2 - min) + min;
         }
     }
 }
