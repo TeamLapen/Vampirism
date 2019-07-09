@@ -1,7 +1,8 @@
 package de.teamlapen.lib.lib.client.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.RendererModel;
@@ -36,7 +37,7 @@ public class RenderUtil {
         render.bindTexture(texture);
         render.bindTexture(texture);
         startGlowing(entity.isInvisible(), brightness);
-        render.getMainModel().render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+        render.getEntityModel().render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         endGlowing(entity.getBrightnessForRender());
     }
 

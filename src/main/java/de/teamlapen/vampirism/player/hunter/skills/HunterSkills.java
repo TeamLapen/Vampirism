@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -111,7 +112,7 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", 64, 48, true));
         registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", 96, 48, true));
         DefaultSkill<IHunterPlayer> attackSpeed = new VampirismSkill.SimpleHunterSkill("hunter_attack_speed", 32, 32, false);
-        attackSpeed.registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", Balance.hps.SMALL_ATTACK_SPEED_MODIFIER, 2);
+        attackSpeed.registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", Balance.hps.SMALL_ATTACK_SPEED_MODIFIER, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
         registry.register(attackSpeed);
         registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter) {
@@ -123,7 +124,7 @@ public class HunterSkills {
         registry.register(new ActionSkill<IHunterPlayer>(new ResourceLocation("vampirism", "hunter_awareness"), HunterActions.awareness_hunter));
 
         DefaultSkill<IHunterPlayer> advancedAttackSpeed = new VampirismSkill.SimpleHunterSkill("hunter_advanced_attack_speed", 32, 32, false);
-        advancedAttackSpeed.registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", Balance.hps.MAJOR_ATTACK_SPEED_MODIFIER, 2);
+        advancedAttackSpeed.registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", Balance.hps.MAJOR_ATTACK_SPEED_MODIFIER, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
         registry.register(advancedAttackSpeed);
 

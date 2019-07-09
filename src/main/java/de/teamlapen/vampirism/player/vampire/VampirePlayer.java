@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.player.vampire;
 
+import com.mojang.datafixers.util.Either;
+
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
@@ -47,10 +49,7 @@ import net.minecraft.network.play.server.SPacketUseBed;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -630,7 +629,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onUpdate() {
-        player.getEntityWorld().profiler.startSection("vampirism_vampirePlayer");
+        player.getEntityWorld().getProfiler().startSection("vampirism_vampirePlayer");
         int level = getLevel();
         if (level > 0) {
             if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 0) {
@@ -646,7 +645,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         if (this.isPlayerSleeping()) {
             player.noClip = true;
-            player.motionX = player.motionY = player.motionZ = 0;
+            player.setMotion(0.0D, 0.0D, 0.0D);
             ++this.sleepTimer;
 
             if (this.sleepTimer > 100) {
@@ -654,8 +653,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
 
             if (!player.getEntityWorld().isRemote) {
-                BlockState state = player.getEntityWorld().getBlockState(player.bedLocation);
-                boolean bed = state.getBlock().isBed(state, player.getEntityWorld(), player.bedLocation, player);
+                BlockState state = player.getEntityWorld().getBlockState(player.getBedLocation());
+                boolean bed = state.getBlock().isBed(state, player.getEntityWorld(), player.getBedLocation(), player);
                 if (!bed) {
                     wakeUpPlayer(true, true, false);
                 } else if (!player.getEntityWorld().isDaytime()) {
@@ -750,7 +749,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 feedBiteTickCounter = 0;
             }
         }
-        player.world.profiler.endSection();
+        player.world.getProfiler().endSection();
     }
 
     @Override
@@ -758,11 +757,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (phase == TickEvent.Phase.END) {
             //Update blood stats
             if (getLevel() > 0) {
-                player.world.profiler.startSection("vampirism_bloodupdate");
+                player.world.getProfiler().startSection("vampirism_bloodupdate");
                 if (!player.world.isRemote && this.bloodStats.onUpdate()) {
                     sync(this.bloodStats.writeUpdate(new CompoundNBT()), false);
                 }
-                player.world.profiler.endSection();
+                player.world.getProfiler().endSection();
             }
             if (getSpecialAttributes().bat) {
                 BatVampireAction.updatePlayerBatSize(player);
@@ -880,19 +879,19 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    public PlayerEntity.SleepResult trySleep(BlockPos bedLocation) {
+    public Either<PlayerEntity.SleepResult, Unit> trySleep(BlockPos bedLocation) {
 
         if (!player.world.isRemote) {
-            if (player.isPlayerSleeping() || !player.isAlive()) {
-                return PlayerEntity.SleepResult.OTHER_PROBLEM;
+            if (player.isSleeping() || !player.isAlive()) {
+                return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
             }
 
             if (!player.world.dimension.isSurfaceWorld()) {
-                return PlayerEntity.SleepResult.NOT_POSSIBLE_HERE;
+                return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_HERE);
             }
 
             if (Math.abs(player.posX - (double) bedLocation.getX()) > 3.0D || Math.abs(player.posY - (double) bedLocation.getY()) > 2.0D || Math.abs(player.posZ - (double) bedLocation.getZ()) > 3.0D) {
-                return PlayerEntity.SleepResult.TOO_FAR_AWAY;
+                return Either.left(PlayerEntity.SleepResult.TOO_FAR_AWAY);
             }
 
             double d0 = 8.0D;
@@ -900,18 +899,18 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             List<MonsterEntity> list = player.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB((double) bedLocation.getX() - d0, (double) bedLocation.getY() - d1, (double) bedLocation.getZ() - d0, (double) bedLocation.getX() + d0, (double) bedLocation.getY() + d1, (double) bedLocation.getZ() + d0));
 
             if (!list.isEmpty()) {
-                return PlayerEntity.SleepResult.NOT_SAFE;
+                return Either.left(PlayerEntity.SleepResult.NOT_SAFE);
             }
             if (!player.world.isDaytime()) {
-                player.bedLocation = bedLocation; //Set sleep location even if night time
-                return PlayerEntity.SleepResult.NOT_POSSIBLE_NOW;
+                player.setBedPosition(bedLocation); //Set sleep location even if night time
+                return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
             }
         }
 
         if (player.getRidingEntity() != null) {
             player.stopRiding();
         }
-        if (!setEntitySize(0.2F, 0.2F)) return PlayerEntity.SleepResult.OTHER_PROBLEM;
+        if (!setEntitySize(0.2F, 0.2F)) return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
 
 
         BlockState state = null;
@@ -936,7 +935,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     break;
                 default://Should not happen
             }
-            player.setRenderOffsetForSleep(enumfacing);//TODO is Private
+            player.setRenderOffsetForSleep(enumfacing);
 
             player.setPosition((double) ((float) bedLocation.getX() + f), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + f1));
         } else {
@@ -948,8 +947,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         sleepTimer = 0;
         sleepingInCoffin = true;
         player.noClip = true;
-        player.bedLocation = bedLocation; //Is also set if sleep fails due to night time. See above
-        player.motionX = player.motionZ = player.motionY = 0.0D;
+        player.setBedPosition(bedLocation);//Is also set if sleep fails due to night time. See above
+        player.setMotion(0.0D, 0.0D, 0.0D);
 
         if (!player.world.isRemote) {
             DaySleepHelper.updateAllPlayersSleeping(player.world);
@@ -962,7 +961,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             playerMP.connection.sendPacket(packet);
         }
 
-        return PlayerEntity.SleepResult.OK;
+        return Either.right(Unit.INSTANCE);
     }
 
     @Override
@@ -1071,14 +1070,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     private void applyEntityAttributes() {
         //Checking if already registered, since this method has to be called multiple times due to SpongeForge not recreating the player, but resetting the attribute map
-        if (player.getAttributeMap().getAttributeInstance(VReference.sunDamage) == null) {
-            player.getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.vp.SUNDAMAGE_DAMAGE);
+        if (player.getAttributes().getAttributeInstance(VReference.sunDamage) == null) {
+            player.getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(Balance.vp.SUNDAMAGE_DAMAGE);
         }
-        if (player.getAttributeMap().getAttributeInstance(VReference.bloodExhaustion) == null) {
-            player.getAttributeMap().registerAttribute(VReference.bloodExhaustion).setBaseValue(Balance.vp.BLOOD_EXHAUSTION_BASIC_MOD);
+        if (player.getAttributes().getAttributeInstance(VReference.bloodExhaustion) == null) {
+            player.getAttributes().registerAttribute(VReference.bloodExhaustion).setBaseValue(Balance.vp.BLOOD_EXHAUSTION_BASIC_MOD);
         }
-        if (player.getAttributeMap().getAttributeInstance(VReference.biteDamage) == null) {
-            player.getAttributeMap().registerAttribute(VReference.biteDamage).setBaseValue(Balance.vp.BITE_DMG);
+        if (player.getAttributes().getAttributeInstance(VReference.biteDamage) == null) {
+            player.getAttributes().registerAttribute(VReference.biteDamage).setBaseValue(Balance.vp.BITE_DMG);
 
         }
     }

@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.client.model;
 
 import net.minecraft.client.renderer.entity.model.RendererModel;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ModelVampireBaron extends ModelBipedCloaked {
+public class ModelVampireBaron<T extends LivingEntity> extends ModelBipedCloaked<T> {
 
 
     private RendererModel rightwing1;
@@ -47,17 +47,19 @@ public class ModelVampireBaron extends ModelBipedCloaked {
         setRotation(leftwing2, 0F, 0F, 0F);
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    @Override
+    public void render(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+        setRotationAngles(entity, f, f1, f2, f3, f4, f5);
         rightwing1.render(f5);
         rightwing2.render(f5);
         leftwing1.render(f5);
         leftwing2.render(f5);
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-        super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+    @Override
+    public void setRotationAngles(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
+        super.setRotationAngles(entity, f, f1, f2, f3, f4, f5);
     }
 
     private void setRotation(RendererModel model, float x, float y, float z) {

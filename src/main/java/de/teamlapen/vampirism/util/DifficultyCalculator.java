@@ -58,7 +58,7 @@ public class DifficultyCalculator {
      * @return A difficulty level based on the world's player's faction levels
      */
     public static Difficulty getWorldDifficulty(World w) {
-        return calculateDifficulty(w.playerEntities);
+        return calculateDifficulty(w.getPlayers());
     }
 
     /**

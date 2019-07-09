@@ -2,13 +2,13 @@ package de.teamlapen.vampirism.client.model;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 
 @OnlyIn(Dist.CLIENT)
-public class ModelHunterHat extends BipedModel {
+public class ModelHunterHat<T extends LivingEntity> extends BipedModel<T> {
     public static final ModelHunterHat hat0 = new ModelHunterHat(0);
     public static final ModelHunterHat hat1 = new ModelHunterHat(1);
     private RendererModel hatTop;
@@ -46,15 +46,15 @@ public class ModelHunterHat extends BipedModel {
     }
 
     @Override
-    public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         hatTop.render(scale);
         hatRim.render(scale);
     }
 
     @Override
-    public void setRotationAngles(float f1, float f2, float f3, float f4, float f5, float f6, Entity e) {
-        super.setRotationAngles(f1, f2, f3, f4, f5, f6, e);
+    public void setRotationAngles(T e, float f1, float f2, float f3, float f4, float f5, float f6) {
+        super.setRotationAngles(e, f1, f2, f3, f4, f5, f6);
         hatRim.rotateAngleX = super.bipedHead.rotateAngleX;
         hatRim.rotateAngleY = super.bipedHead.rotateAngleY;
         hatRim.rotateAngleZ = super.bipedHead.rotateAngleZ;

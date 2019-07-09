@@ -24,9 +24,9 @@ public enum EntityClassType {
     private AttributeModifier speedModifier;
 
     EntityClassType(double healthModifier, double damageModifier, double speedModifier) {
-        this.healthModifier = new AttributeModifier("entity_class_health", healthModifier, 1);
-        this.damageModifier = new AttributeModifier("entity_class_damage", damageModifier, 1);
-        this.speedModifier = new AttributeModifier("entity_class_speed", speedModifier, 1);
+        this.healthModifier = new AttributeModifier("entity_class_health", healthModifier, AttributeModifier.Operation.MULTIPLY_BASE);
+        this.damageModifier = new AttributeModifier("entity_class_damage", damageModifier, AttributeModifier.Operation.MULTIPLY_BASE);
+        this.speedModifier = new AttributeModifier("entity_class_speed", speedModifier, AttributeModifier.Operation.MULTIPLY_BASE);
     }
 
     public static EntityClassType getRandomClass(Random rand) {

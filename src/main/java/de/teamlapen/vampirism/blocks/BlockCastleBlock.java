@@ -70,12 +70,10 @@ public class BlockCastleBlock extends VampirismBlock {
          * The EnumType's name.
          */
         private final String name;
-        private final String unlocalizedName;
 
         EnumVariant(int metaIn, String nameIn) {
             this.meta = metaIn;
             this.name = nameIn;
-            this.unlocalizedName = nameIn;
         }
 
 
@@ -83,9 +81,6 @@ public class BlockCastleBlock extends VampirismBlock {
             return this.name;
         }
 
-        public String getUnlocalizedName() {
-            return this.unlocalizedName;
-        }
 
     }
 

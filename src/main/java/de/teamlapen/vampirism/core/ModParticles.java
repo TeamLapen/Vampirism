@@ -7,8 +7,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.CloudParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Particles;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -188,7 +188,7 @@ public class ModParticles {
             @OnlyIn(Dist.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new CloudParticle.Factory().makeParticle(Particles.CLOUD, world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
+                return new CloudParticle.Factory().makeParticle(ParticleTypes.CLOUD, world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
             }
 
             @Nonnull

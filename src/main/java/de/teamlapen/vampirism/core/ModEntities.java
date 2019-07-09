@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.config.Balance;
@@ -106,7 +107,7 @@ public class ModEntities {
         registry.register(prepareEntityType("villager_converted", EntityType.Builder.create(EntityConvertedVillager.class, EntityConvertedVillager::new), false));
         registry.register(prepareEntityType("villager_angry", EntityType.Builder.create(EntityAggressiveVillager.class, EntityAggressiveVillager::new), false));
         registry.register(prepareEntityType("crossbow_arrow", EntityType.Builder.create(EntityCrossbowArrow.class, EntityCrossbowArrow::new), false));
-        registry.register(prepareEntityType("particle_cloud", EntityType.Builder.create(EntityAreaParticleCloud.class, EntityAreaParticleCloud::new), false));
+        registry.register(prepareEntityType("particle_cloud", EntityType.Builder.create(EntityAreaParticleCloud.class, EntityAreaParticleCloud::new).immuneToFire(), false));
         registry.register(prepareEntityType("throwable_item", EntityType.Builder.create(EntityThrowableItem.class, EntityThrowableItem::new), false));
         registry.register(prepareEntityType("special_dracula_halloween", EntityType.Builder.create(EntityDraculaHalloween.class, EntityDraculaHalloween::new), true));
         registry.register(prepareEntityType("dark_blood_projectile", EntityType.Builder.create(EntityDarkBloodProjectile.class, EntityDarkBloodProjectile::new), false));

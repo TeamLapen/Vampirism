@@ -21,6 +21,7 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -58,7 +59,7 @@ public class BlockMedChair extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 
         ItemStack stack = player.getHeldItem(hand);
         if (!stack.isEmpty() && stack.getItem().equals(ModItems.injection_garlic)) {
@@ -97,11 +98,11 @@ public class BlockMedChair extends VampirismBlock {
             BlockPos other;
             if (state.get(PART) == EnumPart.TOP) {
                 other = pos.offset(dir);
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.item_med_chair, 1)));
+                world.addEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.item_med_chair, 1)));
             } else {
                 other = pos.offset(dir.getOpposite());
             }
-            world.removeBlock(other);
+            world.removeBlock(other, isMoving);
         }
     }
 

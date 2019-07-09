@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -80,7 +81,7 @@ public class VampireSkills {
         registry.register(new ActionSkill<>("bat", VampireActions.bat));
         registry.register(new ActionSkill<>("summon_bats", VampireActions.summon_bat, true));
         DefaultSkill<IVampirePlayer> damage = new VampirismSkill.SimpleVampireSkill("less_sundamage", 96, 0, false);
-        damage.registerAttributeModifier(VReference.sunDamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", Balance.vps.SUNDAMAGE_REDUCTION1, 2);
+        damage.registerAttributeModifier(VReference.sunDamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", Balance.vps.SUNDAMAGE_REDUCTION1, AttributeModifier.Operation.MULTIPLY_TOTAL);
         registry.register(damage);
         DefaultSkill<IVampirePlayer> damage2 = new VampirismSkill.SimpleVampireSkill("water_resistance", 208, 0, true) {
             @Override
@@ -94,7 +95,7 @@ public class VampireSkills {
             }
         };
         registry.register(damage2);
-        registry.register((new VampirismSkill.SimpleVampireSkill("less_blood_thirst", 80, 0, true)).registerAttributeModifier(VReference.bloodExhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", Balance.vps.BLOOD_THIRST_REDUCTION1, 2));
+        registry.register((new VampirismSkill.SimpleVampireSkill("less_blood_thirst", 80, 0, true)).registerAttributeModifier(VReference.bloodExhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", Balance.vps.BLOOD_THIRST_REDUCTION1, AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new ActionSkill<>("vampire_disguise", VampireActions.disguise_vampire));
         registry.register(new ActionSkill<>("vampire_invisibility", VampireActions.vampire_invisibility));
         registry.register(new ActionSkill<>("vampire_rage", VampireActions.vampire_rage, true));
@@ -111,7 +112,7 @@ public class VampireSkills {
             }
         };
         advanced_biter.setHasDefaultDescription();
-        advanced_biter.registerAttributeModifier(VReference.biteDamage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", Balance.vps.BITE_DAMAGE_MULT, 1);
+        advanced_biter.registerAttributeModifier(VReference.biteDamage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", Balance.vps.BITE_DAMAGE_MULT, AttributeModifier.Operation.MULTIPLY_BASE);
         registry.register(advanced_biter);
 
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", 240, 0, true));
@@ -142,7 +143,7 @@ public class VampireSkills {
                 return "effect.moveSpeed";
             }
         };
-        speed.registerAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, "96dc968d-818f-4271-8dbf-6b799d603ad8", Balance.vps.SPEED_BOOST, 2);
+        speed.registerAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, "96dc968d-818f-4271-8dbf-6b799d603ad8", Balance.vps.SPEED_BOOST, AttributeModifier.Operation.MULTIPLY_TOTAL);
         registry.register(speed);
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_vision", 176, 0, true) {
 

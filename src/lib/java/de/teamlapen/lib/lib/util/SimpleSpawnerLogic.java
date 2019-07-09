@@ -1,12 +1,7 @@
 package de.teamlapen.lib.lib.util;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -23,7 +18,7 @@ public abstract class SimpleSpawnerLogic {
     private static final int MOB_COUNT_DIV = (int) Math.pow(17.0D, 2.0D);
 
     @Nullable
-    private ResourceLocation entityName = null;
+    private EntityType entityType = null;
     private int minSpawnDelay = 200;
     private int maxSpawnDelay = 800;
     private int activateRange = 16;
@@ -37,12 +32,12 @@ public abstract class SimpleSpawnerLogic {
     private EntityClassification limitType;
 
     @Nullable
-    public ResourceLocation getEntityName() {
-        return entityName;
+    public EntityType getEntityType() {
+        return entityType;
     }
 
-    public void setEntityName(@Nullable ResourceLocation entityName) {
-        this.entityName = entityName;
+    public void setEntityType(@Nullable EntityType entityType) {
+        this.entityType = entityType;
     }
 
     public abstract BlockPos getSpawnerPosition();
@@ -50,15 +45,15 @@ public abstract class SimpleSpawnerLogic {
     public abstract World getSpawnerWorld();
 
     public boolean isActivated() {
-        if (entityName == null) return false;
+        if (entityType == null) return false;
         BlockPos blockpos = this.getSpawnerPosition();
-        return this.getSpawnerWorld().isAnyPlayerWithinRangeAt((double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D, (double) this.activateRange);
+        return this.getSpawnerWorld().isPlayerWithin((double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D, (double) this.activateRange);
     }
 
     public void readFromNbt(CompoundNBT nbt) {
 
         String s = nbt.getString("id");
-        entityName = StringUtils.isNullOrEmpty(s) ? null : new ResourceLocation(s);
+        entityType = EntityType.byKey(s).orElse(null);
 
         minSpawnDelay = nbt.getInt("min_delay");
         maxSpawnDelay = nbt.getInt("max_delay");
@@ -135,7 +130,7 @@ public abstract class SimpleSpawnerLogic {
                 boolean flag1 = false;
 
                 for (int i = 0; i < this.spawnCount; ++i) {
-                    Entity entity = EntityType.create(this.getSpawnerWorld(), this.getEntityName());
+                    Entity entity = this.getEntityType().create(this.getSpawnerWorld());
 
                     if (entity == null) {
                         break;
@@ -149,7 +144,7 @@ public abstract class SimpleSpawnerLogic {
                     }
 
                     if (limitType != null) {
-                        int total = this.getSpawnerWorld().countEntities(limitType.getClass(), limitType.getMaxNumberOfCreature() + 1);//TODO must verify
+                        int total = this.getSpawnerWorld().countEntities(limitType.getClass(), limitType.getMaxNumberOfCreature() + 1);//TODO ServerWorld#countEntities().getInt(limitType) <= limit
                         total = total * UtilLib.countPlayerLoadedChunks(this.getSpawnerWorld()) / MOB_COUNT_DIV;
                         if (total > limitType.getMaxNumberOfCreature()) {
                             this.resetTimer();
@@ -157,7 +152,7 @@ public abstract class SimpleSpawnerLogic {
                         }
                     }
 
-                    if (UtilLib.spawnEntityInWorld(getSpawnerWorld(), getSpawningBox(), entity, 1, Collections.emptyList())) {
+                    if (UtilLib.spawnEntityInWorld(getSpawnerWorld(), getSpawningBox(), entity, 1, Collections.emptyList(), SpawnReason.SPAWNER)) {
                         onSpawned(entity);
                         flag1 = true;
                     }
@@ -172,7 +167,7 @@ public abstract class SimpleSpawnerLogic {
     }
 
     public void writeToNbt(CompoundNBT nbt) {
-        if (entityName != null) nbt.putString("id", entityName.toString());
+        if (entityType != null) nbt.putString("id", EntityType.getKey(entityType).toString());
         nbt.putInt("min_delay", minSpawnDelay);
         nbt.putInt("max_delay", maxSpawnDelay);
         nbt.putInt("max_nearby", maxNearbyEntities);

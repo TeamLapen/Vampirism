@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
+import com.mojang.datafixers.util.Either;
+
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -9,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
@@ -83,7 +86,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @param pos
      * @return
      */
-    PlayerEntity.SleepResult trySleep(BlockPos pos);
+    Either<PlayerEntity.SleepResult, Unit> trySleep(BlockPos pos);
 
     /**
      * Locks the vision again, preventing the player from using it

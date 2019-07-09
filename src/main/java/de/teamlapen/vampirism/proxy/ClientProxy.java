@@ -18,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -46,8 +47,8 @@ public class ClientProxy extends CommonProxy {
     @Override
     public Entity getMouseOverEntity() {
         RayTraceResult r = Minecraft.getInstance().objectMouseOver;
-        if (r == null) return null;
-        return r.entity;
+        if (r instanceof EntityRayTraceResult) return ((EntityRayTraceResult) r).getEntity();
+        return null;
     }
 
     @Override

@@ -51,7 +51,7 @@ public class ItemMedChair extends VampirismItem {
         BlockPos otherPos = pos.offset(facing);
         Block otherBlock = world.getBlockState(otherPos).getBlock();
 
-        boolean other_replaceable = world.getBlockState(otherPos).isReplaceable(new BlockItemUseContext(ctx.getWorld(), ctx.getPlayer(), ctx.getItem(), otherPos, ctx.getFace(), ctx.getHitX(), ctx.getHitY(), ctx.getHitZ()));
+        boolean other_replaceable = world.getBlockState(otherPos).isReplaceable(new BlockItemUseContext(ctx));
         boolean flag1 = world.isAirBlock(pos) || replaceable;
         boolean flag2 = world.isAirBlock(otherPos) || other_replaceable;
 

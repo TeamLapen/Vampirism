@@ -6,8 +6,8 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.init.Particles;
 import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
@@ -49,7 +49,7 @@ public class BlockAlchemicalFire extends VampirismBlock {
             double d0 = (double) pos.getX() + rand.nextDouble();
             double d1 = (double) pos.getY() + rand.nextDouble() * 0.5D + 0.5D;
             double d2 = (double) pos.getZ() + rand.nextDouble();
-            IParticleData type = i == 0 ? Particles.LARGE_SMOKE : i == 1 ? Particles.WITCH : rand.nextInt(10) == 0 ? Particles.FIREWORK : RedstoneParticleData.REDSTONE_DUST;
+            IParticleData type = i == 0 ? ParticleTypes.LARGE_SMOKE : i == 1 ? ParticleTypes.WITCH : rand.nextInt(10) == 0 ? ParticleTypes.FIREWORK : RedstoneParticleData.REDSTONE_DUST;
             worldIn.addParticle(type, d0, d1, d2, 0.0D, i == 2 ? 0.1D : 0.0D, 0.0D);
         }
     }
@@ -90,9 +90,9 @@ public class BlockAlchemicalFire extends VampirismBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        if (!isValidPosition(state, worldIn, pos)) {
-            worldIn.removeBlock(pos);
+    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+        if (!isValidPosition(state, world, pos)) {
+            world.removeBlock(pos);
         }
     }
 

@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 /**
  * Base class for most vampirism mobs
  */
-public abstract class EntityVampirism extends CreatureEntity implements IEntityWithHome, IVampirismEntity {//TODO move entityaction stuff to users @cheaterpaul
+public abstract class EntityVampirism extends CreatureEntity implements IEntityWithHome, IVampirismEntity {
 
     private final Goal moveTowardsRestriction;
     protected boolean hasArms = true;

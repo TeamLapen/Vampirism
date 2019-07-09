@@ -11,7 +11,7 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.util.DamageSource;
-import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.PlantType;
 
 /**
  * Holds constants (or at init set variables)
@@ -47,7 +47,7 @@ public class VReference {
     /**
      * Plant type for plants that grow on cursed earth;
      */
-    public static final EnumPlantType VAMPIRE_PLANT_TYPE = EnumPlantType.create("VAMPIRISM_VAMPIRE");
+    public static final PlantType VAMPIRE_PLANT_TYPE = PlantType.create("VAMPIRISM_VAMPIRE");
     public static final DamageSource SUNDAMAGE = new DamageSource("sun").setDamageBypassesArmor().setMagicDamage();
     public static final DamageSource VAMPIRE_ON_FIRE = new DamageSource("vampire_on_fire").setDamageBypassesArmor().setMagicDamage();
     public static final DamageSource VAMPIRE_IN_FIRE = new DamageSource("vampire_in_fire").setMagicDamage();

@@ -224,7 +224,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 }
 
             } else if (i == 2 && this.getAttackTarget() != null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), ModEntities.vampire_minion_s);
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), ModEntities.vampire_minion_s, SpawnReason.NATURAL);
             }
             if (m == null) {
                 m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getBoundingBox().grow(19, 4, 19), ModEntities.vampire_minion_s, 3, Collections.emptyList()); //Do not avoid player here. Already using spawnBehind sometimes

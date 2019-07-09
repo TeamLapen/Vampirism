@@ -44,7 +44,7 @@ public class ItemHolyWaterSplashBottle extends ItemHolyWaterBottle implements En
 
             if (!list1.isEmpty()) {
                 for (LivingEntity entitylivingbase : list1) {
-                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.entity != null);
+                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.getType() == RayTraceResult.Type.ENTITY);
                 }
             }
 
@@ -68,7 +68,7 @@ public class ItemHolyWaterSplashBottle extends ItemHolyWaterBottle implements En
             throwStack.setCount(1);
             entityThrowable.setItem(throwStack);
             entityThrowable.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
-            worldIn.spawnEntity(entityThrowable);
+            worldIn.addEntity(entityThrowable);
         }
 
         if (!playerIn.abilities.isCreativeMode) {

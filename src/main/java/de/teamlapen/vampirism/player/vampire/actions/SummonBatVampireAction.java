@@ -25,7 +25,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
             e.restrictLiveSpan();
             e.setIsBatHanging(false);
             e.copyLocationAndAnglesFrom(player.getRepresentingPlayer());
-            player.getRepresentingPlayer().getEntityWorld().spawnEntity(e);
+            player.getRepresentingPlayer().getEntityWorld().addEntity(e);
         }
         entityPlayer.getEntityWorld().playSound(null, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entityPlayer.getEntityWorld().rand.nextFloat() * 0.2F + 1.3F);
         return true;

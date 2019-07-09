@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
+
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
@@ -68,8 +69,8 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
     public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack) {
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
-        if (equipmentSlot == this.armorType) {
-            multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[equipmentSlot.getIndex()], "Armor Swiftness", getSpeedBoost(tier), 2));
+        if (equipmentSlot == this.getEquipmentSlot()) {
+            multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[equipmentSlot.getIndex()], "Armor Swiftness", getSpeedBoost(tier), AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
 
         return multimap;
@@ -79,7 +80,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
     public void onArmorTick(ItemStack itemStack, World world, PlayerEntity player) {
         super.onArmorTick(itemStack, world, player);
         if (player.ticksExisted % 45 == 3) {
-            if (this.armorType == EquipmentSlotType.CHEST) {
+            if (this.getEquipmentSlot() == EquipmentSlotType.CHEST) {
                 boolean flag = true;
                 int boost = Integer.MAX_VALUE;
                 for (ItemStack stack : player.inventory.armorInventory) {

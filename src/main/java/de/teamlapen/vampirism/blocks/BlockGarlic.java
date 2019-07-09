@@ -35,9 +35,8 @@ public class BlockGarlic extends CropsBlock {
         setRegistryName(REFERENCE.MODID, regName);
     }
 
-    @Override
     public void getDrops(BlockState p_getDrops_1_, NonNullList<ItemStack> p_getDrops_2_, World p_getDrops_3_, BlockPos p_getDrops_4_, int fortune) {
-        super.getDrops(p_getDrops_1_, p_getDrops_2_, p_getDrops_3_, p_getDrops_4_, fortune - 1);
+        //super.getDrops(p_getDrops_1_, p_getDrops_2_, p_getDrops_3_, p_getDrops_4_, fortune - 1);
     }
 
     @Override

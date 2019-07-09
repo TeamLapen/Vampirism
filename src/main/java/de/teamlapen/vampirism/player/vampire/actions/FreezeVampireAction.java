@@ -35,7 +35,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
             e.addPotionEffect(new EffectInstance(Effects.SLOWNESS, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new EffectInstance(Effects.RESISTANCE, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, Balance.vpa.FREEZE_DURATION * 20, 128));
-            VampLib.proxy.getParticleHandler().spawnParticles(player.getEntityWorld(), ModParticles.GENERIC_PARTICLE, e.posX, e.posY + e.height / 2, e.posZ, 20, 1, e.getRNG(), 2, 20, 0xF0F0F0, 0.4);
+            VampLib.proxy.getParticleHandler().spawnParticles(player.getEntityWorld(), ModParticles.GENERIC_PARTICLE, e.posX, e.posY + e.getHeight() / 2, e.posZ, 20, 1, e.getRNG(), 2, 20, 0xF0F0F0, 0.4);
         }
         return l.size() > 0;
     }

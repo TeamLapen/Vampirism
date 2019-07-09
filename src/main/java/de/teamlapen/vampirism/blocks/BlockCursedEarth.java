@@ -20,7 +20,7 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
     private static final String name = "cursed_earth";
 
     public BlockCursedEarth() {
-        super(name, Properties.create(Material.GROUND).hardnessAndResistance(0.5f, 2.0f).sound(SoundType.GROUND));
+        super(name, Properties.create(Material.EARTH).hardnessAndResistance(0.5f, 2.0f).sound(SoundType.GROUND));
 
     }
 
@@ -82,7 +82,7 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
 
                 blockpos1 = blockpos1.add(rand.nextInt(3) - 1, (rand.nextInt(3) - 1) * rand.nextInt(3) / 2, rand.nextInt(3) - 1);
 
-                if (worldIn.getBlockState(blockpos1.down()).getBlock() != ModBlocks.cursed_earth || worldIn.getBlockState(blockpos1).isNormalCube()) {
+                if (worldIn.getBlockState(blockpos1.down()).getBlock() != ModBlocks.cursed_earth || worldIn.getBlockState(blockpos1).isNormalCube(worldIn, blockpos1)) {
                     break;
                 }
 
