@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
+
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.core.ModParticles;
@@ -23,7 +24,7 @@ public class HalloweenCommand extends BasicCommand{
     }
 
     private static int halloween(ServerPlayerEntity asPlayer) {
-        // EntityDraculaHalloween draculaHalloween = (EntityDraculaHalloween) UtilLib.spawnEntityBehindEntity(asPlayer, new ResourceLocation(REFERENCE.MODID, ModEntities.SPECIAL_DRACULA_HALLOWEEN));
+        // DraculaHalloweenEntity draculaHalloween = (DraculaHalloweenEntity) UtilLib.spawnEntityBehindEntity(asPlayer, new ResourceLocation(REFERENCE.MODID, ModEntities.SPECIAL_DRACULA_HALLOWEEN));
         // draculaHalloween.setOwnerId(asPlayer.getUniqueID());
         VampLib.proxy.getParticleHandler().spawnParticle(asPlayer.world, ModParticles.HALLOWEEN, asPlayer.posX, asPlayer.posY, asPlayer.posZ);
         return 0;

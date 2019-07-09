@@ -1,0 +1,254 @@
+package de.teamlapen.vampirism.entity.hunter;
+
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.entity.EntityClassType;
+import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
+import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
+import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
+import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
+import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import de.teamlapen.vampirism.util.IPlayerFace;
+import de.teamlapen.vampirism.util.SupporterManager;
+import de.teamlapen.vampirism.world.loot.LootHandler;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+
+/**
+ * Advanced hunter. Is strong. Represents supporters
+ */
+public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerFace, IEntityActionUser {
+    private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<String> NAME = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.STRING);
+    private static final DataParameter<String> TEXTURE = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.STRING);
+
+    private final int MAX_LEVEL = 1;
+    private final int MOVE_TO_RESTRICT_PRIO = 3;
+    /**
+     * available actions for AI task & task
+     */
+    private final ActionHandlerEntity<?> entityActionHandler;
+    private final EntityClassType entityclass;
+    private final EntityActionTier entitytier;
+
+    public AdvancedHunterEntity(EntityType<? extends AdvancedHunterEntity> type, World world) {
+        super(type, world, true);
+        saveHome = true;
+        ((GroundPathNavigator) this.getNavigator()).setEnterDoors(true);
+
+
+        this.setDontDropEquipment();
+        entitytier = EntityActionTier.High;
+        entityclass = EntityClassType.getRandomClass(this.getRNG());
+        IEntityActionUser.applyAttributes(this);
+        this.entityActionHandler = new ActionHandlerEntity<>(this);
+    }
+
+    @Override
+    public boolean attackEntityAsMob(Entity entity) {
+        boolean flag = super.attackEntityAsMob(entity);
+        if (flag && this.getHeldItemMainhand() == null) {
+            this.swingArm(Hand.MAIN_HAND);  //Swing stake if nothing else is held
+        }
+        return flag;
+    }
+
+    @Override
+    public boolean getAlwaysRenderNameTagForRender() {
+        return true;
+    }
+
+    @Override
+    public int getHunterType() {
+        return this.getDataManager().get(TYPE);
+    }
+
+    @Override
+    public int getLevel() {
+        return getDataManager().get(LEVEL);
+    }
+
+    @Override
+    public ITextComponent getName() {
+        String senderName = this.getDataManager().get(NAME);
+        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return MAX_LEVEL;
+    }
+
+    @Override
+    public void read(CompoundNBT tagCompund) {
+        super.read(tagCompund);
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
+        }
+        if (tagCompund.contains("type")) {
+            getDataManager().set(TYPE, tagCompund.getInt("type"));
+            getDataManager().set(NAME, tagCompund.getString("name"));
+            getDataManager().set(TEXTURE, tagCompund.getString("texture"));
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
+        }
+    }
+
+    @Nullable
+    @Override
+    public String getPlayerFaceName() {
+        return getTextureName();
+    }
+
+    @Nullable
+    @Override
+    public String getTextureName() {
+        String texture = this.getDataManager().get(TEXTURE);
+        return "none".equals(texture) ? null : texture;
+    }
+
+    @Override
+    public boolean isLookingForHome() {
+        return !hasHome();
+    }
+
+    @Override
+    public void livingTick() {
+        super.livingTick();
+        if (entityActionHandler != null) {
+            entityActionHandler.handle();
+        }
+    }
+
+    @Override
+    public void setLevel(int level) {
+        if (level >= 0) {
+            getDataManager().set(LEVEL, level);
+            this.updateEntityAttributes();
+            if (level == 1) {
+                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 1));
+            }
+
+        }
+    }
+
+    @Override
+    public void setCampArea(AxisAlignedBB box) {
+        super.setHome(box);
+        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
+    }
+
+    @Override
+    public int suggestLevel(Difficulty d) {
+        if (rand.nextBoolean()) {
+            return (int) (d.avgPercLevel * MAX_LEVEL / 100F);
+        }
+        return rand.nextInt(MAX_LEVEL + 1);
+
+    }
+
+    @Override
+    public void writeAdditional(CompoundNBT nbt) {
+        super.writeAdditional(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putInt("type", getHunterType());
+        nbt.putString("texture", getDataManager().get(TEXTURE));
+        nbt.putString("name", getDataManager().get(NAME));
+        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
+        if (entityActionHandler != null) {
+            entityActionHandler.write(nbt);
+        }
+    }
+
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.updateEntityAttributes();
+
+    }
+
+    @Override
+    public boolean canDespawn() {
+        return isLookingForHome() && super.canDespawn();
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        SupporterManager.Supporter supporter = SupporterManager.getInstance().getRandomHunter(rand);
+        this.getDataManager().register(LEVEL, -1);
+        this.getDataManager().register(TYPE, supporter.typeId);
+        this.getDataManager().register(NAME, supporter.senderName == null ? "none" : supporter.senderName);
+        this.getDataManager().register(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
+
+    }
+
+    @Override
+    protected int getExperiencePoints(PlayerEntity player) {
+        return 10 * (1 + getLevel());
+    }
+
+    @Nullable
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootHandler.ADVANCED_HUNTER;
+    }
+
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+
+        this.tasks.addTask(1, new OpenDoorGoal(this, true));
+        this.tasks.addTask(2, new MeleeAttackGoal(this, 1.0, false));
+
+        this.tasks.addTask(6, new RandomWalkingGoal(this, 0.7, 50));
+        this.tasks.addTask(8, new LookAtGoal(this, PlayerEntity.class, 13F));
+        this.tasks.addTask(8, new LookAtGoal(this, VampireBaseEntity.class, 17F));
+        this.tasks.addTask(8, new LookRandomlyGoal(this));
+
+        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
+
+        this.targetTasks.addTask(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetTasks.addTask(3, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+    }
+
+    protected void updateEntityAttributes() {
+        int l = Math.max(getLevel(), 0);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH + Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH_PL * l);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE_PL * l);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_SPEED);
+    }
+
+    @Override
+    public EntityClassType getEntityClass() {
+        return entityclass;
+    }
+
+    @Override
+    public EntityActionTier getEntityTier() {
+        return entitytier;
+    }
+
+}

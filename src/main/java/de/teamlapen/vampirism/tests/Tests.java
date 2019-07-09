@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.tests;
 
 import com.google.common.base.Stopwatch;
-import de.teamlapen.vampirism.blocks.BlockWeaponTable;
+
+import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.block.BlockState;
@@ -170,8 +171,8 @@ public class Tests {
         block.getBlock().onBlockActivated(block, info.world, info.pos, info.player, info.player.getActiveHand(), Direction.random(info.world.rand), 0, 0, 0);
         block = info.world.getBlockState(info.pos);
         assert info.player.getHeldItem(info.player.getActiveHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
-        log("Block lava level: %s", block.get(BlockWeaponTable.LAVA));
-        assert (block.get(BlockWeaponTable.LAVA) * BlockWeaponTable.MB_PER_META) == Fluid.BUCKET_VOLUME : "Incorrect Fluid Transaction";
+        log("Block lava level: %s", block.get(WeaponTableBlock.LAVA));
+        assert (block.get(WeaponTableBlock.LAVA) * WeaponTableBlock.MB_PER_META) == Fluid.BUCKET_VOLUME : "Incorrect Fluid Transaction";
         return true;
     }
 

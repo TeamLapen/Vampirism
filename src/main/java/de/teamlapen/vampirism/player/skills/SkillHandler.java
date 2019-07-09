@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.core.VampirismRegistries;
+import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -145,7 +145,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     public void loadFromNbt(CompoundNBT nbt) {
         if (!nbt.contains("skills")) return;
         for (String id : nbt.getCompound("skills").keySet()) {
-            ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(id));
+            ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
             if (skill == null) {
                 LOGGER.warn("Skill %s does not exist anymore", id);
                 continue;
@@ -160,7 +160,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         if (!nbt.contains("skills")) return;
         List<ISkill> old = (List<ISkill>) enabledSkills.clone();
         for (String id : nbt.getCompound("skills").keySet()) {
-            ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(id));
+            ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
             if (skill == null) {
                 LOGGER.error("Skill %s does not exist on client!!!", id);
                 continue;

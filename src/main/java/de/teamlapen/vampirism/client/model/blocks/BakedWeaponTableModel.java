@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
-import de.teamlapen.vampirism.blocks.BlockWeaponTable;
+import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
@@ -58,7 +58,7 @@ public class BakedWeaponTableModel implements IBakedModel {
         List<BakedQuad> quads = new LinkedList<>();
 
 
-        int fluidLevel = state.get(BlockWeaponTable.LAVA);
+        int fluidLevel = state.get(WeaponTableBlock.LAVA);
 
         quads.addAll(baseModel.getQuads(state, side, rand));
         if (fluidLevel > 0 && fluidLevel <= FLUID_LEVELS) {

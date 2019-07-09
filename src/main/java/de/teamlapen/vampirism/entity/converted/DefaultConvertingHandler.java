@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 /**
  * Default converting handler for entities.
  * Used for some vanilla entities, but can also be used for third party entities.
- * Converts the entity into a {@link EntityConvertedCreature}
+ * Converts the entity into a {@link ConvertedCreatureEntity}
  */
 public class DefaultConvertingHandler<T extends CreatureEntity> implements IConvertingHandler<T> {
 
@@ -110,7 +110,7 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
 
     @Override
     public IConvertedCreature<T> createFrom(T entity) {
-        EntityConvertedCreature<T> convertedCreature = new EntityConvertedCreature<>(entity.getEntityWorld());
+        ConvertedCreatureEntity<T> convertedCreature = new ConvertedCreatureEntity<>(entity.getEntityWorld());
         copyImportantStuff(convertedCreature, entity);
         convertedCreature.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
         return convertedCreature;
@@ -123,7 +123,7 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
         return helper;
     }
 
-    protected void copyImportantStuff(EntityConvertedCreature converted, T entity) {
+    protected void copyImportantStuff(ConvertedCreatureEntity converted, T entity) {
         converted.copyLocationAndAnglesFrom(entity);
         converted.setEntityCreature(entity);
         converted.updateEntityAttributes();

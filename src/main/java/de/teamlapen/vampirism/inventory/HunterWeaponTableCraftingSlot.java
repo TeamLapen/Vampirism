@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
-import de.teamlapen.vampirism.blocks.BlockWeaponTable;
+import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -56,15 +56,15 @@ public class HunterWeaponTableCraftingSlot extends Slot {
         this.onCrafting(stack);
         int lava = 0;
         BlockState blockState = world.getBlockState(pos);
-        if (blockState.getBlock() instanceof BlockWeaponTable) {
-            lava = blockState.get(BlockWeaponTable.LAVA);
+        if (blockState.getBlock() instanceof WeaponTableBlock) {
+            lava = blockState.get(WeaponTableBlock.LAVA);
         }
         HunterPlayer hunterPlayer = HunterPlayer.get(playerIn);
         IWeaponTableRecipe recipe = findMatchingRecipe(playerIn, hunterPlayer, lava);
         if (recipe != null && recipe.getRequiredLavaUnits() > 0) {
             lava = Math.max(0, lava - recipe.getRequiredLavaUnits());
-            if (blockState.getBlock() instanceof BlockWeaponTable) {
-                world.setBlockState(pos, blockState.with(BlockWeaponTable.LAVA, lava));
+            if (blockState.getBlock() instanceof WeaponTableBlock) {
+                world.setBlockState(pos, blockState.with(WeaponTableBlock.LAVA, lava));
             }
         }
         NonNullList<ItemStack> remaining = recipe == null ? playerIn.world.getRecipeManager().getRemainingItems(this.craftMatrix, playerIn.world, ModRecipes.WEAPONTABLE_CRAFTING_TYPE) : recipe.getRemainingItems(this.craftMatrix);

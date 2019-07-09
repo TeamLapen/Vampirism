@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.entity.EntityBlindingBat;
+import de.teamlapen.vampirism.entity.BlindingBatEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 
@@ -21,7 +21,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     public boolean activate(IVampirePlayer player) {
         PlayerEntity entityPlayer = player.getRepresentingPlayer();
         for (int i = 0; i < Balance.vpa.SUMMON_BAT_COUNT; i++) {
-            EntityBlindingBat e = new EntityBlindingBat(entityPlayer.getEntityWorld());
+            BlindingBatEntity e = new BlindingBatEntity(entityPlayer.getEntityWorld());
             e.restrictLiveSpan();
             e.setIsBatHanging(false);
             e.copyLocationAndAnglesFrom(player.getRepresentingPlayer());

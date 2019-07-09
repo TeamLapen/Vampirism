@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 /**
  * Extends {@link CreatureEntity} home system with a way to set more accurate home positions
- * Implemented by EntityVampirism and thereby by most of Vampirism's.
+ * Implemented by VampirismEntity and thereby by most of Vampirism's.
  */
 public interface IEntityWithHome {
     @Nullable

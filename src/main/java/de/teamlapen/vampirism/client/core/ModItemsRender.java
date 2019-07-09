@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.ItemArmorOfSwiftness;
-import de.teamlapen.vampirism.items.ItemCrossbowArrow;
+import de.teamlapen.vampirism.items.ArmorOfSwiftnessItem;
+import de.teamlapen.vampirism.items.CrossbowArrowItem;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -20,7 +20,7 @@ public class ModItemsRender {
 			if (tintIndex == 0) {
 				return 10511680;
 			} else {
-                switch (((ItemArmorOfSwiftness) stack.getItem()).getVampirismTier()) {
+                switch (((ArmorOfSwiftnessItem) stack.getItem()).getVampirismTier()) {
 					case ENHANCED:
 						return 0x007CFF;
 					case ULTIMATE:
@@ -33,7 +33,7 @@ public class ModItemsRender {
         //Crossbow arrow
         Minecraft.getInstance().getItemColors().register((stack, tintIndex) -> {
 			if (tintIndex == 1) {
-                return ((ItemCrossbowArrow) stack.getItem()).getType().color;
+                return ((CrossbowArrowItem) stack.getItem()).getType().color;
 			}
 			return 0xFFFFFF;
         }, ModItems.crossbow_arrow_normal, ModItems.crossbow_arrow_vampire_killer, ModItems.crossbow_arrow_spitfire);

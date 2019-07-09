@@ -3,10 +3,11 @@ package de.teamlapen.vampirism.recipes;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.*;
+
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.core.VampirismRegistries;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -308,7 +309,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
         ISkill[] skills = new ISkill[jsonObject.size()];
         for (int i = 0; i < skills.length; ++i) {
             String s = JSONUtils.getString(jsonObject.get(i), "skill[" + i + "]");
-            ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(s));
+            ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(s));
             if (skill == null) {
                 throw new JsonSyntaxException("Unknown skill '" + s + "'");
             } else {
@@ -354,7 +355,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
             ISkill[] skills = new ISkill[buffer.readVarInt()];
             if (skills.length != 0) {
                 for (int i = 0; i < skills.length; i++) {
-                    skills[i] = VampirismRegistries.SKILLS.getValue(new ResourceLocation(buffer.readString(32767)));
+                    skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readString(32767)));
                 }
             }
             return new ShapedWeaponTableRecipe(recipeId, group, height, width, ingredients, itemstack, level, skills, lava);

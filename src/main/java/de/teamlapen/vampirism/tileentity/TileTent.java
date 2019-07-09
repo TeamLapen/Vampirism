@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
+import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -45,8 +45,8 @@ public class TileTent extends TileEntity implements ITickableTileEntity {
         @Override
         protected void onSpawned(Entity e) {
             super.onSpawned(e);
-            if (e instanceof EntityBasicHunter) {
-                ((EntityBasicHunter) e).makeCampHunter(getSpawningBox());
+            if (e instanceof BasicHunterEntity) {
+                ((BasicHunterEntity) e).makeCampHunter(getSpawningBox());
             }
         }
     };

@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.entity.EntityBlindingBat;
+import de.teamlapen.vampirism.entity.BlindingBatEntity;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.util.SoundCategory;
 
@@ -24,7 +24,7 @@ public class BatsSpawnEntityAction<T extends CreatureEntity & IEntityActionUser>
     @Override
     public boolean activate(T entity) {
         for (int i = 0; i < Balance.ea.BATSPAWN_AMOUNT; i++) {
-            EntityBlindingBat e = new EntityBlindingBat(entity.getEntityWorld());
+            BlindingBatEntity e = new BlindingBatEntity(entity.getEntityWorld());
             e.restrictLiveSpan();
             e.setIsBatHanging(false);
             e.copyLocationAndAnglesFrom(entity);

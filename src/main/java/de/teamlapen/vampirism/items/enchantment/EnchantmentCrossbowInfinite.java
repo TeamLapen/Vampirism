@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.items.enchantment;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.items.ItemTechCrossbow;
+import de.teamlapen.vampirism.items.TechCrossbowItem;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.enchantment.Enchantment;
@@ -25,7 +25,7 @@ public class EnchantmentCrossbowInfinite extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow && !(stack.getItem() instanceof ItemTechCrossbow);
+        return !stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow && !(stack.getItem() instanceof TechCrossbowItem);
     }
 
     @Override

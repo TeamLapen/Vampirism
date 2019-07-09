@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.render;
 
-import de.teamlapen.vampirism.client.render.entities.RenderAdvancedVampire;
-import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
+import de.teamlapen.vampirism.client.render.entities.AdvancedVampireRenderer;
+import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -14,13 +14,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Render the eyes over the advanced vampire custom face
  */
 @OnlyIn(Dist.CLIENT)
-public class LayerAdvancedVampireEye implements LayerRenderer<EntityAdvancedVampire> {
+public class LayerAdvancedVampireEye implements LayerRenderer<AdvancedVampireEntity> {
 
-    private final RenderAdvancedVampire renderer;
+    private final AdvancedVampireRenderer renderer;
 
     private final ResourceLocation[] overlays;
 
-    public LayerAdvancedVampireEye(RenderAdvancedVampire renderer) {
+    public LayerAdvancedVampireEye(AdvancedVampireRenderer renderer) {
         this.renderer = renderer;
         overlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < overlays.length; i++) {
@@ -29,7 +29,7 @@ public class LayerAdvancedVampireEye implements LayerRenderer<EntityAdvancedVamp
     }
 
     @Override
-    public void render(EntityAdvancedVampire entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(AdvancedVampireEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         int type = entitylivingbaseIn.getEyeType();
         if (type < 0 || type >= overlays.length) {
             type = 0;

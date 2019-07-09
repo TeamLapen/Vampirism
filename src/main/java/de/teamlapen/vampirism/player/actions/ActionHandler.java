@@ -1,15 +1,16 @@
 package de.teamlapen.vampirism.player.actions;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
-import de.teamlapen.vampirism.core.VampirismRegistries;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
+import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -71,7 +72,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     public void deactivateAllActions() {
         for (ResourceLocation r : activeTimers.keySet()) {
-            ILastingAction<T> action = (ILastingAction<T>) VampirismRegistries.ACTIONS.getValue(r);
+            ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(r);
             assert action != null;
             int cooldown = action.getCooldown();
             cooldownTimers.put(r, cooldown);
@@ -135,7 +136,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     public void onActionsReactivated() {
         if (!player.isRemote()) {
             for (ResourceLocation id : activeTimers.keySet()) {
-                ILastingAction<T> action = (ILastingAction<T>) VampirismRegistries.ACTIONS.getValue(id);
+                ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(id);
                 assert action != null;
                 action.onReActivated(player);
             }
@@ -170,7 +171,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
                     client_active.setValue(active.getInt(key));
                     nbt.remove(key);
                 } else {
-                    ILastingAction<T> action = (ILastingAction<T>) VampirismRegistries.ACTIONS.getValue(client_active.getKey());
+                    ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(client_active.getKey());
                     assert action != null;
                     action.onDeactivated(player);
                     it.remove();
@@ -178,7 +179,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             }
             for (String key : active.keySet()) {
                 ResourceLocation id = new ResourceLocation(key);
-                ILastingAction<T> action = (ILastingAction<T>) VampirismRegistries.ACTIONS.getValue(id);
+                ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(id);
                 if (action == null) {
                     LOGGER.error("Action %s is not available client side", key);
                 } else {
@@ -209,7 +210,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     @Override
     public void resetTimers() {
         for (ResourceLocation id : activeTimers.keySet()) {
-            ILastingAction<T> action = (ILastingAction<T>) VampirismRegistries.ACTIONS.getValue(id);
+            ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(id);
             assert action != null;
             action.onDeactivated(player);
         }
@@ -271,7 +272,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     @Override
     public void unlockActions(Collection<IAction> actions) {
         for (IAction action : actions) {
-            if (!VampirismRegistries.ACTIONS.containsValue(action)) {
+            if (!ModRegistries.ACTIONS.containsValue(action)) {
                 throw new ActionNotRegisteredException(action);
             }
         }
@@ -299,7 +300,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         for (Iterator<Object2IntMap.Entry<ResourceLocation>> it = activeTimers.object2IntEntrySet().iterator(); it.hasNext(); ) {
             Object2IntMap.Entry<ResourceLocation> entry = it.next();
             int newtimer = entry.getIntValue() - 1;
-            ILastingAction<T> action = (ILastingAction<T>) VampirismRegistries.ACTIONS.getValue(entry.getKey());
+            ILastingAction<T> action = (ILastingAction<T>) ModRegistries.ACTIONS.getValue(entry.getKey());
             assert action != null;
             if (newtimer == 0) {
                 action.onDeactivated(player);
@@ -335,7 +336,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     private void loadTimerMapFromNBT(CompoundNBT nbt, Object2IntMap<ResourceLocation> map) {
         for (String key : nbt.keySet()) {
             ResourceLocation id = new ResourceLocation(key);
-            IAction action = VampirismRegistries.ACTIONS.getValue(id);
+            IAction action = ModRegistries.ACTIONS.getValue(id);
             if (action == null) {
                 LOGGER.warn("Did not find action with key %s", key);
             } else {

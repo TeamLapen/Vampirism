@@ -3,7 +3,8 @@ package de.teamlapen.vampirism.world.loot;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import de.teamlapen.vampirism.items.ItemStake;
+
+import de.teamlapen.vampirism.items.StakeItem;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,7 +21,7 @@ public class StakeCondition implements ILootCondition {
         Entity player = context.getKillerPlayer();
         if (player instanceof PlayerEntity) {
             ItemStack active = ((PlayerEntity) player).getHeldItemMainhand();
-            return !active.isEmpty() && active.getItem() instanceof ItemStake;
+            return !active.isEmpty() && active.getItem() instanceof StakeItem;
         }
         return false;
     }

@@ -2,12 +2,13 @@ package de.teamlapen.vampirism.client.render;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
+
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import de.teamlapen.vampirism.items.ItemHunterCoat;
+import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -195,7 +196,7 @@ public class RenderHandler {
             Entity entity = event.getEntity();
 
             boolean flag = true;
-            if (entity instanceof PlayerEntity && ItemHunterCoat.isFullyEquipped((PlayerEntity) entity)) flag = false;
+            if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) flag = false;
 
             if (mc.player.getDistanceSq(entity) > Balance.vps.BLOOD_VISION_DISTANCE_SQUARED) {
                 flag = false;

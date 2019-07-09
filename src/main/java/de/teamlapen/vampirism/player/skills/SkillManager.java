@@ -1,13 +1,14 @@
 package de.teamlapen.vampirism.player.skills;
 
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillEvent;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
-import de.teamlapen.vampirism.core.VampirismRegistries;
+import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
@@ -79,7 +80,7 @@ public class SkillManager implements ISkillManager {
 
     @Override
     public List<ISkill> getSkillsForFaction(IPlayableFaction faction) {
-        List<ISkill> list = Lists.newArrayList(VampirismRegistries.SKILLS.getValues());
+        List<ISkill> list = Lists.newArrayList(ModRegistries.SKILLS.getValues());
         list.removeIf(skill -> !faction.equals(skill.getFaction()));
         return list;
     }
@@ -93,7 +94,7 @@ public class SkillManager implements ISkillManager {
      */
     public void printSkills(IPlayableFaction faction, CommandSource sender) {
         for (ISkill s : getSkillsForFaction(faction)) {
-            sender.sendFeedback(new StringTextComponent("ID: " + VampirismRegistries.SKILLS.getKey(s) + " Skill: " + s), true);
+            sender.sendFeedback(new StringTextComponent("ID: " + ModRegistries.SKILLS.getKey(s) + " Skill: " + s), true);
         }
     }
 
@@ -164,7 +165,7 @@ public class SkillManager implements ISkillManager {
      */
     private @Nonnull
     ISkill getRootSkill(IPlayableFaction faction) {
-        ISkill skill = VampirismRegistries.SKILLS.getValue(faction.getKey());
+        ISkill skill = ModRegistries.SKILLS.getValue(faction.getKey());
         if (skill == null) {
             LOGGER.warn("No root skill exists for faction %s", faction.getKey()); //TODO was big warning
             throw new IllegalStateException("You need to register a root skill for your faction " + faction.getKey());

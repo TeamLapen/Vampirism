@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.biome.VampirismBiome;
+import de.teamlapen.vampirism.world.gen.biome.VampirismBiome;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.TranslationTextComponent;

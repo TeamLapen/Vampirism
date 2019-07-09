@@ -13,7 +13,7 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
+import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
@@ -138,7 +138,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 }
                 if (biteable != null && biteable.canBeBitten(player)) {
                     int color = 0xFF0000;
-                    if (entity instanceof EntityHunterBase || (entity instanceof CreatureEntity && ExtendedCreature.get((CreatureEntity) entity).hasPoisonousBlood()))
+                    if (entity instanceof HunterBaseEntity || (entity instanceof CreatureEntity && ExtendedCreature.get((CreatureEntity) entity).hasPoisonousBlood()))
                         color = 0x099022;
                     renderBloodFangs(this.mc.mainWindow.getScaledWidth(), this.mc.mainWindow.getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                     event.setCanceled(true);

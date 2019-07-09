@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.render.particle;
 
-import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
+import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -49,7 +49,7 @@ public class HalloweenParticle extends Particle {
         super.tick();
 
         if (this.entity == null) {
-            EntityDraculaHalloween entityelderguardian = new EntityDraculaHalloween(this.world);
+            DraculaHalloweenEntity entityelderguardian = new DraculaHalloweenEntity(this.world);
             entityelderguardian.setParticle(true);
             this.entity = entityelderguardian;
         }

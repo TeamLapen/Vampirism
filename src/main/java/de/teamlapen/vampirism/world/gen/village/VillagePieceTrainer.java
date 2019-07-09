@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.world.gen.village;
 
-import de.teamlapen.vampirism.blocks.BlockGarlic;
-import de.teamlapen.vampirism.blocks.BlockHunterTable;
-import de.teamlapen.vampirism.blocks.BlockMedChair;
+import de.teamlapen.vampirism.blocks.GarlicBlock;
+import de.teamlapen.vampirism.blocks.HunterTableBlock;
+import de.teamlapen.vampirism.blocks.MedChairBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
+import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -140,7 +140,7 @@ public class VillagePieceTrainer extends VillagePieces.Village {
         this.setBlockState(worldIn, Blocks.OAK_DOOR.getDefaultState().with(DoorBlock.FACING, Direction.NORTH).with(DoorBlock.HALF, DoubleBlockHalf.UPPER), 2, 2, 0, structureBoundingBoxIn);
         this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, -1, 3, 2, -1, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
         //Place decoration etc
-        this.setBlockState(worldIn, ModBlocks.hunter_table.getDefaultState().with(BlockHunterTable.FACING, Direction.NORTH), 5, 1, 7, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.hunter_table.getDefaultState().with(HunterTableBlock.FACING, Direction.NORTH), 5, 1, 7, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.BOOKSHELF.getDefaultState(), 7, 1, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.BOOKSHELF.getDefaultState(), 7, 2, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.BOOKSHELF.getDefaultState(), 3, 1, 9, structureBoundingBoxIn);
@@ -148,8 +148,8 @@ public class VillagePieceTrainer extends VillagePieces.Village {
 
 
         Direction medChairFacing = Direction.WEST;
-        this.setBlockState(worldIn, ModBlocks.med_chair.getDefaultState().with(BlockMedChair.PART, BlockMedChair.EnumPart.TOP).with(BlockMedChair.FACING, medChairFacing), 7, 1, 3, structureBoundingBoxIn);
-        this.setBlockState(worldIn, ModBlocks.med_chair.getDefaultState().with(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).with(BlockMedChair.FACING, medChairFacing), 6, 1, 3, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.med_chair.getDefaultState().with(MedChairBlock.PART, MedChairBlock.EnumPart.TOP).with(MedChairBlock.FACING, medChairFacing), 7, 1, 3, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.med_chair.getDefaultState().with(MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM).with(MedChairBlock.FACING, medChairFacing), 6, 1, 3, structureBoundingBoxIn);
 
         this.generateChest(worldIn, structureBoundingBoxIn, randomIn, 7, 1, 2, LootHandler.STRUCTURE_VILLAGE_TRAINER);
 
@@ -164,14 +164,14 @@ public class VillagePieceTrainer extends VillagePieces.Village {
         }
 
         //Place garlic plants
-        int garlic_age_count = BlockGarlic.AGE.getAllowedValues().size();
+        int garlic_age_count = GarlicBlock.AGE.getAllowedValues().size();
         this.setBlockState(worldIn, Blocks.WATER.getDefaultState(), 1, -1, 6, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.FARMLAND.getDefaultState(), 1, -1, 7, structureBoundingBoxIn);
-        this.setBlockState(worldIn, ModBlocks.garlic.getDefaultState().with(BlockGarlic.AGE, randomIn.nextInt(garlic_age_count)), 1, 0, 7, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.garlic.getDefaultState().with(GarlicBlock.AGE, randomIn.nextInt(garlic_age_count)), 1, 0, 7, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.FARMLAND.getDefaultState(), 1, -1, 8, structureBoundingBoxIn);
-        this.setBlockState(worldIn, ModBlocks.garlic.getDefaultState().with(BlockGarlic.AGE, randomIn.nextInt(garlic_age_count)), 1, 0, 8, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.garlic.getDefaultState().with(GarlicBlock.AGE, randomIn.nextInt(garlic_age_count)), 1, 0, 8, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.FARMLAND.getDefaultState(), 1, -1, 9, structureBoundingBoxIn);
-        this.setBlockState(worldIn, ModBlocks.garlic.getDefaultState().with(BlockGarlic.AGE, randomIn.nextInt(garlic_age_count)), 1, 0, 9, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.garlic.getDefaultState().with(GarlicBlock.AGE, randomIn.nextInt(garlic_age_count)), 1, 0, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.OAK_FENCE.getDefaultState(), 0, 0, 6, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.OAK_FENCE.getDefaultState(), 0, 0, 7, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.OAK_FENCE.getDefaultState(), 0, 0, 8, structureBoundingBoxIn);
@@ -221,7 +221,7 @@ public class VillagePieceTrainer extends VillagePieces.Village {
         }
 
         AxisAlignedBB box = new AxisAlignedBB(structureBoundingBoxIn.minX, structureBoundingBoxIn.minY, structureBoundingBoxIn.minZ, structureBoundingBoxIn.maxX, structureBoundingBoxIn.maxY, structureBoundingBoxIn.maxZ);
-        EntityHunterTrainer hunterTrainer = new EntityHunterTrainer(worldIn.getWorld());
+        HunterTrainerEntity hunterTrainer = new HunterTrainerEntity(worldIn.getWorld());
         hunterTrainer.setHome(box.grow(-1, 0, -1));
         hunterTrainer.setLocationAndAngles((double) j + 0.5D, (double) k, (double) l + 0.5D, 0.0F, 0.0F);
         worldIn.spawnEntity(hunterTrainer);

@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.client.core;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
-import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
-import de.teamlapen.vampirism.blocks.BlockBloodContainer;
-import de.teamlapen.vampirism.blocks.BlockWeaponTable;
-import de.teamlapen.vampirism.client.gui.GuiSkills;
-import de.teamlapen.vampirism.client.gui.GuiSleepCoffin;
+import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
+import de.teamlapen.vampirism.blocks.BloodContainerBlock;
+import de.teamlapen.vampirism.blocks.WeaponTableBlock;
+import de.teamlapen.vampirism.client.gui.SkillsScreen;
+import de.teamlapen.vampirism.client.gui.SleepCoffinScreen;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
@@ -60,7 +60,7 @@ public class ClientEventHandler {
     public void onActionPerformedPre(GuiScreenEvent.ActionPerformedEvent.Post event) {
         if (Configs.gui_skill_button_enable && event.getGui() instanceof InventoryScreen) {
             if (event.getButton().id == SKILLBUTTONID) {
-                event.getGui().mc.displayGuiScreen(new GuiSkills());
+                event.getGui().mc.displayGuiScreen(new SkillsScreen());
             } else if (event.getButton().id == 10) {
                 for (Button e : event.getButtonList()) {
                     if (e.id == SKILLBUTTONID) {
@@ -80,9 +80,9 @@ public class ClientEventHandler {
                 if ((mc.currentScreen == null || mc.currentScreen instanceof SleepInMultiplayerScreen) && mc.player.isSleeping()) {
                     BlockState state = mc.player.getEntityWorld().getBlockState(mc.player.getBedLocation());
                     if (state.getBlock().equals(ModBlocks.block_coffin)) {
-                        mc.displayGuiScreen(new GuiSleepCoffin());
+                        mc.displayGuiScreen(new SleepCoffinScreen());
                     }
-                } else if (mc.currentScreen != null && mc.currentScreen instanceof GuiSleepCoffin && !mc.player.isSleeping()) {
+                } else if (mc.currentScreen != null && mc.currentScreen instanceof SleepCoffinScreen && !mc.player.isSleeping()) {
                     mc.displayGuiScreen(null);
                 }
             }
@@ -138,7 +138,7 @@ public class ClientEventHandler {
 
             for (ResourceLocation modelLoc : registry.keySet()) {
                 if (modelLoc.getNamespace().equals(REFERENCE.MODID)
-                        && modelLoc.getPath().equals(BlockBloodContainer.regName)
+                        && modelLoc.getPath().equals(BloodContainerBlock.regName)
                         ) {
                     modelLocations.add(modelLoc);
                 }
@@ -171,7 +171,7 @@ public class ClientEventHandler {
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(BlockAltarInspiration.regName) && !modelLoc.getVariant().equals("inventory")) {
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(AltarInspirationBlock.regName) && !modelLoc.getVariant().equals("inventory")) {
                     modelLocations.add(modelLoc);
                 }
             }
@@ -200,7 +200,7 @@ public class ClientEventHandler {
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(BlockWeaponTable.regName) && !modelLoc.getVariant().equals("inventory")) {
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(WeaponTableBlock.regName) && !modelLoc.getVariant().equals("inventory")) {
                     modelLocations.add(modelLoc);
                 }
             }

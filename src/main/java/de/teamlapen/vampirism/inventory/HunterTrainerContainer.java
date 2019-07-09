@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.items.ItemHunterIntel;
+import de.teamlapen.vampirism.items.HunterIntelItem;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -45,7 +45,7 @@ public class HunterTrainerContainer extends InventoryContainer {
         if (!levelingConf.isLevelValidForTrainer(targetLevel)) return false;
         int[] req = levelingConf.getItemRequirementsForTrainer(targetLevel);
         int level = levelingConf.getHunterIntelMetaForLevel(targetLevel);
-        missing = InventoryHelper.checkItems(tile, new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, ItemHunterIntel.getIntelForLevel(level)}, new int[]{req[0], req[1], 1});
+        missing = InventoryHelper.checkItems(tile, new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, HunterIntelItem.getIntelForLevel(level)}, new int[]{req[0], req[1], 1});
         return missing.isEmpty();
     }
 

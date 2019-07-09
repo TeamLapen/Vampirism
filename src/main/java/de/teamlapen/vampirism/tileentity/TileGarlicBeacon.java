@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.blocks.BlockGarlicBeacon;
+import de.teamlapen.vampirism.blocks.GarlicBeaconBlock;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.DamageHandler;
@@ -92,7 +92,7 @@ public class TileGarlicBeacon extends TileEntity implements ITickableTileEntity 
         setFueledTime(compound.getInt("fueled"));
     }
 
-    public void setType(BlockGarlicBeacon.Type type) {
+    public void setType(GarlicBeaconBlock.Type type) {
         switch (type) {
             case WEAK:
                 r = Balance.hps.GARLIC_DIFFUSOR_WEAK_DISTANCE;

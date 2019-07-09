@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.biome.BiomeGenVampireForest;
-import de.teamlapen.vampirism.biome.VampirismBiome;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.gen.biome.VampireForestBiome;
+import de.teamlapen.vampirism.world.gen.biome.VampirismBiome;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
@@ -22,13 +22,13 @@ import org.apache.logging.log4j.Logger;
 public class ModBiomes {
 
     private static final Logger LOGGER = LogManager.getLogger(ModBiomes.class);
-    public static BiomeGenVampireForest vampireForest;
+    public static VampireForestBiome vampireForest;
 
 
 
     static void registerBiomes(IForgeRegistry<Biome> registry) {
 
-        vampireForest = new BiomeGenVampireForest();
+        vampireForest = new VampireForestBiome();
         vampireForest.setRegistryName(REFERENCE.MODID, "vampireforest");
         registry.register(vampireForest);
         BiomeDictionary.addTypes(vampireForest, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
