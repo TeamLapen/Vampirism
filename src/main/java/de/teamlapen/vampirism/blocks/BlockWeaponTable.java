@@ -23,6 +23,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -90,6 +91,10 @@ public class BlockWeaponTable extends VampirismBlock {
                 if (fluidHandler != null) {
                     FluidStack missing = new FluidStack(FluidRegistry.LAVA, (MAX_LAVA - lava) * MB_PER_META);
                     FluidStack drainable = fluidHandler.drain(missing, false);
+                    if (drainable == null) { //Buckets can only provide {@link Fluid.BUCKET_VOLUME} at a time, so try this too. Additional lava is wasted though
+                        missing.amount = Fluid.BUCKET_VOLUME;
+                        drainable = fluidHandler.drain(missing, false);
+                    }
                     if (drainable != null && drainable.amount >= MB_PER_META) {
                         FluidStack drained = fluidHandler.drain(missing, true);
                         if (drained != null) {
