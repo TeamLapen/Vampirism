@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.entity.special;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.EntityAreaParticleCloud;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.util.HalloweenSpecial;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.passive.TameableEntity;
@@ -42,8 +42,8 @@ public class EntityDraculaHalloween extends EntityVampirism {
     private int hiding = 0;
     private boolean particle = false;
 
-    public EntityDraculaHalloween(World world) {
-        super(ModEntities.special_dracula_halloween, world);
+    public EntityDraculaHalloween(EntityType<? extends EntityDraculaHalloween> type, World world) {
+        super(type, world);
         this.setInvulnerable(true);
     }
 

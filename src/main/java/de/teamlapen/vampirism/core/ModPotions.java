@@ -8,10 +8,7 @@ import de.teamlapen.vampirism.potion.VampirismPotion;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.potion.Potions;
+import net.minecraft.potion.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -40,18 +37,15 @@ public class ModPotions {
 
 
     static void registerPotions(IForgeRegistry<Effect> registry) {
-        registry.register(new PotionThirst("thirst", true, 859494));
         vanilla_night_vision = Effects.NIGHT_VISION;
-        modded_night_vision = new VampirismNightVisionPotion();
-        registry.register(modded_night_vision);
-        registry.register(new PotionSanguinare("sanguinare", false, 0x6A0888));
-        registry.register(new VampirismPotion("saturation", false, 0xDCFF00).setIconIndex(2, 0).setBeneficial());
-        Effect sunscreen = new VampirismPotion("sunscreen", false, 0xFFF100).setIconIndex(3, 0).setBeneficial();
-        sunscreen.addAttributesModifier(VReference.sunDamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL);
-        registry.register(sunscreen);
-        registry.register(new VampirismPotion("fire_protection", false, 14981690).setIconIndex(6, 0).setBeneficial());
-        registry.register(new VampirismPotion("disguise_as_vampire", false, 0x999900).setIconIndex(4, 0).setBeneficial());
-        registry.register(new VampirismPotion("garlic", true, 0xFFFFFF).setIconIndex(5, 0));
+        registry.register(new VampirismNightVisionPotion());
+        registry.register(new PotionThirst("thirst", EffectType.HARMFUL, 859494));
+        registry.register(new PotionSanguinare("sanguinare", EffectType.NEUTRAL, 0x6A0888));
+        registry.register(new VampirismPotion("saturation", EffectType.BENEFICIAL, 0xDCFF00).setIconIndex(2, 0));
+        registry.register(new VampirismPotion("sunscreen", EffectType.BENEFICIAL, 0xFFF100).setIconIndex(3, 0).addAttributesModifier(VReference.sunDamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismPotion("fire_protection", EffectType.BENEFICIAL, 14981690).setIconIndex(6, 0));
+        registry.register(new VampirismPotion("disguise_as_vampire", EffectType.NEUTRAL, 0x999900).setIconIndex(4, 0));
+        registry.register(new VampirismPotion("garlic", EffectType.HARMFUL, 0xFFFFFF).setIconIndex(5, 0));
     }
 
 

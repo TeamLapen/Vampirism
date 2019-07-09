@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.IPlayerFace;
@@ -15,6 +14,7 @@ import de.teamlapen.vampirism.util.SupporterManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,12 +52,10 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     private final EntityClassType entityclass;
     private final EntityActionTier entitytier;
 
-    public EntityAdvancedHunter(World world) {
-        super(ModEntities.advanced_hunter, world, true);
+    public EntityAdvancedHunter(EntityType<? extends EntityAdvancedHunter> type, World world) {
+        super(type, world, true);
         saveHome = true;
         ((GroundPathNavigator) this.getNavigator()).setEnterDoors(true);
-
-        this.setSize(0.6F, 1.95F);
 
 
         this.setDontDropEquipment();

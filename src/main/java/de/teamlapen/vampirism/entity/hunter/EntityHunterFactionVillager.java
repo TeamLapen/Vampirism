@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModVillages;
 import de.teamlapen.vampirism.entity.EntityFactionVillager;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.merchant.IMerchant;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -49,8 +50,8 @@ public class EntityHunterFactionVillager extends EntityFactionVillager implement
             }
     };
 
-    public EntityHunterFactionVillager(World worldIn) {
-        super(worldIn);
+    public EntityHunterFactionVillager(EntityType<? extends EntityHunterFactionVillager> type, World worldIn) {
+        super(type, worldIn);
     }
 
     @Nullable

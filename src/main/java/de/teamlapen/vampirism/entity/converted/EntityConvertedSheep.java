@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import de.teamlapen.vampirism.core.ModEntities;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
@@ -29,8 +29,8 @@ public class EntityConvertedSheep extends EntityConvertedCreature<SheepEntity> i
     private final static DataParameter<Byte> COAT = EntityDataManager.createKey(EntityConvertedSheep.class, DataSerializers.BYTE);
     private Boolean lastSheared = null;
 
-    public EntityConvertedSheep(World world) {
-        super(ModEntities.converted_sheep, world);
+    public EntityConvertedSheep(EntityType<? extends EntityConvertedSheep> type, World world) {
+        super(type, world);
     }
 
     public DyeColor getFleeceColor() {

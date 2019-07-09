@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -18,8 +19,8 @@ import java.util.List;
 public class EntityBlindingBat extends BatEntity {
     private boolean restrictLiveSpan;
 
-    public EntityBlindingBat(World worldIn) {
-        super(worldIn);
+    public EntityBlindingBat(EntityType<? extends EntityBlindingBat> type, World worldIn) {
+        super(type, worldIn);
     }
 
     @Override

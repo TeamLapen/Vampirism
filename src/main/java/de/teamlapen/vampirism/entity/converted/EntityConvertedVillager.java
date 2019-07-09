@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
@@ -51,8 +52,8 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     private boolean addedAdditionalRecipes = false;
     private int bloodTimer = 0;
 
-    public EntityConvertedVillager(World worldIn) {
-        super(worldIn);
+    public EntityConvertedVillager(EntityType<? extends EntityConvertedVillager> type, World worldIn) {
+        super(type, worldIn);
     }
 
     @Override

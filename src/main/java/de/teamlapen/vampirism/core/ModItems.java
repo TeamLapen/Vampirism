@@ -41,6 +41,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @ObjectHolder(REFERENCE.MODID)
 public class ModItems {
 
+    //Items
     public static final ItemVampireFang vampire_fang = getNull();
     public static final VampirismItemBloodFood human_heart = getNull();
     public static final VampirismItemBloodFood weak_human_heart = getNull();
@@ -176,7 +177,7 @@ public class ModItems {
     public static final SpawnEggItem vampire_baron_spawn_egg = getNull();
     public static final SpawnEggItem hunter_trainer_spawn_egg = getNull();
 
-
+    //Food Category
     public static final Food human_heart_food = (new Food.Builder()).hunger(20).saturation(1.5F).build();
     public static final Food weak_human_heart_food = (new Food.Builder()).hunger(10).saturation(0.9F).build();
 

@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.ai.*;
@@ -100,8 +99,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Nullable
     private AxisAlignedBB village_defense_area;
 
-    public EntityBasicHunter(World world) {
-        super(ModEntities.vampire_hunter, world, true);
+    public EntityBasicHunter(EntityType<? extends EntityBasicHunter> type, World world) {
+        super(type, world, true);
         saveHome = true;
         ((GroundPathNavigator) this.getNavigator()).setEnterDoors(true);
 

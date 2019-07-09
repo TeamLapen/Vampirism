@@ -14,6 +14,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.EffectType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -36,8 +37,8 @@ public class PotionSanguinare extends VampirismPotion {
 
     }
 
-    public PotionSanguinare(String name, boolean badEffect, int potionColor) {
-        super(name, badEffect, potionColor);
+    public PotionSanguinare(String name, EffectType effectType, int potionColor) {
+        super(name, effectType, potionColor);
         setIconIndex(1, 0).addAttributesModifier(SharedMonsterAttributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
     }
 

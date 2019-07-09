@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
@@ -19,6 +18,7 @@ import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -59,8 +59,8 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     private final EntityClassType entityclass;
     private final EntityActionTier entitytier;
 
-    public EntityAdvancedVampire(World world) {
-        super(ModEntities.advanced_vampire, world, true);
+    public EntityAdvancedVampire(EntityType<? extends EntityAdvancedVampire> type, World world) {
+        super(type, world, true);
         this.setSize(0.6F, 1.95F);
         this.canSuckBloodFromPlayer = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);

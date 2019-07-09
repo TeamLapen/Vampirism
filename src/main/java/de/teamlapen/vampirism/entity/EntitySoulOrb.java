@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -49,8 +50,8 @@ public class EntitySoulOrb extends Entity {
         this.motionZ = (double) ((float) (Math.random() * 0.20000000298023224D - 0.10000000149011612D) * 2.0F);
     }
 
-    public EntitySoulOrb(World worldIn) {
-        super(ModEntities.soul_orb, worldIn);
+    public EntitySoulOrb(EntityType<? extends EntitySoulOrb> type, World worldIn) {
+        super(type, worldIn);
         this.setSize(0.25F, 0.25F);
     }
 

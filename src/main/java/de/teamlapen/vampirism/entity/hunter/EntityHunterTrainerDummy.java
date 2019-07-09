@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,8 +21,8 @@ import net.minecraft.world.World;
 public class EntityHunterTrainerDummy extends EntityVampirism {
     private final int MOVE_TO_RESTRICT_PRIO = 3;
 
-    public EntityHunterTrainerDummy(World world) {
-        super(ModEntities.hunter_trainer_dummy, world);
+    public EntityHunterTrainerDummy(EntityType<? extends EntityHunterTrainerDummy> type, World world) {
+        super(type, world);
         saveHome = true;
         hasArms = true;
         ((GroundPathNavigator) this.getNavigator()).setEnterDoors(true);

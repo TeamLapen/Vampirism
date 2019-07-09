@@ -54,7 +54,6 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
 
     public EntityVampireMinionBase(EntityType type, World world) {
         super(type, world, false);
-        // this.setSize(0.5F, 1.1F);
         //this.func_110163_bv(); TODO check if this was relevant
 
         activeCommand = this.createDefaultCommand();

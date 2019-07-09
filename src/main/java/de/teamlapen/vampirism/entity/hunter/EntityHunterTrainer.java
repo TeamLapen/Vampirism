@@ -2,13 +2,13 @@ package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.ai.HunterAILookAtTrainee;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,13 +27,12 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private PlayerEntity trainee;
 
-    public EntityHunterTrainer(World world) {
-        super(ModEntities.hunter_trainer, world, false);
+    public EntityHunterTrainer(EntityType<? extends EntityHunterTrainer> type, World world) {
+        super(type, world, false);
         saveHome = true;
         hasArms = true;
         ((GroundPathNavigator) this.getNavigator()).setEnterDoors(true);
 
-        this.setSize(0.6F, 1.95F);
         this.setDontDropEquipment();
     }
 
