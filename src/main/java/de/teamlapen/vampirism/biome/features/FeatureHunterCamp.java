@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.items.ItemTent;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -71,7 +72,7 @@ public class FeatureHunterCamp extends Feature<HunterTentConfig> {
                 placeTent(worldIn, rand, pos4, Direction.SOUTH);
                 EntityAdvancedHunter hunter = new EntityAdvancedHunter(worldIn.getWorld());
                 AxisAlignedBB box = new AxisAlignedBB(center.add(-7, 0, -10), center.add(7, 1, 7));
-                UtilLib.spawnEntityInWorld(worldIn.getWorld(), box, hunter, 8, Collections.emptyList());
+                UtilLib.spawnEntityInWorld(worldIn.getWorld(), box, hunter, 8, Collections.emptyList(), SpawnReason.CHUNK_GENERATION);
                 hunter.setCampArea(box.grow(4, 5, 4));
                 if (VampirismBiome.debug)
                     LOGGER.info("Generated advanced hunter camp at {}", center);

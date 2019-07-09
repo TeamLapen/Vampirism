@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.model;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import net.minecraft.client.renderer.entity.model.RendererModel;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -15,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Model for Basic Vampire Hunter
  */
 @OnlyIn(Dist.CLIENT)
-public class ModelBasicHunter extends ModelBipedCloaked {
+public class ModelBasicHunter<T extends LivingEntity> extends ModelBipedCloaked<T> {
     private RendererModel hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, secondHead, hatTop2, hatRim2, hatRim3;
     private boolean targetingLeft = false;
     private boolean targetingRight = false;
@@ -93,9 +92,9 @@ public class ModelBasicHunter extends ModelBipedCloaked {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+        setRotationAngles(entity, f, f1, f2, f3, f4, f5);
     }
 
     /**
@@ -143,7 +142,7 @@ public class ModelBasicHunter extends ModelBipedCloaked {
     }
 
     @Override
-    public void setLivingAnimations(LivingEntity entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
+    public void setLivingAnimations(T entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
         this.targetingRight = false;
         this.targetingLeft = false;
         ItemStack itemStack = entitylivingbaseIn.getHeldItem(Hand.MAIN_HAND);
@@ -161,8 +160,8 @@ public class ModelBasicHunter extends ModelBipedCloaked {
     }
 
     @Override
-    public void setRotationAngles(float f1, float f2, float f3, float f4, float f5, float f6, Entity e) {
-        super.setRotationAngles(f1, f2, f3, f4, f5, f6, e);
+    public void setRotationAngles(T e, float f1, float f2, float f3, float f4, float f5, float f6) {
+        super.setRotationAngles(e, f1, f2, f3, f4, f5, f6);
         hatRim.rotateAngleX = super.bipedHead.rotateAngleX;
         hatRim.rotateAngleY = super.bipedHead.rotateAngleY;
         hatRim.rotateAngleZ = super.bipedHead.rotateAngleZ;

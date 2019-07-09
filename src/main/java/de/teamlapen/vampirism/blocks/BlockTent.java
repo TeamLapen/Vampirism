@@ -27,7 +27,7 @@ public class BlockTent extends VampirismBlock {
     }
 
     protected BlockTent(String name) {
-        super(name, Properties.create(Material.CLOTH).hardnessAndResistance(0.6f).sound(SoundType.CLOTH));
+        super(name, Properties.create(Material.WOOL).hardnessAndResistance(0.6f).sound(SoundType.CLOTH));
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POSITION, 0));
     }
 
@@ -58,10 +58,10 @@ public class BlockTent extends VampirismBlock {
                 pos = pos.offset(dir);
                 dir = dir.getOpposite();
             }
-            world.removeBlock(pos);
-            world.removeBlock(pos.offset(dir));
-            world.removeBlock(pos.offset(dir.rotateYCCW()));
-            world.removeBlock(pos.offset(dir).offset(dir.rotateYCCW()));
+            world.removeBlock(pos, isMoving);
+            world.removeBlock(pos.offset(dir), isMoving);
+            world.removeBlock(pos.offset(dir.rotateYCCW()), isMoving);
+            world.removeBlock(pos.offset(dir).offset(dir.rotateYCCW()), isMoving);
         }
 
     }

@@ -9,8 +9,8 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.PlantType;
 
 /**
  * Item for the garlic plant
@@ -28,8 +28,8 @@ public class ItemGarlic extends VampirismItem implements IPlantable {
     }
 
     @Override
-    public EnumPlantType getPlantType(IBlockReader world, BlockPos pos) {
-        return EnumPlantType.Crop;
+    public PlantType getPlantType(IBlockReader world, BlockPos pos) {
+        return PlantType.Crop;
     }
 
 

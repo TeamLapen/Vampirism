@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -147,7 +148,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onLivingJump(LivingEvent.LivingJumpEvent event) {
         if (event.getEntity() instanceof PlayerEntity) {
-            event.getEntity().motionY += (double) ((float) (VampirePlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().getJumpBoost()) * 0.1F);
+            event.getEntity().setMotion(event.getEntity().getMotion().add(0.0D, (double) ((float) (VampirePlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().getJumpBoost()) * 0.1F), 0.0D));
         }
     }
 
@@ -217,7 +218,7 @@ public class ModPlayerEventHandler {
 
         if (state.getBlock() == ModBlocks.alchemical_fire) {
             world.playEvent(null, 1009, pos, 0);
-            world.removeBlock(pos);
+            world.removeBlock(pos, false);
             event.setCanceled(true);
         } else if ((ModBlocks.garlic_beacon_normal.equals(state.getBlock()) || ModBlocks.garlic_beacon_weak.equals(state.getBlock()) || ModBlocks.garlic_beacon_improved.equals(state.getBlock())) && Helper.isVampire(event.getEntityPlayer())) {
             event.getEntityPlayer().addPotionEffect(new EffectInstance(ModPotions.garlic));

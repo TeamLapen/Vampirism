@@ -49,21 +49,21 @@ public class Helper {
      * @return
      */
     public static boolean gettingSundamge(LivingEntity entity) {
-        entity.getEntityWorld().profiler.startSection("vampirism_checkSundamage");
+        entity.getEntityWorld().getProfiler().startSection("vampirism_checkSundamage");
         if (entity instanceof PlayerEntity && entity.isSpectator()) return false;
         if (VampirismAPI.sundamageRegistry().getSundamageInDim(entity.getEntityWorld().getDimension().getType())) {
             if (!entity.getEntityWorld().isRaining()) {
                 float angle = entity.getEntityWorld().getCelestialAngle(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                 if (angle > 0.78 || angle < 0.24) {
-                    BlockPos pos = new BlockPos(entity.posX, entity.posY + MathHelper.clamp(entity.height / 2.0F, 0F, 2F), entity.posZ);
+                    BlockPos pos = new BlockPos(entity.posX, entity.posY + MathHelper.clamp(entity.getHeight() / 2.0F, 0F, 2F), entity.posZ);
 
                     if (canBlockSeeSun(entity.getEntityWorld(), pos)) {
                         try {
                             Biome biome = entity.getEntityWorld().getBiome(pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
                                 if (!TileTotem.isInsideVampireAreaCached(entity.getEntityWorld().getDimension(), new BlockPos(entity.posX, entity.posY + 1, entity.posZ))) { //For some reason client returns different value for #getPosition than server
-                                    entity.getEntityWorld().profiler.endSection();
+                                    entity.getEntityWorld().getProfiler().endSection();
                                     return true;
                                 }
 
@@ -79,18 +79,18 @@ public class Helper {
 
             }
         }
-        entity.getEntityWorld().profiler.endSection();
+        entity.getEntityWorld().getProfiler().endSection();
 
         return false;
     }
 
     public static boolean canBlockSeeSun(World world, BlockPos pos) {
         if (pos.getY() >= world.getSeaLevel()) {
-            return world.canSeeSky(pos);
+            return world.canBlockSeeSky(pos);
         } else {
             BlockPos blockpos = new BlockPos(pos.getX(), world.getSeaLevel(), pos.getZ());
 
-            if (!world.canSeeSky(blockpos)) {
+            if (!world.canBlockSeeSky(blockpos)) {
                 return false;
             } else {
                 int liquidBlocks = 0;

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.model;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * ModelBiped with a cloak
  */
 @OnlyIn(Dist.CLIENT)
-public class ModelBipedCloaked extends BipedModel {
+public class ModelBipedCloaked<T extends LivingEntity> extends BipedModel<T> {
     protected RendererModel bipedCloak;
     private boolean skipCloakOnce = false;
 
@@ -26,9 +26,9 @@ public class ModelBipedCloaked extends BipedModel {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+        setRotationAngles(entity, f, f1, f2, f3, f4, f5);
         if (skipCloakOnce) {
             skipCloakOnce = false;
         } else {
@@ -38,8 +38,8 @@ public class ModelBipedCloaked extends BipedModel {
     }
 
     @Override
-    public void setRotationAngles(float f1, float f2, float f3, float f4, float f5, float f6, Entity e) {
-        super.setRotationAngles(f1, f2, f3, f4, f5, f6, e);
+    public void setRotationAngles(T e, float f1, float f2, float f3, float f4, float f5, float f6) {
+        super.setRotationAngles(e, f1, f2, f3, f4, f5, f6);
         bipedCloak.rotateAngleX = f2;
     }
 

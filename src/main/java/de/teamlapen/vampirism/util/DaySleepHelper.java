@@ -41,11 +41,11 @@ public class DaySleepHelper {
      * @param ignorePlayers This many players will be ignored for calculation. Used for log out event
      */
     public static void updateAllPlayersSleeping(World world, int ignorePlayers) {
-        if (!world.playerEntities.isEmpty()) {
+        if (!world.getPlayers().isEmpty()) {
             int spectators = 0;
             int sleeping = 0;
             int all = 0;
-            for (PlayerEntity entityplayer : world.playerEntities) {
+            for (PlayerEntity entityplayer : world.getPlayers()) {
                 all++;
                 if (entityplayer.isSpectator()) {
                     ++spectators;
@@ -67,7 +67,7 @@ public class DaySleepHelper {
         if (enoughPlayersAsleep.get(world.getDimension().getType().getId()) == Boolean.TRUE) {
             int sleeping = 0;
             int total = 0;
-            for (PlayerEntity entityplayer : world.playerEntities) {
+            for (PlayerEntity entityplayer : world.getPlayers()) {
                 if (!entityplayer.isSpectator()) {
                     total++;
                     if (VampirePlayer.get(entityplayer).isPlayerFullyAsleep()) {
@@ -93,7 +93,7 @@ public class DaySleepHelper {
     public static void wakeAllPlayers(World world) {
         enoughPlayersAsleep.put(world.getDimension().getType().getId(), Boolean.FALSE);
 
-        for (PlayerEntity entityplayer : world.playerEntities) {
+        for (PlayerEntity entityplayer : world.getPlayers()) {
             VampirePlayer vampirePlayer = VampirePlayer.get(entityplayer);
             if (vampirePlayer.isPlayerSleeping()) {
                 vampirePlayer.wakeUpPlayer(false, false, true);

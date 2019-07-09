@@ -11,6 +11,7 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -55,7 +56,7 @@ public class BlockHunterTable extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         //player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TABLE, world, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
         return true;
     }

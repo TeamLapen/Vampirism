@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.tileentity.TileTotem;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -14,11 +13,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -77,19 +77,17 @@ public class BlockTotemTop extends VampirismBlockContainer {
         return false;
     }
 
-
-
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        TileEntity tile = worldIn.getTileEntity(pos);
+    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+        TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof TileTotem) {
             ((TileTotem) tile).updateTotem();
-            worldIn.addBlockEvent(pos, this, 1, 0); //Notify client about render update
+            world.addBlockEvent(pos, this, 1, 0); //Notify client about render update
         }
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (world.isRemote) return true;
         IPlayableFaction f = FactionPlayerHandler.get(player).getCurrentFaction();
         TileTotem t = getTile(world, pos);
@@ -97,7 +95,7 @@ public class BlockTotemTop extends VampirismBlockContainer {
             t.initiateCapture(f, player);
             return true;
         }
-        return super.onBlockActivated(state, world, pos, player, hand, facing, hitX, hitY, hitZ);
+        return super.onBlockActivated(state, world, pos, player, hand, hit);
     }
 
     @Override

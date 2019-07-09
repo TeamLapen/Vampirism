@@ -10,12 +10,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.util.*;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.Hand;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootContext;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Pillar for Altar of Infusion structure
@@ -31,12 +36,13 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     @Override
-    public void getDrops(BlockState state, NonNullList<ItemStack> drops, World world, BlockPos pos, int fortune) {
-        drops.add(new ItemStack(this.asItem(), 1));
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        List<ItemStack> loot = super.getDrops(state, builder);
         EnumPillarType type = state.get(TYPE_PROPERTY);
         if (type != EnumPillarType.NONE) {
-            drops.add(new ItemStack(type.fillerBlock.asItem(), 1));
+            loot.add(new ItemStack(type.fillerBlock.asItem(), 1));
         }
+        return loot;
     }
 
     @Override
@@ -56,7 +62,7 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, Direction p_196250_6_, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
         EnumPillarType type = state.get(TYPE_PROPERTY);
         ItemStack heldItem = playerIn.getHeldItem(hand);
         if (type != EnumPillarType.NONE && heldItem.isEmpty()) {

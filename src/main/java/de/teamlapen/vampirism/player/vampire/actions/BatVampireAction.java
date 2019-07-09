@@ -41,11 +41,11 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         if (player.isSneaking()) {
             height = BAT_HEIGHT - 0.15F;
         }
-        if (player.isPlayerSleeping()) {
+        if (player.isSleeping()) {
             height = 0.2F;
             width = 0.2F;
         }
-        if (player.width != width || player.height != height) {
+        if (player.getWidth() != width || player.getHeight() != height) {
             AxisAlignedBB axisalignedbb = player.getBoundingBox();
             axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double) width, axisalignedbb.minY + (double) height, axisalignedbb.minZ + (double) width);
 
@@ -174,7 +174,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
             IAttributeInstance health = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
             if (health.getModifier(healthModifierUUID) == null) {
-                health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -Balance.vpa.BAT_HEALTH_REDUCTION, 2).setSaved(false));
+                health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -Balance.vpa.BAT_HEALTH_REDUCTION, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(false));
             }
 
             player.abilities.allowFlying = true;

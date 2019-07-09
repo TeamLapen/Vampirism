@@ -32,7 +32,6 @@ public class BlockTentMain extends BlockTent implements ITileEntityProvider {
         return new TileTent();
     }
 
-    @Override
     public void getDrops(BlockState state, NonNullList<ItemStack> drops, World world, BlockPos pos, int fortune) {
         TileTent tile = (TileTent) world.getTileEntity(pos);
         if (tile != null && tile.isSpawner()) {

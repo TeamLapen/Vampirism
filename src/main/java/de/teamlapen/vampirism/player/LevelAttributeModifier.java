@@ -51,7 +51,7 @@ public class LevelAttributeModifier {
      * @param operation   The operation applied to the attribute
      * @param evenIntOnly If the modifier should be rounded to an even integer TODO maybe move this
      */
-    public static void applyModifier(PlayerEntity player, IAttribute attribute, String name, int level, int lcap, double max, double type, int operation, boolean evenIntOnly) {
+    public static void applyModifier(PlayerEntity player, IAttribute attribute, String name, int level, int lcap, double max, double type, AttributeModifier.Operation operation, boolean evenIntOnly) {
         UUID mod = modifiers.get(attribute);
         if (mod == null) {
             LOGGER.warn("Cannot modify %s, no modifier is registered", attribute);

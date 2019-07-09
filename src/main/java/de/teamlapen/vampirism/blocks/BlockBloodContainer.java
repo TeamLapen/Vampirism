@@ -13,10 +13,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -79,9 +79,9 @@ public class BlockBloodContainer extends VampirismBlockContainer {
 
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, Direction side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
-            FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, side);//TODO 1.13 check
+            FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getFace());//TODO 1.13 check
             /*
             ItemStack stack = playerIn.getHeldItem(hand);
             if (!stack.isEmpty() && FluidLib.hasFluidItemCap(stack)) {

@@ -53,7 +53,7 @@ public class ItemCoffin extends VampirismItem {
         int direction = MathHelper.floor((player != null ? player.rotationYaw * 4F : 0) / 360F + 0.5D) & 3;
         Direction facing = Direction.byHorizontalIndex(direction);
         BlockPos other = pos.offset(facing);
-        boolean other_replaceable = world.getBlockState(other).isReplaceable(new BlockItemUseContext(context.getWorld(), context.getPlayer(), context.getItem(), other, context.getFace(), context.getHitX(), context.getHitY(), context.getHitZ()));
+        boolean other_replaceable = world.getBlockState(other).isReplaceable(new BlockItemUseContext(context));
         boolean flag1 = world.isAirBlock(pos) || replaceable;
         boolean flag2 = world.isAirBlock(other) || other_replaceable;
 

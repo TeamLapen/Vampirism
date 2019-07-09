@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.client.model;
 
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -12,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * @author Maxanier
  */
 @OnlyIn(Dist.CLIENT)
-public class ModelBipedShrinkable extends BipedModel {
+public class ModelBipedShrinkable<T extends LivingEntity> extends BipedModel<T> {
 
     private float size = 1F;
 
@@ -25,8 +26,8 @@ public class ModelBipedShrinkable extends BipedModel {
     }
 
     @Override
-    public void render(Entity p_78088_1_, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float p_78088_7_) {
-        this.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, p_78088_1_);
+    public void render(T p_78088_1_, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float p_78088_7_) {
+        this.setRotationAngles(p_78088_1_, p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_);
 
         float f6 = 2.0F - size;
         GlStateManager.pushMatrix();

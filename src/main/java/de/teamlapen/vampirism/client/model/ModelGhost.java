@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.model;
 
+import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
-import net.minecraft.client.renderer.model.Model;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -11,7 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * @author WILLIAM
  */
 @OnlyIn(Dist.CLIENT)
-public class ModelGhost extends Model {
+public class ModelGhost<T extends LivingEntity> extends EntityModel<T> {
     // fields
     private RendererModel head;
     private RendererModel body;
@@ -63,9 +63,9 @@ public class ModelGhost extends Model {
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+        setRotationAngles(entity, f, f1, f2, f3, f4, f5);
         head.render(f5);
         body.render(f5);
         rightarm.render(f5);
@@ -75,8 +75,8 @@ public class ModelGhost extends Model {
     }
 
     @Override
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-        super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+    public void setRotationAngles(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
+        super.setRotationAngles(entity, f, f1, f2, f3, f4, f5);
 
         this.head.rotateAngleY = f3 / (180F / (float) Math.PI);
         this.head.rotateAngleX = f4 / (180F / (float) Math.PI);

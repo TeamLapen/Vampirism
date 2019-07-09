@@ -101,7 +101,7 @@ public class HalloweenSpecial {
                         EntityDraculaHalloween draculaHalloween = new EntityDraculaHalloween(p.getEntityWorld());
                         draculaHalloween.setOwnerId(u);
                         draculaHalloween.makeHide(200 + p.getRNG().nextInt(1000));
-                        p.getEntityWorld().spawnEntity(draculaHalloween);
+                        p.getEntityWorld().addEntity(draculaHalloween);
                         blacklist.add(u);
                     }
                 }

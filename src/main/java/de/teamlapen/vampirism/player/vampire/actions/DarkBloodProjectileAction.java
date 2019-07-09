@@ -49,7 +49,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         projectile.shootingEntity = shooter;
         projectile.setDamage((float) Balance.vpa.DARK_BLOOD_PROJECTILE_DAMAGE, (float) Balance.vpa.DARK_BLOOD_PROJECTILE_INDIRECT_DAMAGE);
 
-        shooter.getEntityWorld().spawnEntity(projectile);
+        shooter.getEntityWorld().addEntity(projectile);
         return true;
     }
 }

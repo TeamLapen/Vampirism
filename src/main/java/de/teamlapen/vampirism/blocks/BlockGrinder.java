@@ -11,6 +11,7 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -58,9 +59,9 @@ public class BlockGrinder extends VampirismBlockContainer {
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
-
+<
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (world.isRemote) return true;
         //player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_GRINDER, world, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
         return true;

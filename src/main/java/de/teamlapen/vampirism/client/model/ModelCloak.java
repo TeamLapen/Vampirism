@@ -2,11 +2,13 @@ package de.teamlapen.vampirism.client.model;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ModelCloak extends BipedModel {
+@OnlyIn(Dist.CLIENT)
+public class ModelCloak<T extends LivingEntity> extends BipedModel<T> {
     RendererModel cloakback;
     RendererModel leftlong;
     RendererModel rightmedium;
@@ -62,9 +64,10 @@ public class ModelCloak extends BipedModel {
         setRotation(shoulderleft, 0F, 0F, 0F);
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    @Override
+    public void render(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+        setRotationAngles(entity, f, f1, f2, f3, f4, f5);
         cloakback.render(f5);
         leftlong.render(f5);
         rightmedium.render(f5);
@@ -76,13 +79,14 @@ public class ModelCloak extends BipedModel {
         shoulderleft.render(f5);
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entityIn) {
+    @Override
+    public void setRotationAngles(T entityIn, float f, float f1, float f2, float f3, float f4, float f5) {
         boolean flag = entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getTicksElytraFlying() > 4;
 
         float f6 = 1.0F;
         if (flag) {
-            f6 = (float) (entityIn.motionX * entityIn.motionX + entityIn.motionY * entityIn.motionY
-                    + entityIn.motionZ * entityIn.motionZ);
+            f6 = (float) (entityIn.getMotion().x * entityIn.getMotion().x + entityIn.getMotion().y * entityIn.getMotion().y
+                    + entityIn.getMotion().z * entityIn.getMotion().z);
             f6 = f6 / 0.2F;
             f6 = f6 * f6 * f6;
         }

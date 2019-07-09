@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Villager Model with usable arms
  */
 @OnlyIn(Dist.CLIENT)
-public class ModelVillagerWithArms extends VillagerModel {
+public class ModelVillagerWithArms<T extends Entity> extends VillagerModel<T> {
     private RendererModel leftArm;
     private RendererModel rightArm;
 
@@ -23,7 +23,7 @@ public class ModelVillagerWithArms extends VillagerModel {
     }
 
     public ModelVillagerWithArms(float scale, float p_i1164_2_, int width, int height) {
-        super(scale, p_i1164_2_, width, height);
+        super(scale, width, height);
         this.villagerArms.isHidden = true;
         this.rightArm = (new RendererModel(this).setTextureSize(width, height));
         this.rightArm.setTextureOffset(44, 22).addBox(-4F, -2F, -2F, 4, 8, 4, scale);
@@ -44,15 +44,15 @@ public class ModelVillagerWithArms extends VillagerModel {
     }
 
     @Override
-    public void render(Entity entityIn, float p_78088_2_, float limbSwing, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(T entityIn, float p_78088_2_, float limbSwing, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         super.render(entityIn, p_78088_2_, limbSwing, ageInTicks, netHeadYaw, headPitch, scale);
         this.leftArm.render(scale);
         this.rightArm.render(scale);
     }
 
     @Override
-    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
-        super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
+    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
+        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
         this.leftArm.setRotationPoint(4, 3, -1);
         this.rightArm.setRotationPoint(-4, 3, -1);
         this.leftArm.rotateAngleX = -0.75F;

@@ -3,6 +3,7 @@ package de.teamlapen.lib.lib.util;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import de.teamlapen.lib.VampLib;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.LogicalSide;
@@ -42,7 +43,7 @@ public class VersionChecker implements Runnable {
         this.currentVersion = currentVersion;
         versionInfo = new VersionInfo(currentVersion);
         if (stats) {
-            this.stats = EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().isSnooperEnabled() : ServerLifecycleHooks.getCurrentServer().isSnooperEnabled();
+            this.stats = EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().getSnooper().isSnooperRunning() : ServerLifecycleHooks.getCurrentServer().getSnooper().isSnooperRunning();
         } else {
             this.stats = false;
         }

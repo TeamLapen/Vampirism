@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
 import de.teamlapen.vampirism.blocks.BlockBloodContainer;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
@@ -22,7 +23,6 @@ import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -77,12 +77,12 @@ public class ClientEventHandler {
         if (event.phase == TickEvent.Phase.START) {
             Minecraft mc = Minecraft.getInstance();
             if (mc.world != null && mc.world != null) {
-                if ((mc.currentScreen == null || mc.currentScreen instanceof SleepInMultiplayerScreen) && mc.player.isPlayerSleeping()) {
-                    BlockState state = mc.player.getEntityWorld().getBlockState(mc.player.bedLocation);
+                if ((mc.currentScreen == null || mc.currentScreen instanceof SleepInMultiplayerScreen) && mc.player.isSleeping()) {
+                    BlockState state = mc.player.getEntityWorld().getBlockState(mc.player.getBedLocation());
                     if (state.getBlock().equals(ModBlocks.block_coffin)) {
                         mc.displayGuiScreen(new GuiSleepCoffin());
                     }
-                } else if (mc.currentScreen != null && mc.currentScreen instanceof GuiSleepCoffin && !mc.player.isPlayerSleeping()) {
+                } else if (mc.currentScreen != null && mc.currentScreen instanceof GuiSleepCoffin && !mc.player.isSleeping()) {
                     mc.displayGuiScreen(null);
                 }
             }
@@ -93,15 +93,11 @@ public class ClientEventHandler {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onInitGuiEventPost(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (Configs.gui_skill_button_enable && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.get(event.getGui().mc.player).getCurrentFactionPlayer() != null) {
-            Button button = new ImageButton(SKILLBUTTONID, ((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22, 20, 18, 178, 0, 19, INVENTORY_SKILLS) {
-                @Override
-                public void onClick(double mouseX, double mouseY) {
-                    // TODO Auto-generated method stub
-                    super.onClick(mouseX, mouseY);
-                }
-            };
-            event.addButton(button);
+        if (Configs.gui_skill_button_enable && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.get(event.getGui().getMinecraft().player).getCurrentFactionPlayer() != null) {
+            Button button = new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22, 20, 18, 178, 0, 19, INVENTORY_SKILLS, (context) -> {
+                //TODO open SkillGui
+            });
+            event.addWidget(button);
         }
     }
 
@@ -137,10 +133,10 @@ public class ClientEventHandler {
 
             // get ModelResourceLocations of all tank block variants from the registry
 
-            Map<ModelResourceLocation, IBakedModel> registry = event.getModelRegistry();
-            ArrayList<ModelResourceLocation> modelLocations = Lists.newArrayList();
+            Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
+            ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
-            for (ModelResourceLocation modelLoc : registry.keySet()) {
+            for (ResourceLocation modelLoc : registry.keySet()) {
                 if (modelLoc.getNamespace().equals(REFERENCE.MODID)
                         && modelLoc.getPath().equals(BlockBloodContainer.regName)
                         ) {
@@ -152,7 +148,7 @@ public class ClientEventHandler {
 
             IBakedModel registeredModel;
             IBakedModel newModel;
-            for (ModelResourceLocation loc : modelLocations) {
+            for (ResourceLocation loc : modelLocations) {
                 registeredModel = event.getModelRegistry().get(loc);
                 newModel = new BakedBloodContainerModel(registeredModel);
                 event.getModelRegistry().put(loc, newModel);
@@ -171,13 +167,11 @@ public class ClientEventHandler {
                 IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/altar_inspiration/blood" + (x + 1)));
                 BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(ModelLoader.defaultModelGetter(), ModelLoader.defaultTextureGetter(), model.getDefaultState(), false, Attributes.DEFAULT_BAKED_FORMAT);
             }
-            Map<ModelResourceLocation, IBakedModel> registry = event.getModelRegistry();
-            ArrayList<ModelResourceLocation> modelLocations = Lists.newArrayList();
+            Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
+            ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
-            for (ModelResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID)
-                        && modelLoc.getPath().equals(BlockAltarInspiration.regName)
-                        && !modelLoc.getVariant().equals("inventory")) {
+            for (ResourceLocation modelLoc : registry.keySet()) {
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(BlockAltarInspiration.regName) && !modelLoc.getVariant().equals("inventory")) {
                     modelLocations.add(modelLoc);
                 }
             }
@@ -186,7 +180,7 @@ public class ClientEventHandler {
 
             IBakedModel registeredModel;
             IBakedModel newModel;
-            for (ModelResourceLocation loc : modelLocations) {
+            for (ResourceLocation loc : modelLocations) {
                 registeredModel = event.getModelRegistry().get(loc);
                 newModel = new BakedAltarInspirationModel(registeredModel);
                 event.getModelRegistry().put(loc, newModel);
@@ -202,13 +196,11 @@ public class ClientEventHandler {
                 IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/weapon_table/weapon_table_lava" + (x + 1)));
                 BakedWeaponTableModel.FLUID_MODELS[x] = model.bake(ModelLoader.defaultModelGetter(), ModelLoader.defaultTextureGetter(), model.getDefaultState(), false, Attributes.DEFAULT_BAKED_FORMAT);
             }
-            Map<ModelResourceLocation, IBakedModel> registry = event.getModelRegistry();
-            ArrayList<ModelResourceLocation> modelLocations = Lists.newArrayList();
+            Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
+            ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
-            for (ModelResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID)
-                        && modelLoc.getPath().equals(BlockWeaponTable.regName)
-                        && !modelLoc.getVariant().equals("inventory")) {
+            for (ResourceLocation modelLoc : registry.keySet()) {
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(BlockWeaponTable.regName) && !modelLoc.getVariant().equals("inventory")) {
                     modelLocations.add(modelLoc);
                 }
             }
@@ -217,7 +209,7 @@ public class ClientEventHandler {
 
             IBakedModel registeredModel;
             IBakedModel newModel;
-            for (ModelResourceLocation loc : modelLocations) {
+            for (ResourceLocation loc : modelLocations) {
                 registeredModel = event.getModelRegistry().get(loc);
                 newModel = new BakedWeaponTableModel(registeredModel);
                 event.getModelRegistry().put(loc, newModel);

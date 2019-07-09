@@ -2,6 +2,7 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -13,10 +14,10 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.init.Particles;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
@@ -56,7 +58,7 @@ public class UtilLib {
     }
 
     public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos).isTopSolid(worldIn, pos);
+        return worldIn.getBlockState(pos).isTopSolid(worldIn, pos);//TODO EntityLiving#1816
     }
 
 
@@ -103,7 +105,7 @@ public class UtilLib {
         }
 
         Vec3d vector2 = vector1.add(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
-        return player.getEntityWorld().rayTraceBlocks(vector1, vector2);
+        return player.getEntityWorld().rayTraceBlocks(new RayTraceContext(vector1, vector2, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player));
     }
 
     public static BlockPos getRandomPosInBox(World w, AxisAlignedBB box) {
@@ -111,7 +113,7 @@ public class UtilLib {
         int z = (int) box.minZ + w.rand.nextInt((int) (box.maxZ - box.minZ) + 1);
         int y = w.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z) + 5;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, y, z);
-        while (y > box.minY && !w.getBlockState(pos).isNormalCube()) {
+        while (y > box.minY && !w.getBlockState(pos).isNormalCube(w, pos)) {
             pos.setPos(x, --y, z);
         }
 
@@ -128,7 +130,7 @@ public class UtilLib {
         List<ChunkPos> chunks = Lists.newArrayList();
         int i = 0;
 
-        for (PlayerEntity entityplayer : world.playerEntities) {
+        for (PlayerEntity entityplayer : world.getPlayers()) {
             if (!entityplayer.isSpectator()) {
                 int x = MathHelper.floor(entityplayer.posX / 16.0D);
                 int z = MathHelper.floor(entityplayer.posZ / 16.0D);
@@ -168,22 +170,22 @@ public class UtilLib {
 
     }
 
-    public static <T extends MobEntity> Entity spawnEntityBehindEntity(LivingEntity entity, EntityType<T> toSpawn) {
+    public static <T extends MobEntity> Entity spawnEntityBehindEntity(LivingEntity entity, EntityType<T> toSpawn, SpawnReason reason) {
 
         BlockPos behind = getPositionBehindEntity(entity, 2);
         MobEntity e = toSpawn.create(entity.getEntityWorld());
 
         e.setPosition(behind.getX(), entity.posY, behind.getZ());
 
-        if (e.canSpawn(entity.getEntityWorld(), false) && e.isNotColliding()) {
-            entity.getEntityWorld().spawnEntity(e);
+        if (e.canSpawn(entity.getEntityWorld(), reason) && e.isNotColliding(entity.getEntityWorld())) {
+            entity.getEntityWorld().addEntity(e);
             return e;
         } else {
             int y = entity.getEntityWorld().getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, behind).getY();
             e.setPosition(behind.getX(), y, behind.getZ());
-            if (e.canSpawn(entity.getEntityWorld(), false) && e.isNotColliding()) {
-                entity.getEntityWorld().spawnEntity(e);
-                onInitialSpawn(e);
+            if (e.canSpawn(entity.getEntityWorld(), reason) && e.isNotColliding(entity.getEntityWorld())) {
+                entity.getEntityWorld().addEntity(e);
+                onInitialSpawn(e, reason);
                 return e;
             }
         }
@@ -192,11 +194,11 @@ public class UtilLib {
     }
 
     /**
-     * Call {@link MobEntity#onInitialSpawn(DifficultyInstance, ILivingEntityData, CompoundNBT)} if applicable
+     * Call {@link MobEntity#onInitialSpawn(IWorld, DifficultyInstance, SpawnReason, ILivingEntityData, CompoundNBT)} if applicable
      */
-    private static void onInitialSpawn(Entity e) {
+    private static void onInitialSpawn(Entity e, SpawnReason reason) {
         if (e instanceof MobEntity) {
-            ((MobEntity) e).onInitialSpawn(e.getEntityWorld().getDifficultyForLocation(e.getPosition()), null, null);
+            ((MobEntity) e).onInitialSpawn(e.getEntityWorld(), e.getEntityWorld().getDifficultyForLocation(e.getPosition()), reason, null, null);
         }
     }
 
@@ -215,10 +217,11 @@ public class UtilLib {
      * @param e               Entity that has a EntityType<? extends EntityLiving>
      * @param maxTry          Max position tried
      * @param avoidedEntities Avoid being to close or seen by these entities. If no valid spawn location is found, this is ignored
+     * @param reason          Spawn reason
      * @return Successful spawn
      */
-    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<LivingEntity> avoidedEntities) {//TODO this method is only called for EntityLiving -> modify?
-        if (!world.isAreaLoaded((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ, true)) {
+    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<LivingEntity> avoidedEntities, SpawnReason reason) {//TODO this method is only called for EntityLiving -> modify?
+        if (!world.isAreaLoaded((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
             return false;
         }
         boolean flag = false;
@@ -228,7 +231,7 @@ public class UtilLib {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
             if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(e.getType()), world, c, e.getType())) {//TODO i see no other way
                 e.setPosition(c.getX(), c.getY() + 0.2, c.getZ());
-                if (!(e instanceof MobEntity) || (((MobEntity) e).canSpawn(world, false) && ((MobEntity) e).isNotColliding())) {
+                if (!(e instanceof MobEntity) || (((MobEntity) e).canSpawn(world, reason) && ((MobEntity) e).isNotColliding(e.getEntityWorld()))) {
                     backupPos = c; //Store the location in case we do not find a better one
                     for (LivingEntity p : avoidedEntities) {
 
@@ -246,8 +249,8 @@ public class UtilLib {
         }
 
         if (flag) {
-            world.spawnEntity(e);
-            onInitialSpawn(e);
+            world.addEntity(e);
+            onInitialSpawn(e, reason);
             return true;
         }
         return false;
@@ -259,12 +262,13 @@ public class UtilLib {
      * @param entityType      EntityType of entity to be created
      * @param maxTry          Max position tried
      * @param avoidedEntities Avoid being to close or seen by these entities. If no valid spawn location is found, this is ignored
+     * @param reason          Spawn reason
      * @return The spawned creature or null if not successful
      */
     @Nullable
-    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, EntityType entityType, int maxTry, @Nonnull List<LivingEntity> avoidedEntities) {
+    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, EntityType entityType, int maxTry, @Nonnull List<LivingEntity> avoidedEntities, SpawnReason reason) {
         Entity e = entityType.create(world);
-        if (spawnEntityInWorld(world, box, e, maxTry,avoidedEntities)) {
+        if (spawnEntityInWorld(world, box, e, maxTry, avoidedEntities, reason)) {
             return e;
         } else {
             if (e != null) {
@@ -327,10 +331,10 @@ public class UtilLib {
                 float f = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
                 float f1 = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
                 float f2 = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
-                double d7 = d3 + (entity.posX - d3) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
-                double d8 = d4 + (entity.posY - d4) * d6 + entity.getRNG().nextDouble() * entity.height;
-                double d9 = d5 + (entity.posZ - d5) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
-                entity.getEntityWorld().addParticle(Particles.PORTAL, d7, d8, d9, f, f1, f2);
+                double d7 = d3 + (entity.posX - d3) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.getWidth() * 2.0D;
+                double d8 = d4 + (entity.posY - d4) * d6 + entity.getRNG().nextDouble() * entity.getHeight();
+                double d9 = d5 + (entity.posZ - d5) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.getWidth() * 2.0D;
+                entity.getEntityWorld().addParticle(ParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
             }
 
             if (sound) {
@@ -367,9 +371,9 @@ public class UtilLib {
             float f = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
             float f1 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
             float f2 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
-            double d7 = e.posX + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
-            double d8 = e.posY + (maxDistance / 2) * d6 + e.getRNG().nextDouble() * e.height;
-            double d9 = e.posZ + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
+            double d7 = e.posX + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.getWidth() * 2.0D;
+            double d8 = e.posY + (maxDistance / 2) * d6 + e.getRNG().nextDouble() * e.getHealth();
+            double d9 = e.posZ + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.getWidth() * 2.0D;
             e.getEntityWorld().addParticle(particle, d7, d8, d9, f, f1, f2);
         }
     }

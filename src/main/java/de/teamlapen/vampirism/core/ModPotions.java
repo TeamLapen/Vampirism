@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.potion.VampirismNightVisionPotion;
 import de.teamlapen.vampirism.potion.VampirismPotion;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SRGNAMES;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -46,7 +47,7 @@ public class ModPotions {
         registry.register(new PotionSanguinare("sanguinare", false, 0x6A0888));
         registry.register(new VampirismPotion("saturation", false, 0xDCFF00).setIconIndex(2, 0).setBeneficial());
         Effect sunscreen = new VampirismPotion("sunscreen", false, 0xFFF100).setIconIndex(3, 0).setBeneficial();
-        sunscreen.registerPotionAttributeModifier(VReference.sunDamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, 2);
+        sunscreen.addAttributesModifier(VReference.sunDamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL);
         registry.register(sunscreen);
         registry.register(new VampirismPotion("fire_protection", false, 14981690).setIconIndex(6, 0).setBeneficial());
         registry.register(new VampirismPotion("disguise_as_vampire", false, 0x999900).setIconIndex(4, 0).setBeneficial());

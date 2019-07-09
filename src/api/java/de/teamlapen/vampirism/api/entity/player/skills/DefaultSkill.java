@@ -67,7 +67,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
         }
     }
 
-    public DefaultSkill<T> registerAttributeModifier(IAttribute attribute, String uuid, double amount, int operation) {
+    public DefaultSkill<T> registerAttributeModifier(IAttribute attribute, String uuid, double amount, AttributeModifier.Operation operation) {
         AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), this.getRegistryName().toString(), amount, operation);
         this.attributeModifierMap.put(attribute, attributemodifier);
         return this;
@@ -106,7 +106,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
 
     private void applyAttributesModifiersToEntity(PlayerEntity player) {
         for (Map.Entry<IAttribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
-            IAttributeInstance iattributeinstance = player.getAttributeMap().getAttributeInstance(entry.getKey());
+            IAttributeInstance iattributeinstance = player.getAttributes().getAttributeInstance(entry.getKey());
 
             if (iattributeinstance != null) {
                 AttributeModifier attributemodifier = entry.getValue();
@@ -129,7 +129,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
 
     private void removeAttributesModifiersFromEntity(PlayerEntity player) {
         for (Map.Entry<IAttribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
-            IAttributeInstance iattributeinstance = player.getAttributeMap().getAttributeInstance(entry.getKey());
+            IAttributeInstance iattributeinstance = player.getAttributes().getAttributeInstance(entry.getKey());
 
             if (iattributeinstance != null) {
                 iattributeinstance.removeModifier(entry.getValue());

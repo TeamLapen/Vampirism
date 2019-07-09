@@ -16,6 +16,8 @@ import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -109,10 +111,10 @@ public class ModKeys {
             suckKeyDown = true;
             PlayerEntity player = Minecraft.getInstance().player;
             if (mouseOver != null && !player.isSpectator() && FactionPlayerHandler.get(player).isInFaction(VReference.VAMPIRE_FACTION) && !VampirePlayer.get(player).getActionHandler().isActionActive(VampireActions.bat)) {
-                if (mouseOver.entity != null) {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entity.getEntityId()));
-                } else if (mouseOver.type == RayTraceResult.Type.BLOCK) {
-                    BlockPos pos = mouseOver.getBlockPos();
+                if (mouseOver instanceof EntityRayTraceResult) {
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + ((EntityRayTraceResult) mouseOver).getEntity().getEntityId()));
+                } else if (mouseOver instanceof BlockRayTraceResult) {
+                    BlockPos pos = ((BlockRayTraceResult) mouseOver).getPos();
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DRINK_BLOOD_BLOCK, "" + pos.getX() + ":" + pos.getY() + ":" + pos.getZ()));
                 } else {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + -1));

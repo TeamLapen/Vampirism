@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.player.vampire;
 
+import com.mojang.datafixers.util.Either;
+
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -11,6 +13,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -216,7 +219,7 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public PlayerEntity.SleepResult trySleep(BlockPos pos) {
+    public Either<PlayerEntity.SleepResult, Unit> trySleep(BlockPos pos) {
         return null;
     }
 

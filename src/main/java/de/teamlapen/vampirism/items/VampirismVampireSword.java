@@ -116,7 +116,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
                 DamageSource dmg = DamageSource.causePlayerDamage((PlayerEntity) attacker);
                 target.attackEntityFrom(dmg, 10000F);
                 Vec3d center = new Vec3d(target.getPosition());
-                center.add(0, target.height / 2d, 0);
+                center.add(0, target.getHeight() / 2d, 0);
                 VampLib.proxy.getParticleHandler().spawnParticles(target.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 15, 0.5, target.getRNG(), 132, 12, 0xE02020);
             }
         }

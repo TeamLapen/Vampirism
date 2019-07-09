@@ -3,12 +3,12 @@ package de.teamlapen.lib.lib.entity;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.init.Particles;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -33,7 +33,6 @@ public class BasicEntityAreaParticleCloud extends Entity {
         this.waitTime = 0;
         this.radiusPerTick = 0F;
         this.noClip = true;
-        this.isImmuneToFire = true;
         this.setRadius(3);
     }
 
@@ -126,7 +125,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
                 float dy = this.rand.nextFloat() * getHeight();
 
 
-                if (particle.getType() == Particles.ENTITY_EFFECT) {
+                if (particle.getType() == ParticleTypes.ENTITY_EFFECT) {
                     int rgb = this.getColor();
                     int cr = rgb >> 16 & 255;
                     int cg = rgb >> 8 & 255;
@@ -181,7 +180,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
         this.getDataManager().register(COLOR, 0);
         this.getDataManager().register(RADIUS, 0.5F);
         this.getDataManager().register(HEIGHT, 0.5F);
-        this.getDataManager().register(PARTICLE, Particles.ENTITY_EFFECT);
+        this.getDataManager().register(PARTICLE, ParticleTypes.ENTITY_EFFECT);
         this.getDataManager().register(SPAWN_RATE, 1F);
 
     }

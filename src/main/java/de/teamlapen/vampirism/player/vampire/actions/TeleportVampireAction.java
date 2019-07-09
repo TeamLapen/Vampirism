@@ -10,6 +10,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 
 
@@ -27,18 +29,24 @@ public class TeleportVampireAction extends DefaultVampireAction {
         double ox = player.posX;
         double oy = player.posY;
         double oz = player.posZ;
-        if (target == null) {
+        if (target.getType() == RayTraceResult.Type.MISS) {
             player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return false;
         }
         BlockPos pos = null;
-        if (player.getEntityWorld().getBlockState(target.getBlockPos()).getMaterial().blocksMovement()) {
-            pos = target.getBlockPos().up();
+        if (target.getType() == RayTraceResult.Type.BLOCK) {
+            if (player.getEntityWorld().getBlockState(((BlockRayTraceResult) target).getPos()).getMaterial().blocksMovement()) {
+                pos = ((BlockRayTraceResult) target).getPos().up();
+            }
+        } else {//TODO better solution / remove
+            if (player.getEntityWorld().getBlockState(((EntityRayTraceResult) target).getEntity().getPosition()).getMaterial().blocksMovement()) {
+                pos = ((EntityRayTraceResult) target).getEntity().getPosition();
+            }
         }
 
         if (pos != null) {
             player.setPosition(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-            if (!(player.getEntityWorld().getCollisionBoxes(player, player.getBoundingBox()).findFirst().orElse(null) == null) || player.getEntityWorld().containsAnyLiquid(player.getBoundingBox())) {//TODO verify if true
+            if (!(player.getEntityWorld().isCollisionBoxesEmpty(player, player.getBoundingBox()) || player.getEntityWorld().containsAnyLiquid(player.getBoundingBox()))) {//TODO verify if true
                 pos = null;
             }
 
@@ -58,10 +66,10 @@ public class TeleportVampireAction extends DefaultVampireAction {
         EntityAreaParticleCloud particleCloud = new EntityAreaParticleCloud(player.getEntityWorld());
         particleCloud.setPosition(ox, oy, oz);
         particleCloud.setRadius(0.7F);
-        particleCloud.setHeight(player.height);
+        particleCloud.setHeight(player.getHeight());
         particleCloud.setDuration(5);
         particleCloud.setSpawnRate(15);
-        player.getEntityWorld().spawnEntity(particleCloud);
+        player.getEntityWorld().addEntity(particleCloud);
         player.getEntityWorld().playSound(ox, oy, oz, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
         player.getEntityWorld().playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1, false);
         return true;
