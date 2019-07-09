@@ -24,7 +24,7 @@ import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
-import de.teamlapen.vampirism.items.ItemHunterCoat;
+import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
@@ -1097,7 +1097,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.POISONOUS_BITE);
             }
         } else if (hunter) {
-            if (entity instanceof PlayerEntity && ItemHunterCoat.isFullyEquipped((PlayerEntity) entity)) {
+            if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) {
                 player.attackEntityFrom(DamageSource.causeThornsDamage(entity), damage);
             }
         }

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.world.gen.village;
 
-import de.teamlapen.vampirism.blocks.BlockChurchAltar;
+import de.teamlapen.vampirism.blocks.ChurchAltarBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.ChunkPos;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Vanilla Church with a {@link de.teamlapen.vampirism.blocks.BlockChurchAltar} inside
+ * Vanilla Church with a {@link ChurchAltarBlock} inside
  */
 public class VillagePieceModChurch extends VillagePieces.Church {
 
@@ -30,7 +30,7 @@ public class VillagePieceModChurch extends VillagePieces.Church {
     @Override
     public boolean addComponentParts(@Nonnull IWorld worldIn, @Nonnull Random random, @Nonnull MutableBoundingBox structureBoundingBoxIn, ChunkPos p_74875_4_) {
         super.addComponentParts(worldIn, random, structureBoundingBoxIn, p_74875_4_);
-        this.setBlockState(worldIn, ModBlocks.church_altar.getDefaultState().with(BlockChurchAltar.FACING, Direction.SOUTH), 2, 2, 7, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.church_altar.getDefaultState().with(ChurchAltarBlock.FACING, Direction.SOUTH), 2, 2, 7, structureBoundingBoxIn);
         return true;
     }
 

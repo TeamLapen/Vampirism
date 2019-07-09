@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
-import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
-import de.teamlapen.vampirism.blocks.BlockBloodContainer;
+import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
+import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -183,10 +183,10 @@ public class ModPlayerEventHandler {
                                 if (drain != null && drain.amount >= BloodBottleFluidHandler.MULTIPLIER) {
                                     flag = true;
                                 }
-                                if (flag && block instanceof BlockAltarInspiration) {
+                                if (flag && block instanceof AltarInspirationBlock) {
                                     flag = false;
                                 }
-                                if (flag && block instanceof BlockBloodContainer) {
+                                if (flag && block instanceof BloodContainerBlock) {
                                     flag = event.getEntityPlayer().isSneaking();
                                 }
                                 return flag;
@@ -194,7 +194,7 @@ public class ModPlayerEventHandler {
 
                         }
                     }
-                    if ((bloodBottle || convert) && block instanceof BlockBloodContainer) {
+                    if ((bloodBottle || convert) && block instanceof BloodContainerBlock) {
                         event.setUseBlock(Event.Result.ALLOW);
                     }
                     if (convert) {

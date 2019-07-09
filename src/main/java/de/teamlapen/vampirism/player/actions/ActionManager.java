@@ -1,10 +1,11 @@
 package de.teamlapen.vampirism.player.actions;
 
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionManager;
-import de.teamlapen.vampirism.core.VampirismRegistries;
+import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -15,7 +16,7 @@ public class ActionManager implements IActionManager {
 
     @Override
     public List<IAction> getActionsForFaction(IPlayableFaction faction) {
-        List<IAction> list = Lists.newArrayList(VampirismRegistries.ACTIONS.getValues());
+        List<IAction> list = Lists.newArrayList(ModRegistries.ACTIONS.getValues());
         list.removeIf(action -> !faction.equals(action.getFaction()));
         return list;
     }

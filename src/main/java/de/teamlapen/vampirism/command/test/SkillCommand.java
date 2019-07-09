@@ -2,12 +2,13 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.core.VampirismRegistries;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.skills.SkillManager;
 import net.minecraft.command.CommandSource;
@@ -28,7 +29,7 @@ public class SkillCommand extends BasicCommand {
         		.requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
         		.then(Commands.argument("type", StringArgumentType.word())
                         .suggests((context, builder) -> {
-                            return ISuggestionProvider.suggest(VampirismRegistries.SKILLS.getKeys().stream().map(id -> id.toString()), builder);
+                            return ISuggestionProvider.suggest(ModRegistries.SKILLS.getKeys().stream().map(id -> id.toString()), builder);
                         })
                         .suggests((context, builder) -> {
                             return ISuggestionProvider.suggest(new String[] { "list", "disableall" }, builder);
@@ -52,7 +53,7 @@ public class SkillCommand extends BasicCommand {
             (factionPlayer.getSkillHandler()).resetSkills();
             return 0;
         }
-        ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(type));
+        ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(type));
         if (skill == null) {
             commandSource.sendFeedback(new StringTextComponent("Skill with id " + type + " could not be found for faction " + factionPlayer.getFaction().name()), true);
             return 0;

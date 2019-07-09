@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
-import de.teamlapen.vampirism.blocks.BlockWeaponTable;
+import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -156,7 +156,7 @@ public class HunterWeaponTableContainer extends Container {
             if (irecipe instanceof IWeaponTableRecipe && craftResultIn.canUseRecipe(worldIn, entityplayermp, irecipe)) {
                 IWeaponTableRecipe recipe = (IWeaponTableRecipe) irecipe;
                 if (recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunterPlayer.getSkillHandler(), recipe.getRequiredSkills())) {
-                    if (recipe.getRequiredLavaUnits() >= worldIn.getBlockState(pos).get(BlockWeaponTable.LAVA)) { //TODO LAVA at BlockPos, BlockWeaponTable.Propert
+                    if (recipe.getRequiredLavaUnits() >= worldIn.getBlockState(pos).get(WeaponTableBlock.LAVA)) { //TODO LAVA at BlockPos, WeaponTableBlock.Propert
                         itemstack = irecipe.getCraftingResult(craftMatrixIn);
 
                     } else {

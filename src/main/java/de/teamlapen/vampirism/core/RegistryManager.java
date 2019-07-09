@@ -57,7 +57,7 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onBuildRegistries(RegistryEvent.NewRegistry event) {
 
-        VampirismRegistries.init();
+        ModRegistries.init();
     }
 
     @Override

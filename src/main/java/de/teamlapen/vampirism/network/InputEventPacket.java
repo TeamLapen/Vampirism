@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.core.VampirismRegistries;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.inventory.HunterBasicContainer;
@@ -107,7 +107,7 @@ public class InputEventPacket implements IMessage {
                     ResourceLocation id = new ResourceLocation(msg.param);
                     if (factionPlayer != null) {
                         IActionHandler actionHandler = factionPlayer.getActionHandler();
-                        IAction action = VampirismRegistries.ACTIONS.getValue(id);
+                        IAction action = ModRegistries.ACTIONS.getValue(id);
                         if (action != null) {
                             IAction.PERM r = actionHandler.toggleAction(action);
                             switch (r) {
@@ -143,7 +143,7 @@ public class InputEventPacket implements IMessage {
                     break;
                 case UNLOCKSKILL:
                     if (factionPlayer != null) {
-                        ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(msg.param));
+                        ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(msg.param));
                         if (skill != null) {
                             ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);

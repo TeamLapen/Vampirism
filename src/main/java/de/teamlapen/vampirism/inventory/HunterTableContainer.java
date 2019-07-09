@@ -6,7 +6,7 @@ import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.items.ItemPureBlood;
+import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,7 +34,7 @@ public class HunterTableContainer extends InventoryContainer {
     private ItemStack missing = ItemStack.EMPTY;
 
     public HunterTableContainer(PlayerEntity player, BlockPos pos) {
-        super(player.inventory, new HunterTableInventory(new InventorySlot.IItemSelector[]{((stack) -> Items.BOOK.equals(stack.getItem())), ((stack) -> ModItems.vampire_fang.equals(stack.getItem())), ((stack) -> stack.getItem() instanceof ItemPureBlood), (stack) -> ModItems.vampire_book.equals(stack.getItem())}));
+        super(player.inventory, new HunterTableInventory(new InventorySlot.IItemSelector[]{((stack) -> Items.BOOK.equals(stack.getItem())), ((stack) -> ModItems.vampire_fang.equals(stack.getItem())), ((stack) -> stack.getItem() instanceof PureBloodItem), (stack) -> ModItems.vampire_book.equals(stack.getItem())}));
         this.inventory = (HunterTableInventory) tile;
         inventory.setChangeListener(this);
         this.pos = pos;
@@ -105,7 +105,7 @@ public class HunterTableContainer extends InventoryContainer {
 
      */
     private ItemStack checkItems(int fangs, int blood, int bloodLevel, int par3) {
-        return InventoryHelper.checkItems(inventory, new Item[]{Items.BOOK, ModItems.vampire_fang, ItemPureBlood.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
+        return InventoryHelper.checkItems(inventory, new Item[]{Items.BOOK, ModItems.vampire_fang, PureBloodItem.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
     }
 
     private class SlotResult extends Slot {

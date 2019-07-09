@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.vampirism.blocks.BlockHunterTable;
+import de.teamlapen.vampirism.blocks.HunterTableBlock;
 import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.inventory.*;
-import de.teamlapen.vampirism.items.ItemVampireBook;
+import de.teamlapen.vampirism.items.VampireBookItem;
 import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import de.teamlapen.vampirism.tileentity.TileGrinder;
@@ -38,40 +38,40 @@ public class ModGuiHandler implements IGuiHandler {
 
         switch (id) {
             case ID_ACTION:
-                return new GuiSelectAction();
+                return new SelectActionScreen();
             case ID_SKILL:
-                return new GuiSkills();
+                return new SkillsScreen();
             case ID_ALTAR_INFUSION:
                 TileAltarInfusion tile = (TileAltarInfusion) world.getTileEntity(new BlockPos(x, y, z));
 
-                return new GuiAltarInfusion(player.inventory, tile);
+                return new AltarInfusionScreen(player.inventory, tile);
             case ID_HUNTER_TABLE:
-                return new GuiHunterTable(BlockHunterTable.createInventoryContainer(player, new BlockPos(x, y, z)));
+                return new HunterTableScreen(HunterTableBlock.createInventoryContainer(player, new BlockPos(x, y, z)));
             case ID_HUNTER_TRAINER:
-                return new GuiHunterTrainer(new HunterTrainerContainer(player));
+                return new HunterTrainerScreen(new HunterTrainerContainer(player));
             case ID_REVERT_BACK:
-                return new GuiRevertBack();
+                return new RevertBackScreen();
             case ID_WEAPON_TABLE:
-                return new GuiHunterWeaponTable(player.inventory, world, new BlockPos(x, y, z));
+                return new HunterWeaponTableScreen(player.inventory, world, new BlockPos(x, y, z));
             case ID_BLOOD_POTION_TABLE:
-                return new GuiBloodPotionTable(player.inventory, new BlockPos(x, y, z), world);
+                return new BloodPotionTableScreen(player.inventory, new BlockPos(x, y, z), world);
             case ID_HUNTER_BASIC:
-                return new GuiHunterBasic(player);
+                return new HunterBasicScreen(player);
             case ID_VAMPIRE_BOOK:
                 ItemStack itemStack = player.getHeldItem(Hand.MAIN_HAND);
-                if (!itemStack.isEmpty() && itemStack.getItem() instanceof ItemVampireBook) {
+                if (!itemStack.isEmpty() && itemStack.getItem() instanceof VampireBookItem) {
                     return new GuiScreenBook(player, itemStack, false, Hand.MAIN_HAND);
                 }
                 return null;
             case ID_ALCHEMICAL_CAULDRON:
                 TileAlchemicalCauldron alchemicalCauldron = (TileAlchemicalCauldron) world.getTileEntity(new BlockPos(x, y, z));
-                return new GuiAlchemicalCauldron(player.inventory, alchemicalCauldron);
+                return new AlchemicalCauldronScreen(player.inventory, alchemicalCauldron);
             case ID_NAME_SWORD:
-                return new GuiNameSword(player.getHeldItemMainhand());
+                return new NameSwordScreen(player.getHeldItemMainhand());
             case ID_BLOOD_GRINDER:
                 TileGrinder tileGrinder = (TileGrinder) world.getTileEntity(new BlockPos(x, y, z));
                 if (tileGrinder != null)
-                    return new GuiBloodGrinder(tileGrinder.getNewInventoryContainer(player.inventory));
+                    return new BloodGrinderScreen(tileGrinder.getNewInventoryContainer(player.inventory));
             default:
                 return null;
         }
@@ -84,7 +84,7 @@ public class ModGuiHandler implements IGuiHandler {
             if (tile != null) return tile.getNewInventoryContainer(player.inventory);
         }
         if (id == ID_HUNTER_TABLE) {
-            return BlockHunterTable.createInventoryContainer(player, new BlockPos(x, y, z));
+            return HunterTableBlock.createInventoryContainer(player, new BlockPos(x, y, z));
         }
         if (id == ID_HUNTER_TRAINER) {
             return new HunterTrainerContainer(player);

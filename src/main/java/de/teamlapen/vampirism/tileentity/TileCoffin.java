@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.tileentity;
 
-import de.teamlapen.vampirism.blocks.BlockCoffin;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.item.DyeColor;
@@ -74,12 +74,12 @@ public class TileCoffin extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void tick() {
-        if (!hasWorld() || !world.isRemote || !BlockCoffin.isHead(world, pos)) {
+        if (!hasWorld() || !world.isRemote || !CoffinBlock.isHead(world, pos)) {
             return;
 
         }
 
-        boolean occupied = BlockCoffin.isOccupied(world, pos);
+        boolean occupied = CoffinBlock.isOccupied(world, pos);
         if (lastTickOccupied != occupied) {
             this.world.playSound(pos.getX(), (double) this.pos.getY() + 0.5D, pos.getZ(), ModSounds.coffin_lid, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F, true);
             lastTickOccupied = occupied;

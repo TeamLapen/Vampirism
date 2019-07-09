@@ -3,14 +3,14 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.lib.lib.client.render.RenderAreaParticleCloud;
 import de.teamlapen.vampirism.client.render.entities.*;
 import de.teamlapen.vampirism.entity.*;
-import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
-import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
+import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
+import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.hunter.*;
-import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
-import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
-import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
-import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
-import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
+import de.teamlapen.vampirism.entity.minions.vampire.VampireMinionBaseEntity;
+import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
+import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
+import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
+import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.BatRenderer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,24 +25,24 @@ public class ModEntitiesRender {
 
 
     public static void registerEntityRenderer() {
-        RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, BatRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, RenderGhost::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityConvertedCreature.class, RenderConvertedCreature::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityBasicHunter.class, RenderBasicHunter::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityBasicVampire.class, RenderBasicVampire::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityHunterTrainer.class, RenderHunterTrainer::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityVampireBaron.class, RenderVampireBaron::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinionBase.class, RenderVampireMinion::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityAdvancedHunter.class, RenderAdvancedHunter::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityAdvancedVampire.class, RenderAdvancedVampire::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityConvertedVillager.class, RenderConvertedVillager::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityAggressiveVillager.class, RenderHunterVillager::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityCrossbowArrow.class, RenderCrossbowArrow::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityAreaParticleCloud.class, RenderAreaParticleCloud::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityThrowableItem.class, manager -> new RenderThrowableItem(manager, Minecraft.getInstance().getItemRenderer()));
-        RenderingRegistry.registerEntityRenderingHandler(EntityDraculaHalloween.class, RenderSpecialDraculaHalloween::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityDarkBloodProjectile.class, RenderDarkBloodProjectile::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntitySoulOrb.class, manager -> new RenderSoulOrb(manager, Minecraft.getInstance().getItemRenderer()));
-        RenderingRegistry.registerEntityRenderingHandler(EntityHunterTrainerDummy.class, RenderHunterTrainerDummy::new);
+        RenderingRegistry.registerEntityRenderingHandler(BlindingBatEntity.class, BatRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GhostEntity.class, GhostRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ConvertedCreatureEntity.class, ConvertedCreatureRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(BasicHunterEntity.class, BasicHunterRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(BasicVampireEntity.class, BasicVampireRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(HunterTrainerEntity.class, HunterTrainerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(VampireBaronEntity.class, VampireBaronRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(VampireMinionBaseEntity.class, VampireMinionRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(AdvancedHunterEntity.class, AdvancedHunterRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(AdvancedVampireEntity.class, AdvancedVampireRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ConvertedVillagerEntity.class, ConvertedVillagerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(AggressiveVillagerEntity.class, HunterVillagerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(CrossbowArrowEntity.class, CrossbowArrowRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(AreaParticleCloudEntity.class, RenderAreaParticleCloud::new);
+        RenderingRegistry.registerEntityRenderingHandler(ItemThrowableEntity.class, manager -> new ThrowableItemRenderer(manager, Minecraft.getInstance().getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(DraculaHalloweenEntity.class, DraculaHalloweenRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(DarkBloodProjectileEntity.class, DarkBloodProjectileRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SoulOrbEntity.class, manager -> new SoulOrbRenderer(manager, Minecraft.getInstance().getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(DummyHunterTrainerEntity.class, DummyHunterTrainerRenderer::new);
     }
 }

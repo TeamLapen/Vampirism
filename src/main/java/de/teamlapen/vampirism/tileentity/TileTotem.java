@@ -13,13 +13,13 @@ import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.entity.EntityFactionVillager;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
+import de.teamlapen.vampirism.entity.FactionVillagerEntity;
+import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.*;
-import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
-import de.teamlapen.vampirism.entity.vampire.EntityVampireFactionVillager;
+import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import de.teamlapen.vampirism.entity.vampire.VampireFactionVillagerEntity;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
@@ -114,7 +114,7 @@ public class TileTotem extends TileEntity implements ITickable {
             }
             return aggressive;
         } else {
-            EntityAggressiveVillager hunter = EntityAggressiveVillager.makeHunter(villager);
+            AggressiveVillagerEntity hunter = AggressiveVillagerEntity.makeHunter(villager);
             villager.getEntityWorld().spawnEntity(hunter);
             villager.remove();
             return hunter;
@@ -343,7 +343,7 @@ public class TileTotem extends TileEntity implements ITickable {
         if (!world.isRemote && capturingFaction == VReference.VAMPIRE_FACTION) {
             List<VillagerEntity> villager = this.world.getEntitiesWithinAABB(VillagerEntity.class, getAffectedArea());
             for (VillagerEntity v : villager) {
-                if (v instanceof EntityFactionVillager) continue;
+                if (v instanceof FactionVillagerEntity) continue;
                 if (v.getRNG().nextInt(3) == 0) {
                     makeAggressive(v, this.getVillage());
                 }
@@ -430,7 +430,7 @@ public class TileTotem extends TileEntity implements ITickable {
                     forced_faction_timer--;
                 } else {
                     if (forced_faction != VReference.HUNTER_FACTION && forced_faction_check_trainer) {
-                        List<EntityHunterTrainer> t = world.getEntitiesWithinAABB(EntityHunterTrainer.class, getAffectedArea());
+                        List<HunterTrainerEntity> t = world.getEntitiesWithinAABB(HunterTrainerEntity.class, getAffectedArea());
                         if (t.size() > 0) {
                             forced_faction = VReference.HUNTER_FACTION;
                         }
@@ -468,7 +468,7 @@ public class TileTotem extends TileEntity implements ITickable {
                     for (Entity e : entities) {
                         IFaction f = VampirismAPI.factionRegistry().getFaction(e);
                         if (f == null) continue;
-                        if (e instanceof EntityHunterTrainer) continue;
+                        if (e instanceof HunterTrainerEntity) continue;
                         if (this.capturingFaction.equals(f)) {
                             attacker++;
                             attackStrength++;
@@ -482,7 +482,7 @@ public class TileTotem extends TileEntity implements ITickable {
                                 defenderPlayer++;
                                 defenseStrength += FactionPlayerHandler.get((PlayerEntity) e).getCurrentLevelRelative();
                             }
-                            if (e instanceof EntityConvertedVillager) {
+                            if (e instanceof ConvertedVillagerEntity) {
                                 defenseStrength += 0.5f; //Converted villagers are useless
                             } else if (e instanceof IAggressiveVillager) {
                                 defenseStrength += 0.7f;
@@ -558,9 +558,9 @@ public class TileTotem extends TileEntity implements ITickable {
                             if (l.size() < max) {
                                 if (seed.getRNG().nextInt(15) == 0) {
                                     if (controllingFaction.equals(VReference.HUNTER_FACTION)) {
-                                        spawnVillagerInVillage(new EntityHunterFactionVillager(this.world), seed, true);
+                                        spawnVillagerInVillage(new HunterFactionVillagerEntity(this.world), seed, true);
                                     } else if (controllingFaction.equals(VReference.VAMPIRE_FACTION)) {
-                                        spawnVillagerInVillage(new EntityVampireFactionVillager(this.world), seed, false);
+                                        spawnVillagerInVillage(new VampireFactionVillagerEntity(this.world), seed, false);
                                     }
                                 } else {
                                     boolean isVampire = this.controllingFaction == VReference.VAMPIRE_FACTION && seed.getRNG().nextBoolean();
@@ -590,10 +590,10 @@ public class TileTotem extends TileEntity implements ITickable {
                             List<MobEntity> guards = new ArrayList<>();
                             ResourceLocation entityId = null;
                             if (this.controllingFaction.equals(VReference.HUNTER_FACTION)) {
-                                guards = this.world.getEntitiesWithinAABB(EntityHunterBase.class, getAffectedArea());
+                                guards = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, getAffectedArea());
                                 entityId = getEntityForFaction(this.controllingFaction);
                             } else if (this.controllingFaction.equals(VReference.VAMPIRE_FACTION)) {
-                                guards = this.world.getEntitiesWithinAABB(EntityVampireBase.class, getAffectedArea());
+                                guards = this.world.getEntitiesWithinAABB(VampireBaseEntity.class, getAffectedArea());
                                 entityId = getEntityForFaction(this.controllingFaction);
                             }
                             if (entityId != null && defenderNumMax > guards.size()) {
@@ -873,8 +873,8 @@ public class TileTotem extends TileEntity implements ITickable {
             return;
         }
         Entity e = EntityType.create(world, id);
-        if (e instanceof EntityVampireBase) {
-            ((EntityVampireBase) e).setSpawnRestriction(EntityVampireBase.SpawnRestriction.SIMPLE);
+        if (e instanceof VampireBaseEntity) {
+            ((VampireBaseEntity) e).setSpawnRestriction(VampireBaseEntity.SpawnRestriction.SIMPLE);
         }
         if (e != null && !UtilLib.spawnEntityInWorld(world, this.getAffectedAreaReduced(), e, 50, world.getPlayers(PlayerEntity.class, EntityPredicates.NOT_SPECTATING))) {
             e.remove();
@@ -1007,11 +1007,11 @@ public class TileTotem extends TileEntity implements ITickable {
     private void updateCreaturesOnCapture() {
         List<VillagerEntity> villager = this.world.getEntitiesWithinAABB(VillagerEntity.class, getAffectedArea());
         if (capturingFaction == VReference.HUNTER_FACTION) {
-            List<EntityHunterBase> hunter = this.world.getEntitiesWithinAABB(EntityHunterBase.class, getAffectedArea());
+            List<HunterBaseEntity> hunter = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, getAffectedArea());
             if (controllingFaction == VReference.VAMPIRE_FACTION) {
                 int i = Math.max(2, hunter.size() / 2);
                 if (hunter.size() > 0) {
-                    for (EntityHunterBase e : hunter) {
+                    for (HunterBaseEntity e : hunter) {
                         if (i-- > 0) {
                             spawnVillagerInVillage(new VillagerEntity(this.world), e, true);
                         }
@@ -1026,30 +1026,30 @@ public class TileTotem extends TileEntity implements ITickable {
                     ExtendedCreature.get(e).setPoisonousBlood(true);
                 }
             }
-            List<EntityHunterTrainerDummy> huntertrainerdummy = this.world.getEntitiesWithinAABB(EntityHunterTrainerDummy.class, getAffectedArea());
-            for (EntityHunterTrainerDummy e : huntertrainerdummy) {
-                EntityHunterTrainer trainer = new EntityHunterTrainer(this.world);
+            List<DummyHunterTrainerEntity> huntertrainerdummy = this.world.getEntitiesWithinAABB(DummyHunterTrainerEntity.class, getAffectedArea());
+            for (DummyHunterTrainerEntity e : huntertrainerdummy) {
+                HunterTrainerEntity trainer = new HunterTrainerEntity(this.world);
                 trainer.copyLocationAndAnglesFrom(e);
                 trainer.setHome(e.getHome());
                 world.removeEntity(e);
                 world.spawnEntity(trainer);
             }
-            spawnVillagerInVillage(new EntityHunterFactionVillager(this.world), null, false);
+            spawnVillagerInVillage(new HunterFactionVillagerEntity(this.world), null, false);
         } else if (capturingFaction == VReference.VAMPIRE_FACTION) {
             for (VillagerEntity e : villager) {
                 ExtendedCreature.get(e).setPoisonousBlood(false);
                 if (e.getRNG().nextInt(2) == 1) continue;
                 PotionSanguinare.addRandom(e, false);
             }
-            List<EntityHunterTrainer> huntertrainer = this.world.getEntitiesWithinAABB(EntityHunterTrainer.class, getAffectedArea());
-            for (EntityHunterTrainer e : huntertrainer) {
-                EntityHunterTrainerDummy dummy = new EntityHunterTrainerDummy(this.world);
+            List<HunterTrainerEntity> huntertrainer = this.world.getEntitiesWithinAABB(HunterTrainerEntity.class, getAffectedArea());
+            for (HunterTrainerEntity e : huntertrainer) {
+                DummyHunterTrainerEntity dummy = new DummyHunterTrainerEntity(this.world);
                 dummy.copyLocationAndAnglesFrom(e);
                 dummy.setHome(e.getHome());
                 world.removeEntity(e);
                 world.spawnEntity(dummy);
             }
-            spawnVillagerInVillage(new EntityVampireFactionVillager(this.world), null, false);
+            spawnVillagerInVillage(new VampireFactionVillagerEntity(this.world), null, false);
         }
     }
 

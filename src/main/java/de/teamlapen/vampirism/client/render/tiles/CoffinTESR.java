@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
-import de.teamlapen.vampirism.blocks.BlockCoffin;
-import de.teamlapen.vampirism.client.model.ModelCoffin;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.client.model.CoffinModel;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,11 +22,11 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
     private Logger LOGGER = LogManager.getLogger();
 
     private final int maxLidPos = 61;
-    private final ModelCoffin model;
+    private final CoffinModel model;
     private final ResourceLocation[] textures = new ResourceLocation[EnumDyeColor.values().length];
 
     public CoffinTESR() {
-        this.model = new ModelCoffin();
+        this.model = new CoffinModel();
         for (EnumDyeColor e : EnumDyeColor.values()) {
             textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.getName() + ".png");
         }
@@ -39,7 +39,7 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
         if (!isHeadSafe(te.getWorld(), te.getPos())) return;
 
         // Calculate lid position
-        boolean occupied = BlockCoffin.isOccupied(te.getWorld(), te.getPos());
+        boolean occupied = CoffinBlock.isOccupied(te.getWorld(), te.getPos());
         if (!occupied && tile.lidPos > 0)
             tile.lidPos--;
         else if (occupied && tile.lidPos < maxLidPos)
@@ -71,7 +71,7 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
      */
     private boolean isHeadSafe(World world, BlockPos pos) {
         try {
-            return BlockCoffin.isHead(world, pos);
+            return CoffinBlock.isHead(world, pos);
         } catch (IllegalArgumentException e) {
             LOGGER.error("CoffinTESR", "Failed to check coffin head at %s caused by wrong blockstate. Block at that pos: %s", pos, world.getBlockState(pos));
         } catch (Exception e) {

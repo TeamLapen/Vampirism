@@ -4,10 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.core.VampirismRegistries;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -53,7 +54,7 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
         ISkill[] skills = new ISkill[jsonObject.size()];
         for (int i = 0; i < skills.length; ++i) {
             String s = JSONUtils.getString(jsonObject.get(i), "skill[" + i + "]");
-            ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(s));
+            ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(s));
             if (skill == null) {
                 throw new JsonSyntaxException("Unknown skill '" + s + "'");
             } else {
@@ -187,7 +188,7 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
             int lava = buffer.readVarInt();
             ISkill[] skills = new ISkill[buffer.readVarInt()];
             for (int i = 0; i < skills.length; i++) {
-                skills[i] = VampirismRegistries.SKILLS.getValue(new ResourceLocation(buffer.readString(32767)));
+                skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readString(32767)));
             }
             return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, skills);
         }

@@ -9,10 +9,11 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.blocks.BlockAltarPillar;
+import de.teamlapen.vampirism.blocks.AltarPillarBlock;
+import de.teamlapen.vampirism.blocks.AltarTipBlock;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.items.ItemPureBlood;
+import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.BlockState;
@@ -65,7 +66,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickableT
     private int targetLevel;
 
     public TileAltarInfusion() {
-        super(ModTiles.altar_infusion, new InventorySlot[]{new InventorySlot(ItemPureBlood.class, 44, 34), new InventorySlot(ModItems.human_heart, 80, 34), new InventorySlot(ModItems.vampire_book, 116, 34)});
+        super(ModTiles.altar_infusion, new InventorySlot[]{new InventorySlot(PureBloodItem.class, 44, 34), new InventorySlot(ModItems.human_heart, 80, 34), new InventorySlot(ModItems.vampire_book, 116, 34)});
     }
 
     /**
@@ -325,7 +326,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickableT
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
         ItemStack missing = InventoryHelper.checkItems(this, new Item[]{
-                ItemPureBlood.getBloodItemForLevel(requirements.pureBloodLevel), ModItems.human_heart, ModItems.vampire_book
+                PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel), ModItems.human_heart, ModItems.vampire_book
         }, new int[]{requirements.blood, requirements.heart, requirements.vampireBook});
         if (!missing.isEmpty()) {
             if (messagePlayer) {
@@ -371,10 +372,10 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickableT
         for (int i = 0; i < tips.length; i++) {
             BlockPos pPos = tips[i];
             int j = 0;
-            BlockAltarPillar.EnumPillarType type = null;
+            AltarPillarBlock.EnumPillarType type = null;
             BlockState temp;
             while ((temp = getWorld().getBlockState(pPos.add(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
-                BlockAltarPillar.EnumPillarType t = temp.get(BlockAltarPillar.TYPE_PROPERTY);
+                AltarPillarBlock.EnumPillarType t = temp.get(AltarPillarBlock.TYPE_PROPERTY);
                 if (type == null) {
                     type = t;
                     j++;
@@ -414,7 +415,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickableT
     }
 
     /**
-     * Finds all {@link de.teamlapen.vampirism.blocks.BlockAltarTip}'s in the area
+     * Finds all {@link AltarTipBlock}'s in the area
      *
      * @return
      */

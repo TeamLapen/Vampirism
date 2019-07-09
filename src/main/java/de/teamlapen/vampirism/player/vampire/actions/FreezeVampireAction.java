@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.entity.EntityBlindingBat;
-import de.teamlapen.vampirism.items.ItemHunterCoat;
+import de.teamlapen.vampirism.entity.BlindingBatEntity;
+import de.teamlapen.vampirism.items.HunterCoatItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -28,9 +28,9 @@ public class FreezeVampireAction extends DefaultVampireAction {
         PlayerEntity player = vampire.getRepresentingPlayer();
         List l = player.getEntityWorld().getEntitiesInAABBexcluding(player, player.getBoundingBox().grow(10, 5, 10), vampire.getNonFriendlySelector(true, false)::test);
         for (Object o : l) {
-            if (o instanceof EntityBlindingBat) continue;
+            if (o instanceof BlindingBatEntity) continue;
             if (!(o instanceof LivingEntity)) continue;
-            if (o instanceof PlayerEntity && ItemHunterCoat.isFullyEquipped((PlayerEntity) o)) continue;
+            if (o instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) o)) continue;
             LivingEntity e = (LivingEntity) o;
             e.addPotionEffect(new EffectInstance(Effects.SLOWNESS, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new EffectInstance(Effects.RESISTANCE, Balance.vpa.FREEZE_DURATION * 20, 10));
