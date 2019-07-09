@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import javax.annotation.Nullable;
@@ -45,18 +46,9 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
         if (vampire.wantsBlood()) {
-            List<EntityCreature> list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, getBiteBoundingBox()); //TODO could exclude entity itself
+            List<EntityCreature> list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, getBiteBoundingBox(), EntitySelectors.NOT_SPECTATING.and((entity) -> entity != vampireEntity && entity.isAlive()));
             if (list.size() > 1) {
-
-                try {
-                    list.sort((o1, o2) -> vampireEntity.getDistanceSq(o1) > vampireEntity.getDistanceSq(o2) ? 1 : -1);
-                } catch (Exception e) {
-                    //TODO investigate issue
-                    //java.lang.IllegalArgumentException: Comparison method violates its general contract!
-                    //at java.util.TimSort.mergeHi(TimSort.java:895)
-                    //http://openeye.openmods.info/crashes/796f6b43ea81b10156658bd4f662e0c1
-                }
-
+                list.sort((o1, o2) -> (int) (vampireEntity.getDistanceSq(o1) - vampireEntity.getDistanceSq(o2)));
             }
 
             for (EntityCreature o : list) {

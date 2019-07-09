@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.EntitySelectors;
 
 import java.util.List;
 
@@ -48,11 +49,11 @@ public class VampireAIMoveToBiteable extends EntityAIBase {
             return false;
         }
         if (!vampire.wantsBlood()) return false;
-        List list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, vampireEntity.getBoundingBox().grow(10, 3, 10));
-        for (Object o : list) {
-            IExtendedCreatureVampirism creature = ExtendedCreature.get((EntityCreature)o);
-            if (creature.canBeBitten(vampire) && !((EntityCreature) o).hasCustomName() && !creature.hasPoisonousBlood()) {
-                target = (EntityCreature) o;
+        List<EntityCreature> list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, vampireEntity.getBoundingBox().grow(10, 3, 10), EntitySelectors.NOT_SPECTATING.and((entity) -> entity != vampireEntity && entity.isAlive()));
+        for (EntityCreature o : list) {
+            IExtendedCreatureVampirism creature = ExtendedCreature.get(o);
+            if (creature.canBeBitten(vampire) && !o.hasCustomName() && !creature.hasPoisonousBlood()) {
+                target = o;
                 return true;
             }
         }
