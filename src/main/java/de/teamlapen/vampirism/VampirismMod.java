@@ -184,20 +184,7 @@ public class VampirismMod {
     private void enqueueIMC(final InterModEnqueueEvent event) {
         finishAPI1();
 
-        String currentVersion = "@VERSION@".equals(REFERENCE.VERSION) ? "0.0.0-test" : REFERENCE.VERSION;
-        if (Configs.disable_versionCheck) {
-            versionInfo = new VersionChecker.VersionInfo(currentVersion);
-        } else {
-            versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, currentVersion, !inDev && !Configs.disable_collectVersionStat);
-        }
 
-        ModEventHandler eventHandler = new ModEventHandler();
-        MinecraftForge.EVENT_BUS.register(eventHandler);
-
-        MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
-
-        MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
-        MinecraftForge.EVENT_BUS.register(LootHandler.getInstance());
 
         HelperRegistry.registerPlayerEventReceivingCapability(VampirePlayer.CAP, VampirePlayer.class);
         HelperRegistry.registerPlayerEventReceivingCapability(HunterPlayer.CAP, HunterPlayer.class);
@@ -205,17 +192,7 @@ public class VampirismMod {
         HelperRegistry.registerSyncablePlayerCapability(VampirePlayer.CAP, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.class);
         HelperRegistry.registerSyncablePlayerCapability(HunterPlayer.CAP, REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.class);
         HelperRegistry.registerSyncablePlayerCapability(FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
-        SupporterManager.getInstance().initAsync();
-        VampireBookManager.getInstance().init();
-        BloodPotions.register();
-        StructureManager.init();
-        VampirismEntitySelectors.registerSelectors();
 
-        // Check for halloween special
-        if (HalloweenSpecial.shouldEnable()) {
-            HalloweenSpecial.enable();
-            MinecraftForge.EVENT_BUS.register(new HalloweenSpecial());
-        }
     }
 
     private void loadComplete(final FMLLoadCompleteEvent event) {
@@ -247,6 +224,33 @@ public class VampirismMod {
         dispatcher.registerPackets();
         registryManager.onInitStep(IInitListener.Step.COMMON_SETUP, event);
         proxy.onInitStep(IInitListener.Step.COMMON_SETUP, event);
+
+        String currentVersion = "@VERSION@".equals(REFERENCE.VERSION) ? "0.0.0-test" : REFERENCE.VERSION;
+        if (Configs.disable_versionCheck) {
+            versionInfo = new VersionChecker.VersionInfo(currentVersion);
+        } else {
+            versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, currentVersion, !inDev && !Configs.disable_collectVersionStat);
+        }
+
+        ModEventHandler eventHandler = new ModEventHandler();
+        MinecraftForge.EVENT_BUS.register(eventHandler);
+
+        MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
+
+        MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
+        MinecraftForge.EVENT_BUS.register(LootHandler.getInstance());
+
+        SupporterManager.getInstance().initAsync();
+        VampireBookManager.getInstance().init();
+        BloodPotions.register();
+        StructureManager.init();
+        VampirismEntitySelectors.registerSelectors();
+
+        // Check for halloween special
+        if (HalloweenSpecial.shouldEnable()) {
+            HalloweenSpecial.enable();
+            MinecraftForge.EVENT_BUS.register(new HalloweenSpecial());
+        }
 
 
     }

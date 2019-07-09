@@ -41,7 +41,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
 
     public static FactionPlayerHandler get(EntityPlayer player) {
-        return (FactionPlayerHandler) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get FactionPlayerHandler from EntityPlayer"));
+        return (FactionPlayerHandler) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get FactionPlayerHandler from EntityPlayer " + player));
     }
 
 

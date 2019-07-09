@@ -2,6 +2,7 @@ package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.network.ISyncable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -60,7 +61,7 @@ public class UpdateEntityPacket implements IMessage {
         if (tag.contains("itself")) {
             pkt.playerItself = tag.getBoolean("itself");
         }
-        return new UpdateEntityPacket();
+        return pkt;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -89,7 +90,7 @@ public class UpdateEntityPacket implements IMessage {
 
     public static void handle(final UpdateEntityPacket message, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-        EntityPlayer player = ctx.getSender();
+        EntityPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             LOGGER.error("Cannot handle update package because sending player entity is null. Message: {}", message);
         } else {

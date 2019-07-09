@@ -39,14 +39,13 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     @CapabilityInject(IExtendedCreatureVampirism.class)
     public static Capability<IExtendedCreatureVampirism> CAP = getNull();
-    private static final String TAG = "ExtendedCreature";
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "maxBlood";
     private final static String POISONOUS_BLOOD = "poisonousBlood";
 
 
     public static IExtendedCreatureVampirism get(EntityCreature mob) {
-        return mob.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get ExtendedCreature from EntityCreature"));
+        return mob.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get ExtendedCreature from EntityCreature " + mob));
     }
 
 

@@ -207,13 +207,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return true;
     }
 
-    /**
-     * Clears tasks and targetTasks
-     */
-    protected void clearAITasks() {
-        tasks.taskEntries.clear();
-        targetTasks.taskEntries.clear();
-    }
 
     /**
      * Removes the MoveTowardsRestriction task

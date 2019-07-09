@@ -94,7 +94,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Don't call before the construction event of the player entity is finished
      */
     public static VampirePlayer get(EntityPlayer player) {
-        return (VampirePlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player"));
+        return (VampirePlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player " + player));
     }
 
     public static void registerCapability() {
@@ -1048,7 +1048,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             } else {
                 vision = ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getVisionOfId(id);
                 if (vision == null) {
-                    LOGGER.warn("Failed to find vision with id %d", id);
+                    LOGGER.warn("Failed to find vision with id {}", id);
                 }
             }
             activateVision(vision);
