@@ -2,7 +2,7 @@ Vampirism for Minecraft 1.13 - Latest branch [![](http://cf.way2muchnoise.eu/sho
 ============================================
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de)  
 
-Don't even try to build it.  
+This compiles and starts, but it is not usable. We skip 1.13 releases and work on 1.14 now
 
 ## Mod Description
 
