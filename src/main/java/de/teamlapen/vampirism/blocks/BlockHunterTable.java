@@ -6,11 +6,14 @@ import de.teamlapen.vampirism.network.ModGuiHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,16 +25,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockHunterTable extends VampirismBlock {
     public static final String name = "hunter_table";
+    public final boolean end;
 
     public static HunterTableContainer createInventoryContainer(EntityPlayer player, BlockPos pos) {
         return new HunterTableContainer(player, pos);
     }
 
-    public BlockHunterTable() {
-        super(name, Material.WOOD);
+    public BlockHunterTable(boolean end) {
+        super(end ? name + "2" : name, Material.WOOD);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         this.setHasFacing();
-        setHardness(0.5F);
+        setHardness(end ? 3f : 0.5F);
+        this.end = end;
+
 
     }
 
@@ -79,4 +85,8 @@ public class BlockHunterTable extends VampirismBlock {
     }
 
 
+    @Override
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
+        if (!end) super.getSubBlocks(itemIn, items);
+    }
 }

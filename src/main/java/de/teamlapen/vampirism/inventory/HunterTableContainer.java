@@ -2,10 +2,13 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -28,6 +31,8 @@ public class HunterTableContainer extends InventoryContainer {
     private final HunterLevelingConf levelingConf = HunterLevelingConf.instance();
     private final BlockPos pos;
     private ItemStack missing = ItemStack.EMPTY;
+    public boolean endVersion = false;
+    public boolean wearingHat = false;
 
     public HunterTableContainer(EntityPlayer player, BlockPos pos) {
         super(player.inventory, new HunterTableInventory(items));
@@ -42,6 +47,19 @@ public class HunterTableContainer extends InventoryContainer {
         }, 0, 146, 28);
         this.addSlotToContainer(slotResult);
         hunterLevel = FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION);
+        try {
+            IBlockState state = player.world.getBlockState(pos);
+            if (ModBlocks.hunter_table2.equals(state.getBlock())) {
+                endVersion = true;
+            }
+            for (ItemStack s : player.getArmorInventoryList()) {
+                if (ModItems.hunter_hat1_head.equals(s.getItem()) || ModItems.hunter_hat0_head.equals(s.getItem())) {
+                    wearingHat = true;
+                }
+            }
+        } catch (Exception e) {
+            VampirismMod.log.e("Easter", e, "Failed");
+        }
     }
 
     public boolean canInteractWith(EntityPlayer playerIn) {
@@ -57,7 +75,7 @@ public class HunterTableContainer extends InventoryContainer {
     }
 
     public boolean isLevelValid() {
-        return levelingConf.isLevelValidForTable(hunterLevel + 1);
+        return levelingConf.isLevelValidForTable(hunterLevel + 1) && (hunterLevel != 14 || endVersion);
     }
 
     public void onContainerClosed(EntityPlayer playerIn) {

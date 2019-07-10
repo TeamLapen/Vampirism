@@ -19,8 +19,8 @@ public class HunterLevelingConf {
     public final int BASIC_HUNTER_MIN_LEVEL = 2;
     public final int BASIC_HUNTER_MAX_LEVEL = 4;
     public final int TABLE_MIN_LEVEL = 5;
-    public final int TABLE_MAX_LEVEL = 14;
-    public final int HUNTER_INTEL_COUNT = 10;
+    public final int TABLE_MAX_LEVEL = 15;
+    public final int HUNTER_INTEL_COUNT = 11;
 
     /**
      * Converts hunter level to metadata for hunter intel. Returns -1 if there is no hunter intel for he given level
@@ -61,6 +61,8 @@ public class HunterLevelingConf {
                 return new int[]{25, 2, 3, 1};
             case 14:
                 return new int[]{25, 2, 4, 1};
+            case 15:
+                return new int[]{64, 1, 5, 1};
             default:
                 return null;//Should never be reached
         }
@@ -92,6 +94,8 @@ public class HunterLevelingConf {
                 return new int[]{40, 20};
             case 14:
                 return new int[]{40, 40};
+            case 15:
+                return new int[]{64, 64};
             default:
                 VampirismMod.log.w("HunterLevelingConf", "Something is wrong with the hunter levels");
         }

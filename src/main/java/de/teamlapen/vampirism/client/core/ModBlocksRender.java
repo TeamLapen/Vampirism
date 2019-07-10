@@ -82,6 +82,7 @@ public class ModBlocksRender {
         renderHelper.registerRender(ModBlocks.castle_stairs_purple);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.castle_slab), BlockCastleSlab.EnumType.values());
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.hunter_table), EnumFacing.HORIZONTALS);
+        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.hunter_table2), EnumFacing.HORIZONTALS);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.vampirism_flower), VampirismFlower.EnumFlowerType.values());
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.church_altar), EnumFacing.HORIZONTALS);
         renderHelper.registerRender(Item.getItemFromBlock(ModBlocks.weapon_table), "inventory");

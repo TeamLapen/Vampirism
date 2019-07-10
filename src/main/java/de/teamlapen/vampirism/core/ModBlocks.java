@@ -41,6 +41,7 @@ public class ModBlocks {
     public static final BlockAltarPillar altar_pillar = getNull();
     public static final BlockAltarTip altar_tip = getNull();
     public static final BlockHunterTable hunter_table = getNull();
+    public static final BlockHunterTable hunter_table2 = getNull();
     public static final BlockMedChair med_chair = getNull();
     public static final BlockGarlic garlic = getNull();
     public static final BlockChurchAltar church_altar = getNull();
@@ -138,6 +139,7 @@ public class ModBlocks {
         registry.register(itemBlock(altar_pillar));
         registry.register(itemBlock(altar_tip));
         registry.register(itemBlock(hunter_table));
+        registry.register(itemBlock(hunter_table2));
         registry.register(itemBlock(church_altar));
         registry.register(itemBlock(altar_inspiration));
         registry.register(itemBlock(fire_place));
@@ -178,7 +180,8 @@ public class ModBlocks {
         registry.register(new BlockAltarInfusion());
         registry.register(new BlockAltarPillar());
         registry.register(new BlockAltarTip());
-        registry.register(new BlockHunterTable());
+        registry.register(new BlockHunterTable(false));
+        registry.register(new BlockHunterTable(true));
         registry.register(new BlockMedChair());
         registry.register(new BlockGarlic());
         registry.register(new BlockChurchAltar());

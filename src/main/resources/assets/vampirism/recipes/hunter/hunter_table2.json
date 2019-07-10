@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "vampirism:hunter_table2"
+  },
+  "pattern": [
+    "XYW",
+    "ZZZ",
+    "Z Z"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "vampirism:vampire_fang"
+    },
+    "Y": {
+      "item": "minecraft:book"
+    },
+    "Z": {
+      "item": "minecraft:end_bricks"
+    },
+    "W": {
+      "item": "minecraft:ender_eye"
+    }
+  }
+}

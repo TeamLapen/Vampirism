@@ -32,7 +32,7 @@ public class ItemPureBlood extends VampirismItem {
     @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(TextFormatting.RED + UtilLib.translate("text.vampirism.purity") + ": " + (stack.getItemDamage() + 1) + "/" + COUNT);
+        tooltip.add(TextFormatting.RED + UtilLib.translate("text.vampirism.purity") + ": " + (stack.getItemDamage() + 1) + "/" + 5);
 
     }
 

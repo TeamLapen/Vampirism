@@ -161,6 +161,8 @@ text.vampirism.trainer_level_wrong=This trainer cannot train you at your level
 
 #BLOCKS
 tile.vampirism.hunter_table.name=Hunter Research Table
+tile.vampirism.hunter_table2.name=Strange Hunter Research Table
+
 tile.vampirism.castle_block.name=Castle Block
 tile.vampirism.castle_block.dark_stone=Dark Stone
 tile.vampirism.castle_block.normal_brick=Stone Brick
