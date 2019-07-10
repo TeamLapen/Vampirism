@@ -467,6 +467,22 @@ public class VampirismCommand extends BasicCommand {
             }
         });
 
+        addSubcommand(new SubCommand(PERMISSION_LEVEL_ALL) {
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                sender.sendMessage(new TextComponentString(REFERENCE.NAME + ": " + REFERENCE.VERSION));
+            }
+
+            @Override
+            public String getName() {
+                return "version";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName();
+            }
+        });
 
         //Add last
         addSubcommand(new CommandTreeHelp(this));

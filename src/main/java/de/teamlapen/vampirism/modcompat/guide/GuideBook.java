@@ -243,7 +243,7 @@ public class GuideBook implements IGuideBook {
         levelingPages.addAll(GuideHelper.addLinks(GuideHelper.pagesForLongText(train2), new ResourceLocation("guide.vampirism.blocks.hunter_table")));
         PageTable.Builder builder = new PageTable.Builder(4);
         builder.addUnlocLine("text.vampirism.level", base + "leveling.train2.fang", ModItems.pure_blood.getLocalizedName(), ModItems.vampire_book.getLocalizedName());
-        for (int i = levelingConf.TABLE_MIN_LEVEL; i <= levelingConf.TABLE_MAX_LEVEL; i++) {
+        for (int i = levelingConf.TABLE_MIN_LEVEL; i <= levelingConf.TABLE_MAX_LEVEL - 1; i++) {
             int[] req = levelingConf.getItemRequirementsForTable(i);
             String pure = "";
             if (req[1] > 0) {
