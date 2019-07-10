@@ -39,7 +39,7 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(AggressiveVillagerEntity.class, HunterVillagerRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(CrossbowArrowEntity.class, CrossbowArrowRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(AreaParticleCloudEntity.class, RenderAreaParticleCloud::new);
-        RenderingRegistry.registerEntityRenderingHandler(ItemThrowableEntity.class, manager -> new ThrowableItemRenderer(manager, Minecraft.getInstance().getItemRenderer()));
+        RenderingRegistry.registerEntityRenderingHandler(ThrowableItemEntity.class, manager -> new ThrowableItemRenderer(manager, Minecraft.getInstance().getItemRenderer()));
         RenderingRegistry.registerEntityRenderingHandler(DraculaHalloweenEntity.class, DraculaHalloweenRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(DarkBloodProjectileEntity.class, DarkBloodProjectileRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SoulOrbEntity.class, manager -> new SoulOrbRenderer(manager, Minecraft.getInstance().getItemRenderer()));

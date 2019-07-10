@@ -3,11 +3,13 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
@@ -24,8 +26,8 @@ public class BlindingBatEntity extends BatEntity {
     }
 
     @Override
-    public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
-        return worldIn.checkNoEntityCollision(this, this.getBoundingBox()) && worldIn.isCollisionBoxesEmpty(this, this.getBoundingBox()) && !worldIn.containsAnyLiquid(this.getBoundingBox()); //TODO eventually dublicated check (isCollisionBoxesEmpty
+    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
+        return worldIn.checkNoEntityCollision(this, VoxelShapes.create(this.getBoundingBox())) && worldIn.isCollisionBoxesEmpty(this, this.getBoundingBox()) && !worldIn.containsAnyLiquid(this.getBoundingBox()); //TODO eventually dublicated check (isCollisionBoxesEmpty
     }
 
     @Override

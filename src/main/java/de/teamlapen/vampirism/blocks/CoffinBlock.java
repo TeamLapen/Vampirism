@@ -25,7 +25,10 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.*;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraftforge.common.extensions.IForgeDimension;
 import org.apache.logging.log4j.LogManager;
@@ -127,23 +130,23 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isFullCube(BlockState state) {
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
     }
 
     @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         Direction enumfacing = state.get(FACING);
 
         if (state.get(PART) == CoffinPart.HEAD) {
-            if (world.getBlockState(pos.offset(enumfacing.getOpposite())).getBlock() != this) {
-                world.removeBlock(pos);
+            if (worldIn.getBlockState(pos.offset(enumfacing.getOpposite())).getBlock() != this) {
+                worldIn.removeBlock(pos, isMoving);
             }
-        } else if (world.getBlockState(pos.offset(enumfacing)).getBlock() != this) {
-            worldIn.removeBlock(pos);
+        } else if (worldIn.getBlockState(pos.offset(enumfacing)).getBlock() != this) {
+            worldIn.removeBlock(pos, isMoving);
 
-            if (!world.isRemote()) {
-                this.dropBlockAsItemWithChance(state, world, pos, 1, 0);
+            if (!worldIn.isRemote()) {
+                Block.spawnDrops(state, worldIn, pos);
             }
         }
     }
@@ -221,31 +224,17 @@ public class CoffinBlock extends VampirismBlockContainer {
         }
     }
 
+    @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         CoffinPart part = state.get(PART);
         BlockPos blockpos = pos.offset(getDirectionToOther(part, state.get(FACING)));
         BlockState iblockstate = worldIn.getBlockState(blockpos);
         if (iblockstate.getBlock() == this && iblockstate.get(PART) != part) {
             worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 35);
-            if (!worldIn.isRemote && !player.abilities.isCreativeMode) {
-                if (part == CoffinPart.HEAD) {
-                    state.dropBlockAsItem(worldIn, pos, 0);
-                } else {
-                    iblockstate.dropBlockAsItem(worldIn, blockpos, 0);
-                }
-            }
-
             player.addStat(Stats.BLOCK_MINED.get(this));
         }
 
         super.onBlockHarvested(worldIn, pos, state, player);
-    }
-
-    @Override
-    public void setBedOccupied(BlockState state, IWorldReader world, BlockPos pos, PlayerEntity player, boolean occupied) {
-        if (world instanceof IWorldWriter) {
-            ((IWorldWriter) world).setBlockState(pos, state.with(OCCUPIED, occupied), 4);
-        }
     }
 
     @Override

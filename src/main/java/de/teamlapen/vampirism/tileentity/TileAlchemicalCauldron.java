@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -21,9 +22,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -131,7 +132,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     private ITextComponent username;
 
     public TileAlchemicalCauldron() {
-        super(ModTiles.alchemical_cauldron, new InventorySlot[]{new InventorySlot(item -> false, 116, 35), new InventorySlot(TileAlchemicalCauldron::isLiquidStack, 44, 17), new InventorySlot(68, 17), new InventorySlot(FurnaceTileEntity::isItemFuel, 56, 53)});
+        super(ModTiles.alchemical_cauldron, new InventorySlot[]{new InventorySlot(item -> false, 116, 35), new InventorySlot(TileAlchemicalCauldron::isLiquidStack, 44, 17), new InventorySlot(68, 17), new InventorySlot(AbstractFurnaceTileEntity::isFuel, 56, 53)});
     }
 
     @Override
@@ -191,7 +192,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
 
     @Nonnull
     @Override
-    public ITextComponent getName() {
+    public ITextComponent getCustomName() {
         return new TranslationTextComponent("tile.vampirism.alchemical_cauldron.name");
     }
 

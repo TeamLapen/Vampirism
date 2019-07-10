@@ -6,13 +6,13 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
+import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -67,12 +67,11 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
         return super.getCapability(cap, side);
     }
 
-
+    @Nullable
     @Override
-    public ITextComponent getName() {
+    public ITextComponent getCustomName() {
         return new TranslationTextComponent("tile.vampirism.blood_grinder.name");
     }
-
 
     @Override
     public void read(CompoundNBT tagCompound) {

@@ -2,11 +2,14 @@ package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.entity.DarkBloodProjectileEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
+import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.EnumSet;
 
 
 public class AttackRangedDarkBloodGoal extends Goal {
@@ -21,7 +24,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
 
     public AttackRangedDarkBloodGoal(VampireBaronEntity entity, int cooldown, int maxDistance, float damage, float indirectDamage) {
         this.entity = entity;
-        this.setMutexBits(3);
+        this.setMutexFlags(EnumSet.of(Flag.MOVE));
         this.attackCooldown = cooldown;
         this.maxAttackDistance = maxDistance;
         this.directDamage = damage;
@@ -59,7 +62,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
                     this.entity.faceEntity(target, 19.0F, 10.0F);
 
 
-                    this.entity.getLookHelper().setLookPositionWithEntity(target, 30.0F, 30.0F);
+                    this.entity.lookAt(EntityAnchorArgument.Type.EYES, target.getEyePosition(1.0F));
                 } else {
                     --this.seeTime;
                 }
@@ -82,7 +85,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
      * Spawns the dark blood entity heading towards the target entity
      */
     protected void attack(LivingEntity target) {
-        Vec3d vec3d = target.getPositionVector().add(0, target.height * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
+        Vec3d vec3d = target.getPositionVector().add(0, target.getHeight() * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
 
         DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.getEntityWorld(), entity.posX + vec3d.x * 0.3f, entity.posY + entity.getEyeHeight() * 0.9f, entity.posZ + vec3d.z * 0.3f, vec3d.x, vec3d.y, vec3d.z);
         projectile.shootingEntity = entity;
@@ -95,6 +98,6 @@ public class AttackRangedDarkBloodGoal extends Goal {
         projectile.setInitialNoClip();
         projectile.excludeShooter();
 
-        entity.getEntityWorld().spawnEntity(projectile);
+        entity.getEntityWorld().addEntity(projectile);
     }
 }

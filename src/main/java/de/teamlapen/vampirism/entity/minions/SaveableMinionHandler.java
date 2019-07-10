@@ -57,7 +57,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
         for (T m : list) {
             Entity entity = MinionHelper.entity(m);
             entity.forceSpawn = true;
-            world.spawnEntity(entity);
+            world.addEntity(entity);
             m.setLord(lord);
         }
         //VampirismMod.log.d(TAG, "Added " + list.size() + " minions");
@@ -132,9 +132,9 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
         loadedMinions = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             CompoundNBT nbttagcompound = list.getCompound(i);
-            Entity entity = EntityType.create(nbttagcompound, lord.getRepresentingEntity().world);
+            Entity entity = EntityType.loadEntityUnchecked(nbttagcompound, lord.getRepresentingEntity().world).orElse(null);
             if (entity != null && entity instanceof ISaveableMinion) {
-                entity.posY = entity.posY + entity.height;
+                entity.posY = entity.posY + entity.getHeight();
                 loadedMinions.add((T) entity);
                 LOGGER.debug("Loaded minion from nbt");
             } else {

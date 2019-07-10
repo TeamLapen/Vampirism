@@ -1,19 +1,21 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.lib.VampLib;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.minions.vampire.VampireMinionBaseEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
-import net.minecraft.init.Particles;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -41,15 +43,15 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
      * Copies the location from shooter.
      * Adds a small random to the motion
      */
-    public DarkBloodProjectileEntity(EntityType<? extends DarkBloodProjectileEntity> type, World worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
-        super(type, shooter, accelX, accelY, accelZ, worldIn);
+    public DarkBloodProjectileEntity(World worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
+        super(ModEntities.dark_blood_projectile, shooter, accelX, accelY, accelZ, worldIn);
     }
 
     /**
      * Does not add a small random to the motion
      */
-    public DarkBloodProjectileEntity(EntityType<? extends DarkBloodProjectileEntity> type, World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
-        super(type, x, y, z, accelX, accelY, accelZ, worldIn);
+    public DarkBloodProjectileEntity(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
+        super(ModEntities.dark_blood_projectile, x, y, z, accelX, accelY, accelZ, worldIn);
     }
 
     @Override
@@ -75,8 +77,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
 
             if (this.ticksExisted % 3 == 0) {
                 Vec3d border = this.getPositionVector();
-                Vec3d motion = new Vec3d(motionX, motionY, motionZ);
-                border = border.add(motion.scale(-0.1));
+                border = border.add(this.getMotion().scale(-0.1));
                 VampLib.proxy.getParticleHandler().spawnParticle(this.world, ModParticles.GENERIC_PARTICLE, border.x, border.y, border.z, 132, 12, 0xC01010, 0.4);
             }
 
@@ -132,7 +133,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
 
     @Override
     protected IParticleData getParticle() {
-        return Particles.UNDERWATER;
+        return ParticleTypes.UNDERWATER;
     }
 
     protected double getRadius() {
@@ -148,21 +149,22 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     protected void onImpact(RayTraceResult result) {
         if (!this.world.isRemote) {
             if (initialNoClip && this.ticksExisted > 20) {
-                if (result.type == RayTraceResult.Type.BLOCK) {
+                if (result.getType() == RayTraceResult.Type.BLOCK) {
                     return;
                 }
-                if (result.type == RayTraceResult.Type.ENTITY && result.entity instanceof VampireMinionBaseEntity && (this.shootingEntity != null && this.shootingEntity.equals(((VampireMinionBaseEntity) result.entity).getLord()))) {
+                if (result.getType() == RayTraceResult.Type.ENTITY && ((EntityRayTraceResult) result).getEntity() instanceof VampireMinionBaseEntity && (this.shootingEntity != null && this.shootingEntity.equals(((VampireMinionBaseEntity) ((EntityRayTraceResult) result).getEntity()).getLord()))) {
                     return;
                 }
             }
 
-            if (result.entity != null) {
-                result.entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), directDamage);
-                if (result.entity instanceof LivingEntity) {
+            if (result.getType() == RayTraceResult.Type.ENTITY) {
+                Entity entity = ((EntityRayTraceResult) result).getEntity();
+                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), directDamage);
+                if (entity instanceof LivingEntity) {
                     if (this.rand.nextInt(3) == 0) {
-                        ((LivingEntity) result.entity).addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100));
-                        ((LivingEntity) result.entity).knockBack(this, 1f, -this.motionX, -this.motionZ);
-                        ((LivingEntity) result.entity).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
+                        ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100));
+                        ((LivingEntity) entity).knockBack(this, 1f, -this.getMotion().x, -this.getMotion().z);
+                        ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
 
                     }
                 }
@@ -178,12 +180,17 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
                 if (e instanceof LivingEntity && e.getDistanceSq(this) < 4) {
                     LivingEntity entity = (LivingEntity) e;
                     entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
-                    if (entity != result.entity)
+                    if (result.getType() == RayTraceResult.Type.ENTITY) {
+                        if (entity != ((EntityRayTraceResult) result).getEntity())
+                            entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), indirecDamage);
+                    } else {
                         entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), indirecDamage);
+                    }
+
 
                 }
             }
-            Vec3d center = result.hitVec;
+            Vec3d center = result.getHitVec();
             VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 40, 2, this.rand, 145, 7, 0xA01010, 0.2);
             VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 15, 2, this.rand, 150, 10, 0x700505, 0.0);
 

@@ -8,6 +8,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.EntityPredicates;
 
+import java.util.EnumSet;
 import java.util.List;
 
 
@@ -26,7 +27,7 @@ public class MoveToBiteableVampireGoal<T extends MobEntity & IVampireMob> extend
     public MoveToBiteableVampireGoal(T vampire, double movementSpeed) {
         this.vampire = vampire;
         this.movementSpeed = movementSpeed;
-        this.setMutexBits(1);
+        this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override

@@ -195,7 +195,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             if (c != null) {
                 Entity e = (Entity) c;
                 entity.remove();
-                entity.getEntityWorld().spawnEntity(e);
+                entity.getEntityWorld().addEntity(e);
             }
             return c;
         }

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.converted;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -110,7 +111,7 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
 
     @Override
     public IConvertedCreature<T> createFrom(T entity) {
-        ConvertedCreatureEntity<T> convertedCreature = new ConvertedCreatureEntity<>(entity.getEntityWorld());
+        ConvertedCreatureEntity<T> convertedCreature = ModEntities.converted_creature.create(entity.getEntityWorld());
         copyImportantStuff(convertedCreature, entity);
         convertedCreature.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
         return convertedCreature;

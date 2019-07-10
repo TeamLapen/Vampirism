@@ -9,6 +9,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.Village;
 import net.minecraft.village.VillageDoorInfo;
 
+import java.util.EnumSet;
+
 /**
  * Same as vanilla {@link EntityAIMoveIndoors}, but executes during day and not night
  */
@@ -20,7 +22,7 @@ public class MoveIndoorsDayGoal extends Goal {
 
     public MoveIndoorsDayGoal(CreatureEntity entityObjIn) {
         this.entityObj = entityObjIn;
-        this.setMutexBits(1);
+        this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
 
     /**

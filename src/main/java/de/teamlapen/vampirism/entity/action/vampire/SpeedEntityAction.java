@@ -33,16 +33,16 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
 
     @Override
     public void deactivate(T entity) {
-        entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(UUIDS);
+        entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(UUIDS);
     }
 
     @Override
     public void onUpdate(T entity, int duration) {
-        if (!entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(new AttributeModifier(UUIDS, "speedaction", Balance.ea.SPEED_AMOUNT, 2))) {
-            entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(UUIDS, "speedaction", Balance.ea.SPEED_AMOUNT, 2));
+        if (!entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(new AttributeModifier(UUIDS, "speedaction", Balance.ea.SPEED_AMOUNT, AttributeModifier.Operation.MULTIPLY_TOTAL))) {
+            entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(UUIDS, "speedaction", Balance.ea.SPEED_AMOUNT, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         if (duration % 5 == 0) {
-            VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), ModParticles.CLOUD, entity.posX, entity.posY, entity.posZ, 5, 0.5, entity.getRNG(), -entity.motionX, 0.0D, -entity.motionZ);
+            VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), ModParticles.CLOUD, entity.posX, entity.posY, entity.posZ, 5, 0.5, entity.getRNG(), -entity.getMotion().x, 0.0D, -entity.getMotion().z);
         }
     }
 

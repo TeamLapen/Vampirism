@@ -205,13 +205,13 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                         entityarrow.setFire(100);
                     }
 
-                    stack.damageItem(1, player);
+                    stack.damageItem(1, player, (consumer) -> consumer.sendBreakAnimation(hand));
 
                     if (!consumeArrow) {
                         entityarrow.pickupStatus = AbstractArrowEntity.PickupStatus.CREATIVE_ONLY;
                     }
 
-                    world.spawnEntity(entityarrow);
+                    world.addEntity(entityarrow);
                     world.playSound(null, player.posX, player.posY + 0.5, player.posZ, ModSounds.crossbow, SoundCategory.PLAYERS, 1F, world.rand.nextFloat() * 0.1F + 0.9F);
 
                 }

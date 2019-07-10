@@ -31,7 +31,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
@@ -101,7 +100,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.canSuckBloodFromPlayer = true;
         hasArms = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
-        this.setSize(0.6F, 1.95F);
         entitytier = EntityActionTier.Medium;
         entityclass = EntityClassType.getRandomClass(this.getRNG());
         IEntityActionUser.applyAttributes(this);
@@ -288,11 +286,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source) {
-        super.dropLoot(wasRecentlyHit, lootingModifier, source);
-    }
-
-    @Override
     protected void registerData() {
         super.registerData();
         getDataManager().register(LEVEL, -1);
@@ -316,13 +309,13 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     public void attackVillage(AxisAlignedBB area) {
-        this.tasks.removeTask(tasks_avoidHunter);
+        this.goalSelector.removeGoal(tasks_avoidHunter);
         village_attack_area = area;
     }
 
     @Override
     public void defendVillage(AxisAlignedBB area) {
-        this.tasks.removeTask(tasks_avoidHunter);
+        this.goalSelector.removeGoal(tasks_avoidHunter);
         village_defense_area = area;
     }
 
@@ -341,42 +334,39 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     public void stopVillageAttackDefense() {
         this.setCustomName(null);
         if (village_defense_area != null) {
-            this.tasks.addTask(2, this.tasks_avoidHunter);
+            this.goalSelector.addGoal(2, this.tasks_avoidHunter);
             village_defense_area = null;
         } else if (village_attack_area != null) {
-            this.tasks.addTask(2, this.tasks_avoidHunter);
+            this.goalSelector.addGoal(2, this.tasks_avoidHunter);
             village_attack_area = null;
         }
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        if (world.getDifficulty() == net.minecraft.world.Difficulty.HARD) {
-            //Only break doors on hard difficulty
-            this.tasks.addTask(1, new BreakDoorGoal(this));
-            ((GroundPathNavigator) this.getNavigator()).setBreakDoors(true);
-        }
-        this.tasks_avoidHunter = new AvoidEntityGoal<>(this, CreatureEntity.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION));
-        this.tasks.addTask(2, this.tasks_avoidHunter);
-        this.tasks.addTask(2, new RestrictSunVampireGoal<>(this));
-        this.tasks.addTask(3, new FleeSunVampireGoal<>(this, 0.9, false));
-        this.tasks.addTask(3, new FleeGarlicVampireGoal(this, 0.9, false));
-        this.tasks.addTask(4, new AttackMeleeNoSunGoal(this, 1.0, false));
-        this.tasks.addTask(5, new BiteNearbyEntityVampireGoal<>(this));
-        this.tasks.addTask(6, new FollowAdvancedVampireGoal(this, 1.0));
-        this.tasks.addTask(7, new MoveToBiteableVampireGoal<>(this, 0.75));
-        this.tasks.addTask(8, new MoveThroughVillageCustomGoal(this, 0.6, true, 600));
-        this.tasks.addTask(9, new RandomWalkingGoal(this, 0.7));
-        this.tasks.addTask(10, new LookAtGoal(this, PlayerEntity.class, 20F, 0.6F));
-        this.tasks.addTask(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
-        this.tasks.addTask(10, new LookRandomlyGoal(this));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> {
+            return difficulty == net.minecraft.world.Difficulty.HARD;
+        }));//Only break doors on hard difficulty
+        this.tasks_avoidHunter = new AvoidEntityGoal(this, CreatureEntity.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION));
+        this.goalSelector.addGoal(2, this.tasks_avoidHunter);
+        this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
+        this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
+        this.goalSelector.addGoal(4, new AttackMeleeNoSunGoal(this, 1.0, false));
+        this.goalSelector.addGoal(5, new BiteNearbyEntityVampireGoal<>(this));
+        this.goalSelector.addGoal(6, new FollowAdvancedVampireGoal(this, 1.0));
+        this.goalSelector.addGoal(7, new MoveToBiteableVampireGoal<>(this, 0.75));
+        this.goalSelector.addGoal(8, new MoveThroughVillageCustomGoal(this, 0.6, true, 600));
+        this.goalSelector.addGoal(9, new RandomWalkingGoal(this, 0.7));
+        this.goalSelector.addGoal(10, new LookAtGoal(this, PlayerEntity.class, 20F, 0.6F));
+        this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
+        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
 
-        this.targetTasks.addTask(3, new HurtByTargetGoal(this, false));
-        this.targetTasks.addTask(4, new AttackVillageGoal<>(this));
-        this.targetTasks.addTask(4, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetTasks.addTask(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetTasks.addTask(6, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(4, new AttackVillageGoal<>(this));
+        this.targetSelector.addGoal(4, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
 
     }
 

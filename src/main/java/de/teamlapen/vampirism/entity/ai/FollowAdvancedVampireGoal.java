@@ -2,8 +2,10 @@ package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
+import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.ai.goal.Goal;
 
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -22,7 +24,7 @@ public class FollowAdvancedVampireGoal extends Goal {
     public FollowAdvancedVampireGoal(BasicVampireEntity entity, double speed) {
         this.entity = entity;
         this.speed = speed;
-        this.setMutexBits(3);
+        this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
@@ -76,7 +78,7 @@ public class FollowAdvancedVampireGoal extends Goal {
         if (--this.delayCounter <= 0 && entity.getAdvancedLeader() != null) {
             this.delayCounter = 10;
             this.entity.getNavigator().tryMoveToEntityLiving(this.entity.getAdvancedLeader(), this.speed);
-            this.entity.getLookHelper().setLookPosition(this.entity.getAdvancedLeader().posX, this.entity.getAdvancedLeader().posY + (double) this.entity.getAdvancedLeader().getEyeHeight(), this.entity.getAdvancedLeader().posZ, (float) this.entity.getHorizontalFaceSpeed(), (float) this.entity.getVerticalFaceSpeed());
+            this.entity.lookAt(EntityAnchorArgument.Type.EYES, this.entity.getAdvancedLeader().getPositionVector().add(0, this.entity.getAdvancedLeader().getEyeHeight(), 0));
         }
     }
 }

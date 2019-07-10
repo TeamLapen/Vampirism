@@ -9,8 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.network.PacketBuffer;
@@ -18,13 +17,13 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.crafting.RecipeType;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 /**
  * 
  * @author Cheaterpaul
  */
-public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
+public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRecipe<CraftingInventory> {
     protected static int MAX_WIDTH = 4;
     protected static int MAX_HEIGHT = 4;
 
@@ -65,7 +64,7 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
+    public ItemStack getCraftingResult(CraftingInventory inv) {
         return this.recipeOutput.copy();
     }
 
@@ -113,12 +112,12 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
     }
 
     @Override
-    public RecipeType<? extends IRecipe> getType() {
+    public IRecipeType<? extends IRecipe> getType() {
         return ModRecipes.WEAPONTABLE_CRAFTING_TYPE;
     }
 
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
+    public boolean matches(CraftingInventory inv, World worldIn) {
         RecipeItemHelper recipeitemhelper = new RecipeItemHelper();
         java.util.List<ItemStack> inputs = new java.util.ArrayList<>();
         int i = 0;
@@ -140,12 +139,7 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
 
     }
 
-    public static class Serializer implements IRecipeSerializer<ShapelessWeaponTableRecipe> {
-        public Serializer() {
-        }
-
-        private static final ResourceLocation NAME = new ResourceLocation(REFERENCE.MODID, "shapeless_weapon_table_recipe");
-
+    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessWeaponTableRecipe> {
         @Override
         public ShapelessWeaponTableRecipe read(ResourceLocation recipeId, JsonObject json) {
             String group = JSONUtils.getString(json, "group", "");
@@ -208,11 +202,6 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
             for (ISkill skill : recipe.requiredSkills) {
                 buffer.writeString(skill.getRegistryName().toString());
             }
-        }
-
-        @Override
-        public ResourceLocation getName() {
-            return NAME;
         }
 
     }

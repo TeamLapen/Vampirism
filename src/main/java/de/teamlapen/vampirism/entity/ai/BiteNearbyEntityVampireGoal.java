@@ -4,12 +4,15 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
+import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> extends Goal {
@@ -19,7 +22,7 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
 
     public BiteNearbyEntityVampireGoal(T vampire) {
         this.vampire = vampire;
-        this.setMutexBits(3);
+        this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
@@ -65,7 +68,7 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
     @Override
     public void tick() {
         CreatureEntity e = creature.getEntity();
-        vampire.getLookHelper().setLookPosition(e.posX, e.posY + (double) e.getEyeHeight(), e.posZ, 10.0F, (float) vampire.getVerticalFaceSpeed());
+        vampire.lookAt(EntityAnchorArgument.Type.EYES, new Vec3d(e.posX, e.posY + (double) e.getEyeHeight(), e.posZ));
 
 
         timer--;

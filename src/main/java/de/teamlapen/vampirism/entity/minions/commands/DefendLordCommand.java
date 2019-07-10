@@ -39,13 +39,13 @@ public class DefendLordCommand extends DefaultMinionCommand {
 
     @Override
     public void onActivated() {
-        minionEntity.targetTasks.addTask(aiPrio, defend);
+        minionEntity.targetSelector.addGoal(aiPrio, defend);
 
     }
 
     @Override
     public void onDeactivated() {
-        minionEntity.targetTasks.removeTask(defend);
+        minionEntity.targetSelector.removeGoal(defend);
 
     }
 

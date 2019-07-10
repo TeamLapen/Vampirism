@@ -5,7 +5,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
-import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
@@ -16,6 +15,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -55,10 +57,9 @@ public class AlchemicalFireBlock extends VampirismBlock {
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, BlockState state, BlockPos pos, Direction face) {
-        return BlockFaceShape.UNDEFINED;
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return VoxelShapes.empty();
     }
-
 
     @Override
     public BlockRenderLayer getRenderLayer() {
@@ -70,35 +71,26 @@ public class AlchemicalFireBlock extends VampirismBlock {
         return true;
     }
 
-    public boolean isFullCube(BlockState state) {
+    @Override
+    public boolean isSolid(BlockState state) {
         return false;
     }
-
 
     @Override
-    public boolean isCollidable() {
-        return false;
-    }
-
-    public boolean isOpaqueCube(BlockState state) {
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
     }
 
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).isTopSolid();
+        return Block.hasSolidSide(worldIn.getBlockState(pos.down()), worldIn, pos.down(), Direction.UP);
     }
 
     @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-        if (!isValidPosition(state, world, pos)) {
-            world.removeBlock(pos);
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        if (!isValidPosition(state, worldIn, pos)) {
+            worldIn.removeBlock(pos, isMoving);
         }
-    }
-
-    @Override
-    public int quantityDropped(BlockState state, Random random) {
-        return 0;
     }
 
     /**
@@ -115,7 +107,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     @Override
     public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
         if (!this.isValidPosition(state, worldIn, pos)) {
-            worldIn.removeBlock(pos);
+            worldIn.removeBlock(pos, this.blocksMovement);
         }
 
 
@@ -126,7 +118,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
             state = state.with(AGE, age + 1);
             worldIn.setBlockState(pos, state, 4);
         } else if (age == 14) {
-            worldIn.removeBlock(pos);
+            worldIn.removeBlock(pos, this.blocksMovement);
         }
         worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn) + random.nextInt(10));
     }

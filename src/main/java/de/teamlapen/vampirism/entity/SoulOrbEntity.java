@@ -11,9 +11,11 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.BlockPos;
@@ -40,19 +42,14 @@ public class SoulOrbEntity extends Entity {
     public SoulOrbEntity(World worldIn, double x, double y, double z, VARIANT type) {
         super(ModEntities.soul_orb, worldIn);
         this.setVariant(type);
-        this.isImmuneToFire = true;
         delayBeforePickup = 10;
-        this.setSize(0.25F, 0.25F);
         this.setPosition(x, y, z);
         this.rotationYaw = (float) (Math.random() * 360.0D);
-        this.motionX = (double) ((float) (Math.random() * 0.20000000298023224D - 0.10000000149011612D) * 2.0F);
-        this.motionY = (double) ((float) (Math.random() * 0.2D) * 2.0F);
-        this.motionZ = (double) ((float) (Math.random() * 0.20000000298023224D - 0.10000000149011612D) * 2.0F);
+        this.setMotion((double) ((float) (Math.random() * 0.20000000298023224D - 0.10000000149011612D) * 2.0F), (double) ((float) (Math.random() * 0.2D) * 2.0F), (double) ((float) (Math.random() * 0.20000000298023224D - 0.10000000149011612D) * 2.0F));
     }
 
     public SoulOrbEntity(EntityType<? extends SoulOrbEntity> type, World worldIn) {
         super(type, worldIn);
-        this.setSize(0.25F, 0.25F);
     }
 
     @Override
@@ -130,13 +127,11 @@ public class SoulOrbEntity extends Entity {
         this.prevPosZ = this.posZ;
 
         if (!this.hasNoGravity()) {
-            this.motionY -= 0.03;
+            this.setMotion(this.getMotion().subtract(0D, 0.03D, 0D));
         }
 
         if (this.world.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA) {
-            this.motionY = 0.2;
-            this.motionX = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-            this.motionZ = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
+            this.setMotion((double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F), 0.2D, (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
         }
 
         this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
@@ -155,13 +150,11 @@ public class SoulOrbEntity extends Entity {
 
             if (d5 > 0.0D) {
                 d5 = d5 * d5;
-                this.motionX += relDiffX / relDist * d5 * 0.08D;
-                this.motionY += relDiffY / relDist * d5 * 0.08D;
-                this.motionZ += relDiffZ / relDist * d5 * 0.08D;
+                this.setMotion(this.getMotion().add(relDiffX / relDist * d5 * 0.08D, relDiffY / relDist * d5 * 0.08D, relDiffZ / relDist * d5 * 0.08D));
             }
         }
 
-        this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+        this.move(MoverType.SELF, this.getMotion());
         float f = 0.98F;
 
         if (this.onGround) {
@@ -170,12 +163,10 @@ public class SoulOrbEntity extends Entity {
             f = underState.getBlock().getSlipperiness(underState, this.world, underPos, this) * 0.98F;
         }
 
-        this.motionX *= (double) f;
-        this.motionY *= 0.9800000190734863D;
-        this.motionZ *= (double) f;
+        this.setMotion(this.getMotion().mul(f, 0.9800000190734863D, f));
 
         if (this.onGround) {
-            this.motionY *= -0.8999999761581421D;
+            this.setMotion(this.getMotion().mul(1D, -0.8999999761581421D, 1D));
         }
 
 
@@ -184,6 +175,11 @@ public class SoulOrbEntity extends Entity {
         if (this.age >= 6000) {
             this.remove();
         }
+    }
+
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return new SSpawnObjectPacket();//TODO 1.14 check
     }
 
     @Override
@@ -218,7 +214,7 @@ public class SoulOrbEntity extends Entity {
         }
     }
 
-    private VARIANT getVariant() {
+    public VARIANT getVariant() {
         return VARIANT.valueOf(getDataManager().get(TYPE_PARAMETER));
     }
 

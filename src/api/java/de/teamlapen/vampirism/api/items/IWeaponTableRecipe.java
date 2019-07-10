@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
@@ -12,8 +13,7 @@ import javax.annotation.Nullable;
 /**
  * Recipe that can be used in the hunter weapon crafting table
  */
-public interface IWeaponTableRecipe extends IRecipe {
-
+public interface IWeaponTableRecipe<T extends IInventory> extends IRecipe<T> {
 
     /**
      * Returns an Item that is the result of this recipe

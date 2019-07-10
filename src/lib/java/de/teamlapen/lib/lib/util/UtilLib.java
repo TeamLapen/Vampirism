@@ -3,6 +3,7 @@ package de.teamlapen.lib.lib.util;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -18,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.Direction;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -58,7 +60,7 @@ public class UtilLib {
     }
 
     public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos).isTopSolid(worldIn, pos);//TODO EntityLiving#1816
+        return Block.hasSolidSide(worldIn.getBlockState(pos), worldIn, pos, Direction.UP);
     }
 
 
@@ -220,7 +222,7 @@ public class UtilLib {
      * @param reason          Spawn reason
      * @return Successful spawn
      */
-    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<LivingEntity> avoidedEntities, SpawnReason reason) {//TODO this method is only called for EntityLiving -> modify?
+    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, SpawnReason reason) {//TODO this method is only called for EntityLiving -> modify?
         if (!world.isAreaLoaded((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
             return false;
         }
@@ -266,7 +268,7 @@ public class UtilLib {
      * @return The spawned creature or null if not successful
      */
     @Nullable
-    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, EntityType entityType, int maxTry, @Nonnull List<LivingEntity> avoidedEntities, SpawnReason reason) {
+    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, EntityType entityType, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, SpawnReason reason) {
         Entity e = entityType.create(world);
         if (spawnEntityInWorld(world, box, e, maxTry, avoidedEntities, reason)) {
             return e;

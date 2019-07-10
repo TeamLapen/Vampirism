@@ -2,17 +2,19 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.tileentity.TilePedestal;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
@@ -22,6 +24,7 @@ import javax.annotation.Nullable;
 public class PedestalBlock extends VampirismBlockContainer {
 
     public final static String regName = "blood_pedestal";
+    protected static final VoxelShape pedestalShape = Block.makeCuboidShape(1, 0, 1, 15, 11, 15);
 
     private static void takeItemPlayer(PlayerEntity player, Hand hand, ItemStack stack) {
         player.setHeldItem(hand, stack);
@@ -43,8 +46,8 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, BlockState state, BlockPos pos, Direction face) {
-        return face == Direction.DOWN ? BlockFaceShape.CENTER_BIG : BlockFaceShape.UNDEFINED;
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return pedestalShape;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isFullCube(BlockState state) {
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
     }
 
@@ -74,7 +77,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (world.isRemote) return true;
         TilePedestal tile = getTileEntity(world, pos);
         if (tile == null) return false;

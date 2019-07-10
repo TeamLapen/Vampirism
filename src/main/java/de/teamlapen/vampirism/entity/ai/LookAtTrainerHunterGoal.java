@@ -4,6 +4,8 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.player.PlayerEntity;
 
+import java.util.EnumSet;
+
 /**
  * Makes the hunter trainer look at his trainee
  */
@@ -16,7 +18,7 @@ public class LookAtTrainerHunterGoal<T extends MobEntity & LookAtTrainerHunterGo
     public LookAtTrainerHunterGoal(T theTrainer) {
         super(theTrainer, PlayerEntity.class, 8.0F);
         this.theTrainer = theTrainer;
-        this.setMutexBits(5);
+        this.setMutexFlags(EnumSet.of(Flag.LOOK));
     }
 
     /**

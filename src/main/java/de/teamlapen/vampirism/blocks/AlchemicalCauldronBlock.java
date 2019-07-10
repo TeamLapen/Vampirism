@@ -19,6 +19,8 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -38,6 +40,7 @@ public class AlchemicalCauldronBlock extends VampirismBlockContainer {
     public static final IntegerProperty LIQUID = IntegerProperty.create("liquid", 0, 2);
     public static final BooleanProperty BURNING = BooleanProperty.create("burning");
     private static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.87, 0.93);
+    protected static final VoxelShape cauldronShape = Block.makeCuboidShape(1, 0, 1, 15, 14, 15);
 
     public AlchemicalCauldronBlock() {
         super(regName, Block.Properties.create(Material.IRON).hardnessAndResistance(4f));
@@ -61,7 +64,12 @@ public class AlchemicalCauldronBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isFullCube(BlockState state) {
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return cauldronShape;
+    }
+
+    @Override
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
     }
 
@@ -125,4 +133,5 @@ public class AlchemicalCauldronBlock extends VampirismBlockContainer {
         if (t instanceof TileAlchemicalCauldron) return (TileAlchemicalCauldron) t;
         return null;
     }
+
 }

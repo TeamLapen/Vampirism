@@ -92,7 +92,7 @@ public class VampireBookItem extends VampirismItem {
                         Object lvt_7_1_;
                         try {
                             ITextComponent var11 = ITextComponent.Serializer.fromJsonLenient(s);
-                            lvt_7_1_ = TextComponentUtils.updateForEntity(null, var11, player);
+                            lvt_7_1_ = TextComponentUtils.updateForEntity(null, var11, player, 0);
                         } catch (Exception var9) {
                             lvt_7_1_ = new StringTextComponent(s);
                         }
@@ -102,7 +102,7 @@ public class VampireBookItem extends VampirismItem {
 
                     nbttagcompound.put("pages", nbttaglist);
                     if (player instanceof ServerPlayerEntity && player.getHeldItemMainhand() == stack) {
-                        Slot var10 = player.openContainer.getSlotFromInventory(player.inventory, player.inventory.currentItem);
+                        Slot var10 = player.openContainer.inventorySlots.get(player.inventory.currentItem);
                         ((ServerPlayerEntity) player).connection.sendPacket(new SSetSlotPacket(0, var10.slotNumber, stack));
                     }
                 }

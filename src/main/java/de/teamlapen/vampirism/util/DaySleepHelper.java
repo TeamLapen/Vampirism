@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -76,7 +77,7 @@ public class DaySleepHelper {
                 }
             }
             if (sleeping / (float) total * 100 < Configs.coffin_sleep_percentage) return;
-            if (world.getGameRules().getBoolean("doDaylightCycle")) {
+            if (world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
                 long i = world.getWorldInfo().getDayTime() + 24000L;
                 world.getWorldInfo().setDayTime(i - i % 24000L + 12700L);
             }

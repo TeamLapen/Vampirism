@@ -15,6 +15,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraftforge.common.ToolType;
@@ -28,6 +31,8 @@ import java.util.List;
 public class AltarPillarBlock extends VampirismBlock {
     private final static String name = "altar_pillar";
     public final static EnumProperty<EnumPillarType> TYPE_PROPERTY = EnumProperty.create("type", EnumPillarType.class);
+    protected static final VoxelShape pillarShape = Block.makeCuboidShape(3, 0, 3, 13, 16, 13);
+    protected static final VoxelShape pillarShapeFilled = Block.makeCuboidShape(2, 0, 2, 14, 16, 14);
 
     public AltarPillarBlock() {
         super(name, Properties.create(Material.ROCK).hardnessAndResistance(0.9f));
@@ -57,7 +62,12 @@ public class AltarPillarBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean isFullCube(BlockState state) {
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return state.get(TYPE_PROPERTY) != EnumPillarType.NONE ? pillarShapeFilled : pillarShape;
+    }
+
+    @Override
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
     }
 

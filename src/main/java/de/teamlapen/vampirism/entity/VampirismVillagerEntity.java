@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.villager.IVillagerType;
 import net.minecraft.util.DamageSource;
@@ -53,8 +50,7 @@ public class VampirismVillagerEntity extends VillagerEntity {
         if (flag) {
             if (i > 0) {
                 entity.addVelocity((double) (-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F));
-                this.motionX *= 0.6D;
-                this.motionZ *= 0.6D;
+                this.setMotion(this.getMotion().mul(0.6D, 1D, 0.6D));
             }
 
             int j = EnchantmentHelper.getFireAspectModifier(this);
@@ -89,8 +85,8 @@ public class VampirismVillagerEntity extends VillagerEntity {
     }
 
     @Override
-    public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
-        return (peaceful || this.world.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, fromSpawner);
+    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
+        return (peaceful || this.world.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
     }
 
     @Nullable
@@ -116,7 +112,7 @@ public class VampirismVillagerEntity extends VillagerEntity {
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
     }
 
     @Override

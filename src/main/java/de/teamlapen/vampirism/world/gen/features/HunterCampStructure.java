@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.world.gen.features;
 
+import com.mojang.datafixers.Dynamic;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
@@ -16,31 +18,68 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.feature.structure.ScatteredStructure;
+import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.StructureStart;
+import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraftforge.fluids.IFluidBlock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.Random;
+import java.util.function.Function;
 
 /**
  * Generate hunter camps
  */
-public class HunterCampFeature extends Feature<HunterTentConfig> {
+public class HunterCampStructure extends ScatteredStructure<NoFeatureConfig> {
 
-    private static final Logger LOGGER = LogManager.getLogger(HunterCampFeature.class);
+    private static final Logger LOGGER = LogManager.getLogger(HunterCampStructure.class);
     private BlockState campfire_blockstate;
 
 
-    public HunterCampFeature() {
-        super();
+    public HunterCampStructure(Function<Dynamic<?>, ? extends NoFeatureConfig> function) {
+        super(function);
         campfire_blockstate = ModBlocks.fire_place.getDefaultState();
+    }
+
+    @Override
+    public String getStructureName() {
+        return "HunterCamp";
+    }
+
+    @Override
+    public int getSize() {
+        return 4;
+    }
+
+    @Override
+    public IStartFactory getStartFactory() {
+        return HunterCampStructure.Start::new;
+    }
+
+    @Override
+    protected int getSeedModifier() {
+        return 0;
+    }
+
+    public static class Start extends StructureStart {
+        public Start(Structure<?> p_i51341_1_, int chunkX, int chunkZ, Biome biomeIn, MutableBoundingBox boundsIn, int referenceIn, long seed) {
+            super(p_i51341_1_, chunkX, chunkZ, biomeIn, boundsIn, referenceIn, seed);
+        }
+
+        @Override
+        public void init(ChunkGenerator<?> generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn) {
+
+        }
     }
 
     /**

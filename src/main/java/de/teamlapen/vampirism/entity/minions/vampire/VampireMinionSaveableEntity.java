@@ -135,10 +135,10 @@ public class VampireMinionSaveableEntity extends VampireMinionBaseEntity impleme
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        this.tasks.addTask(7, new FollowLordMinionGoal(this, 1.0D));
-        this.tasks.addTask(14, new FleeSunGoal(this, 0.9F));
-        this.tasks.addTask(14, new FleeGarlicVampireGoal(this, 0.9F, false));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(7, new FollowLordMinionGoal(this, 1.0D));
+        this.goalSelector.addGoal(14, new FleeSunGoal(this, 0.9F));
+        this.goalSelector.addGoal(14, new FleeGarlicVampireGoal(this, 0.9F, false));
     }
 }

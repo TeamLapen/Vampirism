@@ -32,7 +32,7 @@ public class DarkProjectileEntityAction<T extends CreatureEntity & IEntityAction
         projectile.shootingEntity = shooter;
         projectile.setDamage((float) Balance.ea.DARK_BLOOD_PROJECTILE_DAMAGE, (float) Balance.ea.DARK_BLOOD_PROJECTILE_INDIRECT_DAMAGE);
 
-        shooter.getEntityWorld().spawnEntity(projectile);
+        shooter.getEntityWorld().addEntity(projectile);
         return true;
     }
 

@@ -31,7 +31,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
         super(type, world, false);
         saveHome = true;
         hasArms = true;
-        ((GroundPathNavigator) this.getNavigator()).setEnterDoors(true);
+        ((GroundPathNavigator) this.getNavigator()).setBreakDoors(true);
 
         this.setDontDropEquipment();
     }
@@ -73,25 +73,25 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
     }
 
     @Override
-    public boolean canDespawn() {
-        return !hasHome() && super.canDespawn();
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        this.tasks.addTask(1, new OpenDoorGoal(this, true));
-        this.tasks.addTask(4, new MeleeAttackGoal(this, 1.0, false));
-        this.tasks.addTask(5, new LookAtTrainerHunterGoal(this));
-        this.tasks.addTask(6, new RandomWalkingGoal(this, 0.7));
-        this.tasks.addTask(8, new LookAtGoal(this, PlayerEntity.class, 13F));
-        this.tasks.addTask(9, new LookAtGoal(this, VampireBaseEntity.class, 17F));
-        this.tasks.addTask(10, new LookRandomlyGoal(this));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0, false));
+        this.goalSelector.addGoal(5, new LookAtTrainerHunterGoal(this));
+        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
+        this.goalSelector.addGoal(9, new LookAtGoal(this, VampireBaseEntity.class, 17F));
+        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
 
-        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 
-        this.targetTasks.addTask(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetTasks.addTask(3, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
 

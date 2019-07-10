@@ -47,11 +47,6 @@ public class GarlicBlock extends CropsBlock {
     }
 
     @Override
-    protected IItemProvider getCropsItem() {
-        return ModItems.item_garlic;
-    }
-
-    @Override
     protected IItemProvider getSeedsItem() {
         return ModItems.item_garlic;
     }

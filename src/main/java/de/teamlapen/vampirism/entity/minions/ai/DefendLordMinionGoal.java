@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.util.MinionHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;
 
+import java.util.EnumSet;
+
 /**
  * TargetTask for minions which fight for their bosses
  *
@@ -22,12 +24,12 @@ public class DefendLordMinionGoal extends TargetGoal {
     public DefendLordMinionGoal(IMinion minion) {
         super(MinionHelper.entity(minion), false, false);
         this.minion = minion;
-        this.setMutexBits(1);
+        this.setMutexFlags(EnumSet.of(Flag.TARGET));
     }
 
     @Override
     public boolean shouldExecute() {
-        if (taskOwner.ticksExisted < lastUpdate + 100) return false;
+        if (goalOwner.ticksExisted < lastUpdate + 100) return false;
 
         IMinionLord l = minion.getLord();
         if (l != null) {
@@ -41,8 +43,8 @@ public class DefendLordMinionGoal extends TargetGoal {
 
     @Override
     public void startExecuting() {
-        taskOwner.setAttackTarget(target);
-        lastUpdate = taskOwner.ticksExisted;
+        goalOwner.setAttackTarget(target);
+        lastUpdate = goalOwner.ticksExisted;
         super.startExecuting();
     }
 }

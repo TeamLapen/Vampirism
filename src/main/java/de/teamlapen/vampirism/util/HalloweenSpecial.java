@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
 import net.minecraft.client.Minecraft;
@@ -98,7 +99,7 @@ public class HalloweenSpecial {
                 for (ServerPlayerEntity p : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
                     UUID u = p.getUniqueID();
                     if (!blacklist.contains(u)) {
-                        DraculaHalloweenEntity draculaHalloween = new DraculaHalloweenEntity(p.getEntityWorld());
+                        DraculaHalloweenEntity draculaHalloween = ModEntities.special_dracula_halloween.create(p.getEntityWorld());
                         draculaHalloween.setOwnerId(u);
                         draculaHalloween.makeHide(200 + p.getRNG().nextInt(1000));
                         p.getEntityWorld().addEntity(draculaHalloween);
