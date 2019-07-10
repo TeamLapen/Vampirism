@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.special;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
 import de.teamlapen.vampirism.entity.VampirismEntity;
@@ -56,7 +57,7 @@ public class DraculaHalloweenEntity extends VampirismEntity {
     public LivingEntity getOwner() {
         try {
             UUID uuid = this.getOwnerId();
-            return uuid == null ? null : this.world.getPlayerEntityByUUID(uuid);
+            return uuid == null ? null : this.world.getPlayerByUuid(uuid);
         } catch (IllegalArgumentException var2) {
             return null;
         }
@@ -128,13 +129,13 @@ public class DraculaHalloweenEntity extends VampirismEntity {
 
             if (seen > 5) {
 
-                AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(getEntityWorld());
+                AreaParticleCloudEntity particleCloud = ModEntities.particle_cloud.create(this.getEntityWorld());
                 particleCloud.setPosition(posX, posY, posZ);
                 particleCloud.setRadius(0.7F);
-                particleCloud.setHeight(this.height);
+                particleCloud.setHeight(this.getHeight());
                 particleCloud.setDuration(3);
                 particleCloud.setSpawnRate(10);
-                getEntityWorld().spawnEntity(particleCloud);
+                getEntityWorld().addEntity(particleCloud);
 
                 if (this.getRNG().nextInt(3) == 0) {
                     teleportBehind(owner);
@@ -173,7 +174,7 @@ public class DraculaHalloweenEntity extends VampirismEntity {
     }
 
     @Override
-    public boolean canDespawn() {
+    public boolean canDespawn(double distanceToClosestPlayer) {
         return false;
     }
 
@@ -183,16 +184,16 @@ public class DraculaHalloweenEntity extends VampirismEntity {
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        this.tasks.addTask(1, new LookAtGoal(this, PlayerEntity.class, 10, 1));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new LookAtGoal(this, PlayerEntity.class, 10, 1));
     }
 
     private void teleportBehind(LivingEntity target) {
         BlockPos behind = UtilLib.getPositionBehindEntity(target, 1.5F);
         this.setPosition(behind.getX(), target.posY, behind.getZ());
 
-        if (!this.isNotColliding()) {
+        if (!this.isNotColliding(getEntityWorld())) {
             int y = getEntityWorld().getHeight(Heightmap.Type.WORLD_SURFACE, behind).getY();
             this.setPosition(behind.getX(), y, behind.getZ());
         }

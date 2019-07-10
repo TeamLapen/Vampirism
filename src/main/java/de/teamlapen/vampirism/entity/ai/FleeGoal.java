@@ -6,6 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.EnumSet;
 import java.util.Random;
 
 /**
@@ -25,7 +26,7 @@ public abstract class FleeGoal extends Goal {
         this.movementSpeed = movementSpeed;
         this.restrictToHome = restrictToHome;
         world = theCreature.getEntityWorld();
-        this.setMutexBits(1);
+        this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
 
     public boolean continueExecuting() {
@@ -63,7 +64,7 @@ public abstract class FleeGoal extends Goal {
             BlockPos blockpos1 = blockpos.add(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);
 
             if (isPositionAcceptable(world, blockpos1)) {
-                if (restrictToHome && theCreature.hasHome()) {
+                if (restrictToHome && !theCreature.getHomePosition().equals(BlockPos.ZERO)) {
 
                     if (!theCreature.isWithinHomeDistanceFromPosition(blockpos1)) continue;
                 }

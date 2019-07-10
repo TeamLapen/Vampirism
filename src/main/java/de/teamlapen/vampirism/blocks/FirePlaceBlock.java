@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -18,7 +20,7 @@ import java.util.Random;
 
 
 public class FirePlaceBlock extends VampirismBlock {
-    protected static final AxisAlignedBB BBOX = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D); //TODO 1.13 shape
+    protected static final AxisAlignedBB BBOX = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D); //TODO 1.13 cauldronShape
     private final static String regName = "fire_place";
 
     public FirePlaceBlock() {
@@ -42,7 +44,7 @@ public class FirePlaceBlock extends VampirismBlock {
 
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
-        return world.getBlockState(pos.down()).isTopSolid();
+        return Block.hasSolidSide(world.getBlockState(pos.down()), world, pos.down(), Direction.UP);
     }
 
     @Override

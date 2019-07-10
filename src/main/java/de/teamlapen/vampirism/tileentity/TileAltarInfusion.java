@@ -19,12 +19,12 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.init.Particles;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -136,11 +136,11 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickableT
         return PHASE.WAITING;
     }
 
+    @Nullable
     @Override
-    public ITextComponent getName() {
+    public ITextComponent getCustomName() {
         return new StringTextComponent("tile.vampirism.altar_infusion.name");
     }
-
 
     /**
      * Returns the affected player. If the ritual isn't running it returns null
@@ -196,7 +196,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickableT
         super.read(tagCompound);
         int tick = tagCompound.getInt("tick");
         if (tick > 0 && player == null) {
-                this.player = this.getWorld().getPlayerEntityByUUID(UUID.fromString(tagCompound.getString("playerUUID")));
+            this.player = this.getWorld().getPlayerByUuid(UUID.fromString(tagCompound.getString("playerUUID")));
             if (this.player != null) {
                 this.runningTick = tick;
                 this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
@@ -253,13 +253,12 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickableT
         if (player == null || !player.isAlive()) {
             runningTick = 1;
         } else {
-            player.motionX = 0;
-            if (player.motionY >= 0) {
-                player.motionY = 0;
+            if (player.getMotion().y >= 0) {
+                player.setMotion(0D, 0D, 0D);
             } else {
-                player.motionY = player.motionY / 2;
+                player.setMotion(0D, player.getMotion().y, 0D);
+                player.setMotion(player.getMotion().mul(1D, 0.5D, 1D));
             }
-            player.motionZ = 0;
         }
 
         PHASE phase = getCurrentPhase();
@@ -298,7 +297,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickableT
                 }
             } else {
                 this.world.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
-                this.world.addParticle(Particles.EXPLOSION, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);//TODO was Explosion_huge
+                this.world.addParticle(ParticleTypes.EXPLOSION, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);//TODO was Explosion_huge
             }
 
             player.addPotionEffect(new EffectInstance(ModPotions.saturation, 400, 2));

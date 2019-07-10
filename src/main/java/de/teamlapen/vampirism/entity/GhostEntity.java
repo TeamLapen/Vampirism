@@ -64,15 +64,15 @@ public class GhostEntity extends VampirismEntity implements IMob {
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        this.tasks.addTask(0, new SwimGoal(this));
-        this.tasks.addTask(2, new MeleeAttackGoal(this, 1.0D, true));
-        this.tasks.addTask(7, new RandomWalkingGoal(this, 0.9F));
-        this.tasks.addTask(9, new LookAtGoal(this, PlayerEntity.class, 16));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, true));
+        this.goalSelector.addGoal(7, new RandomWalkingGoal(this, 0.9F));
+        this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 16));
 
-        this.targetTasks.addTask(1, new NearestAttackableTargetGoal(this, PlayerEntity.class, 0, true, false, null));
-        this.targetTasks.addTask(2, new HurtByTargetGoal(this, true));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 0, true, false, null));
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this, true));
     }
 
     /**

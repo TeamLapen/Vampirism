@@ -3,12 +3,14 @@ package de.teamlapen.vampirism.entity.ai;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.VampirismEntity;
+import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nonnull;
+import java.util.EnumSet;
 
 /**
  * Similar to vanilla ranged bow.
@@ -35,7 +37,7 @@ public class AttackRangedCrossbowGoal extends Goal {
         this.moveSpeedAmp = speedAmplifier;
         this.attackCooldown = delay;
         this.maxAttackDistance = maxDistance * maxDistance;
-        this.setMutexBits(3);
+        this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
@@ -111,7 +113,7 @@ public class AttackRangedCrossbowGoal extends Goal {
                 this.entity.getMoveHelper().strafe(this.strafingBackwards ? -0.5F : 0.5F, this.strafingClockwise ? 0.5F : -0.5F);
                 this.entity.faceEntity(entitylivingbase, 30.0F, 30.0F);
             } else {
-                this.entity.getLookHelper().setLookPositionWithEntity(entitylivingbase, 30.0F, 30.0F);
+                this.entity.lookAt(EntityAnchorArgument.Type.EYES, entitylivingbase.getEyePosition(1.0F));
             }
 
             if (--this.attackTime <= 0 && this.seeTime >= -30) {
@@ -126,12 +128,12 @@ public class AttackRangedCrossbowGoal extends Goal {
         ItemStack arrows = attacker.getArrowStackForAttack(target);
         CrossbowArrowEntity entityArrow = CrossbowArrowEntity.createWithShooter(entity.getEntityWorld(), entity, 0, 0.3F, !entity.isLeftHanded(), arrows);
         double sx = target.posX - entityArrow.posX;
-        double sy = target.getBoundingBox().minY + (double) (target.height / 3.0F) - entityArrow.posY;
+        double sy = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - entityArrow.posY;
         double sz = target.posZ - entityArrow.posZ;
         double dist = MathHelper.sqrt(sx * sx + sz * sz);
         entityArrow.shoot(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getEntityWorld().getDifficulty().getId() * 4));
         this.entity.playSound(ModSounds.crossbow, 0.5F, 1);
-        this.entity.getEntityWorld().spawnEntity(entityArrow);
+        this.entity.getEntityWorld().addEntity(entityArrow);
     }
 
     public interface IAttackWithCrossbow {

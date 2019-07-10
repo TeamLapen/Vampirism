@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
+import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.item.DyeColor;
@@ -109,7 +110,7 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> i
 
         @Override
         public ConvertedCreatureEntity createFrom(SheepEntity entity) {
-            ConvertedSheepEntity creature = new ConvertedSheepEntity(entity.getEntityWorld());
+            ConvertedSheepEntity creature = ModEntities.converted_sheep.create(entity.getEntityWorld());
             this.copyImportantStuff(creature, entity);
             creature.setSheared(entity.getSheared());
             return creature;

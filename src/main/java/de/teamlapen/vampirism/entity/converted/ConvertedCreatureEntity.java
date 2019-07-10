@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.entity.ai.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
@@ -31,7 +30,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     private boolean entityChanged = false;
     private boolean canDespawn = false;
 
-    public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity> type, World world) {
+    public ConvertedCreatureEntity(EntityType<? extends CreatureEntity> type, World world) {
         super(type, world, false);
 
     }
@@ -46,15 +45,9 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     @Override
-    public boolean isCreatureType(EntityClassification type, boolean forSpawnCount) {
-        if (forSpawnCount && type == EntityClassification.CREATURE) return true;
-        return super.isCreatureType(type, forSpawnCount);
-    }
-
-    @Override
     public void loadUpdateFromNBT(CompoundNBT nbt) {
         if (nbt.contains("entity_old")) {
-            setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), getEntityWorld()));
+            setEntityCreature((T) EntityType.loadEntityUnchecked(nbt.getCompound("entity_old"), getEntityWorld()).orElse(null));
         }
     }
 
@@ -70,9 +63,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             entityCreature.prevRotationPitch = this.prevRotationPitch;
             entityCreature.prevRotationYaw = this.prevRotationYaw;
             entityCreature.prevRotationYawHead = this.prevRotationYawHead;
-            entityCreature.motionX = this.motionX;
-            entityCreature.motionY = this.motionY;
-            entityCreature.motionZ = this.motionZ;
+            entityCreature.setMotion(this.getMotion());
             entityCreature.lastTickPosX = this.lastTickPosX;
             entityCreature.lastTickPosY = this.lastTickPosY;
             entityCreature.lastTickPosZ = this.lastTickPosZ;
@@ -121,7 +112,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     public void readAdditional(CompoundNBT nbt) {
         super.readAdditional(nbt);
         if (nbt.contains("entity_old")) {
-            setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), world));
+            setEntityCreature((T) EntityType.loadEntityUnchecked(nbt.getCompound("entity_old"), world).orElse(null));
             if (nil()) {
                 LOGGER.warn("Failed to create old entity %s. Maybe the entity does not exist anymore", nbt.getCompound("entity_old"));
             }
@@ -153,7 +144,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             if (!creature.equals(entityCreature)) {
                 entityCreature = creature;
                 entityChanged = true;
-                this.setSize(creature.width, creature.height);
+                this.recalculateSize();
             }
         }
         if (entityCreature != null && getConvertedHelper() == null) {
@@ -188,13 +179,8 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     @Override
-    public boolean canDespawn() {
-        return canDespawn;
-    }
-
-    @Override
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_) {
-        getConvertedHelper().dropConvertedItems(this, entityCreature, p_70628_1_, p_70628_2_);
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return super.canDespawn(distanceToClosestPlayer) && canDespawn;
     }
 
     /**
@@ -209,21 +195,21 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        this.tasks.addTask(1, new AvoidEntityGoal(this, CreatureEntity.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new AvoidEntityGoal(this, CreatureEntity.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION)));
         //this.tasks.addTask(3, new FleeSunVampireGoal(this, 1F));
-        this.tasks.addTask(4, new RestrictSunGoal(this));
-        tasks.addTask(5, new AttackMeleeNoSunGoal(this, 0.9D, false));
+        this.goalSelector.addGoal(4, new RestrictSunGoal(this));
+        this.goalSelector.addGoal(5, new AttackMeleeNoSunGoal(this, 0.9D, false));
         this.experienceValue = 2;
 
-        this.tasks.addTask(11, new RandomWalkingGoal(this, 0.7));
-        this.tasks.addTask(13, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.tasks.addTask(15, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(11, new RandomWalkingGoal(this, 0.7));
+        this.goalSelector.addGoal(13, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(15, new LookRandomlyGoal(this));
 
-        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
-        this.targetTasks.addTask(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetTasks.addTask(3, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
     protected boolean nil() {

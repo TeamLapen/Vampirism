@@ -27,9 +27,6 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
         super(regName, Properties.create(Material.IRON).hardnessAndResistance(Configs.sunscreen_beacon_mineable ? 50 : -1, Configs.sunscreen_beacon_mineable ? 50 : 3600000));
     }
 
-
-
-
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, world, tooltip, advanced);
@@ -42,7 +39,6 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
         return Configs.sunscreen_beacon_mineable;
     }
-
 
     @Nullable
     @Override
@@ -61,9 +57,7 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isFullCube(BlockState state) {
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
     }
-
-
 }

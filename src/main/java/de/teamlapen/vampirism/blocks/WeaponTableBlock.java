@@ -17,6 +17,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 
@@ -25,7 +26,7 @@ public class WeaponTableBlock extends VampirismBlock {
     public static final int MAX_LAVA = 5;
     public static final int MB_PER_META = 200;
     public static final IntegerProperty LAVA = IntegerProperty.create("lava", 0, MAX_LAVA);
-    private static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0, 0, 0, 0.93, 0.6, 1); //TODO 1.13 shape
+    private static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0, 0, 0, 0.93, 0.6, 1); //TODO 1.13 cauldronShape
 
     public WeaponTableBlock() {
         super(regName, Properties.create(Material.IRON).hardnessAndResistance(3));
@@ -34,7 +35,7 @@ public class WeaponTableBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean isFullCube(BlockState state) {
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
     }
 

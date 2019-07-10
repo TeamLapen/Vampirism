@@ -41,6 +41,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -102,10 +103,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     public BasicHunterEntity(EntityType<? extends BasicHunterEntity> type, World world) {
         super(type, world, true);
         saveHome = true;
-        ((GroundPathNavigator) this.getNavigator()).setEnterDoors(true);
-
-        this.setSize(0.6F, 1.95F);
-
+        ((GroundPathNavigator) this.getNavigator()).setBreakDoors(true);
 
         this.setDontDropEquipment();
 
@@ -201,7 +199,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Override
     public boolean isLookingForHome() {
-        return !hasHome();
+        return getHome() == null;
     }
 
     public boolean isSwingingArms() {
@@ -233,8 +231,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(DifficultyInstance difficulty, @Nullable ILivingEntityData livingdata, @Nullable CompoundNBT itemNbt) {
-        livingdata = super.onInitialSpawn(difficulty, livingdata, itemNbt);
+    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        ILivingEntityData livingdata = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 
         if (this.getRNG().nextInt(4) == 0) {
             this.setLeftHanded(true);
@@ -313,13 +311,13 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     public void updateCombatTask() {
         if (this.world != null && !this.world.isRemote) {
-            this.tasks.removeTask(attackMelee);
-            this.tasks.removeTask(attackRange);
+            this.goalSelector.removeGoal(attackMelee);
+            this.goalSelector.removeGoal(attackRange);
             ItemStack stack = this.getHeldItemMainhand();
             if (!stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow) {
-                this.tasks.addTask(2, this.attackRange);
+                this.goalSelector.addGoal(2, this.attackRange);
             } else {
-                this.tasks.addTask(2, this.attackMelee);
+                this.goalSelector.addGoal(2, this.attackMelee);
             }
         }
     }
@@ -348,8 +346,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public boolean canDespawn() {
-        return isLookingForHome() && super.canDespawn();
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
     }
 
 
@@ -378,29 +376,29 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
+    protected void registerGoals() {
+        super.registerGoals();
 
-        this.tasks.addTask(1, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
         //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
-        this.tasks.addTask(3, new LookAtTrainerHunterGoal(this));
-        this.tasks.addTask(5, new MoveThroughVillageCustomGoal(this, 0.7F, false, 300));
-        this.tasks.addTask(6, new RandomWalkingGoal(this, 0.7, 50));
-        this.tasks.addTask(8, new LookAtGoal(this, PlayerEntity.class, 13F));
-        this.tasks.addTask(8, new LookAtGoal(this, VampireBaseEntity.class, 17F));
-        this.tasks.addTask(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(3, new LookAtTrainerHunterGoal<>(this));
+        this.goalSelector.addGoal(5, new MoveThroughVillageCustomGoal(this, 0.7F, false, 300));
+        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7, 50));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, VampireBaseEntity.class, 17F));
+        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
 
-        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
-        this.targetTasks.addTask(2, new AttackVillageGoal<>(this));
-        this.targetTasks.addTask(2, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetTasks.addTask(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetTasks.addTask(5, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new AttackVillageGoal<>(this));
+        this.targetSelector.addGoal(2, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
             @Override
             protected double getTargetDistance() {
                 return super.getTargetDistance() / 2;
             }
         });
-        this.targetTasks.addTask(6, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, true, true));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, true, true));
         //Also check the priority of tasks that are dynamically added. See top of class
     }
 

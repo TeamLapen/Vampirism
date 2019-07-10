@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import de.teamlapen.vampirism.world.VampirismWorldData;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -13,6 +14,8 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
@@ -30,6 +33,7 @@ import javax.annotation.Nullable;
  */
 public class AltarInspirationBlock extends VampirismBlockContainer {
     public final static String regName = "altar_inspiration";
+    protected static final VoxelShape altarShape = Block.makeCuboidShape(0, 0, 0, 16, 14, 16);
 
     public AltarInspirationBlock() {
         super(regName, Properties.create(Material.IRON).hardnessAndResistance(2f));
@@ -63,7 +67,12 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isFullCube(BlockState state) {
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return altarShape;
+    }
+
+    @Override
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
     }
 

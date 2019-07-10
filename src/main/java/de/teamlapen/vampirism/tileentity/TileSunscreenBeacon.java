@@ -4,10 +4,10 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
@@ -44,11 +44,13 @@ public class TileSunscreenBeacon extends TileEntity implements ITickable {
                 };
             }
 
-            List<PlayerEntity> list = this.world.getPlayers(PlayerEntity.class, selector::test);
+            List<? extends PlayerEntity> list = this.world.getPlayers();
 
-            for (PlayerEntity entityplayer : list) {
-                if (VampirePlayer.get(entityplayer).getLevel() > 0) {
-                    entityplayer.addPotionEffect(new EffectInstance(ModPotions.sunscreen, 160, 5, true, false));
+            for (PlayerEntity player : list) {
+                if (selector.test(player))
+                    continue;
+                if (VampirePlayer.get(player).getLevel() > 0) {
+                    player.addPotionEffect(new EffectInstance(ModPotions.sunscreen, 160, 5, true, false));
                 }
             }
         }

@@ -44,7 +44,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      */
     private int randomTickDivider;
 
-    public VampirismEntity(EntityType type, World world) {
+    public VampirismEntity(EntityType<? extends VampirismEntity> type, World world) {
         super(type, world);
         moveTowardsRestriction = new MoveTowardsRestrictionGoal(this, 1.0F);
     }
@@ -63,8 +63,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         if (flag) {
             if (i > 0) {
                 entity.addVelocity((double) (-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F));
-                this.motionX *= 0.6D;
-                this.motionZ *= 0.6D;
+                this.setMotion(this.getMotion().mul(0.6D, 1D, 0.6D));
             }
 
             int j = EnchantmentHelper.getFireAspectModifier(this);
@@ -84,13 +83,14 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     @Override
-    public void detachHome() {
+    public boolean detachHome() {
         this.home = null;
+        return true;
     }
 
     @Override
-    public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
-        return (peaceful || this.world.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, fromSpawner);
+    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
+        return (peaceful || this.world.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
     }
 
     @Nullable
@@ -106,18 +106,13 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
 
     @Override
     public BlockPos getHomePosition() {
-        if (!hasHome())
+        if (home == null)
             return new BlockPos(0, 0, 0);
         int posX, posY, posZ;
         posX = (int) (home.minX + (home.maxX - home.minX) / 2);
         posY = (int) (home.minY + (home.maxY - home.minY) / 2);
         posZ = (int) (home.minZ + (home.maxZ - home.minZ) / 2);
         return new BlockPos(posX, posY, posZ);
-    }
-
-    @Override
-    public boolean hasHome() {
-        return home != null;
     }
 
     @Override
@@ -181,7 +176,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     @Override
     public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
-        if (saveHome && hasHome()) {
+        if (saveHome && home != null) {
             int[] h = { (int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ };
             nbt.putIntArray("home", h);
             if (moveTowardsRestrictionAdded && moveTowardsRestrictionPrio > -1) {
@@ -193,7 +188,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
     }
 
     /**
@@ -213,7 +208,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      */
     protected void disableMoveTowardsRestriction() {
         if (moveTowardsRestrictionAdded) {
-            this.tasks.removeTask(moveTowardsRestriction);
+            this.goalSelector.removeGoal(moveTowardsRestriction);
             moveTowardsRestrictionAdded = false;
         }
     }
@@ -247,13 +242,13 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         if (this.world.getLightFor(LightType.SKY, blockpos) > this.rand.nextInt(32)) {
             return false;
         } else {
-            int i = this.world.getLight(blockpos);//TODO was getLightFromNeighbors(blockpos)
+            int i = this.world.getLight(blockpos);
 
             if (this.world.isThundering()) {
                 int j = this.world.getSkylightSubtracted();
-                this.world.setSkylightSubtracted(10);
-                i = this.world.getLight(blockpos);//TODO was getLightFromNeighbors(blockpos)
-                this.world.setSkylightSubtracted(j);
+                this.world.setLastLightningBolt(10);
+                i = this.world.getLight(blockpos);
+                this.world.setLastLightningBolt(j);
             }
 
             return i <= this.rand.nextInt(8);
@@ -290,11 +285,11 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         if (moveTowardsRestrictionAdded) {
             if (active && moveTowardsRestrictionPrio == prio)
                 return;
-            this.tasks.removeTask(moveTowardsRestriction);
+            this.goalSelector.removeGoal(moveTowardsRestriction);
             moveTowardsRestrictionAdded = false;
         }
         if (active) {
-            tasks.addTask(prio, moveTowardsRestriction);
+            goalSelector.addGoal(prio, moveTowardsRestriction);
             moveTowardsRestrictionAdded = true;
             moveTowardsRestrictionPrio = prio;
         }
@@ -306,7 +301,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, this.posX, this.posY + this.height / 2, this.posZ, 20, 1, this.rand, 134, 10, 0x0A0A0A, 0.6);
+        VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, this.posX, this.posY + this.getHeight() / 2, this.posZ, 20, 1, this.rand, 134, 10, 0x0A0A0A, 0.6);
         this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
         this.remove();

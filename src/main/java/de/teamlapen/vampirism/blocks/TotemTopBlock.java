@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.tileentity.TileTotem;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -18,7 +19,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  */
 public class TotemTopBlock extends VampirismBlockContainer {
 
-    protected static final AxisAlignedBB BBOX = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.7D, 1.0D); //TODO 1.13 shape
+    protected static final AxisAlignedBB BBOX = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.7D, 1.0D); //TODO 1.13 cauldronShape
 
 
     private final static String regName = "totem_top";
@@ -73,16 +73,16 @@ public class TotemTopBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isFullCube(BlockState state) {
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
     }
 
     @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-        TileEntity tile = world.getTileEntity(pos);
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof TileTotem) {
             ((TileTotem) tile).updateTotem();
-            world.addBlockEvent(pos, this, 1, 0); //Notify client about render update
+            worldIn.addBlockEvent(pos, this, 1, 0); //Notify client about render update
         }
     }
 

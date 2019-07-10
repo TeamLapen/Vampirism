@@ -15,6 +15,8 @@ import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
@@ -168,7 +170,7 @@ public class Tests {
         info.world.setBlockState(info.pos, ModBlocks.weapon_table.getDefaultState());
         info.player.setHeldItem(info.player.getActiveHand(), new ItemStack(Items.LAVA_BUCKET));
         BlockState block = info.world.getBlockState(info.pos);
-        block.getBlock().onBlockActivated(block, info.world, info.pos, info.player, info.player.getActiveHand(), Direction.random(info.world.rand), 0, 0, 0);
+        block.onBlockActivated(info.world, info.player, info.player.getActiveHand(), new BlockRayTraceResult(new Vec3d(0, 0, 0), Direction.random(info.world.rand), info.pos, false));//TODO 1.14 test BlockRayTraceResult
         block = info.world.getBlockState(info.pos);
         assert info.player.getHeldItem(info.player.getActiveHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
         log("Block lava level: %s", block.get(WeaponTableBlock.LAVA));

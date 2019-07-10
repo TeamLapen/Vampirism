@@ -104,13 +104,13 @@ public class VampireFactionVillagerBaseEntity extends FactionVillagerEntity impl
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+        getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
     
     @Override
-    protected void initEntityAI() {
-        this.tasks.addTask(1, new RestrictSunVampireGoal<>(this));
-        this.tasks.addTask(1, new FleeSunVampireGoal<>(this, 0.9, false));
-    	super.initEntityAI();
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, new RestrictSunVampireGoal<>(this));
+        this.goalSelector.addGoal(1, new FleeSunVampireGoal<>(this, 0.9, false));
+        super.registerGoals();
     }
 }

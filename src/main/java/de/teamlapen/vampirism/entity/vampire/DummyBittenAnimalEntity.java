@@ -4,12 +4,8 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
 import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.passive.CowEntity;
-import net.minecraft.entity.passive.PigEntity;
-import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.world.World;
 
 /**
@@ -21,12 +17,6 @@ public class DummyBittenAnimalEntity extends MobEntity {
     }
 
     @Override
-    public boolean isCreatureType(EntityClassification type, boolean forSpawnCount) {
-        return type == EntityClassification.CREATURE;
-    }
-
-
-    @Override
     public void livingTick() {
         super.livingTick();
         if (this.ticksExisted > 4 && !this.getEntityWorld().isRemote) {
@@ -34,13 +24,13 @@ public class DummyBittenAnimalEntity extends MobEntity {
             int rand = this.rand.nextInt(3);
             switch (rand) {
                 case 0:
-                    entity = new PigEntity(world);
+                    entity = EntityType.PIG.create(world);
                     break;
                 case 1:
-                    entity = new SheepEntity(world);
+                    entity = EntityType.SHEEP.create(world);
                     break;
                 default:
-                    entity = new CowEntity(world);
+                    entity = EntityType.COW.create(world);
                     break;
             }
             entity.copyLocationAndAnglesFrom(this);

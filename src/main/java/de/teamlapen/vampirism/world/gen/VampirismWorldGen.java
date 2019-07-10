@@ -28,11 +28,11 @@ public class VampirismWorldGen implements IWorldGenerator { //TODO DELETE CLASS 
         return instance;
     }
 
-    public final HunterCampFeature hunterCamp;
+    public final HunterCampStructure hunterCamp;
     public final VampireDungeonFeature vampireDungeon;
 
     private VampirismWorldGen() {
-        this.hunterCamp = new HunterCampFeature();
+        this.hunterCamp = new HunterCampStructure();
         this.vampireDungeon = new VampireDungeonFeature();
         ForgeRegistries.BIOMES.
     }

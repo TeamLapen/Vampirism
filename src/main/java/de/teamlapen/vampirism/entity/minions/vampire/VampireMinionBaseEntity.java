@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.entity.minions.ai.HurtByTargetMinionGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.MinionHelper;
-import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -18,13 +17,13 @@ import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.init.Particles;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -70,11 +69,10 @@ public abstract class VampireMinionBaseEntity extends VampireBaseEntity implemen
     }
 
     @Override
-    public boolean canAttackClass(Class p_70686_1_) {
-        //if (EntityPortalGuard.class.equals(p_70686_1_)) return false;//TODO
-        return super.canAttackClass(p_70686_1_);
+    public boolean canAttack(EntityType<?> typeIn) {
+        //if(typeIn.equals(ModEntities.portal_guard) return false;
+        return super.canAttack(typeIn);
     }
-
 
     public IMinionCommand getActiveCommand() {
         return this.activeCommand;
@@ -107,18 +105,12 @@ public abstract class VampireMinionBaseEntity extends VampireBaseEntity implemen
     }
 
     @Override
-    public boolean isCreatureType(EntityClassification type, boolean forSpawnCount) {
-        //Don't count as entity for spawning
-        return !forSpawnCount && super.isCreatureType(type, forSpawnCount);
-    }
-
-    @Override
     public void livingTick() {
         if (getOldVampireTexture() != -1 && this.ticksExisted > 50) {
             setOldVampireTexture(-1);
         }
         if (getOldVampireTexture() != -1 && world.isRemote) {
-            UtilLib.spawnParticlesAroundEntity(this, Particles.WITCH, 1.0F, 3);
+            UtilLib.spawnParticlesAroundEntity(this, ParticleTypes.WITCH, 1.0F, 3);
         }
         if (!this.world.isRemote && !this.dead) {
 
@@ -250,12 +242,12 @@ public abstract class VampireMinionBaseEntity extends VampireBaseEntity implemen
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        this.tasks.addTask(6, new MeleeAttackGoal(this, 1.0, false));
-        this.tasks.addTask(15, new RandomWalkingGoal(this, 0.7));
-        this.tasks.addTask(16, new LookAtGoal(this, PlayerEntity.class, 10));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 1.0, false));
+        this.goalSelector.addGoal(15, new RandomWalkingGoal(this, 0.7));
+        this.goalSelector.addGoal(16, new LookAtGoal(this, PlayerEntity.class, 10));
 
-        this.targetTasks.addTask(8, new HurtByTargetMinionGoal(this, false));
+        this.targetSelector.addGoal(8, new HurtByTargetMinionGoal(this, false));
     }
 }

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.DamageHandler;
-import de.teamlapen.vampirism.entity.ItemThrowableEntity;
+import de.teamlapen.vampirism.entity.ThrowableItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author maxanier
  */
-public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements ItemThrowableEntity.IVampirismThrowableItem {
+public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements ThrowableItemEntity.IVampirismThrowableItem {
 
     public final static String regName = "holy_water_splash_bottle";
 
@@ -32,7 +32,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements It
     }
 
     @Override
-    public void onImpact(ItemThrowableEntity entity, ItemStack stack, RayTraceResult result, boolean remote) {
+    public void onImpact(ThrowableItemEntity entity, ItemStack stack, RayTraceResult result, boolean remote) {
 
         TIER tier = getVampirismTier();
         if (!remote) {
@@ -63,7 +63,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements It
         worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 
         if (!worldIn.isRemote) {
-            ItemThrowableEntity entityThrowable = new ItemThrowableEntity(worldIn, playerIn);
+            ThrowableItemEntity entityThrowable = new ThrowableItemEntity(worldIn, playerIn);
             ItemStack throwStack = stack.copy();
             throwStack.setCount(1);
             entityThrowable.setItem(throwStack);

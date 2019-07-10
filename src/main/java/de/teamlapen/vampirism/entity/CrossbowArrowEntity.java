@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -10,6 +11,7 @@ import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
@@ -56,8 +58,8 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
     /**
      * @param arrow ItemStack of the represented arrow. Is copied.
      */
-    public CrossbowArrowEntity(EntityType<? extends CrossbowArrowEntity> type, World worldIn, double x, double y, double z, ItemStack arrow) {
-        this(type, worldIn);
+    public CrossbowArrowEntity(World worldIn, double x, double y, double z, ItemStack arrow) {
+        this(ModEntities.crossbow_arrow, worldIn);
         this.setPosition(x, y, z);
         this.arrowStack = arrow.copy();
         arrowStack.setCount(1);
@@ -94,7 +96,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
             if (ignoreHurtTimer && living.hurtResistantTime > 0) {
                 living.hurtResistantTime = 0;
             }
-            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityFromUuid(this.shootingEntity) : null); //TODO nonnull server only
+            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityByUuid(this.shootingEntity) : null); //TODO nonnull server only
         }
     }
 
@@ -105,10 +107,10 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
 
     @Override
     protected void onHit(RayTraceResult raytraceResultIn) {
-        if (raytraceResultIn.entity == null) {
+        if (raytraceResultIn.getType() == RayTraceResult.Type.BLOCK) {
             Item item = arrowStack.getItem();
             if (item instanceof IVampirismCrossbowArrow) {
-                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityFromUuid(this.shootingEntity) : null);//TODO nonnull server only
+                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, ((BlockRayTraceResult) raytraceResultIn).getPos(), this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityByUuid(this.shootingEntity) : null);//TODO nonnull server only
             }
         }
         super.onHit(raytraceResultIn);

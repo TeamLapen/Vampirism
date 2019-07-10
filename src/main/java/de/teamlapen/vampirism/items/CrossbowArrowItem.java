@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -32,11 +34,6 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
         super(regName + "_" + type.getName(), new Properties().group(VampirismMod.creativeTab));
         this.type = type;
     }
-
-
-
-
-
 
     /**
      * @param stack        Is copied by {@link CrossbowArrowEntity}
@@ -80,7 +77,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
                         BlockPos pos = blockPos.add(dx, dy, dz);
                         BlockState blockState = entity.getEntityWorld().getBlockState(pos);
                         if (blockState.getMaterial().isReplaceable()
-                                && entity.getEntityWorld().getBlockState(pos.down()).isTopSolid() && (entity).getRNG().nextInt(4) != 0) {
+                                && Block.hasSolidSide(entity.getEntityWorld().getBlockState(pos.down()), entity.getEntityWorld(), pos.down(), Direction.UP) && (entity).getRNG().nextInt(4) != 0) {
                             entity.getEntityWorld().setBlockState(pos, ModBlocks.alchemical_fire.getDefaultState());
                         }
                     }

@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.entity.CreatureEntity;
-import net.minecraft.init.Particles;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 
 public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
@@ -42,13 +42,13 @@ public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public void activate(T entity) {
-        VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), ModParticles.GENERIC_PARTICLE, entity.posX, entity.posY, entity.posZ, 60, 1, entity.getRNG(), Particles.EXPLOSION.getId(), 16, 0xF0F0F0);
+        VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), ModParticles.GENERIC_PARTICLE, entity.posX, entity.posY, entity.posZ, 60, 1, entity.getRNG(), ParticleTypes.EXPLOSION, 16, 0xF0F0F0);
     }
 
     @Override
     public void updatePreAction(T entity, int duration) {
         if (duration % 5 == 0) {
-            VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), ModParticles.GENERIC_PARTICLE, entity.posX, entity.posY, entity.posZ, 10, 1, entity.getRNG(), Particles.EXPLOSION.getId(), 16, 0xF0F0F0);
+            VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), ModParticles.GENERIC_PARTICLE, entity.posX, entity.posY, entity.posZ, 10, 1, entity.getRNG(), ParticleTypes.EXPLOSION, 16, 0xF0F0F0);
         }
     }
 

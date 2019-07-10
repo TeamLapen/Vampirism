@@ -26,7 +26,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
@@ -61,7 +60,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     public AdvancedVampireEntity(EntityType<? extends AdvancedVampireEntity> type, World world) {
         super(type, world, true);
-        this.setSize(0.6F, 1.95F);
         this.canSuckBloodFromPlayer = true;
         this.setSpawnRestriction(SpawnRestriction.SPECIAL);
         this.setDontDropEquipment();
@@ -235,25 +233,23 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        if (world.getDifficulty() == net.minecraft.world.Difficulty.HARD) {
-            //Only break doors on hard difficulty
-            this.tasks.addTask(1, new BreakDoorGoal(this));
-            ((GroundPathNavigator) this.getNavigator()).setBreakDoors(true);
-        }
-        this.tasks.addTask(2, new RestrictSunVampireGoal<>(this));
-        this.tasks.addTask(3, new FleeSunVampireGoal<>(this, 0.9, false));
-        this.tasks.addTask(3, new FleeGarlicVampireGoal(this, 0.9, false));
-        this.tasks.addTask(4, new AttackMeleeNoSunGoal(this, 1.0, false));
-        this.tasks.addTask(8, new RandomWalkingGoal(this, 0.9, 25));
-        this.tasks.addTask(9, new LookAtGoal(this, PlayerEntity.class, 13F));
-        this.tasks.addTask(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
-        this.tasks.addTask(11, new LookRandomlyGoal(this));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> {
+            return difficulty == net.minecraft.world.Difficulty.HARD;
+        }));//Only break doors on hard difficulty
+        this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
+        this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
+        this.goalSelector.addGoal(3, new FleeGarlicVampireGoal(this, 0.9, false));
+        this.goalSelector.addGoal(4, new AttackMeleeNoSunGoal(this, 1.0, false));
+        this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.9, 25));
+        this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 13F));
+        this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
+        this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
 
-        this.targetTasks.addTask(3, new HurtByTargetGoal(this, false));
-        this.targetTasks.addTask(4, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetTasks.addTask(5, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
     protected void updateEntityAttributes() {

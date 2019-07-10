@@ -8,20 +8,18 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.*;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.crafting.RecipeType;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,7 +29,7 @@ import java.util.Set;
  * 
  * @author Cheaterpaul
  */
-public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraftforge.common.crafting.IShapedRecipe {
+public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRecipe<CraftingInventory>, IShapedRecipe<CraftingInventory> {
     protected static int MAX_WIDTH = 4;
     protected static int MAX_HEIGHT = 4;
 
@@ -58,7 +56,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
     }
 
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
+    public boolean matches(CraftingInventory inv, World worldIn) {
         for (int i = 0; i <= inv.getWidth() - this.recipeWidth; ++i) {
             for (int j = 0; j <= inv.getHeight() - this.recipeHeight; ++j) {
                 if (this.checkMatch(inv, i, j, true)) {
@@ -76,7 +74,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
     /**
      * Checks if the region of a crafting inventory is match for the recipe.
      */
-    private boolean checkMatch(IInventory craftingInventory, int startRow, int startColumn, boolean p_77573_4_) {
+    private boolean checkMatch(CraftingInventory craftingInventory, int startRow, int startColumn, boolean p_77573_4_) {
         for (int i = 0; i < craftingInventory.getWidth(); ++i) {
             for (int j = 0; j < craftingInventory.getHeight(); ++j) {
                 int k = i - startRow;
@@ -100,7 +98,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
+    public ItemStack getCraftingResult(CraftingInventory inv) {
         return this.recipeOutput.copy();
     }
 
@@ -164,7 +162,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
     }
 
     @Override
-    public RecipeType<? extends IRecipe> getType() {
+    public IRecipeType<? extends IRecipe> getType() {
         return ModRecipes.WEAPONTABLE_CRAFTING_TYPE;
     }
 
@@ -319,11 +317,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
         return skills;
     }
 
-    public static class Serializer implements IRecipeSerializer<ShapedWeaponTableRecipe> {
-        public Serializer() {
-        }
-
-        private static final ResourceLocation NAME = new ResourceLocation(REFERENCE.MODID, "shaped_weapon_table_recipe");
+    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapedWeaponTableRecipe> {
         @Override
         public ShapedWeaponTableRecipe read(ResourceLocation recipeId, JsonObject json) {
             String group = JSONUtils.getString(json, "group", "");
@@ -378,11 +372,6 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe, net.minecraf
                     buffer.writeString(skill.getRegistryName().toString());
                 }
             }
-        }
-
-        @Override
-        public ResourceLocation getName() {
-            return NAME;
         }
 
     }

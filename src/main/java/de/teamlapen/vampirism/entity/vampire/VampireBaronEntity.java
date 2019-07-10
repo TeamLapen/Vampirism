@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.entity.ai.AttackRangedDarkBloodGoal;
 import de.teamlapen.vampirism.entity.ai.FleeGarlicVampireGoal;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
-import de.teamlapen.vampirism.entity.minions.vampire.VampireMinionSaveableEntity;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.world.loot.LootHandler;
@@ -213,12 +212,12 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             IVampireMinion.Saveable m = null;
 
             if (i == 1) {
-                MobEntity e = new VampireMinionSaveableEntity(world);
+                MobEntity e = ModEntities.vampire_minion_s.create(world);
                 if (e == null) {
                     LOGGER.warn("Failed to create saveable minion");
                 } else {
                     e.copyLocationAndAnglesFrom(this);
-                    world.spawnEntity(e);
+                    world.addEntity(e);
                     m = (IVampireMinion.Saveable) e;
                 }
 
@@ -226,7 +225,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
                 m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), ModEntities.vampire_minion_s, SpawnReason.NATURAL);
             }
             if (m == null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getBoundingBox().grow(19, 4, 19), ModEntities.vampire_minion_s, 3, Collections.emptyList()); //Do not avoid player here. Already using spawnBehind sometimes
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getBoundingBox().grow(19, 4, 19), ModEntities.vampire_minion_s, 3, Collections.emptyList(), SpawnReason.MOB_SUMMONED); //Do not avoid player here. Already using spawnBehind sometimes
             }
             if (m != null) {
                 m.setLord(this);
@@ -328,19 +327,19 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        this.tasks.addTask(4, new FleeGarlicVampireGoal(this, 0.9F, false));
-        this.tasks.addTask(5, new BaronAIAttackMelee(this, 1.0F));
-        this.tasks.addTask(6, new BaronAIAttackRanged(this, 60, 64, 6, 4));
-        this.tasks.addTask(6, new AvoidEntityGoal<>(this, PlayerEntity.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel((PlayerEntity) input)));//TODO Works only partially. Pathfinding somehow does not find escape routes
-        this.tasks.addTask(7, new RandomWalkingGoal(this, 0.2));
-        this.tasks.addTask(9, new LookAtGoal(this, PlayerEntity.class, 10.0F));
-        this.tasks.addTask(10, new LookRandomlyGoal(this));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(4, new FleeGarlicVampireGoal(this, 0.9F, false));
+        this.goalSelector.addGoal(5, new BaronAIAttackMelee(this, 1.0F));
+        this.goalSelector.addGoal(6, new BaronAIAttackRanged(this, 60, 64, 6, 4));
+        this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, PlayerEntity.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel((PlayerEntity) input)));//TODO Works only partially. Pathfinding somehow does not find escape routes
+        this.goalSelector.addGoal(7, new RandomWalkingGoal(this, 0.2));
+        this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 10.0F));
+        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
 
-        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
-        this.targetTasks.addTask(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, input -> input != null && isLowerLevel(input)));
-        this.targetTasks.addTask(3, new NearestAttackableTargetGoal<>(this, VampireBaronEntity.class, true, false));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, input -> input != null && isLowerLevel(input)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, VampireBaronEntity.class, true, false));
     }
 
     /**
@@ -372,9 +371,12 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
                 .setBaseValue(Balance.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
     }
 
-    private boolean isLowerLevel(PlayerEntity player) {
-        int playerLevel = FactionPlayerHandler.get(player).getCurrentLevel();
-        return (playerLevel - 8) / 2F - VampireBaronEntity.this.getLevel() <= 0;
+    private boolean isLowerLevel(LivingEntity player) {
+        if (player instanceof PlayerEntity) {
+            int playerLevel = FactionPlayerHandler.get((PlayerEntity) player).getCurrentLevel();
+            return (playerLevel - 8) / 2F - VampireBaronEntity.this.getLevel() <= 0;
+        }
+        return false;
     }
 
     private class BaronAIAttackMelee extends MeleeAttackGoal {

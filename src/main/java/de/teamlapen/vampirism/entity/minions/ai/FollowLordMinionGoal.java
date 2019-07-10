@@ -10,6 +10,8 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.EnumSet;
+
 public class FollowLordMinionGoal extends Goal {
     /**
      * Min dist for execution
@@ -32,7 +34,7 @@ public class FollowLordMinionGoal extends Goal {
         this.minion = minion;
         minionEntity = MinionHelper.entity(minion);
         this.speed = speed;
-        this.setMutexBits(1);
+        this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
 
     /**
@@ -96,7 +98,7 @@ public class FollowLordMinionGoal extends Goal {
                     for (int dz = 0; dz <= 4; ++dz) {
                         BlockPos pos1 = pos.add(dx, 0, dz);
                         if ((dx < 1 || dz < 1 || dx > 3 || dz > 3) && UtilLib.doesBlockHaveSolidTopSurface(lord.getEntityWorld(), pos1.down())
-                                && !lord.getEntityWorld().getBlockState(pos1).isNormalCube() && !lord.getEntityWorld().getBlockState(pos.up()).isNormalCube()) {
+                                && !lord.getEntityWorld().getBlockState(pos1).isNormalCube(lord.getEntityWorld(), pos1) && !lord.getEntityWorld().getBlockState(pos.up()).isNormalCube(lord.getEntityWorld(), pos.up())) {
                             minionEntity.setLocationAndAngles(pos1.getX() + 0.5F, pos1.getY() + 0.1, pos1.getZ() + 0.5F,
                                     MathHelper.wrapDegrees(lord.rotationYaw + 180F), MathHelper.wrapDegrees(lord.rotationPitch + 180F));
                             minionEntity.getNavigator().clearPath();

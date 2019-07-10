@@ -55,7 +55,7 @@ public class ModEntities {
     public static final EntityType<AggressiveVillagerEntity> villager_angry = getNull();
     public static final EntityType<CrossbowArrowEntity> crossbow_arrow = getNull();
     public static final EntityType<AreaParticleCloudEntity> particle_cloud = getNull();
-    public static final EntityType<ItemThrowableEntity> throwable_item = getNull();
+    public static final EntityType<ThrowableItemEntity> throwable_item = getNull();
     public static final EntityType<DraculaHalloweenEntity> special_dracula_halloween = getNull();
     public static final EntityType<DarkBloodProjectileEntity> dark_blood_projectile = getNull();
     public static final EntityType<SoulOrbEntity> soul_orb = getNull();
@@ -108,10 +108,10 @@ public class ModEntities {
         registry.register(prepareEntityType("villager_angry", EntityType.Builder.<AggressiveVillagerEntity>create(AggressiveVillagerEntity::new, EntityClassification.CREATURE).size(0.6F, 1.95F), false));
         registry.register(prepareEntityType("crossbow_arrow", EntityType.Builder.<CrossbowArrowEntity>create(CrossbowArrowEntity::new, EntityClassification.MISC).size(0.5F, 0.5F), false));
         registry.register(prepareEntityType("particle_cloud", EntityType.Builder.<AreaParticleCloudEntity>create(AreaParticleCloudEntity::new, EntityClassification.MISC).size(6.0F, 0.5F).immuneToFire(), false));
-        registry.register(prepareEntityType("throwable_item", EntityType.Builder.<ItemThrowableEntity>create(ItemThrowableEntity::new, EntityClassification.MISC).size(0.25F, 0.25F), false));
+        registry.register(prepareEntityType("throwable_item", EntityType.Builder.<ThrowableItemEntity>create(ThrowableItemEntity::new, EntityClassification.MISC).size(0.25F, 0.25F), false));
         registry.register(prepareEntityType("special_dracula_halloween", EntityType.Builder.<DraculaHalloweenEntity>create(DraculaHalloweenEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true));
         registry.register(prepareEntityType("dark_blood_projectile", EntityType.Builder.<DarkBloodProjectileEntity>create(DarkBloodProjectileEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), false));
-        registry.register(prepareEntityType("soul_orb", EntityType.Builder.<SoulOrbEntity>create(SoulOrbEntity::new, EntityClassification.MISC).size(0.3125F, 0.3125F), false));
+        registry.register(prepareEntityType("soul_orb", EntityType.Builder.<SoulOrbEntity>create(SoulOrbEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).immuneToFire(), false));
         registry.register(prepareEntityType("villager_hunter_faction", EntityType.Builder.<HunterFactionVillagerEntity>create(HunterFactionVillagerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true));
         registry.register(prepareEntityType("villager_vampire_faction", EntityType.Builder.<VampireFactionVillagerEntity>create(VampireFactionVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true));
         registry.register(prepareEntityType("hunter_trainer_dummy", EntityType.Builder.<DummyHunterTrainerEntity>create(DummyHunterTrainerEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), true));
@@ -134,7 +134,7 @@ public class ModEntities {
         EntitySpawnPlacementRegistry.register(vampire_hunter, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(advanced_hunter, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(vampire_baron, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
-        EntitySpawnPlacementRegistry.register(vampire_minion_s, EntitySpawnPlacementRegistry.PlacementType..ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null)
+        EntitySpawnPlacementRegistry.register(vampire_minion_s, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null)
         ;
         EntitySpawnPlacementRegistry.register(dummy_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(villager_converted, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);

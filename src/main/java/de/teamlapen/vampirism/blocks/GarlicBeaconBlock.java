@@ -35,7 +35,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     private final static AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.75, 0.93);
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     private final static AxisAlignedBB COLLISION_BOX_2 = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.19, 0.93);
-    private final static AxisAlignedBB COLLISION_BOX_1 = new AxisAlignedBB(0.19, 0, 0.19, 0.81, 0.75, 0.81); //TODO 1.13 shape
+    private final static AxisAlignedBB COLLISION_BOX_1 = new AxisAlignedBB(0.19, 0, 0.19, 0.81, 0.75, 0.81); //TODO 1.13 cauldronShape
     private final Type type;
 
     public GarlicBeaconBlock(Type type) {
@@ -85,10 +85,9 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isFullCube(BlockState state) {
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
     }
-
 
     @Override
     public BlockRenderLayer getRenderLayer() {

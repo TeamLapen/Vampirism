@@ -9,16 +9,21 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.conditions.ILootCondition;
 
-import java.util.Random;
-
 public class StakeCondition implements ILootCondition {
+    private final LootContext.EntityTarget target;
+
+    public StakeCondition(LootContext.EntityTarget targetIn) {
+        this.target = targetIn;
+    }
+
     @Override
-    public boolean testCondition(Random rand, LootContext context) {
-        Entity player = context.getKillerPlayer();
+    public boolean test(LootContext context) {
+        Entity player = context.get(target.getParameter());
         if (player instanceof PlayerEntity) {
             ItemStack active = ((PlayerEntity) player).getHeldItemMainhand();
             return !active.isEmpty() && active.getItem() instanceof StakeItem;
@@ -26,7 +31,7 @@ public class StakeCondition implements ILootCondition {
         return false;
     }
 
-    public static class Serializer extends ILootCondition.Serializer<StakeCondition> {
+    public static class Serializer extends ILootCondition.AbstractSerializer<StakeCondition> {
 
         protected Serializer() {
             super(new ResourceLocation(REFERENCE.MODID, "with_stake"), StakeCondition.class);
@@ -34,7 +39,7 @@ public class StakeCondition implements ILootCondition {
 
         @Override
         public StakeCondition deserialize(JsonObject json, JsonDeserializationContext context) {
-            return new StakeCondition();
+            return new StakeCondition(JSONUtils.deserializeClass(json, "entity", context, LootContext.EntityTarget.class));
         }
 
         @Override

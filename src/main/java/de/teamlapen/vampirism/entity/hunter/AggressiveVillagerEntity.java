@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.ai.DefendVillageGoal;
@@ -22,6 +23,7 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -38,7 +40,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
      * @return
      */
     public static AggressiveVillagerEntity makeHunter(VillagerEntity villager) {
-        AggressiveVillagerEntity hunter = new AggressiveVillagerEntity(villager.world);
+        AggressiveVillagerEntity hunter = ModEntities.villager_angry.create(villager.world);
         CompoundNBT nbt = new CompoundNBT();
         villager.writeWithoutTypeId(nbt);
         hunter.read(nbt);
@@ -50,7 +52,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
 
     public AggressiveVillagerEntity(EntityType<? extends AggressiveVillagerEntity> type, World worldIn) {
         super(type, worldIn);
-        ((GroundPathNavigator) getNavigator()).setEnterDoors(true);
+        ((GroundPathNavigator) getNavigator()).setBreakDoors(true);
     }
 
 
@@ -61,8 +63,8 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(DifficultyInstance difficulty, ILivingEntityData livingdata, @Nullable CompoundNBT itemNbt) {
-        ILivingEntityData data = super.onInitialSpawn(difficulty, livingdata, itemNbt);
+    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        ILivingEntityData data = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
         return data;
     }
@@ -108,27 +110,27 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
 
     @Override
     public void stopVillageAttackDefense() {
-        VillagerEntity villager = new VillagerEntity(this.world);
+        VillagerEntity villager = EntityType.VILLAGER.create(this.world);
         CompoundNBT nbt = new CompoundNBT();
         this.writeWithoutTypeId(nbt);
         villager.read(nbt);
         villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
-        world.spawnEntity(villager);
+        world.addEntity(villager);
         this.remove();
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        this.tasks.taskEntries.removeIf(entry -> entry.action instanceof TradeWithPlayerGoal || entry.action instanceof LookAtCustomerGoal || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem);
-        this.tasks.addTask(6, new MeleeAttackGoal(this, 0.6, false));
-        this.tasks.addTask(8, new MoveThroughVillageCustomGoal(this, 0.55, false, 400));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.taskEntries.removeIf(entry -> entry.action instanceof TradeWithPlayerGoal || entry.action instanceof LookAtCustomerGoal || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem);
+        this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 0.6, false));
+        this.goalSelector.addGoal(8, new MoveThroughVillageCustomGoal(this, 0.55, false, 400));
 
 
-        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
-        this.targetTasks.addTask(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetTasks.addTask(3, new DefendVillageGoal<>(this));
-        this.targetTasks.addTask(4, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetSelector.addGoal(3, new DefendVillageGoal<>(this));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
 
             @Override
             protected double getTargetDistance() {

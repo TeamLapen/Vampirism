@@ -116,7 +116,7 @@ public class TileTent extends TileEntity implements ITickableTileEntity {
         if (spawn) {
             spawnerLogic.updateSpawner();
             if (!this.world.isRemote && this.world.getGameTime() % 64 == 0) {
-                if (this.world.villageCollection.getNearestVillage(this.pos, 5) != null) {
+                if (this.world.findNearestStructure("Village", pos, 5, false) != null) {
                     this.spawn = false; //Disable spawning inside villages
                 }
             }

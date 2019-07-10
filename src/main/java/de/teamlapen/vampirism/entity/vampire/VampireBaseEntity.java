@@ -26,6 +26,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
@@ -38,13 +39,13 @@ import javax.annotation.Nonnull;
 public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob {
 
     /**
-     * Rules to consider for {@link #canSpawn(IWorld, boolean)}
+     * Rules to consider for {@link #canSpawn(IWorld, SpawnReason)}
      */
     protected SpawnRestriction spawnRestriction = SpawnRestriction.NORMAL;
     private final boolean countAsMonsterForSpawn;
 
     @Override
-    public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
+    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
         if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
             if (isGettingSundamage(true) || isGettingGarlicDamage(true) != EnumStrength.NONE) return false;
 
@@ -52,7 +53,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 if ((world.isDaytime() && rand.nextInt(5) != 0)) {
                     return false;
                 }
-                if (world.getVillageCollection().getNearestVillage(getPosition(), 1) != null) {
+                if (world.findNearestStructure("Village", getPosition(), 1, false) != null) {
                     if (getRNG().nextInt(60) != 0) {
                         return false;
                     }
@@ -66,7 +67,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             }
         }
 
-        return super.canSpawn(worldIn, fromSpawner);
+        return super.canSpawn(worldIn, spawnReasonIn);
     }
     protected EnumStrength garlicResist = EnumStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
@@ -89,7 +90,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     /**
-     * Select rules to consider for {@link #canSpawn(IWorld, boolean)}
+     * Select rules to consider for {@link #canSpawn(IWorld, SpawnReason)}
      */
     public void setSpawnRestriction(SpawnRestriction r) {
         this.spawnRestriction = r;
@@ -158,19 +159,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public float getEyeHeight() {
-        return height * 0.875f;
-    }
-
-    @Override
     public LivingEntity getRepresentingEntity() {
         return this;
-    }
-
-    @Override
-    public boolean isCreatureType(EntityClassification type, boolean forSpawnCount) {
-        if (forSpawnCount && countAsMonsterForSpawn && type == EntityClassification.MONSTER) return true;
-        return super.isCreatureType(type, forSpawnCount);
     }
 
     @Nonnull
@@ -250,7 +240,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+        getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     /**
@@ -264,16 +254,16 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        this.tasks.addTask(0, new SwimGoal(this));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(0, new SwimGoal(this));
     }
 
     @Override
     protected void onDeathUpdate() {
         if (this.deathTime == 19) {
-            if (!this.world.isRemote && (dropSoul && this.world.getGameRules().getBoolean("doMobLoot"))) {
-                this.world.spawnEntity(new SoulOrbEntity(this.world, this.posX, this.posY, this.posZ, SoulOrbEntity.VARIANT.VAMPIRE));
+            if (!this.world.isRemote && (dropSoul && this.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT))) {
+                this.world.addEntity(new SoulOrbEntity(this.world, this.posX, this.posY, this.posZ, SoulOrbEntity.VARIANT.VAMPIRE));
             }
         }
         super.onDeathUpdate();

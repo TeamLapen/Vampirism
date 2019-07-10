@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
@@ -21,17 +22,17 @@ import javax.annotation.Nonnull;
  *
  * @author maxanier
  */
-public class ItemThrowableEntity extends ThrowableEntity {
+public class ThrowableItemEntity extends ThrowableEntity {
 
-    private final static Logger LOGGER = LogManager.getLogger(ItemThrowableEntity.class);
-    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(ItemThrowableEntity.class, DataSerializers.ITEM_STACK);
+    private final static Logger LOGGER = LogManager.getLogger(ThrowableItemEntity.class);
+    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(ThrowableItemEntity.class, DataSerializers.ITEMSTACK);
 
-    public ItemThrowableEntity(EntityType<? extends ItemThrowableEntity> type, World worldIn) {
+    public ThrowableItemEntity(EntityType<? extends ThrowableItemEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
-    public ItemThrowableEntity(EntityType<? extends ItemThrowableEntity> type, World worldIn, LivingEntity thrower) {
-        super(type, thrower, worldIn);
+    public ThrowableItemEntity(World worldIn, LivingEntity thrower) {
+        super(ModEntities.throwable_item, thrower, worldIn);
     }
 
     /**
@@ -77,7 +78,6 @@ public class ItemThrowableEntity extends ThrowableEntity {
 
     @Override
     protected void registerData() {
-        super.registerData();
         this.getDataManager().register(ITEM, ItemStack.EMPTY);
     }
 
@@ -100,7 +100,7 @@ public class ItemThrowableEntity extends ThrowableEntity {
     }
 
     /**
-     * Has to be implemented by any item, that can be thrown using {@link ItemThrowableEntity}
+     * Has to be implemented by any item, that can be thrown using {@link ThrowableItemEntity}
      */
     public interface IVampirismThrowableItem {
         /**
@@ -112,6 +112,6 @@ public class ItemThrowableEntity extends ThrowableEntity {
          * @param impact The impact raytrace
          * @param remote If this is a remote world
          */
-        void onImpact(ItemThrowableEntity entity, ItemStack stack, RayTraceResult impact, boolean remote);
+        void onImpact(ThrowableItemEntity entity, ItemStack stack, RayTraceResult impact, boolean remote);
     }
 }
