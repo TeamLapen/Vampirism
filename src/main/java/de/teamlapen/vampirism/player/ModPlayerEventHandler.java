@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -12,7 +11,7 @@ import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
@@ -170,7 +169,7 @@ public class ModPlayerEventHandler {
             if (!heldStack.isEmpty() && heldStack.getCount() == 1) {
                 boolean glasBottle = Items.GLASS_BOTTLE.equals(heldStack.getItem());
                 boolean bloodBottle = ModItems.blood_bottle.equals(heldStack.getItem());
-                if (bloodBottle || (glasBottle && Configs.autoConvertGlasBottles)) {
+                if (bloodBottle || (glasBottle && VampirismConfig.SERVER.autoConvertGlassBottles.get())) {
                     Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
                     BlockState state = event.getWorld().getBlockState(event.getPos());
                     boolean convert = false;
@@ -227,7 +226,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.NameFormat event) {
-        if (event.getEntityPlayer() != null && !Configs.disable_factionDisplayChat) {
+        if (event.getEntityPlayer() != null && VampirismConfig.SERVER.factionColorInChat.get()) {
             IFactionPlayer fp = FactionPlayerHandler.get(event.getEntityPlayer()).getCurrentFactionPlayer();
             IFaction f = fp == null ? null : fp.getDisguisedAs();
             if (f != null) {

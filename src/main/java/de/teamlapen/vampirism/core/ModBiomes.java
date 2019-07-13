@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.gen.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.gen.biome.VampirismBiomeFeatures;
@@ -32,7 +32,7 @@ public class ModBiomes {
         vampireForest.setRegistryName(REFERENCE.MODID, "vampireforest");
         registry.register(vampireForest);
         BiomeDictionary.addTypes(vampireForest, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
-        if (!Configs.disable_vampireForest) {
+        if (!VampirismConfig.SERVER.disableVampireForest.get()) {
 
             BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampireForest, Balance.general.VAMPIRE_FOREST_WEIGHT));
             LOGGER.debug("Registered vampire forest with weight {}", Balance.general.VAMPIRE_FOREST_WEIGHT);
@@ -42,8 +42,7 @@ public class ModBiomes {
     }
 
     static void registerFeatures() {
-        if (Configs.disable_all_worldgen) return;
-        if (!Configs.disable_hunter_camps) {
+        if (!VampirismConfig.SERVER.disableHunterCamps.get()) {
             for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
                 if (new ResourceLocation("the_end").equals(biome.getRegistryName()) || new ResourceLocation("nether").equals(biome.getRegistryName()))
                     continue;

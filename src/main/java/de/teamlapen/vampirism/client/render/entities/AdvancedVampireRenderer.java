@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.client.render.LayerAdvancedVampireEye;
 import de.teamlapen.vampirism.client.render.LayerPlayerFaceOverlay;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.BipedRenderer;
@@ -21,7 +21,7 @@ public class AdvancedVampireRenderer extends BipedRenderer<AdvancedVampireEntity
 
     public AdvancedVampireRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BipedModel(0F, 0F, 64, 64), 0.5F);
-        if (!Configs.disable_advancedMobPlayerFaces) {
+        if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new LayerPlayerFaceOverlay<AdvancedVampireEntity>(this));
             this.addLayer(new LayerAdvancedVampireEye(this));
 

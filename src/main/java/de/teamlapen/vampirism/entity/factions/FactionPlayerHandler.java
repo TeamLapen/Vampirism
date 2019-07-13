@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.event.FactionEvent;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
@@ -201,7 +201,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
-        if (Configs.pvp_only_between_factions && src instanceof EntityDamageSource) {
+        if (VampirismConfig.SERVER.pvpOnlyBetweenFactions.get() && src instanceof EntityDamageSource) {
             if (src.getTrueSource() instanceof PlayerEntity) {
                 FactionPlayerHandler other = get((PlayerEntity) src.getTrueSource());
                 return this.currentFaction == null || !this.currentFaction.equals(other.currentFaction);

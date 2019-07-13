@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.client.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.client.render.RenderUtil;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -34,7 +33,7 @@ public class LayerVampirePlayerHead extends LayerRenderer<AbstractClientPlayerEn
 
     @Override
     public void render(AbstractClientPlayerEntity player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        if (Configs.disable_vampireEyes) return;
+        if (!VampirismConfig.CLIENT.renderVampireEyes.get()) return;
         VampirePlayer vampirePlayer = VampirePlayer.get(player);
         if (vampirePlayer.getLevel() > 0 && !vampirePlayer.isDisguised() && !player.isInvisible()) {
             int eyeType = Math.max(0, Math.min(vampirePlayer.getEyeType(), eyeOverlays.length - 1));

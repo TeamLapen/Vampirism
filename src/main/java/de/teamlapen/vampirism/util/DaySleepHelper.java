@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,7 +54,7 @@ public class DaySleepHelper {
                     ++sleeping;
                 }
             }
-            boolean enough = sleeping > 0 && sleeping / ((float) all - spectators - ignorePlayers) * 100 >= Configs.coffin_sleep_percentage;
+            boolean enough = sleeping > 0 && sleeping / ((float) all - spectators - ignorePlayers) * 100 >= VampirismConfig.SERVER.coffinSleepPercentage.get();
             enoughPlayersAsleep.put(world.getDimension().getType().getId(), enough);
         }
     }
@@ -76,7 +76,7 @@ public class DaySleepHelper {
                     }
                 }
             }
-            if (sleeping / (float) total * 100 < Configs.coffin_sleep_percentage) return;
+            if (sleeping / (float) total * 100 < VampirismConfig.SERVER.coffinSleepPercentage.get()) return;
             if (world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
                 long i = world.getWorldInfo().getDayTime() + 24000L;
                 world.getWorldInfo().setDayTime(i - i % 24000L + 12700L);

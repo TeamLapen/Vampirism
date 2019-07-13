@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.tileentity.TotemTile;
@@ -132,7 +132,7 @@ public class Helper {
         if (biter instanceof IVampirePlayer) {
             return Permissions.canPlayerTurnPlayer(((IVampirePlayer) biter).getRepresentingPlayer());
         } else {
-            return !Configs.disable_mob_bite_infection;
+            return !VampirismConfig.SERVER.disableMobBiteInfection.get();
         }
     }
 

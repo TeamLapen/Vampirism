@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.tileentity.SunscreenBeaconTileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -24,20 +24,20 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     private static final String regName = "sunscreen_beacon";
 
     public SunscreenBeaconBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(Configs.sunscreen_beacon_mineable ? 50 : -1, Configs.sunscreen_beacon_mineable ? 50 : 3600000));
+        super(regName, Properties.create(Material.IRON).hardnessAndResistance(VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : -1, VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : 3600000));
     }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, world, tooltip, advanced);
         tooltip.add(UtilLib.translated(getTranslationKey() + ".tooltip1"));
-        tooltip.add(UtilLib.translated(getTranslationKey() + ".tooltip2", Configs.sunscreen_beacon_distance));
+        tooltip.add(UtilLib.translated(getTranslationKey() + ".tooltip2", VampirismConfig.SERVER.sunscreenBeaconDistance.get()));
     }
 
 
     @Override
     public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return Configs.sunscreen_beacon_mineable;
+        return VampirismConfig.SERVER.sunscreenBeaconMineable.get();
     }
 
     @Nullable

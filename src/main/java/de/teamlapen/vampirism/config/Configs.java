@@ -30,44 +30,11 @@ public class Configs {
     public static final String CATEGORY_WORLDGEN = "world_gen";
     public static boolean realism_mode;
     public static boolean resetConfigurationInDev;
-    public static int gui_level_offset_x;
-    public static int gui_level_offset_y;
-    public static boolean gui_skill_button_enable;
-    public static boolean renderVampireForestFog;
-    public static boolean renderVampireForestFogEnforce;
-    public static int blood_vision_recompile_ticks;
-    public static int coffin_sleep_percentage;
-    public static boolean pvp_only_between_factions;
-    public static boolean bat_mode_in_end;
-    public static boolean unlock_all_skills;
-    public static int sunscreen_beacon_distance;
-    public static boolean autoCalculateEntityBlood;
-    public static boolean sunscreen_beacon_mineable;
-    public static boolean playerCanTurnPlayer;
 
 
-    public static int village_distance;
-    public static int village_separation;
-    public static boolean village_modify;
-
-    public static boolean disable_replaceVanillaNightVision;
-    public static boolean disable_vampireForest;
-    public static boolean disable_factionDisplayChat;
-    public static boolean disable_versionCheck;
-    public static boolean disable_advancedMobPlayerFaces;
     public static boolean updated_vampirism;
-    public static boolean disable_vampireEyes;
-    public static boolean disable_config_sync;
-    public static boolean disable_screen_overlay;
-    public static boolean disable_collectVersionStat;
-    public static boolean disable_fang_infection;
-    public static boolean disable_mob_bite_infection;
-    public static boolean disable_hunter_camps;
-    public static boolean disable_all_worldgen;
-    public static boolean disable_halloween_special;
 
 
-    public static boolean autoConvertGlasBottles;
     private static Configuration main_config;
     private static boolean overriddenByServer = false;
 
@@ -126,46 +93,9 @@ public class Configs {
 
         }
 
-        playerCanTurnPlayer = main_config.getBoolean("player_can_turn_player", CATEGORY_GENERAL, true, "If one player can bite infect a human player with sanguinare");
-        renderVampireForestFog = main_config.getBoolean("vampire_forest_fog", CATEGORY_GENERAL, true, "");
-        renderVampireForestFogEnforce = main_config.getBoolean("vampire_forest_fog_enforce", CATEGORY_GENERAL, true, "Prevents clients from disabling the fog client side");
-        blood_vision_recompile_ticks = main_config.getInt("blood_vision_recompile", CATEGORY_GENERAL, 3, 1, 100, "Every n tick the blood vision entities are recompiled - Might have a performance impact");
-
-        autoConvertGlasBottles = main_config.getBoolean("auto_convert_glas_bottles", CATEGORY_GENERAL, true, "If glas bottles should automatically be converted to blood bottles if needed");
-        coffin_sleep_percentage = main_config.getInt("coffin_sleep_percantage", CATEGORY_GENERAL, 100, 1, 100, "Percentage of players that have to lay in a coffin to make it night. Be careful with values below 51 if e.g. Morpheus is installed");
-        pvp_only_between_factions = main_config.getBoolean("pvp_only_between_factions", CATEGORY_GENERAL, false, "If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates");
-        bat_mode_in_end = main_config.getBoolean("bat_mode_in_end", CATEGORY_GENERAL, false, "If vampires can convert to a bat in the end");
-        unlock_all_skills = main_config.getBoolean("unlock_all_skills_at_max", CATEGORY_GENERAL, false, "CHEAT: If enabled, you will be able to unlock all skills at max level");
-        sunscreen_beacon_distance = main_config.getInt("sunscreen_beacon_distance", CATEGORY_GENERAL, 32, 1, 40000, "Block radius, the sunscreen beacon affects");
-        sunscreen_beacon_mineable = main_config.getBoolean("sunscreen_beacon_mineable", CATEGORY_GENERAL, false, "If the sunscreen beacon can be mined in survival");
-        autoCalculateEntityBlood = main_config.getBoolean("auto_calculate_entity_blood", CATEGORY_GENERAL, true, "Calculate the blood level for unknown creatures based on their size");
-
-        //Village
-        village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
-        village_separation = main_config.getInt("village_separation", CATEGORY_VILLAGE, 8, 1, 100, "Village centers will be at least N chunks apart. Must be smaller than density. Vanilla: 8");
-        village_distance = main_config.getInt("village_distance", CATEGORY_VILLAGE, 32, 1, 100, "");
-
-        // Gui
-        gui_level_offset_x = main_config.getInt("level_offset_x", CATEGORY_GUI, 0, -250, 250, "X-Offset of the level indicator from the center in pixels");
-        gui_level_offset_y = main_config.getInt("level_offset_y", CATEGORY_GUI, 47, 0, 270, "Y-Offset of the level indicator from the bottom in pixels");
-        gui_skill_button_enable = main_config.getBoolean("skill_button_enable", CATEGORY_GUI, true, "If the skill button in inventory should be rendered");
-
 
         //Disable
-        disable_replaceVanillaNightVision = main_config.getBoolean("disable_replace_night_vision", CATEGORY_DISABLE, false, "Disable replacing vanilla night vision, if disabled the potion is shown to the player all the time");
-        disable_factionDisplayChat = main_config.getBoolean("disable_faction_display_chat", CATEGORY_DISABLE, false, "Do not display the player's current faction in chat");
-        disable_vampireForest = main_config.getBoolean("disable_vampire_forest", CATEGORY_DISABLE, false, "Disable vampire forest generation");
-        disable_versionCheck = main_config.getBoolean("disable_version_check", CATEGORY_DISABLE, false, "Disable vampirism's version check");
-        disable_advancedMobPlayerFaces = main_config.getBoolean("disable_advanced_mob_player_face", CATEGORY_DISABLE, false, "Disable the rendering of other player faces for the advanced hunter and advanced vampire");
-        disable_vampireEyes = main_config.getBoolean("disable_vampire_player_eyes", CATEGORY_DISABLE, false, "Disables the rendering of vampire eyes");
-        disable_config_sync = main_config.getBoolean("disable_config_sync", CATEGORY_DISABLE, false, "Disable syncing config between server and client. (Note: Only a few settings are synced anyway)");
-        disable_screen_overlay = main_config.getBoolean("disable_screen_overlay", CATEGORY_DISABLE, false, "Disable the colored overlay (sunindicator, disguise or rage)  if they cause problems.");
-        disable_collectVersionStat = main_config.getBoolean("disable_collect_basic_version_stat", CATEGORY_DISABLE, false, "Disable sending Mod version, MC version and mod count on version check");
-        disable_fang_infection = main_config.getBoolean("disable_fang_infection", CATEGORY_DISABLE, false, "Disable vampire fangs being useable to infect yourself");
-        disable_mob_bite_infection = main_config.getBoolean("disable_mob_bite_infection", CATEGORY_DISABLE, false, "Prevent vampire mobs from infecting players when attacking");
-        disable_hunter_camps = main_config.getBoolean("disable_hunter_camps", CATEGORY_DISABLE, false, "Disable the generation of hunter camps completely");
-        disable_all_worldgen = main_config.getBoolean("disable_all_worldgen", CATEGORY_DISABLE, false, "Disable all world gen. Does not affect vampire Forest");
-        disable_halloween_special = main_config.getBoolean("disable_halloween_special", CATEGORY_DISABLE, false, "Disable halloween special event");
+
 
         updated_vampirism = false;//TODO 1.13 !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 

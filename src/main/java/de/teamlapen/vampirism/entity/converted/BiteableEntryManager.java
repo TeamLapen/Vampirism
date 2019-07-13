@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.util.ResourceLocation;
@@ -86,7 +86,7 @@ public class BiteableEntryManager {
         if (blacklist.contains(id)) return null;
         BiteableEntry entry = get(id);
         if (entry != null) return entry;
-        if (!Configs.autoCalculateEntityBlood || !(creature instanceof AnimalEntity)) {
+        if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get() || !(creature instanceof AnimalEntity)) {
             blacklist.add(id);
             return null;
         }

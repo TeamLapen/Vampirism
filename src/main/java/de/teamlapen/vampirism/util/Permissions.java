@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
@@ -22,6 +22,6 @@ public class Permissions {
     }
 
     public static boolean canPlayerTurnPlayer(PlayerEntity player) {
-        return Configs.playerCanTurnPlayer;
+        return VampirismConfig.SERVER.playerCanTurnPlayer.get();
     }
 }

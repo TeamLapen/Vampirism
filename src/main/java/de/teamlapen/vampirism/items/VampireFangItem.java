@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
@@ -31,7 +31,7 @@ public class VampireFangItem extends VampirismItem {
 
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
-            if (Configs.disable_fang_infection) {
+            if (VampirismConfig.SERVER.disableFangInfection.get()) {
                 playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {

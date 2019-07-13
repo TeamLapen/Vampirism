@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
@@ -38,7 +38,7 @@ public class HalloweenSpecial {
     }
 
     public static boolean shouldEnable() {
-        if (Configs.disable_halloween_special) {
+        if (VampirismConfig.SERVER.disableHalloweenSpecial.get()) {
             return false;
         }
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);

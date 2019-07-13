@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.item.ItemStack;
@@ -69,7 +69,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
             /*
              might cause crashes with other mods, although this is probably legit as forge does something similar in {@link net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack.SwapEmpty}
              */
-            if (getBlood(container) == 0 && Configs.autoConvertGlasBottles) {
+            if (getBlood(container) == 0 && VampirismConfig.SERVER.autoConvertGlassBottles.get()) {
                 container = new ItemStack(Items.GLASS_BOTTLE);
             }
         }

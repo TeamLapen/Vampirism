@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.fluids;
 
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.entity.player.PlayerEntity;
@@ -125,7 +125,7 @@ public class BloodHelper {
             }
         }
         ItemStack glas = getGlassBottleInHotbar(player.inventory);
-        if (!glas.isEmpty() && Configs.autoConvertGlasBottles) {
+        if (!glas.isEmpty() && VampirismConfig.SERVER.autoConvertGlassBottles.get()) {
             ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
             int filled = fill(bloodBottle, amt, true);
             if (filled == 0) {

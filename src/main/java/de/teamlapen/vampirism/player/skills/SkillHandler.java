@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -105,7 +105,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     @Override
     public int getLeftSkillPoints() {
         int level = player.getLevel();
-        if (Configs.unlock_all_skills && level == player.getMaxLevel()) {
+        if (VampirismConfig.SERVER.unlockAllSkills.get() && level == player.getMaxLevel()) {
             return 1;
         }
         return player.getLevel() - enabledSkills.size();

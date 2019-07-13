@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
 import de.teamlapen.vampirism.client.render.LayerPlayerFaceOverlay;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.BipedRenderer;
@@ -23,7 +23,7 @@ public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity, 
 
     public AdvancedHunterRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel(), 0.5F);
-        if (!Configs.disable_advancedMobPlayerFaces) {
+        if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new LayerPlayerFaceOverlay(this));
 
         }

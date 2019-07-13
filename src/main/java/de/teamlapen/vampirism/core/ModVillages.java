@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceModChurch;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceTotem;
@@ -52,19 +53,19 @@ public class ModVillages {
 
     static void modifyVillageSize(ChunkGenSettings settings) {
 
-        if (!Configs.village_modify) {
+        if (!VampirismConfig.SERVER.villageModify.get()) {
             LOGGER.trace("Not modifying village");
             return;
         }
             try {
-                ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, Configs.village_distance, SRGNAMES.ChunkGenSettings_villageDistance);
+                ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, VampirismConfig.SERVER.villageDistance.get(), SRGNAMES.ChunkGenSettings_villageDistance);
             } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
                 LOGGER.error("Could not modify field 'villageDistance' in ChunkGenSettings", e);
             }
 
 
         try {
-            ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, Configs.village_separation, SRGNAMES.ChunkGenSettings_villageSeparation);
+            ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, VampirismConfig.SERVER.villageSeparation.get(), SRGNAMES.ChunkGenSettings_villageSeparation);
             } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
             LOGGER.error("Could not modify field for villageSeparation in ChunkGenSettings", e);
             }

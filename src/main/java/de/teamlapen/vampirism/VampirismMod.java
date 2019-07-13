@@ -12,10 +12,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
-import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.config.BloodGrinderValueLoader;
-import de.teamlapen.vampirism.config.BloodValueLoader;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.*;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
@@ -124,6 +121,7 @@ public class VampirismMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+        VampirismConfig.registerConfigs();
         MinecraftForge.EVENT_BUS.register(this);
         addModCompats();
         registryManager = new RegistryManager();
@@ -225,10 +223,10 @@ public class VampirismMod {
         proxy.onInitStep(IInitListener.Step.COMMON_SETUP, event);
 
         String currentVersion = "@VERSION@".equals(REFERENCE.VERSION) ? "0.0.0-test" : REFERENCE.VERSION;
-        if (Configs.disable_versionCheck) {
+        if (!VampirismConfig.COMMON.versionCheck.get()) {
             versionInfo = new VersionChecker.VersionInfo(currentVersion);
         } else {
-            versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, currentVersion, !inDev && !Configs.disable_collectVersionStat);
+            versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, currentVersion, !inDev && VampirismConfig.COMMON.collectStats.get());
         }
 
         ModEventHandler eventHandler = new ModEventHandler();

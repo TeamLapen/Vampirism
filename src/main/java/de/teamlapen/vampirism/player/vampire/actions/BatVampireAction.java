@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -156,7 +157,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (vampire.isGettingGarlicDamage() != EnumStrength.NONE && !vampire.isRemote()) {
             vampire.getRepresentingEntity().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_garlic"));
             return true;
-        } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().getEntityWorld().dimension instanceof EndDimension) {
+        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getEntityWorld().dimension instanceof EndDimension) {
             vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_end"));
             return true;
         } else return vampire.getRepresentingPlayer().isInWater();

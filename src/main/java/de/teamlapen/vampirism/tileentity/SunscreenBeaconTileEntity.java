@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.tileentity;
 
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -36,7 +36,7 @@ public class SunscreenBeaconTileEntity extends TileEntity implements ITickable {
             if (oldPos == null || selector == null || !oldPos.equals(this.pos)) {
                 oldPos = this.pos;
                 final BlockPos center = new BlockPos(this.pos.getX(), 0, this.pos.getZ());
-                final int distSq = Configs.sunscreen_beacon_distance * Configs.sunscreen_beacon_distance;
+                final int distSq = VampirismConfig.SERVER.sunscreenBeaconDistance.get() * VampirismConfig.SERVER.sunscreenBeaconDistance.get();
                 selector = input -> {
                     if (input == null) return false;
                     BlockPos player = new BlockPos(input.posX, 0, input.posZ);

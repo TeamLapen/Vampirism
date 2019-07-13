@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -47,7 +47,7 @@ public class InjectionItem extends VampirismItem {
 
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {
-                    if (Configs.disable_fang_infection) {
+                    if (VampirismConfig.SERVER.disableFangInfection.get()) {
                         playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
                     } else {
                         PotionSanguinare.addRandom(playerIn, true);

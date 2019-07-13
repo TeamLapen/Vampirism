@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
@@ -133,7 +132,7 @@ public class RenderHandler {
             }
         }
         if (mc.player.ticksExisted % 10 == 0) {
-            if (Configs.renderVampireForestFog && (Helper.isEntityInVampireBiome(mc.player) || TotemTile.isInsideVampireAreaCached(mc.world.getDimension(), mc.player.getPosition()))) {
+            if ((Configs.renderVampireForestFog || Configs.renderVampireForestFogEnforce) && (Helper.isEntityInVampireBiome(mc.player) || TotemTile.isInsideVampireAreaCached(mc.world.getDimension(), mc.player.getPosition()))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getSpecialAttributes().increasedVampireFogDistance ? 2 : 1;
             } else {

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
@@ -9,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -182,8 +181,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
             // boolean flag1 = false;
             int color = faction.getColor();
             String text = "" + FactionPlayerHandler.get(mc.player).getCurrentLevel();
-            int x = (this.mc.mainWindow.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + Configs.gui_level_offset_x;
-            int y = this.mc.mainWindow.getScaledHeight() - Configs.gui_level_offset_y;
+            int x = (this.mc.mainWindow.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
+            int y = this.mc.mainWindow.getScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
             mc.fontRenderer.drawString(text, x + 1, y, 0);
             mc.fontRenderer.drawString(text, x - 1, y, 0);
             mc.fontRenderer.drawString(text, x, y + 1, 0);
@@ -240,7 +239,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderWorldLast(RenderWorldLastEvent event) {
 
-        if ((screenPercentage > 0 || screenBottomPercentage > 0) && !Configs.disable_screen_overlay) {
+        if ((screenPercentage > 0 || screenBottomPercentage > 0) && VampirismConfig.CLIENT.renderScreenOverlay.get()) {
             // Set the working matrix/layer to a layer directly on the screen/in front of
             // the player
             // int factor=scaledresolution.getScaleFactor();
