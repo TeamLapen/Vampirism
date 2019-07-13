@@ -1,20 +1,29 @@
 package de.teamlapen.vampirism.client.render.particle;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.SpriteTexturedParticle;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.entity.Entity;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class HealingParticle extends Particle {
+import javax.annotation.Nullable;
+
+public class HealingParticle extends SpriteTexturedParticle {
     private final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
     private static final ResourceLocation HEART_TEXTURE = new ResourceLocation("vampirism", "textures/particle/particles.png");
     private static final VertexFormat VERTEX_FORMAT = (new VertexFormat()).addElement(DefaultVertexFormats.POSITION_3F).addElement(DefaultVertexFormats.TEX_2F).addElement(DefaultVertexFormats.COLOR_4UB).addElement(DefaultVertexFormats.TEX_2S).addElement(DefaultVertexFormats.NORMAL_3B).addElement(DefaultVertexFormats.PADDING_1B);
@@ -25,12 +34,21 @@ public class HealingParticle extends Particle {
     }
 
     @Override
+    public IParticleRenderType getRenderType() {
+        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    }
+
+    /**
+     * Retrieve what effect layer (what texture) the particle should be rendered with. 0 for the particle sprite sheet,
+     * 1 for the main Texture atlas, and 3 for a custom texture
+     */
+    @Override
     public int getFXLayer() {
         return 3;
     }
 
     @Override
-    public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+    public void renderParticle(BufferBuilder buffer, ActiveRenderInfo entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         this.textureManager.bindTexture(HEART_TEXTURE);
         float f = 0F;// minU
         float f1 = 0.030188679245283F;// maxU
@@ -58,4 +76,12 @@ public class HealingParticle extends Particle {
         GlStateManager.enableLighting();
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public static class Factory implements IParticleFactory<BasicParticleType> {
+        @Nullable
+        @Override
+        public Particle makeParticle(BasicParticleType typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new HealingParticle(worldIn, x, y, z);
+        }
+    }
 }

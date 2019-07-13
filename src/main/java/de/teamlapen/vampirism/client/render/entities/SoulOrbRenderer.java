@@ -6,8 +6,6 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -16,14 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class SoulOrbRenderer extends SpriteRenderer<SoulOrbEntity> {
 
     public SoulOrbRenderer(EntityRendererManager renderManager, ItemRenderer renderItem) {
-        super(renderManager, Items.SNOWBALL, renderItem);
-    }
-
-
-    @Override
-    public ItemStack getStackToRender(SoulOrbEntity entityIn) {
-        ItemStack stack = entityIn.getSoulItemStack();
-        return stack.isEmpty() ? new ItemStack(item) : stack;
+        super(renderManager, renderItem);
     }
 
     @Override

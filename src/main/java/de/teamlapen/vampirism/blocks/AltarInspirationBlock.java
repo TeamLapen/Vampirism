@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.FluidLib;
-import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
+import de.teamlapen.vampirism.tileentity.AltarInspirationTileEntity;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -41,7 +41,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
 
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileAltarInspiration();
+        return new AltarInspirationTileEntity();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         if (!stack.isEmpty() && !worldIn.isRemote) {
             LazyOptional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
             if (opt.isPresent()) {
-                TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
+                AltarInspirationTileEntity tileEntity = (AltarInspirationTileEntity) worldIn.getTileEntity(pos);
                 if (!player.isSneaking() && tileEntity != null) {
                     tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map((handler) -> {
                         FluidActionResult result = FluidUtil.tryEmptyContainer(stack, handler, Integer.MAX_VALUE, player, true);
@@ -99,7 +99,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
             }
         }
         if (stack.isEmpty()) {
-            TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
+            AltarInspirationTileEntity tileEntity = (AltarInspirationTileEntity) worldIn.getTileEntity(pos);
             tileEntity.startRitual(player);
         }
 

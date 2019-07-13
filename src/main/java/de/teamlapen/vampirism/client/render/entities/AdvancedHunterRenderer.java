@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Similar to {@link BasicHunterRenderer}
  */
 @OnlyIn(Dist.CLIENT)
-public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity> {
+public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity, BasicHunterModel<AdvancedHunterEntity>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base1.png");
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_extra.png");
 
@@ -24,7 +24,7 @@ public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity> 
     public AdvancedHunterRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel(), 0.5F);
         if (!Configs.disable_advancedMobPlayerFaces) {
-            this.addLayer(new LayerPlayerFaceOverlay<AdvancedHunterEntity, AdvancedHunterEntity>(this));
+            this.addLayer(new LayerPlayerFaceOverlay(this));
 
         }
     }
@@ -44,8 +44,8 @@ public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity> 
 
         super.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, partTicks);
         bindTexture(textureExtra);
-        ((BasicHunterModel) mainModel).renderHat(partTicks, entitylivingbaseIn.getHunterType());
-        ((BasicHunterModel) mainModel).renderWeapons(partTicks, false);
+        getEntityModel().renderHat(partTicks, entitylivingbaseIn.getHunterType());
+        getEntityModel().renderWeapons(partTicks, false);
 
     }
 }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.Item;
@@ -22,7 +23,7 @@ import javax.annotation.Nonnull;
  *
  * @author maxanier
  */
-public class ThrowableItemEntity extends ThrowableEntity {
+public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsItem {
 
     private final static Logger LOGGER = LogManager.getLogger(ThrowableItemEntity.class);
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(ThrowableItemEntity.class, DataSerializers.ITEMSTACK);

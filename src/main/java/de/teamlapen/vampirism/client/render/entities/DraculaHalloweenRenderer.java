@@ -11,13 +11,13 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public class DraculaHalloweenRenderer extends MobRenderer<DraculaHalloweenEntity> {
+public class DraculaHalloweenRenderer extends MobRenderer<DraculaHalloweenEntity, BipedCloakedModel<DraculaHalloweenEntity>> {
 
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/dracula.png");
 
     public DraculaHalloweenRenderer(EntityRendererManager rendermanagerIn) {
         super(rendermanagerIn, new BipedCloakedModel(0, 0, 128, 64), 0.3F);
-        this.addLayer(new LayerGlowingEyes<>(this, new ResourceLocation(REFERENCE.MODID, "textures/entity/dracula_eyes.png")).setBrightness(160f));
+        this.addLayer(new LayerGlowingEyes(this, new ResourceLocation(REFERENCE.MODID, "textures/entity/dracula_eyes.png")).setBrightness(160f));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class DraculaHalloweenRenderer extends MobRenderer<DraculaHalloweenEntity
     protected void renderModel(DraculaHalloweenEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
 
         if (entitylivingbaseIn.isParticle()) {
-            BipedModel model = (BipedModel) getMainModel();
+            BipedModel model = getEntityModel();
             model.setVisible(false);
             model.bipedHead.showModel = true;
             super.renderModel(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);

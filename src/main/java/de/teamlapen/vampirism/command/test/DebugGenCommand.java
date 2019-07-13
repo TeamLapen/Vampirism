@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.command.test;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.world.gen.biome.VampirismBiome;
+import de.teamlapen.vampirism.core.ModWorld;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -23,11 +23,11 @@ public class DebugGenCommand extends BasicCommand{
     }
 
     private static int debugGen(CommandSource commandSource) {
-        if (VampirismBiome.debug) {
-            VampirismBiome.debug = false;
+        if (ModWorld.debug) {
+            ModWorld.debug = false;
             commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.gen_debug.false"), true);
         } else {
-            VampirismBiome.debug = true;
+            ModWorld.debug = true;
             commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.gen_debug.true"), true);
         }
         return 0;

@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.client.render.tiles.PedestalTESR;
 import de.teamlapen.vampirism.client.render.tiles.TotemTESR;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.*;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,8 +34,8 @@ public class ModBlocksRender {
         Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
-                if (tile != null && tile instanceof TileAlchemicalCauldron) {
-                    return ((TileAlchemicalCauldron) tile).getLiquidColorClient();
+                if (tile != null && tile instanceof AlchemicalCauldronTileEntity) {
+                    return ((AlchemicalCauldronTileEntity) tile).getLiquidColorClient();
                 }
             }
             return 0xFFFFFF;
@@ -44,8 +43,8 @@ public class ModBlocksRender {
         Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
-                if (tile instanceof TileTotem) {
-                    IPlayableFaction f = ((TileTotem) tile).getControllingFaction();
+                if (tile instanceof TotemTile) {
+                    IPlayableFaction f = ((TotemTile) tile).getControllingFaction();
                     if (f != null) return f.getColor();
                 }
             }
@@ -54,10 +53,10 @@ public class ModBlocksRender {
     }
 
     private static void registerTileRenderer() {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileCoffin.class, new CoffinTESR());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileAltarInfusion.class, new AltarInfusionTESR());
-        ClientRegistry.bindTileEntitySpecialRenderer(TilePedestal.class, new PedestalTESR());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileTotem.class, new TotemTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(CoffinTileEntity.class, new CoffinTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(AltarInfusionTileEntity.class, new AltarInfusionTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(PedestalTileEntity.class, new PedestalTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(TotemTile.class, new TotemTESR());
     }
 
 

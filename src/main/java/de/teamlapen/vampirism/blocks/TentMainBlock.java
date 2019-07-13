@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.tileentity.TileTent;
+import de.teamlapen.vampirism.tileentity.TentTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ITileEntityProvider;
@@ -29,11 +29,11 @@ public class TentMainBlock extends TentBlock implements ITileEntityProvider {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileTent();
+        return new TentTileEntity();
     }
 
     public void getDrops(BlockState state, NonNullList<ItemStack> drops, World world, BlockPos pos, int fortune) {
-        TileTent tile = (TileTent) world.getTileEntity(pos);
+        TentTileEntity tile = (TentTileEntity) world.getTileEntity(pos);
         if (tile != null && tile.isSpawner()) {
             ItemStack stack;
             switch (world.rand.nextInt(4)) {

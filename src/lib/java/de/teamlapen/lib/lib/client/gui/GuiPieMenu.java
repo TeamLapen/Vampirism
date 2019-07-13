@@ -6,9 +6,10 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraftforge.client.ForgeIngameGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
@@ -35,7 +36,6 @@ public abstract class GuiPieMenu<T> extends Screen {
     protected final float bgblue;
     protected final float bggreen;
     protected final float bgalpha;
-    protected final String name;
     /**
      * Size of the background image
      */
@@ -57,26 +57,25 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     private double radDiff;
 
-    public GuiPieMenu(int textureWidth, int textureHeight, long backgroundColor, String name) {
-        this.allowUserInput = true;
+    public GuiPieMenu(int textureWidth, int textureHeight, long backgroundColor, ITextComponent title) {
+        super(title);
+        this.passEvents = true;
         this.bgred = (backgroundColor >> 16 & 255) / 255.0F;
         this.bgblue = (backgroundColor >> 8 & 255) / 255.0F;
         this.bggreen = (backgroundColor & 255) / 255.0F;
         this.bgalpha = (backgroundColor >> 24 & 255) / 255.0F;
-        this.name = name;
         this.elements = new ArrayList<>();
         this.textureHeight = textureHeight;
         this.textureWidth = textureWidth;
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
+    public boolean isPauseScreen() {
         return false;
     }
 
-
     @Override
-    public void initGui() {
+    public void init() {
         this.onGuiInit();
         this.elementCount = elements.size();
         radDiff = 2D * Math.PI / elementCount;// gap in rad
@@ -91,7 +90,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         }
         */
 
-        GuiIngameForge.renderCrosshairs = false;
+        ForgeIngameGui.renderCrosshairs = false;
     }
 
     @Override
@@ -103,13 +102,13 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double p_mouseScrolled_1_) {
+    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
         return false;
     }
 
     @Override
-    public void onGuiClosed() {
-        GuiIngameForge.renderCrosshairs = true;
+    public void onClose() {
+        ForgeIngameGui.renderCrosshairs = true;
         // Enable cursor
         /*
         //TODO 1.13
@@ -154,10 +153,10 @@ public abstract class GuiPieMenu<T> extends Screen {
             if (col != null) {
                 GL11.glColor4f(col[0], col[1], col[2], 0.5F);
             }
-            this.mc.getTextureManager().bindTexture(WIDGETS);
-            drawTexturedModalRect(x - 2, y - 2, 1, 1, 20, 20);
+            this.minecraft.getTextureManager().bindTexture(WIDGETS);
+            blit(x - 2, y - 2, 1, 1, 20, 20);
             if (selected) {
-                drawTexturedModalRect(x - 3, y - 3, 1, 23, 22, 22);
+                blit(x - 3, y - 3, 1, 23, 22, 22);
             }
             GL11.glColor4f(1F, 1F, 1F, 1F);
             if (selected) {
@@ -165,8 +164,8 @@ public abstract class GuiPieMenu<T> extends Screen {
                 drawSelectedCenter(cX, cY, rad);
             }
             // Draw Icon
-            this.mc.getTextureManager().bindTexture(getIconLoc(element));
-            UtilLib.drawTexturedModalRect(this.zLevel, x, y, getMinU(element), getMinV(element), IS, IS, textureWidth, textureHeight);
+            this.minecraft.getTextureManager().bindTexture(getIconLoc(element));
+            UtilLib.drawTexturedModalRect(blitOffset, x, y, getMinU(element), getMinV(element), IS, IS, textureWidth, textureHeight);
 
             this.afterIconDraw(element, x, y);
 
@@ -175,9 +174,9 @@ public abstract class GuiPieMenu<T> extends Screen {
             this.drawUnselectedCenter(cX, cY);
         } else {
             String name = UtilLib.translate(getUnlocalizedName(elements.get(selectedElement)));
-            int tx = cX - mc.fontRenderer.getStringWidth(name) / 2;
+            int tx = cX - minecraft.fontRenderer.getStringWidth(name) / 2;
             int ty = this.height / 7;
-            mc.fontRenderer.drawStringWithShadow(name, tx, ty, 16777215);
+            minecraft.fontRenderer.drawStringWithShadow(name, tx, ty, 16777215);
         }
         super.render(mouseX, mouseY, partialTicks);
     }
@@ -185,14 +184,14 @@ public abstract class GuiPieMenu<T> extends Screen {
     @Override
     public void tick() {
         super.tick();
-        this.mc.player.movementInput.updatePlayerMoveState();
+        this.minecraft.player.movementInput.tick(this.minecraft.player.shouldRenderSneaking(), this.minecraft.player.isSpectator());
 
         if (!getMenuKeyBinding().isKeyDown()) { //TODO 1.13 if this does not work, move to #keyReleased
             if (selectedElement >= 0) {
                 this.onElementSelected(elements.get(selectedElement));
             }
 
-            this.mc.displayGuiScreen(null);
+            this.minecraft.displayGuiScreen(null);
         }
     }
 
@@ -209,8 +208,8 @@ public abstract class GuiPieMenu<T> extends Screen {
         GL11.glColor4f(0F, 0F, 0F, 1F);
         GL11.glLineWidth(2F);
         GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex3d(x1, y1, this.zLevel);
-        GL11.glVertex3d(x2, y2, this.zLevel);
+        GL11.glVertex3d(x1, y1, this.blitOffset);
+        GL11.glVertex3d(x2, y2, this.blitOffset);
         GL11.glEnd();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glColor4f(1, 1, 1, 1);
@@ -270,21 +269,21 @@ public abstract class GuiPieMenu<T> extends Screen {
         float scale = (this.height / 2F + IS + IS) / BGS;
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(cX, cY, this.zLevel);
+        GL11.glTranslatef(cX, cY, this.blitOffset);
         GL11.glScalef(scale, scale, 1);
 
         // Draw the cicle image
-        this.mc.getTextureManager().bindTexture(backgroundTex);
+        this.minecraft.getTextureManager().bindTexture(backgroundTex);
         GL11.glColor4f(this.bgred, this.bggreen, this.bgblue, this.bgalpha);
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(1F, 1F);
-        GL11.glVertex3f(BGS / 2, BGS / 2, this.zLevel);
+        GL11.glVertex3f(BGS / 2, BGS / 2, this.blitOffset);
         GL11.glTexCoord2f(1F, 0F);
-        GL11.glVertex3f(BGS / 2, -BGS / 2, this.zLevel);
+        GL11.glVertex3f(BGS / 2, -BGS / 2, this.blitOffset);
         GL11.glTexCoord2f(0F, 0F);
-        GL11.glVertex3f(-BGS / 2, -BGS / 2, this.zLevel);
+        GL11.glVertex3f(-BGS / 2, -BGS / 2, this.blitOffset);
         GL11.glTexCoord2f(0F, 1F);
-        GL11.glVertex3f(-BGS / 2, BGS / 2, this.zLevel);
+        GL11.glVertex3f(-BGS / 2, BGS / 2, this.blitOffset);
         GL11.glEnd();
 
         // Draw the lines
@@ -315,21 +314,21 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         GL11.glPushMatrix();
         // Move origin to center, scale and rotate
-        GL11.glTranslated(cX, cY, this.zLevel);
+        GL11.glTranslated(cX, cY, this.blitOffset);
         GL11.glScalef(scale, scale, 1);
         GL11.glRotated(deg, 0, 0, 1);
 
         // Draw
-        this.mc.getTextureManager().bindTexture(centerTex);
+        this.minecraft.getTextureManager().bindTexture(centerTex);
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(0.5F, 1F);
-        GL11.glVertex3d(CS / 2, CS / 2, this.zLevel);
+        GL11.glVertex3d(CS / 2, CS / 2, this.blitOffset);
         GL11.glTexCoord2f(0.5F, 0F);
-        GL11.glVertex3d(CS / 2, -CS / 2, this.zLevel);
+        GL11.glVertex3d(CS / 2, -CS / 2, this.blitOffset);
         GL11.glTexCoord2f(0F, 0F);
-        GL11.glVertex3d(-CS / 2, -CS / 2, this.zLevel);
+        GL11.glVertex3d(-CS / 2, -CS / 2, this.blitOffset);
         GL11.glTexCoord2f(0F, 1F);
-        GL11.glVertex3d(-CS / 2, CS / 2, this.zLevel);
+        GL11.glVertex3d(-CS / 2, CS / 2, this.blitOffset);
         GL11.glEnd();
 
         GL11.glPopMatrix();
@@ -341,20 +340,20 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         GL11.glPushMatrix();
         // Move origin to center, scale and rotate
-        GL11.glTranslated(cX, cY, this.zLevel);
+        GL11.glTranslated(cX, cY, this.blitOffset);
         GL11.glScalef(scale, scale, 1);
 
         // Draw
-        this.mc.getTextureManager().bindTexture(centerTex);
+        this.minecraft.getTextureManager().bindTexture(centerTex);
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(1F, 1F);
-        GL11.glVertex3d(CS / 2, CS / 2, this.zLevel);
+        GL11.glVertex3d(CS / 2, CS / 2, this.blitOffset);
         GL11.glTexCoord2f(1F, 0F);
-        GL11.glVertex3d(CS / 2, -CS / 2, this.zLevel);
+        GL11.glVertex3d(CS / 2, -CS / 2, this.blitOffset);
         GL11.glTexCoord2f(0.5F, 0F);
-        GL11.glVertex3d(-CS / 2, -CS / 2, this.zLevel);
+        GL11.glVertex3d(-CS / 2, -CS / 2, this.blitOffset);
         GL11.glTexCoord2f(0.5F, 1F);
-        GL11.glVertex3d(-CS / 2, CS / 2, this.zLevel);
+        GL11.glVertex3d(-CS / 2, CS / 2, this.blitOffset);
         GL11.glEnd();
 
         GL11.glPopMatrix();
@@ -368,9 +367,9 @@ public abstract class GuiPieMenu<T> extends Screen {
      * @param y
      */
     private void setAbsoluteMouse(double x, double y) {
-        x = x * this.mc.mainWindow.getFramebufferWidth() / this.width;
-        y = -(y + 1 - height) * this.mc.mainWindow.getFramebufferHeight() / height;
-        GLFW.glfwSetCursorPos(this.mc.mainWindow.getHandle(), x, y);
+        x = x * this.minecraft.mainWindow.getFramebufferWidth() / this.width;
+        y = -(y + 1 - height) * this.minecraft.mainWindow.getFramebufferHeight() / height;
+        GLFW.glfwSetCursorPos(this.minecraft.mainWindow.getHandle(), x, y);
     }
 
     /**

@@ -3,25 +3,27 @@ package de.teamlapen.lib.lib.inventory;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 /**
  * Simple Inventory
  */
-public abstract class SimpleInventory implements InventorySlot.IInventorySlotInventory {
-    protected final InventorySlot[] slots;
+public class SimpleInventory implements InventorySlot.IInventorySlotInventory {
+    protected final NonNullList<InventorySlot> slots;
     private InventoryContainer container;
 
     /**
      * @param slots All slots this inventory has
      */
-    public SimpleInventory(InventorySlot[] slots) {
+    public SimpleInventory(NonNullList<InventorySlot> slots) {
         this.slots = slots;
-
     }
 
     @Override
     public void clear() {
-
+        for (InventorySlot slot : slots) {
+            slot.stack = ItemStack.EMPTY;
+        }
     }
 
     @Override
@@ -39,38 +41,28 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     }
 
     @Override
-    public int getField(int id) {
-        return 0;
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
-
-    @Override
     public int getInventoryStackLimit() {
         return 64;
     }
 
     @Override
     public int getSizeInventory() {
-        return slots.length;
+        return slots.size();
     }
 
     @Override
-    public InventorySlot[] getSlots() {
+    public NonNullList<InventorySlot> getSlots() {
         return slots;
     }
 
     @Override
     public ItemStack getStackInSlot(int index) {
-        return index >= getSizeInventory() ? ItemStack.EMPTY : slots[index].stack;
+        return index >= getSizeInventory() ? ItemStack.EMPTY : slots.get(index).stack;
     }
 
     @Override
-    public boolean hasCustomName() {
-        return false;
+    public InventorySlot getSlot(int index) {
+        return slots.get(index);
     }
 
     @Override
@@ -86,8 +78,8 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        if (slots[slot].itemSelector != null && !stack.isEmpty()) {
-            return slots[slot].itemSelector.isItemAllowed(stack);
+        if (slots.get(slot).itemSelector != null && !stack.isEmpty()) {
+            return slots.get(slot).itemSelector.isItemAllowed(stack);
         }
         return true;
     }
@@ -109,9 +101,9 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        if (this.slots[index] != null) {
-            ItemStack itemstack = this.slots[index].stack;
-            this.slots[index].stack = ItemStack.EMPTY;
+        if (this.slots.get(index) != null) {
+            ItemStack itemstack = this.slots.get(index).stack;
+            this.slots.get(index).stack = ItemStack.EMPTY;
             onContentChanged();
             return itemstack;
         } else {
@@ -129,13 +121,8 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     }
 
     @Override
-    public void setField(int id, int value) {
-
-    }
-
-    @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        slots[index].stack = stack;
+        slots.get(index).stack = stack;
         if (stack.getCount() > getInventoryStackLimit()) {
             stack.setCount(getInventoryStackLimit());
         }

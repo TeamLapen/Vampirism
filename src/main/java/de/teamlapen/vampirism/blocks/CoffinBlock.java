@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.tileentity.TileCoffin;
+import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
@@ -81,7 +81,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileCoffin();
+        return new CoffinTileEntity();
     }
 
     @Override
@@ -159,13 +159,13 @@ public class CoffinBlock extends VampirismBlockContainer {
         } else {
             ItemStack heldItem = player.getHeldItem(hand);
             if (!heldItem.isEmpty() && heldItem.getItem() instanceof DyeItem) {
-                TileCoffin tile = (TileCoffin) world.getTileEntity(pos);
+                CoffinTileEntity tile = (CoffinTileEntity) world.getTileEntity(pos);
                 TileEntity other = state.get(PART) == CoffinPart.HEAD ? world.getTileEntity(pos.offset(state.get(FACING).getOpposite())) : world.getTileEntity(pos.offset(state.get(FACING)));
-                if (!(other instanceof TileCoffin)) {
+                if (!(other instanceof CoffinTileEntity)) {
                     return true;
                 }
                 tile.changeColor(((DyeItem) heldItem.getItem()).getDyeColor());
-                ((TileCoffin) other).changeColor(((DyeItem) heldItem.getItem()).getDyeColor());
+                ((CoffinTileEntity) other).changeColor(((DyeItem) heldItem.getItem()).getDyeColor());
                 if (!player.abilities.isCreativeMode) {
                     heldItem.shrink(1);
                 }

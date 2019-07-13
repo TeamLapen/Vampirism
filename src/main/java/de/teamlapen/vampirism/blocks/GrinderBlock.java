@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.tileentity.TileGrinder;
+import de.teamlapen.vampirism.tileentity.BloodGrinderTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +35,7 @@ public class GrinderBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileGrinder();
+        return new BloodGrinderTileEntity();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class GrinderBlock extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (world.isRemote) return true;
-        //player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_GRINDER, world, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
+        player.openContainer(world.getTileEntity(pos) instanceof BloodGrinderTileEntity ? (BloodGrinderTileEntity) world.getTileEntity(pos) : null);
         return true;
     }
 

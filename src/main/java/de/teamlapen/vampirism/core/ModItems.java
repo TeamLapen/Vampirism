@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.BloodGrinderValueLoader;
-import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
+import de.teamlapen.vampirism.inventory.crafting.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;

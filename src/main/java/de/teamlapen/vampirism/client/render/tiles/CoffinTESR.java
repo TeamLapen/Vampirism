@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.client.model.CoffinModel;
-import de.teamlapen.vampirism.tileentity.TileCoffin;
+import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.DyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -18,24 +19,24 @@ import org.apache.logging.log4j.Logger;
  * Render the coffin with it's different colors and the lid opening animation
  */
 @OnlyIn(Dist.CLIENT)
-public class CoffinTESR extends VampirismTESR<TileCoffin> {
+public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
     private Logger LOGGER = LogManager.getLogger();
 
     private final int maxLidPos = 61;
     private final CoffinModel model;
-    private final ResourceLocation[] textures = new ResourceLocation[EnumDyeColor.values().length];
+    private final ResourceLocation[] textures = new ResourceLocation[DyeColor.values().length];
 
     public CoffinTESR() {
         this.model = new CoffinModel();
-        for (EnumDyeColor e : EnumDyeColor.values()) {
+        for (DyeColor e : DyeColor.values()) {
             textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.getName() + ".png");
         }
     }
 
 
     @Override
-    public void render(TileCoffin te, double x, double y, double z, float partialTicks, int destroyStage) {
-        TileCoffin tile = te;
+    public void render(CoffinTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
+        CoffinTileEntity tile = te;
         if (!isHeadSafe(te.getWorld(), te.getPos())) return;
 
         // Calculate lid position
@@ -53,7 +54,7 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
         adjustRotatePivotViaState(te);
         GlStateManager.rotatef(180F, 0.0F, 0.0F, 1.0F);
         model.rotateLid(calcLidAngle(tile.lidPos));
-        model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+        model.render(0.0625F);
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();
     }

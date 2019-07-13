@@ -1,10 +1,11 @@
 package de.teamlapen.vampirism.client.render.entities;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.client.model.BipedShrinkableModel;
 import de.teamlapen.vampirism.entity.minions.vampire.VampireMinionBaseEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
@@ -12,7 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class VampireMinionRenderer extends BipedRenderer<VampireMinionBaseEntity> {
+public class VampireMinionRenderer extends BipedRenderer<VampireMinionBaseEntity, BipedShrinkableModel<VampireMinionBaseEntity>> {
 
     private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png");
 
@@ -45,7 +46,7 @@ public class VampireMinionRenderer extends BipedRenderer<VampireMinionBaseEntity
         if (entity.getOldVampireTexture() != -1) {
             size = 1F - Math.min(entity.ticksExisted / 50F, 1F);
         }
-        ((BipedShrinkableModel) this.mainModel).setSize(size);
+        getEntityModel().setSize(size);
 
         // If either invisible or already small ->use parent method
         if (entity.isInvisible() || entity.getOldVampireTexture() == -1) {
@@ -53,12 +54,12 @@ public class VampireMinionRenderer extends BipedRenderer<VampireMinionBaseEntity
         } else {
             // firstly render own texture secondly blend old vampire texture in
             this.bindEntityTexture(entity);
-            this.mainModel.render(entity, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+            getEntityModel().render(entity, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
             GlStateManager.enableBlend();
             GlStateManager.color4f(1F, 1F, 1F, size);
 
             this.bindTexture(this.getVampireTexture(entity.getOldVampireTexture()));
-            this.mainModel.render(entity, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+            getEntityModel().render(entity, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
             GlStateManager.disableBlend();
         }
     }

@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Hunter as of level 1 look all the same, but have different weapons
  */
 @OnlyIn(Dist.CLIENT)
-public class BasicHunterRenderer extends BipedRenderer<BasicHunterEntity> {
+public class BasicHunterRenderer extends BipedRenderer<BasicHunterEntity, BasicHunterModel<BasicHunterEntity>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base1.png");
     private final ResourceLocation[] textures = {
             new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base2.png"),
@@ -46,12 +46,12 @@ public class BasicHunterRenderer extends BipedRenderer<BasicHunterEntity> {
         int level = entitylivingbaseIn.getLevel();
         int type = entitylivingbaseIn.getEntityId() % textures.length;
         if (level == 0) {
-            ((BasicHunterModel) mainModel).setSkipCloakOnce();
+            getEntityModel().setSkipCloakOnce();
         }
         super.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, partTicks);
         bindTexture(textureExtra);
-        ((BasicHunterModel) mainModel).renderHat(partTicks, level == 0 ? type : -1);
-        ((BasicHunterModel) mainModel).renderWeapons(partTicks, level < 2 || entitylivingbaseIn.isCrossbowInMainhand());
+        getEntityModel().renderHat(partTicks, level == 0 ? type : -1);
+        getEntityModel().renderWeapons(partTicks, level < 2 || entitylivingbaseIn.isCrossbowInMainhand());
 
     }
 }

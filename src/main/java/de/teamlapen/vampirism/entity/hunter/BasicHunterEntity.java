@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import de.teamlapen.vampirism.inventory.HunterBasicContainer;
+import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -25,6 +25,7 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -36,9 +37,11 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
@@ -59,6 +62,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private final MeleeAttackGoal attackMelee;
     private final AttackRangedCrossbowGoal attackRange;
+    private static final ITextComponent name = new TranslationTextComponent("container.hunter");
     /**
      * available actions for AI task & task
      */
@@ -409,7 +413,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             if (!world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
                     if (trainee == null) {
-                        //player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_BASIC, this.world, (int) posX, (int) posY, (int) posZ);//TODO 1.14
+                        player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
+                            return new HunterBasicContainer(id, playerInventory, IWorldPosCallable.of(player.getEntityWorld(), this.getPosition()));
+                        }, name));
                         trainee = player;
                     } else {
                         player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"));
@@ -424,7 +430,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
         return super.processInteract(player, hand);
     }
-
 
     @Override
     public void defendVillage(AxisAlignedBB area) {

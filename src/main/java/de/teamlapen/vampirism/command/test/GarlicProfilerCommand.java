@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -33,7 +34,7 @@ public class GarlicProfilerCommand extends BasicCommand {
 	}
 	
 	private static void print(CommandSource source, String id) {
-        List<Profiler.Result> l = ServerLifecycleHooks.getCurrentServer().profiler.getProfilingData(id);
+        List<Profiler.Result> l = ServerLifecycleHooks.getCurrentServer().getProfiler().getProfilingData(id);
         for (Profiler.Result r : l) {
             source.sendFeedback(new StringTextComponent("" + r.profilerName + ": " + r.usePercentage + "|" + r.totalUsePercentage), true);
         }

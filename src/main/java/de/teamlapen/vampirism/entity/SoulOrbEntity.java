@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -30,7 +31,7 @@ import javax.annotation.Nullable;
 /**
  * Similar to EntityXPOrb
  */
-public class SoulOrbEntity extends Entity {
+public class SoulOrbEntity extends Entity implements IRendersAsItem {
 
     public static final DataParameter<String> TYPE_PARAMETER = EntityDataManager.createKey(SoulOrbEntity.class, DataSerializers.STRING);
     private int delayBeforePickup;
@@ -50,6 +51,11 @@ public class SoulOrbEntity extends Entity {
 
     public SoulOrbEntity(EntityType<? extends SoulOrbEntity> type, World worldIn) {
         super(type, worldIn);
+    }
+
+    @Override
+    public ItemStack getItem() {
+        return soulItemStack;
     }
 
     @Override

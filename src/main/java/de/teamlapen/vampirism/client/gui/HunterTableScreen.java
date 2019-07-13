@@ -1,13 +1,15 @@
 package de.teamlapen.vampirism.client.gui;
 
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.inventory.HunterTableContainer;
+import com.mojang.blaze3d.platform.GlStateManager;
+
+import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -18,13 +20,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Gui for the hunter table
  */
 @OnlyIn(Dist.CLIENT)
-public class HunterTableScreen extends ContainerScreen {
+public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_table.png");
-    private final HunterTableContainer container;
+    private static IWorldPosCallable worldPos;
 
-    public HunterTableScreen(HunterTableContainer inventorySlotsIn) {
-        super(inventorySlotsIn);
-        container = inventorySlotsIn;
+    public HunterTableScreen(HunterTableContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name) {
+        this(inventorySlotsIn, playerInventory, name, IWorldPosCallable.DUMMY);
+    }
+
+    public HunterTableScreen(HunterTableContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name, IWorldPosCallable worldPosIn) {
+        super(inventorySlotsIn, playerInventory, name);
+        this.worldPos = worldPosIn;
     }
 
     @Override
@@ -37,17 +43,16 @@ public class HunterTableScreen extends ContainerScreen {
     @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(altarGuiTextures);
-        int k = (this.width - this.xSize) / 2;
-        int l = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bindTexture(altarGuiTextures);
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
+        this.blit(i, j, 0, 0, this.xSize, this.ySize);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        String string = container.getHunterInventory().hasCustomName() ? this.container.getHunterInventory().getName().toString() : I18n.format(ModBlocks.hunter_table.getTranslationKey());
-        this.fontRenderer.drawString(string, 8, 6, 0x404040);
-        this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 0x404040);
+        this.font.drawString(this.title.getFormattedText(), 8.0F, 6.0F, 0x404040);
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);
 
         String text = null;
         if (!container.isLevelValid()) {
@@ -57,6 +62,6 @@ public class HunterTableScreen extends ContainerScreen {
             ITextComponent item = missing.getItem() instanceof PureBloodItem ? missing.getDisplayName() : new TranslationTextComponent(missing.getTranslationKey() + ".name");
             text = I18n.format("text.vampirism.ritual_missing_items", missing.getCount(), item.getUnformattedComponentText());
         }
-        if (text != null) this.fontRenderer.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
+        if (text != null) this.font.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
     }
 }

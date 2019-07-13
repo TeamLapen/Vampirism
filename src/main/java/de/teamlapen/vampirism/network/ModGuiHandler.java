@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.blocks.HunterTableBlock;
 import de.teamlapen.vampirism.client.gui.*;
-import de.teamlapen.vampirism.inventory.*;
+import de.teamlapen.vampirism.inventory.container.*;
 import de.teamlapen.vampirism.items.VampireBookItem;
-import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
-import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
-import de.teamlapen.vampirism.tileentity.TileGrinder;
+import de.teamlapen.vampirism.tileentity.AlchemicalCauldronTileEntity;
+import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
+import de.teamlapen.vampirism.tileentity.BloodGrinderTileEntity;
 import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -42,8 +42,7 @@ public class ModGuiHandler implements IGuiHandler {
             case ID_SKILL:
                 return new SkillsScreen();
             case ID_ALTAR_INFUSION:
-                TileAltarInfusion tile = (TileAltarInfusion) world.getTileEntity(new BlockPos(x, y, z));
-
+                AltarInfusionTileEntity tile = (AltarInfusionTileEntity) world.getTileEntity(new BlockPos(x, y, z));
                 return new AltarInfusionScreen(player.inventory, tile);
             case ID_HUNTER_TABLE:
                 return new HunterTableScreen(HunterTableBlock.createInventoryContainer(player, new BlockPos(x, y, z)));
@@ -57,6 +56,7 @@ public class ModGuiHandler implements IGuiHandler {
                 return new BloodPotionTableScreen(player.inventory, new BlockPos(x, y, z), world);
             case ID_HUNTER_BASIC:
                 return new HunterBasicScreen(player);
+
             case ID_VAMPIRE_BOOK:
                 ItemStack itemStack = player.getHeldItem(Hand.MAIN_HAND);
                 if (!itemStack.isEmpty() && itemStack.getItem() instanceof VampireBookItem) {
@@ -64,12 +64,12 @@ public class ModGuiHandler implements IGuiHandler {
                 }
                 return null;
             case ID_ALCHEMICAL_CAULDRON:
-                TileAlchemicalCauldron alchemicalCauldron = (TileAlchemicalCauldron) world.getTileEntity(new BlockPos(x, y, z));
+                AlchemicalCauldronTileEntity alchemicalCauldron = (AlchemicalCauldronTileEntity) world.getTileEntity(new BlockPos(x, y, z));
                 return new AlchemicalCauldronScreen(player.inventory, alchemicalCauldron);
             case ID_NAME_SWORD:
                 return new NameSwordScreen(player.getHeldItemMainhand());
             case ID_BLOOD_GRINDER:
-                TileGrinder tileGrinder = (TileGrinder) world.getTileEntity(new BlockPos(x, y, z));
+                BloodGrinderTileEntity tileGrinder = (BloodGrinderTileEntity) world.getTileEntity(new BlockPos(x, y, z));
                 if (tileGrinder != null)
                     return new BloodGrinderScreen(tileGrinder.getNewInventoryContainer(player.inventory));
             default:
@@ -80,7 +80,7 @@ public class ModGuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int id, PlayerEntity player, World world, int x, int y, int z) {
         if (id == ID_ALTAR_INFUSION) {
-            TileAltarInfusion tile = (TileAltarInfusion) world.getTileEntity(new BlockPos(x, y, z));
+            AltarInfusionTileEntity tile = (AltarInfusionTileEntity) world.getTileEntity(new BlockPos(x, y, z));
             if (tile != null) return tile.getNewInventoryContainer(player.inventory);
         }
         if (id == ID_HUNTER_TABLE) {
@@ -90,7 +90,7 @@ public class ModGuiHandler implements IGuiHandler {
             return new HunterTrainerContainer(player);
         }
         if (id == ID_WEAPON_TABLE) {
-            return new HunterWeaponTableContainer(player.inventory, world, new BlockPos(x, y, z));
+            return new WeaponTableContainer(player.inventory, world, new BlockPos(x, y, z));
         }
         if (id == ID_BLOOD_POTION_TABLE) {
             return new BloodPotionTableContainer(player.inventory, new BlockPos(x, y, z), world);
@@ -99,11 +99,11 @@ public class ModGuiHandler implements IGuiHandler {
             return new HunterBasicContainer(player.inventory);
         }
         if (id == ID_ALCHEMICAL_CAULDRON) {
-            TileAlchemicalCauldron alchemicalCauldron = (TileAlchemicalCauldron) world.getTileEntity(new BlockPos(x, y, z));
+            AlchemicalCauldronTileEntity alchemicalCauldron = (AlchemicalCauldronTileEntity) world.getTileEntity(new BlockPos(x, y, z));
             return new AlchemicalCauldronContainer(player.inventory, alchemicalCauldron);
         }
         if (id == ID_BLOOD_GRINDER) {
-            TileGrinder tileGrinder = (TileGrinder) world.getTileEntity(new BlockPos(x, y, z));
+            BloodGrinderTileEntity tileGrinder = (BloodGrinderTileEntity) world.getTileEntity(new BlockPos(x, y, z));
             if (tileGrinder != null) return tileGrinder.getNewInventoryContainer(player.inventory);
         }
         return null;

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
@@ -69,7 +68,7 @@ public class HalloweenSpecial {
     public static void triggerOverlay(PlayerEntity target) {
 
         render_overlay = 150;
-        VampLib.proxy.getParticleHandler().spawnParticle(target.getEntityWorld(), ModParticles.HALLOWEEN, target.posX, target.posY, target.posZ);
+        ModParticles.spawnParticle(target.getEntityWorld(), ModParticles.halloween, target.posX, target.posY, target.posZ);
     }
 
     private List<UUID> blacklist = new ArrayList<>();

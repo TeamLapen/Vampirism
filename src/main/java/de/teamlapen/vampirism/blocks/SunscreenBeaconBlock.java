@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.tileentity.TileSunscreenBeacon;
+import de.teamlapen.vampirism.tileentity.SunscreenBeaconTileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -43,7 +43,7 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileSunscreenBeacon();
+        return new SunscreenBeaconTileEntity();
     }
 
     @Override

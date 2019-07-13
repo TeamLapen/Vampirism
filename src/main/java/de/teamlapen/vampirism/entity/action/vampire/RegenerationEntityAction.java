@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.entity.action.vampire;
 
-import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.entity.CreatureEntity;
-import net.minecraft.util.ResourceLocation;
-
-import java.util.Random;
+import net.minecraft.particles.ParticleTypes;
 
 public class RegenerationEntityAction<T extends CreatureEntity & IEntityActionUser> extends VampireEntityAction<T> implements ILastingAction<T> {
 
@@ -35,7 +33,7 @@ public class RegenerationEntityAction<T extends CreatureEntity & IEntityActionUs
     public void onUpdate(T entity, int duration) {
         entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * Balance.ea.REGENERATION_AMOUNT / (getDuration(entity.getLevel()) * 20)); // seconds in ticks
         if (duration % 20 == 0) {
-            VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), new ResourceLocation("vampirism", "heal"), entity.posX, entity.posY + 1, entity.posZ, 3, 0.01D, new Random(), entity);
+            ModParticles.spawnParticles(entity.getEntityWorld(), ParticleTypes.HEART, entity.posX, entity.posY + 1, entity.posZ, 3, 0.01D, entity.getRNG());//TODO test with Vanilla particles before changing to mod particle
         }
 
     }

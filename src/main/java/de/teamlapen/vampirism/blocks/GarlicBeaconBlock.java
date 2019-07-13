@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.tileentity.TileGarlicBeacon;
+import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -60,7 +60,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        TileGarlicBeacon tile = new TileGarlicBeacon();
+        GarlicBeaconTileEntity tile = new GarlicBeaconTileEntity();
         tile.setType(type);
         return tile;
     }
@@ -79,8 +79,8 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     @Override
     public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
         super.harvestBlock(worldIn, player, pos, state, te, stack);
-        if (te != null && te instanceof TileGarlicBeacon) {
-            ((TileGarlicBeacon) te).onTouched(player);
+        if (te != null && te instanceof GarlicBeaconTileEntity) {
+            ((GarlicBeaconTileEntity) te).onTouched(player);
         }
     }
 
@@ -104,7 +104,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         ItemStack heldItem = player.getHeldItem(hand);
         if (!heldItem.isEmpty() && ModItems.purified_garlic.equals(heldItem.getItem())) {
             if (!world.isRemote) {
-                TileGarlicBeacon t = getTile(world, pos);
+                GarlicBeaconTileEntity t = getTile(world, pos);
                 if (t != null) {
                     if (t.getFuelTime() > 0) {
                         player.sendMessage(new TranslationTextComponent("tile.vampirism.garlic_beacon.already_fueled"));
@@ -123,7 +123,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
 
     @Override
     public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn) {
-        TileGarlicBeacon tile = getTile(worldIn, pos);
+        GarlicBeaconTileEntity tile = getTile(worldIn, pos);
         if (tile != null) {
             tile.onTouched(playerIn);
         }
@@ -142,10 +142,10 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
 
 
     @Nullable
-    private TileGarlicBeacon getTile(IBlockReader world, BlockPos pos) {
+    private GarlicBeaconTileEntity getTile(IBlockReader world, BlockPos pos) {
         TileEntity t = world.getTileEntity(pos);
-        if (t instanceof TileGarlicBeacon) {
-            return (TileGarlicBeacon) t;
+        if (t instanceof GarlicBeaconTileEntity) {
+            return (GarlicBeaconTileEntity) t;
         }
         return null;
     }

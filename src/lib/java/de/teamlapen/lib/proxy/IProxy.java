@@ -36,7 +36,7 @@ public interface IProxy {
      */
     String getActiveLanguage();
 
-    ParticleHandler getParticleHandler();
+    ParticleHandler getParticleHandler();//TODO delete particlehandler
 
     PlayerEntity getPlayerEntity(NetworkEvent.Context context);
 

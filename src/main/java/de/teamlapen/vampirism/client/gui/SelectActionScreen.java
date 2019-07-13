@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -62,7 +63,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     };
 
     public SelectActionScreen() {
-        super(ICON_TEXTURE_WIDTH, ICON_TEXTURE_HEIGHT, 2298478591L, "selectAction");
+        super(ICON_TEXTURE_WIDTH, ICON_TEXTURE_HEIGHT, 2298478591L, new TranslationTextComponent("selectAction"));
     }
 
     @Override
@@ -74,11 +75,11 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         if (active > 0) {
 
             float h = active * IS;
-            this.drawGradientRect(x, (int) (y + h), x + IS, y + IS, 0xDDE0E000, 0x88E0E000);
+            this.blit(x, (int) (y + h), x + IS, y + IS, 0xDDE0E000, 0x88E0E000);
         } else if (active < 0) {
 
             float h = (1F + (active)) * IS;
-            this.drawGradientRect(x, (int) (y + h), x + IS, y + IS, 0x880E0E0E, 0xEE0E0E0E);
+            this.blit(x, (int) (y + h), x + IS, y + IS, 0x880E0E0E, 0xEE0E0E0E);
         }
     }
 
@@ -110,13 +111,13 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     @Override
     protected void onElementSelected(IAction action) {
         if (action != fakeAction) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName().toString()));//TODO Dispatcher
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName().toString()));
         }
     }
 
     @Override
     protected void onGuiInit() {
-        IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer();
+        IFactionPlayer player = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
         if (player != null) {
             actionHandler = player.getActionHandler();
             elements.addAll(actionHandler.getAvailableActions());

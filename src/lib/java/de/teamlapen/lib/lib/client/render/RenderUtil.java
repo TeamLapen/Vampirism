@@ -1,10 +1,11 @@
 package de.teamlapen.lib.lib.client.render;
 
+import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.IEntityRenderer;
+import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
@@ -17,11 +18,11 @@ public class RenderUtil {
     /**
      * Render the given model part using the given texture with a glowing lightmap (like vanilla spider)
      *
+     * The Texture must set before calling this method
+     *
      * @param brightness Between 0 and 255f
      */
-    public static <T extends LivingEntity> void renderGlowing(LivingRenderer<T> render, RendererModel modelPart, ResourceLocation texture, float brightness, T entity, float scale) {
-        render.bindTexture(texture);
-
+    public static <T extends LivingEntity> void renderGlowing(RendererModel modelPart, float brightness, T entity, float scale) {
         startGlowing(entity.isInvisible(), brightness);
         modelPart.render(scale);
         endGlowing(entity.getBrightnessForRender());
@@ -33,7 +34,7 @@ public class RenderUtil {
      *
      * @param brightness Between 0 and 255f
      */
-    public static <T extends LivingEntity> void renderGlowing(LivingRenderer<T> render, ResourceLocation texture, float brightness, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public static <T extends LivingEntity> void renderGlowing(IEntityRenderer<T, EntityModel<T>> render, ResourceLocation texture, float brightness, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         render.bindTexture(texture);
         render.bindTexture(texture);
         startGlowing(entity.isInvisible(), brightness);
@@ -51,7 +52,7 @@ public class RenderUtil {
         } else {
             GlStateManager.depthMask(true);
         }
-        OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, brightness, 0.0F);
+        GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, brightness, 0.0F);
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getInstance().gameRenderer.setupFogColor(true);
     }
@@ -60,7 +61,7 @@ public class RenderUtil {
         Minecraft.getInstance().gameRenderer.setupFogColor(false);
         int j = brightnessForRender % 65536;
         int k = brightnessForRender / 65536;
-        OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, j, k);
+        GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, j, k);
         GlStateManager.disableBlend();
     }
 

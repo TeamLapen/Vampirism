@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.entity.action.vampire;
 
-import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.entity.CreatureEntity;
-import net.minecraft.util.ResourceLocation;
-
-import java.util.Random;
+import net.minecraft.particles.ParticleTypes;
 
 public class HealEntityAction<T extends CreatureEntity & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
 
@@ -25,7 +23,7 @@ public class HealEntityAction<T extends CreatureEntity & IEntityActionUser> exte
     @Override
     public boolean activate(T entity) {
         entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * Balance.ea.HEAL_AMOUNT);
-        VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), new ResourceLocation("vampirism", "heal"), entity.posX, entity.posY + 1, entity.posZ, 10, 0.3D, new Random(), entity);
+        ModParticles.spawnParticles(entity.getEntityWorld(), ParticleTypes.HEART, entity.posX, entity.posY + 1, entity.posZ, 10, 0.3, entity.getRNG());//TODO test with Vanilla particles before changing to mod particle
         return true;
     }
 

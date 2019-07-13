@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * @author WILLIAM
  */
 @OnlyIn(Dist.CLIENT)
-public class GhostRenderer extends MobRenderer<GhostEntity> {
+public class GhostRenderer extends MobRenderer<GhostEntity, GhostModel<GhostEntity>> {
     private static final ResourceLocation ghostTexture = new ResourceLocation(REFERENCE.MODID + ":textures/entity/ghost.png");
 
     public GhostRenderer(EntityRendererManager renderManager) {

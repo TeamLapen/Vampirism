@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.tileentity.TileSieve;
+import de.teamlapen.vampirism.tileentity.SieveTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -33,7 +33,7 @@ public class SieveBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileSieve();
+        return new SieveTileEntity();
     }
 
     @Override

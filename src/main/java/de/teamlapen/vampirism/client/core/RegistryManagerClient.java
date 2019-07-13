@@ -20,6 +20,8 @@ public class RegistryManagerClient implements IInitListener {
             ModBlocksRender.registerColors();
             ModItemsRender.registerColors();
             ModBlocksRender.register();
+            ModParticleFactories.registerFactories();
+            ModScreens.registerScreens();
         }
     }
 

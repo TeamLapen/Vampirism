@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
+import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -42,7 +42,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader world) {
-        return new TileAltarInfusion();
+        return new AltarInfusionTileEntity();
     }
 
     @Override
@@ -79,8 +79,8 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack heldItem = player.getHeldItem(hand);
-        TileAltarInfusion te = (TileAltarInfusion) worldIn.getTileEntity(pos);
-        //If empty hand and can start -> Start
+        AltarInfusionTileEntity te = (AltarInfusionTileEntity) worldIn.getTileEntity(pos);
+        //If empty hand and can start -> StartAdvanced
         if (worldIn.isRemote || te == null) return true;
         int result = te.canActivate(player, true);
         if (heldItem.isEmpty()) {
@@ -92,11 +92,11 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         }
         //If non empty hand or missing items -> open GUI
         if (!heldItem.isEmpty() || result == -4) {
-            if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING) {
+            if (te.getCurrentPhase() != AltarInfusionTileEntity.PHASE.NOT_RUNNING) {
                 player.sendMessage(new TranslationTextComponent("text.vampirism.ritual_still_running"));
                 return true;
             }
-            //player.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
+            player.openContainer(te);
             return true;
         }
         return true;

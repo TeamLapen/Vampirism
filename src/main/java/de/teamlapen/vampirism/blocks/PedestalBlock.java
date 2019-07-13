@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.items.VampirismVampireSword;
-import de.teamlapen.vampirism.tileentity.TilePedestal;
+import de.teamlapen.vampirism.tileentity.PedestalTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -42,7 +42,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TilePedestal();
+        return new PedestalTileEntity();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (world.isRemote) return true;
-        TilePedestal tile = getTileEntity(world, pos);
+        PedestalTileEntity tile = getTileEntity(world, pos);
         if (tile == null) return false;
         ItemStack stack = player.getHeldItem(hand);
         if (stack.isEmpty() && !tile.extractItem(0, 1, true).isEmpty()) {
@@ -102,7 +102,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     @Override
     public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!world.isRemote && state.getBlock() != newState.getBlock()) {
-            TilePedestal tile = getTileEntity(world, pos);
+            PedestalTileEntity tile = getTileEntity(world, pos);
             if (tile != null && tile.hasStack()) {
                 net.minecraft.inventory.InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.removeStack());
             }
@@ -111,10 +111,10 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Nullable
-    private TilePedestal getTileEntity(IBlockReader world, BlockPos pos) {
+    private PedestalTileEntity getTileEntity(IBlockReader world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TilePedestal) {
-            return (TilePedestal) tile;
+        if (tile instanceof PedestalTileEntity) {
+            return (PedestalTileEntity) tile;
         }
         return null;
     }

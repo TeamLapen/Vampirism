@@ -4,7 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.tileentity.TileTent;
+import de.teamlapen.vampirism.tileentity.TentTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -56,8 +56,8 @@ public class TentItem extends VampirismItem {
                 world.setBlockState(new BlockPos(x3, y, z3), tent.getDefaultState().with(TentBlock.FACING, dir.getOpposite()).with(TentBlock.POSITION, 3), 3);
                 if (spawner) {
                     TileEntity tile = world.getTileEntity(pos);
-                    if (tile instanceof TileTent) {
-                        ((TileTent) tile).setSpawn(true);
+                    if (tile instanceof TentTileEntity) {
+                        ((TentTileEntity) tile).setSpawn(true);
                     }
                 }
                 return true;
@@ -99,9 +99,9 @@ public class TentItem extends VampirismItem {
         boolean flag = placeAt(ctx.getWorld(), ctx.getPos().up(), dir, false, false);
         if (flag) {
             TileEntity tile = ctx.getWorld().getTileEntity(ctx.getPos().up());
-            if (tile instanceof TileTent) {
+            if (tile instanceof TentTileEntity) {
                 if (spawner) {
-                    ((TileTent) tile).setSpawn(true);
+                    ((TentTileEntity) tile).setSpawn(true);
                 }
             }
 

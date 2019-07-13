@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.AbstractCookingRecipe;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
@@ -13,7 +14,7 @@ import javax.annotation.Nullable;
 /**
  * Recipe for Alchemical Cauldron
  */
-public interface IAlchemicalCauldronRecipe {
+public interface IAlchemicalCauldronRecipe extends AbstractCookingRecipe {
     /**
      * @return if the ingredients are the same
      */

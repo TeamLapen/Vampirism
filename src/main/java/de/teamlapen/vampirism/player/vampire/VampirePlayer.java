@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.player.vampire;
 
 import com.mojang.datafixers.util.Either;
 
-import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -26,6 +25,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
@@ -1257,7 +1257,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 25, 4, false, false));
 
-        VampLib.proxy.getParticleHandler().spawnParticles(player.world, ModParticles.FLYING_BLOOD_ENTITY, e.posX + 0.5, e.posY + 0.5, e.posZ + 0.5, 10, 0.1F, player.getRNG(), player, true);
+        ModParticles.spawnParticles(player.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player, true), e.posX + 0.5, e.posY + 0.5, e.posZ + 0.5, 10, 0.1F, player.getRNG());
 
         if (!biteFeed(e)) {
             endFeeding(true);

@@ -15,32 +15,32 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @ObjectHolder(REFERENCE.MODID)
 public class ModTiles {
 
-    public static final TileEntityType<TileAlchemicalCauldron> alchemical_cauldron = getNull();
-    public static final TileEntityType<TileTent> tent = getNull();
-    public static final TileEntityType<TileCoffin> coffin = getNull();
-    public static final TileEntityType<TileAltarInfusion> altar_infusion = getNull();
-    public static final TileEntityType<TileBloodContainer> blood_container = getNull();
-    public static final TileEntityType<TileAltarInspiration> altar_inspiration = getNull();
-    public static final TileEntityType<TileSunscreenBeacon> sunscreen_beacon = getNull();
-    public static final TileEntityType<TileGarlicBeacon> garlic_beacon = getNull();
-    public static final TileEntityType<TilePedestal> blood_pedestal = getNull();
-    public static final TileEntityType<TileGrinder> grinder = getNull();
-    public static final TileEntityType<TileSieve> sieve = getNull();
-    public static final TileEntityType<TileTotem> totem = getNull();
+    public static final TileEntityType<AlchemicalCauldronTileEntity> alchemical_cauldron = getNull();
+    public static final TileEntityType<TentTileEntity> tent = getNull();
+    public static final TileEntityType<CoffinTileEntity> coffin = getNull();
+    public static final TileEntityType<AltarInfusionTileEntity> altar_infusion = getNull();
+    public static final TileEntityType<BloodContainerTileEntity> blood_container = getNull();
+    public static final TileEntityType<AltarInspirationTileEntity> altar_inspiration = getNull();
+    public static final TileEntityType<SunscreenBeaconTileEntity> sunscreen_beacon = getNull();
+    public static final TileEntityType<GarlicBeaconTileEntity> garlic_beacon = getNull();
+    public static final TileEntityType<PedestalTileEntity> blood_pedestal = getNull();
+    public static final TileEntityType<BloodGrinderTileEntity> grinder = getNull();
+    public static final TileEntityType<SieveTileEntity> sieve = getNull();
+    public static final TileEntityType<TotemTile> totem = getNull();
 
     static void registerTiles(IForgeRegistry<TileEntityType<?>> registry) {
-        registry.register(create("tent", TileTent::new));
-        registry.register(create("coffin", TileTent::new));
-        registry.register(create("altar_infusion", TileAltarInfusion::new));
-        registry.register(create("blood_container", TileBloodContainer::new));
-        registry.register(create("altar_inspiration", TileAltarInspiration::new));
-        registry.register(create("sunscreen_beacon", TileSunscreenBeacon::new));
-        registry.register(create("alchemical_cauldron", TileAlchemicalCauldron::new));
-        registry.register(create("garlic_beacon", TileGarlicBeacon::new));
-        registry.register(create("blood_pedestal", TilePedestal::new));
-        registry.register(create("grinder", TileGrinder::new));
-        registry.register(create("sieve", TileSieve::new));
-        registry.register(create("totem", TileTotem::new));
+        registry.register(create("tent", TentTileEntity::new));
+        registry.register(create("coffin", TentTileEntity::new));
+        registry.register(create("altar_infusion", AltarInfusionTileEntity::new));
+        registry.register(create("blood_container", BloodContainerTileEntity::new));
+        registry.register(create("altar_inspiration", AltarInspirationTileEntity::new));
+        registry.register(create("sunscreen_beacon", SunscreenBeaconTileEntity::new));
+        registry.register(create("alchemical_cauldron", AlchemicalCauldronTileEntity::new));
+        registry.register(create("garlic_beacon", GarlicBeaconTileEntity::new));
+        registry.register(create("blood_pedestal", PedestalTileEntity::new));
+        registry.register(create("grinder", BloodGrinderTileEntity::new));
+        registry.register(create("sieve", SieveTileEntity::new));
+        registry.register(create("totem", TotemTile::new));
     }
 
     private static <T extends TileEntity> TileEntityType<?> create(String id, Supplier<? extends T> factoryIn) {
