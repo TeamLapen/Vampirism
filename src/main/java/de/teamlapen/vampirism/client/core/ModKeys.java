@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.client.gui.SelectActionScreen;
+import de.teamlapen.vampirism.client.gui.SkillsScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -123,12 +125,12 @@ public class ModKeys {
         } else if (keyPressed == KEY.ACTION) {
             PlayerEntity player = Minecraft.getInstance().player;
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
-                //player.openGui(VampirismMod.instance, ModGuiHandler.ID_ACTION, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ()); TODO 1.14
+                Minecraft.getInstance().displayGuiScreen(new SelectActionScreen());
             }
         } else if (keyPressed == KEY.SKILL) {
             PlayerEntity player = Minecraft.getInstance().player;
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
-                //openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ()); TODO 1.14
+                Minecraft.getInstance().displayGuiScreen(new SkillsScreen());
             }
         } else if (keyPressed == KEY.VISION) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));

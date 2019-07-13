@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.world.villages;
 
-import de.teamlapen.vampirism.tileentity.TileTotem;
+import de.teamlapen.vampirism.tileentity.TotemTile;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -28,12 +28,12 @@ public class VampirismVillageHelper {
 
 
     public static @Nullable
-    TileTotem getNearestVillageTotem(World w, BlockPos pos, int r) {
+    TotemTile getNearestVillageTotem(World w, BlockPos pos, int r) {
         VampirismVillage v = getNearestVillage(w, pos, r);
         if (v != null && v.getTotemLocation() != null) {
             TileEntity t = w.getTileEntity(v.getTotemLocation());
-            if (t instanceof TileTotem) {
-                return (TileTotem) t;
+            if (t instanceof TotemTile) {
+                return (TotemTile) t;
             }
         }
         return null;

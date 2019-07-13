@@ -1,25 +1,33 @@
 package de.teamlapen.vampirism.client.render.particle;
 
+import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.platform.GlStateManager;
+
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.TexturedParticle;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
 
 /**
  * Quick and dirty
  * Only used on halloween
  */
 @OnlyIn(Dist.CLIENT)
-public class HalloweenParticle extends Particle {
+public class HalloweenParticle extends TexturedParticle {
 
     private LivingEntity entity;
 
@@ -33,6 +41,11 @@ public class HalloweenParticle extends Particle {
         this.motionZ = 0.0D;
         this.particleGravity = 0.0F;
         this.maxAge = 150;
+    }
+
+    @Override
+    public IParticleRenderType getRenderType() {
+        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     /**
@@ -49,17 +62,14 @@ public class HalloweenParticle extends Particle {
         super.tick();
 
         if (this.entity == null) {
-            DraculaHalloweenEntity entityelderguardian = new DraculaHalloweenEntity(this.world);
+            DraculaHalloweenEntity entityelderguardian = ModEntities.special_dracula_halloween.create(this.world);
             entityelderguardian.setParticle(true);
             this.entity = entityelderguardian;
         }
     }
 
-    /**
-     * Renders the particle
-     */
     @Override
-    public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+    public void renderParticle(BufferBuilder buffer, ActiveRenderInfo entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         if (this.entity != null) {
             EntityRendererManager rendermanager = Minecraft.getInstance().getRenderManager();
             rendermanager.setRenderPosition(Particle.interpPosX, Particle.interpPosY, Particle.interpPosZ);
@@ -72,13 +82,13 @@ public class HalloweenParticle extends Particle {
             entity.prevRotationPitch = 60F;
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             float f2 = 240.0F;
-            OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, 240.0F, 240.0F);
+            GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, 240.0F, 240.0F);
             GlStateManager.pushMatrix();
             float f3 = 0.05F + 0.5F * MathHelper.sin(f1 * (float) Math.PI);
             GlStateManager.color4f(1.0F, 1.0F, 1.0F, f3);
             GlStateManager.translatef(0.0F, 1.8F, 0.0F);
-            GlStateManager.rotatef(180.0F - entityIn.rotationYaw, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotatef(10.0F - 150.0F * f1 - entityIn.rotationPitch, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotatef(180.0F - entityIn.getYaw(), 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotatef(10.0F - 150.0F * f1 - entityIn.getPitch(), 1.0F, 0.0F, 0.0F);
             GlStateManager.translatef(0.0F, -0.4F, -1.5F);
             //GlStateManager.scale(0.42553192F, 0.42553192F, 0.42553192F);
             GlStateManager.scalef(2F, 2F, 2F);
@@ -92,6 +102,35 @@ public class HalloweenParticle extends Particle {
             GlStateManager.popMatrix();
 
 
+        }
+    }
+
+    @Override
+    protected float getMinU() {
+        return 0;
+    }
+
+    @Override
+    protected float getMaxU() {
+        return 0;
+    }
+
+    @Override
+    protected float getMinV() {
+        return 0;
+    }
+
+    @Override
+    protected float getMaxV() {
+        return 0;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static class Factory implements IParticleFactory<BasicParticleType> {
+        @Nullable
+        @Override
+        public Particle makeParticle(BasicParticleType typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new HalloweenParticle(worldIn, x, y, z);
         }
     }
 }

@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
@@ -28,14 +28,14 @@ public class EntityCommand extends BasicCommand {
     }
 
     private static int entity(CommandSource commandSource, ServerPlayerEntity asPlayer) {
-        List<?> l = asPlayer.getEntityWorld().getEntitiesWithinAABBExcludingEntity(asPlayer, asPlayer.getBoundingBox().grow(3, 2, 3));
-        for (Object o : l) {
-            if (o instanceof CreatureEntity) {
+        List<Entity> l = asPlayer.getEntityWorld().getEntitiesWithinAABBExcludingEntity(asPlayer, asPlayer.getBoundingBox().grow(3, 2, 3));
+        for (Entity entity : l) {
+            if (entity instanceof CreatureEntity) {
 
-                ResourceLocation id = EntityType.getId(((Entity) o).getType());
+                ResourceLocation id = entity.getType().getRegistryName();
                 commandSource.sendFeedback(new StringTextComponent(id.toString()), true);
             } else {
-                commandSource.sendFeedback(new StringTextComponent("Not biteable " + o.getClass().getName()), true);
+                commandSource.sendFeedback(new StringTextComponent("Not biteable " + entity.getClass().getName()), true);
             }
         }
 		return 0;

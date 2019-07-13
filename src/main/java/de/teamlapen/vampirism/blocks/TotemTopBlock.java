@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.tileentity.TileTotem;
+import de.teamlapen.vampirism.tileentity.TotemTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -52,7 +52,7 @@ public class TotemTopBlock extends VampirismBlockContainer {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileTotem();
+        return new TotemTile();
     }
 
     @Override
@@ -80,8 +80,8 @@ public class TotemTopBlock extends VampirismBlockContainer {
     @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         TileEntity tile = worldIn.getTileEntity(pos);
-        if (tile instanceof TileTotem) {
-            ((TileTotem) tile).updateTotem();
+        if (tile instanceof TotemTile) {
+            ((TotemTile) tile).updateTotem();
             worldIn.addBlockEvent(pos, this, 1, 0); //Notify client about render update
         }
     }
@@ -90,7 +90,7 @@ public class TotemTopBlock extends VampirismBlockContainer {
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (world.isRemote) return true;
         IPlayableFaction f = FactionPlayerHandler.get(player).getCurrentFaction();
-        TileTotem t = getTile(world, pos);
+        TotemTile t = getTile(world, pos);
         if (f != null && t != null && world.getBlockState(pos.down()).getBlock().equals(ModBlocks.totem_base)) {
             t.initiateCapture(f, player);
             return true;
@@ -106,15 +106,15 @@ public class TotemTopBlock extends VampirismBlockContainer {
 
 
     @Nullable
-    private TileTotem getTile(World world, BlockPos pos) {
+    private TotemTile getTile(World world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TileTotem) return (TileTotem) tile;
+        if (tile instanceof TotemTile) return (TotemTile) tile;
         return null;
     }
 
     @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
-        TileTotem tile = getTile(world, pos);
+        TotemTile tile = getTile(world, pos);
         if (tile != null) {
             if (!tile.canPlayerRemoveBlock(player)) {
                 return false;

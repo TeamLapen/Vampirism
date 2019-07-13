@@ -3,6 +3,7 @@ package de.teamlapen.lib.lib.inventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
 
@@ -47,6 +48,8 @@ public class InventorySlot {
      * Interface for accessing the inventory slots of tiles
      */
     public interface IInventorySlotInventory extends IInventory {
-        InventorySlot[] getSlots();
+        NonNullList<InventorySlot> getSlots();
+
+        InventorySlot getSlot(int index);
     }
 }

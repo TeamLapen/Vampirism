@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.tileentity.TileTotem;
+import de.teamlapen.vampirism.tileentity.TotemTile;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.ModWorldEventListener;
@@ -120,7 +120,7 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         VampirismAPI.getGarlicChunkHandler(event.getWorld().getWorld()).clear();//TODO test is World right (or IWorld)
-        TileTotem.clearCacheForDimension(event.getWorld().getDimension());
+        TotemTile.clearCacheForDimension(event.getWorld().getDimension());
     }
 
     @SubscribeEvent

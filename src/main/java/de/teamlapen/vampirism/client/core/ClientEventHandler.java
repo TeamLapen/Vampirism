@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
-import de.teamlapen.vampirism.client.gui.SkillsScreen;
 import de.teamlapen.vampirism.client.gui.SleepCoffinScreen;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
@@ -51,26 +50,8 @@ import java.util.function.Function;
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
     private final Logger LOGGER = LogManager.getLogger();
-    private final static int SKILLBUTTONID = 27496;
     private final static ResourceLocation INVENTORY_SKILLS = new ResourceLocation("vampirism", "textures/gui/inventory_skills.png");
 
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public void onActionPerformedPre(GuiScreenEvent.ActionPerformedEvent.Post event) {
-        if (Configs.gui_skill_button_enable && event.getGui() instanceof InventoryScreen) {
-            if (event.getButton().id == SKILLBUTTONID) {
-                event.getGui().mc.displayGuiScreen(new SkillsScreen());
-            } else if (event.getButton().id == 10) {
-                for (Button e : event.getButtonList()) {
-                    if (e.id == SKILLBUTTONID) {
-                        ((ImageButton) e).setPosition(((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22);
-                        break;
-                    }
-                }
-            }
-        }
-    }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {

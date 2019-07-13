@@ -5,9 +5,11 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
+import de.teamlapen.vampirism.client.gui.NameSwordScreen;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.util.Helper;
@@ -30,7 +32,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -202,7 +203,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      */
     public void tryName(ItemStack stack, PlayerEntity player) {
         if (!stack.hasDisplayName() && player instanceof ServerPlayerEntity && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
-            NetworkHooks.openGui((ServerPlayerEntity) player, null, packetBuffer -> packetBuffer.writeItemStack(stack));
+            Minecraft.getInstance().displayGuiScreen(new NameSwordScreen(stack));
             player.world.playSound((player).posX, (player).posY, (player).posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
         }
     }
@@ -300,7 +301,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         Vec3d mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
             Vec3d pos = mainPos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
-            VampLib.proxy.getParticleHandler().spawnParticle(player.getEntityWorld(), ModParticles.FLYING_BLOOD, pos.x, pos.y, pos.z, pos.x + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.y + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.z + (player.getRNG().nextFloat() - 0.5D) * 0.2D, (int) (4.0F / (player.getRNG().nextFloat() * 0.9F + 0.1F)), 177);
+            ModParticles.spawnParticle(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.9F + 0.1F)), 177), pos.x, pos.y, pos.y, pos.x + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.y + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.z + (player.getRNG().nextFloat() - 0.5D) * 0.2D);
         }
     }
 
@@ -310,7 +311,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         if (player.getSwingProgress(1f) > 0f) return;
         pos = pos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
         Vec3d playerPos = new Vec3d((player).posX, (player).posY + player.getEyeHeight() - 0.2f, (player).posZ);
-        VampLib.proxy.getParticleHandler().spawnParticle(player.getEntityWorld(), ModParticles.FLYING_BLOOD, playerPos.x, playerPos.y, playerPos.z, pos.x, pos.y, pos.z, (int) (4.0F / (player.getRNG().nextFloat() * 0.6F + 0.1F)));
-
+        ModParticles.spawnParticle(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.6F + 0.1F))), playerPos.x, playerPos.y, playerPos.y, pos.x, pos.y, pos.z);
     }
 }

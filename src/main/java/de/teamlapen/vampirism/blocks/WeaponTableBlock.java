@@ -3,25 +3,33 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Hand;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 
 public class WeaponTableBlock extends VampirismBlock {
+    private static final ITextComponent name = new TranslationTextComponent("container.weaponTable");
     public final static String regName = "weapon_table";
     public static final int MAX_LAVA = 5;
     public static final int MB_PER_META = 200;
@@ -71,7 +79,7 @@ public class WeaponTableBlock extends VampirismBlock {
             if (!flag) {
 
                 if (canUse(player)) {
-                    //player.openGui(VampirismMod.instance, ModGuiHandler.ID_WEAPON_TABLE, world, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
+                    player.openContainer(state.getContainer(world, pos));
                 }
                 else {
                     player.sendMessage(new TranslationTextComponent("tile.vampirism." + regName + ".cannot_use"));
@@ -79,6 +87,14 @@ public class WeaponTableBlock extends VampirismBlock {
             }
         }
         return true;
+    }
+
+    @Nullable
+    @Override
+    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
+        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
+            return new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos));
+        }, name);
     }
 
     @Override

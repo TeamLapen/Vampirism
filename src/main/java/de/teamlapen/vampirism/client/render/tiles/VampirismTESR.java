@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.blocks.VampirismBlockContainer;
 import net.minecraft.block.HorizontalBlock;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
+import de.teamlapen.vampirism.tileentity.AlchemicalCauldronTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -49,7 +49,7 @@ public class AlchemicalCauldronBlock extends VampirismBlockContainer {
 
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileAlchemicalCauldron();
+        return new AlchemicalCauldronTileEntity();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class AlchemicalCauldronBlock extends VampirismBlockContainer {
     TODO 1.13 make sure tile entity updates block state
     @Override
     public IBlockState getActualState(IBlockState state, IBlockReader worldIn, BlockPos pos) {
-        TileAlchemicalCauldron t = getTile(worldIn, pos);
+        AlchemicalCauldronTileEntity t = getTile(worldIn, pos);
         if (t != null) {
             state = state.withProperty(LIQUID, !t.isFilled() ? 0 : t.isCooking() ? 2 : 1).withProperty(BURNING, t.isBurning());
         }
@@ -98,10 +98,11 @@ public class AlchemicalCauldronBlock extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
-            TileAlchemicalCauldron tile = getTile(worldIn, pos);
+            AlchemicalCauldronTileEntity tile = getTile(worldIn, pos);
             if (tile != null) {
                 if (tile.canUse(playerIn)) {
                     //playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALCHEMICAL_CAULDRON, worldIn, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
+                    playerIn.openContainer(tile);
                 }
             }
         }
@@ -111,7 +112,7 @@ public class AlchemicalCauldronBlock extends VampirismBlockContainer {
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-        TileAlchemicalCauldron tile = getTile(worldIn, pos);
+        AlchemicalCauldronTileEntity tile = getTile(worldIn, pos);
         if (tile != null && placer instanceof PlayerEntity) {
             tile.setOwner((PlayerEntity) placer);
         }
@@ -128,9 +129,9 @@ public class AlchemicalCauldronBlock extends VampirismBlockContainer {
     }
 
     @Nullable
-    private TileAlchemicalCauldron getTile(IBlockReader world, BlockPos pos) {
+    private AlchemicalCauldronTileEntity getTile(IBlockReader world, BlockPos pos) {
         TileEntity t = world.getTileEntity(pos);
-        if (t instanceof TileAlchemicalCauldron) return (TileAlchemicalCauldron) t;
+        if (t instanceof AlchemicalCauldronTileEntity) return (AlchemicalCauldronTileEntity) t;
         return null;
     }
 

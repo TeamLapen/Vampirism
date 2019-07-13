@@ -23,7 +23,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
  * 
  * @author Cheaterpaul
  */
-public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRecipe<CraftingInventory> {
+public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRecipe {
     protected static int MAX_WIDTH = 4;
     protected static int MAX_HEIGHT = 4;
 

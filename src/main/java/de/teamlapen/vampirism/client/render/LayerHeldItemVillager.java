@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.client.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.client.model.VillagerWithArmsModel;
-import de.teamlapen.vampirism.client.render.entities.HunterVillagerRenderer;
 import de.teamlapen.vampirism.entity.hunter.AggressiveVillagerEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.model.VillagerModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
@@ -17,12 +19,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Same as {@link HeldItemLayer} but for {@link VillagerWithArmsModel} model
  */
 @OnlyIn(Dist.CLIENT)
-public class LayerHeldItemVillager implements LayerRenderer<AggressiveVillagerEntity> {
+public class LayerHeldItemVillager extends LayerRenderer<AggressiveVillagerEntity, VillagerModel<AggressiveVillagerEntity>> {
 
-    private final HunterVillagerRenderer renderer;
-
-    public LayerHeldItemVillager(HunterVillagerRenderer renderer) {
-        this.renderer = renderer;
+    public LayerHeldItemVillager(IEntityRenderer<AggressiveVillagerEntity, VillagerModel<AggressiveVillagerEntity>> entityRendererIn) {
+        super(entityRendererIn);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class LayerHeldItemVillager implements LayerRenderer<AggressiveVillagerEn
         if (!itemstack.isEmpty() || !itemstack1.isEmpty()) {
             GlStateManager.pushMatrix();
 
-            if (this.renderer.getMainModel().isChild) {
+            if (getEntityModel().isChild) {
                 float f = 0.5F;
                 GlStateManager.translatef(0.0F, 0.625F, 0.0F);
                 GlStateManager.rotatef(-20.0F, -1.0F, 0.0F, 0.0F);
@@ -54,7 +54,7 @@ public class LayerHeldItemVillager implements LayerRenderer<AggressiveVillagerEn
     private void renderHeldItem(AggressiveVillagerEntity p_188358_1_, ItemStack stack, ItemCameraTransforms.TransformType p_188358_3_, HandSide p_188358_4_) {
         if (!stack.isEmpty()) {
             GlStateManager.pushMatrix();
-            ((VillagerWithArmsModel) this.renderer.getMainModel()).postRenderArm(0.0625F, p_188358_4_);
+            ((VillagerWithArmsModel) getEntityModel()).postRenderArm(0.0625F, p_188358_4_);
 
             if (p_188358_1_.isSneaking()) {
                 GlStateManager.translatef(0.0F, 0.2F, 0.0F);

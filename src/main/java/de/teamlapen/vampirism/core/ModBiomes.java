@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.gen.biome.VampireForestBiome;
-import de.teamlapen.vampirism.world.gen.biome.VampirismBiome;
+import de.teamlapen.vampirism.world.gen.biome.VampirismBiomeFeatures;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
@@ -47,7 +47,7 @@ public class ModBiomes {
             for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
                 if (new ResourceLocation("the_end").equals(biome.getRegistryName()) || new ResourceLocation("nether").equals(biome.getRegistryName()))
                     continue;
-                biome.addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, VampirismBiome.HUNTER_TENT_FEATURE);
+                biome.addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, VampirismBiomeFeatures.HUNTER_TENT_FEATURE);
             }
         }
     }

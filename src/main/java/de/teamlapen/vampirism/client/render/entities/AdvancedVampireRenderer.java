@@ -16,13 +16,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Render the advanced vampire with overlays
  */
 @OnlyIn(Dist.CLIENT)
-public class AdvancedVampireRenderer extends BipedRenderer<AdvancedVampireEntity> {
+public class AdvancedVampireRenderer extends BipedRenderer<AdvancedVampireEntity, BipedModel<AdvancedVampireEntity>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png");
 
     public AdvancedVampireRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BipedModel(0F, 0F, 64, 64), 0.5F);
         if (!Configs.disable_advancedMobPlayerFaces) {
-            this.addLayer(new LayerPlayerFaceOverlay<AdvancedVampireEntity, AdvancedVampireEntity>(this));
+            this.addLayer(new LayerPlayerFaceOverlay<AdvancedVampireEntity>(this));
             this.addLayer(new LayerAdvancedVampireEye(this));
 
         }

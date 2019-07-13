@@ -5,18 +5,21 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.ai.LookAtTrainerHunterGoal;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
+import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.util.Hand;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -24,6 +27,7 @@ import net.minecraft.world.World;
  * Hunter Trainer which allows Hunter players to level up
  */
 public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrainerHunterGoal.ITrainer {
+    private static final ITextComponent name = new TranslationTextComponent("container.huntertrainer");
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private PlayerEntity trainee;
 
@@ -104,8 +108,10 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
             if (!this.world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
                     if (trainee == null) {
+                        player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
+                            return new HunterTrainerContainer(id, playerInventory, IWorldPosCallable.of(player.getEntityWorld(), this.getPosition()));
+                        }, name));
                         this.trainee = player;
-                        //player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.getEntityWorld(), getPosition().getX(), getPosition().getY(), getPosition().getZ());//TODO 1.14
                     } else {
                         player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"));
                     }

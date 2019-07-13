@@ -14,11 +14,15 @@ import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.potion.Effect;
+import net.minecraft.stats.StatType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -73,7 +77,6 @@ public class RegistryManager implements IInitListener {
                 ModItems.registerBloodConversionRates();
                 ModVillages.init();
                 ModAdvancements.registerAdvancements();
-                ModParticles.init();
 
                 break;
             case LOAD_COMPLETE:
@@ -171,5 +174,25 @@ public class RegistryManager implements IInitListener {
                 VampireSkills.buildSkillTree(event.getNode());
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onRegisterContainer(RegistryEvent.Register<ContainerType<?>> event) {
+        ModContainer.registerContainer(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterParticles(RegistryEvent.Register<ParticleType<?>> event) {
+        ModParticles.registerParticles(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterStats(RegistryEvent.Register<StatType<?>> event) {
+        ModStats.registerStats(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterFeatures(RegistryEvent.Register<Feature<?>> event) {
+        ModWorld.registerFeatures(event.getRegistry());
     }
 }

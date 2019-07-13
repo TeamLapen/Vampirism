@@ -1,26 +1,27 @@
 package de.teamlapen.vampirism.client.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.lib.lib.client.render.RenderUtil;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class LayerVampirePlayerHead implements LayerRenderer<AbstractClientPlayerEntity> {
-    private final PlayerRenderer playerRenderer;
+public class LayerVampirePlayerHead extends LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> {
 
     private final ResourceLocation[] eyeOverlays;
     private final ResourceLocation[] fangOverlays;
 
-    public LayerVampirePlayerHead(PlayerRenderer playerRendererIn) {
-        this.playerRenderer = playerRendererIn;
+    public LayerVampirePlayerHead(IEntityRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> entityRendererIn) {
+        super(entityRendererIn);
         eyeOverlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < eyeOverlays.length; i++) {
             eyeOverlays[i] = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/eyes" + (i) + ".png");
@@ -43,11 +44,12 @@ public class LayerVampirePlayerHead implements LayerRenderer<AbstractClientPlaye
                 GlStateManager.translatef(0.0F, 0.2F, 0.0F);
             }
 
-            this.playerRenderer.bindTexture(fangOverlays[fangType]);
-            this.playerRenderer.getMainModel().bipedHead.render(scale);
+            bindTexture(fangOverlays[fangType]);
+            getEntityModel().bipedHead.render(scale);
 
             if (vampirePlayer.getGlowingEyes()) {
-                RenderUtil.renderGlowing(playerRenderer, playerRenderer.getMainModel().bipedHead, eyeOverlays[eyeType], 240f, player, scale);
+                bindTexture(eyeOverlays[eyeType]);
+                RenderUtil.renderGlowing(getEntityModel().bipedHead, 240f, player, scale);
 
             } else {
                 renderNormalEyes(eyeType, scale);
@@ -65,9 +67,7 @@ public class LayerVampirePlayerHead implements LayerRenderer<AbstractClientPlaye
 
 
     private void renderNormalEyes(int eyeType, float scale) {
-        this.playerRenderer.bindTexture(eyeOverlays[eyeType]);
-        this.playerRenderer.getMainModel().bipedHead.render(scale);
-
-
+        bindTexture(eyeOverlays[eyeType]);
+        getEntityModel().bipedHead.render(scale);
     }
 }

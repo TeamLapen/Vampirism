@@ -1,9 +1,16 @@
 package de.teamlapen.vampirism.client.render.particle;
 
+import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
+import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
 
 /**
  * Flying Blood Particle for rituals
@@ -11,7 +18,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * @author maxanier
  */
 @OnlyIn(Dist.CLIENT)
-public class FlyingBloodParticle extends Particle {
+public class FlyingBloodParticle extends VampirismTexturedParticle {
     private final String TAG = "FlyingBloodParticle";
     private final double destX, destY, destZ;
 
@@ -23,16 +30,14 @@ public class FlyingBloodParticle extends Particle {
      * 160-168
      * 176-182
      */
-    public FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double
-            destZ, int maxage, int particleId) {
-        super(world, posX, posY, posZ, 0D, 0D, 0D);
+    public FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, int particleId) {
+        super(world, posX, posY, posZ, particleId);
         this.maxAge = maxage;
         this.destX = destX;
         this.destY = destY;
         this.destZ = destZ;
         this.particleRed = 0.95F;
         this.particleBlue = this.particleGreen = 0.05F;
-        this.setParticleTextureIndex(particleId);
         double wayX = destX - this.posX;
         double wayZ = destZ - this.posZ;
         double wayY = destY - this.posY;
@@ -40,11 +45,6 @@ public class FlyingBloodParticle extends Particle {
         this.motionY = (this.world.rand.nextDouble() / 10 - 0.01) + wayY / maxAge;
         this.motionZ = (this.world.rand.nextDouble() / 10 - 0.05) + wayZ / maxAge;
         this.tick();
-    }
-
-    public FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double
-            destZ, int maxage) {
-        this(world, posX, posY, posZ, destX, destY, destZ, maxage, 65);
     }
 
 
@@ -72,4 +72,22 @@ public class FlyingBloodParticle extends Particle {
         }
     }
 
+    @Override
+    public void renderParticle(BufferBuilder buffer, ActiveRenderInfo entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+
+    }
+
+    @Override
+    public IParticleRenderType getRenderType() {
+        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static class Factory implements IParticleFactory<FlyingBloodParticleData> {
+        @Nullable
+        @Override
+        public Particle makeParticle(FlyingBloodParticleData typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new FlyingBloodParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getMaxAge(), typeIn.getTexturePos());
+        }
+    }
 }

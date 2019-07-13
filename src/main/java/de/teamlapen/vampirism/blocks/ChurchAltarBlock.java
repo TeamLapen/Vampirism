@@ -4,12 +4,14 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.client.gui.RevertBackScreen;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -57,7 +59,9 @@ public class ChurchAltarBlock extends VampirismBlock {
         IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(player);
         ItemStack heldItem = player.getHeldItem(hand);
         if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
-            //player.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, world, (int) player.posX, (int) player.posY, (int) player.posZ);//TODO 1.14
+            if (world.isRemote) {
+                Minecraft.getInstance().displayGuiScreen(new RevertBackScreen());
+            }
             return true;
         } else if (!heldItem.isEmpty()) {
             if (ModItems.holy_salt_water.equals(heldItem.getItem())) {

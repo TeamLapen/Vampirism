@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
-import de.teamlapen.vampirism.tileentity.TileBloodContainer;
+import de.teamlapen.vampirism.tileentity.BloodContainerTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -124,7 +124,7 @@ public class BakedBloodContainerModel implements IBakedModel {
                     FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound("fluid"));
                     if (fluid != null) {
 
-                        float amount = fluid.amount / (float) TileBloodContainer.LEVEL_AMOUNT;
+                        float amount = fluid.amount / (float) BloodContainerTileEntity.LEVEL_AMOUNT;
 
                         return new BakedBloodContainerModel(originalModel, fluid.getFluid().getName(), (amount > 0 && amount < 1) ? 1 : (int) amount);
                     }

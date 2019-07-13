@@ -1,52 +1,34 @@
 package de.teamlapen.lib.lib.tile;
 
-import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.ITextComponent;
-
-import javax.annotation.Nullable;
 
 
 /**
  * Basic abstract class for TileEntitys which need a small inventory (with an gui)
  */
-public abstract class InventoryTileEntity extends TileEntity implements IInventory, InventorySlot.IInventorySlotInventory {
+public abstract class InventoryTileEntity extends LockableTileEntity implements INamedContainerProvider {
 
     /**
      * Maximal squared distance from which the player can access the inventory
      */
     protected final int MAX_DIST_SQRT = 40;
-    private InventorySlot[] slots;
+    protected InventorySlot.IInventorySlotInventory inventorySlots;
 
     /**
-     * @param slots A slot 'description'. The array should contain one Slot instance for each inventory slot which should be created. The slots must each contain the position where they should be
+     * @param inventorySlotsIn A slot 'description'. The array should contain one Slot instance for each inventory slot which should be created. The slots must each contain the position where they should be
      *              displayed in the GUI, they can also contain a filter for which items are allowed. Make sure that these Slot instance are unique on server and client.
      */
-    public InventoryTileEntity(TileEntityType<?> tileEntityTypeIn, InventorySlot[] slots) {
+    public InventoryTileEntity(TileEntityType<?> tileEntityTypeIn, InventorySlot.IInventorySlotInventory inventorySlotsIn) {
         super(tileEntityTypeIn);
-        this.slots = slots;
-    }
-
-    @Override
-    public void clear() {
-        for (int i = 0; i < slots.length; i++) {
-            slots[i] = null;
-        }
-    }
-
-    @Override
-    public void closeInventory(PlayerEntity player) {
-
+        this.inventorySlots = inventorySlotsIn;
     }
 
     @Override
@@ -54,116 +36,66 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         return ItemStackUtil.decrIInventoryStackSize(this, slot, amt);
     }
 
-
     @Override
-    public int getField(int id) {
-        return 0;
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return 64;
-    }
-
-    public Container getNewInventoryContainer(PlayerInventory inv) {
-        return new InventoryContainer(inv, this);
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return inventorySlots.isItemValidForSlot(slot, stack);
     }
 
     @Override
     public int getSizeInventory() {
-        return slots.length;
-    }
-
-    @Override
-    public InventorySlot[] getSlots() {
-        return slots;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return slots[slot].stack;
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return false;
-    }
-
-    @Nullable
-    @Override
-    public ITextComponent getCustomName() {
-        return null;
+        return inventorySlots.getSizeInventory();
     }
 
     @Override
     public boolean isEmpty() {
-        for (InventorySlot slot : slots) {
-            if (!slot.stack.isEmpty()) {
-                return false;
-            }
-        }
-        return true;
+        return inventorySlots.isEmpty();
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        if (slots[slot].itemSelector != null && !stack.isEmpty()) {
-            return slots[slot].itemSelector.isItemAllowed(stack);
-        }
-        return true;
+    public void clear() {
+        inventorySlots.clear();
     }
 
+    @Override
+    public ItemStack getStackInSlot(int index) {
+        return inventorySlots.getStackInSlot(index);
+    }
 
     @Override
     public boolean isUsableByPlayer(PlayerEntity player) {
-        return player.getDistanceSq(getPos()) < MAX_DIST_SQRT;
+        return inventorySlots.isUsableByPlayer(player);
     }
 
     @Override
     public void openInventory(PlayerEntity player) {
-
+        inventorySlots.openInventory(player);
     }
 
     @Override
     public void read(CompoundNBT tagCompound) {
         super.read(tagCompound);
-        for (InventorySlot slot1 : slots) {
+        inventorySlots.clear();
+        for (InventorySlot slot1 : inventorySlots.getSlots()) {
             slot1.stack = ItemStack.EMPTY;
         }
         ListNBT tagList = tagCompound.getList("Inventory", 10);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundNBT tag = tagList.getCompound(i);
             byte slot = tag.getByte("Slot");
-            if (slot >= 0 && slot < slots.length) {
-                slots[slot].stack = ItemStack.read(tag);
+            if (slot >= 0 && slot < inventorySlots.getSizeInventory()) {
+                inventorySlots.getSlot(slot).stack = ItemStack.read(tag);
             }
         }
     }
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        if (this.slots[index] != null) {
-            ItemStack itemstack = this.slots[index].stack;
-            this.slots[index].stack = ItemStack.EMPTY;
-            return itemstack;
-        } else {
-            return ItemStack.EMPTY;
-        }
-    }
-
-    @Override
-    public void setField(int id, int value) {
-
+        return inventorySlots.removeStackFromSlot(index);
     }
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
-        slots[slot].stack = stack;
+        inventorySlots.getSlot(slot).stack = stack;
         if (stack.getCount() > getInventoryStackLimit()) {
             stack.setCount(getInventoryStackLimit());
         }
@@ -176,8 +108,8 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         CompoundNBT nbt = super.write(compound);
 
         ListNBT itemList = new ListNBT();
-        for (int i = 0; i < slots.length; i++) {
-            ItemStack stack = slots[i].stack;
+        for (int i = 0; i < inventorySlots.getSizeInventory(); i++) {
+            ItemStack stack = inventorySlots.getSlot(i).stack;
             if (!stack.isEmpty()) {
                 CompoundNBT tag = new CompoundNBT();
                 tag.putByte("Slot", (byte) i);
@@ -192,8 +124,8 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 
 
     protected boolean isFull() {
-        for (InventorySlot s : this.getSlots()) {
-            if (this.slots[0].stack.isEmpty() || this.slots[0].stack.getCount() < this.slots[0].stack.getMaxStackSize()) {
+        for (InventorySlot s : inventorySlots.getSlots()) {
+            if (this.inventorySlots.getStackInSlot(0).isEmpty() || this.inventorySlots.getStackInSlot(0).getCount() < this.inventorySlots.getStackInSlot(0).getMaxStackSize()) {
                 return false;
             }
         }

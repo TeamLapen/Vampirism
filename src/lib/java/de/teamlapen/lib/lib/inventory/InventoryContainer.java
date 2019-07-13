@@ -4,8 +4,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IWorldPosCallable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,34 +17,35 @@ import javax.annotation.Nullable;
  *
  * @author Maxanier
  */
-public class InventoryContainer extends Container {
+public abstract class InventoryContainer extends Container {
 
-    protected InventorySlot.IInventorySlotInventory tile;
+    protected InventorySlot.IInventorySlotInventory inventory;
+    protected IWorldPosCallable worldPos;
 
-    public InventoryContainer(PlayerInventory invPlayer, InventorySlot.IInventorySlotInventory te) {
-        tile = te;
-        InventorySlot[] slots = tile.getSlots();
-        for (int i = 0; i < slots.length; i++) {
-            this.addSlot(new FilterSlot(tile, i, slots[i].xDisplay, slots[i].yDisplay, slots[i].itemSelector));
+    public InventoryContainer(int id, PlayerInventory playerInventory, ContainerType containerType, InventorySlot.IInventorySlotInventory inventoryIn) {
+        this(id, playerInventory, containerType, inventoryIn, IWorldPosCallable.DUMMY);
+    }
+
+    public InventoryContainer(int id, PlayerInventory playerInventory, ContainerType containerType, InventorySlot.IInventorySlotInventory inventoryIn, IWorldPosCallable worldPosIn) {
+        super(containerType, id);
+        this.inventory = inventoryIn;
+        this.worldPos = worldPosIn;
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
+            this.addSlot(new FilterSlot(inventory, i, inventory.getSlot(i).xDisplay, inventory.getSlot(i).yDisplay, inventory.getSlot(i).itemSelector));
         }
 
         int i;
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
         for (i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(invPlayer, i, 8 + i * 18, 142));
+            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
 
         onInventoryChanged();
 
-    }
-
-    @Override
-    public boolean canInteractWith(PlayerEntity player) {
-        return tile.isUsableByPlayer(player);
     }
 
     /**
@@ -63,13 +66,13 @@ public class InventoryContainer extends Container {
         if (slotObject != null && !(stackInSlot = slotObject.getStack()).isEmpty()) {
             stack = stackInSlot.copy();
             // merges the item into player inventory since its in the tileEntity
-            if (slot < tile.getSlots().length) {
-                if (!this.mergeItemStack(stackInSlot, tile.getSlots().length, tile.getSlots().length + 36, true)) {
+            if (slot < inventory.getSizeInventory()) {
+                if (!this.mergeItemStack(stackInSlot, inventory.getSizeInventory(), inventory.getSizeInventory() + 36, true)) {
                     return ItemStack.EMPTY;
                 }
             }
             // places it into the tileEntity is possible since its in the player inventory
-            else if (!this.mergeItemStack(stackInSlot, 0, tile.getSlots().length, false)) {
+            else if (!this.mergeItemStack(stackInSlot, 0, inventory.getSizeInventory(), false)) {
                 return ItemStack.EMPTY;
             }
 

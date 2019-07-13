@@ -26,7 +26,7 @@ import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
-import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
+import de.teamlapen.vampirism.inventory.crafting.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.player.actions.ActionManager;

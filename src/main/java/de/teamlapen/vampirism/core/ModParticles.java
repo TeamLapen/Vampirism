@@ -1,216 +1,49 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.lib.util.ParticleHandler;
-import de.teamlapen.vampirism.client.render.particle.*;
+import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
+import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.CloudParticle;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nonnull;
+import java.util.Random;
 
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
+
+@ObjectHolder(REFERENCE.MODID)
 public class ModParticles {
-    public static final ResourceLocation FLYING_BLOOD = new ResourceLocation(REFERENCE.MODID, "flying_blood");
-    public static final ResourceLocation FLYING_BLOOD_ENTITY = new ResourceLocation(REFERENCE.MODID, "flying_blood_entity");
-    public static final ResourceLocation HALLOWEEN = new ResourceLocation(REFERENCE.MODID, "halloween");
-    public static final ResourceLocation HEAL = new ResourceLocation(REFERENCE.MODID, "heal");
+    public static final ParticleType<FlyingBloodParticleData> flying_blood = getNull();
+    public static final ParticleType<FlyingBloodEntityParticleData> flying_blood_entity = getNull();
+    public static final BasicParticleType halloween = getNull();
+    public static final BasicParticleType heal = getNull();
 
-    /**
-     * Arguments: motionX [double], motionY [double], motionZ [double]
-     */
-    public static final ResourceLocation CLOUD = new ResourceLocation(REFERENCE.MODID, "cloud");
+    public static void registerParticles(IForgeRegistry<ParticleType<?>> registry) {
+        registry.register(new ParticleType<FlyingBloodParticleData>(false, FlyingBloodParticleData.DESERIALIZER).setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood")));
+        registry.register(new ParticleType<FlyingBloodEntityParticleData>(false, FlyingBloodEntityParticleData.DESERIALIZER).setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood_entity")));
+        registry.register(new BasicParticleType(false).setRegistryName(new ResourceLocation(REFERENCE.MODID, "halloween")));
+        registry.register(new BasicParticleType(false).setRegistryName(new ResourceLocation(REFERENCE.MODID, "heal")));
+    }
 
-    /**
-     * Arguments: Particle ID (Vanilla texture,int), TicksToLive(int), Color(int), [speed modifier (double)]
-     */
-    public static final ResourceLocation GENERIC_PARTICLE = new ResourceLocation(REFERENCE.MODID, "generic");
-    
-    public static void init() {
-        ParticleHandler.registerParticle(GENERIC_PARTICLE, new ParticleHandler.ICustomParticleFactory() {
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                GenericParticle particle = new GenericParticle(world, posX, posY, posZ, (int) param[0], (int) param[1], (int) param[2]);
-                if (param.length > 3) {
-                    particle.scaleSpeed((Double) param[3]);
-                }
-                return particle;
-            }
+    public static void spawnParticles(World worldIn, IParticleData particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int count, double maxDist, Random rand) {
+        for (int i = 0; i < count; i++) {
+            worldIn.addParticle(particle, x + maxDist * (2 * rand.nextDouble() - 1), y + (2 * rand.nextDouble() - 1) * maxDist, z + (2 * rand.nextDouble() - 1) * maxDist, xSpeed, ySpeed, zSpeed);
+        }
+    }
 
-            @Nonnull
-            @Override
-            public CompoundNBT createParticleInfo(Object... param) {
-                CompoundNBT nbt = new CompoundNBT();
-                nbt.putInt("0", (Integer) param[0]);
-                nbt.putInt("1", (Integer) param[1]);
-                nbt.putInt("2", (Integer) param[2]);
-                if (param.length > 3) {
-                    nbt.putDouble("3", (Double) param[3]);
-                }
-                return nbt;
-            }
+    public static void spawnParticles(World worldIn, IParticleData particle, double x, double y, double z, int count, double maxDist, Random rand) {
+        spawnParticles(worldIn, particle, x, y, z, 0, 0, 0, count, maxDist, rand);
+    }
 
-            @Nonnull
-            @Override
-            public Object[] readParticleInfo(CompoundNBT nbt) {
-                Object[] data = new Object[nbt.contains("3") ? 4 : 3];
-                data[0] = nbt.getInt("0");
-                data[1] = nbt.getInt("1");
-                data[2] = nbt.getInt("2");
-                if (data.length > 3) {
-                    data[3] = nbt.getDouble("3");
-                }
-                return data;
-            }
-        });
-        ParticleHandler.registerParticle(FLYING_BLOOD, new ParticleHandler.ICustomParticleFactory() {
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                if (param.length > 4) {
-                    return new FlyingBloodParticle(world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2], (int) param[3], (int) param[4]);
-                } else {
-                    return new FlyingBloodParticle(world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2], (int) param[3]);
-                }
-            }
+    public static void spawnParticle(World worldIn, IParticleData particle, double x, double y, double z) {
+        spawnParticle(worldIn, particle, x, y, z, 0, 0, 0);
+    }
 
-            @Nonnull
-            @Override
-            public CompoundNBT createParticleInfo(Object... param) {
-                CompoundNBT nbt = new CompoundNBT();
-                nbt.putDouble("0", (Double) param[0]);
-                nbt.putDouble("1", (Double) param[1]);
-                nbt.putDouble("2", (Double) param[2]);
-                nbt.putInt("3", (Integer) param[3]);
-                if (param.length > 4) {
-                    nbt.putInt("4", (Integer) param[4]);
-                }
-                return nbt;
-            }
-
-            @Nonnull
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public Object[] readParticleInfo(CompoundNBT nbt) {
-                Object[] data = new Object[nbt.contains("4") ? 5 : 4];
-                data[0] = nbt.getDouble("0");
-                data[1] = nbt.getDouble("1");
-                data[2] = nbt.getDouble("2");
-                data[3] = nbt.getInt("3");
-                if (data.length > 4) {
-                    data[4] = nbt.getInt("4");
-                }
-                return data;
-            }
-        });
-        ParticleHandler.registerParticle(FLYING_BLOOD_ENTITY, new ParticleHandler.ICustomParticleFactory() {
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new FlyingBloodEntityParticle(world, posX, posY, posZ, (Entity) param[0], (Boolean) param[1]);
-            }
-
-            @Nonnull
-            @Override
-            public CompoundNBT createParticleInfo(Object... param) {
-                CompoundNBT nbt = new CompoundNBT();
-                nbt.putInt("0", ((Entity) param[0]).getEntityId());
-                nbt.putBoolean("1", (Boolean) param[1]);
-                return nbt;
-            }
-
-            @Nonnull
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public Object[] readParticleInfo(CompoundNBT nbt) {
-                int i = nbt.getInt("0");
-                World world = Minecraft.getInstance().world;
-                if (world == null) return null;
-                Entity e = world.getEntityByID(i);
-                if (e == null) return null;
-                Object[] data = new Object[2];
-                data[0] = e;
-                data[1] = nbt.getBoolean("1");
-                return data;
-            }
-        });
-
-        ParticleHandler.registerParticle(HALLOWEEN, new ParticleHandler.ICustomParticleFactory() {
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new HalloweenParticle(world, posX, posY, posZ);
-            }
-
-            @Nonnull
-            @Override
-            public CompoundNBT createParticleInfo(Object... param) {
-                return new CompoundNBT();
-            }
-
-            @Nonnull
-            @Override
-            public Object[] readParticleInfo(CompoundNBT nbt) {
-                return new Object[0];
-            }
-        });
-
-        ParticleHandler.registerParticle(HEAL, new ParticleHandler.ICustomParticleFactory() {
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new HealingParticle(world, posX, posY, posZ);
-            }
-
-            @Nonnull
-            @Override
-            public CompoundNBT createParticleInfo(Object... param) {
-                return new CompoundNBT();
-            }
-
-            @Nonnull
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public Object[] readParticleInfo(CompoundNBT nbt) {
-                return new Object[0];
-            }
-        });
-
-        ParticleHandler.registerParticle(CLOUD, new ParticleHandler.ICustomParticleFactory() {
-
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new CloudParticle.Factory().makeParticle(ParticleTypes.CLOUD, world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2]);
-            }
-
-            @Nonnull
-            @Override
-            public CompoundNBT createParticleInfo(Object... param) {
-                CompoundNBT nbt = new CompoundNBT();
-                nbt.putDouble("0", (Double) param[0]);
-                nbt.putDouble("1", (Double) param[1]);
-                nbt.putDouble("2", (Double) param[2]);
-                return nbt;
-            }
-
-            @OnlyIn(Dist.CLIENT)
-            @Nonnull
-            @Override
-            public Object[] readParticleInfo(CompoundNBT nbt) {
-                Object[] data = new Object[3];
-                data[0] = nbt.getDouble("0");
-                data[1] = nbt.getDouble("1");
-                data[2] = nbt.getDouble("2");
-                return data;
-            }
-        });
+    public static void spawnParticle(World worldIn, IParticleData particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        worldIn.addParticle(particle, x, y, z, xSpeed, ySpeed, zSpeed);
     }
 }

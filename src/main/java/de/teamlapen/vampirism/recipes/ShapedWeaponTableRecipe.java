@@ -29,7 +29,7 @@ import java.util.Set;
  * 
  * @author Cheaterpaul
  */
-public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRecipe<CraftingInventory>, IShapedRecipe<CraftingInventory> {
+public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRecipe, IShapedRecipe<CraftingInventory> {
     protected static int MAX_WIDTH = 4;
     protected static int MAX_HEIGHT = 4;
 

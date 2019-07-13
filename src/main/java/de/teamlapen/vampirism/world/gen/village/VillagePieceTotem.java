@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.tileentity.TileTotem;
+import de.teamlapen.vampirism.tileentity.TotemTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
@@ -77,10 +77,10 @@ public class VillagePieceTotem extends VillagePieces.Village {
 
         if (structureBoundingBoxIn.isVecInside(blockpos)) {
             TileEntity t = worldIn.getTileEntity(blockpos);
-            if (t instanceof TileTotem) {
+            if (t instanceof TotemTile) {
                 IPlayableFaction[] factions = VampirismAPI.factionRegistry().getPlayableFactions();
                 IPlayableFaction f = factions[randomIn.nextInt(factions.length)];
-                ((TileTotem) t).forceChangeFaction(forceHunter ? VReference.HUNTER_FACTION : f, true);
+                ((TotemTile) t).forceChangeFaction(forceHunter ? VReference.HUNTER_FACTION : f, true);
             }
         }
 

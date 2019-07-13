@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.inventory.HunterTableContainer;
+import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -59,6 +59,7 @@ public class HunterTableBlock extends VampirismBlock {
     @Override
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         //player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TABLE, world, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
+        player.openContainer(state.getContainer(world, pos));
         return true;
     }
 

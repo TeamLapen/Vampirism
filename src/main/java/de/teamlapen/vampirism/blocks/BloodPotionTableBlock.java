@@ -3,25 +3,33 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.inventory.container.BloodPotionTableContainer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Hand;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 
 public class BloodPotionTableBlock extends VampirismBlock {
 
     private final static String regName = "blood_potion_table";
+    private static final ITextComponent name = new TranslationTextComponent("container.crafting");
     protected static final VoxelShape tableShape = Block.makeCuboidShape(0, 0, 0, 16, 11, 16);
 
     public BloodPotionTableBlock() {
@@ -42,6 +50,7 @@ public class BloodPotionTableBlock extends VampirismBlock {
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
             if (canUse(player)) {
+                player.openContainer(state.getContainer(worldIn, pos));
                 //player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ()); 1.14
             }
             else {
@@ -52,6 +61,13 @@ public class BloodPotionTableBlock extends VampirismBlock {
         return true;
     }
 
+    @Nullable
+    @Override
+    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
+        return new SimpleNamedContainerProvider((id, playerInventory, player) -> {
+            return new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos));
+        }, name);
+    }
 
     private boolean canUse(PlayerEntity player) {
         IPlayableFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();

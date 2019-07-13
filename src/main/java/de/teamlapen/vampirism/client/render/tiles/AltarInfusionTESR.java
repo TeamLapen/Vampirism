@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
-import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
+import com.mojang.blaze3d.platform.GlStateManager;
+
+import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -20,7 +21,7 @@ import org.lwjgl.opengl.GL11;
  * Renders the beams for the altar of infusion
  */
 @OnlyIn(Dist.CLIENT)
-public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
+public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
 
 
     private final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation("textures/entity/endercrystal/endercrystal_beam.png");
@@ -28,10 +29,10 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
 
 
     @Override
-    public void render(TileAltarInfusion te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(AltarInfusionTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
         // Render the beams if the ritual is running
-        TileAltarInfusion.PHASE phase = te.getCurrentPhase();
-        if (phase == TileAltarInfusion.PHASE.BEAM1 || phase == TileAltarInfusion.PHASE.BEAM2) {
+        AltarInfusionTileEntity.PHASE phase = te.getCurrentPhase();
+        if (phase == AltarInfusionTileEntity.PHASE.BEAM1 || phase == AltarInfusionTileEntity.PHASE.BEAM2) {
             x += 0.5;
             y += 3;
             z += 0.5;
@@ -44,7 +45,7 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
                 for (BlockPos tip : tips) {
                     this.renderBeam(x, y, z, cX, cY, cZ, tip.getX() + 0.5, tip.getY() + 0.5, tip.getZ() + 0.5, te.getRunningTick() + partialTicks, false);
                 }
-                if (phase == TileAltarInfusion.PHASE.BEAM2) {
+                if (phase == AltarInfusionTileEntity.PHASE.BEAM2) {
                     PlayerEntity p = te.getPlayer();
                     if (p != null) {
                         double rX = 0, rZ = 0;

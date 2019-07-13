@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class VampireBaronRenderer extends BipedRenderer<VampireBaronEntity> {
+public class VampireBaronRenderer extends BipedRenderer<VampireBaronEntity, VampireBaronModel<VampireBaronEntity>> {
 
     private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampire_baron.png");
 

@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class HunterTrainerRenderer extends BipedRenderer<HunterTrainerEntity> {
+public class HunterTrainerRenderer extends BipedRenderer<HunterTrainerEntity, BasicHunterModel<HunterTrainerEntity>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base1.png");
 
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_extra.png");
@@ -38,7 +38,7 @@ public class HunterTrainerRenderer extends BipedRenderer<HunterTrainerEntity> {
     protected void renderModel(HunterTrainerEntity entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float partTicks) {
         super.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, partTicks);
         bindTexture(textureExtra);
-        ((BasicHunterModel) mainModel).renderHat(partTicks, 1);
+        getEntityModel().renderHat(partTicks, 1);
 
     }
 }

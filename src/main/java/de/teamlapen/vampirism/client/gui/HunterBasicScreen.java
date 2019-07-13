@@ -1,32 +1,32 @@
 package de.teamlapen.vampirism.client.gui;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.inventory.HunterBasicContainer;
+import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 
 @OnlyIn(Dist.CLIENT)
-public class HunterBasicScreen extends ContainerScreen {
+public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
     private static final ResourceLocation guiTexture = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_basic.png");
 
     private Button buttonLevelup;
-    private HunterBasicContainer container;
     private int missing = 0;
     private int timer = 0;
 
-    public HunterBasicScreen(PlayerEntity player) {
-        super(new HunterBasicContainer(player.inventory));
-        this.container = (HunterBasicContainer) inventorySlots;
+    public HunterBasicScreen(HunterBasicContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name) {
+        super(inventorySlotsIn, playerInventory, name);
     }
 
     @Override
@@ -37,18 +37,13 @@ public class HunterBasicScreen extends ContainerScreen {
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         String name = I18n.format("text.vampirism.level_up");
-        buttons.add(buttonLevelup = new Button(1, i + 37, j + 55, 100, 20, name) {
-            @Override
-            public void onClick(double mouseX, double mouseY) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BASICHUNTERLEVELUP, ""));//TODO Dispatcher
-            }
-        });
-        buttonLevelup.enabled = false;
+        buttons.add(buttonLevelup = new Button(i + 37, j + 55, 150, 20, name, (context) -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BASICHUNTERLEVELUP, ""))));
+        buttonLevelup.active = false;
     }
 
     @Override
@@ -57,22 +52,24 @@ public class HunterBasicScreen extends ContainerScreen {
         timer = (timer + 1) % 10;
         if (timer == 0) {
             this.missing = container.getMissingCount();
-            this.buttonLevelup.enabled = missing == 0;
+            this.buttonLevelup.active = missing == 0;
         }
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(guiTexture);
-        int k = (this.width - this.xSize) / 2;
-        int l = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bindTexture(guiTexture);
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
+        this.blit(i, j, 0, 0, this.xSize, this.ySize);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+        this.font.drawString(this.title.getFormattedText(), 8.0F, 6.0F, 0x404040);
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);//TODO 1.14 test and #77
+
         String text = null;
         if (missing == 0) {
             text = UtilLib.translate("text.vampirism.basic_hunter.i_will_train_you");
@@ -80,7 +77,7 @@ public class HunterBasicScreen extends ContainerScreen {
             text = UtilLib.translate("text.vampirism.basic_hunter.pay_n_vampire_blood_more", missing);
         }
         if (text != null) {
-            this.fontRenderer.drawSplitString(text, 50, 12, 120, 0);
+            this.font.drawSplitString(text, 50, 12, 120, 0);
         }
     }
 }
