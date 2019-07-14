@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -85,7 +84,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage() && vampire.isGettingGarlicDamage() == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().dimension instanceof EndDimension));
+        return !vampire.isGettingSundamage() && vampire.isGettingGarlicDamage() == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getEntityWorld().dimension instanceof EndDimension));
     }
 
     @Override

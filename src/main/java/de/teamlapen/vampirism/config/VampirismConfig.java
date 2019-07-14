@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.config;
 
 
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.entity.SundamageRegistry;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -8,6 +11,9 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
+
+import java.util.Collections;
+import java.util.List;
 
 import static net.minecraftforge.fml.Logging.CORE;
 import static net.minecraftforge.fml.loading.LogMarkers.FORGEMOD;
@@ -49,11 +55,17 @@ public class VampirismConfig {
     @SubscribeEvent
     public static void onLoad(final ModConfig.Loading configEvent) {
         LogManager.getLogger().debug(FORGEMOD, "Loaded forge config file {}", configEvent.getConfig().getFileName());
+        if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
+            ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
+        }
     }
 
     @SubscribeEvent
     public static void onFileChange(final ModConfig.ConfigReloading configEvent) {
         LogManager.getLogger().fatal(CORE, "Forge config just got changed on the file system!");
+        if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
+            ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
+        }
     }
 
     /**
@@ -73,6 +85,12 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
         public final ForgeConfigSpec.BooleanValue playerCanTurnPlayer;
         public final ForgeConfigSpec.BooleanValue factionColorInChat;
+
+        public final ForgeConfigSpec.BooleanValue sundamageUnknownDimension;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverridePositive;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverrideNegative;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDisabledBiomes;
+
 
         public final ForgeConfigSpec.IntValue villageDistance;
         public final ForgeConfigSpec.IntValue villageSeparation;
@@ -99,6 +117,44 @@ public class VampirismConfig {
             autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
             playerCanTurnPlayer = builder.comment("Whether players can infect other players").define("playersCanTurnPlayers", true);
             factionColorInChat = builder.comment("Whether to color player names in chat based on their current faction").define("factionColorInChat", true);
+
+
+            builder.push("sundamage");
+            sundamageUnknownDimension = builder.comment("Whether vampires should receive sundamage in unknown dimensions").define("sundamageUnknownDimension", false);
+            sundamageDimensionsOverridePositive = builder.comment("Add the id of any dimension you want to enforce sundamage for to this list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverridePositive", Collections.emptyList(), (o -> {
+                if (o instanceof String) {
+                    try {
+                        new ResourceLocation((String) o);
+                        return true;
+                    } catch (Exception ignored) {
+                    }
+                }
+                return false;
+
+            }));
+
+            sundamageDimensionsOverrideNegative = builder.comment("Add the id of any dimension you want to disable sundamage for to this list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverridePositive", Collections.emptyList(), (object) -> {
+                if (object instanceof String) {
+                    try {
+                        new ResourceLocation((String) object);
+                        return true;
+                    } catch (Exception ignored) {
+                    }
+                }
+                return false;
+            });
+            sundamageDisabledBiomes = builder.comment("Additional biomes the player should not get sundamage in. Use biome ids e.g. 'minecraft:mesa'").defineList("sundamageDisabledBiomes", Collections.emptyList(), (object) -> {
+                if (object instanceof String) {
+                    try {
+                        new ResourceLocation((String) object);
+                        return true;
+                    } catch (Exception ignored) {
+                    }
+                }
+                return false;
+            });
+            builder.pop();
+
 
             builder.push("village");
             villageModify = builder.comment("Whether to modify the village world gen (size and frequency)").define("villageModify", true);

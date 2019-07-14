@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.inventory.crafting;
 
 import com.google.gson.JsonObject;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.util.JSONUtils;
 import net.minecraftforge.common.crafting.IConditionSerializer;
 
@@ -20,7 +20,7 @@ public class ConfigEntryConditionSerializer implements IConditionSerializer {
         String key = JSONUtils.getString(json, "key");
         switch (key) {
             case "auto_convert_blood_bottles":
-                return () -> Configs.autoConvertGlasBottles;
+                return VampirismConfig.SERVER.autoConvertGlassBottles::get;
             default:
                 return () -> false;
         }

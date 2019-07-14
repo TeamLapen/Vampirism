@@ -133,7 +133,6 @@ public class VampirismMod {
 
 
         File vampConfigDir = new File(FMLPaths.CONFIGDIR.get().toFile(), REFERENCE.MODID);
-        Configs.init(vampConfigDir, inDev);
         Balance.init(vampConfigDir, inDev);
         BloodValueLoader.init(vampConfigDir);
         BloodGrinderValueLoader.init(vampConfigDir);

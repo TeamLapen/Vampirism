@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
@@ -10,7 +9,7 @@ import de.teamlapen.vampirism.client.gui.SleepCoffinScreen;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -74,7 +73,7 @@ public class ClientEventHandler {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onInitGuiEventPost(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (Configs.gui_skill_button_enable && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.get(event.getGui().getMinecraft().player).getCurrentFactionPlayer() != null) {
+        if (VampirismConfig.CLIENT.guiSkillButton.get() && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.get(event.getGui().getMinecraft().player).getCurrentFactionPlayer() != null) {
             Button button = new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22, 20, 18, 178, 0, 19, INVENTORY_SKILLS, (context) -> {
                 //TODO open SkillGui
             });
@@ -136,7 +135,7 @@ public class ClientEventHandler {
             }
 
         } catch (Exception e) {
-            LOGGER.error("ModelBake", e, "Failed to load fluid models for blood container");
+            LOGGER.error("Failed to load fluid models for blood container", e);
 
             return;
         }
@@ -167,7 +166,7 @@ public class ClientEventHandler {
                 event.getModelRegistry().put(loc, newModel);
             }
         } catch (Exception e) {
-            LOGGER.error("ModelBake", e, "Failed to load fluid models for altar inspiration");
+            LOGGER.error("Failed to load fluid models for altar inspiration", e);
 
         }
 
@@ -196,7 +195,7 @@ public class ClientEventHandler {
                 event.getModelRegistry().put(loc, newModel);
             }
         } catch (Exception e) {
-            LOGGER.error("ModelBake", e, "Failed to load fluid models for weapon crafting table");
+            LOGGER.error("Failed to load fluid models for weapon crafting table", e);
 
         }
     }

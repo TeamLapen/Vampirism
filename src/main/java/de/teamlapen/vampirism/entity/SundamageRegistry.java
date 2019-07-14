@@ -1,20 +1,20 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -26,11 +26,10 @@ public class SundamageRegistry implements ISundamageRegistry {
     private Set<ResourceLocation> noSundamageBiomesIDs = new CopyOnWriteArraySet<>();
     private Set<ResourceLocation> noSundamageConfiguredBiomesIDs = new CopyOnWriteArraySet<>();
     private Set<Class> noSundamageBiomes = new CopyOnWriteArraySet<>();
-    private boolean defaultSundamage = false;
 
     public SundamageRegistry() {
         sundamageDims.put(DimensionType.OVERWORLD, true);
-        sundamageDims.put(DimensionType.NETHER, false);
+        sundamageDims.put(DimensionType.THE_NETHER, false);
         sundamageDims.put(DimensionType.THE_END, false);
     }
 
@@ -78,7 +77,7 @@ public class SundamageRegistry implements ISundamageRegistry {
         if (r == null) {
             r = sundamageDims.get(dim);
         }
-        return r == null ? defaultSundamage : r;
+        return r == null ? VampirismConfig.SERVER.sundamageUnknownDimension.get() : r;
     }
 
     @Override
@@ -86,47 +85,37 @@ public class SundamageRegistry implements ISundamageRegistry {
         return Helper.gettingSundamge(entity);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void readClient(CompoundNBT nbt) {
-        if (nbt.contains("sundamage")) {
-            CompoundNBT sundamage = nbt.getCompound("sundamage");
-            defaultSundamage = sundamage.getBoolean("default");
-            sundamageConfiguredDims.clear();
-            CompoundNBT dimensions = sundamage.getCompound("dimensions");
-            for (String s : dimensions.keySet()) {
-                try {
-                    ResourceLocation dim = new ResourceLocation(s);
-                    boolean value = sundamage.getBoolean(s);
-                    specifyConfiguredSundamageForDim(DimensionType.byName(dim), value);
-                } catch (NumberFormatException e) {
-                    LOGGER.error("Failed to parse dimension id (%s) in update packet ", s);
-                }
-            }
-            noSundamageConfiguredBiomesIDs.clear();
-            CompoundNBT biomes = sundamage.getCompound("biomes");
-            for (String s : biomes.keySet()) {
-                ResourceLocation res = new ResourceLocation(s);
-                addNoSundamageBiomeConfigured(res);
+
+    public void reloadConfiguration() {
+        sundamageConfiguredDims.clear();
+        List<? extends String> negative = VampirismConfig.SERVER.sundamageDimensionsOverrideNegative.get();
+        for (String s : negative) {
+            ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
+            Optional<DimensionType> opt = Registry.DIMENSION_TYPE.getValue(id);
+            opt.ifPresent(type -> sundamageConfiguredDims.put(type, false));
+            if (!opt.isPresent()) {
+                LOGGER.warn("Could not find configured negative sundamage dimension {}", s);
             }
         }
-    }
+        List<? extends String> positive = VampirismConfig.SERVER.sundamageDimensionsOverridePositive.get();
+        for (String s : positive) {
+            ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
+            Optional<DimensionType> opt = Registry.DIMENSION_TYPE.getValue(id);
+            opt.ifPresent(type -> sundamageConfiguredDims.put(type, true));
+            if (!opt.isPresent()) {
+                LOGGER.warn("Could not find configured positive sundamage dimension {}", s);
+            }
+        }
 
-    /**
-     * Resets the configured sundamage dims. E.G. on configuration reload
-     */
-    public void resetConfigurations() {
-        sundamageConfiguredDims.clear();
         noSundamageConfiguredBiomesIDs.clear();
+        List<? extends String> biomes = VampirismConfig.SERVER.sundamageDisabledBiomes.get();
+        for (String s : biomes) {
+            ResourceLocation id = new ResourceLocation(s);
+            noSundamageConfiguredBiomesIDs.add(id);
+        }
+
     }
 
-    /**
-     * Specifies the default value for non specified dimensions
-     *
-     * @param val
-     */
-    public void setDefaultDimsSundamage(boolean val) {
-        defaultSundamage = val;
-    }
 
     /**
      * Adds settings from Vampirism's config file.
@@ -143,19 +132,4 @@ public class SundamageRegistry implements ISundamageRegistry {
         sundamageDims.put(dimension, sundamage);
     }
 
-    public void writeServer(CompoundNBT nbt) {
-        CompoundNBT sundamage = new CompoundNBT();
-        CompoundNBT dimensions = new CompoundNBT();
-        for (Map.Entry<DimensionType, Boolean> entry : sundamageConfiguredDims.entrySet()) {
-            dimensions.putBoolean(DimensionType.getKey(entry.getKey()).toString(), entry.getValue());
-        }
-        sundamage.put("dimensions", dimensions);
-        CompoundNBT biomes = new CompoundNBT();
-        for (ResourceLocation s : noSundamageConfiguredBiomesIDs) {
-            biomes.putBoolean(s.toString(), true);
-        }
-        sundamage.put("biomes", biomes);
-        sundamage.putBoolean("default", defaultSundamage);
-        nbt.put("sundamage", sundamage);
-    }
 }

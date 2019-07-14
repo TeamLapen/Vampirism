@@ -5,7 +5,7 @@ import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.tileentity.TotemTile;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -84,8 +84,7 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
     public void onConfigurationChanged(ConfigChangedEvent.OnConfigChangedEvent e) {
         if (e.getModID().equalsIgnoreCase(REFERENCE.MODID)) {
             LOGGER.info("Configuration ({}) changed", e.getConfigID());
-            Configs.onConfigurationChanged();
-            Balance.onConfigurationChanged();
+            Balance.onConfigurationChanged(); //TODO 1.14 see if this still exist after Forge readds config GUI. And if this is necessary or if the events inside VampirismConfig are sufficient
         }
     }
 
@@ -130,7 +129,7 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
 
         boolean isAdminLikePlayer = !ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.getPlayer());
 
-        if (!Configs.disable_versionCheck && versionInfo.isNewVersionAvailable()) {
+        if (VampirismConfig.COMMON.versionCheck.get() && versionInfo.isNewVersionAvailable()) {
             if (isAdminLikePlayer || event.getPlayer().getRNG().nextInt(5) == 0) {
                 if (event.getPlayer().getRNG().nextInt(4) == 0) {
                     VersionChecker.Version newVersion = versionInfo.getNewVersion();

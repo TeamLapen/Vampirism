@@ -42,7 +42,7 @@ public class Balance {
         hps = addBalance(new BalanceHunterSkills(balanceDir));
         hpa = addBalance(new BalanceHunterActions(balanceDir));
         ea = addBalance(new BalanceEntityActions(balanceDir));
-        if (inDev && Configs.resetConfigurationInDev) {
+        if (inDev) {
             resetAndReload(null);
         } else {
             loadConfiguration();

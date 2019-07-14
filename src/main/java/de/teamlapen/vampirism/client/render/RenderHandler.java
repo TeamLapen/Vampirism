@@ -6,7 +6,7 @@ import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.items.HunterCoatItem;
@@ -132,7 +132,7 @@ public class RenderHandler {
             }
         }
         if (mc.player.ticksExisted % 10 == 0) {
-            if ((Configs.renderVampireForestFog || Configs.renderVampireForestFogEnforce) && (Helper.isEntityInVampireBiome(mc.player) || TotemTile.isInsideVampireAreaCached(mc.world.getDimension(), mc.player.getPosition()))) {
+            if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInVampireBiome(mc.player) || TotemTile.isInsideVampireAreaCached(mc.world.getDimension(), mc.player.getPosition()))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getSpecialAttributes().increasedVampireFogDistance ? 2 : 1;
             } else {

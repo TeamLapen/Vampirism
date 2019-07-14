@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceModChurch;
@@ -44,11 +43,10 @@ public class ModVillages {
     }
 
     private static void registerCreationHandlers() {
-        if (!Configs.disable_all_worldgen) {
             VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceTrainer.CreationHandler());
             VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceModChurch.CreationHandler());
             VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceTotem.CreationHandler());
-        }
+
     }
 
     static void modifyVillageSize(ChunkGenSettings settings) {
