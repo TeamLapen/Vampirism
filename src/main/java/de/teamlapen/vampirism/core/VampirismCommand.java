@@ -169,7 +169,7 @@ public class VampirismCommand extends BasicCommand {
                 int currentLevel = handler.getCurrentLevel();
                 if (currentLevel == 0) {
                     throw new CommandException("command.vampirism.base.levelup.nofaction");
-                } else if (currentLevel == handler.getCurrentFaction().getHighestReachableLevel()) {
+                } else if (currentLevel == handler.getCurrentFaction().getHighestReachableLevel() || currentLevel == 14) {
                     sender.sendMessage(new TextComponentTranslation("command.vampirism.base.levelup.max"));
                 } else {
                     if (handler.setFactionLevel(handler.getCurrentFaction(), currentLevel + 1)) {
