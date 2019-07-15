@@ -634,12 +634,12 @@ public class TileTotem extends TileEntity implements ITickable {
                             if (l.size() < max) {
                                 if (seed.getRNG().nextInt(15) == 0) {
                                     if (controllingFaction.equals(VReference.HUNTER_FACTION)) {
-                                        spawnVillagerInVillage(new EntityHunterFactionVillager(this.world), seed, true);
+                                        spawnVillagerInVillage(new EntityHunterFactionVillager(this.world), seed, true, false);
                                     } else if (controllingFaction.equals(VReference.VAMPIRE_FACTION)) {
-                                        spawnVillagerInVillage(new EntityVampireFactionVillager(this.world), seed, false);
+                                        spawnVillagerInVillage(new EntityVampireFactionVillager(this.world), seed, false, false);
                                     } else {
                                         VampirismVillageEvent.SpawnFactionVillager event = ModEventFactory.fireSpawnFactionVillagerEvent(village, seed, controllingFaction);
-                                        spawnVillagerInVillage(event.getVillager(), seed, event.hasPoisonousBlood());
+                                        spawnVillagerInVillage(event.getVillager(), seed, event.hasPoisonousBlood(), false);
                                     }
                                 } else {
                                     boolean isConverted = this.controllingFaction != VReference.HUNTER_FACTION && seed.getRNG().nextBoolean();
@@ -651,13 +651,12 @@ public class TileTotem extends TileEntity implements ITickable {
                                         } else {
                                             newVillager = new EntityVillager(this.world);
                                             newVillager.copyLocationAndAnglesFrom(seed);
-                                            newVillager.setGrowingAge(-24000);
-                                            seed.setGrowingAge(6000);
+                                            newVillager.setGrowingAge(seed.getGrowingAge());
                                         }
                                         if (event.isWillBeConverted()) {
                                             IConvertedCreature converted = ExtendedCreature.get(newVillager).makeVampire(); //Already spawns the creature in the world
                                         } else {
-                                            this.spawnVillagerInVillage(newVillager, seed, this.controllingFaction == VReference.HUNTER_FACTION);
+                                            this.spawnVillagerInVillage(newVillager, seed, this.controllingFaction == VReference.HUNTER_FACTION, false);
                                         }
                                     }
 
@@ -676,7 +675,7 @@ public class TileTotem extends TileEntity implements ITickable {
                             }
                             if (entityId != null && defenderNumMax > guards.size()) {
                                 Entity e = EntityList.createEntityByIDFromName(entityId, world);
-                                if (e != null && !spawnEntityInVillage(e, null)) {
+                                if (e != null && !spawnEntityInVillage(e, null, false)) {
                                     e.setDead();
                                 }
                             }
@@ -929,7 +928,7 @@ public class TileTotem extends TileEntity implements ITickable {
      * @param entityToReplace old Entity to be replaced
      * @returns false if spawn is not possible
      */
-    private boolean spawnEntityInVillage(@Nonnull Entity newEntity, @Nullable Entity entityToReplace) {
+    private boolean spawnEntityInVillage(@Nonnull Entity newEntity, @Nullable Entity entityToReplace, boolean removeEntityToReplace) {
         if (entityToReplace != null) {
             newEntity.copyLocationAndAnglesFrom(entityToReplace);
         } else {
@@ -940,23 +939,23 @@ public class TileTotem extends TileEntity implements ITickable {
             if (!world.isAirBlock(new BlockPos(vec))) vec = vec.add(0, 1, 0);
             newEntity.setPosition(vec.x, vec.y, vec.z);
         }
-        if (entityToReplace != null) world.removeEntity(entityToReplace);
+        if (entityToReplace != null && removeEntityToReplace) world.removeEntity(entityToReplace);
         world.spawnEntity(newEntity);
         return true;
     }
 
     /**
      * Spawn the given new villager in the world/village
-     * by using {@link TileTotem#spawnEntityInVillage(Entity, Entity)} spawning new Villager
+     * by using {@link TileTotem#spawnEntityInVillage(Entity, Entity, boolean)} spawning new Villager
      *
      * @param newVillager     new Entity to spawn
      * @param entityToReplace old Entity to bew replaced
      * @param poisonousBlood  if the villager should have poisonous blood
      * @return false if spawn is not possible
      */
-    private boolean spawnVillagerInVillage(EntityVillager newVillager, @Nullable Entity entityToReplace, boolean poisonousBlood) {
+    private boolean spawnVillagerInVillage(EntityVillager newVillager, @Nullable Entity entityToReplace, boolean poisonousBlood, boolean removeEntityToReplace) {
         if (newVillager == null) return false;
-        if (!spawnEntityInVillage(newVillager, entityToReplace)) return false;
+        if (!spawnEntityInVillage(newVillager, entityToReplace, removeEntityToReplace)) return false;
         if (entityToReplace instanceof EntityVillager) {
             newVillager.setHomePosAndDistance(((EntityVillager) entityToReplace).getHomePosition(), (int) ((EntityVillager) entityToReplace).getMaximumHomeDistance());
         } else {
@@ -1043,12 +1042,12 @@ public class TileTotem extends TileEntity implements ITickable {
                     if (hunter.size() > 0) {
                         for (EntityHunterBase e : hunter) {
                             if (i-- > 0) {
-                                spawnVillagerInVillage(new EntityVillager(this.world), e, true);
+                                spawnVillagerInVillage(new EntityVillager(this.world), e, true,true);
                             }
                         }
                     }
                     for (int o = i; o > 0; o--) {
-                        spawnVillagerInVillage(new EntityVillager(this.world), null, true);
+                        spawnVillagerInVillage(new EntityVillager(this.world), null, true, true);
                     }
 
                 } else {
@@ -1064,7 +1063,7 @@ public class TileTotem extends TileEntity implements ITickable {
                     world.removeEntity(e);
                     world.spawnEntity(trainer);
                 }
-                spawnVillagerInVillage(new EntityHunterFactionVillager(this.world), null, false);
+                spawnVillagerInVillage(new EntityHunterFactionVillager(this.world), null, false, true);
             } else if (capturingFaction == VReference.VAMPIRE_FACTION) {
                 for (EntityVillager e : villager) {
                     ExtendedCreature.get(e).setPoisonousBlood(false);
@@ -1079,7 +1078,7 @@ public class TileTotem extends TileEntity implements ITickable {
                     world.removeEntity(e);
                     world.spawnEntity(dummy);
                 }
-                spawnVillagerInVillage(new EntityVampireFactionVillager(this.world), null, false);
+                spawnVillagerInVillage(new EntityVampireFactionVillager(this.world), null, false, true);
             }
         }
     }
