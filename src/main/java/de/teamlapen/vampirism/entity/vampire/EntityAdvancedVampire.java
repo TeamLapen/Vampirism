@@ -9,10 +9,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
-import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
-import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
-import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
-import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
+import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
@@ -240,7 +237,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
         this.tasks.addTask(4, new EntityAIAttackMeleeNoSun(this, 1.0, false));
         this.tasks.addTask(8, new EntityAIWander(this, 0.9, 25));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
+        this.tasks.addTask(9, new EntityAIWatchClosestVisible(this, EntityPlayer.class, 13F));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));
         this.tasks.addTask(11, new EntityAILookIdle(this));
 
