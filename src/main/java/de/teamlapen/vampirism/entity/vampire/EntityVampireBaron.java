@@ -49,7 +49,7 @@ import java.util.UUID;
 public class EntityVampireBaron extends EntityVampireBase implements IVampireBaron {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityVampireBaron.class, DataSerializers.VARINT);
     private final SaveableMinionHandler<IVampireMinion.Saveable> minionHandler;
-    private final int MAX_LEVEL = 5;
+    public static final int MAX_LEVEL = 5;
 
     /**
      * Used for ranged vs melee attack decision

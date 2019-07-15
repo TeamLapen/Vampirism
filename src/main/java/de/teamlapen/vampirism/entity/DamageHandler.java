@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -9,6 +8,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.action.EntityActionHandler;
 import de.teamlapen.vampirism.entity.action.EntityActions;
+import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
@@ -18,6 +18,9 @@ import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EntityDamageSourceIndirect;
+
+import javax.annotation.Nullable;
 
 /**
  * Centralizes the calculation and appliance of different sorts of damages or similar.
@@ -93,6 +96,21 @@ public class DamageHandler {
      * @param directHit If the entity was hit directly
      */
     public static void affectEntityHolyWaterSplash(EntityLivingBase entity, EnumStrength strength, double distSq, boolean directHit) {
+        affectEntityHolyWaterSplash(entity, strength, distSq, directHit, null);
+    }
+
+    /**
+     * Applies all holy water effects to the given entity.
+     * Used if a holy water splash bottle affects an entity.
+     * Affects vampires and undead (less).
+     *
+     * @param entity    The affected entity
+     * @param strength  The used strength
+     * @param distSq    The squared distance from the center point
+     * @param directHit If the entity was hit directly
+     * @param source    The throwing entity
+     */
+    public static void affectEntityHolyWaterSplash(EntityLivingBase entity, EnumStrength strength, double distSq, boolean directHit, @Nullable EntityLivingBase source) {
         boolean vampire = Helper.isVampire(entity);
         if (entity.canBeHitWithPotion() && (vampire || EnumCreatureAttribute.UNDEAD.equals(entity.getCreatureAttribute()))) {
             if (distSq < 16.0D) {
@@ -109,9 +127,12 @@ public class DamageHandler {
                 double amount = (affect * (Balance.general.HOLY_WATER_SPLASH_DAMAGE * (strength == EnumStrength.WEAK ? 1 : strength == EnumStrength.MEDIUM ? Balance.general.HOLY_WATER_TIER_DAMAGE_INC : (Balance.general.HOLY_WATER_TIER_DAMAGE_INC * Balance.general.HOLY_WATER_TIER_DAMAGE_INC))) + 0.5D);
                 if (entity instanceof EntityPlayer) {
                     int l = VampirePlayer.get((EntityPlayer) entity).getLevel();
-                    amount = scaleDamageWithLevel(l, amount * 0.8, amount * 1.1);
+                    amount = scaleDamageWithLevel(l, REFERENCE.HIGHEST_VAMPIRE_LEVEL, amount * 0.8, amount * 1.3);
+                } else if(entity instanceof EntityVampireBaron) {
+                    int l = ((EntityVampireBaron) entity).getLevel();
+                    amount = scaleDamageWithLevel(l, EntityVampireBaron.MAX_LEVEL, amount * 0.8, amount * 2);
                 }
-                entity.attackEntityFrom(VReference.HOLY_WATER, (float) amount);
+                entity.attackEntityFrom(new EntityDamageSourceIndirect("holy_water", entity, source).setMagicDamage(), (float) amount);
             }
         }
         if (vampire && entity instanceof EntityPlayer) {
@@ -139,8 +160,8 @@ public class DamageHandler {
      * @param maxDamage
      * @return
      */
-    private static double scaleDamageWithLevel(int level, double minDamage, double maxDamage) {
-        return minDamage + level / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL * (maxDamage - minDamage);
+    private static double scaleDamageWithLevel(int level, int maxLevel, double minDamage, double maxDamage) {
+        return minDamage + level / (double) maxLevel * (maxDamage - minDamage);
     }
 
 }
