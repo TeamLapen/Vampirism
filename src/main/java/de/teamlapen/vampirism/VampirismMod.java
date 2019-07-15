@@ -7,10 +7,8 @@ import de.teamlapen.lib.lib.util.ModCompatLoader;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.*;
 import de.teamlapen.vampirism.core.*;
@@ -85,13 +83,13 @@ public class VampirismMod {
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private final static EntityClassification HUNTER_CREATURE_TYPE = EntityClassification.create("VAMPIRISM_HUNTER", IHunterMob.class, 25, false, false);
+    private final static EntityClassification HUNTER_CREATURE_TYPE = EntityClassification.create("vampirism_hunter", "test1", 25, false, false); //TODO 1.14 use debugger to find out what test1 does
     /**
      * Vampire creatures are of this creature type. Use the instance in
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private static final EntityClassification VAMPIRE_CREATURE_TYPE = EntityClassification.create("VAMPIRISM_VAMPIRE", IVampireMob.class, 30, false, false);
+    private static final EntityClassification VAMPIRE_CREATURE_TYPE = EntityClassification.create("vampirism_vampire", "test2", 30, false, false);
     /**
      * Vampire creatures have this attribute Vampire creatures are of this creature
      * type. Use the instance in {@link VReference} instead of this one. This is
@@ -221,7 +219,7 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.COMMON_SETUP, event);
         proxy.onInitStep(IInitListener.Step.COMMON_SETUP, event);
 
-        String currentVersion = "@VERSION@".equals(REFERENCE.VERSION) ? "0.0.0-test" : REFERENCE.VERSION;
+        String currentVersion = REFERENCE.VERSION;
         if (!VampirismConfig.COMMON.versionCheck.get()) {
             versionInfo = new VersionChecker.VersionInfo(currentVersion);
         } else {

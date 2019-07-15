@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -63,7 +64,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
             playerMp.disconnect();
             playerMp.setPositionAndUpdate(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
-        AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(player.getEntityWorld());
+        AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(ModEntities.particle_cloud, player.getEntityWorld());
         particleCloud.setPosition(ox, oy, oz);
         particleCloud.setRadius(0.7F);
         particleCloud.setHeight(player.getHeight());

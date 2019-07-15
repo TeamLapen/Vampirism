@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -22,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_table.png");
-    private static IWorldPosCallable worldPos;
+    private IWorldPosCallable worldPos;
 
     public HunterTableScreen(HunterTableContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name) {
         this(inventorySlotsIn, playerInventory, name, IWorldPosCallable.DUMMY);

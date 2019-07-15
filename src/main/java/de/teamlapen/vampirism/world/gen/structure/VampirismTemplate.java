@@ -8,13 +8,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class VampirismTemplate extends Template {
@@ -23,13 +21,15 @@ public class VampirismTemplate extends Template {
     private ResourceLocation lootTable;
 
     @Override
-    public boolean addBlocksToWorld(IWorld worldIn, BlockPos pos, @Nullable StructureProcessor templateProcessor, PlacementSettings placementIn, int flags) {//TODO right return statement
-        super.addBlocksToWorld(worldIn, pos, templateProcessor, placementIn, flags);
+    public boolean addBlocksToWorld(IWorld worldIn, BlockPos pos, PlacementSettings placementIn, int flags) {
+        if (!super.addBlocksToWorld(worldIn, pos, placementIn, flags)) {
+            return false;
+        }
         if (lootTable != null) {
             boolean flag = false;
             List<BlockInfo> blocks = ObfuscationReflectionHelper.getPrivateValue(Template.class, this, SRGNAMES.Template_blocks);
             for (BlockInfo b : blocks) {
-                if (b.blockState.getBlock() instanceof ChestBlock) {
+                if (b.state.getBlock() instanceof ChestBlock) {
                     TileEntity t = worldIn.getTileEntity(b.pos);
                     if (t instanceof ChestTileEntity) {
                         ((ChestTileEntity) t).setLootTable(lootTable, worldIn.getSeed());

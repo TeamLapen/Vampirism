@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import com.mojang.datafixers.util.Either;
-
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -127,7 +126,7 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public Predicate<Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
+    public Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
         return null;
     }
 

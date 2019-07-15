@@ -15,7 +15,7 @@ import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
@@ -114,7 +114,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     @Override
-    public Predicate<Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
+    public Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
         if (otherFactionPlayers) {
             return entity -> true;
         } else {

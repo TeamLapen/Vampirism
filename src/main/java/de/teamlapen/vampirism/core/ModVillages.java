@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.world.gen.village.VillagePieceTrainer;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.ChunkGenSettings;
+import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
@@ -49,23 +49,23 @@ public class ModVillages {
 
     }
 
-    static void modifyVillageSize(ChunkGenSettings settings) {
+    static void modifyVillageSize(GenerationSettings settings) {
 
         if (!VampirismConfig.SERVER.villageModify.get()) {
             LOGGER.trace("Not modifying village");
             return;
         }
             try {
-                ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, VampirismConfig.SERVER.villageDistance.get(), SRGNAMES.ChunkGenSettings_villageDistance);
+                ObfuscationReflectionHelper.setPrivateValue(GenerationSettings.class, settings, VampirismConfig.SERVER.villageDistance.get(), SRGNAMES.GenerationSettings_villageDistance);
             } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
-                LOGGER.error("Could not modify field 'villageDistance' in ChunkGenSettings", e);
+                LOGGER.error("Could not modify field 'villageDistance' in GenerationSettings", e);
             }
 
 
         try {
-            ObfuscationReflectionHelper.setPrivateValue(ChunkGenSettings.class, settings, VampirismConfig.SERVER.villageSeparation.get(), SRGNAMES.ChunkGenSettings_villageSeparation);
+            ObfuscationReflectionHelper.setPrivateValue(GenerationSettings.class, settings, VampirismConfig.SERVER.villageSeparation.get(), SRGNAMES.GenerationSettings_villageSeparation);
             } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
-            LOGGER.error("Could not modify field for villageSeparation in ChunkGenSettings", e);
+            LOGGER.error("Could not modify field for villageSeparation in GenerationSettings", e);
             }
 
 

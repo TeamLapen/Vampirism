@@ -66,12 +66,12 @@ public class ModPotions {
         try {
             for (EffectInstance effect : Potions.NIGHT_VISION.getEffects()) {
                 if (effect.getPotion().equals(vanilla_night_vision)) { //If still referring to vanilla potion replace
-                    ObfuscationReflectionHelper.setPrivateValue(EffectInstance.class, effect, modded_night_vision, SRGNAMES.PotionEffect_potion);
+                    ObfuscationReflectionHelper.setPrivateValue(EffectInstance.class, effect, modded_night_vision, SRGNAMES.EffectInstance_potion);
                 }
             }
             for (EffectInstance effect : Potions.LONG_NIGHT_VISION.getEffects()) {
                 if (effect.getPotion().equals(vanilla_night_vision)) {
-                    ObfuscationReflectionHelper.setPrivateValue(EffectInstance.class, effect, modded_night_vision, SRGNAMES.PotionEffect_potion);
+                    ObfuscationReflectionHelper.setPrivateValue(EffectInstance.class, effect, modded_night_vision, SRGNAMES.EffectInstance_potion);
                 }
             }
         } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {

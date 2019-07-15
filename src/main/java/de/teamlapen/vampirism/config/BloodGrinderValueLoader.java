@@ -15,6 +15,7 @@ import java.util.Map;
 
 /**
  * Handle loading and saving of blood values.
+ * TODO 1.14 probably want to migrate to data packs
  */
 public class BloodGrinderValueLoader {
 

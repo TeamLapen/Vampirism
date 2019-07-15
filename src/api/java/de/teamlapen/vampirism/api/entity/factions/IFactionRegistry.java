@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity.factions;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -43,17 +44,15 @@ public interface IFactionRegistry {
 
     /**
      * Get a cached or create a predicate which selects all other faction entities
-     * For all non EntityLivingBase entities the predicate is always false
      *
      * @param thisFaction
      * @param ignoreDisguise If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
      * @return
      */
-    Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise);
+    Predicate<LivingEntity> getPredicate(IFaction thisFaction, boolean ignoreDisguise);
 
     /**
      * Get a cached or create a predicate which selects entities from other factions.
-     * For all non EntityLivingBase entities the predicate is always false
      *
      * @param thisFaction    The friendly faction
      * @param player         If players should be selected
@@ -63,7 +62,7 @@ public interface IFactionRegistry {
      * @param otherFaction   If this is not null, only entities of this faction are selected.
      * @return
      */
-    Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction);
+    Predicate<LivingEntity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction);
 
     /**
      * Create and registerAdvancements a non playable faction. Has to be called during InterModEnqueueEvent

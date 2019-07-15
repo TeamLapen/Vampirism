@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.tileentity.TotemTile;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.world.ModWorldEventListener;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.block.Blocks;
@@ -20,10 +19,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.Village;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.ChunkGenSettings;
 import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.OverworldChunkGenerator;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -75,7 +72,7 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
     public void on(WorldEvent.Load event) {
         ChunkGenerator generator = event.getWorld().getChunkProvider().getChunkGenerator();
         if (generator instanceof OverworldChunkGenerator) {
-            ChunkGenSettings settings = ((OverworldChunkGenerator) generator).getSettings();
+            GenerationSettings settings = ((OverworldChunkGenerator) generator).getSettings();
             ModVillages.modifyVillageSize(settings);
         }
     }
@@ -98,28 +95,6 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
                 }
             }
         }
-    }
-
-    @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event) {
-        IWorld world = event.getWorld();
-        if (world instanceof World) {
-            ((World) world).addEventListener(new ModWorldEventListener(event.getWorld().getDimension()));
-        }
-    }
-
-    @SubscribeEvent
-    public void onWorldTick(TickEvent.WorldTickEvent event) {
-        if (event.phase.equals(TickEvent.Phase.END)) {
-            DaySleepHelper.checkSleepWorld(event.world);
-            VampirismVillageHelper.tick(event.world);
-        }
-    }
-
-    @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event) {
-        VampirismAPI.getGarlicChunkHandler(event.getWorld().getWorld()).clear();//TODO test is World right (or IWorld)
-        TotemTile.clearCacheForDimension(event.getWorld().getDimension());
     }
 
     @SubscribeEvent
@@ -154,15 +129,31 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
             }
 
         }
-        if (Configs.updated_vampirism) {
-            if (!ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.getPlayer())) {
+//        if (Configs.updated_vampirism) { TODO 1.14 Balance
+//            if (!ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.getPlayer())) {
+//
+//
+//                event.getPlayer().sendMessage(new StringTextComponent("It looks like you have updated Vampirism"));
+//                event.getPlayer().sendMessage(new StringTextComponent("Please consider resetting the balance values to the updated ones, using " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance all'" + TextFormatting.RESET));
+//                event.getPlayer().sendMessage(new StringTextComponent("For more information use " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance help'" + TextFormatting.RESET));
+//            }
+    }
 
+    @SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload event) {
+        VampirismAPI.getGarlicChunkHandler(event.getWorld().getWorld()).clear();//TODO test is World right (or IWorld)
+        TotemTile.clearCacheForDimension(event.getWorld().getDimension());
+    }
 
-                event.getPlayer().sendMessage(new StringTextComponent("It looks like you have updated Vampirism"));
-                event.getPlayer().sendMessage(new StringTextComponent("Please consider resetting the balance values to the updated ones, using " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance all'" + TextFormatting.RESET));
-                event.getPlayer().sendMessage(new StringTextComponent("For more information use " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance help'" + TextFormatting.RESET));
+    @SubscribeEvent
+    public void onWorldTick(TickEvent.WorldTickEvent event) {
+        if (event.phase.equals(TickEvent.Phase.END)) {
+            VampirismVillageHelper.tick(event.world);
+            if (event.world.getGameTime() % 16 == 0) {
+                DaySleepHelper.checkSleepWorld(event.world);
             }
         }
+    }
 
     }
 }

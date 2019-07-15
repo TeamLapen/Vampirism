@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.BlindingBatEntity;
 import de.teamlapen.vampirism.items.HunterCoatItem;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -26,8 +27,8 @@ public class FreezeVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(final IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
-        List l = player.getEntityWorld().getEntitiesInAABBexcluding(player, player.getBoundingBox().grow(10, 5, 10), vampire.getNonFriendlySelector(true, false)::test);
-        for (Object o : l) {
+        List<Entity> l = player.getEntityWorld().getEntitiesInAABBexcluding(player, player.getBoundingBox().grow(10, 5, 10), vampire.getNonFriendlySelector(true, false)::test);
+        for (Entity o : l) {
             if (o instanceof BlindingBatEntity) continue;
             if (!(o instanceof LivingEntity)) continue;
             if (o instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) o)) continue;

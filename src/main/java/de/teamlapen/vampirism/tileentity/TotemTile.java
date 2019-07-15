@@ -70,7 +70,6 @@ import java.util.*;
 public class TotemTile extends TileEntity implements ITickable {
     private final static Logger LOGGER = LogManager.getLogger(TotemTile.class);
     private final static int NOTIFY_DISTANCE_SQ = 40000;
-    private final static String TAG = "TotemTile";
     private final static int DURATION_PHASE_1 = 60;
     /**
      * Store a dimension -> blockpos -> BoundingBox map of villages controlled by vampires. Added/Updated on update package. Removed on invalidate.

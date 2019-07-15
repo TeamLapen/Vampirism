@@ -54,7 +54,7 @@ public class LevelAttributeModifier {
     public static void applyModifier(PlayerEntity player, IAttribute attribute, String name, int level, int lcap, double max, double type, AttributeModifier.Operation operation, boolean evenIntOnly) {
         UUID mod = modifiers.get(attribute);
         if (mod == null) {
-            LOGGER.warn("Cannot modify %s, no modifier is registered", attribute);
+            LOGGER.warn("Cannot modify {}, no modifier is registered", attribute);
             return;
         }
         double m = calculateModifierValue(level, lcap, max, type);

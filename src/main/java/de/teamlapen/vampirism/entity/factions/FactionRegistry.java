@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -29,7 +30,7 @@ public class FactionRegistry implements IFactionRegistry {
     private List<Faction> temp = new CopyOnWriteArrayList<>(); //Copy on write is costly, but we only expect very few elements anyway
     private Faction[] allFactions;
     private PlayableFaction[] playableFactions;
-    private Map<Integer, Predicate<Entity>> predicateMap = new HashMap<Integer, Predicate<Entity>>();
+    private Map<Integer, Predicate<LivingEntity>> predicateMap = new HashMap<>();
 
     /**
      * Finishes registrations during InterModProcessEvent
@@ -83,13 +84,13 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public java.util.function.Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise) {
+    public Predicate<LivingEntity> getPredicate(IFaction thisFaction, boolean ignoreDisguise) {
 
         return getPredicate(thisFaction, true, true, true, ignoreDisguise, null);
     }
 
     @Override
-    public java.util.function.Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction) {
+    public Predicate<LivingEntity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction) {
         int key = 0;
         if (otherFaction != null) {
             int id = ((Faction) otherFaction).getId();
@@ -115,7 +116,7 @@ public class FactionRegistry implements IFactionRegistry {
             LOGGER.warn("Faction id over 64, predicates won't work");
         }
         key |= id & 63;
-        Predicate<Entity> predicate;
+        Predicate<LivingEntity> predicate;
         if (predicateMap.containsKey(key)) {
             predicate = predicateMap.get(key);
         } else {

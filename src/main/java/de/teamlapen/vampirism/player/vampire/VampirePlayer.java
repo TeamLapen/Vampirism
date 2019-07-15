@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import com.mojang.datafixers.util.Either;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -37,15 +36,13 @@ import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.init.Particles;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
-import net.minecraft.network.IPacket;
 import net.minecraft.network.play.server.SAnimateHandPacket;
-import net.minecraft.network.play.server.SPacketUseBed;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
@@ -197,7 +194,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             return;
         }
         double dist = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1;
-        if (player.getDistanceSq(pos) > dist * dist) {
+        if (player.getDistanceSq(pos.getX(), pos.getY(), pos.getZ()) > dist * dist) {
             LOGGER.warn("Block sent by client is not in reach" + pos);
         } else {
             biteBlock(pos, player.world.getBlockState(pos), player.world.getTileEntity(pos));
@@ -401,7 +398,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    public Predicate<Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
+    public Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
         if (otherFactionPlayers) {
             return entity -> true;
         } else {
@@ -555,11 +552,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void onLevelChanged(int newLevel, int oldLevel) {
         if (!isRemote()) {
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE, 2, false);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE, 2, false);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE, 0, true);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE, AttributeModifier.Operation.ADDITION, true);
             if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
-            LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXHAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE, 2, false);
+            LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXHAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
             if (newLevel > 13) {
                 bloodStats.setMaxBlood(40);
             } else if (newLevel > 9) {
@@ -812,7 +809,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * @return
      */
     public boolean setEntitySize(float width, float height) {
-
+        //TODO 1.14 this is not going to work
         try {
             if (reflectionMethodSetSize == null) {
                 reflectionMethodSetSize = ObfuscationReflectionHelper.findMethod(Entity.class, SRGNAMES.Entity_setSize, float.class, float.class);
@@ -894,12 +891,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 return Either.left(PlayerEntity.SleepResult.TOO_FAR_AWAY);
             }
 
-            double d0 = 8.0D;
-            double d1 = 5.0D;
-            List<MonsterEntity> list = player.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB((double) bedLocation.getX() - d0, (double) bedLocation.getY() - d1, (double) bedLocation.getZ() - d0, (double) bedLocation.getX() + d0, (double) bedLocation.getY() + d1, (double) bedLocation.getZ() + d0));
-
-            if (!list.isEmpty()) {
-                return Either.left(PlayerEntity.SleepResult.NOT_SAFE);
+            if (!player.isCreative()) {
+                double d0 = 8.0D;
+                double d1 = 5.0D;
+                List<MonsterEntity> list = player.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB((double) bedLocation.getX() - d0, (double) bedLocation.getY() - d1, (double) bedLocation.getZ() - d0, (double) bedLocation.getX() + d0, (double) bedLocation.getY() + d1, (double) bedLocation.getZ() + d0), (p_213820_1_) -> p_213820_1_.isPreventingPlayerRest(player));
+                if (!list.isEmpty()) {
+                    return Either.left(PlayerEntity.SleepResult.NOT_SAFE);
+                }
             }
             if (!player.world.isDaytime()) {
                 player.setBedPosition(bedLocation); //Set sleep location even if night time
@@ -907,59 +905,57 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         }
 
-        if (player.getRidingEntity() != null) {
-            player.stopRiding();
-        }
-        if (!setEntitySize(0.2F, 0.2F)) return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
+        player.startSleeping(bedLocation); //TODO 1.14 check if this actually replaces most of the commented code below
+        //if (!setEntitySize(0.2F, 0.2F)) return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
 
 
-        BlockState state = null;
-        if (player.world.isBlockLoaded(bedLocation)) state = player.world.getBlockState(bedLocation);
-        if (state != null && state.getBlock().isBed(state, player.world, bedLocation, player)) {
-            Direction enumfacing = state.getBlock().getBedDirection(state, player.world, bedLocation);
-            float f = 0.5F;
-            float f1 = 0.5F;
-
-            switch (enumfacing) {
-                case SOUTH:
-                    f1 = 0.9F;
-                    break;
-                case NORTH:
-                    f1 = 0.1F;
-                    break;
-                case WEST:
-                    f = 0.1F;
-                    break;
-                case EAST:
-                    f = 0.9F;
-                    break;
-                default://Should not happen
-            }
-            player.setRenderOffsetForSleep(enumfacing);
-
-            player.setPosition((double) ((float) bedLocation.getX() + f), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + f1));
-        } else {
-            player.setPosition((double) ((float) bedLocation.getX() + 0.5F), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + 0.5F));
-        }
+//        BlockState state = null;
+//        if (player.world.isBlockLoaded(bedLocation)) state = player.world.getBlockState(bedLocation);
+//        if (state != null && state.getBlock().isBed(state, player.world, bedLocation, player)) {
+//            Direction enumfacing = state.getBlock().getBedDirection(state, player.world, bedLocation);
+//            float f = 0.5F;
+//            float f1 = 0.5F;
+//
+//            switch (enumfacing) {
+//                case SOUTH:
+//                    f1 = 0.9F;
+//                    break;
+//                case NORTH:
+//                    f1 = 0.1F;
+//                    break;
+//                case WEST:
+//                    f = 0.1F;
+//                    break;
+//                case EAST:
+//                    f = 0.9F;
+//                    break;
+//                default://Should not happen
+//            }
+//            //player.setRenderOffsetForSleep(enumfacing);
+//
+//            player.setPosition((double) ((float) bedLocation.getX() + f), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + f1));
+//        } else {
+//            player.setPosition((double) ((float) bedLocation.getX() + 0.5F), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + 0.5F));
+//        }
 
         player.abilities.isFlying = false;
         player.sendPlayerAbilities();
         sleepTimer = 0;
         sleepingInCoffin = true;
-        player.noClip = true;
-        player.setBedPosition(bedLocation);//Is also set if sleep fails due to night time. See above
-        player.setMotion(0.0D, 0.0D, 0.0D);
+        //player.noClip = true;
+        //player.setBedPosition(bedLocation);//Is also set if sleep fails due to night time. See above
+        //player.setMotion(0.0D, 0.0D, 0.0D);
 
-        if (!player.world.isRemote) {
-            DaySleepHelper.updateAllPlayersSleeping(player.world);
-        }
-        if (player instanceof ServerPlayerEntity) {
-            ServerPlayerEntity playerMP = (ServerPlayerEntity) player;
-            IPacket<?> packet = new SPacketUseBed(player, bedLocation);
-            playerMP.getServerWorld().getEntityTracker().sendToTracking(playerMP, packet);
-            playerMP.connection.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
-            playerMP.connection.sendPacket(packet);
-        }
+//        if (!player.world.isRemote) {
+//            DaySleepHelper.updateAllPlayersSleeping(player.world);
+//        }
+//        if (player instanceof ServerPlayerEntity) {
+//            ServerPlayerEntity playerMP = (ServerPlayerEntity) player;
+//            IPacket<?> packet = new SPacketUseBed(player, bedLocation);
+//            playerMP.getServerWorld().getChunkProvider().sendToAllTracking(playerMP, packet);
+//            playerMP.connection.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+//            playerMP.connection.sendPacket(packet);
+//        }
 
         return Either.right(Unit.INSTANCE);
     }
@@ -989,15 +985,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn) {
         LOGGER.debug("Waking up player");
         if (this.isPlayerSleeping() && player instanceof ServerPlayerEntity) {
-            ((ServerPlayerEntity) player).getServerWorld().getEntityTracker().sendToTrackingAndSelf(player, new SAnimateHandPacket(player, 2));
+            ((ServerPlayerEntity) player).getServerWorld().getChunkProvider().sendToTrackingAndSelf(player, new SAnimateHandPacket(player, 2));
         }
         player.wakeUpPlayer(immediately, false, setSpawn);
         this.sleepingInCoffin = false;
         player.noClip = true;
-        if (updateWorldFlag) {
-            DaySleepHelper.updateAllPlayersSleeping(player.world);
-        }
-
         if (player instanceof ServerPlayerEntity && ((ServerPlayerEntity) player).connection != null) {
             ((ServerPlayerEntity) player).connection.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
         }

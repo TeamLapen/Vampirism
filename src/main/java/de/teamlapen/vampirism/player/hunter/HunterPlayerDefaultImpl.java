@@ -66,7 +66,7 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
     }
 
     @Override
-    public Predicate<Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
+    public Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
         return null;
     }
 
