@@ -25,7 +25,6 @@ import net.minecraft.world.gen.OverworldChunkGenerator;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -44,11 +43,6 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
 
     private final static Logger LOGGER = LogManager.getLogger(ModEventHandler.class);
 
-    @SubscribeEvent
-    public void onAttachCapabilitiesVillage(AttachCapabilitiesEvent<Village> event) {
-        event.addCapability(REFERENCE.VAMPIRISM_VILLAGE_KEY_NEW, VampirismVillage.createNewCapability(event.getObject()));
-
-    }
 //  TODO 1.14 wait for https://github.com/MinecraftForge/MinecraftForge/issues/5536 or find a different solution
 
 //    @OnlyIn(Dist.CLIENT)
@@ -88,7 +82,7 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
     @SubscribeEvent
     public void onHarvestDrops(BlockEvent.HarvestDropsEvent event) {
         if (event.getState().getBlock().equals(Blocks.OAK_LEAVES)) {
-            if (ModBiomes.vampireForest.equals(event.getWorld().getBiome(event.getPos()))) {
+            if (ModBiomes.vampire_forest.equals(event.getWorld().getBiome(event.getPos()))) {
                 PlayerEntity p = event.getHarvester();
                 if (p != null && p.getRNG().nextInt(Balance.general.DROP_ORCHID_FROM_LEAVES_CHANCE) == 0) {
                     event.getDrops().add(new ItemStack(ModBlocks.vampirism_flower_vampire_orchid, 1));

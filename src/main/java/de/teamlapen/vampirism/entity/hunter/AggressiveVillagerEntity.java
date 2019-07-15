@@ -1,17 +1,14 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
-import de.teamlapen.vampirism.entity.ai.DefendVillageGoal;
-import de.teamlapen.vampirism.entity.ai.MoveThroughVillageCustomGoal;
+import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -82,11 +79,11 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_MAX_HEALTH);
     }
 
-    @Nullable
-    @Override
-    public IVampirismVillage getCurrentFriendlyVillage() {
-        return this.cachedVillage != null ? this.cachedVillage.getControllingFaction() == VReference.HUNTER_FACTION ? this.cachedVillage : null : null;
-    }
+//    @Nullable
+//    @Override
+//    public IVampirismVillage getCurrentFriendlyVillage() {
+//        return this.cachedVillage != null ? this.cachedVillage.getControllingFaction() == VReference.HUNTER_FACTION ? this.cachedVillage : null : null;
+//    }
 
     @Override
     public void attackVillage(AxisAlignedBB area) {
@@ -124,7 +121,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         super.registerGoals();
         this.goalSelector.taskEntries.removeIf(entry -> entry.action instanceof TradeWithPlayerGoal || entry.action instanceof LookAtCustomerGoal || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem);
         this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 0.6, false));
-        this.goalSelector.addGoal(8, new MoveThroughVillageCustomGoal(this, 0.55, false, 400));
+        this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.55, false, 400, this::getTrue));
 
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
@@ -137,5 +134,9 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
                 return super.getTargetDistance() / 2;
             }
         });
+    }
+
+    private boolean getTrue() {
+        return true;
     }
 }

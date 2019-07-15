@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.particles.ParticleType;
@@ -28,7 +29,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 import net.minecraftforge.registries.ObjectHolderRegistry;
 
@@ -75,7 +75,6 @@ public class RegistryManager implements IInitListener {
                 ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
                 ModItems.registerBloodConversionRates();
-                ModVillages.init();
                 ModAdvancements.registerAdvancements();
 
                 break;
@@ -147,8 +146,8 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterProfessions(RegistryEvent.Register<VillagerRegistry.VillagerProfession> event) {
-        ModVillages.registerProfessions(event.getRegistry());
+    public void onRegisterProfessions(RegistryEvent.Register<VillagerProfession> event) {
+        ModEntities.registerProfessions(event.getRegistry());
     }
 
     @SubscribeEvent

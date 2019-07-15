@@ -42,7 +42,7 @@ public interface IVampirismEntityRegistry {
      * @param overlay_loc Location of the overlay texture file
      */
     @ThreadSafeAPI
-    void addConvertible(EntityType<? extends CreatureEntity> type, String overlay_loc);
+    void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, String overlay_loc);
 
     /**
      * Register a {@link EntityType} which can be converted using a default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
@@ -53,7 +53,7 @@ public interface IVampirismEntityRegistry {
      * @param overlay_loc Location of the overlay texture file
      */
     @ThreadSafeAPI
-    void addConvertible(EntityType<? extends CreatureEntity> type, String overlay_loc, IConvertingHandler.IDefaultHelper helper);
+    void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, String overlay_loc, IConvertingHandler.IDefaultHelper helper);
 
     /**
      * Register a {@link EntityType} which can be converted
@@ -64,7 +64,7 @@ public interface IVampirismEntityRegistry {
      * @param handler     Handles the conversion
      */
     @ThreadSafeAPI
-    void addConvertible(EntityType<? extends CreatureEntity> type, String overlay_loc, IConvertingHandler handler);
+    void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, String overlay_loc, IConvertingHandler handler);
 
     /**
      * Registers a custom {@link IExtendedCreatureVampirism} for a entity class
@@ -83,7 +83,7 @@ public interface IVampirismEntityRegistry {
      * @return A map mapping the overlay resource location string to e convertible entity's class
      */
     @OnlyIn(Dist.CLIENT)
-    Map<EntityType<? extends CreatureEntity>, String> getConvertibleOverlay();
+    Map<Class<? extends CreatureEntity>, String> getConvertibleOverlay();
 
     /**
      * @return The custom constructor registered for the given entity's class. Can be null if none is registered

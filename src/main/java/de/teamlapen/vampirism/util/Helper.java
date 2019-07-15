@@ -164,7 +164,7 @@ public class Helper {
     public static boolean isEntityInVampireBiome(Entity e) {
         if (e == null) return false;
         try {
-            return ModBiomes.vampireForest.getRegistryName().equals(e.getEntityWorld().getBiome(e.getPosition()).getRegistryName());
+            return ModBiomes.vampire_forest.getRegistryName().equals(e.getEntityWorld().getBiome(e.getPosition()).getRegistryName());
         } catch (NullPointerException e1) {
             //http://openeye.openmods.info/crashes/8cef4d710e41adf9be8362e57ad70d28
             LOGGER.error("Nullpointer when checking biome. This is strange and should not happen", e1);

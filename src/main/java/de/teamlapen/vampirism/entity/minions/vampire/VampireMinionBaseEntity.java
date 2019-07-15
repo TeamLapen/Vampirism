@@ -51,7 +51,7 @@ public abstract class VampireMinionBaseEntity extends VampireBaseEntity implemen
     private boolean wantsBlood = false;
 
 
-    public VampireMinionBaseEntity(EntityType type, World world) {
+    public VampireMinionBaseEntity(EntityType<? extends VampireMinionBaseEntity> type, World world) {
         super(type, world, false);
         //this.func_110163_bv(); TODO check if this was relevant
 
@@ -248,6 +248,6 @@ public abstract class VampireMinionBaseEntity extends VampireBaseEntity implemen
         this.goalSelector.addGoal(15, new RandomWalkingGoal(this, 0.7));
         this.goalSelector.addGoal(16, new LookAtGoal(this, PlayerEntity.class, 10));
 
-        this.targetSelector.addGoal(8, new HurtByTargetMinionGoal(this, false));
+        this.targetSelector.addGoal(8, new HurtByTargetMinionGoal(this));
     }
 }

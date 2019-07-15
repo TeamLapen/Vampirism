@@ -72,7 +72,7 @@ public class GhostEntity extends VampirismEntity implements IMob {
         this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 16));
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 0, true, false, null));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this, true));
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
     }
 
     /**

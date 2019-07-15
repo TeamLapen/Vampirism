@@ -22,7 +22,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     public boolean activate(IVampirePlayer player) {
         PlayerEntity entityPlayer = player.getRepresentingPlayer();
         for (int i = 0; i < Balance.vpa.SUMMON_BAT_COUNT; i++) {
-            BlindingBatEntity e = new BlindingBatEntity(ModEntities.blinding_bat, entityPlayer.getEntityWorld());
+            BlindingBatEntity e = ModEntities.blinding_bat.create(entityPlayer.getEntityWorld());
             e.restrictLiveSpan();
             e.setIsBatHanging(false);
             e.copyLocationAndAnglesFrom(player.getRepresentingPlayer());

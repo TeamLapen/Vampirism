@@ -6,12 +6,9 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.BloodGrinderValueLoader;
-import de.teamlapen.vampirism.inventory.crafting.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -183,10 +180,10 @@ public class ModItems {
 
     static void registerCraftingRecipes() {
 
-        // TODO CRAFTING
-        //TODO 1.13 probably have to modifiy alchemical cauldron system with item groups /ingridients
-        //TODO 1.13 (rewrite alchemical cauldron recipes to register recipes through json)
-        AlchemicalCauldronCraftingManager cauldronCraftingManager = AlchemicalCauldronCraftingManager.getInstance();
+//        // TODO CRAFTING
+//        //TODO 1.13 probably have to modifiy alchemical cauldron system with item groups /ingridients
+//        //TODO 1.13 (rewrite alchemical cauldron recipes to register recipes through json)
+//        AlchemicalCauldronCraftingManager cauldronCraftingManager = AlchemicalCauldronCraftingManager.getInstance();
 
         // HolyWaterBottleItem.registerSplashRecipes(holy_water_bottle,
         // IItemWithTier.TIER.NORMAL);
@@ -195,32 +192,16 @@ public class ModItems {
         // HolyWaterBottleItem.registerSplashRecipes(holy_water_bottle,
         // IItemWithTier.TIER.ULTIMATE);
         //
-        cauldronCraftingManager.registerLiquidColor(ModItems.holy_water_bottle_normal, 0x6666FF);
-        cauldronCraftingManager.registerLiquidColor(ModItems.holy_water_bottle_enhanced, 0x6666FF);
-        cauldronCraftingManager.registerLiquidColor(ModItems.holy_water_bottle_ultimate, 0x6666FF);
-
-        cauldronCraftingManager.registerLiquidColor(ModItems.item_garlic, 0xBBBBBB);
-        cauldronCraftingManager
-                .addRecipe(new ItemStack(ModItems.item_alchemical_fire, 4),
-                        ModItems.holy_water_bottle_normal, Items.GUNPOWDER)
-                .setRequirements(1, HunterSkills.basic_alchemy);
-        cauldronCraftingManager.addRecipe(new ItemStack(ModItems.purified_garlic, 2),
-                ModItems.holy_water_bottle_normal, new ItemStack(ModItems.item_garlic, 4))
-                .setRequirements(1, HunterSkills.purified_garlic);
-        cauldronCraftingManager.addRecipe(new ItemStack(ModItems.garlic_beacon_core), ModItems.item_garlic, Blocks.BLACK_WOOL)
-                .setRequirements(1, HunterSkills.garlic_beacon);
-        cauldronCraftingManager
-                .addRecipe(ModItems.garlic_beacon_core_improved,
-                        ModItems.holy_water_bottle_ultimate, ModItems.garlic_beacon_core)
-                .setRequirements(1, HunterSkills.garlic_beacon_improved).setExperience(2F);
-        //cauldronCraftingManager.addRecipe(new ItemStack(ModItems.pure_salt, 4),new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), null).setRequirements(1, HunterSkills.basic_alchemy).setCookingTime(20 * 60); TODO 1.14 fluid
+//        cauldronCraftingManager.registerLiquidColor(ModItems.holy_water_bottle_normal, 0x6666FF);
+//        cauldronCraftingManager.registerLiquidColor(ModItems.holy_water_bottle_enhanced, 0x6666FF);
+//        cauldronCraftingManager.registerLiquidColor(ModItems.holy_water_bottle_ultimate, 0x6666FF);
+//
+//        cauldronCraftingManager.registerLiquidColor(ModItems.item_garlic, 0xBBBBBB);
 
         // Brewing
         BrewingRecipeRegistry.addRecipe(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
 
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new ItemStack(holy_water_bottle_normal), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_normal)) {
-
-
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
 
@@ -228,16 +209,13 @@ public class ModItems {
             }
         });
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new ItemStack(holy_water_bottle_enhanced), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_enhanced)) {
-
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
 
                 return holy_water_bottle_enhanced.equals(stack.getItem());
             }
         });
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(
-                new ItemStack(holy_water_bottle_ultimate), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_ultimate)) {
-
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new ItemStack(holy_water_bottle_ultimate), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_ultimate)) {
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
 

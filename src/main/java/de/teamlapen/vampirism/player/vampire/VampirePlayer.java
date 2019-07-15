@@ -43,6 +43,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.network.play.server.SAnimateHandPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
@@ -1216,7 +1217,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private void spawnBiteParticle(int entityId) {
         Entity entity = player.world.getEntityByID(entityId);
         if (entity != null) {
-            UtilLib.spawnParticles(player.world, Particles.CRIT, entity.posX, entity.posY, entity.posZ, player.posX - entity.posX, player.posY - entity.posY, player.posZ - entity.posZ, 10, 1);
+            UtilLib.spawnParticles(player.world, ParticleTypes.CRIT, entity.posX, entity.posY, entity.posZ, player.posX - entity.posX, player.posY - entity.posY, player.posZ - entity.posZ, 10, 1);
         }
         for (int j = 0; j < 16; ++j) {
             Vec3d vec3 = new Vec3d((player.getRNG().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api;
 
 import com.google.common.collect.Sets;
+
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -10,13 +11,10 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionManager;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
-import de.teamlapen.vampirism.api.items.IAlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraftforge.common.capabilities.Capability;
@@ -36,15 +34,12 @@ public class VampirismAPI {
     private static Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
     @CapabilityInject(IFactionPlayerHandler.class)
     private static Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
-    @CapabilityInject(IVampirismVillage.class)
-    private static Capability<IVampirismVillage> CAP_VILLAGE = null;
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
     private static IVampirismEntityRegistry entityRegistry;
     private static IVampireVisionRegistry vampireVisionRegistry;
     private static IBloodPotionRegistry bloodPotionRegistry;
     private static IGarlicChunkHandler.Provider garlicHandlerProvider;
-    private static IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingManager;
     private static Set<Dimension> worldGenDimensions = Sets.newHashSet();
     private static ISkillManager skillManager;
     private static IActionManager actionManager;
@@ -108,13 +103,6 @@ public class VampirismAPI {
     }
 
     /**
-     * @return The crafting manager for the alchemical cauldron (hunter)
-     */
-    public static IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingManager() {
-        return alchemicalCauldronCraftingManager;
-    }
-
-    /**
      * Makes Vampirism execute it's worldgen in this dimension
      */
     public static void addDimensionForWorldgen(Dimension id) {
@@ -156,9 +144,8 @@ public class VampirismAPI {
      * Setup the API accessors
      * FOR INTERNAL USAGE ONLY
      */
-    public static void setUpAccessors(IGarlicChunkHandler.Provider garlicChunkHandlerProv, IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingMan) {
+    public static void setUpAccessors(IGarlicChunkHandler.Provider garlicChunkHandlerProv) {
         garlicHandlerProvider = garlicChunkHandlerProv;
-        alchemicalCauldronCraftingManager = alchemicalCauldronCraftingMan;
     }
 
 
@@ -178,12 +165,12 @@ public class VampirismAPI {
         return creature.getCapability(CAP_CREATURE, null).orElseThrow(() -> new IllegalStateException("Cannot get extended creature from creature"));
     }
 
-    /**
-     * Get the {@link IVampirismVillage} instance for the given village
-     */
-    public static IVampirismVillage getVampirismVillage(Village village) {
-        return village.getCapability(CAP_VILLAGE, null).orElseThrow(() -> new IllegalStateException("Cannot get vampirism village from village"));
-    }
+//    /**
+//     * Get the {@link IVampirismVillage} instance for the given village
+//     */
+//    public static IVampirismVillage getVampirismVillage(Village village) {
+//        return village.getCapability(CAP_VILLAGE, null).orElseThrow(() -> new IllegalStateException("Cannot get vampirism village from village"));
+//    }
 
     /**
      * @return The {@link IGarlicChunkHandler} for the given world

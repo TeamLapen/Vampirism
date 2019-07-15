@@ -1,25 +1,22 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.ai.*;
+import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.world.loot.LootHandler;
-import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.ZombieEntity;
@@ -35,7 +32,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.ResourceLocation;
@@ -76,17 +72,17 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     private @Nullable
     PlayerEntity trainee;
 
-    private @Nullable
-    IVampirismVillage cachedVillage;
+//    private @Nullable
+//    IVampirismVillage cachedVillage;
 
-    @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
-        IVampirismVillage v = getCurrentFriendlyVillage();
-        if (v != null) {
-            v.addOrRenewAggressor(source.getTrueSource());
-        }
-        return super.attackEntityFrom(source, amount);
-    }
+//    @Override
+//    public boolean attackEntityFrom(DamageSource source, float amount) {
+//        IVampirismVillage v = getCurrentFriendlyVillage();
+//        if (v != null) {
+//            v.addOrRenewAggressor(source.getTrueSource());
+//        }
+//        return super.attackEntityFrom(source, amount);
+//    }
 
     /**
      * Stores the x axis angle between when targeting an enemy with the crossbow
@@ -135,11 +131,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return new ItemStack(ModItems.crossbow_arrow_normal);
     }
 
-    @Nullable
-    @Override
-    public IVampirismVillage getCurrentFriendlyVillage() {
-        return cachedVillage != null ? cachedVillage.getControllingFaction() == VReference.HUNTER_FACTION ? cachedVillage : null : null;
-    }
+//    @Nullable
+//    @Override
+//    public IVampirismVillage getCurrentFriendlyVillage() {
+//        return cachedVillage != null ? cachedVillage.getControllingFaction() == VReference.HUNTER_FACTION ? cachedVillage : null : null;
+//    }
 
     @Override
     public int getLevel() {
@@ -457,11 +453,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         }
     }
 
-    @Override
-    protected void onRandomTick() {
-        super.onRandomTick();
-        this.cachedVillage = VampirismVillageHelper.getNearestVillage(this);
-    }
+//    @Override
+//    protected void onRandomTick() {
+//        super.onRandomTick();
+//        this.cachedVillage = VampirismVillageHelper.getNearestVillage(this);
+//    }
 
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);

@@ -21,7 +21,6 @@ import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
-import de.teamlapen.vampirism.inventory.crafting.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.player.actions.ActionManager;
@@ -38,9 +37,8 @@ import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
-import de.teamlapen.vampirism.world.gen.structure.StructureManager;
+import de.teamlapen.vampirism.world.gen.structures.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
-import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.item.ItemGroup;
@@ -209,7 +207,6 @@ public class VampirismMod {
         VampirePlayer.registerCapability();
         FactionPlayerHandler.registerCapability();
         ExtendedCreature.registerCapability();
-        VampirismVillage.registerCapability();
 
 
         modCompatLoader.onInitStep(IInitListener.Step.COMMON_SETUP, event);
@@ -286,7 +283,7 @@ public class VampirismMod {
         biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
         BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
         VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, bloodPotionRegistry, entityActionManager);
-        VampirismAPI.setUpAccessors(new GarlicChunkHandler.Provider(), AlchemicalCauldronCraftingManager.getInstance());
+        VampirismAPI.setUpAccessors(new GarlicChunkHandler.Provider());
     }
 
     /**

@@ -607,7 +607,7 @@ public class UtilLib {
 
             while (true) {
                 Object var3 = var1.next();
-                var2.append(var3 == c ? "(this Collection)" : ((GoalSelector.EntityAITaskEntry) var3).action);
+                var2.append(var3 == c ? "(this Collection)" : ((GoalSelector.goals) var3).action);
                 if (!var1.hasNext()) {
                     return var2.append(']').toString();
                 }

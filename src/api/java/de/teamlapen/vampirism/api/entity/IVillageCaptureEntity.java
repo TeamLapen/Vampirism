@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.entity;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import javax.annotation.Nullable;
@@ -29,10 +28,10 @@ public interface IVillageCaptureEntity extends IFactionEntity {
      */
     void stopVillageAttackDefense();
 
-    /**
-     * @return A (cached) instance of the village the entity is currently in if it is of the same faction or null otherwise
-     */
-    @Nullable
-    IVampirismVillage getCurrentFriendlyVillage();
+//    /**
+//     * @return A (cached) instance of the village the entity is currently in if it is of the same faction or null otherwise
+//     */
+//    @Nullable
+//    IVampirismVillage getCurrentFriendlyVillage();
 
 }

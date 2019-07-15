@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.tileentity;
 
-import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -18,11 +17,11 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.FactionVillagerEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.hunter.AggressiveVillagerEntity;
 import de.teamlapen.vampirism.entity.hunter.DummyHunterTrainerEntity;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
@@ -99,28 +98,28 @@ public class TotemTile extends TileEntity implements ITickable {
         return false;
     }
 
-    /**
-     * Create a aggressive copy of the given villager and replace the old instance in the world
-     *
-     * @return New entity
-     */
-    public static @Nullable
-    IVillageCaptureEntity makeAggressive(VillagerEntity villager, @Nullable VampirismVillage v) {
-        VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(v, villager);
-        if (MinecraftForge.EVENT_BUS.post(event)) {
-            IVillageCaptureEntity aggressive = event.getAggressiveVillager();
-            if (aggressive != null) {
-                villager.getEntityWorld().addEntity((Entity) aggressive);
-                villager.remove();
-            }
-            return aggressive;
-        } else {
-            AggressiveVillagerEntity hunter = AggressiveVillagerEntity.makeHunter(villager);
-            villager.getEntityWorld().addEntity(hunter);
-            villager.remove();
-            return hunter;
-        }
-    }
+//    /**
+//     * Create a aggressive copy of the given villager and replace the old instance in the world
+//     *
+//     * @return New entity
+//     */
+//    public static @Nullable
+//    IVillageCaptureEntity makeAggressive(VillagerEntity villager, @Nullable VampirismVillage v) {//TODO 1.14 village
+//        VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(v, villager);
+//        if (MinecraftForge.EVENT_BUS.post(event)) {
+//            IVillageCaptureEntity aggressive = event.getAggressiveVillager();
+//            if (aggressive != null) {
+//                villager.getEntityWorld().addEntity((Entity) aggressive);
+//                villager.remove();
+//            }
+//            return aggressive;
+//        } else {
+//            AggressiveVillagerEntity hunter = AggressiveVillagerEntity.makeHunter(villager);
+//            villager.getEntityWorld().addEntity(hunter);
+//            villager.remove();
+//            return hunter;
+//        }
+//    }
 
     /**
      * Remove all cached areas for the given map/dimension
@@ -346,7 +345,7 @@ public class TotemTile extends TileEntity implements ITickable {
             for (VillagerEntity v : villager) {
                 if (v instanceof FactionVillagerEntity) continue;
                 if (v.getRNG().nextInt(3) == 0) {
-                    makeAggressive(v, this.getVillage());
+                    //makeAggressive(v, this.getVillage());//TODO 1.14 village
                 }
             }
         }
@@ -419,7 +418,8 @@ public class TotemTile extends TileEntity implements ITickable {
                 this.capture_timer++;
             }
             if (controllingFaction != null && time % 10 == 7) {
-                VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, this.pos.getX(), this.pos.getY(), this.pos.getZ(), 3, 30, this.world.rand, 4, 20, controllingFaction.getColor());
+                ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, 4, 20, controllingFaction.getColor(), 0.2F), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 3, 30, this.world.rand);
+
             }
             return;
         }
@@ -948,7 +948,7 @@ public class TotemTile extends TileEntity implements ITickable {
             if (village == null) return false;
             newVillager.setHomePosAndDistance(village.getVillage().getCenter(), village.getVillage().getVillageRadius());
         }
-        newVillager.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(newVillager)), null, null);
+        newVillager.onInitialSpawn(world, world.getDifficultyForLocation(new BlockPos(newVillager)), SpawnReason.NATURAL, null, null);
         ExtendedCreature.get(newVillager).setPoisonousBlood(poisonousBlood);
         return true;
     }

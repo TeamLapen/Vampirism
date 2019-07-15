@@ -2,9 +2,10 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.world.gen.structure.StructureManager;
-import de.teamlapen.vampirism.world.gen.structure.VampirismTemplate;
+import de.teamlapen.vampirism.world.gen.structures.StructureManager;
+import de.teamlapen.vampirism.world.gen.structures.VampirismTemplate;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.ISuggestionProvider;

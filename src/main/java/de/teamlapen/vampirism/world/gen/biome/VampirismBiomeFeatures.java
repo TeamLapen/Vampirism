@@ -22,4 +22,8 @@ public class VampirismBiomeFeatures {
     public static void addVampireTrees(Biome biomeIn) {
         biomeIn.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Biome.createDecoratedFeature(Feature.RANDOM_SELECTOR, new MultipleRandomFeatureConfig(new Feature[]{ModWorld.vampire_tree}, new IFeatureConfig[]{IFeatureConfig.NO_FEATURE_CONFIG, IFeatureConfig.NO_FEATURE_CONFIG}, new float[]{0.2F, 0.1F}, ModWorld.vampire_tree, IFeatureConfig.NO_FEATURE_CONFIG), Placement.COUNT_EXTRA_HEIGHTMAP, new AtSurfaceWithExtraConfig(5, 0.05F, 1)));
     }
+
+    public static void addHunterTent(Biome biomeIn) {
+        //biomeIn.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES,);//TODO 1.14 world add huntertent structure
+    }
 }

@@ -16,15 +16,13 @@ import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.world.villages.VampirismVillage;
-import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -130,9 +128,9 @@ public class ModEntityEventHandler {
                 ((CreeperEntity) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 20, 1.1, 1.3, input -> input != null && VampirePlayer.get((PlayerEntity) input).getSpecialAttributes().avoided_by_creepers));
 
                 Goal target = null;
-                for (GoalSelector.EntityAITaskEntry t : ((CreeperEntity) event.getEntity()).targetSelector.taskEntries) {
-                    if (t.action instanceof NearestAttackableTargetGoal && t.priority == 1) {
-                        target = t.action;
+                for (PrioritizedGoal t : ((CreeperEntity) event.getEntity()).targetSelector.goals) {//TODO private
+                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 1) {
+                        target = t.getGoal();
                     }
                 }
                 if (target != null) {
@@ -153,11 +151,11 @@ public class ModEntityEventHandler {
         }
 
 
-        if (event.getEntity() instanceof VillagerEntity && !event.getWorld().isRemote) {
-            VampirismVillage village = VampirismVillageHelper.getNearestVillage(event.getWorld(), event.getEntity().getPosition(), 5);
-            if (village != null && village.getControllingFaction() != null && village.getControllingFaction().equals(VReference.HUNTER_FACTION)) {
-                ExtendedCreature.get((CreatureEntity) event.getEntity()).setPoisonousBlood(true);
-            }
+        if (event.getEntity() instanceof VillagerEntity && !event.getWorld().isRemote) {//TODO 1.14 village
+//            VampirismVillage village = VampirismVillageHelper.getNearestVillage(event.getWorld(), event.getEntity().getPosition(), 5);
+//            if (village != null && village.getControllingFaction() != null && village.getControllingFaction().equals(VReference.HUNTER_FACTION)) {
+//                ExtendedCreature.get((CreatureEntity) event.getEntity()).setPoisonousBlood(true);
+//            }
         }
     }
 

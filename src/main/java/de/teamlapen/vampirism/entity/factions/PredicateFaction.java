@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.factions;
 
 import com.google.common.base.Predicate;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
