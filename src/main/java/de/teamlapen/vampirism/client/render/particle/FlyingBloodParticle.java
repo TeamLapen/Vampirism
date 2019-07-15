@@ -4,8 +4,10 @@ import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,9 +20,10 @@ import javax.annotation.Nullable;
  * @author maxanier
  */
 @OnlyIn(Dist.CLIENT)
-public class FlyingBloodParticle extends VampirismTexturedParticle {
+public class FlyingBloodParticle extends SpriteTexturedParticle {
     private final String TAG = "FlyingBloodParticle";
     private final double destX, destY, destZ;
+    private final ResourceLocation particlePos;
 
 
     /**
@@ -30,8 +33,8 @@ public class FlyingBloodParticle extends VampirismTexturedParticle {
      * 160-168
      * 176-182
      */
-    public FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, int particleId) {
-        super(world, posX, posY, posZ, particleId);
+    public FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, ResourceLocation particleId) {
+        super(world, posX, posY, posZ);
         this.maxAge = maxage;
         this.destX = destX;
         this.destY = destY;
@@ -44,6 +47,7 @@ public class FlyingBloodParticle extends VampirismTexturedParticle {
         this.motionX = (this.world.rand.nextDouble() / 10 - 0.05) + wayX / maxAge;
         this.motionY = (this.world.rand.nextDouble() / 10 - 0.01) + wayY / maxAge;
         this.motionZ = (this.world.rand.nextDouble() / 10 - 0.05) + wayZ / maxAge;
+        this.particlePos = particleId;
         this.tick();
     }
 

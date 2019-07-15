@@ -5,8 +5,6 @@ import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,11 +23,6 @@ public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
     private final String TAG = "FlyingBloodParticle";
 
     private final Entity entity;
-
-    @Override
-    public void renderParticle(BufferBuilder buffer, ActiveRenderInfo entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-
-    }
 
     @Override
     public IParticleRenderType getRenderType() {
@@ -58,7 +51,6 @@ public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
             this.motionY = (this.world.rand.nextDouble() + 0.2);
             this.motionZ = (this.world.rand.nextDouble() - 0.5);
         }
-
         this.tick();
     }
 

@@ -106,7 +106,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean canSpawn(IWorld worldIn, boolean fromSpawner) {
+    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
         int i = MathHelper.floor(this.getBoundingBox().minY);
         //Only spawn on the surface
         if (i < 60) return false;
@@ -116,7 +116,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 //        }
         BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
 
-        return ModBlocks.cursed_earth.equals(world.getBlockState(blockpos.down()).getBlock()) && super.canSpawn(worldIn, fromSpawner);
+        return ModBlocks.cursed_earth.equals(world.getBlockState(blockpos.down()).getBlock()) && super.canSpawn(worldIn, spawnReasonIn);
     }
 
     @Override

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.world.gen.biome;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModWorld;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -17,7 +17,7 @@ public class VampireForestBiome extends VampirismBiome {
     public final static String regName = "vampire_forest";
 
     public VampireForestBiome() {
-        super(new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, ModWorld.vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).waterColor(0xEE2505).waterFogColor(0xEE2505).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f), !Configs.disable_vampireForest, Balance.general.VAMPIRE_FOREST_WEIGHT, BiomeManager.BiomeType.WARM, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
+        super(new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, ModWorld.vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).waterColor(0xEE2505).waterFogColor(0xEE2505).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f), !VampirismConfig.SERVER.disableVampireForest.get(), Balance.general.VAMPIRE_FOREST_WEIGHT, BiomeManager.BiomeType.WARM, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
         this.setRegistryName(REFERENCE.MODID, regName);
 
         VampirismBiomeFeatures.addVampireTrees(this);

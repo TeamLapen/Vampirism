@@ -22,7 +22,6 @@ public class ModBiomes {
 
     static void registerBiomes(IForgeRegistry<Biome> registry) {
         registry.register(new VampireForestBiome());
-        !VampirismConfig.SERVER.disableVampireForest.get()
     }
 
     static void registerFeatures() {

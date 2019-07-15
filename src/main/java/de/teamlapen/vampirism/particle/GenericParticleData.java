@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -17,23 +18,23 @@ public class GenericParticleData implements IParticleData {
         }
 
         public GenericParticleData read(ParticleType<GenericParticleData> particleTypeIn, PacketBuffer buffer) {
-            return new GenericParticleData(particleTypeIn, buffer.readVarInt(), buffer.readVarInt(), buffer.readVarInt(), buffer.readFloat());//TODO 1.14 test
+            return new GenericParticleData(particleTypeIn, buffer.readResourceLocation(), buffer.readVarInt(), buffer.readVarInt(), buffer.readFloat());//TODO 1.14 test
         }
     };
 
     private ParticleType<GenericParticleData> particleType;
-    private final int texturePos;
+    private final ResourceLocation texture;
     private final int color;
     private final int maxAge;
     private final float speed;
 
-    public GenericParticleData(ParticleType<GenericParticleData> particleType, int texturePos, int maxAge, int color) {
-        this(particleType, texturePos, maxAge, color, 1.0F);
+    public GenericParticleData(ParticleType<GenericParticleData> particleType, ResourceLocation texture, int maxAge, int color) {
+        this(particleType, texture, maxAge, color, 1.0F);
     }
 
-    public GenericParticleData(ParticleType<GenericParticleData> particleType, int texturePos, int maxAge, int color, float speed) {
+    public GenericParticleData(ParticleType<GenericParticleData> particleType, ResourceLocation texture, int maxAge, int color, float speed) {
         this.particleType = particleType;
-        this.texturePos = texturePos;
+        this.texture = texture;
         this.maxAge = maxAge;
         this.color = color;
         this.speed = speed;
@@ -46,7 +47,7 @@ public class GenericParticleData implements IParticleData {
 
     @Override
     public void write(PacketBuffer packetBuffer) {
-        packetBuffer.writeVarInt(texturePos);
+        packetBuffer.writeResourceLocation(texture);
         packetBuffer.writeVarInt(maxAge);
         packetBuffer.writeVarInt(color);
         packetBuffer.writeFloat(speed);
@@ -54,7 +55,7 @@ public class GenericParticleData implements IParticleData {
 
     @Override
     public String getParameters() {
-        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + texturePos + " " + maxAge + " " + color;
+        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + texture + " " + maxAge + " " + color;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -63,8 +64,8 @@ public class GenericParticleData implements IParticleData {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public int getTexturePos() {
-        return texturePos;
+    public ResourceLocation getTexturePos() {
+        return texture;
     }
 
     @OnlyIn(Dist.CLIENT)
