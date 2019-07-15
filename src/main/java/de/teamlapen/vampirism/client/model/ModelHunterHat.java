@@ -61,6 +61,13 @@ public class ModelHunterHat extends ModelBiped {
         hatTop.rotateAngleX = super.bipedHead.rotateAngleX;
         hatTop.rotateAngleY = super.bipedHead.rotateAngleY;
         hatTop.rotateAngleZ = super.bipedHead.rotateAngleZ;
+        if(isSneak){
+            hatRim.rotationPointY = super.bipedHead.rotationPointY +3.2F;
+            hatTop.rotationPointY = super.bipedHead.rotationPointY +3.2F;
+        }else{
+            hatRim.rotationPointY = super.bipedHead.rotationPointY;
+            hatTop.rotationPointY = super.bipedHead.rotationPointY;
+        }
     }
 
     @Override
