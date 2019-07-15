@@ -53,6 +53,7 @@ public class EntityVampireFactionVillager extends EntityVampireFactionVillagerBa
     @Override
     public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata) {
         this.setProfession(ModVillages.profession_vampire_expert);
+        this.setGrowingAge(0);
         return this.finalizeMobSpawn(difficulty, livingdata, false);
     }
 
