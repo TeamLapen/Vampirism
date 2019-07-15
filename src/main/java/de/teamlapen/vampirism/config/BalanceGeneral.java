@@ -32,7 +32,7 @@ public class BalanceGeneral extends BalanceValues {
 
     @DefaultInt(value = 5, minValue = 0, comment = "Damage a normal holy water splash bottle does when directly hitting a vampire")
     public int HOLY_WATER_SPLASH_DAMAGE;
-    @DefaultDouble(value = 1.5, minValue = 1, comment = "Holy water damage is multiplied with this value for each tier above normal")
+    @DefaultDouble(value = 2, minValue = 1, comment = "Holy water damage is multiplied with this value for each tier above normal")
     public double HOLY_WATER_TIER_DAMAGE_INC;
 
     @DefaultDouble(value = 0.05 / (double) VReference.FOOD_TO_FLUID_BLOOD, minValue = 0, maxValue = 1, comment = "The blood mB to charge percentage of the normal heart seeker vampire sword")

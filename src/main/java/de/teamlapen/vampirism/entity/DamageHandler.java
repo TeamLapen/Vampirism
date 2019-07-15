@@ -124,7 +124,7 @@ public class DamageHandler {
             }
         } else if (vampire && entity instanceof EntityVampirism) {
             EntityActionHandler h = ((EntityVampirism) entity).getActionHandler();
-            if (h.isActionActive(EntityActions.entity_invisible)) {
+            if (h != null && h.isActionActive(EntityActions.entity_invisible)) {
                 h.deactivateAction();
             }
         }

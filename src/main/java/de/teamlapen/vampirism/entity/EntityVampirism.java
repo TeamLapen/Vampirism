@@ -42,8 +42,11 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected boolean hasArms = true;
     protected boolean peaceful = false;
     /** available actions for AI task & task */
+    @Nullable
     protected EntityActionHandler<?> entityActionHandler;
+    @Nullable
     protected EntityClassType entityclass;
+    @Nullable
     protected EntityActionTier entitytier;
     /**
      * Whether the home should be saved to nbt or not
@@ -97,6 +100,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return flag;
     }
 
+    @Nullable
     public EntityActionHandler getActionHandler() {
         return entityActionHandler;
     }
@@ -366,10 +370,12 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
     }
 
+    @Nullable
     public EntityClassType getEntityClass() {
         return entityclass;
     }
 
+    @Nullable
     public EntityActionTier getEntityTier() {
         return entitytier;
     }
@@ -377,7 +383,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     /**
      * sets entity Tier & Class, applies class modifier
      */
-    @Nullable
     protected void setupEntityClass() {
         entitytier = EntityActionTier.Default;
         entityclass = EntityClassType.getRandomClass(this.getRNG());
