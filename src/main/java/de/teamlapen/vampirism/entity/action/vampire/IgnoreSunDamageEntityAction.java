@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.potion.EffectInstance;
 
@@ -28,8 +28,8 @@ public class IgnoreSunDamageEntityAction<T extends CreatureEntity & IEntityActio
 
     @Override
     public void deactivate(T entity) {
-        if (entity.getActivePotionEffect(ModPotions.sunscreen) != null && entity.getActivePotionEffect(ModPotions.sunscreen).getAmplifier() == 0) {
-            entity.removePotionEffect(ModPotions.sunscreen);
+        if (entity.getActivePotionEffect(ModEffects.sunscreen) != null && entity.getActivePotionEffect(ModEffects.sunscreen).getAmplifier() == 0) {
+            entity.removePotionEffect(ModEffects.sunscreen);
         }
     }
 
@@ -39,7 +39,7 @@ public class IgnoreSunDamageEntityAction<T extends CreatureEntity & IEntityActio
 
     @Override
     public void activate(T entity) {
-        entity.addPotionEffect(new EffectInstance(ModPotions.sunscreen, getDuration(entity.getLevel()), 0));
+        entity.addPotionEffect(new EffectInstance(ModEffects.sunscreen, getDuration(entity.getLevel()), 0));
 
     }
 

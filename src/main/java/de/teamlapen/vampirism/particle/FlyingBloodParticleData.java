@@ -33,7 +33,7 @@ public class FlyingBloodParticleData implements IParticleData {
     }
 
     public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn) {
-        this(particleTypeIn, maxAgeIn, 65);
+        this(particleTypeIn, maxAgeIn, new ResourceLocation("minecraft", "critical_hit"));
     }
 
     @Override

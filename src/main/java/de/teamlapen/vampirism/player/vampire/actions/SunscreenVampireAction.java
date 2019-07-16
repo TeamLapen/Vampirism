@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.potion.EffectInstance;
 
 /**
@@ -18,7 +18,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public boolean activate(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().addPotionEffect(new EffectInstance(ModPotions.sunscreen, getDuration(vampire.getLevel()), 3, false, false));
+        vampire.getRepresentingPlayer().addPotionEffect(new EffectInstance(ModEffects.sunscreen, getDuration(vampire.getLevel()), 3, false, false));
         return true;
     }
 
@@ -59,7 +59,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().removePotionEffect(ModPotions.sunscreen);
+        vampire.getRepresentingPlayer().removePotionEffect(ModEffects.sunscreen);
     }
 
     @Override

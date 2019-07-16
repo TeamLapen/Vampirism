@@ -119,7 +119,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.taskEntries.removeIf(entry -> entry.action instanceof TradeWithPlayerGoal || entry.action instanceof LookAtCustomerGoal || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem);
+        this.goalSelector.goals.removeIf(entry -> entry.getGoal() instanceof TradeWithPlayerGoal || entry.getGoal() instanceof LookAtCustomerGoal || entry.getGoal() instanceof EntityAIVillagerMate || entry.getGoal() instanceof EntityAIFollowGolem);//TODO AT goals
         this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 0.6, false));
         this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.55, false, 400, this::getTrue));
 

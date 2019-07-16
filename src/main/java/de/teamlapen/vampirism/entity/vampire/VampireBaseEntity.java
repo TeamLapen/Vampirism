@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
@@ -180,7 +180,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public boolean isIgnoringSundamage() {
-        return this.isPotionActive(ModPotions.sunscreen);
+        return this.isPotionActive(ModEffects.sunscreen);
     }
 
     @Override

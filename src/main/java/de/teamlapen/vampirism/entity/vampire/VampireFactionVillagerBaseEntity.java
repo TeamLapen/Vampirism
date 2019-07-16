@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.FactionVillagerEntity;
 import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
@@ -59,7 +59,7 @@ public class VampireFactionVillagerBaseEntity extends FactionVillagerEntity impl
 
     @Override
     public boolean isIgnoringSundamage() {
-        return this.isPotionActive(ModPotions.sunscreen);
+        return this.isPotionActive(ModEffects.sunscreen);
     }
 
     @Override

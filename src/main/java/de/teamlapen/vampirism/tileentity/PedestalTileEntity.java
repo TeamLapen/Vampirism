@@ -14,6 +14,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -258,10 +259,10 @@ public class PedestalTileEntity extends TileEntity implements ITickable, IItemHa
     @OnlyIn(Dist.CLIENT)
     private void spawnChargedParticle() {
         Vec3d pos = new Vec3d(this.getPos()).add(0.5, 0.8, 0.5);
-        ModParticles.spawnParticle(getWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177), this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1);
-        ModParticles.spawnParticle(getWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177), this.pos.getX() + 0.80, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1);
-        ModParticles.spawnParticle(getWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177), this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.80, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1);
-        ModParticles.spawnParticle(getWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), 177), this.pos.getX() + 0.80, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.80, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1);
+        ModParticles.spawnParticle(getWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), new ResourceLocation("minecraft", "glitter_1")), this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1);//TODO particle textureindex: 177
+        ModParticles.spawnParticle(getWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), new ResourceLocation("minecraft", "glitter_1")), this.pos.getX() + 0.80, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1);
+        ModParticles.spawnParticle(getWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), new ResourceLocation("minecraft", "glitter_1")), this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.80, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1);
+        ModParticles.spawnParticle(getWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), new ResourceLocation("minecraft", "glitter_1")), this.pos.getX() + 0.80, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.80, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1);
 
     }
 }

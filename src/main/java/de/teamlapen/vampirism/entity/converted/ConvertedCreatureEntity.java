@@ -154,6 +154,12 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     @Override
+    public void recalculateSize() {
+        super.recalculateSize();
+        this.eyeHeight = entityCreature.getEyeHeight();
+    }
+
+    @Override
     public String toString() {
         return "[" + super.toString() + " representing " + entityCreature + "]";
     }

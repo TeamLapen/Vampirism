@@ -52,7 +52,7 @@ public class Tests {
         boolean wasCreative = player.isCreative();
         player.setGameType(GameType.SURVIVAL);
         player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 40, 100));
-        player.attemptTeleport(0, 5, 0);
+        player.func_213373_a(0, 5, 0, true);//TODO mapping ->player.attemptTeleport(0, 5, 0, true);
         TestInfo info = new TestInfo(world, player, new BlockPos(-20, 2, -20), "BloodFluidHandler");
 
         runTest(Tests::bloodFluidHandler, info);
@@ -60,7 +60,7 @@ public class Tests {
         runLightTest(Tests::checkObjectHolders, "Object holders", player);
 
         log("Finished tests -> teleporting player");
-        player.attemptTeleport(0, 5, 0);
+        player.func_213373_a(0, 5, 0, true);//TODO mapping ->player.attemptTeleport(0, 5, 0, true);
         if (wasCreative) player.setGameType(GameType.CREATIVE);
         sendMsg(player, "Finished tests");
     }
@@ -109,7 +109,7 @@ public class Tests {
         failed |= !checkObjectHolders(ModEntities.class);
         failed |= !checkObjectHolders(ModFluids.class);
         failed |= !checkObjectHolders(ModItems.class);
-        failed |= !checkObjectHolders(ModPotions.class);
+        failed |= !checkObjectHolders(ModEffects.class);
         failed |= !checkObjectHolders(ModSounds.class);
         return !failed;
     }

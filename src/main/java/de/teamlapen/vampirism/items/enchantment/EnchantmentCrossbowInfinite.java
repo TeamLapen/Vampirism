@@ -29,7 +29,7 @@ public class EnchantmentCrossbowInfinite extends Enchantment {
     }
 
     @Override
-    public int getMaxEnchantability(int enchantmentLevel) {
+    public int func_223551_b(int enchantmentLevel) {//TODO mapping -> getMaxEnchantability()
         return 50;
     }
 

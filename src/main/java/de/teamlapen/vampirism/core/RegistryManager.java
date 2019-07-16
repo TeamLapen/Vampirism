@@ -79,8 +79,8 @@ public class RegistryManager implements IInitListener {
 
                 break;
             case LOAD_COMPLETE:
-                if (ModPotions.checkNightVision()) {
-                    ModPotions.fixNightVisionPotionTypes();
+                if (ModEffects.checkNightVision()) {
+                    ModEffects.fixNightVisionEffecTypes();
                 }
                 break;
             default:
@@ -142,7 +142,7 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterPotions(RegistryEvent.Register<Effect> event) {
 
-        ModPotions.registerPotions(event.getRegistry());
+        ModEffects.registerEffects(event.getRegistry());
     }
 
     @SubscribeEvent

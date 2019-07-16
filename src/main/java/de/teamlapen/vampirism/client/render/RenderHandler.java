@@ -4,10 +4,11 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -151,7 +152,7 @@ public class RenderHandler {
 
         if (GLX.isNextGen() && doSaturationShader) {
             if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
-                EffectInstance pe = mc.player.getActivePotionEffect(ModPotions.saturation);
+                EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
                 boolean active = pe != null && pe.getAmplifier() >= 2;
                 GameRenderer renderer = mc.gameRenderer;
                 if (active && !renderer.isShaderActive()) {
@@ -318,12 +319,12 @@ public class RenderHandler {
     private void adjustBloodVisionShaders(float progress) {
         progress = MathHelper.clamp(progress, 0, 1);
 
-        blit0.getShaderManager().getShaderUniform("ColorModulate").set((1 - 0.8F * progress), (1 - 0.9F * progress), (1 - 0.7F * progress), 1);
-        blur1.getShaderManager().getShaderUniform("Radius").set(Math.round(10 * progress) / 1F);
-        blur2.getShaderManager().getShaderUniform("Radius").set(Math.round(10 * progress) / 1F);
-        blit1.getShaderManager().getShaderUniform("ColorModulate").set(1F, 0.1F, 0.1F, (1F * progress));
-        blit2.getShaderManager().getShaderUniform("ColorModulate").set(0.1F, 0.1F, 0.2F, (0.7F * progress));
-        blit3.getShaderManager().getShaderUniform("ColorModulate").set(0.1F, 0.1F, 1F, (1F * progress));
+        blit0.func_217624_b().func_216538_b("ColorModulate").set((1 - 0.8F * progress), (1 - 0.9F * progress), (1 - 0.7F * progress), 1);//TODO mapping -> blur2.getShaderManager().getShaderUniform("BlurDir").set(0F, 1F); or blur2.getInstance
+        blur1.func_217624_b().func_216538_b("Radius").set(Math.round(10 * progress) / 1F);
+        blur2.func_217624_b().func_216538_b("Radius").set(Math.round(10 * progress) / 1F);
+        blit1.func_217624_b().func_216538_b("ColorModulate").set(1F, 0.1F, 0.1F, (1F * progress));
+        blit2.func_217624_b().func_216538_b("ColorModulate").set(0.1F, 0.1F, 0.2F, (0.7F * progress));
+        blit3.func_217624_b().func_216538_b("ColorModulate").set(0.1F, 0.1F, 1F, (1F * progress));
 
     }
 
@@ -385,9 +386,9 @@ public class RenderHandler {
 
                 blit0 = blurShader.addShader("blit", swap, this.mc.getFramebuffer());
                 blur1 = blurShader.addShader("blur", this.mc.getFramebuffer(), swap);
-                blur1.getShaderManager().getShaderUniform("BlurDir").set(1F, 0F);
+                blur1.func_217624_b().func_216538_b("BlurDir").set(1F, 0F);//TODO mapping -> blur2.getShaderManager().getShaderUniform("BlurDir").set(0F, 1F); or blur2.getInstance
                 blur2 = blurShader.addShader("blur", swap, this.mc.getFramebuffer());
-                blur2.getShaderManager().getShaderUniform("BlurDir").set(0F, 1F);
+                blur2.func_217624_b().func_216538_b("BlurDir").set(0F, 1F);//TODO mapping -> blur2.getShaderManager().getShaderUniform("BlurDir").set(0F, 1F); or blur2.getInstance
 
 
                 this.bloodVisionShader1 = new ShaderGroup(this.mc.getTextureManager(), this.mc.getResourceManager(), this.mc.getFramebuffer(), resourcelocationOutline);
@@ -489,7 +490,7 @@ public class RenderHandler {
     private boolean renderEntityOutlines(List<? extends Entity> entities, ShaderGroup shader, Framebuffer framebuffer, float partialTicks) {
         EntityRendererManager renderManager = mc.getRenderManager();
         mc.world.getProfiler().startSection("bloodVision");
-        framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
+        framebuffer.func_216493_b(false);//TODO mapping -> framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
         boolean flag = !entities.isEmpty();
         if (flag) {
             renderingBloodVision = true;

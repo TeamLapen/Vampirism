@@ -118,7 +118,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
                 target.attackEntityFrom(dmg, 10000F);
                 Vec3d center = new Vec3d(target.getPosition());
                 center.add(0, target.getHeight() / 2d, 0);
-                ModParticles.spawnParticles(target.world, new GenericParticleData(ModParticles.generic, 132, 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, target.getRNG());
+                ModParticles.spawnParticles(target.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, target.getRNG());
             }
         }
         return super.hitEntity(stack, target, attacker);
@@ -301,7 +301,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         Vec3d mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
             Vec3d pos = mainPos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
-            ModParticles.spawnParticle(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.9F + 0.1F)), 177), pos.x, pos.y, pos.y, pos.x + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.y + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.z + (player.getRNG().nextFloat() - 0.5D) * 0.2D);
+            ModParticles.spawnParticle(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.9F + 0.1F)), new ResourceLocation("minecraft", "glitter_1")), pos.x, pos.y, pos.y, pos.x + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.y + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.z + (player.getRNG().nextFloat() - 0.5D) * 0.2D);//TODO particle textureindex: 177
         }
     }
 

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -41,7 +41,7 @@ public class VampireFangItem extends VampirismItem {
                     if (Helper.isVampire(playerIn)) {
                         playerIn.sendMessage(new TranslationTextComponent("text.vampirism.already_vampire"));
                     } else {
-                        playerIn.sendMessage(new TranslationTextComponent("text.vampirism.immune_to").appendSibling(new TranslationTextComponent(ModPotions.sanguinare.getName())));
+                        playerIn.sendMessage(new TranslationTextComponent("text.vampirism.immune_to").appendSibling(new TranslationTextComponent(ModEffects.sanguinare.getName())));
                     }
                 }
                 stack.shrink(1);

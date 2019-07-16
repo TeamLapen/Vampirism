@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
@@ -51,7 +51,7 @@ public class DamageHandler {
     private static void affectVampireGarlic(IVampire vampire, EnumStrength strength, float multiplier, boolean ambient) {
         if (strength == EnumStrength.NONE) return;
         LivingEntity entity = vampire.getRepresentingEntity();
-        entity.addPotionEffect(new EffectInstance(ModPotions.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
+        entity.addPotionEffect(new EffectInstance(ModEffects.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
         if (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.isCreativeMode) return;
         entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {

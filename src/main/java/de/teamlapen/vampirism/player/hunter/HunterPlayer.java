@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.items.ObsidianArmorItem;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
@@ -105,7 +105,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public IFaction getDisguisedAs() {
-        return player.isPotionActive(ModPotions.disguise_as_vampire) ? VReference.VAMPIRE_FACTION : getFaction();
+        return player.isPotionActive(ModEffects.disguise_as_vampire) ? VReference.VAMPIRE_FACTION : getFaction();
     }
 
     @Override
@@ -138,7 +138,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public boolean isDisguised() {
-        return player.isPotionActive(ModPotions.disguise_as_vampire);
+        return player.isPotionActive(ModEffects.disguise_as_vampire);
     }
 
     public void loadData(CompoundNBT compound) {

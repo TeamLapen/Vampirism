@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
@@ -10,8 +11,8 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
@@ -343,7 +344,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             screenColor = 0xfff00000;
             fullScreen = false;
         } else if ((screenPercentage = vampire.getTicksInSun() / 2) > 0) {
-            EffectInstance effect = mc.player.getActivePotionEffect(ModPotions.sunscreen);
+            EffectInstance effect = mc.player.getActivePotionEffect(ModEffects.sunscreen);
             if (effect == null || effect.getAmplifier() < 5) {
                 screenColor = 0xfffff755;
                 fullScreen = false;

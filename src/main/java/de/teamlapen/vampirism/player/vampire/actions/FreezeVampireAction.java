@@ -12,6 +12,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
             e.addPotionEffect(new EffectInstance(Effects.SLOWNESS, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new EffectInstance(Effects.RESISTANCE, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, Balance.vpa.FREEZE_DURATION * 20, 128));
-            ModParticles.spawnParticles(player.getEntityWorld(), new GenericParticleData(ModParticles.generic, 2, 20, 0xF0F0F0, 0.4F), e.posX, e.posY, e.posZ, 20, 1, e.getRNG());
+            ModParticles.spawnParticles(player.getEntityWorld(), new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_2"), 20, 0xF0F0F0, 0.4F), e.posX, e.posY, e.posZ, 20, 1, e.getRNG());//TODO particle textureindex: 2
         }
         return l.size() > 0;
     }

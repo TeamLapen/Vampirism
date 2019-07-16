@@ -22,9 +22,9 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  * Handles all potion registrations and reference.
  */
 @ObjectHolder(REFERENCE.MODID)
-public class ModPotions {
+public class ModEffects {
 
-    private static final Logger LOGGER = LogManager.getLogger(ModPotions.class);
+    private static final Logger LOGGER = LogManager.getLogger(ModEffects.class);
     public static final Effect sanguinare = getNull();
     public static final Effect thirst = getNull();
     public static final Effect saturation = getNull();
@@ -36,20 +36,19 @@ public class ModPotions {
     private static Effect vanilla_night_vision; //Vanilla night vision instance
 
 
-    static void registerPotions(IForgeRegistry<Effect> registry) {
+    static void registerEffects(IForgeRegistry<Effect> registry) {
         vanilla_night_vision = Effects.NIGHT_VISION;
         registry.register(new VampirismNightVisionPotion());
         registry.register(new PotionThirst("thirst", EffectType.HARMFUL, 859494));
         registry.register(new PotionSanguinare("sanguinare", EffectType.NEUTRAL, 0x6A0888));
-        registry.register(new VampirismPotion("saturation", EffectType.BENEFICIAL, 0xDCFF00).setIconIndex(2, 0));
-        registry.register(new VampirismPotion("sunscreen", EffectType.BENEFICIAL, 0xFFF100).setIconIndex(3, 0).addAttributesModifier(VReference.sunDamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        registry.register(new VampirismPotion("fire_protection", EffectType.BENEFICIAL, 14981690).setIconIndex(6, 0));
-        registry.register(new VampirismPotion("disguise_as_vampire", EffectType.NEUTRAL, 0x999900).setIconIndex(4, 0));
-        registry.register(new VampirismPotion("garlic", EffectType.HARMFUL, 0xFFFFFF).setIconIndex(5, 0));
+        registry.register(new VampirismPotion("saturation", EffectType.BENEFICIAL, 0xDCFF00));
+        registry.register(new VampirismPotion("sunscreen", EffectType.BENEFICIAL, 0xFFF100).addAttributesModifier(VReference.sunDamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismPotion("fire_protection", EffectType.BENEFICIAL, 14981690));
+        registry.register(new VampirismPotion("disguise_as_vampire", EffectType.NEUTRAL, 0x999900));
+        registry.register(new VampirismPotion("garlic", EffectType.HARMFUL, 0xFFFFFF));
     }
 
-
-    static void fixNightVisionPotionTypes() {
+    static void fixNightVisionEffecTypes() {
         /*We have to fix the vanilla night vision potion types as they are created using the vanilla night vision potion before it can be replaced
         There are two options:
         1) Substitute the potion types too

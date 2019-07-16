@@ -10,6 +10,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MoveTowardsRestrictionGoal;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -301,7 +302,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, 134, 10, 0x0A0A0A, 0.6F), this.posX, this.posY, this.posZ, 20, 1, this.rand);
+        ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.posX, this.posY, this.posZ, 20, 1, this.rand);//TODO particle textureindex: 134
         this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
         this.remove();

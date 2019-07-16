@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render.particle;
 
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
@@ -23,7 +24,6 @@ import javax.annotation.Nullable;
 public class FlyingBloodParticle extends SpriteTexturedParticle {
     private final String TAG = "FlyingBloodParticle";
     private final double destX, destY, destZ;
-    private final ResourceLocation particlePos;
 
 
     /**
@@ -47,7 +47,7 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
         this.motionX = (this.world.rand.nextDouble() / 10 - 0.05) + wayX / maxAge;
         this.motionY = (this.world.rand.nextDouble() / 10 - 0.01) + wayY / maxAge;
         this.motionZ = (this.world.rand.nextDouble() / 10 - 0.05) + wayZ / maxAge;
-        this.particlePos = particleId;
+        this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(particleId));
         this.tick();
     }
 

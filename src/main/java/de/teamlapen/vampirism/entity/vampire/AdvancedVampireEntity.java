@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
@@ -73,7 +73,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     public boolean attackEntityFrom(DamageSource damageSource, float amount) {
         boolean flag = super.attackEntityFrom(damageSource, amount);
         if (flag && damageSource.getTrueSource() instanceof PlayerEntity && this.rand.nextInt(4) == 0) {
-            this.addPotionEffect(new EffectInstance(ModPotions.sunscreen, 150, 2));
+            this.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 150, 2));
         }
         return flag;
     }

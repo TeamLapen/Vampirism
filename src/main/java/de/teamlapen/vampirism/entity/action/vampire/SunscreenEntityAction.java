@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.potion.EffectInstance;
 
@@ -28,7 +28,7 @@ public class SunscreenEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public void deactivate(T entity) {
-        entity.getRepresentingEntity().removePotionEffect(ModPotions.sunscreen);
+        entity.getRepresentingEntity().removePotionEffect(ModEffects.sunscreen);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SunscreenEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public void activate(T entity) {
-        entity.getRepresentingEntity().addPotionEffect(new EffectInstance(ModPotions.sunscreen, getDuration(entity.getLevel()), 3, false, false));
+        entity.getRepresentingEntity().addPotionEffect(new EffectInstance(ModEffects.sunscreen, getDuration(entity.getLevel()), 3, false, false));
     }
 
     @Override

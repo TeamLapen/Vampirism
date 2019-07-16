@@ -15,6 +15,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -73,14 +74,14 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 
         super.tick();
         if (this.world.isRemote) {
             Vec3d center = this.getPositionVector();
-            ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, 148, 4, 0xA01010), center.x, center.y, center.z, 60, 1, this.rand);
+            ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010), center.x, center.y, center.z, 60, 1, this.rand);//TODO particle textureindex: 148
 
             //Vec3d border=center.addVector(this.getRadius() * (this.rand.nextDouble()-0.5)*2,this.getRadius() * (this.rand.nextDouble()-0.5)*2,this.getRadius() * (this.rand.nextDouble()-0.5)*2);
 
             if (this.ticksExisted % 3 == 0) {
                 Vec3d border = this.getPositionVector();
                 border = border.add(this.getMotion().scale(-0.1));
-                ModParticles.spawnParticle(this.world, new GenericParticleData(ModParticles.generic, 132, 12, 0xC01010, 0.4F), center.x, center.y, center.z);
+                ModParticles.spawnParticle(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);//TODO particle textureindex: 132
             }
 
         } else {
@@ -193,8 +194,8 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 
                 }
             }
             Vec3d center = result.getHitVec();
-            ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, 145, 7, 0xA01010, 0.2F), center.x, center.y, center.z, 40, 2, this.rand);
-            ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, 150, 10, 0x700505), center.x, center.y, center.z, 15, 2, this.rand);
+            ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), center.x, center.y, center.z, 40, 2, this.rand);//TODO particle textureindex:145
+            ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), center.x, center.y, center.z, 15, 2, this.rand);//TODO particle textureindex:150
 
 
             this.remove();

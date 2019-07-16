@@ -36,7 +36,7 @@ import java.util.UUID;
 /**
  * slots:  0: ingredient, 1: fuel, 2: result, 3: liquid
  */
-public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {//TODO 1.14 AT for AbstractFurnaceTileEntity#func_214006_r()(164)
+public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {//TODO 1.14 fluidsystem
     private static final int[] SLOTS_DOWN = new int[]{0, 2, 3};
     private static final int[] SLOTS_UP = new int[]{0};
     private static final int[] SLOTS_WEST = new int[]{3};
@@ -101,7 +101,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {//T
             ItemStack itemstack = this.items.get(1);
             if (this.isBurning() || !itemstack.isEmpty() && !this.items.get(3).isEmpty() && !this.items.get(0).isEmpty()) {
                 AlchemicalCauldronRecipe irecipe = this.world.getRecipeManager().getRecipe((IRecipeType<AlchemicalCauldronRecipe>) this.recipeType, this, this.world).orElse(null);
-                if (!this.isBurning() && this.func_214008_b(irecipe) && this.canPlayerCook(irecipe)) {
+                if (!this.isBurning() && this.isRecipe(irecipe) && this.canPlayerCook(irecipe)) {
                     field_214013_b.set(0, this.getBurnTime(itemstack));
                     field_214013_b.set(1, field_214013_b.get(0));
                     if (this.isBurning()) {
@@ -118,7 +118,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {//T
                     }
                 }
 
-                if (this.isBurning() && this.func_214008_b(irecipe) && this.canPlayerCook(irecipe)) {
+                if (this.isBurning() && this.isRecipe(irecipe) && this.canPlayerCook(irecipe)) {
                     field_214013_b.set(2, field_214013_b.get(2) + 1);
                     if (field_214013_b.get(2) == field_214013_b.get(3)) {
                         field_214013_b.set(2, 0);
@@ -148,6 +148,10 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {//T
             this.markDirty();
         }
 
+    }
+
+    private boolean isRecipe(AlchemicalCauldronRecipe recipe) {
+        return this.func_214008_b(recipe);
     }
 
     protected boolean canPlayerCook(AlchemicalCauldronRecipe recipe) {

@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.*;
@@ -155,7 +155,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             if (this.isPotionActive(Effects.FIRE_RESISTANCE)) {
                 EffectInstance fireResistance = this.removeActivePotionEffect(Effects.FIRE_RESISTANCE);
                 onFinishedPotionEffect(fireResistance);
-                this.addPotionEffect(new EffectInstance(ModPotions.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                this.addPotionEffect(new EffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
             }
         }
         if (entityActionHandler != null) {
@@ -275,7 +275,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     protected float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        EffectInstance protection = this.getActivePotionEffect(ModPotions.fire_protection);
+        EffectInstance protection = this.getActivePotionEffect(ModEffects.fire_protection);
         if (protection != null) {
             protectionMod = 1F / (2F + protection.getAmplifier());
         }

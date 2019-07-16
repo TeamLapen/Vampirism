@@ -28,7 +28,7 @@ public class ModParticles {
         registry.register(new ParticleType<FlyingBloodParticleData>(false, FlyingBloodParticleData.DESERIALIZER).setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood")));
         registry.register(new ParticleType<FlyingBloodEntityParticleData>(false, FlyingBloodEntityParticleData.DESERIALIZER).setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood_entity")));
         registry.register(new BasicParticleType(false).setRegistryName(new ResourceLocation(REFERENCE.MODID, "halloween")));
-        registry.register(new BasicParticleType(false).setRegistryName(new ResourceLocation(REFERENCE.MODID, "heal")));
+        //registry.register(new BasicParticleType(false).setRegistryName(new ResourceLocation(REFERENCE.MODID, "heal")));
         registry.register(new ParticleType<GenericParticleData>(false, GenericParticleData.DESERIALIZER).setRegistryName(new ResourceLocation(REFERENCE.MODID, "generic")));
     }
 

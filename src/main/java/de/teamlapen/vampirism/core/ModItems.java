@@ -180,10 +180,7 @@ public class ModItems {
 
     static void registerCraftingRecipes() {
 
-//        // TODO CRAFTING
-//        //TODO 1.13 probably have to modifiy alchemical cauldron system with item groups /ingridients
-//        //TODO 1.13 (rewrite alchemical cauldron recipes to register recipes through json)
-//        AlchemicalCauldronCraftingManager cauldronCraftingManager = AlchemicalCauldronCraftingManager.getInstance();
+        //TODO 1.13 probably have to modifiy alchemical cauldron system with item groups /ingridients
 
         // HolyWaterBottleItem.registerSplashRecipes(holy_water_bottle,
         // IItemWithTier.TIER.NORMAL);
@@ -192,11 +189,6 @@ public class ModItems {
         // HolyWaterBottleItem.registerSplashRecipes(holy_water_bottle,
         // IItemWithTier.TIER.ULTIMATE);
         //
-//        cauldronCraftingManager.registerLiquidColor(ModItems.holy_water_bottle_normal, 0x6666FF);
-//        cauldronCraftingManager.registerLiquidColor(ModItems.holy_water_bottle_enhanced, 0x6666FF);
-//        cauldronCraftingManager.registerLiquidColor(ModItems.holy_water_bottle_ultimate, 0x6666FF);
-//
-//        cauldronCraftingManager.registerLiquidColor(ModItems.item_garlic, 0xBBBBBB);
 
         // Brewing
         BrewingRecipeRegistry.addRecipe(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));

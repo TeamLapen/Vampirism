@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.client.render.particle;
 
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -21,7 +23,6 @@ import javax.annotation.Nullable;
 public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
     private final int MAX_AGE = 60;
     private final String TAG = "FlyingBloodParticle";
-
     private final Entity entity;
 
     @Override
@@ -51,6 +52,7 @@ public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
             this.motionY = (this.world.rand.nextDouble() + 0.2);
             this.motionZ = (this.world.rand.nextDouble() - 0.5);
         }
+        this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(new ResourceLocation("minecraft", "critical_hit")));
         this.tick();
     }
 

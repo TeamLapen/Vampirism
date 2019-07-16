@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.potion.blood;
 
 
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -9,8 +10,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
 import de.teamlapen.vampirism.api.items.IBloodPotionPropertyRandomizer;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -60,7 +61,7 @@ public class BloodPotions {
         registry.addItemsToCategory(false, IBloodPotionRegistry.CATEGORY_NORMAL_VAMPIRE_SKILLS, ModItems.vampire_fang, ModItems.blood_bottle, ModItems.item_coffin);
         //Special vampire skills
         //IBloodPotionCategory specialVampireSkills = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, "text.vampirism.blood_potion.category.special_vampire_skills");
-        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "disguise"), IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, ModPotions.disguise_as_vampire, 5, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 0));
+        registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "disguise"), IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, ModEffects.disguise_as_vampire, 5, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 0));
         registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "special_night_vision"), IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, Effects.NIGHT_VISION, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(1000, 24000, 0));
         registry.addItemsToCategory(false, IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, ModItems.pure_blood_0, ModItems.pure_blood_1, ModItems.pure_blood_2, ModItems.pure_blood_3, ModItems.pure_blood_4);
 

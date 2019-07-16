@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import com.mojang.datafixers.util.Either;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -247,7 +248,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        EffectInstance protection = player.getActivePotionEffect(ModPotions.fire_protection);
+        EffectInstance protection = player.getActivePotionEffect(ModEffects.fire_protection);
         if (protection != null) {
             protectionMod = 1F / (2F + protection.getAmplifier());
         }
@@ -480,7 +481,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             int sucked = (int) Math.ceil((amt * perc));
             player.getFoodStats().setFoodLevel(amt - sucked);
             player.addExhaustion(1000F);
-            if (!player.isPotionActive(ModPotions.sanguinare) && Helper.canTurnPlayer(biter, player) && Helper.canBecomeVampire(player)) {
+            if (!player.isPotionActive(ModEffects.sanguinare) && Helper.canTurnPlayer(biter, player) && Helper.canBecomeVampire(player)) {
                 if (!player.isCreative()) PotionSanguinare.addRandom(player, true);
             }
             return sucked;
@@ -514,7 +515,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             actionHandler.onActionsReactivated();
             ticksInSun = 0;
             if (wasDead) {
-                player.addPotionEffect(new EffectInstance(ModPotions.sunscreen, 400, 4, true, false));
+                player.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 400, 4, true, false));
                 player.setHealth(player.getMaxHealth());
                 bloodStats.setBloodLevel(bloodStats.getMaxBlood());
             }
@@ -595,7 +596,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public void onPlayerLoggedIn() {
         if (getLevel() > 0 && !player.world.isRemote) {
-            player.addPotionEffect(new EffectInstance(ModPotions.sunscreen, 200, 4, true, false));
+            player.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 200, 4, true, false));
         }
     }
 
@@ -694,12 +695,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
                 if (player.ticksExisted % 9 == 3 && player.isPotionActive(Effects.FIRE_RESISTANCE)) {
                     EffectInstance fireResistance = player.getActivePotionEffect(Effects.FIRE_RESISTANCE);
-                    player.addPotionEffect(new EffectInstance(ModPotions.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                    player.addPotionEffect(new EffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
                     player.removePotionEffect(Effects.FIRE_RESISTANCE);
                 }
                 if (player.ticksExisted % 9 == 3 && player.isPotionActive(Effects.HUNGER)) {
                     EffectInstance hunterEffect = player.getActivePotionEffect(Effects.HUNGER);
-                    player.addPotionEffect(new EffectInstance(ModPotions.thirst, hunterEffect.getDuration(), hunterEffect.getAmplifier()));
+                    player.addPotionEffect(new EffectInstance(ModEffects.thirst, hunterEffect.getDuration(), hunterEffect.getAmplifier()));
                     player.removePotionEffect(Effects.HUNGER);
                 }
                 if (actionHandler.updateActions()) {
@@ -1188,7 +1189,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Handle sun damage
      */
     private void handleSunDamage(boolean isRemote) {
-        EffectInstance potionEffect = player.getActivePotionEffect(ModPotions.sunscreen);
+        EffectInstance potionEffect = player.getActivePotionEffect(ModEffects.sunscreen);
         int sunscreen = potionEffect == null ? -1 : potionEffect.getAmplifier();
         if (ticksInSun < 100) {
             ticksInSun++;

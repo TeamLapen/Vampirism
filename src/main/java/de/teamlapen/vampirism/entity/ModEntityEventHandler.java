@@ -135,7 +135,7 @@ public class ModEntityEventHandler {
                 }
                 if (target != null) {
                     ((CreeperEntity) event.getEntity()).targetSelector.removeGoal(target);
-                    ((CreeperEntity) event.getEntity()).targetSelector.addGoal(1, new NearestAttackableTargetGoal<PlayerEntity>((CreeperEntity) event.getEntity(), PlayerEntity.class, 10, true, false, input -> input != null && !VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers));
+                    ((CreeperEntity) event.getEntity()).targetSelector.addGoal(1, new NearestAttackableTargetGoal<PlayerEntity>((CreeperEntity) event.getEntity(), PlayerEntity.class, 10, true, false, input -> input != null && !VampirePlayer.get((PlayerEntity) input).getSpecialAttributes().avoided_by_creepers));
                 } else {
                     if (warnAboutCreeper) {
                         LOGGER.warn("Could not replace creeper target task");

@@ -25,7 +25,7 @@ import java.util.Arrays;
 /**
  * 1.14
  */
-public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
+public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {//TODO 1.14 fluidsystem
     private static final ISkill[] EMPTY_SKILLS = {};
     private final ItemStack fluid;
     @Nullable
@@ -74,18 +74,6 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         return (skills == null) ? EMPTY_SKILLS : skills;
     }
 
-//    @Nullable
-//    public FluidStack isValidFluidItem(@Nonnull ItemStack stack) {
-//        if (fluid == null) return null;
-//        return FluidLib.getFluidItemCap(stack).map(handler -> {
-//            FluidStack drained = handler.drain(fluid, false);
-//            if (drained == null || !drained.isFluidStackIdentical(fluid)) {
-//                return null;
-//            }
-//            return fluid.copy();
-//        }).orElse(null);
-//    }
-
     @Override
     public String toString() {
         return "AlchemicalCauldronRecipe{" +
@@ -98,21 +86,6 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
                 ", fluidStack=" + fluid +
                 '}';
     }
-
-//    private void addFluidStackDescription(ItemStack stack, FluidStack fluidStack) {
-//
-//        CompoundNBT nbt = stack.getTag();
-//        if (nbt == null) nbt = new CompoundNBT();
-//        CompoundNBT display = nbt.contains("display", 10) ? nbt.getCompound("display") : new CompoundNBT();
-//        ListNBT lore = nbt.contains("Lore", 0) ? nbt.getList("Lore", 9) : new ListNBT();
-//        lore.add(new StringNBT(UtilLib.translate("text.vampirism.liquid_container")));
-//        display.put("Lore", lore);
-//        nbt.put("display", display);
-//        stack.setTag(nbt);
-//
-//        stack.addEnchantment(Enchantments.UNBREAKING, 1);
-//        stack.setDisplayName(new StringTextComponent(fluidStack.getLocalizedName() + ": " + fluidStack.amount + "mB"));
-//    }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AlchemicalCauldronRecipe> {
         @Override
