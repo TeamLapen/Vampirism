@@ -24,7 +24,7 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     private static final String regName = "sunscreen_beacon";
 
     public SunscreenBeaconBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : -1, VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : 3600000));
+        super(regName, Properties.create(Material.IRON).hardnessAndResistance(-1, 3600000));
     }
 
     @Override
@@ -34,10 +34,19 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
         tooltip.add(UtilLib.translated(getTranslationKey() + ".tooltip2", VampirismConfig.SERVER.sunscreenBeaconDistance.get()));
     }
 
-
     @Override
     public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
         return VampirismConfig.SERVER.sunscreenBeaconMineable.get();
+    }
+
+    @Override
+    public float getBlockHardness(BlockState p_176195_1_, IBlockReader p_176195_2_, BlockPos p_176195_3_) {
+        return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : -1;
+    }
+
+    @Override
+    public float getExplosionResistance() {
+        return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : 3600000;
     }
 
     @Nullable

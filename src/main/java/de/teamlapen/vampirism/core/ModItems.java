@@ -174,9 +174,6 @@ public class ModItems {
     public static final SpawnEggItem vampire_baron_spawn_egg = getNull();
     public static final SpawnEggItem hunter_trainer_spawn_egg = getNull();
 
-    //Food Category
-    public static final Food human_heart_food = (new Food.Builder()).hunger(20).saturation(1.5F).build();
-    public static final Food weak_human_heart_food = (new Food.Builder()).hunger(10).saturation(0.9F).build();
 
     static void registerCraftingRecipes() {
 
@@ -211,8 +208,8 @@ public class ModItems {
 
     static void registerItems(IForgeRegistry<Item> registry) {
         registry.register(new VampireFangItem());
-        registry.register(new VampirismItemBloodFood("human_heart", human_heart_food));
-        registry.register(new VampirismItemBloodFood("weak_human_heart", weak_human_heart_food));
+        registry.register(new VampirismItemBloodFood("human_heart", (new Food.Builder()).hunger(20).saturation(1.5F).build()));
+        registry.register(new VampirismItemBloodFood("weak_human_heart", (new Food.Builder()).hunger(10).saturation(0.9F).build()));
         registry.register(new BloodBottleIItem());
         registry.register(new TentItem(true));
         registry.register(new TentItem(false));

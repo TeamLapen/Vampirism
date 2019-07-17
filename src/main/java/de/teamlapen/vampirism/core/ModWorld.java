@@ -14,7 +14,6 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.TreeFeature;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -33,10 +32,8 @@ public class ModWorld {
 
     public static final Structure<NoFeatureConfig> hunter_camp = getNull();
 
-    public static final SurfaceBuilderConfig vampire_surface = new SurfaceBuilderConfig(ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState());
 
-
-    public static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
+    static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
         registry.register(new VampireForestFlowerFeature(NoFeatureConfig::deserialize).setRegistryName(REFERENCE.MODID, "vampire_flower"));
         registry.register(new TreeFeature(NoFeatureConfig::deserialize, false, 4, Blocks.SPRUCE_LOG.getDefaultState(), Blocks.OAK_LEAVES.getDefaultState(), false).setRegistryName(REFERENCE.MODID, "vampire_tree"));
 
