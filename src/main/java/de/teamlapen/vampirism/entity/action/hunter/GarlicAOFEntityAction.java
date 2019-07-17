@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -40,8 +40,8 @@ public class GarlicAOFEntityAction<T extends CreatureEntity & IEntityActionUser>
         List<PlayerEntity> players = entity.getEntityWorld().getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(entity.posX - 4, entity.posY - 1, entity.posZ - 4, entity.posX + 4, entity.posY + 3, entity.posZ + 4));
         for (PlayerEntity e : players) {
             if (VampirismAPI.factionRegistry().getFaction(e) == VReference.VAMPIRE_FACTION) {
-                if (e.getActivePotionEffect(ModPotions.garlic) == null || e.getActivePotionEffect(ModPotions.garlic).getDuration() <= 60) {
-                    e.addPotionEffect(new EffectInstance(ModPotions.garlic, 99));
+                if (e.getActivePotionEffect(ModEffects.garlic) == null || e.getActivePotionEffect(ModEffects.garlic).getDuration() <= 60) {
+                    e.addPotionEffect(new EffectInstance(ModEffects.garlic, 99));
                 }
             }
         }

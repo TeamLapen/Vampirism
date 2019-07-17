@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.minions.ai;
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.util.MinionHelper;
+import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;
 
@@ -38,7 +39,7 @@ public class DefendLordMinionGoal extends TargetGoal {
             return false;
         }
 
-        return this.isSuitableTarget(target, false);
+        return this.isSuitableTarget(target, EntityPredicate.DEFAULT);
     }
 
     @Override

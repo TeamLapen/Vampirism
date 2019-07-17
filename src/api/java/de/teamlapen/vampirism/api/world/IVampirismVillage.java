@@ -1,3 +1,4 @@
+/*
 package de.teamlapen.vampirism.api.world;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -16,10 +17,11 @@ public interface IVampirismVillage {
     IFaction getControllingFaction();
 
     @Nonnull
-    Village getVillage();
+    Village getTotemTile();
 
     void addOrRenewAggressor(@Nullable Entity entity);
 
     @Nullable
     IFactionEntity findNearestVillageAggressor(@Nonnull LivingEntity entity);
 }
+*/

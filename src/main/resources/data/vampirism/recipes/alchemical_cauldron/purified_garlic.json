@@ -1,0 +1,16 @@
+{
+  "result": {
+    "item": "vampirism:purified_garlic",
+    "count": 2
+  },
+  "skill": [
+    "vampirism:purified_garlic"
+  ],
+  "liquid": {
+    "item": "vampirism:holy_water_bottle_normal"
+  },
+  "ingredient": {
+    "item": "vampirism:item_garlic"
+  },
+  "type": "vampirism:alchemical_cauldron_recipe"
+}

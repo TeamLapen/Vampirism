@@ -7,12 +7,12 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.ai.AttackMeleeNoSunGoal;
-import de.teamlapen.vampirism.entity.ai.FleeGarlicVampireGoal;
-import de.teamlapen.vampirism.entity.ai.FleeSunVampireGoal;
-import de.teamlapen.vampirism.entity.ai.RestrictSunVampireGoal;
+import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
+import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
+import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
+import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
@@ -73,7 +73,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     public boolean attackEntityFrom(DamageSource damageSource, float amount) {
         boolean flag = super.attackEntityFrom(damageSource, amount);
         if (flag && damageSource.getTrueSource() instanceof PlayerEntity && this.rand.nextInt(4) == 0) {
-            this.addPotionEffect(new EffectInstance(ModPotions.sunscreen, 150, 2));
+            this.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 150, 2));
         }
         return flag;
     }
@@ -248,8 +248,8 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
 
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
     protected void updateEntityAttributes() {

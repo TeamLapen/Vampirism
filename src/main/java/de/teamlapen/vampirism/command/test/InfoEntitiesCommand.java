@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.command.CommandSource;
@@ -25,13 +27,8 @@ public class InfoEntitiesCommand extends BasicCommand {
 	}
 
     private static int infoEntities(CommandSource commandSource, ServerPlayerEntity asPlayer) {
-        int entityMonster = asPlayer.getEntityWorld().countEntities(EntityClassification.MONSTER, maxSpawns, false);
-        int entityMonsterSpawn = asPlayer.getEntityWorld().countEntities(EntityClassification.MONSTER, maxSpawns, true);
-        int entityHunter = asPlayer.getEntityWorld().countEntities(VReference.HUNTER_CREATURE_TYPE, maxSpawns, false);
-        int entityHunterSpawn = asPlayer.getEntityWorld().countEntities(VReference.HUNTER_CREATURE_TYPE, maxSpawns, true);
-        int entityVampire = asPlayer.getEntityWorld().countEntities(VReference.VAMPIRE_CREATURE_TYPE, maxSpawns, false);
-        int entityVampireSpawn = asPlayer.getEntityWorld().countEntities(VReference.VAMPIRE_CREATURE_TYPE, maxSpawns, true);
-        commandSource.sendFeedback(new StringTextComponent(String.format("Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", entityMonster, entityMonsterSpawn, entityHunter, entityHunterSpawn, entityVampire, entityVampireSpawn)), true);
+        Object2IntMap<EntityClassification> object2intmap = asPlayer.getServerWorld().countEntities();
+        commandSource.sendFeedback(new StringTextComponent(String.format("Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", object2intmap.getOrDefault(EntityClassification.MONSTER, 0), EntityClassification.MONSTER.getMaxNumberOfCreature(), object2intmap.getOrDefault(VReference.HUNTER_CREATURE_TYPE, 0), VReference.HUNTER_CREATURE_TYPE.getMaxNumberOfCreature(), object2intmap.getOrDefault(VReference.VAMPIRE_CREATURE_TYPE, 0), VReference.VAMPIRE_CREATURE_TYPE.getMaxNumberOfCreature())), true);
         return 0;
     }
 }

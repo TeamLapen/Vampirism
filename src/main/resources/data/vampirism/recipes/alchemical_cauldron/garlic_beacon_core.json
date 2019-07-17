@@ -1,0 +1,16 @@
+{
+  "result": {
+    "item": "vampirism:garlic_beacon_core",
+    "count": 4
+  },
+  "skill": [
+    "vampirism:garlic_beacon"
+  ],
+  "liquid": {
+    "item": "vampirism:item_garlic"
+  },
+  "ingredient": {
+    "item": "minecraft:black_wool"
+  },
+  "type": "vampirism:alchemical_cauldron_recipe"
+}

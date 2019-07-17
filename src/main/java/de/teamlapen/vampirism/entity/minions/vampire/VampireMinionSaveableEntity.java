@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.minions.IMinionCommand;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMinion;
-import de.teamlapen.vampirism.entity.ai.FleeGarlicVampireGoal;
+import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
 import de.teamlapen.vampirism.entity.minions.ai.FollowLordMinionGoal;
 import de.teamlapen.vampirism.entity.minions.commands.DefendLordCommand;
 import net.minecraft.entity.EntityType;

@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.minions.vampire.VampireMinionBaseEntity;
+import de.teamlapen.vampirism.particle.GenericParticleData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -15,6 +15,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -27,18 +28,16 @@ import java.util.List;
  * <p>
  * Damages directly hit entities but also has a small area of effect damage
  */
-public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
+public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 1.14 particle
 
     protected float directDamage = 4;
     protected float indirecDamage = 2;
     private boolean initialNoClip = false;
     private float motionFactor = 0.9f;
     private boolean excludeShooter = false;
-    public LivingEntity shootingEntity; //Temporary until mapping is fixed. Is not updated if someone changes projectile direction TODO
 
     public DarkBloodProjectileEntity(EntityType<? extends DarkBloodProjectileEntity> type, World worldIn) {
         super(type, worldIn);
-        this.shootingEntity = field_70235_a;
     }
 
     /**
@@ -73,14 +72,14 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
         super.tick();
         if (this.world.isRemote) {
             Vec3d center = this.getPositionVector();
-            //VampLib.proxy.getParticleHandler().spawnParticle(this.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z,  148, 4, 0xA01010,0.0);
-            VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 2, getRadius(), this.rand, 148, 4, 0xA01010, 0.0);
+            ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010), center.x, center.y, center.z, 60, 1, this.rand);//TODO particle textureindex: 148
+
             //Vec3d border=center.addVector(this.getRadius() * (this.rand.nextDouble()-0.5)*2,this.getRadius() * (this.rand.nextDouble()-0.5)*2,this.getRadius() * (this.rand.nextDouble()-0.5)*2);
 
             if (this.ticksExisted % 3 == 0) {
                 Vec3d border = this.getPositionVector();
                 border = border.add(this.getMotion().scale(-0.1));
-                VampLib.proxy.getParticleHandler().spawnParticle(this.world, ModParticles.GENERIC_PARTICLE, border.x, border.y, border.z, 132, 12, 0xC01010, 0.4);
+                ModParticles.spawnParticle(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);//TODO particle textureindex: 132
             }
 
         } else {
@@ -193,8 +192,8 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
                 }
             }
             Vec3d center = result.getHitVec();
-            VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 40, 2, this.rand, 145, 7, 0xA01010, 0.2);
-            VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 15, 2, this.rand, 150, 10, 0x700505, 0.0);
+            ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), center.x, center.y, center.z, 40, 2, this.rand);//TODO particle textureindex:145
+            ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), center.x, center.y, center.z, 15, 2, this.rand);//TODO particle textureindex:150
 
 
             this.remove();

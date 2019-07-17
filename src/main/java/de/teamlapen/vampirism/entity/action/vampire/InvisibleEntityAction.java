@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.action.vampire;
 
-import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
@@ -42,13 +41,14 @@ public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public void activate(T entity) {
-        VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), ModParticles.GENERIC_PARTICLE, entity.posX, entity.posY, entity.posZ, 60, 1, entity.getRNG(), ParticleTypes.EXPLOSION, 16, 0xF0F0F0);
+        ModParticles.spawnParticles(entity.getEntityWorld(), ParticleTypes.EXPLOSION, entity.posX, entity.posY, entity.posZ, 60, 1, entity.getRNG());
+
     }
 
     @Override
     public void updatePreAction(T entity, int duration) {
         if (duration % 5 == 0) {
-            VampLib.proxy.getParticleHandler().spawnParticles(entity.getEntityWorld(), ModParticles.GENERIC_PARTICLE, entity.posX, entity.posY, entity.posZ, 10, 1, entity.getRNG(), ParticleTypes.EXPLOSION, 16, 0xF0F0F0);
+            ModParticles.spawnParticles(entity.getEntityWorld(), ParticleTypes.EXPLOSION, entity.posX, entity.posY, entity.posZ, 10, 1, entity.getRNG());
         }
     }
 

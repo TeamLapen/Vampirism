@@ -1,49 +1,46 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModVillages;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.merchant.IMerchant;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.merchant.villager.VillagerData;
+import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.village.MerchantRecipe;
-import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.ArrayUtils;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Random;
 
 
 public class VampireFactionVillagerEntity extends VampireFactionVillagerBaseEntity implements IVampire {
 
-    private final static VillagerEntity.ITradeList[][] TRADES = {
+    private final static VillagerTrades.ITrade[][] TRADES = {
             {
-                    new ItemsForHeart(new PriceInfo(10, 15), new ItemStack(ModItems.pure_blood_0, 1), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(25, 35), new ItemStack(ModItems.pure_blood_1, 1), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood_2, 1), new PriceInfo(1, 1)),
-                    new ItemsForHeart(new PriceInfo(1, 5), ModItems.item_coffin, new PriceInfo(1, 1))
+                    new ItemsForHeart(new Price(10, 15), ModItems.pure_blood_0, new Price(1, 1)),
+                    new ItemsForHeart(new Price(25, 30), ModItems.pure_blood_1, new Price(1, 1)),
+                    new ItemsForHeart(new Price(30, 40), ModItems.pure_blood_2, new Price(1, 1)),
+                    new ItemsForHeart(new Price(1, 5), ModItems.item_coffin, new Price(1, 1))
             }, {
-            new ItemsForHeart(new PriceInfo(3, 12), bloodBottle(1, 9), new PriceInfo(1, 15)),
-            new ItemsForHeart(new PriceInfo(30, 40), new ItemStack(ModItems.pure_blood_4, 1), new PriceInfo(1, 1)),
-            new ItemsForHeart(new PriceInfo(20, 30), new ItemStack(ModItems.pure_blood_3, 1), new PriceInfo(1, 1))
+            new BloodBottleForHeart(new Price(3, 12), new Price(1, 15), 9),
+            new ItemsForHeart(new Price(30, 40), ModItems.pure_blood_4, new Price(1, 1)),
+            new ItemsForHeart(new Price(20, 30), ModItems.pure_blood_3, new Price(1, 1))
             }, {
-            new ItemsForHeart(new PriceInfo(10, 30), new ItemStack[]{
-                    new ItemStack(ModItems.vampire_cloak_black_blue, 1),
-                    new ItemStack(ModItems.vampire_cloak_black_red, 1),
-                    new ItemStack(ModItems.vampire_cloak_black_white, 1),
-                    new ItemStack(ModItems.vampire_cloak_red_black, 1),
-                    new ItemStack(ModItems.vampire_cloak_white_black, 1)}, new PriceInfo(1, 1))
+            new ItemsForHeart(new Price(10, 30), new ItemStack[]{
+                    new ItemStack(ModItems.vampire_cloak_black_blue),
+                    new ItemStack(ModItems.vampire_cloak_black_red),
+                    new ItemStack(ModItems.vampire_cloak_black_white),
+                    new ItemStack(ModItems.vampire_cloak_red_black),
+                    new ItemStack(ModItems.vampire_cloak_white_black)}, new Price(1, 1))
             }
     };
 
@@ -53,9 +50,10 @@ public class VampireFactionVillagerEntity extends VampireFactionVillagerBaseEnti
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(DifficultyInstance difficulty, @Nullable ILivingEntityData livingdata, @Nullable CompoundNBT itemNbt) {
-        this.setProfession(ModVillages.profession_vampire_expert);
-        return this.finalizeMobSpawn(difficulty, livingdata, itemNbt, false);
+    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        this.setVillagerData(this.getVillagerData().withProfession(ModEntities.vampire_expert));
+        return spawnDataIn;
     }
 
     @Override
@@ -71,63 +69,13 @@ public class VampireFactionVillagerEntity extends VampireFactionVillagerBaseEnti
     }
 
     @Override
-    public void useRecipe(MerchantRecipe recipe) {
-        super.useRecipe(recipe);
-        PlayerEntity player = getCustomer();
-        if (player != null) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.vampire_villager.trade_successful"), false);
-        }
-    }
-
-    @Nonnull
-    @Override
-    protected ITradeList[] getTrades(int level) {
-        if (level >= 2) {
-            return ArrayUtils.addAll(TRADES[1], TRADES[2]);
-        }
-        return TRADES[level];//Must not be >2
-    }
-
-    @Deprecated
-    private static ItemStack bloodBottle(int count, int damage) {
-        ItemStack bottle = new ItemStack(ModItems.blood_bottle, count);
-        bottle.setDamage(damage);
-        return bottle;
-    }
-
-    private static class ItemsForHeart implements ITradeList {
-        private ItemStack[] sellingStacks;
-        private PriceInfo buying;
-        private PriceInfo selling;
-
-        ItemsForHeart(PriceInfo price, Item sell, PriceInfo amount) {
-            this(price, new ItemStack[] { new ItemStack(sell) }, amount);
-        }
-
-        ItemsForHeart(PriceInfo price, ItemStack sell, PriceInfo amount) {
-            this(price, new ItemStack[] { sell }, amount);
-
-        }
-
-        ItemsForHeart(PriceInfo price, ItemStack[] sellingStacks, PriceInfo amount) {
-            this.sellingStacks = sellingStacks;
-            this.buying = price;
-            this.selling = amount;
-        }
-
-        @Override
-        public void addMerchantRecipe(IMerchant merchant, MerchantRecipeList recipeList, Random random) {
-            int price = this.buying.getPrice(random);
-            int count = this.selling.getPrice(random);
-            ItemStack selling = sellingStacks[random.nextInt(sellingStacks.length)].copy();
-            selling.setCount(count);
-            ItemStack first = new ItemStack(ModItems.human_heart, price);
-            ItemStack second = ItemStack.EMPTY;
-            if (price > 64) {
-                second = new ItemStack(ModItems.human_heart, price - 64);
-                first.setCount(price - second.getCount());
-            }
-            recipeList.add(new MerchantRecipe(first, second, selling));
+    protected void populateTradeData() {
+        super.populateTradeData();
+        VillagerData villagerData = this.getVillagerData();
+        VillagerTrades.ITrade[] trades = TRADES[villagerData.getLevel()];
+        if (trades != null) {
+            MerchantOffers merchantOffers = this.getOffers();
+            this.addTrades(merchantOffers, trades, 2);
         }
     }
 }

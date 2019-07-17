@@ -13,6 +13,6 @@ public class HunterVillagerRenderer extends VillagerRenderer {
     public HunterVillagerRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, (IReloadableResourceManager) Minecraft.getInstance().getResourceManager());
         this.layerRenderers.clear();
-        this.mainModel = new VillagerWithArmsModel(0.0F);
+        this.entityModel = new VillagerWithArmsModel(0.0F);
     }
 }

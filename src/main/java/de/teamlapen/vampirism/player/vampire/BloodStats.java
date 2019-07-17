@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.GameRules;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -94,7 +95,7 @@ public class BloodStats implements IBloodStats {
                 this.bloodLevel = Math.max(bloodLevel - 1, 0);
             }
         }
-        boolean regen = player.getEntityWorld().getGameRules().getBoolean("naturalRegeneration");
+        boolean regen = player.getEntityWorld().getGameRules().getBoolean(GameRules.NATURAL_REGENERATION);
         if (regen && this.bloodSaturationLevel > 0 && player.shouldHeal() && this.bloodLevel >= maxBlood) {
             ++this.bloodTimer;
             if (this.bloodTimer >= 10) {

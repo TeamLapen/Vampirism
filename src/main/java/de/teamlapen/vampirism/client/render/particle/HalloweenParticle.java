@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.TexturedParticle;
+import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -27,8 +27,7 @@ import javax.annotation.Nullable;
  * Only used on halloween
  */
 @OnlyIn(Dist.CLIENT)
-public class HalloweenParticle extends TexturedParticle {
-
+public class HalloweenParticle extends SpriteTexturedParticle {
     private LivingEntity entity;
 
     public HalloweenParticle(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn) {
@@ -48,19 +47,9 @@ public class HalloweenParticle extends TexturedParticle {
         return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
-    /**
-     * Retrieve what effect layer (what texture) the particle should be rendered with. 0 for the particle sprite sheet,
-     * 1 for the main Texture atlas, and 3 for a custom texture
-     */
-    @Override
-    public int getFXLayer() {
-        return 3;
-    }
-
     @Override
     public void tick() {
         super.tick();
-
         if (this.entity == null) {
             DraculaHalloweenEntity entityelderguardian = ModEntities.special_dracula_halloween.create(this.world);
             entityelderguardian.setParticle(true);
@@ -103,26 +92,6 @@ public class HalloweenParticle extends TexturedParticle {
 
 
         }
-    }
-
-    @Override
-    protected float getMinU() {
-        return 0;
-    }
-
-    @Override
-    protected float getMaxU() {
-        return 0;
-    }
-
-    @Override
-    protected float getMinV() {
-        return 0;
-    }
-
-    @Override
-    protected float getMaxV() {
-        return 0;
     }
 
     @OnlyIn(Dist.CLIENT)

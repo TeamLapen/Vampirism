@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 import de.teamlapen.vampirism.api.VReference;
@@ -19,7 +20,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.passive.*;
+import net.minecraft.entity.passive.horse.HorseEntity;
+import net.minecraft.entity.passive.horse.LlamaEntity;
+import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.Heightmap;
@@ -65,6 +72,9 @@ public class ModEntities {
     public static final EntityType<BasicVampireEntity> vampire = getNull();
     public static final EntityType<DummyHunterTrainerEntity> advanced_vampire = getNull();
 
+    public static final VillagerProfession hunter_expert = getNull();
+    public static final VillagerProfession vampire_expert = getNull();
+
     private static final Logger LOGGER = LogManager.getLogger(ModEntities.class);
 
 
@@ -81,15 +91,15 @@ public class ModEntities {
     static void registerConvertibles() {
         String base = REFERENCE.MODID + ":textures/entity/vanilla/%s_overlay.png";
         IVampirismEntityRegistry registry = VampirismAPI.entityRegistry();
-        registry.addConvertible(EntityType.COW, String.format(base, "cow"));
-        registry.addConvertible(EntityType.PIG, String.format(base, "pig"));
-        registry.addConvertible(EntityType.OCELOT, String.format(base, "cat"));
-        registry.addConvertible(EntityType.HORSE, String.format(base, "horse"));
-        registry.addConvertible(EntityType.POLAR_BEAR, String.format(base, "polarbear"));
-        registry.addConvertible(EntityType.RABBIT, String.format(base, "rabbit"));
-        registry.addConvertible(EntityType.SHEEP, String.format(base, "sheep"), new ConvertedSheepEntity.ConvertingHandler());
-        registry.addConvertible(EntityType.VILLAGER, null, new ConvertedVillagerEntity.ConvertingHandler());
-        registry.addConvertible(EntityType.LLAMA, String.format(base, "llama"));
+        registry.addConvertible(EntityType.COW, CowEntity.class, String.format(base, "cow"));
+        registry.addConvertible(EntityType.PIG, PigEntity.class, String.format(base, "pig"));
+        registry.addConvertible(EntityType.OCELOT, OcelotEntity.class, String.format(base, "cat"));
+        registry.addConvertible(EntityType.HORSE, HorseEntity.class, String.format(base, "horse"));
+        registry.addConvertible(EntityType.POLAR_BEAR, PolarBearEntity.class, String.format(base, "polarbear"));
+        registry.addConvertible(EntityType.RABBIT, RabbitEntity.class, String.format(base, "rabbit"));
+        registry.addConvertible(EntityType.SHEEP, SheepEntity.class, String.format(base, "sheep"), new ConvertedSheepEntity.ConvertingHandler());
+        registry.addConvertible(EntityType.VILLAGER, VillagerEntity.class, null, new ConvertedVillagerEntity.ConvertingHandler());
+        registry.addConvertible(EntityType.LLAMA, LlamaEntity.class, String.format(base, "llama"));
     }
 
     static void registerEntities(IForgeRegistry<EntityType<?>> registry) {
@@ -128,19 +138,17 @@ public class ModEntities {
 
     static void registerSpawns() {
         EntitySpawnPlacementRegistry.register(blinding_bat, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
-        EntitySpawnPlacementRegistry.register(ghost, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);//TODO new BlockTag#cursed_earth
+        EntitySpawnPlacementRegistry.register(ghost, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, GhostEntity::spawnPredicate);
         EntitySpawnPlacementRegistry.register(converted_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(converted_sheep, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(vampire_hunter, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(advanced_hunter, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
-        EntitySpawnPlacementRegistry.register(vampire_baron, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
-        EntitySpawnPlacementRegistry.register(vampire_minion_s, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null)
-        ;
+        EntitySpawnPlacementRegistry.register(vampire_baron, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampireBaronEntity::spawnPredicate);
+        EntitySpawnPlacementRegistry.register(vampire_minion_s, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(dummy_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(villager_converted, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(villager_angry, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(special_dracula_halloween, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
-        EntitySpawnPlacementRegistry.register(soul_orb, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(villager_hunter_faction, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(villager_vampire_faction, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
         EntitySpawnPlacementRegistry.register(hunter_trainer_dummy, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, null);
@@ -193,5 +201,10 @@ public class ModEntities {
         EntityType<T> entry = type.build(REFERENCE.MODID + ":" + id);
         entry.setRegistryName(REFERENCE.MODID, id);
         return entry;
+    }
+
+    static void registerProfessions(IForgeRegistry<VillagerProfession> registry) {
+        registry.register(new VillagerProfession("vampirism:hunter_expert", PointOfInterestType.UNEMPLOYED, ImmutableSet.of(), ImmutableSet.of()));
+        registry.register(new VillagerProfession("vampirism:vampire_expert", PointOfInterestType.UNEMPLOYED, ImmutableSet.of(), ImmutableSet.of()));
     }
 }

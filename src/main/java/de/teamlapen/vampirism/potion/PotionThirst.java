@@ -11,7 +11,6 @@ import net.minecraft.potion.EffectType;
 public class PotionThirst extends VampirismPotion {
     public PotionThirst(String name, EffectType effectType, int potionColor) {
         super(name, effectType, potionColor);
-        setIconIndex(0, 0);
         addAttributesModifier(VReference.bloodExhaustion, "f6d9889e-dfdc-11e5-b86d-9a79f06e9478", 0.5F, AttributeModifier.Operation.ADDITION);
     }
 

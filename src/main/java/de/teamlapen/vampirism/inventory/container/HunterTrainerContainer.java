@@ -6,8 +6,8 @@ import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.inventory.SimpleInventory;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModContainer;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.HunterIntelItem;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
@@ -103,7 +103,7 @@ public class HunterTrainerContainer extends InventoryContainer {
             FactionPlayerHandler.get(player).setFactionLevel(VReference.HUNTER_FACTION, old + 1);
             int[] req = HunterLevelingConf.instance().getItemRequirementsForTrainer(old + 1);
             InventoryHelper.removeItems(inventory, new int[]{req[0], req[1], 1});
-            player.addPotionEffect(new EffectInstance(ModPotions.saturation, 400, 2));
+            player.addPotionEffect(new EffectInstance(ModEffects.saturation, 400, 2));
         }
     }
 

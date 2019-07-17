@@ -11,9 +11,11 @@ public class ModStats {
 
     public static final ResourceLocation weapon_table = new ResourceLocation(REFERENCE.MODID, "weapon_table");
     public static final ResourceLocation blood_table = new ResourceLocation(REFERENCE.MODID, "blood_table");
+    public static final ResourceLocation interact_alchemical_cauldron = new ResourceLocation(REFERENCE.MODID, "interact_alchemical_cauldron");
 
     public static void registerStats(IForgeRegistry<StatType<?>> registry) {
         register(weapon_table);
+        register(interact_alchemical_cauldron);
     }
 
     private static void register(ResourceLocation id) {

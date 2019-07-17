@@ -3,13 +3,9 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.villager.IVillagerType;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
 
 
 /**
@@ -47,22 +43,7 @@ public abstract class FactionVillagerEntity extends VampirismVillagerEntity impl
         return this;
     }
 
-    @Nonnull
-    protected ITradeList[] getTrades(int level) {
-        return new ITradeList[0];
-    }
-
     @Override
-    protected void populateBuyingList() {
-        this.tradingLevel++;
-
-        if (this.buyingList == null) {
-            this.buyingList = new MerchantRecipeList();
-        }
-        ITradeList[] trades = this.getTrades(tradingLevel - 1);
-        for (VillagerEntity.ITradeList trade : trades) {
-            trade.addMerchantRecipe(this, this.buyingList, this.rand);
-        }
-
+    protected void populateTradeData() {
     }
 }

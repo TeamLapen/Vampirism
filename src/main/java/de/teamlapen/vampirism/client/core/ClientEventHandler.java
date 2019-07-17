@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
@@ -21,7 +22,7 @@ import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -41,7 +42,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * Handle general client side events
@@ -91,10 +91,6 @@ public class ClientEventHandler {
                 containerFluidModels[x] = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/blood_container/fluid_" + (x + 1)));
             }
 
-            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getInstance().getTextureMap().getAtlasSprite(location.toString());
-
-            IModel<?> retexturedModel;
-
             //For each registered fluid: Replace the fluid model texture by fluid (still) texture and cache the retextured model
 
             Set<Fluid> temp = new LinkedHashSet<>();
@@ -102,11 +98,11 @@ public class ClientEventHandler {
             temp.add(ModFluids.impure_blood);
             for (Fluid f : temp) {//TODO 1.14 create for all fluids
                 for (int x = 0; x < containerFluidModels.length; x++) {
-                    retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder<String, String>()
+                    IModel<?> retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder<String, String>()
                             .put("fluid", f.getStill().toString())
                             .build());
 
-                    BakedBloodContainerModel.FLUID_MODELS[x].put(f.getName(), retexturedModel.bake(ModelLoader.defaultModelGetter(), ModelLoader.defaultTextureGetter(), retexturedModel.getDefaultState(), false, Attributes.DEFAULT_BAKED_FORMAT));
+                    BakedBloodContainerModel.FLUID_MODELS[x].put(f.getName(), retexturedModel.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT));//TODO test
 
                 }
             }
@@ -117,9 +113,7 @@ public class ClientEventHandler {
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID)
-                        && modelLoc.getPath().equals(BloodContainerBlock.regName)
-                        ) {
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(BloodContainerBlock.regName)) {
                     modelLocations.add(modelLoc);
                 }
             }
@@ -142,16 +136,15 @@ public class ClientEventHandler {
 
 
         try {
-            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getInstance().getTextureMap().getAtlasSprite(location.toString());
             for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
                 IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/altar_inspiration/blood" + (x + 1)));
-                BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(ModelLoader.defaultModelGetter(), ModelLoader.defaultTextureGetter(), model.getDefaultState(), false, Attributes.DEFAULT_BAKED_FORMAT);
+                BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT);//TODO test
             }
             Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(AltarInspirationBlock.regName) && !modelLoc.getVariant().equals("inventory")) {
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(AltarInspirationBlock.regName)) {//TODO test
                     modelLocations.add(modelLoc);
                 }
             }
@@ -171,16 +164,15 @@ public class ClientEventHandler {
         }
 
         try {
-            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getInstance().getTextureMap().getAtlasSprite(location.toString());
             for (int x = 0; x < BakedWeaponTableModel.FLUID_LEVELS; x++) {
                 IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/weapon_table/weapon_table_lava" + (x + 1)));
-                BakedWeaponTableModel.FLUID_MODELS[x] = model.bake(ModelLoader.defaultModelGetter(), ModelLoader.defaultTextureGetter(), model.getDefaultState(), false, Attributes.DEFAULT_BAKED_FORMAT);
+                BakedWeaponTableModel.FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT);//TODO test
             }
             Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(WeaponTableBlock.regName) && !modelLoc.getVariant().equals("inventory")) {
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(WeaponTableBlock.regName)) {//TODO test
                     modelLocations.add(modelLoc);
                 }
             }

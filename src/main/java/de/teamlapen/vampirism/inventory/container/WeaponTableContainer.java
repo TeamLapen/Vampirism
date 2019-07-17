@@ -16,6 +16,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
@@ -174,5 +176,41 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
             }
             entityplayermp.connection.sendPacket(new SSetSlotPacket(this.windowId, 0, craftResultIn.getStackInSlot(0)));
         }
+    }
+
+    @Override
+    public void func_201771_a(RecipeItemHelper recipeItemHelper) {
+        craftMatrix.fillStackedContents(recipeItemHelper);
+    }
+
+    @Override
+    public void clear() {
+        craftMatrix.clear();
+        craftResult.clear();
+    }
+
+    @Override
+    public boolean matches(IRecipe<? super CraftingInventory> recipeIn) {
+        return recipeIn.matches(craftMatrix, this.player.world);
+    }
+
+    @Override
+    public int getOutputSlot() {
+        return 0;
+    }
+
+    @Override
+    public int getWidth() {
+        return craftMatrix.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return craftMatrix.getHeight();
+    }
+
+    @Override
+    public int getSize() {
+        return 17;
     }
 }

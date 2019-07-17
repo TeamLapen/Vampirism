@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -93,14 +92,14 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
     }
 
-    private void registerVampireEntityOverlay(EntityRendererManager manager, EntityType<? extends CreatureEntity> type, ResourceLocation loc) {
-        EntityRenderer render = manager.getEntityClassRenderObject(type.getEntityClass());
+    private void registerVampireEntityOverlay(EntityRendererManager manager, Class<? extends CreatureEntity> type, ResourceLocation loc) {
+        EntityRenderer render = manager.getRenderer(type);
         if (render == null) {
-            LOGGER.error("Did not find renderer for {}", type.getEntityClass());
+            LOGGER.error("Did not find renderer for {}", type);
             return;
         }
         if (!(render instanceof LivingRenderer)) {
-            LOGGER.error("Renderer ({}) for {} does not extend RenderLivingEntity", type.getEntityClass(), render);
+            LOGGER.error("Renderer ({}) for {} does not extend RenderLivingEntity", type, render);
             return;
         }
         LivingRenderer rendererLiving = (LivingRenderer) render;
@@ -110,7 +109,7 @@ public class ClientProxy extends CommonProxy {
     private void registerVampireEntityOverlays() {
         EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
         registerVampirePlayerHead(manager);
-        for (Map.Entry<EntityType<? extends CreatureEntity>, String> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
+        for (Map.Entry<Class<? extends CreatureEntity>, String> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
             registerVampireEntityOverlay(manager, entry.getKey(), new ResourceLocation(entry.getValue()));
         }
     }

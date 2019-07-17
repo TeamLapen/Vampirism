@@ -5,7 +5,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.profiler.Profiler;
+import net.minecraft.profiler.DataPoint;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
@@ -34,9 +34,9 @@ public class GarlicProfilerCommand extends BasicCommand {
 	}
 	
 	private static void print(CommandSource source, String id) {
-        List<Profiler.Result> l = ServerLifecycleHooks.getCurrentServer().getProfiler().getProfilingData(id);
-        for (Profiler.Result r : l) {
-            source.sendFeedback(new StringTextComponent("" + r.profilerName + ": " + r.usePercentage + "|" + r.totalUsePercentage), true);
+        List<DataPoint> l = ServerLifecycleHooks.getCurrentServer().getProfiler().func_219899_d().func_219938_b().getDataPoints(id);//getProfilingData(id);
+        for (DataPoint r : l) {
+            source.sendFeedback(new StringTextComponent("" + r.name + ": " + r.relTime + "|" + r.rootRelTime), true);
         }
     }
 }

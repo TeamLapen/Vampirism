@@ -2,11 +2,14 @@ package de.teamlapen.lib.lib.entity;
 
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.MathHelper;
@@ -52,15 +55,11 @@ public class BasicEntityAreaParticleCloud extends Entity {
         this.duration = duration;
     }
 
-    public float getHeight() {
-        return this.getDataManager().get(HEIGHT);
-    }
-
     public void setHeight(float height) {
         double d0 = this.posX;
         double d1 = this.posY;
         double d2 = this.posZ;
-        this.setSize(getRadius() * 2, height);
+        this.size = new EntitySize(getRadius() * 2, height, size.fixed);
         this.setPosition(d0, d1, d2);
 
         if (!this.world.isRemote) {
@@ -86,7 +85,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
         double d0 = this.posX;
         double d1 = this.posY;
         double d2 = this.posZ;
-        this.setSize(radius * 2.0F, getHeight());
+        this.size = new EntitySize(radius * 2.0F, getHeight(), size.fixed);
         this.setPosition(d0, d1, d2);
 
         if (!this.world.isRemote) {
@@ -188,5 +187,10 @@ public class BasicEntityAreaParticleCloud extends Entity {
     @Override
     protected void writeAdditional(CompoundNBT compound) {
 
+    }
+
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return new SSpawnObjectPacket(this);
     }
 }

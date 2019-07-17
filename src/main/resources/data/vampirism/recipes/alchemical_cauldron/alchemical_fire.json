@@ -1,0 +1,16 @@
+{
+  "result": {
+    "item": "vampirism:item_alchemical_fire",
+    "count": 4
+  },
+  "skill": [
+    "vampirism:basic_alchemy"
+  ],
+  "liquid": {
+    "item": "vampirism:holy_water_bottle_normal"
+  },
+  "ingredient": {
+    "item": "minecraft:gunpowder"
+  },
+  "type": "vampirism:alchemical_cauldron_recipe"
+}

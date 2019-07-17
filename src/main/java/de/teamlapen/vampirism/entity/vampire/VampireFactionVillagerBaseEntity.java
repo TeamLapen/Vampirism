@@ -4,11 +4,9 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.FactionVillagerEntity;
-import de.teamlapen.vampirism.entity.ai.FleeSunVampireGoal;
-import de.teamlapen.vampirism.entity.ai.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityType;
@@ -59,7 +57,7 @@ public class VampireFactionVillagerBaseEntity extends FactionVillagerEntity impl
 
     @Override
     public boolean isIgnoringSundamage() {
-        return this.isPotionActive(ModPotions.sunscreen);
+        return this.isPotionActive(ModEffects.sunscreen);
     }
 
     @Override
@@ -108,9 +106,9 @@ public class VampireFactionVillagerBaseEntity extends FactionVillagerEntity impl
     }
     
     @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new RestrictSunVampireGoal<>(this));
-        this.goalSelector.addGoal(1, new FleeSunVampireGoal<>(this, 0.9, false));
-        super.registerGoals();
+    protected void registerGoals() {//TODO 1.14 villager brain
+//        this.goalSelector.addGoal(1, new RestrictSunVampireGoal<>(this));
+//        this.goalSelector.addGoal(1, new FleeSunVampireGoal<>(this, 0.9, false));
+//        super.registerGoals();
     }
 }

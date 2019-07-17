@@ -10,15 +10,13 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.ai.*;
+import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.world.loot.LootHandler;
-import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -49,7 +47,7 @@ import java.util.List;
  * Basic vampire mob.
  * Follows nearby advanced hunters
  */
-public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser {
+public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser {//TODO 1.14 village
 
     private final static Logger LOGGER = LogManager.getLogger(BasicVampireEntity.class);
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
@@ -67,20 +65,20 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     private Goal tasks_avoidHunter;
 
-    /**
-     * Cached village. Serverside
-     */
-    @Nullable
-    private IVampirismVillage cachedVillage;
+//    /**
+//     * Cached village. Serverside
+//     */
+//    @Nullable
+//    private IVampirismVillage cachedVillage;
 
     @Override
     public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
         boolean flag = super.attackEntityFrom(damageSource, p_70097_2_);
         if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
-        IVampirismVillage v = getCurrentFriendlyVillage();
-        if (v != null) {
-            v.addOrRenewAggressor(damageSource.getTrueSource());
-        }
+//        IVampirismVillage v = getCurrentFriendlyVillage();
+//        if (v != null) {
+//            v.addOrRenewAggressor(damageSource.getTrueSource());
+//        }
         return flag;
     }
 
@@ -106,11 +104,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.entityActionHandler = new ActionHandlerEntity<>(this);
     }
 
-    @Nullable
-    @Override
-    public IVampirismVillage getCurrentFriendlyVillage() {
-        return cachedVillage != null ? cachedVillage.getControllingFaction() == VReference.VAMPIRE_FACTION ? cachedVillage : null : null;
-    }
+//    @Nullable
+//    @Override
+//    public IVampirismVillage getCurrentFriendlyVillage() {
+//        return cachedVillage != null ? cachedVillage.getControllingFaction() == VReference.VAMPIRE_FACTION ? cachedVillage : null : null;
+//    }
 
     @Override
     public void drinkBlood(int amt, float saturationMod) {
@@ -157,7 +155,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             if (this.isPotionActive(Effects.FIRE_RESISTANCE)) {
                 EffectInstance fireResistance = this.removeActivePotionEffect(Effects.FIRE_RESISTANCE);
                 onFinishedPotionEffect(fireResistance);
-                this.addPotionEffect(new EffectInstance(ModPotions.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                this.addPotionEffect(new EffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
             }
         }
         if (entityActionHandler != null) {
@@ -230,7 +228,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             advancedLeader = null;
         }
         if (!this.world.isRemote && this.ticksExisted % 40 == 8) {
-            cachedVillage = VampirismVillageHelper.getNearestVillage(this);
+//            cachedVillage = VampirismVillageHelper.getNearestVillage(this);
         }
     }
 
@@ -277,7 +275,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     protected float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        EffectInstance protection = this.getActivePotionEffect(ModPotions.fire_protection);
+        EffectInstance protection = this.getActivePotionEffect(ModEffects.fire_protection);
         if (protection != null) {
             protectionMod = 1F / (2F + protection.getAmplifier());
         }
@@ -348,7 +346,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> {
             return difficulty == net.minecraft.world.Difficulty.HARD;
         }));//Only break doors on hard difficulty
-        this.tasks_avoidHunter = new AvoidEntityGoal(this, CreatureEntity.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION));
+        this.tasks_avoidHunter = new AvoidEntityGoal<CreatureEntity>(this, CreatureEntity.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION));
         this.goalSelector.addGoal(2, this.tasks_avoidHunter);
         this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
         this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
@@ -356,7 +354,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.goalSelector.addGoal(5, new BiteNearbyEntityVampireGoal<>(this));
         this.goalSelector.addGoal(6, new FollowAdvancedVampireGoal(this, 1.0));
         this.goalSelector.addGoal(7, new MoveToBiteableVampireGoal<>(this, 0.75));
-        this.goalSelector.addGoal(8, new MoveThroughVillageCustomGoal(this, 0.6, true, 600));
+        this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.6, true, 600, () -> {
+            return false;
+        }));//TODO was MoveThroughVillageCustomGoal (test)
         this.goalSelector.addGoal(9, new RandomWalkingGoal(this, 0.7));
         this.goalSelector.addGoal(10, new LookAtGoal(this, PlayerEntity.class, 20F, 0.6F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
@@ -365,8 +365,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(4, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(4, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
 
     }
 

@@ -9,8 +9,6 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.tileentity.TotemTile;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.world.villages.VampirismVillage;
-import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -18,11 +16,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.village.Village;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.OverworldChunkGenerator;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -44,11 +40,6 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
 
     private final static Logger LOGGER = LogManager.getLogger(ModEventHandler.class);
 
-    @SubscribeEvent
-    public void onAttachCapabilitiesVillage(AttachCapabilitiesEvent<Village> event) {
-        event.addCapability(REFERENCE.VAMPIRISM_VILLAGE_KEY_NEW, VampirismVillage.createNewCapability(event.getObject()));
-
-    }
 //  TODO 1.14 wait for https://github.com/MinecraftForge/MinecraftForge/issues/5536 or find a different solution
 
 //    @OnlyIn(Dist.CLIENT)
@@ -73,7 +64,7 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
         ChunkGenerator generator = event.getWorld().getChunkProvider().getChunkGenerator();
         if (generator instanceof OverworldChunkGenerator) {
             GenerationSettings settings = ((OverworldChunkGenerator) generator).getSettings();
-            ModVillages.modifyVillageSize(settings);
+            ModWorld.modifyVillageSize(settings);
         }
     }
 
@@ -88,7 +79,7 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
     @SubscribeEvent
     public void onHarvestDrops(BlockEvent.HarvestDropsEvent event) {
         if (event.getState().getBlock().equals(Blocks.OAK_LEAVES)) {
-            if (ModBiomes.vampireForest.equals(event.getWorld().getBiome(event.getPos()))) {
+            if (ModBiomes.vampire_forest.equals(event.getWorld().getBiome(event.getPos()))) {
                 PlayerEntity p = event.getHarvester();
                 if (p != null && p.getRNG().nextInt(Balance.general.DROP_ORCHID_FROM_LEAVES_CHANCE) == 0) {
                     event.getDrops().add(new ItemStack(ModBlocks.vampirism_flower_vampire_orchid, 1));
@@ -148,12 +139,10 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.END)) {
-            VampirismVillageHelper.tick(event.world);
+            //VampirismVillageHelper.tick(event.world);
             if (event.world.getGameTime() % 16 == 0) {
                 DaySleepHelper.checkSleepWorld(event.world);
             }
         }
-    }
-
     }
 }

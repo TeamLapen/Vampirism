@@ -1,45 +1,39 @@
 package de.teamlapen.vampirism.entity.converted;
 
+import com.google.common.collect.Lists;
+import com.mojang.datafixers.Dynamic;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
-import de.teamlapen.vampirism.entity.ai.BiteNearbyEntityVampireGoal;
-import de.teamlapen.vampirism.entity.ai.FleeSunVampireGoal;
-import de.teamlapen.vampirism.entity.ai.MoveIndoorsDayGoal;
-import de.teamlapen.vampirism.entity.ai.MoveToBiteableVampireGoal;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.RestrictSunGoal;
+import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.MerchantOffer;
+import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.village.MerchantRecipe;
-import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -49,7 +43,6 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     private EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
-    private boolean addedAdditionalRecipes = false;
     private int bloodTimer = 0;
 
     public ConvertedVillagerEntity(EntityType<? extends ConvertedVillagerEntity> type, World worldIn) {
@@ -75,17 +68,6 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
         this.addPotionEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
         bloodTimer = -1200 - rand.nextInt(1200);
-    }
-
-    @Override
-    public MerchantRecipeList getRecipes(PlayerEntity player) {
-        MerchantRecipeList list = super.getRecipes(player);
-        if (!addedAdditionalRecipes) {
-            addAdditionalRecipes(list);
-            Collections.shuffle(list);
-            addedAdditionalRecipes = true;
-        }
-        return list;
     }
 
     @Override
@@ -134,14 +116,6 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
-        if (compound.contains("addedAdditionalRecipes")) {
-            addedAdditionalRecipes = compound.getBoolean("addedAdditionalRecipes");
-        }
-    }
-
-    @Override
     public boolean useBlood(int amt, boolean allowPartial) {
         this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
         bloodTimer = 0;
@@ -154,56 +128,57 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
-        compound.putBoolean("addedAdditionalRecipes", addedAdditionalRecipes);
+    protected Brain<?> createBrain(Dynamic<?> p_213364_1_) {
+        Brain<?> brain = super.createBrain(p_213364_1_);
+        return brain;
     }
+
 
     @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-
-        this.tasks.taskEntries.removeIf(entry -> entry.action instanceof EntityAIMoveIndoors || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem);
-
-        tasks.addTask(0, new RestrictSunGoal(this));
-        tasks.addTask(1, new AvoidEntityGoal<>(this, CreatureEntity.class, 10, 0.45F, 0.55F, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, false, VReference.HUNTER_FACTION)));
-        tasks.addTask(2, new MoveIndoorsDayGoal(this));
-        tasks.addTask(5, new FleeSunVampireGoal<>(this, 0.6F, true));
-        tasks.addTask(6, new MeleeAttackGoal(this, 0.6F, false));
-        tasks.addTask(7, new BiteNearbyEntityVampireGoal<>(this));
-        tasks.addTask(9, new MoveToBiteableVampireGoal<>(this, 0.55F));
-
-
-        this.targetTasks.addTask(1, new HurtByTargetGoal(this, false));
+    protected void registerGoals() {//TODO 1.14 villager brain
+//        super.registerGoals();
+//
+//        this.goalSelector.addGoal(0, new RestrictSunGoal(this));
+//        this.goalSelector.addGoal(1, new AvoidEntityGoal<CreatureEntity>(this, CreatureEntity.class, 10, 0.45F, 0.55F, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, false, VReference.HUNTER_FACTION)));
+//        this.goalSelector.addGoal(5, new FleeSunVampireGoal<>(this, 0.6F, true));
+//        this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 0.6F, false));
+//        this.goalSelector.addGoal(7, new BiteNearbyEntityVampireGoal<>(this));
+//        this.goalSelector.addGoal(9, new MoveToBiteableVampireGoal<>(this, 0.55F));
+//
+//
+//        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 
     }
 
-    private void addAdditionalRecipes(MerchantRecipeList list) {
-        if (list.size() > 0) {
-            list.remove(rand.nextInt(list.size()));
+    private void addAdditionalRecipes(MerchantOffers offers) {
+        if (offers.size() > 0) {
+            offers.remove(rand.nextInt(offers.size()));
         }
-        addRecipe(list, new ItemStack(ModItems.human_heart, 9), 2, this.getRNG(), 0.5F);
-        addRecipe(list, 3, new ItemStack(ModItems.human_heart, 9), this.getRNG(), 0.5F);
+        List<MerchantOffer> trades = Lists.newArrayList();
+        addRecipe(trades, new ItemStack(ModItems.human_heart, 9), 2, this.getRNG(), 0.5F);
+        addRecipe(trades, 3, new ItemStack(ModItems.human_heart, 9), this.getRNG(), 0.5F);
         ItemStack bottle = new ItemStack(ModItems.blood_bottle, 3);
         bottle.setDamage(9);
-        addRecipe(list, 1, bottle, rand, 0.9F);
+        addRecipe(trades, 1, bottle, rand, 0.9F);
+
+        offers.addAll(trades);
     }
 
     /**
      * Add a recipe to BUY something for emeralds
      */
-    private void addRecipe(MerchantRecipeList list, int emeralds, ItemStack stack, Random rnd, float prop) {
+    private void addRecipe(List list, int emeralds, ItemStack stack, Random rnd, float prop) {
         if (rnd.nextFloat() < prop) {
-            list.add(new MerchantRecipe(new ItemStack(Items.EMERALD, emeralds), stack));
+            list.add(new MerchantOffer(new ItemStack(Items.EMERALD, emeralds), stack, 8, 2, 0.2F));
         }
     }
 
     /**
      * Add a recipe to SELL something for emeralds
      */
-    private void addRecipe(MerchantRecipeList list, ItemStack stack, int emeralds, Random rnd, float prop) {
+    private void addRecipe(List list, ItemStack stack, int emeralds, Random rnd, float prop) {
         if (rnd.nextFloat() < prop) {
-            list.add(new MerchantRecipe(new ItemStack(Items.EMERALD, emeralds), stack));
+            list.add(new MerchantOffer(stack, new ItemStack(Items.EMERALD, emeralds), 8, 2, 0.2F));
         }
     }
 
@@ -213,9 +188,10 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         public IConvertedCreature<VillagerEntity> createFrom(VillagerEntity entity) {
             CompoundNBT nbt = new CompoundNBT();
             entity.writeWithoutTypeId(nbt);
-            ConvertedVillagerEntity converted = new ConvertedVillagerEntity(entity.world);
+            ConvertedVillagerEntity converted = ModEntities.villager_converted.create(entity.world);
             converted.read(nbt);
             converted.setUniqueId(MathHelper.getRandomUUID(converted.rand));
+            converted.addAdditionalRecipes(converted.getOffers());
             return converted;
         }
     }

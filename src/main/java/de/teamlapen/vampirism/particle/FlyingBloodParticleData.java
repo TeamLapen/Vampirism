@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -17,22 +18,22 @@ public class FlyingBloodParticleData implements IParticleData {
         }
 
         public FlyingBloodParticleData read(ParticleType<FlyingBloodParticleData> particleTypeIn, PacketBuffer buffer) {
-            return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readVarInt());//TODO 1.14 test
+            return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readResourceLocation());//TODO 1.14 test
         }
     };
 
     private ParticleType<FlyingBloodParticleData> particleType;
     private final int maxAge;
-    private final int texturePos;
+    private final ResourceLocation texture;
 
-    public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn, int texturePosIn) {
+    public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn, ResourceLocation textureIn) {
         this.particleType = particleTypeIn;
         this.maxAge = maxAgeIn;
-        this.texturePos = texturePosIn;
+        this.texture = textureIn;
     }
 
     public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn) {
-        this(particleTypeIn, maxAgeIn, 65);
+        this(particleTypeIn, maxAgeIn, new ResourceLocation("minecraft", "critical_hit"));
     }
 
     @Override
@@ -43,12 +44,12 @@ public class FlyingBloodParticleData implements IParticleData {
     @Override
     public void write(PacketBuffer buffer) {
         buffer.writeVarInt(maxAge);
-        buffer.writeVarInt(texturePos);
+        buffer.writeResourceLocation(texture);
     }
 
     @Override
     public String getParameters() {
-        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + maxAge + " " + texturePos;
+        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + maxAge + " " + texture;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -57,7 +58,7 @@ public class FlyingBloodParticleData implements IParticleData {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public int getTexturePos() {
-        return texturePos;
+    public ResourceLocation getTexturePos() {
+        return texture;
     }
 }

@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.world.gen;
+/*package de.teamlapen.vampirism.world.old.gen;
 
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.AbstractChunkProvider;
@@ -7,9 +7,9 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 
 import java.util.Random;
 
-/**
+*//**
  * Handles Vampirism's world gen
- */
+ *//*
 public class VampirismWorldGenOLD implements IWorldGenerator { //TODO DELETE CLASS (keep it for reference (how to generate?))
     public VampirismWorldGenOLD() {
     }
@@ -18,7 +18,7 @@ public class VampirismWorldGenOLD implements IWorldGenerator { //TODO DELETE CLA
     public void generate(Random random, int chunkX, int chunkZ, World world, ChunkGenerator chunkGenerator, AbstractChunkProvider chunkProvider) {
 
     }
-    /*public static boolean debug = false;
+    public static boolean debug = false;
     private static VampirismWorldGenOLD instance;
 
     public static VampirismWorldGenOLD getInstance() {
@@ -89,5 +89,5 @@ public class VampirismWorldGenOLD implements IWorldGenerator { //TODO DELETE CLA
             if (i == value) return true;
         }
         return false;
-    }*/
-}
+    }
+}*/

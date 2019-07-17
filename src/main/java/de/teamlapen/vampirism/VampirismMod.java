@@ -21,7 +21,6 @@ import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
-import de.teamlapen.vampirism.inventory.crafting.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.player.actions.ActionManager;
@@ -38,9 +37,9 @@ import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
-import de.teamlapen.vampirism.world.gen.structure.StructureManager;
+import de.teamlapen.vampirism.world.gen.structures.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
-import de.teamlapen.vampirism.world.villages.VampirismVillage;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.item.ItemGroup;
@@ -119,6 +118,7 @@ public class VampirismMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::gatherData);
         VampirismConfig.registerConfigs();
         MinecraftForge.EVENT_BUS.register(this);
         addModCompats();
@@ -209,7 +209,6 @@ public class VampirismMod {
         VampirePlayer.registerCapability();
         FactionPlayerHandler.registerCapability();
         ExtendedCreature.registerCapability();
-        VampirismVillage.registerCapability();
 
 
         modCompatLoader.onInitStep(IInitListener.Step.COMMON_SETUP, event);
@@ -286,7 +285,7 @@ public class VampirismMod {
         biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
         BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
         VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, bloodPotionRegistry, entityActionManager);
-        VampirismAPI.setUpAccessors(new GarlicChunkHandler.Provider(), AlchemicalCauldronCraftingManager.getInstance());
+        VampirismAPI.setUpAccessors(new GarlicChunkHandler.Provider());
     }
 
     /**
@@ -308,6 +307,14 @@ public class VampirismMod {
     private void setupAPI3() {
         VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision("nightVision", new NightVision());
         VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision("bloodVision", new BloodVision());
+    }
+
+    private void gatherData(GatherDataEvent event) {
+        DataGenerator gen = event.getGenerator();
+        if (event.includeServer()) {
+            gen.addProvider(new VampirismBlockTagProvider(gen));
+            gen.addProvider(new VampirismItemTagProvider(gen));
+        }
     }
 
 }

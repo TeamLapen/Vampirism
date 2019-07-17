@@ -1,9 +1,11 @@
 package de.teamlapen.lib.lib.util;
 
+import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.entity.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.spawner.AbstractSpawner;
 
@@ -144,7 +146,7 @@ public abstract class SimpleSpawnerLogic {
                     }
 
                     if (limitType != null) {
-                        int total = this.getSpawnerWorld().countEntities(limitType.getClass(), limitType.getMaxNumberOfCreature() + 1);//TODO ServerWorld#countEntities().getInt(limitType) <= limit
+                        int total = ((ServerWorld) getSpawnerWorld()).countEntities().getInt(VReference.HUNTER_CREATURE_TYPE);
                         total = total * UtilLib.countPlayerLoadedChunks(this.getSpawnerWorld()) / MOB_COUNT_DIV;
                         if (total > limitType.getMaxNumberOfCreature()) {
                             this.resetTimer();

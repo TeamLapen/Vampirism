@@ -28,7 +28,7 @@ public class EnchantmentArrowFrugality extends Enchantment {
     }
 
     @Override
-    public int getMaxEnchantability(int enchantmentLevel) {
+    public int getMaxEnchantability(int enchantmentLevel) {//TODO mapping -> getMaxEnchantability()
         return 50;
     }
 

@@ -4,10 +4,11 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -151,7 +152,7 @@ public class RenderHandler {
 
         if (GLX.isNextGen() && doSaturationShader) {
             if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
-                EffectInstance pe = mc.player.getActivePotionEffect(ModPotions.saturation);
+                EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
                 boolean active = pe != null && pe.getAmplifier() >= 2;
                 GameRenderer renderer = mc.gameRenderer;
                 if (active && !renderer.isShaderActive()) {
