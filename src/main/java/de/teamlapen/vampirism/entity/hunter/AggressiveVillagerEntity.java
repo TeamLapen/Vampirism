@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
@@ -8,11 +7,8 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
-import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -81,7 +77,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
 
 //    @Nullable
 //    @Override
-//    public IVampirismVillage getCurrentFriendlyVillage() {
+//    public IVampirismVillage getCurrentFriendlyVillage() { //TODO 1.14 village
 //        return this.cachedVillage != null ? this.cachedVillage.getControllingFaction() == VReference.HUNTER_FACTION ? this.cachedVillage : null : null;
 //    }
 
@@ -117,23 +113,22 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    protected void registerGoals() {
+    protected void registerGoals() {//TODO 1.14 villager brain
         super.registerGoals();
-        this.goalSelector.goals.removeIf(entry -> entry.getGoal() instanceof TradeWithPlayerGoal || entry.getGoal() instanceof LookAtCustomerGoal || entry.getGoal() instanceof EntityAIVillagerMate || entry.getGoal() instanceof EntityAIFollowGolem);//TODO AT goals
-        this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 0.6, false));
-        this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.55, false, 400, this::getTrue));
-
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetSelector.addGoal(3, new DefendVillageGoal<>(this));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
-
-            @Override
-            protected double getTargetDistance() {
-                return super.getTargetDistance() / 2;
-            }
-        });
+//        this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 0.6, false));
+//        this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.55, false, 400, this::getTrue));
+//
+//
+//        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+//        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+//        this.targetSelector.addGoal(3, new DefendVillageGoal<>(this));
+//        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
+//
+//            @Override
+//            protected double getTargetDistance() {
+//                return super.getTargetDistance() / 2;
+//            }
+//        });
     }
 
     private boolean getTrue() {

@@ -28,7 +28,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(final IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
-        List<Entity> l = player.getEntityWorld().getEntitiesInAABBexcluding(player, player.getBoundingBox().grow(10, 5, 10), vampire.getNonFriendlySelector(true, false)::test);
+        List<Entity> l = player.getEntityWorld().getEntitiesInAABBexcluding(player, player.getBoundingBox().grow(10, 5, 10), vampire.getNonFriendlySelector(true, false));//TODO @Maxanier needs Predicate<Entity>
         for (Entity o : l) {
             if (o instanceof BlindingBatEntity) continue;
             if (!(o instanceof LivingEntity)) continue;

@@ -20,7 +20,7 @@
 //
 //    @Nonnull
 //    @Override
-//    public Village getVillage() {
+//    public Village getTotemTile() {
 //        return null;
 //    }
 //

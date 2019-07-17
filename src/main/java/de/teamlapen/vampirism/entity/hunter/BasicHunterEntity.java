@@ -10,7 +10,10 @@ import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.goals.*;
+import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
+import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
+import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
+import de.teamlapen.vampirism.entity.goals.LookAtTrainerHunterGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
@@ -382,7 +385,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
         //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
         this.goalSelector.addGoal(3, new LookAtTrainerHunterGoal<>(this));
-        this.goalSelector.addGoal(5, new MoveThroughVillageCustomGoal(this, 0.7F, false, 300));
+        this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> {
+            return false;
+        }));//TODO was MoveThroughVillageCustomGoal(test)
         this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7, 50));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
         this.goalSelector.addGoal(8, new LookAtGoal(this, VampireBaseEntity.class, 17F));

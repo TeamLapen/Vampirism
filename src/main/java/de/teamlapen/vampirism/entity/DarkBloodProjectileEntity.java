@@ -35,11 +35,9 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 
     private boolean initialNoClip = false;
     private float motionFactor = 0.9f;
     private boolean excludeShooter = false;
-    public LivingEntity shootingEntity; //Temporary until mapping is fixed. Is not updated if someone changes projectile direction TODO
 
     public DarkBloodProjectileEntity(EntityType<? extends DarkBloodProjectileEntity> type, World worldIn) {
         super(type, worldIn);
-        this.shootingEntity = field_70235_a;
     }
 
     /**

@@ -38,15 +38,15 @@ public class AttackMeleeNoSunGoal extends MeleeAttackGoal {
             if (avoidSun) {
 
                 Path path = this.path;
-                if (attacker.getEntityWorld().canSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
+                if (attacker.getEntityWorld().canBlockSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
                     return false;
                 }
 
                 for (int j = 0; j < path.getCurrentPathLength(); ++j) {
                     PathPoint pathpoint2 = path.getPathPointFromIndex(j);
 
-                    if (this.attacker.getEntityWorld().canSeeSky(new BlockPos(pathpoint2.x, pathpoint2.y, pathpoint2.z))) {
-                        path.setCurrentPathLength(j - 1);
+                    if (this.attacker.getEntityWorld().canBlockSeeSky(new BlockPos(pathpoint2.x, pathpoint2.y, pathpoint2.z))) {
+                        path.func_215747_b(j - 1);//TODO mapping setCurrentPathLength
                         return path.getCurrentPathLength() > 1;
                     }
 

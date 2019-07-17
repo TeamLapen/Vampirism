@@ -180,15 +180,7 @@ public class ModItems {
 
     static void registerCraftingRecipes() {
 
-        //TODO 1.13 probably have to modifiy alchemical cauldron system with item groups /ingridients
-
-        // HolyWaterBottleItem.registerSplashRecipes(holy_water_bottle,
-        // IItemWithTier.TIER.NORMAL);
-        // HolyWaterBottleItem.registerSplashRecipes(holy_water_bottle,
-        // IItemWithTier.TIER.ENHANCED);
-        // HolyWaterBottleItem.registerSplashRecipes(holy_water_bottle,
-        // IItemWithTier.TIER.ULTIMATE);
-        //
+        //TODO 1.13 probably have to modifiy alchemical cauldron system with item groups / ingridients
 
         // Brewing
         BrewingRecipeRegistry.addRecipe(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));

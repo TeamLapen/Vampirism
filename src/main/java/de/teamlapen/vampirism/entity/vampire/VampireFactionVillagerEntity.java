@@ -75,7 +75,7 @@ public class VampireFactionVillagerEntity extends VampireFactionVillagerBaseEnti
         VillagerTrades.ITrade[] trades = TRADES[villagerData.getLevel()];
         if (trades != null) {
             MerchantOffers merchantOffers = this.getOffers();
-            this.func_213717_a(merchantOffers, trades, 2);//AbstractVillager#229
+            this.addTrades(merchantOffers, trades, 2);
         }
     }
 }

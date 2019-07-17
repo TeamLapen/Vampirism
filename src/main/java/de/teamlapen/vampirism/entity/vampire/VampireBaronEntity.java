@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.minions.ISaveableMinionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireBaron;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMinion;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -39,6 +40,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -406,5 +408,9 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         public boolean shouldExecute() {
             return VampireBaronEntity.this.getAttackTarget() != null && (VampireBaronEntity.this.rangedAttack || !VampireBaronEntity.this.hasPath());
         }
+    }
+
+    public static boolean spawnPredicate(EntityType<VampireBaronEntity> entityType, IWorld worldIn, SpawnReason spawnReason, BlockPos pos, Random rand) {
+        return worldIn.getBiome(pos) == ModBiomes.vampire_forest ? true : false;
     }
 }

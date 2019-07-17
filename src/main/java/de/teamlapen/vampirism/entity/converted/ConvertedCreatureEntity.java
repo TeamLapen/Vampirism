@@ -144,7 +144,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             if (!creature.equals(entityCreature)) {
                 entityCreature = creature;
                 entityChanged = true;
-                this.recalculateSize();
+                this.size = creature.size;
             }
         }
         if (entityCreature != null && getConvertedHelper() == null) {

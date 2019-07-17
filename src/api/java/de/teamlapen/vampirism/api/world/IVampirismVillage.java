@@ -17,7 +17,7 @@ public interface IVampirismVillage {
     IFaction getControllingFaction();
 
     @Nonnull
-    Village getVillage();
+    Village getTotemTile();
 
     void addOrRenewAggressor(@Nullable Entity entity);
 

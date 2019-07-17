@@ -14,7 +14,6 @@ public class VampirismNightVisionPotion extends Effect {
     private final static Logger LOGGER = LogManager.getLogger(VampirismNightVisionPotion.class);
     public VampirismNightVisionPotion() {
         super(EffectType.BENEFICIAL, 2039713);
-        setIconIndex(4, 1);
         LOGGER.warn("-------Please ignore the following error!------");
         this.setRegistryName("minecraft", "night_vision");
         LOGGER.warn("-----------------------------------------------");

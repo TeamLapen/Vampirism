@@ -13,6 +13,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.GoalSelector;
+import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -607,7 +608,7 @@ public class UtilLib {
 
             while (true) {
                 Object var3 = var1.next();
-                var2.append(var3 == c ? "(this Collection)" : ((GoalSelector.goals) var3).action);
+                var2.append(var3 == c ? "(this Collection)" : (((PrioritizedGoal) var3).getGoal()));//TODO Test
                 if (!var1.hasNext()) {
                     return var2.append(']').toString();
                 }

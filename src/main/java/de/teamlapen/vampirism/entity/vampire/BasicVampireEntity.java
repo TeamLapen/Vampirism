@@ -354,7 +354,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.goalSelector.addGoal(5, new BiteNearbyEntityVampireGoal<>(this));
         this.goalSelector.addGoal(6, new FollowAdvancedVampireGoal(this, 1.0));
         this.goalSelector.addGoal(7, new MoveToBiteableVampireGoal<>(this, 0.75));
-        this.goalSelector.addGoal(8, new MoveThroughVillageCustomGoal(this, 0.6, true, 600));
+        this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.6, true, 600, () -> {
+            return false;
+        }));//TODO was MoveThroughVillageCustomGoal (test)
         this.goalSelector.addGoal(9, new RandomWalkingGoal(this, 0.7));
         this.goalSelector.addGoal(10, new LookAtGoal(this, PlayerEntity.class, 20F, 0.6F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));

@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,9 +15,11 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 /**
  * Entity Ghost
@@ -81,5 +85,9 @@ public class GhostEntity extends VampirismEntity implements IMob {
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
         return;
+    }
+
+    public static boolean spawnPredicate(EntityType<GhostEntity> entityType, IWorld worldIn, SpawnReason spawnReason, BlockPos pos, Random rand) {
+        return ModTags.Blocks.CURSEDEARTH.contains(worldIn.getBlockState(pos.down()).getBlock()) ? true : false;
     }
 }

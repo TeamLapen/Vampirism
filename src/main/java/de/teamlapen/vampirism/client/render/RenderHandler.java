@@ -319,12 +319,12 @@ public class RenderHandler {
     private void adjustBloodVisionShaders(float progress) {
         progress = MathHelper.clamp(progress, 0, 1);
 
-        blit0.func_217624_b().func_216538_b("ColorModulate").set((1 - 0.8F * progress), (1 - 0.9F * progress), (1 - 0.7F * progress), 1);//TODO mapping -> blur2.getShaderManager().getShaderUniform("BlurDir").set(0F, 1F); or blur2.getInstance
-        blur1.func_217624_b().func_216538_b("Radius").set(Math.round(10 * progress) / 1F);
-        blur2.func_217624_b().func_216538_b("Radius").set(Math.round(10 * progress) / 1F);
-        blit1.func_217624_b().func_216538_b("ColorModulate").set(1F, 0.1F, 0.1F, (1F * progress));
-        blit2.func_217624_b().func_216538_b("ColorModulate").set(0.1F, 0.1F, 0.2F, (0.7F * progress));
-        blit3.func_217624_b().func_216538_b("ColorModulate").set(0.1F, 0.1F, 1F, (1F * progress));
+        blit0.getShaderManager().getShaderUniform("ColorModulate").set((1 - 0.8F * progress), (1 - 0.9F * progress), (1 - 0.7F * progress), 1);
+        blur1.getShaderManager().getShaderUniform("Radius").set(Math.round(10 * progress) / 1F);
+        blur2.getShaderManager().getShaderUniform("Radius").set(Math.round(10 * progress) / 1F);
+        blit1.getShaderManager().getShaderUniform("ColorModulate").set(1F, 0.1F, 0.1F, (1F * progress));
+        blit2.getShaderManager().getShaderUniform("ColorModulate").set(0.1F, 0.1F, 0.2F, (0.7F * progress));
+        blit3.getShaderManager().getShaderUniform("ColorModulate").set(0.1F, 0.1F, 1F, (1F * progress));
 
     }
 
@@ -386,9 +386,9 @@ public class RenderHandler {
 
                 blit0 = blurShader.addShader("blit", swap, this.mc.getFramebuffer());
                 blur1 = blurShader.addShader("blur", this.mc.getFramebuffer(), swap);
-                blur1.func_217624_b().func_216538_b("BlurDir").set(1F, 0F);//TODO mapping -> blur2.getShaderManager().getShaderUniform("BlurDir").set(0F, 1F); or blur2.getInstance
+                blur1.getShaderManager().getShaderUniform("BlurDir").set(1F, 0F);
                 blur2 = blurShader.addShader("blur", swap, this.mc.getFramebuffer());
-                blur2.func_217624_b().func_216538_b("BlurDir").set(0F, 1F);//TODO mapping -> blur2.getShaderManager().getShaderUniform("BlurDir").set(0F, 1F); or blur2.getInstance
+                blur2.getShaderManager().getShaderUniform("BlurDir").set(0F, 1F);
 
 
                 this.bloodVisionShader1 = new ShaderGroup(this.mc.getTextureManager(), this.mc.getResourceManager(), this.mc.getFramebuffer(), resourcelocationOutline);
@@ -490,7 +490,7 @@ public class RenderHandler {
     private boolean renderEntityOutlines(List<? extends Entity> entities, ShaderGroup shader, Framebuffer framebuffer, float partialTicks) {
         EntityRendererManager renderManager = mc.getRenderManager();
         mc.world.getProfiler().startSection("bloodVision");
-        framebuffer.func_216493_b(false);//TODO mapping -> framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
+        framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
         boolean flag = !entities.isEmpty();
         if (flag) {
             renderingBloodVision = true;

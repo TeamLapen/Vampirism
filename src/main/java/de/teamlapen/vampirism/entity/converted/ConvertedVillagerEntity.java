@@ -5,8 +5,6 @@ import com.mojang.datafixers.Dynamic;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
@@ -15,21 +13,13 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
-import de.teamlapen.vampirism.entity.goals.BiteNearbyEntityVampireGoal;
-import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
-import de.teamlapen.vampirism.entity.goals.MoveToBiteableVampireGoal;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.RestrictSunGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -145,18 +135,18 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
 
     @Override
-    protected void registerGoals() {
-        super.registerGoals();
-
-        this.goalSelector.addGoal(0, new RestrictSunGoal(this));
-        this.goalSelector.addGoal(1, new AvoidEntityGoal<CreatureEntity>(this, CreatureEntity.class, 10, 0.45F, 0.55F, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, false, VReference.HUNTER_FACTION)));
-        this.goalSelector.addGoal(5, new FleeSunVampireGoal<>(this, 0.6F, true));
-        this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 0.6F, false));
-        this.goalSelector.addGoal(7, new BiteNearbyEntityVampireGoal<>(this));
-        this.goalSelector.addGoal(9, new MoveToBiteableVampireGoal<>(this, 0.55F));
-
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+    protected void registerGoals() {//TODO 1.14 villager brain
+//        super.registerGoals();
+//
+//        this.goalSelector.addGoal(0, new RestrictSunGoal(this));
+//        this.goalSelector.addGoal(1, new AvoidEntityGoal<CreatureEntity>(this, CreatureEntity.class, 10, 0.45F, 0.55F, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, false, VReference.HUNTER_FACTION)));
+//        this.goalSelector.addGoal(5, new FleeSunVampireGoal<>(this, 0.6F, true));
+//        this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 0.6F, false));
+//        this.goalSelector.addGoal(7, new BiteNearbyEntityVampireGoal<>(this));
+//        this.goalSelector.addGoal(9, new MoveToBiteableVampireGoal<>(this, 0.55F));
+//
+//
+//        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
 
     }
 

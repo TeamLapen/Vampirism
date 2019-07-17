@@ -5,9 +5,6 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -39,7 +36,7 @@ public class PotionSanguinare extends VampirismPotion {
 
     public PotionSanguinare(String name, EffectType effectType, int potionColor) {
         super(name, effectType, potionColor);
-        setIconIndex(1, 0).addAttributesModifier(SharedMonsterAttributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
+        addAttributesModifier(SharedMonsterAttributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
     }
 
     @Override
@@ -57,18 +54,6 @@ public class PotionSanguinare extends VampirismPotion {
         if (entity instanceof PlayerEntity) {
             VampirePlayer.get((PlayerEntity) entity).onSanguinareFinished();
         }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void renderInventoryEffect(EffectInstance effect, AbstractGui gui, int x, int y, float z) {
-//        https://github.com/MinecraftForge/MinecraftForge/issues/2473
-        String s1 = I18n.format(getName());
-
-        Minecraft.getInstance().fontRenderer.drawStringWithShadow(s1, (float) (x + 10 + 18), (float) (y + 6), 16777215);
-        String s = "Unknown";
-        Minecraft.getInstance().fontRenderer.drawStringWithShadow(s, (float) (x + 10 + 18), (float) (y + 6 + 10), 8355711);
-
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -7,8 +7,6 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.FactionVillagerEntity;
-import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
-import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityType;
@@ -108,9 +106,9 @@ public class VampireFactionVillagerBaseEntity extends FactionVillagerEntity impl
     }
     
     @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new RestrictSunVampireGoal<>(this));
-        this.goalSelector.addGoal(1, new FleeSunVampireGoal<>(this, 0.9, false));
-        super.registerGoals();
+    protected void registerGoals() {//TODO 1.14 villager brain
+//        this.goalSelector.addGoal(1, new RestrictSunVampireGoal<>(this));
+//        this.goalSelector.addGoal(1, new FleeSunVampireGoal<>(this, 0.9, false));
+//        super.registerGoals();
     }
 }

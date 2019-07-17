@@ -33,10 +33,10 @@ public class AlchemicalCauldronScreen extends ContainerScreen<AlchemicalCauldron
         int j = (this.height - this.ySize) / 2;
         this.blit(i, j, 0, 0, this.xSize, this.ySize);
 
-        int k = container.func_217059_k();//TODO 1.14 func_217059_k ->getBurnLeftScaled
+        int k = container.getBurnLeftScaled();
         if (k > 0) this.blit(i + 56, j + 36 + 12 - k, 176, 12 - k, 14, k + 1);
 
-        int l = container.func_217060_j();//TODO 1.14 func_217060_j -> getCookProgressionScyled
+        int l = container.getCookProgressionScaled();
         this.blit(i + 79, j + 34, 176, 14, l + 1, 16);
         l = l / 24 * 30;
         this.blit(i + 142, j + 28 + 30 - l, 176, 60 - l, 12, l);

@@ -39,7 +39,7 @@ public class DefendLordMinionGoal extends TargetGoal {
             return false;
         }
 
-        return this.func_220777_a(target, EntityPredicate.DEFAULT);//TODO mapping -> this.isSuitableTarget(target, EntityPredicates.IS_ALIVE);
+        return this.isSuitableTarget(target, EntityPredicate.DEFAULT);
     }
 
     @Override

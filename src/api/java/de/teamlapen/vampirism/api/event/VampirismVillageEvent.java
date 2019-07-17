@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
+import de.teamlapen.vampirism.tileentity.TotemTile;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -12,15 +12,15 @@ import javax.annotation.Nullable;
 public abstract class VampirismVillageEvent extends Event {
 
     @Nullable
-    private final IVampirismVillage village;
+    private final TotemTile totemTile;
 
-    public VampirismVillageEvent(@Nullable IVampirismVillage village) {
-        this.village = village;
+    public VampirismVillageEvent(@Nullable TotemTile totemTile) {
+        this.totemTile = totemTile;
     }
 
     @Nullable
-    public IVampirismVillage getVillage() {
-        return village;
+    public TotemTile getTotemTile() {
+        return totemTile;
     }
 
 
@@ -38,7 +38,7 @@ public abstract class VampirismVillageEvent extends Event {
     public static class SpawnNewVillager extends VampirismVillageEvent {
 
         /**
-         * Random existing villager in village
+         * Random existing villager in totemTile
          * Used as a "seed" villager to get a valid spawn point.
          */
         private final @Nonnull
@@ -47,8 +47,8 @@ public abstract class VampirismVillageEvent extends Event {
         VillagerEntity newVillager;
         private boolean willBeVampire;
 
-        public SpawnNewVillager(@Nonnull IVampirismVillage village, @Nonnull VillagerEntity seedVillager, boolean willBeVampire) {
-            super(village);
+        public SpawnNewVillager(@Nonnull TotemTile totemTile, @Nonnull VillagerEntity seedVillager, boolean willBeVampire) {
+            super(totemTile);
             this.seedVillager = seedVillager;
             this.willBeVampire = willBeVampire;
         }
@@ -79,7 +79,7 @@ public abstract class VampirismVillageEvent extends Event {
 
         /**
          * If the villager will be converted to a vampire version afterwards.
-         * Default: Is sometimes true if the village is controlled by vampires. Can be overridden by {@link #setWillBeVampire}
+         * Default: Is sometimes true if the totemTile is controlled by vampires. Can be overridden by {@link #setWillBeVampire}
          */
         public boolean isWillBeVampire() {
             return willBeVampire;
@@ -105,8 +105,8 @@ public abstract class VampirismVillageEvent extends Event {
         private @Nullable
         IVillageCaptureEntity captureVillager;
 
-        public MakeAggressive(@Nullable IVampirismVillage village, @Nonnull VillagerEntity villager) {
-            super(village);
+        public MakeAggressive(@Nullable TotemTile totemTile, @Nonnull VillagerEntity villager) {
+            super(totemTile);
             this.oldVillager = villager;
         }
 

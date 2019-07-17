@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModTags;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.init.Blocks;
 import net.minecraftforge.common.Tags;
-
-import static de.teamlapen.vampirism.core.ModTags.Blocks.OBSIDIAN;
 
 public class VampirismBlockTagProvider extends BlockTagsProvider {
     public VampirismBlockTagProvider(DataGenerator gen) {
@@ -15,8 +14,9 @@ public class VampirismBlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void registerTags() {
-        getBuilder(OBSIDIAN).add(Blocks.OBSIDIAN);
+        getBuilder(ModTags.Blocks.OBSIDIAN).add(Blocks.OBSIDIAN);
         getBuilder(Tags.Blocks.DIRT).add(ModBlocks.cursed_earth);
+        getBuilder(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.cursed_earth);
     }
 
     @Override

@@ -71,7 +71,7 @@ public class WeaponTableCraftingSlot extends Slot {
                     }
                 }));
             }
-            NonNullList<ItemStack> remaining = recipe == null ? playerIn.world.getRecipeManager().func_215369_c(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.world) : recipe.getRemainingItems(this.craftMatrix);//TODO 1.14 func_215369_c -> getRemainingItems
+            NonNullList<ItemStack> remaining = recipe == null ? playerIn.world.getRecipeManager().getRecipeNonNull(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.world) : recipe.getRemainingItems(this.craftMatrix);//TODO 1.14 func_215369_c -> getRemainingItems
 
             for (int i = 0; i < remaining.size(); ++i) {
                 ItemStack itemstack = this.craftMatrix.getStackInSlot(i);

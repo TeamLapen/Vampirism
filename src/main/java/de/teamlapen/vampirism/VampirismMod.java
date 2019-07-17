@@ -39,6 +39,7 @@ import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.structures.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.item.ItemGroup;
@@ -117,6 +118,7 @@ public class VampirismMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::gatherData);
         VampirismConfig.registerConfigs();
         MinecraftForge.EVENT_BUS.register(this);
         addModCompats();
@@ -305,6 +307,14 @@ public class VampirismMod {
     private void setupAPI3() {
         VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision("nightVision", new NightVision());
         VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision("bloodVision", new BloodVision());
+    }
+
+    private void gatherData(GatherDataEvent event) {
+        DataGenerator gen = event.getGenerator();
+        if (event.includeServer()) {
+            gen.addProvider(new VampirismBlockTagProvider(gen));
+            gen.addProvider(new VampirismItemTagProvider(gen));
+        }
     }
 
 }
