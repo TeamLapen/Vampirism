@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Render the vampire overlay
  */
 @OnlyIn(Dist.CLIENT)
-public class LayerVampireEntity extends LayerRenderer<CreatureEntity, EntityModel<CreatureEntity>> {
+public class LayerVampireEntity<T extends CreatureEntity, U extends EntityModel<T>> extends LayerRenderer<T, U> {
 
     private final ResourceLocation overlay;
     private final boolean checkIfRender;
@@ -22,14 +22,14 @@ public class LayerVampireEntity extends LayerRenderer<CreatureEntity, EntityMode
      * @param overlay
      * @param checkIfRender If it should check if {@link ConvertedCreatureRenderer#renderOverlay} is true
      */
-    public LayerVampireEntity(IEntityRenderer<CreatureEntity, EntityModel<CreatureEntity>> entityRendererIn, ResourceLocation overlay, boolean checkIfRender) {
+    public LayerVampireEntity(IEntityRenderer<T, U> entityRendererIn, ResourceLocation overlay, boolean checkIfRender) {
         super(entityRendererIn);
         this.overlay = overlay;
         this.checkIfRender = checkIfRender;
     }
 
     @Override
-    public void render(CreatureEntity entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale) {
+    public void render(T entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale) {
         if (!entitylivingbaseIn.isInvisible() && (!checkIfRender || ConvertedCreatureRenderer.renderOverlay)) {
             bindTexture(overlay);
             getEntityModel().render(entitylivingbaseIn, p_177141_2_, p_177141_3_, p_177141_5_, p_177141_6_, p_177141_7_, scale);

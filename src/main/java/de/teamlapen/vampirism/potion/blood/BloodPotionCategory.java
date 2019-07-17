@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
@@ -15,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -64,7 +64,7 @@ class BloodPotionCategory implements IBloodPotionCategory {
             } else if (item instanceof ItemStack) {
                 addItemExact((ItemStack) item);
             } else {
-                LOGGER.warn("Failed to add item '%s' of unkown type", item);
+                LOGGER.warn("Failed to add item '{}' of unkown type", item);
             }
         }
     }
@@ -85,12 +85,8 @@ class BloodPotionCategory implements IBloodPotionCategory {
     }
 
     @Override
-    public List<IBloodPotionRegistry.WeightedEffect> getEffectsCopy() {
-        List<IBloodPotionRegistry.WeightedEffect> copied = Lists.newArrayList();
-        for (IBloodPotionRegistry.WeightedEffect effect : effects) {
-            copied.add(effect.copy());
-        }
-        return copied;
+    public List<IBloodPotionRegistry.WeightedEffect> getImmutableEffectsList() {
+        return Collections.unmodifiableList(effects); //Probably better to only create this once. But this isn't called that often
     }
 
     public ResourceLocation getId() {

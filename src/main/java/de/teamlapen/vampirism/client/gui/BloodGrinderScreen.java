@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
-import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.inventory.container.BloodGrinderContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
@@ -15,12 +14,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class BloodGrinderScreen extends ContainerScreen<InventoryContainer> {
+public class BloodGrinderScreen extends ContainerScreen<BloodGrinderContainer> {
 
     private static final ResourceLocation background = new ResourceLocation(REFERENCE.MODID, "textures/gui/grinder.png");
     private final Container grinderContainer;
 
-    public BloodGrinderScreen(InventoryContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name) {
+    public BloodGrinderScreen(BloodGrinderContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name) {
         super(inventorySlotsIn, playerInventory, name);
         this.grinderContainer = inventorySlotsIn;
     }

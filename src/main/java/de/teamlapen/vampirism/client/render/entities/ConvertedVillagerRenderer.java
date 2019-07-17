@@ -18,6 +18,6 @@ public class ConvertedVillagerRenderer extends VillagerRenderer {
 
     public ConvertedVillagerRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, (IReloadableResourceManager) Minecraft.getInstance().getRenderManager());
-        this.addLayer(new LayerVampireEntity(this, overlay, false));
+        this.addLayer(new LayerVampireEntity<>(this, overlay, false));
     }
 }

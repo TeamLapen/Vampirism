@@ -1,14 +1,11 @@
 package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Lists;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.storage.WorldSavedData;
 
 import javax.annotation.Nonnull;
@@ -24,35 +21,17 @@ public class VampirismWorldData extends WorldSavedData {
     private static final String IDENTIFIER = "vampirism";
 
     public static @Nonnull
-    VampirismWorldData get(@Nonnull World world) {
-        String s = fileNameForProvider(world.dimension);
-        DimensionType key = world.getDimension().getType().isVanilla() ? DimensionType.OVERWORLD : world.getDimension().getType();
-        VampirismWorldData data = world.getSavedData(key, VampirismWorldData::new, s);//TODO @Maxanier
-        if (data == null) {
-            data = new VampirismWorldData(world);
-            world.setSavedData(key, s, data);
-        } else {
-            data.world = world;
-        }
-        return data;
+    VampirismWorldData get(@Nonnull ServerWorld world) {
+        return world.getSavedData().getOrCreate(() -> new VampirismWorldData(IDENTIFIER), IDENTIFIER);
     }
 
-    private static String fileNameForProvider(Dimension provider) {
-        return IDENTIFIER + provider.getType().getSuffix();
-    }
 
     private final List<BlockPos> vampireDungeons = Lists.newLinkedList();
-    private World world;
 
     public VampirismWorldData(String name) {
         super(name);
     }
 
-    private VampirismWorldData(World world) {
-        this(fileNameForProvider(world.dimension));
-        this.world = world;
-        this.markDirty();
-    }
 
     /**
      * Register a new vampire dungeon position during world gen

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
-import de.teamlapen.vampirism.tileentity.TotemTile;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -11,17 +10,9 @@ import javax.annotation.Nullable;
 
 public abstract class VampirismVillageEvent extends Event {
 
-    @Nullable
-    private final TotemTile totemTile;
 
-    public VampirismVillageEvent(@Nullable TotemTile totemTile) {
-        this.totemTile = totemTile;
-    }
 
-    @Nullable
-    public TotemTile getTotemTile() {
-        return totemTile;
-    }
+
 
 
     /**
@@ -47,8 +38,7 @@ public abstract class VampirismVillageEvent extends Event {
         VillagerEntity newVillager;
         private boolean willBeVampire;
 
-        public SpawnNewVillager(@Nonnull TotemTile totemTile, @Nonnull VillagerEntity seedVillager, boolean willBeVampire) {
-            super(totemTile);
+        public SpawnNewVillager(@Nonnull VillagerEntity seedVillager, boolean willBeVampire) {
             this.seedVillager = seedVillager;
             this.willBeVampire = willBeVampire;
         }
@@ -105,8 +95,7 @@ public abstract class VampirismVillageEvent extends Event {
         private @Nullable
         IVillageCaptureEntity captureVillager;
 
-        public MakeAggressive(@Nullable TotemTile totemTile, @Nonnull VillagerEntity villager) {
-            super(totemTile);
+        public MakeAggressive(@Nonnull VillagerEntity villager) {
             this.oldVillager = villager;
         }
 
@@ -127,7 +116,7 @@ public abstract class VampirismVillageEvent extends Event {
          * Event has to be canceled for this to take effect
          *
          */
-        public <T extends VillagerEntity & IVillageCaptureEntity> void setAgressiveVillager(@Nullable T captureVillager) {
+        public <T extends VillagerEntity & IVillageCaptureEntity> void setAggressiveVillager(@Nullable T captureVillager) {
             this.captureVillager = captureVillager;
         }
     }

@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.BlindingBatEntity;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.particle.GenericParticleData;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -28,12 +27,11 @@ public class FreezeVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(final IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
-        List<Entity> l = player.getEntityWorld().getEntitiesInAABBexcluding(player, player.getBoundingBox().grow(10, 5, 10), vampire.getNonFriendlySelector(true, false));//TODO @Maxanier needs Predicate<Entity>
-        for (Entity o : l) {
-            if (o instanceof BlindingBatEntity) continue;
-            if (!(o instanceof LivingEntity)) continue;
-            if (o instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) o)) continue;
-            LivingEntity e = (LivingEntity) o;
+        List<LivingEntity> l = player.getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, player.getBoundingBox().grow(10, 5, 10), vampire.getNonFriendlySelector(true, false));//TODO @Maxanier needs Predicate<Entity>
+        for (LivingEntity e : l) {
+            if (player.equals(e)) continue;
+            if (e instanceof BlindingBatEntity) continue;
+            if (e instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) e)) continue;
             e.addPotionEffect(new EffectInstance(Effects.SLOWNESS, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new EffectInstance(Effects.RESISTANCE, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, Balance.vpa.FREEZE_DURATION * 20, 128));

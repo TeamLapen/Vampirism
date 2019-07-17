@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
-import de.teamlapen.lib.lib.inventory.InventoryContainer;
+import de.teamlapen.vampirism.inventory.container.AltarInfusionContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,11 +11,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class AltarInfusionScreen extends ContainerScreen<InventoryContainer> {
+public class AltarInfusionScreen extends ContainerScreen<AltarInfusionContainer> {
 
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/altar4.png");
 
-    public AltarInfusionScreen(InventoryContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name) {
+    public AltarInfusionScreen(AltarInfusionContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name) {
         super(inventorySlotsIn, playerInventory, name);
     }
 

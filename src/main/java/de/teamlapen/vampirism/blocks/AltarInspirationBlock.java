@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.LazyOptional;
@@ -109,7 +110,9 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         super.onReplaced(state, worldIn, pos, newState, isMoving);
-        VampirismWorldData.get(worldIn).onAltarInspirationDestroyed(pos);
+        if (worldIn instanceof ServerWorld) {
+            VampirismWorldData.get((ServerWorld) worldIn).onAltarInspirationDestroyed(pos);
+        }
     }
 
 }

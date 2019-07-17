@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
@@ -73,12 +72,11 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
 
         for (BloodPotionCategory category : categories) {
             if (!item.isEmpty() && category.containsItem(item)) {
-                for (WeightedEffect effect : category.getEffectsCopy()) {
-                    effect.itemWeight *= 5; //TODO @Maxanier (AT public-f ?, doesnt work for me)
-                    effects.add(effect);
+                for (WeightedEffect effect : category.getImmutableEffectsList()) {
+                    effects.add(new WeightedEffect(effect.effect, effect.itemWeight * 5));
                 }
             } else {
-                effects.addAll(category.getEffectsCopy());
+                effects.addAll(category.getImmutableEffectsList());
             }
 
         }

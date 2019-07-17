@@ -37,10 +37,8 @@ public interface IBloodPotionCategory {
      */
     boolean containsItem(@Nonnull ItemStack stack);
 
-    /**
-     * @return A list containing copied {@link IBloodPotionRegistry.WeightedEffect}s
-     */
-    List<IBloodPotionRegistry.WeightedEffect> getEffectsCopy();
+
+    List<IBloodPotionRegistry.WeightedEffect> getImmutableEffectsList();
 
     String getDescTranslationKey();
 }

@@ -21,13 +21,13 @@ public class ModContainer {
     public static final ContainerType<BloodGrinderContainer> blood_grinder = getNull();
 
     public static void registerContainer(IForgeRegistry<ContainerType<?>> registry) {
-        registry.register(new ContainerType<HunterTrainerContainer>(HunterTrainerContainer::new).setRegistryName(REFERENCE.MODID, "hunter_trainer"));
-        registry.register(new ContainerType<AlchemicalCauldronContainer>(AlchemicalCauldronContainer::new).setRegistryName(REFERENCE.MODID, "alchemical_cauldron"));
-        registry.register(new ContainerType<BloodPotionTableContainer>(BloodPotionTableContainer::new).setRegistryName(REFERENCE.MODID, "blood_potion_table"));
-        registry.register(new ContainerType<HunterBasicContainer>(HunterBasicContainer::new).setRegistryName(REFERENCE.MODID, "hunter_basic"));
-        registry.register(new ContainerType<HunterTableContainer>(HunterTableContainer::new).setRegistryName(REFERENCE.MODID, "hunter_table"));
-        registry.register(new ContainerType<WeaponTableContainer>(WeaponTableContainer::new).setRegistryName(REFERENCE.MODID, "weapon_table"));
-        registry.register(new ContainerType<AltarInfusionContainer>(AltarInfusionContainer::new).setRegistryName(REFERENCE.MODID, "altar_infusion"));
-        registry.register(new ContainerType<BloodGrinderContainer>(BloodGrinderContainer::new).setRegistryName(REFERENCE.MODID, "blood_grinder"));
+        registry.register(new ContainerType<>(HunterTrainerContainer::new).setRegistryName(REFERENCE.MODID, "hunter_trainer"));
+        registry.register(new ContainerType<>(AlchemicalCauldronContainer::new).setRegistryName(REFERENCE.MODID, "alchemical_cauldron"));
+        registry.register(new ContainerType<>(BloodPotionTableContainer::new).setRegistryName(REFERENCE.MODID, "blood_potion_table"));
+        registry.register(new ContainerType<>(HunterBasicContainer::new).setRegistryName(REFERENCE.MODID, "hunter_basic"));
+        registry.register(new ContainerType<>(HunterTableContainer::new).setRegistryName(REFERENCE.MODID, "hunter_table"));
+        registry.register(new ContainerType<>(WeaponTableContainer::new).setRegistryName(REFERENCE.MODID, "weapon_table"));
+        registry.register(new ContainerType<>(AltarInfusionContainer::new).setRegistryName(REFERENCE.MODID, "altar_infusion"));
+        registry.register(new ContainerType<>(BloodGrinderContainer::new).setRegistryName(REFERENCE.MODID, "blood_grinder"));
     }
 }
