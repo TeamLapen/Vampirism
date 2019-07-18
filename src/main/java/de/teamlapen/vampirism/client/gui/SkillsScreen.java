@@ -87,8 +87,6 @@ public class SkillsScreen extends Screen {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         if (!display) {
-
-            //this.drawDefaultBackground();TODO needed check
             super.render(mouseX, mouseY, partialTicks);
             return;
         }
@@ -154,7 +152,7 @@ public class SkillsScreen extends Screen {
             this.field_146573_x = (double) (area_max_y - 1);
         }
 
-        //this.drawDefaultBackground();TODO needed check
+        this.renderBackground();
         this.drawSkills(mouseX, mouseY, partialTicks);
         GlStateManager.disableLighting();
         GlStateManager.disableDepthTest();
@@ -186,9 +184,9 @@ public class SkillsScreen extends Screen {
             addToList(skillNodes, skillHandler.getRootNode());
         }
         this.buttons.clear();
-        this.buttons.add(new Button(1, this.width / 2 + 24, this.height / 2 + 74, 80, UtilLib.translate("gui.done"), (context) -> SkillsScreen.this.onClose()));
+        this.buttons.add(new Button(this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done"), (context) -> this.minecraft.displayGuiScreen((Screen) null)));
         if (display) {
-            Button resetSkills = new Button(2, (this.width - display_width) / 2 + 24, this.height / 2 + 74, 125, UtilLib.translate("text.vampirism.skill.resetall"), (context) -> {
+            Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("text.vampirism.skill.resetall"), (context) -> {
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
                 ConfirmScreen resetGui = new ConfirmScreen((cxt) -> {
                     if (cxt) {
@@ -199,12 +197,11 @@ public class SkillsScreen extends Screen {
                     }
                 }, new TranslationTextComponent("gui.vampirism.reset_skills.title"), new TranslationTextComponent("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")));
                 Minecraft.getInstance().displayGuiScreen(resetGui);
-            });
+            }));
 
             if (factionPlayer.getLevel() < 2) {
                 resetSkills.active = false;
             }
-            this.buttons.add(resetSkills);
         }
 
 

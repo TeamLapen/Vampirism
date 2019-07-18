@@ -14,8 +14,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IConditionSerializer;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.Map;
+
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handles all recipe registrations and reference.
@@ -24,10 +28,14 @@ public class ModRecipes {
     public static final IRecipeType<IWeaponTableRecipe> WEAPONTABLE_CRAFTING_TYPE = IRecipeType.register(new ResourceLocation(REFERENCE.MODID, "weapontable_crafting").toString());
     public static final IRecipeType<AlchemicalCauldronRecipe> ALCHEMICAL_CAULDRON_TYPE = IRecipeType.register(new ResourceLocation(REFERENCE.MODID, "alchemical_cauldron").toString());
 
-    public static final IRecipeSerializer<ShapedWeaponTableRecipe> SHAPED_CRAFTING_WEAPONTABLE = IRecipeSerializer.register(new ResourceLocation(REFERENCE.MODID, "shaped_weapon_table_recipe").toString(), new ShapedWeaponTableRecipe.Serializer());
-    public static final IRecipeSerializer<ShapelessWeaponTableRecipe> SHAPELESS_CRAFTING_WEAPONTABLE = IRecipeSerializer.register(new ResourceLocation(REFERENCE.MODID, "shapeless_weapon_table_recipe").toString(), new ShapelessWeaponTableRecipe.Serializer());
-    public static final IRecipeSerializer<ShapedRecipe> REPAIR_IITEMWITHTIER = IRecipeSerializer.register(new ResourceLocation(REFERENCE.MODID, "shaped_item_with_tier_repair").toString(), new ShapedItemWithTierRepair.Serializer());
-    public static final IRecipeSerializer<AlchemicalCauldronRecipe> ALCHEMICAL_CAULDRON = IRecipeSerializer.register(new ResourceLocation(REFERENCE.MODID, "alchemical_cauldron_recipe").toString(), new AlchemicalCauldronRecipe.Serializer());
+    @ObjectHolder(REFERENCE.MODID + ":shaped_crafting_weapontable")
+    public static final IRecipeSerializer<ShapedWeaponTableRecipe> shaped_crafting_weapontable = getNull();
+    @ObjectHolder(REFERENCE.MODID + ":shapeless_crafting_weapontable")
+    public static final IRecipeSerializer<ShapelessWeaponTableRecipe> shapeless_crafting_weapontable = getNull();
+    @ObjectHolder(REFERENCE.MODID + ":repair_iitemwithtier")
+    public static final IRecipeSerializer<ShapedRecipe> repair_iitemwithtier = getNull();
+    @ObjectHolder(REFERENCE.MODID + ":alchemical_cauldron")
+    public static final IRecipeSerializer<AlchemicalCauldronRecipe> alchemical_cauldron = getNull();
 
     public static final IConditionSerializer CONFIG_CONDITION = CraftingHelper.register(new ResourceLocation(REFERENCE.MODID, "config_condition"), new ConfigEntryConditionSerializer());
 
@@ -43,6 +51,13 @@ public class ModRecipes {
         for (Fluid fluid : ForgeRegistries.FLUIDS.getValues()) {
             registerLiquidColor(fluid, 0xFFFFFF);
         }
+    }
+
+    static void registerSerializer(IForgeRegistry<IRecipeSerializer<?>> registry) {
+        registry.register(new ShapedWeaponTableRecipe.Serializer().setRegistryName(REFERENCE.MODID, "shaped_crafting_weapontable"));
+        registry.register(new ShapelessWeaponTableRecipe.Serializer().setRegistryName(REFERENCE.MODID, "shapeless_crafting_weapontable"));
+        registry.register(new ShapedItemWithTierRepair.Serializer().setRegistryName(REFERENCE.MODID, "repair_iitemwithtier"));
+        registry.register(new AlchemicalCauldronRecipe.Serializer().setRegistryName(REFERENCE.MODID, "alchemical_cauldron"));
     }
 
     public static void registerLiquidColor(Item stack, int color) {

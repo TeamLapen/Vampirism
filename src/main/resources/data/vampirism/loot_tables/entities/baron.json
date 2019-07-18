@@ -1,4 +1,5 @@
 {
+  "type": "minecraft:entity",
   "pools": [
     {
       "name": "pure_blood_0",
@@ -8,7 +9,8 @@
         },
         {
           "condition": "vampirism:adjustable_level",
-          "level": 0
+          "level": 0,
+          "entity": "this"
         }
       ],
       "rolls": 1,
@@ -28,7 +30,8 @@
         },
         {
           "condition": "vampirism:adjustable_level",
-          "level": 1
+          "level": 1,
+          "entity": "this"
         }
       ],
       "rolls": 1,
@@ -48,7 +51,8 @@
         },
         {
           "condition": "vampirism:adjustable_level",
-          "level": 2
+          "level": 2,
+          "entity": "this"
         }
       ],
       "rolls": 1,
@@ -68,7 +72,8 @@
         },
         {
           "condition": "vampirism:adjustable_level",
-          "level": 3
+          "level": 3,
+          "entity": "this"
         }
       ],
       "rolls": 1,
@@ -88,7 +93,8 @@
         },
         {
           "condition": "vampirism:adjustable_level",
-          "level": 4
+          "level": 4,
+          "entity": "this"
         }
       ],
       "rolls": 1,

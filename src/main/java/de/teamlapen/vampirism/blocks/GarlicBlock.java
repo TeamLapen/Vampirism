@@ -12,9 +12,7 @@ import net.minecraft.block.CropsBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IItemProvider;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -33,10 +31,6 @@ public class GarlicBlock extends CropsBlock {
     public GarlicBlock() {
         super(Properties.create(Material.PLANTS));
         setRegistryName(REFERENCE.MODID, regName);
-    }
-
-    public void getDrops(BlockState p_getDrops_1_, NonNullList<ItemStack> p_getDrops_2_, World p_getDrops_3_, BlockPos p_getDrops_4_, int fortune) {
-        //super.getDrops(p_getDrops_1_, p_getDrops_2_, p_getDrops_3_, p_getDrops_4_, fortune - 1);
     }
 
     @Override

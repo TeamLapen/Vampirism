@@ -13,10 +13,10 @@
       "item": "minecraft:bucket"
     },
     "Y": {
-      "constant": "vampirism:iron"
+      "tag": "forge:ingots/iron"
     },
     "Z": {
-      "constant": "vampirism:iron_block"
+      "tag": "forge:storage_blocks/iron"
     }
   }
 }

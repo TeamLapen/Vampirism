@@ -1,11 +1,5 @@
 {
   "conditions": {
     "config": "de.teamlapen.vampirism.inventory.crafting.ConfigEntryConditionFactory"
-  },
-  "recipes": {
-  	"shaped_weapon_table_recipe" : "de.teamlapen.vampirism.recipes.ShapedWeaponTableRecipe.Serializer",
-  	"shapeless_weapon_table_recipe" : "de.teamlapen.vampirism.recipes.ShapelessWeaponTableRecipe.Serializer",
-    "shaped_item_with_tier_repair": "de.teamlapen.vampirism.recipes.ShapedItemWithTierRepair.Serializer",
-    "alchemical_cauldron_recipe": "de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe.Serializer"
   }
 }

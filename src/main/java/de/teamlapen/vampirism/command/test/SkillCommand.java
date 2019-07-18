@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.skills.SkillManager;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.ISuggestionProvider;
@@ -22,7 +23,7 @@ import net.minecraft.util.text.StringTextComponent;
  * 
  * @authors Cheaterpaul, Maxanier
  */
-public class SkillCommand extends BasicCommand {
+public class SkillCommand extends BasicCommand {//TODO add compability for other mods
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("skill")
@@ -53,7 +54,7 @@ public class SkillCommand extends BasicCommand {
             (factionPlayer.getSkillHandler()).resetSkills();
             return 0;
         }
-        ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(type));
+        ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(REFERENCE.MODID, type));
         if (skill == null) {
             commandSource.sendFeedback(new StringTextComponent("Skill with id " + type + " could not be found for faction " + factionPlayer.getFaction().name()), true);
             return 0;

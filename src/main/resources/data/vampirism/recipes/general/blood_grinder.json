@@ -7,16 +7,16 @@
   ],
   "key": {
     "X": {
-      "constant": "vampirism:iron"
+      "tag": "forge:ingots/iron"
     },
     "Y": {
-      "constant": "vampirism:planks"
+      "tag": "minecraft:planks"
     },
     "Z": {
       "item": "minecraft:hopper"
     },
     "D": {
-      "constant": "vampirism:diamond"
+      "tag": "forge:gems/diamond"
     }
   },
   "result": {

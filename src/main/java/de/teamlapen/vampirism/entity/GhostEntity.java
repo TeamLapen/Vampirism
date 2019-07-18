@@ -15,6 +15,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
@@ -87,7 +88,7 @@ public class GhostEntity extends VampirismEntity implements IMob {
         return;
     }
 
-    public static boolean spawnPredicate(EntityType<GhostEntity> entityType, IWorld worldIn, SpawnReason spawnReason, BlockPos pos, Random rand) {
-        return ModTags.Blocks.CURSEDEARTH.contains(worldIn.getBlockState(pos.down()).getBlock()) ? true : false;
+    public static boolean spawnPredicateGhost(EntityType<? extends GhostEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        return world.getDifficulty() != Difficulty.PEACEFUL && spawnPredicateVampireFog(world, blockPos) && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random) && ModTags.Blocks.CURSEDEARTH.contains(world.getBlockState(blockPos.down()).getBlock()) ? true : false;
     }
 }

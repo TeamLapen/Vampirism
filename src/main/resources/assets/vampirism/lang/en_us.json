@@ -365,6 +365,7 @@
   "command.vampirism.base.bind_action.success": "Successfully bound action %s to action key %s",
   "command.vampirism.base.levelup.nofaction": "Player has to be in a faction to be able to level up",
   "command.vampirism.base.levelup.max": "Player is already on the highest level",
+  "command.vampirism.base.level.successful": "%s is now a %s level %s",
   "enchantment.vampirism.arrow_frugality": "Arrow Frugality",
   "enchantment.vampirism.vampire_slayer": "Vampire Slayer",
   "text.vampirism.village.faction_capturing": "%s are capturing this village",

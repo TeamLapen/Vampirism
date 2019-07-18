@@ -76,7 +76,7 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
     /**
      * Check if the given position is inside a (statically) cached list of vampire village BBs
      */
-    public static boolean isInsideVampireAreaCached(Dimension dimension, BlockPos pos) { //TODO use {@link Dimension} instead of id
+    public static boolean isInsideVampireAreaCached(Dimension dimension, BlockPos pos) {
         HashMap<BlockPos, MutableBoundingBox> map = vampireVillages.get(dimension);
         if (map != null) {
             for (MutableBoundingBox bb : map.values()) {

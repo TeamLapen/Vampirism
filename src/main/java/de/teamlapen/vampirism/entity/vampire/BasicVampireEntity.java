@@ -391,6 +391,4 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     public List<IEntityAction> getAvailableActions() {
         return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
     }
-
-
 }

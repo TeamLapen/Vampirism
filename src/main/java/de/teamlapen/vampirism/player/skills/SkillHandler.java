@@ -36,8 +36,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         if (isSkillEnabled(skill)) {
             return Result.ALREADY_ENABLED;
         }
-        SkillNode node = VampirismAPI.skillManager().getRootSkillNode(player.getFaction());
-        node = findSkillNode(node, skill);
+        SkillNode node = findSkillNode(VampirismAPI.skillManager().getRootSkillNode(player.getFaction()), skill);
         if (node != null) {
             if (node.isRoot() || isNodeEnabled(node.getParent())) {
                 if (getLeftSkillPoints() > 0) {

@@ -13,7 +13,7 @@
       "item": "vampirism:blood_infused_enhanced_iron_ingot"
     },
     "Y": {
-      "constant": "vampirism:stick"
+      "tag": "forge:rods/wooden"
     }
   }
 }

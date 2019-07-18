@@ -10,16 +10,16 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "constant": "vampirism:planks"
+      "tag": "minecraft:planks"
     },
     "Y": {
-      "constant": "vampirism:diamond"
+      "tag": "forge:gems/diamond"
     },
     "Z": {
       "item": "vampirism:garlic_beacon_core"
     },
     "O": {
-      "constant": "vampirism:obsidian"
+      "item": "minecraft:obsidian"
     }
   }
 }

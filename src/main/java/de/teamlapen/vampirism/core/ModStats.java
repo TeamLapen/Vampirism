@@ -5,6 +5,7 @@ import net.minecraft.stats.IStatFormatter;
 import net.minecraft.stats.StatType;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModStats {
@@ -19,7 +20,8 @@ public class ModStats {
     }
 
     private static void register(ResourceLocation id) {
-        Stats.CUSTOM.get(id);
+        Registry.register(Registry.CUSTOM_STAT, id, id);
+        Stats.CUSTOM.get(id, IStatFormatter.DEFAULT);
     }
 
     private static void register(ResourceLocation id, IStatFormatter formatter) {

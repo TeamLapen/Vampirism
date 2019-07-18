@@ -17,6 +17,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.potion.Effect;
 import net.minecraft.stats.StatType;
@@ -69,6 +70,7 @@ public class RegistryManager implements IInitListener {
 
         switch (step) {
             case COMMON_SETUP:
+                ModBiomes.addBiome();
                 ModFluids.registerFluids();
                 ModEntities.registerConvertibles();
                 ModEntities.registerSpawns();
@@ -76,7 +78,6 @@ public class RegistryManager implements IInitListener {
                 ModItems.registerCraftingRecipes();
                 ModItems.registerBloodConversionRates();
                 ModAdvancements.registerAdvancements();
-
                 break;
             case LOAD_COMPLETE:
                 if (ModEffects.checkNightVision()) {
@@ -193,5 +194,10 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterFeatures(RegistryEvent.Register<Feature<?>> event) {
         ModWorld.registerFeatures(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterRecipeSerializer(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+        ModRecipes.registerSerializer(event.getRegistry());
     }
 }

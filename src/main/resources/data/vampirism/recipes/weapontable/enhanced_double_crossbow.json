@@ -10,10 +10,10 @@
     " XX ",
     " XX "
   ],
-  "type": "vampirism:shaped_weapon_table_recipe",
+  "type": "vampirism:shaped_crafting_weapontable",
   "key": {
     "X": {
-      "constant": "vampirism:iron"
+      "tag": "forge:ingots/iron"
     },
     "Y": {
       "item": "minecraft:string"

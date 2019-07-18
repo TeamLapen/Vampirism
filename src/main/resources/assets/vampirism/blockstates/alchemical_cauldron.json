@@ -30,7 +30,7 @@
         "y": 270
       }
     },
-    "burning": {
+    "lit": {
       "true": {
         "submodel": "vampirism:alchemy_cauldron_fire"
       },

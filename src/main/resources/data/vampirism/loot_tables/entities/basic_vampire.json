@@ -1,4 +1,5 @@
 {
+  "type": "minecraft:entity",
   "pools": [
     {
       "name": "general",
@@ -25,7 +26,8 @@
       "name": "special",
       "conditions": [
         {
-          "condition": "vampirism:with_stake"
+          "condition": "vampirism:with_stake",
+          "entity": "this"
         },
         {
           "condition": "random_chance_with_looting",

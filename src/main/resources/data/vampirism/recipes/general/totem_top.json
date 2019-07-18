@@ -13,10 +13,10 @@
       "item": "minecraft:glass"
     },
     "Y": {
-      "constant": "vampirism:obsidian"
+      "item": "minecraft:obsidian"
     },
     "Z": {
-      "constant": "vampirism:iron_block"
+      "tag": "forge:ingots/iron"
     }
   }
 }

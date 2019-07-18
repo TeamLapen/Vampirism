@@ -17,11 +17,11 @@
     }
     ,
     "Z": {
-      "constant": "vampirism:diamond"
+      "tag": "forge:gems/diamond"
     }
     ,
     "A": {
-      "constant": "vampirism:pure_blood"
+      "tag": "vampirism:pure_blood"
     }
   }
 }
