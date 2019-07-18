@@ -18,6 +18,18 @@
       "texture": "bronzeshadow",
       "type": 2,
       "status": 1
+    },
+    {
+      "name": "Zerelth",
+      "texture": "Zerelth",
+      "type": 0,
+      "status": 1
+    },
+    {
+      "name": "Lord Kranzy",
+      "texture": "Kranzy",
+      "type": 0,
+      "status": 1
     }
   ],
   "hunters": [
@@ -40,8 +52,8 @@
       "status": 1
     },
     {
-      "name": "Zerelth",
-      "texture": "1LiterZinalco",
+      "name": "Emberball",
+      "texture": "Emberball",
       "type": 0,
       "status": 1
     }
