@@ -16,7 +16,7 @@
       "item": "minecraft:book"
     },
     "Z": {
-      "constant": "vampirism:planks"
+      "tag": "minecraft:planks"
     },
     "W": {
       "item": "vampirism:item_garlic"

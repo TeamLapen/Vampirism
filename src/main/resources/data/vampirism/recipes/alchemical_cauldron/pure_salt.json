@@ -1,18 +1,18 @@
 {
+  "type": "vampirism:alchemical_cauldron",
   "result": {
     "item": "vampirism:pure_salt",
     "count": 4
   },
-  "skill": [
-    "vampirism:basic_alchemy"
-  ],
-  "liquid": {
-    "item": "minecraft:water",
-    "__comment": "waiting for forge"
-  },
   "ingredient": {
     "item": "vampirism:item_garlic"
   },
-  "type": "vampirism:alchemical_cauldron_recipe",
+  "fluid": {
+    "item": "minecraft:water",
+    "__comment": "waiting for forge"
+  },
+  "skill": [
+    "vampirism:basic_alchemy"
+  ],
   "cookTime": 1200
 }

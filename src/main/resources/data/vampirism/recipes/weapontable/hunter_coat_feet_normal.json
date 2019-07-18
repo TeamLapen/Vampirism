@@ -9,7 +9,7 @@
     "XZZX",
     "XYYX"
   ],
-  "type": "vampirism:shaped_weapon_table_recipe",
+  "type": "vampirism:shaped_crafting_weapontable",
   "key": {
     "X": {
       "tag": "forge:ingots/iron"

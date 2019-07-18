@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -14,7 +15,6 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Collection;
@@ -59,7 +59,7 @@ public class LevelCommand extends BasicCommand {
                 context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.base.level.cant_leave"));
             }
             if (handler.setFactionAndLevel(faction, level)) {
-                context.getSource().sendFeedback(new StringTextComponent(player.getName() + " is now a " + faction.getName() + " level " + level), true);
+                context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), faction.getName(), level), true);
             } else {
                 context.getSource().sendErrorMessage(new TranslationTextComponent("commands.vampirism.failed_to_execute"));
             }

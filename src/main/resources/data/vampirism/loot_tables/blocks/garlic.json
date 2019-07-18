@@ -2,22 +2,47 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1,
+      "rolls": 1.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
+          "name": "vampirism:item_garlic"
+        }
+      ]
+    },
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
             {
-              "block": "vampirism:item_garlic"
+              "function": "minecraft:apply_bonus",
+              "enchantment": "minecraft:fortune",
+              "formula": "minecraft:binomial_with_bonus_count",
+              "parameters": {
+                "extra": 3,
+                "probability": 0.5714286
+              }
             }
-          ]
+          ],
+          "name": "vampirism:item_garlic"
         }
       ],
       "conditions": [
         {
-          "condition": "minecraft:survives_explosion"
+          "condition": "minecraft:block_state_property",
+          "block": "vampirism:garlic",
+          "properties": {
+            "age": "7"
+          }
         }
       ]
+    }
+  ],
+  "functions": [
+    {
+      "function": "minecraft:explosion_decay"
     }
   ]
 }

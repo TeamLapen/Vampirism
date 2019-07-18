@@ -13,10 +13,10 @@
       "item": "minecraft:glass_bottle"
     },
     "Y": {
-      "constant": "vampirism:planks"
+      "tag": "minecraft:planks"
     },
     "Z": {
-      "constant": "vampirism:iron"
+      "tag": "forge:ingots/iron"
     }
   }
 }

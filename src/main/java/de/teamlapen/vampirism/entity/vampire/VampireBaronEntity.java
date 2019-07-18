@@ -410,7 +410,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         }
     }
 
-    public static boolean spawnPredicate(EntityType<VampireBaronEntity> entityType, IWorld worldIn, SpawnReason spawnReason, BlockPos pos, Random rand) {
-        return worldIn.getBiome(pos) == ModBiomes.vampire_forest ? true : false;
+    public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        return world.getBiome(blockPos) == ModBiomes.vampire_forest && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
 }

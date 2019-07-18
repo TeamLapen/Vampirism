@@ -2,8 +2,10 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.entity.IEntityWithHome;
 import de.teamlapen.vampirism.api.entity.IVampirismEntity;
+import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.particle.GenericParticleData;
+import de.teamlapen.vampirism.tileentity.TotemTile;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.Goal;
@@ -23,6 +25,7 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 /**
  * Base class for most vampirism mobs
@@ -315,5 +318,31 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
             this.randomTickDivider = 70 + rand.nextInt(50);
             onRandomTick();
         }
+    }
+
+    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        return world.getDifficulty() != Difficulty.PEACEFUL && (spawnPredicateLight(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
+    }
+
+    public static boolean spawnPredicateHunter(EntityType<? extends VampirismEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        return world.getDifficulty() != Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
+    }
+
+    public static boolean spawnPredicateLight(IWorld world, BlockPos blockPos, Random random) {
+        if (world.getLightFor(LightType.SKY, blockPos) > random.nextInt(32)) {
+            return false;
+        } else {
+            int lvt_3_1_ = world.getWorld().isThundering() ? world.getNeighborAwareLightSubtracted(blockPos, 10) : world.getLight(blockPos);
+            return lvt_3_1_ <= random.nextInt(8);
+        }
+    }
+
+    public static boolean spawnPredicateVampireFog(IWorld world, BlockPos blockPos) {
+        return world.getBiome(blockPos).getRegistryName() == ModBiomes.vampire_forest.getRegistryName() || TotemTile.isInsideVampireAreaCached(world.getDimension(), blockPos);
+    }
+
+    public static boolean spawnPredicateCanSpawn(EntityType<? extends MobEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        BlockPos blockpos = blockPos.down();
+        return spawnReason == SpawnReason.SPAWNER || world.getBlockState(blockpos).canEntitySpawn(world, blockpos, entityType);
     }
 }

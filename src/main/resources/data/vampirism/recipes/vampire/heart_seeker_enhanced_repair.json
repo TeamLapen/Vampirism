@@ -6,7 +6,7 @@
     " X ",
     "XYX"
   ],
-  "type": "vampirism:shaped_item_with_tier_repair",
+  "type": "vampirism:repair_iitemwithtier",
   "key": {
     "X": {
       "item": "vampirism:blood_infused_enhanced_iron_ingot"

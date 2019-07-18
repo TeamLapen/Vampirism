@@ -10,19 +10,19 @@
     "XYYX",
     "DYYD"
   ],
-  "type": "vampirism:shaped_weapon_table_recipe",
+  "type": "vampirism:shaped_crafting_weapontable",
   "key": {
     "X": {
-      "constant": "vampirism:iron"
+      "tag": "forge:ingots/iron"
     },
     "Y": {
-      "constant": "vampirism:obsidian"
+      "item": "minecraft:obsidian"
     },
     "Z": {
       "item": "minecraft:leather"
     },
     "D": {
-      "constant": "vampirism:diamond"
+      "tag": "forge:gems/diamond"
     }
   }
 }
