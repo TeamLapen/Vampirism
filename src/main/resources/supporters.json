@@ -1,5 +1,5 @@
 {
-  "comment": "List of player of supporters of Vampirism. Status: 0-Dev,1-Contributor,2-Patreon",
+  "comment": "List of player of supporters of Vampirism. Status: 0-Dev,1-Contributor,2-Temporary",
   "vampires": [
     {
       "name": "The powerful Bill",
@@ -29,7 +29,7 @@
       "name": "Kranzy",
       "texture": "Kranzy",
       "type": 0,
-      "status": 1
+      "status": 2
     }
   ],
   "hunters": [
@@ -43,7 +43,7 @@
       "name": "Paul the Hunter",
       "texture": "cheaterpaul",
       "type": 1,
-      "status": 1
+      "status": 0
     },
     {
       "name": "Pyromaniac Pik",
@@ -55,7 +55,13 @@
       "name": "Wise Emberball",
       "texture": "Emberball",
       "type": 0,
-      "status": 1
+      "status": 2
+    },
+    {
+      "name": "James the hunter",
+      "texture": "JaberC",
+      "type": 1,
+      "status": 2
     }
   ]
 }
