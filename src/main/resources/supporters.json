@@ -18,6 +18,18 @@
       "texture": "bronzeshadow",
       "type": 2,
       "status": 1
+    },
+    {
+      "name": "Prince Zin",
+      "texture": "1LiterZinalco",
+      "type": 0,
+      "status": 1
+    },
+    {
+      "name": "Kranzy",
+      "texture": "Kranzy",
+      "type": 0,
+      "status": 1
     }
   ],
   "hunters": [
@@ -40,8 +52,8 @@
       "status": 1
     },
     {
-      "name": "Zerelth",
-      "texture": "1LiterZinalco",
+      "name": "Wise Emberball",
+      "texture": "Emberball",
       "type": 0,
       "status": 1
     }
