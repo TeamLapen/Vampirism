@@ -31,7 +31,8 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, world, tooltip, advanced);
         tooltip.add(UtilLib.translated(getTranslationKey() + ".tooltip1"));
-        tooltip.add(UtilLib.translated(getTranslationKey() + ".tooltip2", VampirismConfig.SERVER.sunscreenBeaconDistance.get()));
+        if (world != null)
+            tooltip.add(UtilLib.translated(getTranslationKey() + ".tooltip2", VampirismConfig.SERVER.sunscreenBeaconDistance.get())); //Only add this if a world is present. Otherwise the config might not be ready as this is also called during search tree population before setup TODO 1.14 verify this works
     }
 
     @Override

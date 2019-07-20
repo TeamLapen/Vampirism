@@ -54,7 +54,7 @@ public class FactionRegistry implements IFactionRegistry {
         if (entity instanceof IFactionEntity) {
             return ((IFactionEntity) entity).getFaction();
         } else if (entity instanceof PlayerEntity) {
-            return VampirismAPI.getFactionPlayerHandler(((PlayerEntity) entity)).getCurrentFaction();
+            return entity.isAlive() ? VampirismAPI.getFactionPlayerHandler(((PlayerEntity) entity)).getCurrentFaction() : null;
         }
         return null;
     }

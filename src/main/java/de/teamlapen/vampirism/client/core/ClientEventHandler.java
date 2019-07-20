@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
@@ -48,7 +47,7 @@ import java.util.Set;
  */
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
-    private final Logger LOGGER = LogManager.getLogger();
+    private final static Logger LOGGER = LogManager.getLogger();
     private final static ResourceLocation INVENTORY_SKILLS = new ResourceLocation("vampirism", "textures/gui/inventory_skills.png");
 
 
@@ -81,8 +80,7 @@ public class ClientEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public void onModelBakeEvent(ModelBakeEvent event) {
+    public static void onModelBakeEvent(ModelBakeEvent event) {
         IModel[] containerFluidModels = new IModel[BakedBloodContainerModel.FLUID_LEVELS];
         try {
             // load the fluid models for the different levels from the .json files

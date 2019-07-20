@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.world.gen.structures;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -27,13 +26,13 @@ public class StructureManager {
         for (Structure s : Structure.values()) {
             loadTemplate(s);
         }
-        LOGGER.debug("Loaded %s structures", Structure.values().length);
+        LOGGER.debug("Loaded {} structures", Structure.values().length);
     }
 
     private static void loadTemplate(Structure structure) {
         InputStream input = StructureManager.class.getResourceAsStream("/structures/" + structure.name + ".nbt");
         if (input == null) {
-            LOGGER.error("Failed to locate structure file %s", structure.name);
+            LOGGER.error("Failed to locate structure file {}", structure.name);
             return;
         }
         try {

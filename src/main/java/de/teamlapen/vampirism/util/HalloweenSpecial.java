@@ -26,6 +26,7 @@ import java.util.UUID;
 /**
  * Quick and dirty
  * Only just at halloween
+ * TODO 1.14 test
  */
 public class HalloweenSpecial {
 
@@ -46,9 +47,9 @@ public class HalloweenSpecial {
         return day == 31 && month == 9;
     }
 
-    public static void enable() {
-        enabled = true;
-        LOGGER.info("It's Halloween");
+    public static void checkEnable() {
+        enabled = shouldEnable();
+        if (enabled) LOGGER.info("It's Halloween");
     }
 
     /**
@@ -77,6 +78,7 @@ public class HalloweenSpecial {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (!enabled) return;
         if (event.phase == TickEvent.Phase.END) return;
         if (render_overlay > 0) {
             render_overlay--;
@@ -90,6 +92,7 @@ public class HalloweenSpecial {
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
+        if (!enabled) return;
         if (event.phase == TickEvent.Phase.END) return;
 
         if (enabled) {

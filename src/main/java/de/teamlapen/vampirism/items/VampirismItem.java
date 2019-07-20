@@ -32,14 +32,6 @@ public class VampirismItem extends Item {
 
         return this.translation_key;
     }
-
-    /**
-     * @return The name this item is registered in the GameRegistry
-     */
-    public String getRegisteredName() {
-        return regName;
-    }
-
     /**
      * Set a custom translation key
      */

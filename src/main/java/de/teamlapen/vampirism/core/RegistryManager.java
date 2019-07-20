@@ -27,7 +27,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
@@ -48,9 +47,7 @@ public class RegistryManager implements IInitListener {
 
     @OnlyIn(Dist.CLIENT)
     public static void setupClientRegistryManager() {
-
         registryManagerClient = new de.teamlapen.vampirism.client.core.RegistryManagerClient();
-        MinecraftForge.EVENT_BUS.register(registryManagerClient);
     }
 
     @OnlyIn(Dist.CLIENT)

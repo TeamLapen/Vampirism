@@ -4,12 +4,10 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.lib.lib.util.IInitListener;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 
 /**
- * Handle client side registration events as well as a few dependent registrations
+ * Handle client side registration events as well as a few dependent registrations TODO maybe move to proxy
  */
 @OnlyIn(Dist.CLIENT)
 public class RegistryManagerClient implements IInitListener {
@@ -22,12 +20,8 @@ public class RegistryManagerClient implements IInitListener {
             ModBlocksRender.register();
             ModParticleFactories.registerFactories();
             ModScreens.registerScreens();
+        } else if (step == Step.CLIENT_SETUP) {
+            ModEntitiesRender.registerEntityRenderer();
         }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public void onRegisterModels(ModelRegistryEvent event) {
-        ModEntitiesRender.registerEntityRenderer();
     }
 }

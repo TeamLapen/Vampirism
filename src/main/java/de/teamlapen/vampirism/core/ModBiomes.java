@@ -31,19 +31,17 @@ public class ModBiomes {
 
     static void addBiome() {
         BiomeDictionary.addTypes(vampire_forest, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
-        if (VampirismConfig.SERVER.disableVampireForest.get()) {
+        if (VampirismConfig.COMMON.disableVampireForest.get()) {
             BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest, Balance.general.VAMPIRE_FOREST_WEIGHT));
         }
     }
 
     static void registerFeatures() {
-        if (!VampirismConfig.SERVER.disableHunterCamps.get()) {
             for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
                 if (new ResourceLocation("the_end").equals(biome.getRegistryName()) || new ResourceLocation("nether").equals(biome.getRegistryName()))
                     continue;
                 VampirismBiomeFeatures.addHunterTent(biome);
             }
-        }
     }
 
 

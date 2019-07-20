@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
@@ -121,7 +120,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     @SubscribeEvent
     public void onRenderCrosshair(RenderGameOverlayEvent.Pre event) {
 
-        if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS || mc.player == null || !mc.player.isAlive()) {
             return;
         }
 
@@ -172,7 +171,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     @SubscribeEvent
     public void onRenderExperienceBar(RenderGameOverlayEvent.Post event) {
 
-        if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE || mc.player == null || !mc.player.isAlive()) {
             return;
         }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

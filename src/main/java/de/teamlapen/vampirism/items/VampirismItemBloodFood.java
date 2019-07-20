@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Food;
@@ -13,19 +12,9 @@ import net.minecraft.world.World;
 
 
 public class VampirismItemBloodFood extends VampirismItem {
-    private final String regName;
 
     public VampirismItemBloodFood(String regName, Food food) {
         super(regName, new Properties().group(VampirismMod.creativeTab).food(food));
-        this.regName = regName;
-        setRegistryName(REFERENCE.MODID, regName);
-    }
-
-    /**
-     * @return The name this item is registered with in the GameRegistry
-     */
-    public String getRegisteredName() {
-        return regName;
     }
 
     @Override

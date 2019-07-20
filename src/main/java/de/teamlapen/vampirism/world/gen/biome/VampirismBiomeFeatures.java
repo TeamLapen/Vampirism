@@ -24,6 +24,6 @@ public class VampirismBiomeFeatures {
     }
 
     public static void addHunterTent(Biome biomeIn) {
-        //biomeIn.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES,);//TODO 1.14 world add huntertent structure
+        //biomeIn.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES,);//TODO 1.14 world add huntertent structure also make sure generation of this can be deactivated. Maybe with a FrequencyConfig. Not sure how that works
     }
 }

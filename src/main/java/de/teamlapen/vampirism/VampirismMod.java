@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
+import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.config.*;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -45,6 +46,7 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -119,6 +121,7 @@ public class VampirismMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::gatherData);
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventHandler::onModelBakeEvent));
         VampirismConfig.registerConfigs();
         MinecraftForge.EVENT_BUS.register(this);
         addModCompats();
@@ -239,11 +242,7 @@ public class VampirismMod {
         StructureManager.init();
         VampirismEntitySelectors.registerSelectors();
 
-        // Check for halloween special
-        if (HalloweenSpecial.shouldEnable()) {
-            HalloweenSpecial.enable();
-            MinecraftForge.EVENT_BUS.register(new HalloweenSpecial());
-        }
+        MinecraftForge.EVENT_BUS.register(new HalloweenSpecial());
 
 
     }

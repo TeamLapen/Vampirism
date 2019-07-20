@@ -114,7 +114,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         if (nbt.contains("entity_old")) {
             setEntityCreature((T) EntityType.loadEntityUnchecked(nbt.getCompound("entity_old"), world).orElse(null));
             if (nil()) {
-                LOGGER.warn("Failed to create old entity %s. Maybe the entity does not exist anymore", nbt.getCompound("entity_old"));
+                LOGGER.warn("Failed to create old entity {}. Maybe the entity does not exist anymore", nbt.getCompound("entity_old"));
             }
         } else {
             LOGGER.warn("Saved entity did not have a old entity");
@@ -129,6 +129,12 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
      */
     public void setCanDespawn() {
         canDespawn = true;
+    }
+
+    @Override
+    public void recalculateSize() {
+        super.recalculateSize();
+        this.eyeHeight = entityCreature == null ? 0.5f : entityCreature.getEyeHeight();
     }
 
     /**
@@ -149,14 +155,8 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         }
         if (entityCreature != null && getConvertedHelper() == null) {
             entityCreature = null;
-            LOGGER.warn("Cannot find converting handler for converted creature %s (%s)", this, entityCreature);
+            LOGGER.warn("Cannot find converting handler for converted creature {} ({})", this, entityCreature);
         }
-    }
-
-    @Override
-    public void recalculateSize() {
-        super.recalculateSize();
-        this.eyeHeight = entityCreature.getEyeHeight();
     }
 
     @Override

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.config;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
+import de.teamlapen.vampirism.util.HalloweenSpecial;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,8 +21,20 @@ import static net.minecraftforge.fml.loading.LogMarkers.FORGEMOD;
 
 public class VampirismConfig {
 
+    /**
+     * For client side only configuration.
+     * Loaded after registry events but before setup
+     */
     public static final Client CLIENT;
+    /**
+     * Synced to clients.
+     * Only loaded on world load
+     */
     public static final Server SERVER;
+    /**
+     * For side independent configuration. Not synced.
+     * Loaded after registry events but before setup
+     */
     public static final Common COMMON;
     private static final ForgeConfigSpec clientSpec;
     private static final ForgeConfigSpec serverSpec;
@@ -57,14 +70,17 @@ public class VampirismConfig {
         LogManager.getLogger().debug(FORGEMOD, "Loaded forge config file {}", configEvent.getConfig().getFileName());
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
+            HalloweenSpecial.checkEnable();
+
         }
     }
 
     @SubscribeEvent
-    public static void onFileChange(final ModConfig.ConfigReloading configEvent) {
+    public static void onReload(final ModConfig.ConfigReloading configEvent) {
         LogManager.getLogger().fatal(CORE, "Forge config just got changed on the file system!");
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
+            HalloweenSpecial.checkEnable();
         }
     }
 
@@ -96,10 +112,8 @@ public class VampirismConfig {
         public final ForgeConfigSpec.IntValue villageSeparation;
         public final ForgeConfigSpec.BooleanValue villageModify;
 
-        public final ForgeConfigSpec.BooleanValue disableVampireForest;
         public final ForgeConfigSpec.BooleanValue disableFangInfection;
         public final ForgeConfigSpec.BooleanValue disableMobBiteInfection;
-        public final ForgeConfigSpec.BooleanValue disableHunterCamps;
         public final ForgeConfigSpec.BooleanValue disableHalloweenSpecial;
 
 
@@ -170,9 +184,7 @@ public class VampirismConfig {
             builder.push("disable");
             disableFangInfection = builder.comment("Disable vampire fangs being usable to infect yourself").define("disableFangInfection", false);
             disableHalloweenSpecial = builder.comment("Disable Halloween special event").define("disableHalloweenSpecialEvent", false);
-            disableHunterCamps = builder.comment("Disable the generation of hunter camps completely").define("disableHunterCamps", false);
             disableMobBiteInfection = builder.comment("Prevent vampire mobs from infecting players when attacking").define("disableMobBiteInfection", false);
-            disableVampireForest = builder.comment("Disable vampire forest generation").define("disableVampireForest", false);
 
             builder.pop();
 
@@ -227,12 +239,16 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue versionCheck;
         public final ForgeConfigSpec.BooleanValue collectStats;
 
+        public final ForgeConfigSpec.BooleanValue disableVampireForest;
+
+
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.comment("Common configuration settings")
                     .push("common");
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
+            disableVampireForest = builder.comment("Disable vampire forest generation").define("disableVampireForest", false);
 
             builder.pop();
         }

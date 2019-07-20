@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.tests;
 
 import com.google.common.base.Stopwatch;
-
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.fluids.BloodHelper;
@@ -47,7 +46,7 @@ public class Tests {
 
     public static void runTests(World world, PlayerEntity player) {
         sendMsg(player, "Starting tests");
-        log("Clearing area");
+        LOGGER.warn("Clearing area", new Object[]{});
         clearArea(world);
         boolean wasCreative = player.isCreative();
         player.setGameType(GameType.SURVIVAL);
@@ -59,7 +58,7 @@ public class Tests {
         runTest(Tests::blockWeaponTableFluids, info.next("BlockWeaponTableFluids"));
         runLightTest(Tests::checkObjectHolders, "Object holders", player);
 
-        log("Finished tests -> teleporting player");
+        LOGGER.warn("Finished tests -> teleporting player", new Object[]{});
         player.attemptTeleport(0, 5, 0, true);
         if (wasCreative) player.setGameType(GameType.CREATIVE);
         sendMsg(player, "Finished tests");
@@ -70,7 +69,7 @@ public class Tests {
         try {
             result = tester.run(info);
         } catch (Throwable t) {
-            log(info.name + " failed with exception %s", t);
+            LOGGER.warn(info.name + " failed with exception %s", new Object[]{t});
             result = false;
         }
         sendMsg(info.player, info.name + " test " + (result ? "§2was successful§r" : "§4failed§r"));
@@ -81,13 +80,14 @@ public class Tests {
         try {
             result = tester.run();
         } catch (Throwable t) {
-            log(name + " failed with exception %s", t);
+            LOGGER.warn(name + " failed with exception {}", new Object[]{t});
             result = false;
         }
         if (player != null) {
             sendMsg(player, name + " test " + (result ? "§2was successful§r" : "§4failed§r"));
         } else {
-            log(name + "test " + (result ? "was successful" : "failed"));
+            String msg = name + "test " + (result ? "was successful" : "failed");
+            LOGGER.warn(msg, new Object[]{});
         }
     }
 
@@ -95,10 +95,10 @@ public class Tests {
      * Should be run in POST INIT
      */
     public static void runBackgroundTests() {
-        log("Running background tests");
+        LOGGER.warn("Running background tests", new Object[]{});
         Stopwatch w = Stopwatch.createStarted();
         runLightTest(Tests::checkObjectHolders, "Object holders", null);
-        log("Finished background tests after %s ms", w.stop().elapsed(TimeUnit.MILLISECONDS));
+        LOGGER.warn("Finished background tests after {} ms", new Object[]{w.stop().elapsed(TimeUnit.MILLISECONDS)});
     }
 
     private static boolean checkObjectHolders() {
@@ -124,11 +124,11 @@ public class Tests {
             }
             try {
                 if (f.get(null) == null) {
-                    log("Field %s in class %s is null", f.getName(), clazz.getName());
+                    LOGGER.warn("Field {} in class {} is null", new Object[]{f.getName(), clazz.getName()});
                     failed = true;
                 }
             } catch (IllegalAccessException e) {
-                LOGGER.error(String.format("Failed to check fields of class %s", clazz.getName()), e);
+                LOGGER.error(String.format("Failed to check fields of class {}", clazz.getName()), e);
                 return false;
             }
 
@@ -160,7 +160,7 @@ public class Tests {
         FluidActionResult result4 = FluidUtil.tryEmptyContainer(bloodBottle2, handler, Integer.MAX_VALUE, null, true);
         assert result4.isSuccess() : "Transaction 4 failed";
         bloodBottle2 = result4.getResult();
-        log("%d %d", BloodHelper.getBlood(handler), blood);
+        LOGGER.warn("{} {}", new Object[]{BloodHelper.getBlood(handler), blood});
         assert BloodHelper.getBlood(handler) == blood : "Lost blood somewhere";
         return true;
 
@@ -173,13 +173,9 @@ public class Tests {
         block.onBlockActivated(info.world, info.player, info.player.getActiveHand(), new BlockRayTraceResult(new Vec3d(0, 0, 0), Direction.random(info.world.rand), info.pos, false));//TODO 1.14 test BlockRayTraceResult
         block = info.world.getBlockState(info.pos);
         assert info.player.getHeldItem(info.player.getActiveHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
-        log("Block lava level: %s", block.get(WeaponTableBlock.LAVA));
+        LOGGER.warn("Block lava level: {}", new Object[]{block.get(WeaponTableBlock.LAVA)});
         assert (block.get(WeaponTableBlock.LAVA) * WeaponTableBlock.MB_PER_META) == Fluid.BUCKET_VOLUME : "Incorrect Fluid Transaction";
         return true;
-    }
-
-    private static void log(String msg, Object... format) {
-        LOGGER.warn(msg, format);
     }
 
     private static void sendMsg(PlayerEntity player, String msg) {
