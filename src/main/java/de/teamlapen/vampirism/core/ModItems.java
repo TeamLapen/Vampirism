@@ -180,26 +180,25 @@ public class ModItems {
         //TODO 1.13 probably have to modifiy alchemical cauldron system with item groups / ingridients
 
         // Brewing
-        BrewingRecipeRegistry.addRecipe(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
+        BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
 
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new ItemStack(holy_water_bottle_normal), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_normal)) {
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromItems(holy_water_bottle_normal), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_normal)) {
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
 
                 return holy_water_bottle_normal.equals(stack.getItem());
             }
         });
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new ItemStack(holy_water_bottle_enhanced), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_enhanced)) {
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromItems(holy_water_bottle_enhanced), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_enhanced)) {
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
 
                 return holy_water_bottle_enhanced.equals(stack.getItem());
             }
         });
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new ItemStack(holy_water_bottle_ultimate), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_ultimate)) {
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromItems(holy_water_bottle_ultimate), Ingredient.fromItems(Items.GUNPOWDER), new ItemStack(holy_water_splash_bottle_ultimate)) {
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
-
                 return holy_water_bottle_ultimate.equals(stack.getItem());
             }
         });
