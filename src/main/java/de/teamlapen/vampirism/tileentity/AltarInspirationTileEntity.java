@@ -17,7 +17,7 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
@@ -74,9 +74,9 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     }
 
     @Override
-    public void markDirty() {
+    public void markDirty() {//TODO test
         ModelDataManager.requestModelDataRefresh(this);
-        world.markForRerender(getPos());
+        //world.markForRerender(getPos()); //TODO 1.14 still needed world.func_225319_b(BlockPos,BlockState(Pre),Blockstate(Post))
         super.markDirty();
     }
 

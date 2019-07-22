@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import net.minecraft.command.CommandSource;
@@ -9,7 +10,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapDecoration;
 

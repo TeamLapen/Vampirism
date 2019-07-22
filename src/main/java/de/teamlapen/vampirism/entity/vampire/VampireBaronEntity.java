@@ -239,7 +239,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         }
         if (!this.world.isRemote && this.getAttackTarget() != null && this.ticksExisted % 128 == 0) {
             if (rangedAttack) {
-                if (this.rand.nextInt(2) == 0 && this.navigator.getPathToEntityLiving(this.getAttackTarget()) != null) {
+                if (this.rand.nextInt(2) == 0 && this.navigator.getPathToEntityLiving(this.getAttackTarget(), 1) != null) {//TODO test speed 1 or 0
                     rangedAttack = false;
                 }
             } else {

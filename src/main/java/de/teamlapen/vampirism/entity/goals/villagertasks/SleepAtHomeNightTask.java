@@ -12,7 +12,7 @@ import net.minecraft.entity.ai.brain.task.Task;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
-import net.minecraft.world.ServerWorld;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.Objects;
 import java.util.Optional;
