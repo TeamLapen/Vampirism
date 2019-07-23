@@ -1,7 +1,7 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:garlic_beacon_weak"
+    "model": "vampirism:block/garlic_beacon_weak"
   },
   "variants": {
     "facing": {

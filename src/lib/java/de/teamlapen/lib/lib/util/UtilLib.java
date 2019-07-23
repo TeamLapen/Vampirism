@@ -494,7 +494,7 @@ public class UtilLib {
      *
      * @param center
      * @param distance
-     * @param fullY    If it should reach from y 0 to 265 or use the distance for y as well
+     * @param fullY    If it should reach from yDisplay 0 to 265 or use the distance for yDisplay as well
      * @return
      */
     public static AxisAlignedBB createBB(BlockPos center, int distance, boolean fullY) {

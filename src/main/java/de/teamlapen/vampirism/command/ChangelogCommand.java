@@ -2,12 +2,14 @@ package de.teamlapen.vampirism.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.util.SharedConstants;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -35,7 +37,7 @@ public class ChangelogCommand extends BasicCommand {
         }
         VersionChecker.Version newVersion = VampirismMod.instance.getVersionInfo().getNewVersion();
         List<String> changes = newVersion.getChanges();
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Vampirism " + newVersion.name + "(" + /* TODO-issue insert Minecraft Version */ ")"), true);
+        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Vampirism " + newVersion.name + "(" + SharedConstants.getVersion().getName() + ")"), true);
         for (String c : changes) {
             context.getSource().sendFeedback(new StringTextComponent("-" + c), true);
         }

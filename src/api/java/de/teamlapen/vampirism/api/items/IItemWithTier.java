@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 
 /**
- * Simple interface for items that exist in different tiers.
+ * Simple interface for tileInventory that exist in different tiers.
  */
 public interface IItemWithTier {
 

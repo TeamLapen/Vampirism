@@ -46,7 +46,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {//TODO 1.14
 
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        boolean match = this.ingredient.test(inv.getStackInSlot(2));
+        boolean match = this.ingredient.test(inv.getStackInSlot(3));
         boolean fluidMatch = true;//TODO 1.14 fluids
         return match & fluidMatch;
     }

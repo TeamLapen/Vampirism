@@ -210,10 +210,10 @@
 //    }
 //
 //
-//    private void spawnHunterTrainer(IWorld worldIn, MutableBoundingBox structureBoundingBoxIn, int x, int y, int z) {
+//    private void spawnHunterTrainer(IWorld worldIn, MutableBoundingBox structureBoundingBoxIn, int x, int yDisplay, int z) {
 //
 //        int j = this.getXWithOffset(x, z);
-//        int k = this.getYWithOffset(y);
+//        int k = this.getYWithOffset(yDisplay);
 //        int l = this.getZWithOffset(x, z);
 //
 //        if (!structureBoundingBoxIn.isVecInside(new BlockPos(j, k, l))) {

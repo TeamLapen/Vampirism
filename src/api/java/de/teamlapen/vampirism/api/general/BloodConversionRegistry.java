@@ -103,7 +103,7 @@ public class BloodConversionRegistry {
     /**
      * Register the impure blood amount for the given item.
      * This affects any stack of the given item regardless of meta or NBT
-     * For different meta values or advanced items (e.g. NBT) check {@link #registerItem(ResourceLocation, Function)}
+     * For different meta values or advanced tileInventory (e.g. NBT) check {@link #registerItem(ResourceLocation, Function)}
      *
      * @param amount Impure blood amount in mB
      */

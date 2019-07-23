@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -31,6 +32,7 @@ public class BloodPotionTableBlock extends VampirismBlock {
     private final static String regName = "blood_potion_table";
     private static final ITextComponent name = new TranslationTextComponent("container.crafting");
     protected static final VoxelShape tableShape = Block.makeCuboidShape(0, 0, 0, 16, 11, 16);
+    protected static final VoxelShape shape = makeShape();
 
     public BloodPotionTableBlock() {
         super(regName, Properties.create(Material.IRON).hardnessAndResistance(1f));
@@ -38,7 +40,7 @@ public class BloodPotionTableBlock extends VampirismBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return tableShape;
+        return shape;
     }
 
     @Override
@@ -51,7 +53,6 @@ public class BloodPotionTableBlock extends VampirismBlock {
         if (!worldIn.isRemote) {
             if (canUse(player)) {
                 player.openContainer(state.getContainer(worldIn, pos));
-                //player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ()); 1.14
             }
             else {
                 player.sendMessage(new TranslationTextComponent("tile.vampirism." + regName + ".cannot_use"));
@@ -80,5 +81,13 @@ public class BloodPotionTableBlock extends VampirismBlock {
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
+    }
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(0, 0, 0, 16, 1, 16);
+        VoxelShape b = Block.makeCuboidShape(1, 1, 1, 15, 2, 15);
+        VoxelShape c = Block.makeCuboidShape(2, 2, 2, 14, 9, 14);
+        VoxelShape d = Block.makeCuboidShape(0, 9, 0, 16, 11, 16);
+        return VoxelShapes.or(a, b, c, d);
     }
 }

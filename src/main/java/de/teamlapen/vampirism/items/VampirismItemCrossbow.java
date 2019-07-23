@@ -122,7 +122,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     }
 
     /**
-     * Can be overridden to use other items as arrows. Could cause problems though.
+     * Can be overridden to use other tileInventory as arrows. Could cause problems though.
      */
     protected boolean isArrow(@Nonnull ItemStack stack) {
         return !stack.isEmpty() && stack.getItem() instanceof IVampirismCrossbowArrow;

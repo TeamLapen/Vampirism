@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -58,7 +59,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     private LazyOptional<IItemHandler> itemHandlerOptional = LazyOptional.of(() -> itemHandler);
 
     public BloodGrinderTileEntity() {
-        super(ModTiles.grinder, new BloodGrinderContainer.BloodGrinderInventory());
+        super(ModTiles.grinder, NonNullList.withSize(1, ItemStack.EMPTY), BloodGrinderContainer.SELECTOR_INFOS);
     }
 
     @Override

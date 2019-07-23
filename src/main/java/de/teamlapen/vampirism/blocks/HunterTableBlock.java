@@ -14,6 +14,9 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -29,6 +32,7 @@ public class HunterTableBlock extends VampirismBlock {
     public static final String name = "hunter_table";
     public static final ITextComponent containerName = new TranslationTextComponent("container.hunter_table");
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    private static final VoxelShape shape = makeShape();//TODO 1.14 make shape for all directions
 
     @Nullable
     @Override
@@ -51,7 +55,7 @@ public class HunterTableBlock extends VampirismBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getNearestLookingDirection());
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
     }
 
     @Override
@@ -66,7 +70,6 @@ public class HunterTableBlock extends VampirismBlock {
 
     @Override
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        //player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TABLE, world, pos.getX(), pos.getY(), pos.getZ());//TODO 1.14
         player.openContainer(state.getContainer(world, pos));
         return true;
     }
@@ -77,10 +80,31 @@ public class HunterTableBlock extends VampirismBlock {
     }
 
     @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return shape;
+    }
+
+    @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(0, 0, 0, 2, 10, 2);
+        VoxelShape b = Block.makeCuboidShape(14, 0, 0, 16, 10, 2);
+        VoxelShape c = Block.makeCuboidShape(0, 0, 14, 2, 10, 16);
+        VoxelShape d = Block.makeCuboidShape(14, 0, 14, 16, 10, 16);
 
+        VoxelShape e = Block.makeCuboidShape(1, 8, 1, 15, 10, 15);
+        VoxelShape f = Block.makeCuboidShape(8.5, 10, 3.5, 13.5, 11, 10);
 
+        VoxelShape d1 = VoxelShapes.or(a, b);
+        VoxelShape d2 = VoxelShapes.or(c, d);
+
+        VoxelShape d3 = VoxelShapes.or(d1, d2);
+        VoxelShape f1 = VoxelShapes.or(e, f);
+
+        VoxelShape g = VoxelShapes.or(d3, f1);
+        return g;
+    }
 }

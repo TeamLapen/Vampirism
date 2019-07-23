@@ -42,7 +42,7 @@ public class CoffinItem extends VampirismItem {
 
         if (world.isRemote)
             return ActionResultType.PASS;
-        // Increasing y, so the coffin is placed on top of the block that was
+        // Increasing yDisplay, so the coffin is placed on top of the block that was
         // clicked at except if the block is replaceable
         BlockState iblockstate = world.getBlockState(targetPos);
         boolean replaceable = iblockstate.isReplaceable(new BlockItemUseContext(context));

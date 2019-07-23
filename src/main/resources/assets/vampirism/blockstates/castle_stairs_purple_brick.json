@@ -26,19 +26,19 @@
     },
     "shape": {
       "straight": {
-        "model": "vampirism:castle_stairs_purple_brick"
+        "model": "vampirism:block/castle_stairs_purple_brick"
       },
       "outer_right": {
-        "model": "vampirism:castle_stairs_purple_brick_outer"
+        "model": "vampirism:block/castle_stairs_purple_brick_outer"
       },
       "outer_left": {
-        "model": "vampirism:castle_stairs_purple_brick_outer"
+        "model": "vampirism:block/castle_stairs_purple_brick_outer"
       },
       "inner_right": {
-        "model": "vampirism:castle_stairs_purple_brick_inner"
+        "model": "vampirism:block/castle_stairs_purple_brick_inner"
       },
       "inner_left": {
-        "model": "vampirism:castle_stairs_purple_brick_inner"
+        "model": "vampirism:block/castle_stairs_purple_brick_inner"
       }
     }
   }

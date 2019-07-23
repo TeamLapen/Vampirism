@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
@@ -101,7 +102,7 @@ class BloodPotionCategory implements IBloodPotionCategory {
     @Override
     public String toString() {
         return "BloodPotionCategory{" +
-                "items=" + items +
+                "tileInventory=" + items +
                 ", unlocDesc='" + unlocDesc + '\'' +
                 ", exactItems=" + exactItems +
                 '}';

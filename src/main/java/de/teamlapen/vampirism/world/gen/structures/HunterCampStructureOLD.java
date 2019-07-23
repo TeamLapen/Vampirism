@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModWorld;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
-import de.teamlapen.vampirism.items.TentItem;
+import de.teamlapen.vampirism.tileInventory.TentItem;
 import de.teamlapen.vampirism.world.old.gen.features.config.HunterTentConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

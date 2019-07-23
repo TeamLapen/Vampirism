@@ -15,9 +15,11 @@ import net.minecraft.fluid.IFluidState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -33,8 +35,7 @@ import javax.annotation.Nullable;
  * Has both model renderer (with color/tint) and TESR (used for beam)
  */
 public class TotemTopBlock extends VampirismBlockContainer {
-
-    protected static final AxisAlignedBB BBOX = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.7D, 1.0D); //TODO 1.13 cauldronShape
+    private static final VoxelShape shape = makeShape();
 
 
     private final static String regName = "totem_top";
@@ -75,6 +76,11 @@ public class TotemTopBlock extends VampirismBlockContainer {
     @Override
     public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return shape;
     }
 
     @Override
@@ -121,5 +127,11 @@ public class TotemTopBlock extends VampirismBlockContainer {
             }
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+    }
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 10, 13);
+        VoxelShape b = Block.makeCuboidShape(1, 1, 1, 15, 9, 15);
+        return VoxelShapes.or(a, b);
     }
 }

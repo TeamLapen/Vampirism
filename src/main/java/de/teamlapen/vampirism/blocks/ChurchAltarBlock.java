@@ -22,6 +22,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -34,6 +37,7 @@ public class ChurchAltarBlock extends VampirismBlock {
 
     private final static String regName = "church_altar";
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    private static final VoxelShape shape = makeShape();//TODO 1.14 make shape for all directions
 
 
     public ChurchAltarBlock() {
@@ -52,6 +56,11 @@ public class ChurchAltarBlock extends VampirismBlock {
     @Override
     public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState blockState, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return shape;
     }
 
     @Override
@@ -86,5 +95,14 @@ public class ChurchAltarBlock extends VampirismBlock {
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
+    }
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(1, 0, 5, 15, 1, 12);
+        VoxelShape b = Block.makeCuboidShape(7, 1, 7, 9, 12, 11);
+        VoxelShape c = Block.makeCuboidShape(1, 9, 3, 15, 14, 13);
+        VoxelShape r = VoxelShapes.or(a, b);
+        VoxelShape d = VoxelShapes.or(r, c);
+        return d;
     }
 }

@@ -2,7 +2,7 @@
   "forge_marker": 1,
   "variants": {
     "": {
-      "model": "vampirism:fire_place"
+      "model": "vampirism:block/fire_place"
     }
   }
 }

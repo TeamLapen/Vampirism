@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
@@ -111,8 +112,8 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
 
     /**
      * Gets or creates a new category using given id and isBad.
-     * Expects a list of items belonging to this category.
-     * Add items or blocks if meta/nbt should be ignored or itemstacks if meta/nbt is relevant
+     * Expects a list of tileInventory belonging to this category.
+     * Add tileInventory or blocks if meta/nbt should be ignored or itemstacks if meta/nbt is relevant
      *
      * @param id Identifier which can be used by different mods to modify the same category. The id will be unique for good categories as well as for bad categories
      * @return The created category

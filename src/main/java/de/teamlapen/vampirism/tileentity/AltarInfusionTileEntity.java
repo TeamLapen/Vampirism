@@ -30,6 +30,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -67,7 +68,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     private int targetLevel;
 
     public AltarInfusionTileEntity() {
-        super(ModTiles.altar_infusion, new AltarInfusionContainer.AltarInfusionInventory());
+        super(ModTiles.altar_infusion, NonNullList.withSize(3, ItemStack.EMPTY), AltarInfusionContainer.SELECTOR_INFOS);
     }
 
     @Override
@@ -90,7 +91,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
      *
      * @param player        trying to execute the ritual
      * @param messagePlayer If the player should be notified on fail
-     * @return 1 if it can start, 0 if still running, -1 if wrong level, -2 if night only, -3 if structure wrong, -4 if items missing
+     * @return 1 if it can start, 0 if still running, -1 if wrong level, -2 if night only, -3 if structure wrong, -4 if tileInventory missing
      */
     public int canActivate(PlayerEntity player, boolean messagePlayer) {
         if (runningTick > 0) {
@@ -414,7 +415,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     }
 
     /**
-     * Consume the required items
+     * Consume the required tileInventory
      */
     private void consumeItems() {
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(targetLevel);

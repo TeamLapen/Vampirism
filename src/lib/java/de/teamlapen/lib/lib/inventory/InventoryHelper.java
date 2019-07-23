@@ -1,10 +1,12 @@
 package de.teamlapen.lib.lib.inventory;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.util.LazyOptional;
@@ -23,20 +25,20 @@ public class InventoryHelper {
 
 
     /**
-     * Checks if the given inventory contains at least the given amount of items in the respective slots.
+     * Checks if the given inventory contains at least the given amount of tileInventory in the respective slots.
      * TODO 1.13 probably has to be modified/removed since meta data does not exist
      *
      * @param inventory
      * @param items     Has to have the same size as the inventory
      * @param amounts   Has to have the same size as the inventory
-     * @return Null if all items are present otherwise an itemstack which represents the missing items
+     * @return Null if all tileInventory are present otherwise an itemstack which represents the missing tileInventory
      */
-    public static ItemStack checkItems(InventorySlot.IInventorySlotInventory inventory, Item[] items, int[] amounts) {
-        if (inventory.getSizeInventory() != amounts.length || items.length != amounts.length) {
+    public static ItemStack checkItems(NonNullList<ItemStack> inventory, Item[] items, int[] amounts) {
+        if (inventory.size() != amounts.length || items.length != amounts.length) {
             throw new IllegalArgumentException("There has to be one amount and meta value for each slot");
         }
-        for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            ItemStack stack = inventory.getStackInSlot(i);
+        for (int i = 0; i < inventory.size(); i++) {
+            ItemStack stack = inventory.get(i);
             int actual = (!stack.isEmpty() && stack.getItem().equals(items[i])) ? stack.getCount() : 0;
             if (actual < amounts[i]) {
                 return new ItemStack(items[i], amounts[i] - actual);
@@ -51,18 +53,12 @@ public class InventoryHelper {
      * @param inventory
      * @param amounts   Has to have the same size as the inventory
      */
-    public static void removeItems(InventorySlot.IInventorySlotInventory inventory, int[] amounts) {
-        if (inventory.getSizeInventory() != amounts.length) {
+    public static void removeItems(NonNullList<ItemStack> inventory, int[] amounts) {
+        if (inventory.size() != amounts.length) {
             throw new IllegalArgumentException("There has to be one amount and meta value for each slot");
         }
-        for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            ItemStack stack = inventory.getStackInSlot(i);
-            if (!stack.isEmpty() && amounts[i] > 0) {
-                stack.grow(-amounts[i]);
-                if (stack.isEmpty()) {
-                    inventory.removeStackFromSlot(i);
-                }
-            }
+        for (int i = 0; i < inventory.size(); i++) {
+            ItemStackHelper.getAndSplit(inventory, i, amounts[i]);
         }
     }
 

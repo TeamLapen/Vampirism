@@ -1,39 +1,66 @@
 package de.teamlapen.vampirism.inventory.container;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
-import de.teamlapen.lib.lib.inventory.InventorySlot;
-import de.teamlapen.lib.lib.inventory.SimpleInventory;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
-import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.NonNullList;
 
+import java.util.function.Function;
+
 public class BloodGrinderContainer extends InventoryContainer {
+    private static final Function<ItemStack, Boolean> canProcess = stack -> BloodConversionRegistry.getImpureBloodValue(stack) > 0;
+    public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(canProcess, 80, 34)};
 
     public BloodGrinderContainer(int id, PlayerInventory playerInventory) {
-        super(id, playerInventory, ModContainer.blood_grinder, new BloodGrinderInventory(), IWorldPosCallable.DUMMY);
+        this(id, playerInventory, NonNullList.withSize(1, ItemStack.EMPTY), IWorldPosCallable.DUMMY);
     }
 
-    public BloodGrinderContainer(int id, PlayerInventory playerInventory, InventorySlot.IInventorySlotInventory inventory, IWorldPosCallable worldPosIn) {
-        super(id, playerInventory, ModContainer.blood_grinder, inventory, worldPosIn);
+    public BloodGrinderContainer(int id, PlayerInventory playerInventory, NonNullList<ItemStack> inventory, IWorldPosCallable worldPosIn) {
+        super(ModContainer.blood_grinder, id, playerInventory, worldPosIn, inventory, SELECTOR_INFOS);
+        this.addPlayerSlots(playerInventory);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(this.worldPos, playerIn, ModBlocks.blood_grinder);
-    }
+    public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
+        ItemStack result = ItemStack.EMPTY;
+        Slot slot = (Slot) this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack slotStack = slot.getStack();
+            result = slotStack.copy();
+            if (index >= 1) {
+                if (index < 27) {
+                    if (!this.mergeItemStack(slotStack, 0, 1, false)) {
+                        return ItemStack.EMPTY;
+                    } else if (this.mergeItemStack(slotStack, 27, 36, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else {
+                    if (!this.mergeItemStack(slotStack, 0, 27, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
+            } else if (!this.mergeItemStack(slotStack, 1, 36, false)) {
+                return ItemStack.EMPTY;
+            }
 
-    public static class BloodGrinderInventory extends SimpleInventory {
-        public BloodGrinderInventory() {
-            super(NonNullList.from(new InventorySlot(BloodGrinderInventory::canProcess, 80, 34)));
+            if (slotStack.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            if (slotStack.getCount() == result.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(playerEntity, slotStack);
         }
 
-        public static boolean canProcess(ItemStack stack) {
-            return BloodConversionRegistry.getImpureBloodValue(stack) > 0;
-        }
+        return result;
     }
 }

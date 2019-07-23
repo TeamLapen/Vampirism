@@ -975,7 +975,7 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
 //        } else if (zLength < 20) {
 //            cZ = 20 - zLength;
 //        }
-//        affectedArea = box.grow(cX / 2d, 0, cZ / 2d); //Ensure a maximum and minimum size of the village area. Also set y limits to +-10
+//        affectedArea = box.grow(cX / 2d, 0, cZ / 2d); //Ensure a maximum and minimum size of the village area. Also set yDisplay limits to +-10
 //        affectedAreaReduced = affectedArea.grow(-10, 0, -10);
 //        if (!world.isRemote) {
 //            this.markDirty();
