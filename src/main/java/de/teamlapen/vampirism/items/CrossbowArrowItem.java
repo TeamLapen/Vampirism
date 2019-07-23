@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +20,14 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Ammo for the crossbows. Has different subtypes with different base damage/names/special effects.
@@ -33,6 +41,14 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
     public CrossbowArrowItem(EnumArrowType type) {
         super(regName + "_" + type.getName(), new Properties().group(VampirismMod.creativeTab));
         this.type = type;
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation(ItemStack itemStack, @Nullable World world, List<ITextComponent> textComponents, ITooltipFlag tooltipFlag) {
+        if (type != EnumArrowType.NORMAL) {
+            textComponents.add(new TranslationTextComponent(type == EnumArrowType.VAMPIRE_KILLER ? "item.vampirism.crossbow_arrow_vampire_killer.tooltip" : "item.vampirism.crossbow_arrow_spitfire.tooltip"));
+        }
     }
 
     /**

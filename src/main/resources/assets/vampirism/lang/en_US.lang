@@ -380,7 +380,7 @@ gui.vampirism.name_sword.text=Do you want to give this sword a name?
 
 #COMMANDS
 command.vampirism.base.level.faction_not_found=Did not find faction %s
-commands.vampirism.failed_to_execute=Failed to execute command. Internal error.
+command.vampirism.failed_to_execute=Failed to execute command. Internal error.
 command.vampirism.base.reset_balance.success=Successfully reset %s balance category. Please restart MC.
 command.vampirism.base.reset_balance.not_found=Did not find %s balance category.
 command.vampirism.base.level.cant_leave=Cannot leave faction %s

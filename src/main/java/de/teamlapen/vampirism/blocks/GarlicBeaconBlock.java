@@ -44,7 +44,11 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         super(regName + "_" + type.getName(), Properties.create(Material.ROCK).hardnessAndResistance(3f).sound(SoundType.STONE));
         this.type = type;
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
+    }
 
+    @Override
+    public String getTranslationKey() {
+        return "block.vampirism.garlic_beacon";
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -54,9 +58,9 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
             tooltip.add(UtilLib.translated(getTranslationKey() + "." + type.getName()).applyTextStyle(TextFormatting.AQUA));
         }
 
-        tooltip.add(UtilLib.translated(getTranslationKey() + ".tooltip1"));
+        tooltip.add(UtilLib.translated("block.vampirism.garlic_beacon.tooltip1"));
         int c = 1 + 2 * (type == Type.IMPROVED ? Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE : (type == Type.WEAK ? Balance.hps.GARLIC_DIFFUSOR_WEAK_DISTANCE : Balance.hps.GARLIC_DIFFUSOR_NORMAL_DISTANCE));
-        tooltip.add(UtilLib.translated(getTranslationKey() + ".tooltip2", c, c));
+        tooltip.add(UtilLib.translated("block.vampirism.garlic_beacon.tooltip2", c, c));
     }
 
     @Nullable

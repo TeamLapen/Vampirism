@@ -2,11 +2,12 @@ package de.teamlapen.vampirism.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * 
@@ -23,7 +24,7 @@ public class CurrentDimensionCommand extends BasicCommand {
     }
 
     private static int currentDimension(CommandContext<CommandSource> context, ServerPlayerEntity asPlayer) {
-        context.getSource().sendFeedback(new StringTextComponent("Dimension ID: " + asPlayer.getEntityWorld().getDimension()), true);
+        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.currentdimension.dimension", asPlayer.getEntityWorld().getDimension()), true);
         return 0;
     }
 }

@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -37,8 +38,12 @@ public class CheckForVampireBiomeCommand extends BasicCommand {
     }
 
     private static int checkForVampireBiome(CommandContext<CommandSource> context, ServerPlayerEntity entityPlayerMP, int radius, boolean force) {
+        if (VampirismConfig.COMMON.disableVampireForest.get()) {
+            context.getSource().sendFeedback(new TranslationTextComponent("The Vampire Biome is disabled in the config file"), true);
+            return 0;
+        }
         if (radius > 500 && !force) {
-            context.getSource().sendFeedback((new TranslationTextComponent("command.vampirism.base.vampire_biome.time_warning")), true);
+            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.vampire_biome.time_warning", "checkForVampireBiome", radius), true);
         } else {
             List<Biome> biomes = new ArrayList<>();
             biomes.add(ModBiomes.vampire_forest);
@@ -47,7 +52,7 @@ public class CheckForVampireBiomeCommand extends BasicCommand {
             if (pos == null) {
                 context.getSource().sendFeedback((new TranslationTextComponent("command.vampirism.base.vampire_biome.not_found")), true);
             } else {
-                context.getSource().sendFeedback((new TranslationTextComponent("command.vampirism.base.vampire_biome.found")), true);
+                context.getSource().sendFeedback((new TranslationTextComponent("command.vampirism.base.vampire_biome.found", pos)), true);
             }
         }
         return 0;
