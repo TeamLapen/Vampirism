@@ -3,13 +3,13 @@
   "variants": {
     "type": {
       "bottom": {
-        "model": "vampirism:castle_slab_purple_brick"
+        "model": "vampirism:block/castle_slab_purple_brick"
       },
       "top": {
-        "model": "vampirism:castle_slab_purple_brick_top"
+        "model": "vampirism:block/castle_slab_purple_brick_top"
       },
       "double": {
-        "model": "vampirism:castle_block_purple_brick"
+        "model": "vampirism:block/castle_block_purple_brick"
       }
     }
   }

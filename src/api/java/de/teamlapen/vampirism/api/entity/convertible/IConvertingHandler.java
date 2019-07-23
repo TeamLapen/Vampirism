@@ -23,7 +23,7 @@ public interface IConvertingHandler<T extends CreatureEntity> {
      */
     interface IDefaultHelper<Q extends CreatureEntity> {
         /**
-         * Drop items on entity's death.
+         * Drop tileInventory on entity's death.
          * Is called in {@link CreatureEntity#onDeath(DamageSource)}
          * Items should be dropped using {@link Entity#entityDropItem(ItemStack)} on the converted entity
          *

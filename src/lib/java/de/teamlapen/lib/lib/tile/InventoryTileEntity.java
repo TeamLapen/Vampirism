@@ -1,14 +1,15 @@
 package de.teamlapen.lib.lib.tile;
 
-import de.teamlapen.lib.lib.inventory.InventorySlot;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
+import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.NonNullList;
 
 
 /**
@@ -20,30 +21,32 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
      * Maximal squared distance from which the player can access the inventory
      */
     protected final int MAX_DIST_SQRT = 40;
-    protected InventorySlot.IInventorySlotInventory inventorySlots;
+    protected NonNullList<ItemStack> inventorySlots;
+    protected InventoryContainer.ItemHandler selector;
 
     /**
      * @param inventorySlotsIn A slot 'description'. The array should contain one Slot instance for each inventory slot which should be created. The slots must each contain the position where they should be
-     *              displayed in the GUI, they can also contain a filter for which items are allowed. Make sure that these Slot instance are unique on server and client.
+     *              displayed in the GUI, they can also contain a filter for which tileInventory are allowed. Make sure that these Slot instance are unique on server and client.
      */
-    public InventoryTileEntity(TileEntityType<?> tileEntityTypeIn, InventorySlot.IInventorySlotInventory inventorySlotsIn) {
+    public InventoryTileEntity(TileEntityType<?> tileEntityTypeIn, NonNullList<ItemStack> inventorySlotsIn, InventoryContainer.SelectorInfo... selectorInfos) {
         super(tileEntityTypeIn);
         this.inventorySlots = inventorySlotsIn;
+        selector = new InventoryContainer.ItemHandler(inventorySlotsIn, selectorInfos);
     }
 
     @Override
     public ItemStack decrStackSize(int slot, int amt) {
-        return ItemStackUtil.decrIInventoryStackSize(this, slot, amt);
+        return ItemStackHelper.getAndSplit(inventorySlots, slot, amt);
     }
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return inventorySlots.isItemValidForSlot(slot, stack);
+        return selector.isItemValid(slot, stack);
     }
 
     @Override
     public int getSizeInventory() {
-        return inventorySlots.getSizeInventory();
+        return inventorySlots.size();
     }
 
     @Override
@@ -58,44 +61,43 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
 
     @Override
     public ItemStack getStackInSlot(int index) {
-        return inventorySlots.getStackInSlot(index);
+        return inventorySlots.get(index);
     }
 
     @Override
     public boolean isUsableByPlayer(PlayerEntity player) {
-        return inventorySlots.isUsableByPlayer(player);
+        return true;
     }
 
     @Override
     public void openInventory(PlayerEntity player) {
-        inventorySlots.openInventory(player);
     }
 
     @Override
     public void read(CompoundNBT tagCompound) {
         super.read(tagCompound);
         inventorySlots.clear();
-        for (InventorySlot slot1 : inventorySlots.getSlots()) {
-            slot1.stack = ItemStack.EMPTY;
+        for (ItemStack stack : inventorySlots) {
+            stack = ItemStack.EMPTY;
         }
         ListNBT tagList = tagCompound.getList("Inventory", 10);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundNBT tag = tagList.getCompound(i);
             byte slot = tag.getByte("Slot");
-            if (slot >= 0 && slot < inventorySlots.getSizeInventory()) {
-                inventorySlots.getSlot(slot).stack = ItemStack.read(tag);
+            if (slot >= 0 && slot < inventorySlots.size()) {
+                inventorySlots.set(slot, ItemStack.read(tag));
             }
         }
     }
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        return inventorySlots.removeStackFromSlot(index);
+        return ItemStackHelper.getAndRemove(inventorySlots, index);
     }
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
-        inventorySlots.getSlot(slot).stack = stack;
+        inventorySlots.set(slot, stack);
         if (stack.getCount() > getInventoryStackLimit()) {
             stack.setCount(getInventoryStackLimit());
         }
@@ -108,8 +110,8 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
         CompoundNBT nbt = super.write(compound);
 
         ListNBT itemList = new ListNBT();
-        for (int i = 0; i < inventorySlots.getSizeInventory(); i++) {
-            ItemStack stack = inventorySlots.getSlot(i).stack;
+        for (int i = 0; i < inventorySlots.size(); i++) {
+            ItemStack stack = inventorySlots.get(i);
             if (!stack.isEmpty()) {
                 CompoundNBT tag = new CompoundNBT();
                 tag.putByte("Slot", (byte) i);
@@ -124,8 +126,8 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
 
 
     protected boolean isFull() {
-        for (InventorySlot s : inventorySlots.getSlots()) {
-            if (this.inventorySlots.getStackInSlot(0).isEmpty() || this.inventorySlots.getStackInSlot(0).getCount() < this.inventorySlots.getStackInSlot(0).getMaxStackSize()) {
+        for (ItemStack s : inventorySlots) {
+            if (s.isEmpty() || s.getCount() < s.getMaxStackSize()) {
                 return false;
             }
         }

@@ -19,6 +19,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -32,7 +33,7 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
      * 2: Boiling liquid
      */
     public static final IntegerProperty LIQUID = IntegerProperty.create("liquid", 0, 2);
-    protected static final VoxelShape cauldronShape = Block.makeCuboidShape(1, 0, 1, 15, 14, 15);
+    protected static final VoxelShape cauldronShape = makeShape();
 
     public AlchemicalCauldronBlock() {
         super(Block.Properties.create(Material.IRON).hardnessAndResistance(4f));
@@ -87,5 +88,12 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(LIT, FACING, LIQUID);
+    }
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(2, 0, 2, 14, 9, 14);
+        VoxelShape b = Block.makeCuboidShape(1, 9, 1, 15, 13, 15);
+        VoxelShape c = Block.makeCuboidShape(2, 13, 2, 14, 14, 14);
+        return VoxelShapes.or(a, b, c);
     }
 }

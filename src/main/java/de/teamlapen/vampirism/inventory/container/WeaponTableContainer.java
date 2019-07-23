@@ -36,6 +36,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     private final PlayerEntity player;
     private boolean missingLava = false;
 
+    @Deprecated
     public WeaponTableContainer(int id, PlayerInventory playerInventory) {
         this(id, playerInventory, IWorldPosCallable.DUMMY);
     }

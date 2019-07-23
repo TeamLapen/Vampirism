@@ -2,12 +2,11 @@ package de.teamlapen.vampirism.inventory.container;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import de.teamlapen.lib.lib.inventory.InventorySlot;
-import de.teamlapen.lib.lib.inventory.SimpleInventory;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
@@ -16,11 +15,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.NonNullList;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -29,23 +29,23 @@ import net.minecraftforge.registries.ForgeRegistries;
  * Handles inventory setup  and "crafting"
  */
 public class HunterTableContainer extends InventoryContainer {
-
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(Items.BOOK), 15, 28), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_fang), 42, 28), new SelectorInfo(Ingredient.fromTag(ModTags.Items.PURE_BLOOD), 69, 28), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_book), 96, 28)};
     private final SlotResult slotResult;
     private final int hunterLevel;
     private final HunterLevelingConf levelingConf = HunterLevelingConf.instance();
     private ItemStack missing = ItemStack.EMPTY;
 
     public HunterTableContainer(int id, PlayerInventory playerInventory) {
-        super(id, playerInventory, ModContainer.hunter_table, new HunterTableInventory());
-        ((SimpleInventory) inventory).setChangeListener(this);
+        super(ModContainer.hunter_table, id, playerInventory, SELECTOR_INFOS);
         slotResult = new SlotResult(this, new CraftResultInventory() {
             @Override
             public int getInventoryStackLimit() {
                 return 1;
             }
-        }, 0, 146, 28);
+        }, 4, 146, 28);
         this.addSlot(slotResult);
         hunterLevel = FactionPlayerHandler.get(playerInventory.player).getCurrentLevel(VReference.HUNTER_FACTION);
+        this.addPlayerSlots(playerInventory);
     }
 
     @Override
@@ -66,8 +66,8 @@ public class HunterTableContainer extends InventoryContainer {
         super.onContainerClosed(playerIn);
 
         if (!playerIn.getEntityWorld().isRemote) {
-            for (int i = 0; i < this.inventory.getSizeInventory(); ++i) {
-                ItemStack itemstack = this.inventory.removeStackFromSlot(i);
+            for (int i = 0; i < 4; ++i) {
+                ItemStack itemstack = ItemStackHelper.getAndRemove(this.inventoryItemStacks, i);
 
                 if (!itemstack.isEmpty()) {
                     playerIn.dropItem(itemstack, false);
@@ -77,8 +77,8 @@ public class HunterTableContainer extends InventoryContainer {
     }
 
     @Override
-    public void onInventoryChanged() {
-        if (inventory != null && isLevelValid()) {
+    public void onCraftMatrixChanged(IInventory inventoryIn) {
+        if (inventoryItemStacks != null && isLevelValid()) {
             int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
             missing = checkItems(req[0], req[1], req[2], req[3]);
             if (missing.isEmpty()) {
@@ -94,16 +94,58 @@ public class HunterTableContainer extends InventoryContainer {
      */
     protected void onPickupResult() {
         int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
-        InventoryHelper.removeItems(inventory, new int[]{1, req[0], req[1], req[3]});
-        onInventoryChanged();
+        InventoryHelper.removeItems(inventoryItemStacks, new int[]{1, req[0], req[1], req[3]});
     }
 
     /**
-     * Checks if the given items are present
+     * Checks if the given tileInventory are present
 
      */
     private ItemStack checkItems(int fangs, int blood, int bloodLevel, int par3) {
-        return InventoryHelper.checkItems(inventory, new Item[]{Items.BOOK, ModItems.vampire_fang, PureBloodItem.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
+        return InventoryHelper.checkItems(inventoryItemStacks, new Item[]{Items.BOOK, ModItems.vampire_fang, PureBloodItem.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
+        ItemStack result = ItemStack.EMPTY;
+        Slot slot = (Slot) this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack slotStack = slot.getStack();
+            result = slotStack.copy();
+            if (index == 4) {
+                if (!this.mergeItemStack(slotStack, 5, 41, true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index >= 5) {
+                if (index < 32) {
+                    if (!this.mergeItemStack(slotStack, 0, 5, false)) {
+                        return ItemStack.EMPTY;
+                    } else if (this.mergeItemStack(slotStack, 32, 41, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else {
+                    if (!this.mergeItemStack(slotStack, 0, 32, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
+            } else if (!this.mergeItemStack(slotStack, 5, 41, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (slotStack.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            if (slotStack.getCount() == result.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(playerEntity, slotStack);
+        }
+
+        return result;
     }
 
     private class SlotResult extends Slot {
@@ -126,12 +168,4 @@ public class HunterTableContainer extends InventoryContainer {
             return stack;
         }
     }
-
-    protected static class HunterTableInventory extends SimpleInventory {
-        protected HunterTableInventory() {
-            super(NonNullList.from(new InventorySlot(Items.BOOK, 15, 28), new InventorySlot(ModItems.vampire_fang, 42, 28), new InventorySlot(PureBloodItem.class, 69, 28), new InventorySlot(ModItems.vampire_book, 96, 28)));
-
-        }
-    }
-
 }

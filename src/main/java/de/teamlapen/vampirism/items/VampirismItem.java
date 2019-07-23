@@ -7,7 +7,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
 
 /**
- * Base class for most of Vampirism's items
+ * Base class for most of Vampirism's tileInventory
  */
 public class VampirismItem extends Item {
     protected final String regName;

@@ -47,7 +47,7 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
 
     /**
      * Set's the representing item stack.
-     * Only accepts stacks of {@link IVampirismThrowableItem} items
+     * Only accepts stacks of {@link IVampirismThrowableItem} tileInventory
      *
      * @param stack Corresponding item has to be instance of {@link IVampirismThrowableItem}
      */

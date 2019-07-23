@@ -2,7 +2,7 @@
   "forge_marker": 1,
   "variants": {
     "": {
-      "model": "vampirism:altar_infusion"
+      "model": "vampirism:block/altar_infusion"
     }
   }
 }

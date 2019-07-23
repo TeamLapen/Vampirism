@@ -38,7 +38,7 @@ public class MedChairItem extends VampirismItem {
             return ActionResultType.SUCCESS;
 
         ItemStack stack = ctx.getItem();
-        // Increasing y, so the chair is placed on top of the block that was
+        // Increasing yDisplay, so the chair is placed on top of the block that was
         // clicked at except if the block is replaceable
         BlockState iblockstate = world.getBlockState(ctx.getPos());
         boolean replaceable = iblockstate.isReplaceable(new BlockItemUseContext(ctx));

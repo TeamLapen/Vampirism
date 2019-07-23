@@ -1,7 +1,7 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:tent_bl"
+    "model": "vampirism:block/tent_bl"
   },
   "variants": {
     "facing": {
@@ -19,25 +19,25 @@
     },
     "position": {
       "0": {
-        "model": "vampirism:tent_br"
+        "model": "vampirism:block/tent_br"
       },
       "1": {
-        "model": "vampirism:tent_bl"
+        "model": "vampirism:block/tent_bl"
       },
       "2": {
-        "model": "vampirism:tent_tl",
+        "model": "vampirism:block/tent_tl",
         "submodel": {
           "back": {
-            "model": "vampirism:tentback",
+            "model": "vampirism:block/tentback",
             "y": 180
           }
         }
       },
       "3": {
-        "model": "vampirism:tent_tr",
+        "model": "vampirism:block/tent_tr",
         "submodel": {
           "back": {
-            "model": "vampirism:tentback_flipped"
+            "model": "vampirism:block/tentback_flipped"
           }
         }
       }

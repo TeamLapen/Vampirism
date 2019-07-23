@@ -7,6 +7,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 
@@ -17,7 +18,7 @@ import javax.annotation.Nullable;
  */
 public class AltarTipBlock extends VampirismBlock {
     private final static String name = "altar_tip";
-    protected static final VoxelShape tipShape = Block.makeCuboidShape(3, 0, 3, 13, 7, 13);
+    protected static final VoxelShape tipShape = makeShape();
 
     public AltarTipBlock() {
         super(name, Properties.create(Material.IRON).hardnessAndResistance(1f));
@@ -49,6 +50,12 @@ public class AltarTipBlock extends VampirismBlock {
         return BlockRenderLayer.CUTOUT;
     }
 
-
-
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 3, 13);
+        VoxelShape b = Block.makeCuboidShape(4, 3, 4, 12, 4, 12);
+        VoxelShape c = Block.makeCuboidShape(5, 4, 5, 11, 5, 11);
+        VoxelShape d = Block.makeCuboidShape(6, 5, 6, 10, 6, 10);
+        VoxelShape e = Block.makeCuboidShape(7, 6, 7, 9, 7, 9);
+        return VoxelShapes.or(a, b, c, d, e);
+    }
 }

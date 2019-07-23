@@ -8,8 +8,10 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.IWorldWriter;
 import net.minecraft.world.World;
@@ -20,7 +22,7 @@ import java.util.Random;
 
 
 public class FirePlaceBlock extends VampirismBlock {
-    protected static final AxisAlignedBB BBOX = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D); //TODO 1.13 cauldronShape
+    private static final VoxelShape shape = makeShape();
     private final static String regName = "fire_place";
 
     public FirePlaceBlock() {
@@ -29,8 +31,14 @@ public class FirePlaceBlock extends VampirismBlock {
     }
 
 
-    public boolean isFullCube(BlockState state) {
+    @Override
+    public boolean isNormalCube(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_) {
         return false;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return shape;
     }
 
     @Override
@@ -71,5 +79,9 @@ public class FirePlaceBlock extends VampirismBlock {
             worldIn.addParticle(ParticleTypes.LARGE_SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
 
+    }
+
+    private static VoxelShape makeShape() {
+        return Block.makeCuboidShape(0, 0, 0, 16, 4, 16);
     }
 }

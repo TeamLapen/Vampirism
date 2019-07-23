@@ -17,6 +17,9 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -34,9 +37,8 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     public final static String regName = "garlic_beacon";
     private final static AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.75, 0.93);
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-    private final static AxisAlignedBB COLLISION_BOX_2 = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.19, 0.93);
-    private final static AxisAlignedBB COLLISION_BOX_1 = new AxisAlignedBB(0.19, 0, 0.19, 0.81, 0.75, 0.81); //TODO 1.13 cauldronShape
     private final Type type;
+    private static final VoxelShape shape = makeShape();
 
     public GarlicBeaconBlock(Type type) {
         super(regName + "_" + type.getName(), Properties.create(Material.ROCK).hardnessAndResistance(3f).sound(SoundType.STONE));
@@ -150,6 +152,11 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         return null;
     }
 
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return shape;
+    }
+
     public enum Type implements IStringSerializable {
         NORMAL("normal", 0), IMPROVED("improved", 1), WEAK("weak", 2);
 
@@ -167,5 +174,11 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         public String getName() {
             return name;
         }
+    }
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(1, 0, 1, 15, 2, 15);
+        VoxelShape b = Block.makeCuboidShape(3, 2, 3, 13, 12, 13);
+        return VoxelShapes.or(a, b);
     }
 }

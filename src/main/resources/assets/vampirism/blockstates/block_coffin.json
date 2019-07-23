@@ -1,7 +1,7 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:block_coffin"
+    "model": "vampirism:block/block_coffin"
   },
   "variants": {
     "part": {

@@ -114,7 +114,7 @@
 //                        } else {
 //
 //                            pathnavigateground.setBreakDoors(false);
-//                            this.entityPathNavigate = this.theEntity.getNavigator().getPathToXYZ(vec3d.x, vec3d.y, vec3d.z);
+//                            this.entityPathNavigate = this.theEntity.getNavigator().getPathToXYZ(vec3d.x, vec3d.yDisplay, vec3d.z);
 //                            pathnavigateground.setBreakDoors(flag);
 //
 //                            return this.entityPathNavigate != null;

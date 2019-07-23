@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.inventory.container;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
-import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModContainer;
@@ -14,10 +13,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,8 +30,8 @@ import java.util.Optional;
 /**
  * Table to create blood potions
  */
-public class BloodPotionTableContainer extends Container {
-    private static final InventorySlot.IItemSelector bloodfilter = item -> ModItems.vampire_blood_bottle.equals(item.getItem());
+public class BloodPotionTableContainer extends InventoryContainer {
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 115, 55), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 137, 55), new SelectorInfo(Ingredient.fromItems(ModItems.item_garlic), 126, 14), new SelectorInfo(Ingredient.EMPTY, 101, 22)};
     private final IWorldPosCallable worldPos;
     private final HunterPlayer hunterPlayer;
     private final int max_crafting_time;
@@ -40,12 +40,13 @@ public class BloodPotionTableContainer extends Container {
     private int craftingTimer = 0;
     private int prevCraftingTimer = 0;
 
+    @Deprecated
     public BloodPotionTableContainer(int id, PlayerInventory playerInventory) {
         this(id, playerInventory, IWorldPosCallable.DUMMY);
     }
 
     public BloodPotionTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosIn) {
-        super(ModContainer.blood_potion_table, id);
+        super(ModContainer.blood_potion_table, id, playerInventory, SELECTOR_INFOS);
         this.worldPos = worldPosIn;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
         portable = worldPos.apply(((world, pos) -> {
@@ -59,21 +60,7 @@ public class BloodPotionTableContainer extends Container {
             crafting_time /= 2;
         }
         this.max_crafting_time = crafting_time;
-
-        this.addSlot(new PotionSlot(inventory, 0, 115, 55));
-        this.addSlot(new PotionSlot(inventory, 1, 137, 55));
-        this.addSlot(new InventoryContainer.FilterSlot(inventory, 2, 126, 14, item -> ModItems.item_garlic.equals(item.getItem())));
-        this.addSlot(new Slot(inventory, 3, 101, 22));
-
-        for (int k = 0; k < 3; ++k) {
-            for (int i1 = 0; i1 < 9; ++i1) {
-                this.addSlot(new Slot(playerInventory, i1 + k * 9 + 9, 8 + i1 * 18, 84 + k * 18));
-            }
-        }
-
-        for (int l = 0; l < 9; ++l) {
-            this.addSlot(new Slot(playerInventory, l, 8 + l * 18, 142));
-        }
+        this.addPlayerSlots(playerInventory);
     }
 
     /**
@@ -92,7 +79,7 @@ public class BloodPotionTableContainer extends Container {
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        for (IContainerListener icontainerlistener : this.listeners) {//TODO 1.14 private
+        for (IContainerListener icontainerlistener : this.listeners) {
             if (this.prevCraftingTimer != this.craftingTimer) {
                 icontainerlistener.sendWindowProperty(this, 0, craftingTimer);
             }
@@ -131,17 +118,15 @@ public class BloodPotionTableContainer extends Container {
     @Override
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
-        this.worldPos.consume(((world, pos) -> {
-            if (!world.isRemote) {
-                for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-                    ItemStack itemstack = this.inventory.removeStackFromSlot(i);
+        if (!playerIn.getEntityWorld().isRemote) {
+            for (int i = 0; i < 4; ++i) {
+                ItemStack itemstack = ItemStackHelper.getAndRemove(inventoryItemStacks, i);
 
-                    if (!itemstack.isEmpty()) {
-                        playerIn.dropItem(itemstack, false);
-                    }
+                if (!itemstack.isEmpty()) {
+                    playerIn.dropItem(itemstack, false);
                 }
             }
-        }));
+        }
     }
 
     /**
@@ -173,25 +158,24 @@ public class BloodPotionTableContainer extends Container {
     }
 
     @Nonnull
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            if (index >= 0 && index < 4) {
-                if (!this.mergeItemStack(itemstack1, 4, 40, true)) {
-                    return ItemStack.EMPTY;
-                }
-
-            } else if (index >= 3 && index < 31) {
-                if (!this.mergeItemStack(itemstack1, 31, 40, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (index >= 31 && index < 40) {
-                if (!this.mergeItemStack(itemstack1, 4, 31, false)) {
-                    return ItemStack.EMPTY;
+            if (index >= 4) {
+                if (index < 31) {
+                    if (!this.mergeItemStack(itemstack1, 0, 4, false)) {
+                        return ItemStack.EMPTY;
+                    } else if (!this.mergeItemStack(itemstack1, 31, 40, true)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else {
+                    if (!this.mergeItemStack(itemstack1, 0, 31, false)) {
+                        return ItemStack.EMPTY;
+                    }
                 }
             } else if (!this.mergeItemStack(itemstack1, 4, 40, false)) {
                 return ItemStack.EMPTY;
@@ -207,7 +191,7 @@ public class BloodPotionTableContainer extends Container {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(playerIn, itemstack1);
+            slot.onTake(playerEntity, itemstack1);
         }
 
         return itemstack;
@@ -222,7 +206,7 @@ public class BloodPotionTableContainer extends Container {
     }
 
     /**
-     * @return if all required items are in the container
+     * @return if all required tileInventory are in the container
      */
     private boolean areRequirementsMet() {
         ItemStack garlic = inventory.getStackInSlot(2);
@@ -260,18 +244,5 @@ public class BloodPotionTableContainer extends Container {
         inventory.setInventorySlotContents(0, bottle1);
         inventory.setInventorySlotContents(1, bottle2);
         hunterPlayer.getRepresentingPlayer().addStat(ModStats.blood_table);
-    }
-
-    private class PotionSlot extends InventoryContainer.FilterSlot {
-
-
-        private PotionSlot(IInventory inventory, int index, int xPosition, int yPosition) {
-            super(inventory, index, xPosition, yPosition, bloodfilter);
-        }
-
-        @Override
-        public int getSlotStackLimit() {
-            return 1;
-        }
     }
 }

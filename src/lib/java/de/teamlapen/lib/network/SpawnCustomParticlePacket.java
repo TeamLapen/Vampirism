@@ -26,7 +26,7 @@ public class SpawnCustomParticlePacket implements IMessage {
         final NetworkEvent.Context ctx = contextSupplier.get();
         CompoundNBT nbt = pkt.nbt;
         double posX = nbt.getDouble("x");
-        double posY = nbt.getDouble("y");
+        double posY = nbt.getDouble("yDisplay");
         double posZ = nbt.getDouble("z");
         ResourceLocation particle = new ResourceLocation(nbt.getString("id"));
         CompoundNBT data = nbt.getCompound("data");
@@ -61,7 +61,7 @@ public class SpawnCustomParticlePacket implements IMessage {
     public SpawnCustomParticlePacket(ResourceLocation particle, double posX, double posY, double posZ, CompoundNBT param) {
         nbt = new CompoundNBT();
         nbt.putDouble("x", posX);
-        nbt.putDouble("y", posY);
+        nbt.putDouble("yDisplay", posY);
         nbt.putDouble("z", posZ);
         nbt.putString("id", particle.toString());
         nbt.put("data", param);

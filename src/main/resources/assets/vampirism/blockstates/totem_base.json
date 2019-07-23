@@ -2,7 +2,7 @@
   "forge_marker": 1,
   "variants": {
     "": {
-      "model": "vampirism:totem_base"
+      "model": "vampirism:block/totem_base"
     }
   }
 }

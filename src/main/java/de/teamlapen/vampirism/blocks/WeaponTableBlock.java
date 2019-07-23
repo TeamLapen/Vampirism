@@ -17,9 +17,11 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -34,7 +36,7 @@ public class WeaponTableBlock extends VampirismBlock {
     public static final int MAX_LAVA = 5;
     public static final int MB_PER_META = 200;
     public static final IntegerProperty LAVA = IntegerProperty.create("lava", 0, MAX_LAVA);
-    private static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0, 0, 0, 0.93, 0.6, 1); //TODO 1.13 cauldronShape
+    private static final VoxelShape shape = makeShape();
 
     public WeaponTableBlock() {
         super(regName, Properties.create(Material.IRON).hardnessAndResistance(3));
@@ -113,5 +115,33 @@ public class WeaponTableBlock extends VampirismBlock {
             return faction.getPlayerCapability(player).getSkillHandler().isSkillEnabled(HunterSkills.weapon_table);
         }
         return false;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return shape;
+    }
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(3, 0, 0, 13, 2, 8);
+        VoxelShape b = Block.makeCuboidShape(4, 2, 1, 12, 3, 7);
+        VoxelShape c = Block.makeCuboidShape(5, 3, 2, 11, 6, 6);
+        VoxelShape d = Block.makeCuboidShape(3, 6, 0, 13, 9.5, 8);
+
+        VoxelShape e = Block.makeCuboidShape(0, 1, 9, 7, 2, 16);
+        VoxelShape e1 = Block.makeCuboidShape(0, 0, 9, 2, 1, 11);
+        VoxelShape e2 = Block.makeCuboidShape(5, 0, 9, 7, 1, 11);
+        VoxelShape e3 = Block.makeCuboidShape(0, 0, 14, 2, 1, 16);
+        VoxelShape e4 = Block.makeCuboidShape(5, 0, 14, 7, 1, 16);
+
+        VoxelShape e5 = Block.makeCuboidShape(0, 1, 9, 1, 7, 16);
+        VoxelShape e6 = Block.makeCuboidShape(0, 1, 9, 7, 7, 10);
+        VoxelShape e7 = Block.makeCuboidShape(7, 1, 16, 0, 7, 15);
+        VoxelShape e8 = Block.makeCuboidShape(7, 1, 16, 6, 7, 9);
+
+        VoxelShape f = Block.makeCuboidShape(10, 0, 11, 15, 3, 14);
+        VoxelShape g = Block.makeCuboidShape(12, 3, 12, 13, 10, 13);
+
+        return VoxelShapes.or(a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, f, g);
     }
 }

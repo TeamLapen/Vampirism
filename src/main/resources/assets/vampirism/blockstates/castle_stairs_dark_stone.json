@@ -26,19 +26,19 @@
     },
     "shape": {
       "straight": {
-        "model": "vampirism:castle_stairs_dark_stone"
+        "model": "vampirism:block/castle_stairs_dark_stone"
       },
       "outer_right": {
-        "model": "vampirism:castle_stairs_dark_stone_outer"
+        "model": "vampirism:block/castle_stairs_dark_stone_outer"
       },
       "outer_left": {
-        "model": "vampirism:castle_stairs_dark_stone_outer"
+        "model": "vampirism:block/castle_stairs_dark_stone_outer"
       },
       "inner_right": {
-        "model": "vampirism:castle_stairs_dark_stone_inner"
+        "model": "vampirism:block/castle_stairs_dark_stone_inner"
       },
       "inner_left": {
-        "model": "vampirism:castle_stairs_dark_stone_inner"
+        "model": "vampirism:block/castle_stairs_dark_stone_inner"
       }
     }
   }

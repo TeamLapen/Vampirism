@@ -17,10 +17,10 @@
     },
     "part": {
       "top": {
-        "model": "vampirism:medchairhead"
+        "model": "vampirism:block/medchairhead"
       },
       "bottom": {
-        "model": "vampirism:medchairbase"
+        "model": "vampirism:block/medchairbase"
       }
     }
   }

@@ -2,7 +2,7 @@
   "forge_marker": 1,
   "variants": {
     "": {
-      "model": "vampirism:castle_block_purple_brick"
+      "model": "vampirism:block/castle_block_purple_brick"
     }
   }
 }

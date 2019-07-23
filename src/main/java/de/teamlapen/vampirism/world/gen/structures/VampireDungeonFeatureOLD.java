@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModWorld;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
-import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
+import de.teamlapen.vampirism.tileInventory.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.tileentity.AltarInspirationTileEntity;
 import de.teamlapen.vampirism.tileentity.BloodContainerTileEntity;
 import de.teamlapen.vampirism.world.VampirismWorldData;

@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
@@ -31,8 +32,8 @@ import java.util.List;
 public class AltarPillarBlock extends VampirismBlock {
     private final static String name = "altar_pillar";
     public final static EnumProperty<EnumPillarType> TYPE_PROPERTY = EnumProperty.create("type", EnumPillarType.class);
-    protected static final VoxelShape pillarShape = Block.makeCuboidShape(3, 0, 3, 13, 16, 13);
-    protected static final VoxelShape pillarShapeFilled = Block.makeCuboidShape(2, 0, 2, 14, 16, 14);
+    protected static final VoxelShape pillarShape = makeShape();
+    protected static final VoxelShape pillarShapeFilled = makeShapeFull();
 
     public AltarPillarBlock() {
         super(name, Properties.create(Material.ROCK).hardnessAndResistance(0.9f));
@@ -137,4 +138,23 @@ public class AltarPillarBlock extends VampirismBlock {
             return value;
         }
     }
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 1, 13);
+        VoxelShape b1 = Block.makeCuboidShape(3, 0, 3, 4, 16, 4);
+        VoxelShape b2 = Block.makeCuboidShape(12, 0, 3, 13, 16, 4);
+        VoxelShape b3 = Block.makeCuboidShape(3, 0, 12, 4, 16, 13);
+        VoxelShape b4 = Block.makeCuboidShape(12, 0, 12, 13, 16, 13);
+        VoxelShape c = Block.makeCuboidShape(3, 15, 3, 13, 16, 13);
+        return VoxelShapes.or(a, b1, b2, b3, b4, c);
+    }
+
+    private static VoxelShape makeShapeFull() {
+        VoxelShape a = pillarShape;
+        VoxelShape b = Block.makeCuboidShape(4, 1, 2, 12, 15, 14);
+        VoxelShape c = Block.makeCuboidShape(2, 1, 4, 14, 15, 12);
+        return VoxelShapes.or(a, b, c);
+    }
+
+
 }

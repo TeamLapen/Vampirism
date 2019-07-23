@@ -74,7 +74,7 @@ public class ModEffects {
                 }
             }
         } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
-            LOGGER.error("Unable to modify vanilla night vision types. Potion items and more might not work", e);
+            LOGGER.error("Unable to modify vanilla night vision types. Potion tileInventory and more might not work", e);
         }
     }
 

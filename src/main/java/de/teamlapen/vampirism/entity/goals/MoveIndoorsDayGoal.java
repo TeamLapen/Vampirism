@@ -92,10 +92,10 @@ public class MoveIndoorsDayGoal extends Goal {
             Vec3d vec3d = RandomPositionGenerator.findRandomTargetBlockTowards(this.entityObj, 14, 3, pos.add(0.5D,0,0.5D));
 
             if (vec3d != null) {
-                this.entityObj.getNavigator().tryMoveToXYZ(vec3d.x, vec3d.y, vec3d.z, 1.0D);
+                this.entityObj.getNavigator().tryMoveToXYZ(vec3d.x, vec3d.yDisplay, vec3d.z, 1.0D);
             }
         } else {
-            this.entityObj.getNavigator().tryMoveToXYZ(pos.x + 0.5D, pos.y, pos.z + 0.5D, 1.0D);
+            this.entityObj.getNavigator().tryMoveToXYZ(pos.x + 0.5D, pos.yDisplay, pos.z + 0.5D, 1.0D);
         }
     }
 }

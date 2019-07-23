@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Represents a blood potion category. There are an arbitrary number of items associated with this category.
+ * Represents a blood potion category. There are an arbitrary number of tileInventory associated with this category.
  */
 public interface IBloodPotionCategory {
 
@@ -28,7 +28,7 @@ public interface IBloodPotionCategory {
     void addItemExact(@Nonnull ItemStack stack);
 
     /**
-     * Adds all items in the list. See {@link IBloodPotionCategory#addItem(Item)},{@link IBloodPotionCategory#addItem(Block)},{@link IBloodPotionCategory#addItemExact(ItemStack)}
+     * Adds all tileInventory in the list. See {@link IBloodPotionCategory#addItem(Item)},{@link IBloodPotionCategory#addItem(Block)},{@link IBloodPotionCategory#addItemExact(ItemStack)}
      */
     void addItems(Object... items);
 

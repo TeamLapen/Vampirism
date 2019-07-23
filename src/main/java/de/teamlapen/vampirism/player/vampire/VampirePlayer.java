@@ -1230,7 +1230,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
             vec31 = vec31.add(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
 
-            //TODO 1.13 check if there are still particle effects when eating an apple player.world.addParticle(EnumParticleTypes.ITEM_CRACK, vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z, Item.getIdFromItem(Items.APPLE));
+            //TODO 1.13 check if there are still particle effects when eating an apple player.world.addParticle(EnumParticleTypes.ITEM_CRACK, vec31.x, vec31.yDisplay, vec31.z, vec3.x, vec3.yDisplay + 0.05D, vec3.z, Item.getIdFromItem(Items.APPLE));
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
         player.world.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);

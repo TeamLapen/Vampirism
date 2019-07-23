@@ -69,8 +69,8 @@ public interface IBloodPotionRegistry {
     IBloodPotionEffect getRandomEffect(@Nonnull ItemStack item, boolean bad, Random rng);
 
     /**
-     * Add items to a category
-     * Adds all items in the list. See {@link IBloodPotionCategory#addItem(Item)},{@link IBloodPotionCategory#addItem(Block)},{@link IBloodPotionCategory#addItemExact(ItemStack)}
+     * Add tileInventory to a category
+     * Adds all tileInventory in the list. See {@link IBloodPotionCategory#addItem(Item)},{@link IBloodPotionCategory#addItem(Block)},{@link IBloodPotionCategory#addItemExact(ItemStack)}
      *
      * @param categoryId Id of the category. Non-existent ones will be created
      */

@@ -2,7 +2,7 @@
   "forge_marker": 1,
   "variants": {
     "": {
-      "model": "vampirism:sunscreen_beacon"
+      "model": "vampirism:block/sunscreen_beacon"
     }
   }
 }
