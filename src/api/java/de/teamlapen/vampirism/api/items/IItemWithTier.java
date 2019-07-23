@@ -18,7 +18,7 @@ public interface IItemWithTier {
     default void addTierInformation(List<ITextComponent> tooltip) {
         TIER t = getVampirismTier();
         if (t != TIER.NORMAL) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.item.tier." + t.getName().toLowerCase()).applyTextStyle(TextFormatting.AQUA));
+            tooltip.add(new TranslationTextComponent("item.vampirism.item.tier." + t.getName().toLowerCase()).applyTextStyle(TextFormatting.AQUA));
         }
     }
 

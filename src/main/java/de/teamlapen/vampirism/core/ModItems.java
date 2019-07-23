@@ -176,9 +176,6 @@ public class ModItems {
 
 
     static void registerCraftingRecipes() {
-
-        //TODO 1.13 probably have to modifiy alchemical cauldron system with item groups / ingridients
-
         // Brewing
         BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));
 
@@ -351,9 +348,9 @@ public class ModItems {
         registry.register(new HeartSeekerItem(IItemWithTier.TIER.ULTIMATE));
         registry.register(new HeartStrikerItem(IItemWithTier.TIER.ULTIMATE));
 
-        registry.register(new VampirismItem("blood_infused_iron_ingot", new Item.Properties()));
-        registry.register(new VampirismItem("blood_infused_enhanced_iron_ingot", new Item.Properties()));
-        registry.register(new VampirismItem("soul_orb_vampire", new Item.Properties()));
+        registry.register(new VampirismItem("blood_infused_iron_ingot", new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(new VampirismItem("blood_infused_enhanced_iron_ingot", new Item.Properties().group(VampirismMod.creativeTab)));
+        registry.register(new VampirismItem("soul_orb_vampire", new Item.Properties().group(VampirismMod.creativeTab)));
 
         registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.REDBLACK));
         registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.BLACKBLUE));

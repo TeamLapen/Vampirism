@@ -34,7 +34,7 @@ public class CastleBricksBlock extends VampirismBlock {
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, world, tooltip, advanced);
-        tooltip.add(new TranslationTextComponent(getTranslationKey() + (variant == EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).applyTextStyle(TextFormatting.ITALIC));
+        tooltip.add(new TranslationTextComponent("block.vampirism.castle_block" + (variant == EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).applyTextStyle(TextFormatting.ITALIC));
     }
 
 

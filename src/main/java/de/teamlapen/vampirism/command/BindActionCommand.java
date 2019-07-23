@@ -4,9 +4,11 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -28,12 +30,18 @@ public class BindActionCommand extends BasicCommand {
                         .then(Commands.argument("action-id", StringArgumentType.word())
                                 .executes(context->{
                                     return bindAction(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "number"), StringArgumentType.getString(context, "action-id"));
-                                })));
+                                })))
+                .then(Commands.literal("help")
+                        .executes(context -> {
+                            return help(context);
+                        }));
     }
 
     private static int bindAction(CommandContext<CommandSource> context, ServerPlayerEntity asPlayer, int number, String actionID) {
         @Nullable
         ResourceLocation id = new ResourceLocation(actionID);
+        if (id.getNamespace().equals("minecraft"))
+            id = new ResourceLocation(REFERENCE.MODID, actionID);
         if (actionID.equals("null")) {
             id = null;
         }
@@ -47,6 +55,11 @@ public class BindActionCommand extends BasicCommand {
         } else {
             context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.base.bind_action.not_existing"));
         }
+        return 0;
+    }
+
+    private static int help(CommandContext<CommandSource> context) {
+        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.help"), true);
         return 0;
     }
 

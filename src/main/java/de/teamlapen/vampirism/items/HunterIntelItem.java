@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -37,17 +36,8 @@ public class HunterIntelItem extends VampirismItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("text.vampirism.for_level").appendText(": " + HunterLevelingConf.instance().getHunterIntelMetaForLevel(level)).applyTextStyle(TextFormatting.RED));
+        tooltip.add(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").appendText(": " + (level + 5)).applyTextStyle(TextFormatting.RED));
     }
-
-
-    @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        return new TranslationTextComponent(getTranslationKey() + ".name").appendSibling(new StringTextComponent(" ")).appendSibling(new TranslationTextComponent("text.vampirism.for_level")).appendSibling(new StringTextComponent(" " + HunterLevelingConf.instance().getLevelForHunterIntelMeta(level)));
-    }
-
-
-
 
     @OnlyIn(Dist.CLIENT)
     public boolean hasEffect(ItemStack stack) {

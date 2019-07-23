@@ -6,7 +6,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -36,16 +35,7 @@ public class PureBloodItem extends VampirismItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("text.vampirism.purity").appendText(": " + (level + 1 + "/" + COUNT)).applyTextStyle(TextFormatting.RED));
-
-    }
-
-
-    @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        ITextComponent t = new TranslationTextComponent(getTranslationKey() + ".name");
-        t.appendSibling(new StringTextComponent(" ")).appendSibling(new TranslationTextComponent("text.vampirism.purity")).appendSibling(new StringTextComponent(" " + (level + 1)));
-        return t;
+        tooltip.add(new TranslationTextComponent("item.vampirism.pure_blood.purity").appendText(": " + (level + 1 + "/" + COUNT)).applyTextStyle(TextFormatting.RED));
     }
 
     public static Item getBloodItemForLevel(int level) {

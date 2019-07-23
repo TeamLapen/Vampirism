@@ -13,6 +13,7 @@ import net.minecraft.util.SharedConstants;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class ChangelogCommand extends BasicCommand {
 
     private static int changelog(CommandContext<CommandSource> context) {
         if (!VampirismMod.instance.getVersionInfo().isNewVersionAvailable()) {
-            context.getSource().sendFeedback(new StringTextComponent("There is no new version available"), true);
+            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.changelog.newversion"), true);
             return 0;
         }
         VersionChecker.Version newVersion = VampirismMod.instance.getVersionInfo().getNewVersion();
