@@ -9,11 +9,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Bat which blinds non vampires for a short time.
@@ -48,5 +50,18 @@ public class BlindingBatEntity extends BatEntity {
 
     public void restrictLiveSpan() {
         this.restrictLiveSpan = true;
+    }
+
+    public static boolean spawnPredicate(EntityType<? extends BlindingBatEntity> p_223369_0_, IWorld p_223369_1_, SpawnReason p_223369_2_, BlockPos p_223369_3_, Random p_223369_4_) {
+        if (p_223369_3_.getY() >= p_223369_1_.getSeaLevel()) {
+            return false;
+        } else {
+            int i = p_223369_1_.getLight(p_223369_3_);
+            int j = 4;
+            if (p_223369_4_.nextBoolean())
+                return false;
+
+            return i > p_223369_4_.nextInt(j) ? false : func_223315_a(p_223369_0_, p_223369_1_, p_223369_2_, p_223369_3_, p_223369_4_);
+        }
     }
 }

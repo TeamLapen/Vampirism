@@ -30,14 +30,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Random;
@@ -138,7 +136,10 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            LOGGER.info("Lev %s", level);
+            LOGGER.info("Lev {}", level);
+            this.setCustomName(new TranslationTextComponent("entity.vampirism.vampire_baron.level").appendSibling(new TranslationTextComponent("entity.vampirism.vampire_baron.level", level + 1)));
+        } else {
+            this.setCustomName(null);
         }
     }
 
@@ -160,12 +161,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     @Override
     public LivingEntity getMinionTarget() {
         return this.getAttackTarget();
-    }
-
-    @Nonnull
-    @Override
-    public ITextComponent getName() {
-        return super.getName().appendText(" " + new TranslationTextComponent("text.vampirism.entity_level") + " " + (getLevel() + 1));
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
  * 
  * @authors Cheaterpaul, Maxanier
  */
-public class GarlicProfilerCommand extends BasicCommand {
+public class GarlicProfilerCommand extends BasicCommand {//TODO 1.14 should work as intended
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("garlic_profiler")

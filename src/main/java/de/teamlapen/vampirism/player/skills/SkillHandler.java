@@ -102,6 +102,15 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     }
 
     @Override
+    public ISkill[] getParentSkills(ISkill skill) {
+        SkillNode node = findSkillNode(VampirismAPI.skillManager().getRootSkillNode(player.getFaction()), skill);
+        if (node == null)
+            return null;
+        else
+            return node.getParent().getElements();
+    }
+
+    @Override
     public int getLeftSkillPoints() {
         int level = player.getLevel();
         if (VampirismConfig.SERVER.unlockAllSkills.get() && level == player.getMaxLevel()) {

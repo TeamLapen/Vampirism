@@ -18,6 +18,12 @@ public class BalanceMobProps extends BalanceValues {
     public int BLINDING_BAT_LIVE_SPAWN;
     @DefaultInt(value = 40, name = "blinding_bat_effect_duration", minValue = 1, comment = "Blinding duration in ticks")
     public int BLINDING_BAT_EFFECT_DURATION;
+    @DefaultInt(value = 30, minValue = 0, maxValue = 1000000, name = "blinding_bat_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
+    public int BLINDING_BAT_SPAWN_CHANCE;
+
+    @DefaultInt(value = 75, minValue = 0, maxValue = 1000000, name = "dummy_creature_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
+    public int DUMMY_CREATURE_SPAWN_CHANCE;
+
     @DefaultDouble(value = 5D, name = "ghost_attack_damage", minValue = 0)
     public double GHOST_ATTACK_DAMAGE;
     @DefaultInt(value = 14, name = "ghost_follow_range", minValue = 1, maxValue = 32)
@@ -26,6 +32,8 @@ public class BalanceMobProps extends BalanceValues {
     public double GHOST_SPEED;
     @DefaultInt(value = 30, name = "ghost_health", minValue = 0)
     public int GHOST_HEALTH;
+    @DefaultInt(value = 50, minValue = 0, maxValue = 1000000, name = "ghost_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
+    public int GHOST_SPAWN_CHANCE;
 
     @DefaultInt(value = 1, minValue = 0, name = "converted_mob_default_dmg")
     public int CONVERTED_MOB_DEFAULT_DMG;
@@ -113,6 +121,9 @@ public class BalanceMobProps extends BalanceValues {
     public double VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL;
     @DefaultDouble(value = 3, minValue = 0, comment = "Any fire damage that is received by a baron is multiplied by this")
     public double VAMPIRE_BARON_FIRE_VULNERABILITY;
+    @DefaultInt(value = 10, minValue = 0, maxValue = 1000000, name = "vampire_baron_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
+    public int VAMPIRE_BARON_SPAWN_CHANCE;
+
 
     @DefaultDouble(value = 20.0D, minValue = 5.0D, maxValue = 200.0D, name = "Vampire Minion Max Health", comment = "")
     public double VAMPIRE_MINION_MAX_HEALTH;
@@ -122,6 +133,7 @@ public class BalanceMobProps extends BalanceValues {
     public double VAMPIRE_MINION_MOVEMENT_SPEED;
     @DefaultInt(value = 5, minValue = -1, name = "Vampire Minion Regenerate Seconds", comment = "Regenerate 1 heart every n seconds. -1 to disable")
     public int VAMPIRE_MINION_REGENERATE_SECS;
+
 
     public BalanceMobProps(File directory) {
         super("mob_prop", directory);

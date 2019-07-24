@@ -45,27 +45,27 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @ObjectHolder(REFERENCE.MODID)
 public class ModEntities {
 
-    public static final EntityType<BlindingBatEntity> blinding_bat = getNull();
+    public static final EntityType<BlindingBatEntity> blinding_bat = prepareEntityType("blinding_bat", EntityType.Builder.create(BlindingBatEntity::new, EntityClassification.MISC).size(0.5F, 0.9F), true);
     public static final EntityType<GhostEntity> ghost = prepareEntityType("ghost", EntityType.Builder.create(GhostEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.8F, 1.95F), true);
-    public static final EntityType<ConvertedCreatureEntity> converted_creature = getNull();
-    public static final EntityType<ConvertedSheepEntity> converted_sheep = getNull();
+    public static final EntityType<ConvertedCreatureEntity> converted_creature = prepareEntityType("converted_creature", EntityType.Builder.<ConvertedCreatureEntity>create(ConvertedCreatureEntity::new, EntityClassification.CREATURE), false);
+    public static final EntityType<ConvertedSheepEntity> converted_sheep = prepareEntityType("converted_sheep", EntityType.Builder.create(ConvertedSheepEntity::new, EntityClassification.CREATURE).size(0.9F, 1.3F), false);
     public static final EntityType<BasicHunterEntity> vampire_hunter = prepareEntityType("vampire_hunter", EntityType.Builder.create(BasicHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
     public static final EntityType<HunterTrainerEntity> hunter_trainer = prepareEntityType("hunter_trainer", EntityType.Builder.create(HunterTrainerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
     public static final EntityType<AdvancedHunterEntity> advanced_hunter = prepareEntityType("advanced_hunter", EntityType.Builder.create(AdvancedHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
     public static final EntityType<VampireBaronEntity> vampire_baron = prepareEntityType("vampire_baron", EntityType.Builder.create(VampireBaronEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
-    public static final EntityType<VampireMinionSaveableEntity> vampire_minion_s = getNull();
-    public static final EntityType<DummyBittenAnimalEntity> dummy_creature = getNull();
-    public static final EntityType<ConvertedVillagerEntity> villager_converted = getNull();
-    public static final EntityType<AggressiveVillagerEntity> villager_angry = getNull();
-    public static final EntityType<CrossbowArrowEntity> crossbow_arrow = getNull();
-    public static final EntityType<AreaParticleCloudEntity> particle_cloud = getNull();
-    public static final EntityType<ThrowableItemEntity> throwable_item = getNull();
-    public static final EntityType<DraculaHalloweenEntity> special_dracula_halloween = getNull();
-    public static final EntityType<DarkBloodProjectileEntity> dark_blood_projectile = getNull();
-    public static final EntityType<SoulOrbEntity> soul_orb = getNull();
-    public static final EntityType<HunterFactionVillagerEntity> villager_hunter_faction = getNull();
-    public static final EntityType<VampireFactionVillagerEntity> villager_vampire_faction = getNull();
-    public static final EntityType<DummyHunterTrainerEntity> hunter_trainer_dummy = getNull();
+    public static final EntityType<VampireMinionSaveableEntity> vampire_minion_s = prepareEntityType("vampire_minion_s", EntityType.Builder.create(VampireMinionSaveableEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.5F, 1.1F), false);
+    public static final EntityType<DummyBittenAnimalEntity> dummy_creature = prepareEntityType("dummy_creature", EntityType.Builder.create(DummyBittenAnimalEntity::new, EntityClassification.CREATURE), false);
+    public static final EntityType<ConvertedVillagerEntity> villager_converted = prepareEntityType("villager_converted", EntityType.Builder.create(ConvertedVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), false);
+    public static final EntityType<AggressiveVillagerEntity> villager_angry = prepareEntityType("villager_angry", EntityType.Builder.create(AggressiveVillagerEntity::new, EntityClassification.CREATURE).size(0.6F, 1.95F), false);
+    public static final EntityType<CrossbowArrowEntity> crossbow_arrow = prepareEntityType("crossbow_arrow", EntityType.Builder.<CrossbowArrowEntity>create(CrossbowArrowEntity::new, EntityClassification.MISC).size(0.5F, 0.5F), false);
+    public static final EntityType<AreaParticleCloudEntity> particle_cloud = prepareEntityType("particle_cloud", EntityType.Builder.create(AreaParticleCloudEntity::new, EntityClassification.MISC).size(6.0F, 0.5F).immuneToFire(), false);
+    public static final EntityType<ThrowableItemEntity> throwable_item = prepareEntityType("throwable_item", EntityType.Builder.<ThrowableItemEntity>create(ThrowableItemEntity::new, EntityClassification.MISC).size(0.25F, 0.25F), false);
+    public static final EntityType<DraculaHalloweenEntity> special_dracula_halloween = prepareEntityType("special_dracula_halloween", EntityType.Builder.create(DraculaHalloweenEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
+    public static final EntityType<DarkBloodProjectileEntity> dark_blood_projectile = prepareEntityType("dark_blood_projectile", EntityType.Builder.<DarkBloodProjectileEntity>create(DarkBloodProjectileEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), false);
+    public static final EntityType<SoulOrbEntity> soul_orb = prepareEntityType("soul_orb", EntityType.Builder.<SoulOrbEntity>create(SoulOrbEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).immuneToFire(), false);
+    public static final EntityType<HunterFactionVillagerEntity> villager_hunter_faction = prepareEntityType("villager_hunter_faction", EntityType.Builder.create(HunterFactionVillagerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
+    public static final EntityType<VampireFactionVillagerEntity> villager_vampire_faction = prepareEntityType("villager_vampire_faction", EntityType.Builder.create(VampireFactionVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
+    public static final EntityType<DummyHunterTrainerEntity> hunter_trainer_dummy = prepareEntityType("hunter_trainer_dummy", EntityType.Builder.create(DummyHunterTrainerEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), true);
     public static final EntityType<BasicVampireEntity> vampire = prepareEntityType("vampire", EntityType.Builder.create(BasicVampireEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
     public static final EntityType<AdvancedVampireEntity> advanced_vampire = prepareEntityType("advanced_vampire", EntityType.Builder.create(AdvancedVampireEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
 
@@ -102,46 +102,46 @@ public class ModEntities {
 
     static void registerEntities(IForgeRegistry<EntityType<?>> registry) {
         //simply register EntityType
-        registry.register(prepareEntityType("blinding_bat", EntityType.Builder.create(BlindingBatEntity::new, EntityClassification.MISC).size(0.5F, 0.9F), true));
+        registry.register(blinding_bat);
         registry.register(ghost);
-        registry.register(prepareEntityType("converted_creature", EntityType.Builder.<ConvertedCreatureEntity>create(ConvertedCreatureEntity::new, VReference.VAMPIRE_CREATURE_TYPE), false));
-        registry.register(prepareEntityType("converted_sheep", EntityType.Builder.create(ConvertedSheepEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.9F, 1.3F), false));
+        registry.register(converted_creature);
+        registry.register(converted_sheep);
         registry.register(vampire_hunter);
         registry.register(hunter_trainer);
         registry.register(advanced_hunter);
         registry.register(vampire_baron);
-        registry.register(prepareEntityType("vampire_minion_s", EntityType.Builder.create(VampireMinionSaveableEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.5F, 1.1F), false));
-        registry.register(prepareEntityType("dummy_creature", EntityType.Builder.create(DummyBittenAnimalEntity::new, VReference.VAMPIRE_CREATURE_TYPE), false));
-        registry.register(prepareEntityType("villager_converted", EntityType.Builder.create(ConvertedVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), false));
-        registry.register(prepareEntityType("villager_angry", EntityType.Builder.create(AggressiveVillagerEntity::new, EntityClassification.CREATURE).size(0.6F, 1.95F), false));
-        registry.register(prepareEntityType("crossbow_arrow", EntityType.Builder.<CrossbowArrowEntity>create(CrossbowArrowEntity::new, EntityClassification.MISC).size(0.5F, 0.5F), false));
-        registry.register(prepareEntityType("particle_cloud", EntityType.Builder.create(AreaParticleCloudEntity::new, EntityClassification.MISC).size(6.0F, 0.5F).immuneToFire(), false));
-        registry.register(prepareEntityType("throwable_item", EntityType.Builder.<ThrowableItemEntity>create(ThrowableItemEntity::new, EntityClassification.MISC).size(0.25F, 0.25F), false));
-        registry.register(prepareEntityType("special_dracula_halloween", EntityType.Builder.create(DraculaHalloweenEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true));
-        registry.register(prepareEntityType("dark_blood_projectile", EntityType.Builder.<DarkBloodProjectileEntity>create(DarkBloodProjectileEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), false));
-        registry.register(prepareEntityType("soul_orb", EntityType.Builder.<SoulOrbEntity>create(SoulOrbEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).immuneToFire(), false));
-        registry.register(prepareEntityType("villager_hunter_faction", EntityType.Builder.create(HunterFactionVillagerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true));
-        registry.register(prepareEntityType("villager_vampire_faction", EntityType.Builder.create(VampireFactionVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true));
-        registry.register(prepareEntityType("hunter_trainer_dummy", EntityType.Builder.create(DummyHunterTrainerEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), true));
-        //RegisterType and add it to biome spawns
+        registry.register(vampire_minion_s);
+        registry.register(dummy_creature);
+        registry.register(villager_converted);
+        registry.register(villager_angry);
+        registry.register(crossbow_arrow);
+        registry.register(particle_cloud);
+        registry.register(throwable_item);
+        registry.register(special_dracula_halloween);
+        registry.register(dark_blood_projectile);
+        registry.register(soul_orb);
+        registry.register(villager_hunter_faction);
+        registry.register(villager_vampire_faction);
+        registry.register(hunter_trainer_dummy);
         registry.register(vampire);
         registry.register(advanced_vampire);
+        //add to biomes
         for (Biome e : getZombieBiomes()) {
-            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
-            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
+            e.getSpawns(VReference.VAMPIRE_CREATURE_TYPE).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
+            e.getSpawns(VReference.VAMPIRE_CREATURE_TYPE).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
         }
     }
 
     static void registerSpawns() {
-        EntitySpawnPlacementRegistry.register(blinding_bat, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (d, a, g, t, b) -> true);
+        EntitySpawnPlacementRegistry.register(blinding_bat, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, BlindingBatEntity::spawnPredicate);
         EntitySpawnPlacementRegistry.register(ghost, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, GhostEntity::spawnPredicateGhost);
-        EntitySpawnPlacementRegistry.register(converted_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampirismEntity::spawnPredicateVampire);
-        EntitySpawnPlacementRegistry.register(converted_sheep, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampirismEntity::spawnPredicateVampire);
+        EntitySpawnPlacementRegistry.register(converted_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate);
+        EntitySpawnPlacementRegistry.register(converted_sheep, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate);
         EntitySpawnPlacementRegistry.register(vampire_hunter, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampirismEntity::spawnPredicateHunter);
         EntitySpawnPlacementRegistry.register(advanced_hunter, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampirismEntity::spawnPredicateHunter);
         EntitySpawnPlacementRegistry.register(vampire_baron, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampireBaronEntity::spawnPredicateBaron);
         EntitySpawnPlacementRegistry.register(vampire_minion_s, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampirismEntity::spawnPredicateVampire);
-        EntitySpawnPlacementRegistry.register(dummy_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::func_223315_a);
+        //EntitySpawnPlacementRegistry.register(dummy_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::func_223315_a);
         EntitySpawnPlacementRegistry.register(villager_converted, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::func_223315_a);
         EntitySpawnPlacementRegistry.register(villager_angry, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::func_223315_a);
         EntitySpawnPlacementRegistry.register(special_dracula_halloween, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampirismEntity::spawnPredicateVampire);
@@ -163,7 +163,8 @@ public class ModEntities {
         zombieBiomes.remove(Biomes.MUSHROOM_FIELDS);
         zombieBiomes.remove(Biomes.MUSHROOM_FIELD_SHORE);
         zombieBiomes.remove(Biomes.NETHER);
-        zombieBiomes.remove(Biomes.THE_END);//TODO is right?
+        zombieBiomes.remove(Biomes.THE_END);
+        zombieBiomes.remove(ModBiomes.vampire_forest);
         Iterator<Biome> iterator = zombieBiomes.iterator();
         while (iterator.hasNext()) {
             Biome b = iterator.next();

@@ -1,23 +1,18 @@
 package de.teamlapen.vampirism.command.test;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.command.arguments.SkillArgumentType;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.player.skills.SkillManager;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * 
@@ -28,35 +23,30 @@ public class SkillCommand extends BasicCommand {
 	public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("skill")
         		.requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
-        		.then(Commands.argument("type", StringArgumentType.word())
-                        .suggests((context, builder) -> {
-                            return ISuggestionProvider.suggest(ModRegistries.SKILLS.getKeys().stream().map(id -> id.toString()), builder);
-                        })
-                        .suggests((context, builder) -> {
-                            return ISuggestionProvider.suggest(new String[] { "list", "disableall" }, builder);
-                        })
-        				.executes(context -> {
-                            return skill(context.getSource(), context.getSource().asPlayer(), StringArgumentType.getString(context, "type"));
-        				}));
+                .then(Commands.argument("type", SkillArgumentType.skills())
+                        .executes(context -> {
+                            return skill(context.getSource(), context.getSource().asPlayer(), SkillArgumentType.getSkill(context, "type"));
+                        }))
+                .then(Commands.literal("disableall")
+                        .executes(context -> {
+                            return disableall(context.getSource(), context.getSource().asPlayer());
+                        }));
     }
 
-    private static int skill(CommandSource commandSource, ServerPlayerEntity asPlayer, String type) {
-		IFactionPlayer factionPlayer = FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer();
-		if (factionPlayer == null) {
+    private static int disableall(CommandSource commandSource, ServerPlayerEntity asPlayer) {
+        IFactionPlayer factionPlayer = FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer();
+        if (factionPlayer == null) {
             commandSource.sendFeedback(new StringTextComponent("You have to be in a faction"), true);
             return 0;
         }
-        if ("list".equals(type)) {
-            ((SkillManager) VampirismAPI.skillManager()).printSkills(factionPlayer.getFaction(), commandSource);
-            return 0;
-        }
-        if ("disableall".equals(type)) {
-            (factionPlayer.getSkillHandler()).resetSkills();
-            return 0;
-        }
-        ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(REFERENCE.MODID, type));
-        if (skill == null) {
-            commandSource.sendFeedback(new StringTextComponent("Skill with id " + type + " could not be found for faction " + factionPlayer.getFaction().getID()), true);
+        factionPlayer.getSkillHandler().resetSkills();
+        return 0;
+    }
+
+    private static int skill(CommandSource commandSource, ServerPlayerEntity asPlayer, ISkill skill) {
+        IFactionPlayer factionPlayer = FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer();
+        if (factionPlayer == null) {
+            commandSource.sendFeedback(new StringTextComponent("You have to be in a faction"), true);
             return 0;
         }
         if (factionPlayer.getSkillHandler().isSkillEnabled(skill)) {
@@ -69,7 +59,29 @@ public class SkillCommand extends BasicCommand {
             factionPlayer.getSkillHandler().enableSkill(skill);
             commandSource.sendFeedback(new StringTextComponent("Enabled skill"), true);
         } else {
-            commandSource.sendFeedback(new StringTextComponent("Could not enable skill " + result), true);
+            switch (result) {
+                case ALREADY_ENABLED:
+                    commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.alreadyenabled", new TranslationTextComponent(skill.getTranslationKey())), true);
+                    return 0;
+                case PARENT_NOT_ENABLED:
+                    ISkill[] skills = factionPlayer.getSkillHandler().getParentSkills(skill);
+                    if (skills == null || skills.length == 0) return 0;
+                    if (skills.length == 1)
+                        commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.parent", skills[0].getRegistryName()), true);
+                    else
+                        commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.parents", skills[0].getRegistryName(), skills[1].getRegistryName()), true);
+                    return 0;
+                case NO_POINTS:
+                    commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.nopoints"), true);
+                    return 0;
+                case OTHER_NODE_SKILL:
+                    commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.othernode"), true);
+                    return 0;
+                case NOT_FOUND:
+                    commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.otherfaction"), true);
+                    return 0;
+                default:
+            }
         }
         return 0;
 	}
