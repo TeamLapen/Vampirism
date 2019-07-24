@@ -358,13 +358,13 @@ public class ModItems {
         registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.BLACKWHITE));
         registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.WHITEBLACK));
 
-        registry.register(new VampirismSpawnEgg(ModEntities.vampire, "vampire_spawn_egg"));
-        registry.register(new VampirismSpawnEgg(ModEntities.vampire_hunter, "vampire_hunter_spawn_egg"));
-        registry.register(new VampirismSpawnEgg(ModEntities.advanced_vampire, "advanced_vampire_spawn_egg"));
-        registry.register(new VampirismSpawnEgg(ModEntities.advanced_hunter, "advanced_vampire_hunter_spawn_egg"));
-        registry.register(new VampirismSpawnEgg(ModEntities.vampire_baron, "vampire_baron_spawn_egg"));
-        registry.register(new VampirismSpawnEgg(ModEntities.ghost, "ghost_spawn_egg"));
-        registry.register(new VampirismSpawnEgg(ModEntities.hunter_trainer, "hunter_trainer_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.vampire_hunter, 0x2d05f2, 0x2600e0, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_hunter_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.advanced_vampire, 0x8B15A3, 0x560a7e, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.advanced_hunter, 0x2d05f2, 0x1a028c, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_hunter_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.ghost, 0x626262, 0xbcbcbc, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "ghost_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "hunter_trainer_spawn_egg"));
     }
 
     static void registerBloodConversionRates() {

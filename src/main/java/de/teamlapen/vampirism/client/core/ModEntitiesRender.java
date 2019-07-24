@@ -23,7 +23,6 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 @OnlyIn(Dist.CLIENT)
 public class ModEntitiesRender {
 
-
     public static void registerEntityRenderer() {
         RenderingRegistry.registerEntityRenderingHandler(BlindingBatEntity.class, BatRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(GhostEntity.class, GhostRenderer::new);
