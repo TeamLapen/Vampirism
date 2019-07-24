@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -183,8 +182,10 @@ public class SkillsScreen extends Screen {
             skillNodes.clear();
             addToList(skillNodes, skillHandler.getRootNode());
         }
-        this.buttons.clear();
-        this.buttons.add(new Button(this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done"), (context) -> this.minecraft.displayGuiScreen((Screen) null)));
+        this.addButton(new Button(this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done"), (context) -> {
+            this.minecraft.displayGuiScreen(null);
+            this.minecraft.mouseHelper.grabMouse();
+        }));
         if (display) {
             Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("text.vampirism.skill.resetall"), (context) -> {
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
@@ -207,7 +208,9 @@ public class SkillsScreen extends Screen {
 
     }
 
-    public void updateScreen() {
+
+    @Override
+    public void tick() {
         if (display) {
             this.displayX = this.displayXNew;
             this.displayY = this.displayYNew;
@@ -349,7 +352,7 @@ public class SkillsScreen extends Screen {
                 }
 
                 this.minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-                this.blit(x * 16 - i2, y * 16 - j2, this.blitOffset, 16, 16, textureatlassprite);
+                blit(x * 16 - i2, y * 16 - j2, this.blitOffset, 16, 16, textureatlassprite);
             }
         }
 

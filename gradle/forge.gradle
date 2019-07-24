@@ -82,7 +82,7 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'META-INF/mods.toml'
 
-        expand 'version': project.version, 'mcversion': minecraft_version, 'forge_version': forge_version
+        expand 'version': project.mod_version, 'mcversion': minecraft_version, 'forge_version': forge_version
     }
 
 
@@ -100,7 +100,7 @@ processLibResources {
     from(sourceSets.lib.resources.srcDirs) {
         include 'META-INF/mods.toml'
 
-        expand 'version': project.version, 'mcversion': minecraft_version, 'forge_version': forge_version
+        expand 'version': project.mod_version, 'mcversion': minecraft_version, 'forge_version': forge_version
     }
     from(sourceSets.lib.resources.srcDirs) {
         exclude 'META-INF/mods.toml'
@@ -136,7 +136,7 @@ jar {
                 "Specification-Vendor": "maxanier",
                 "Specification-Version": "1", // We are version 1 of ourselves
                 "Implementation-Title": project.name,
-                "Implementation-Version": "${version}",
+                "Implementation-Version": "${mod_version}",
                 "Implementation-Vendor" :"maxanier",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])

@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.util;
 
 import net.minecraft.util.ResourceLocation;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 /**
  * Class to store constants and stuff
@@ -8,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 public class REFERENCE {
     public static final String MODID = "vampirism";
     public static final String NAME = "Vampirism";
-    public static final String VERSION = "@VERSION@";
+    public static ArtifactVersion VERSION = new DefaultArtifactVersion("0.0.0");
     public static final String MINECRAFT_VERSION = "@MVERSION@";
     public static final String FORGE_VERSION_MIN = "14.23.1.2554";
     public static final int HIGHEST_VAMPIRE_LEVEL = 14;

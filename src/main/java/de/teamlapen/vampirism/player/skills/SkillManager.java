@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player.skills;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -167,7 +166,7 @@ public class SkillManager implements ISkillManager {
     ISkill getRootSkill(IPlayableFaction faction) {
         ISkill skill = ModRegistries.SKILLS.getValue(faction.getKey());
         if (skill == null) {
-            LOGGER.warn("No root skill exists for faction %s", faction.getKey()); //TODO was big warning
+            LOGGER.warn("No root skill exists for faction {}", faction.getKey());
             throw new IllegalStateException("You need to register a root skill for your faction " + faction.getKey());
         }
         return skill;

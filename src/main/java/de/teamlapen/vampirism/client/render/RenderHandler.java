@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -109,7 +108,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (mc.world == null || mc.player == null) return;
+        if (mc.world == null || mc.player == null || !mc.player.isAlive()) return;
         if (event.phase == TickEvent.Phase.END) return;
         lastBloodVisionTicks = bloodVisionTicks;
 

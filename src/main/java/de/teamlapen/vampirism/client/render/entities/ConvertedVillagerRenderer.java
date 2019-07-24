@@ -17,7 +17,7 @@ public class ConvertedVillagerRenderer extends VillagerRenderer {
     private final ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villager_overlay.png");
 
     public ConvertedVillagerRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, (IReloadableResourceManager) Minecraft.getInstance().getRenderManager());
+        super(renderManagerIn, (IReloadableResourceManager) Minecraft.getInstance().getResourceManager());
         this.addLayer(new LayerVampireEntity<>(this, overlay, false));
     }
 }

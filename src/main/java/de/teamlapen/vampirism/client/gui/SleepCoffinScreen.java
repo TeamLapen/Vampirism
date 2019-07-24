@@ -22,7 +22,7 @@ public class SleepCoffinScreen extends ChatScreen {
     @Override
     public void init() {
         super.init();
-        this.buttons.add(new Button(this.width / 2 - 100, this.height - 40, 150, 20, I18n.format("multiplayer.stopSleeping"), (context) -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.WAKEUP, ""))));
+        this.addButton(new Button(this.width / 2 - 100, this.height - 40, 150, 20, I18n.format("multiplayer.stopSleeping"), (context) -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.WAKEUP, ""))));
     }
 
     @Override

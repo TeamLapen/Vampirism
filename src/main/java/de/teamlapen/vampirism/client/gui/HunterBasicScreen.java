@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
@@ -42,7 +41,7 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         String name = I18n.format("text.vampirism.level_up");
-        buttons.add(buttonLevelup = new Button(i + 37, j + 55, 150, 20, name, (context) -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BASICHUNTERLEVELUP, ""))));
+        addButton(buttonLevelup = new Button(i + 37, j + 55, 150, 20, name, (context) -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BASICHUNTERLEVELUP, ""))));
         buttonLevelup.active = false;
     }
 

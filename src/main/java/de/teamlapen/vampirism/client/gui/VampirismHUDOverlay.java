@@ -89,7 +89,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
 
-        if (mc.player == null)
+        if (mc.player == null || !mc.player.isAlive())
             return;
         if (event.phase == TickEvent.Phase.END)
             return;
@@ -100,8 +100,9 @@ public class VampirismHUDOverlay extends ExtendedGui {
             handleScreenColorHunter((HunterPlayer) player);
         } else {
             screenPercentage = 0;
-            screenBottomPercentage =0;
+            screenBottomPercentage = 0;
         }
+
 
         //If we are supposed to render fullscreen, we overwrite the other values and only render fullscreen
         if (renderFullTick > 0) {

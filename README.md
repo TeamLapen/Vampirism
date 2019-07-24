@@ -15,8 +15,7 @@ After being bitten by a vampire or manually injecting some vampire blood you get
 For a more detailed description head over to the Minecraft forums or the Curseforge page.
 ## Links
 [Curseforge Project](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire)
-[Minecraft Forum Thread](http://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2756555-vampirism-become-a-vampire)  
-[Downloads](https://minecraft.curseforge.com/projects/vampirism/files)  
+[Downloads](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)  
 [Help to translate](https://crowdin.com/project/vampirism)
 
 ## Team

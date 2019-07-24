@@ -50,6 +50,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
@@ -62,6 +63,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Optional;
 
 /**
  * Main class for Vampirism TODO readd "required-after:teamlapen-lib;"
@@ -114,6 +116,13 @@ public class VampirismMod {
     public VampirismMod() {
         instance = this;
         checkDevEnv();
+
+        Optional<? extends net.minecraftforge.fml.ModContainer> opt = ModList.get().getModContainerById(REFERENCE.MODID);
+        if (opt.isPresent()) {
+            REFERENCE.VERSION = opt.get().getModInfo().getVersion();
+        } else {
+            LOGGER.warn("Cannot get version from mod info");
+        }
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
@@ -221,11 +230,10 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.COMMON_SETUP, event);
         proxy.onInitStep(IInitListener.Step.COMMON_SETUP, event);
 
-        String currentVersion = REFERENCE.VERSION;
         if (!VampirismConfig.COMMON.versionCheck.get()) {
-            versionInfo = new VersionChecker.VersionInfo(currentVersion);
+            versionInfo = new VersionChecker.VersionInfo(REFERENCE.VERSION);
         } else {
-            versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, currentVersion, !inDev && VampirismConfig.COMMON.collectStats.get());
+            versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, REFERENCE.VERSION, !inDev && VampirismConfig.COMMON.collectStats.get());
         }
 
         ModEventHandler eventHandler = new ModEventHandler();

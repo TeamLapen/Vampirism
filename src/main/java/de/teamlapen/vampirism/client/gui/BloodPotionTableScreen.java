@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModSounds;
@@ -42,7 +41,7 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
     @Override
     public void init() {
         super.init();
-        this.buttons.add(this.craftBtn = new Button(this.width / 2 - 77, this.height / 2 - 78, font.getStringWidth(UtilLib.translate("gui.vampirism.blood_potion_table.create")) + 5, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create"), (context) -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.CRAFT_BLOOD_POTION, ""))));
+        this.addButton(this.craftBtn = new Button(this.width / 2 - 77, this.height / 2 - 78, font.getStringWidth(UtilLib.translate("gui.vampirism.blood_potion_table.create")) + 5, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create"), (context) -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.CRAFT_BLOOD_POTION, ""))));
         craftBtn.active = false;
     }
 

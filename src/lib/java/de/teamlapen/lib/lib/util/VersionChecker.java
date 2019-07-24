@@ -3,7 +3,6 @@ package de.teamlapen.lib.lib.util;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-
 import de.teamlapen.lib.VampLib;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.LogicalSide;
@@ -13,6 +12,8 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.versions.mcp.MCPVersion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,30 +39,18 @@ public class VersionChecker implements Runnable {
 
     private final boolean stats;
 
-    protected VersionChecker(String update_file_url, String currentVersion, boolean stats) {
-        UPDATE_FILE_URL = update_file_url;
-        this.currentVersion = currentVersion;
-        versionInfo = new VersionInfo(currentVersion);
-        if (stats) {
-            this.stats = EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().getSnooper().isSnooperRunning() : ServerLifecycleHooks.getCurrentServer().getSnooper().isSnooperRunning();
-        } else {
-            this.stats = false;
-        }
-    }
-
-    private final String UPDATE_FILE_URL;
-    private final VersionInfo versionInfo;
-    private final String currentVersion;
-
     /**
      * Use the other one
      */
     @Deprecated
-    public static VersionInfo executeVersionCheck(String updateUrl, String currentVersion) {
+    public static VersionInfo executeVersionCheck(String updateUrl, ArtifactVersion currentVersion) {
         VersionChecker checker = new VersionChecker(updateUrl, currentVersion, false);
         new Thread(checker).start();
         return checker.versionInfo;
     }
+
+    private final String UPDATE_FILE_URL;
+    private final VersionInfo versionInfo;
 
     /**
      * Execute an async version check.
@@ -71,10 +60,23 @@ public class VersionChecker implements Runnable {
      * @param stats if to send very basic stats
      * @return a version info object, which is update when the check is finished
      */
-    public static VersionInfo executeVersionCheck(String updateUrl, String currentVersion, boolean stats) {
+    public static VersionInfo executeVersionCheck(String updateUrl, ArtifactVersion currentVersion, boolean stats) {
         VersionChecker checker = new VersionChecker(updateUrl, currentVersion, stats);
         new Thread(checker).start();
         return checker.versionInfo;
+    }
+
+    private final ArtifactVersion currentVersion;
+
+    protected VersionChecker(String update_file_url, ArtifactVersion currentVersion, boolean stats) {
+        UPDATE_FILE_URL = update_file_url;
+        this.currentVersion = currentVersion;
+        versionInfo = new VersionInfo(currentVersion);
+        if (stats) {
+            this.stats = EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().getSnooper().isSnooperRunning() : ServerLifecycleHooks.getCurrentServer().getSnooper().isSnooperRunning();
+        } else {
+            this.stats = false;
+        }
     }
 
     @Override
@@ -112,11 +114,7 @@ public class VersionChecker implements Runnable {
         String rec = promos.get(MCPVersion.getMCVersion() + "-recommended");
         String lat = promos.get(MCPVersion.getMCVersion() + "-latest");
 
-        Version current = Version.parse(currentVersion);
-        if (current == null) {
-            LOGGER.warn("Failed to parse current version ({}), aborting version check", currentVersion);
-            return;
-        }
+        Version current = Version.from(currentVersion);
         versionInfo.currentVersion = current;
         Version possibleTarget = null;
         if (current.type == Version.TYPE.RELEASE) {
@@ -184,7 +182,7 @@ public class VersionChecker implements Runnable {
         try {
             return "?" +
                     "current=" +
-                    URLEncoder.encode(currentVersion.trim(), "UTF-8") +
+                    URLEncoder.encode(currentVersion.getMajorVersion() + "." + currentVersion.getMinorVersion() + "." + currentVersion.getIncrementalVersion(), "UTF-8") +
                     '&' +
                     "mc=" +
                     URLEncoder.encode(MCPVersion.getMCVersion(), "UTF-8") +
@@ -208,11 +206,8 @@ public class VersionChecker implements Runnable {
         private boolean checked = false;
         private String homePage;
 
-        public VersionInfo(String current) {
-            currentVersion = Version.parse(current);
-            if (currentVersion == null) {
-                currentVersion = new Version("current", 0, 0, 0, Version.TYPE.TEST, null);
-            }
+        public VersionInfo(ArtifactVersion current) {
+            currentVersion = Version.from(current);
         }
 
         public
@@ -247,44 +242,31 @@ public class VersionChecker implements Runnable {
      * Comparable version descriptor, which can store additional information like download url
      */
     public static class Version implements Comparable<Version> {
-        public static
-        @Nullable
-        Version parse(String version) {
-            String name = version;
-            try {
 
-                int i = version.indexOf('+');
-                String extra = null;
+        static Version from(ArtifactVersion version) {
+            String extra = null;
+            String qualifier = version.getQualifier();
+            TYPE type = TYPE.RELEASE;
+            if (qualifier.contains("alpha")) {
+                type = TYPE.ALPHA;
+                int i = qualifier.indexOf('+');
                 if (i != -1) {
-                    extra = version.substring(i);
-                    version = version.substring(0, i);
+                    extra = qualifier.substring(i + 1);
                 }
-                i = version.indexOf('.');
-                int main = Integer.parseInt(version.substring(0, i));
-                version = version.substring(i + 1);
-                i = version.indexOf('.');
-                int major = Integer.parseInt(version.substring(0, i));
-                version = version.substring(i + 1);
-
-
-                i = version.indexOf('-');
-                if (i == -1) i = version.length();
-                int minor = Integer.parseInt(version.substring(0, i));
-                TYPE type = TYPE.RELEASE;
-                if (version.contains("alpha")) {
-                    type = TYPE.ALPHA;
-                } else if (version.contains("beta")) {
-                    type = TYPE.BETA;
-                    i = version.indexOf('.', version.indexOf("beta"));
-                    extra = version.substring(i + 1);
-                } else if (version.contains("test")) {
-                    type = TYPE.TEST;
+            } else if (qualifier.contains("beta")) {
+                type = TYPE.BETA;
+                int i = qualifier.indexOf('.', qualifier.indexOf("beta"));
+                if (i != -1) {
+                    extra = qualifier.substring(i + 1);
                 }
-                return new Version(name, main, major, minor, type, extra);
-            } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                LOGGER.error("Failed to parse version {} {}", name, e);
-                return null;
+            } else if (qualifier.contains("test")) {
+                type = TYPE.TEST;
             }
+            return new Version(version.toString(), version.getMajorVersion(), version.getMinorVersion(), version.getIncrementalVersion(), type, extra);
+        }
+
+        static Version parse(String s) {
+            return from(new DefaultArtifactVersion(s));
         }
 
         public final String name;
@@ -323,8 +305,8 @@ public class VersionChecker implements Runnable {
             if (i != 0) return i;
             if (type == TYPE.BETA) {
                 try {
-                    int cb = Integer.parseInt(extra);
-                    int nb = Integer.parseInt(version.extra);
+                    int cb = extra == null ? 0 : Integer.parseInt(extra);
+                    int nb = version.extra == null ? 0 : Integer.parseInt(version.extra);
                     if (nb > cb) return -1;
                     if (nb < cb) return 1;
                 } catch (NumberFormatException e) {

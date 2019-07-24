@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
@@ -48,7 +47,7 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         String name = I18n.format("text.vampirism.level_up");
-        this.buttons.add(this.buttonLevelup = new Button(i + 120, j + 24, font.getStringWidth(name) + 5, 20, name, (context) -> {
+        this.addButton(this.buttonLevelup = new Button(i + 120, j + 24, font.getStringWidth(name) + 5, 20, name, (context) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
             PlayerEntity player = Minecraft.getInstance().player;
             UtilLib.spawnParticles(player.getEntityWorld(), ParticleTypes.ENCHANT, player.posX, player.posY, player.posZ, 1, 1, 1, 100, 1);

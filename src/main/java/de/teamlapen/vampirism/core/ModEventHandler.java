@@ -3,9 +3,13 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillEvent;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.tileentity.TotemTile;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -73,6 +77,18 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
         if (e.getModID().equalsIgnoreCase(REFERENCE.MODID)) {
             LOGGER.info("Configuration ({}) changed", e.getConfigID());
             Balance.onConfigurationChanged(); //TODO 1.14 see if this still exist after Forge readds config GUI. And if this is necessary or if the events inside VampirismConfig are sufficient
+        }
+    }
+
+    @SubscribeEvent
+    public void onSkillNodeCreated(SkillEvent.CreatedNode event) {
+
+        if (event.getNode().isRoot()) {
+            if (event.getNode().getFaction().equals(VReference.HUNTER_FACTION)) {
+                HunterSkills.buildSkillTree(event.getNode());
+            } else if (event.getNode().getFaction().equals(VReference.VAMPIRE_FACTION)) {
+                VampireSkills.buildSkillTree(event.getNode());
+            }
         }
     }
 

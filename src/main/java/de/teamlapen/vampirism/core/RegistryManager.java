@@ -1,11 +1,9 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillEvent;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
@@ -159,18 +157,6 @@ public class RegistryManager implements IInitListener {
     public void onRegisterSounds(RegistryEvent.Register<SoundEvent> event) {
 
         ModSounds.registerSounds(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onSkillNodeCreated(SkillEvent.CreatedNode event) {
-
-        if (event.getNode().isRoot()) {
-            if (event.getNode().getFaction().equals(VReference.HUNTER_FACTION)) {
-                HunterSkills.buildSkillTree(event.getNode());
-            } else if (event.getNode().getFaction().equals(VReference.VAMPIRE_FACTION)) {
-                VampireSkills.buildSkillTree(event.getNode());
-            }
-        }
     }
 
     @SubscribeEvent
