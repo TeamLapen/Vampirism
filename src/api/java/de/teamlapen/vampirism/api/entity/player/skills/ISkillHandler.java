@@ -35,6 +35,8 @@ public interface ISkillHandler<T extends ISkillPlayer> {
 
     boolean isSkillEnabled(ISkill skill);
 
+    ISkill[] getParentSkills(ISkill skill);
+
     /**
      * Reset all skills but reactivate the root skill of the faction
      */

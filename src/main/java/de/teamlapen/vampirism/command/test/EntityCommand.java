@@ -31,7 +31,6 @@ public class EntityCommand extends BasicCommand {
         List<Entity> l = asPlayer.getEntityWorld().getEntitiesWithinAABBExcludingEntity(asPlayer, asPlayer.getBoundingBox().grow(3, 2, 3));
         for (Entity entity : l) {
             if (entity instanceof CreatureEntity) {
-
                 ResourceLocation id = entity.getType().getRegistryName();
                 commandSource.sendFeedback(new StringTextComponent(id.toString()), true);
             } else {

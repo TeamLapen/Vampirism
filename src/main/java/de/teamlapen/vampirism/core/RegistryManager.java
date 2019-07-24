@@ -176,7 +176,7 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterFeatures(RegistryEvent.Register<Feature<?>> event) {
-        ModWorld.registerFeatures(event.getRegistry());
+        ModWorldFeatures.registerFeatures(event.getRegistry());
     }
 
     @SubscribeEvent

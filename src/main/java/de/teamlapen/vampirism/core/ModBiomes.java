@@ -31,7 +31,7 @@ public class ModBiomes {
 
     static void addBiome() {
         BiomeDictionary.addTypes(vampire_forest, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
-        if (VampirismConfig.COMMON.disableVampireForest.get()) {
+        if (!VampirismConfig.COMMON.disableVampireForest.get()) {
             BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest, Balance.general.VAMPIRE_FOREST_WEIGHT));
         }
     }
