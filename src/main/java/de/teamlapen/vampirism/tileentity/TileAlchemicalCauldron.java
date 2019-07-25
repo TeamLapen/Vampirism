@@ -53,9 +53,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     private static final int SLOT_LIQUID = 1;
     private static final int SLOT_INGREDIENT = 2;
     private static final int SLOT_FUEL = 3;
-    private static final int[] SLOTS_ALL = new int[]{SLOT_INGREDIENT, SLOT_LIQUID, SLOT_FUEL};
-    private static final int[] SLOTS_SOUTH = new int[]{SLOT_RESULT};
-    private static final int[] SLOTS_BOTTOM = new int[]{SLOT_RESULT};
+    private static final int[] SLOTS_ALL = new int[]{SLOT_INGREDIENT, SLOT_LIQUID, SLOT_FUEL, SLOT_RESULT};
 
     /**
      * @return The liquid color of the given stack. -1 if not a (registered) liquid stack
@@ -206,14 +204,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     @Nonnull
     @Override
     public int[] getSlotsForFace(EnumFacing side) {
-        switch (side) {
-            case SOUTH:
-                return SLOTS_SOUTH;
-            case DOWN:
-                return SLOTS_BOTTOM;
-            default:
-                return new int[]{SLOT_INGREDIENT};
-        }
+        return SLOTS_ALL;
     }
 
     @Nullable
