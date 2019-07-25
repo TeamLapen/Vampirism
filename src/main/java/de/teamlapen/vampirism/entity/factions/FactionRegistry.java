@@ -61,12 +61,12 @@ public class FactionRegistry implements IFactionRegistry {
 
     @Nullable
     @Override
-    public IFaction getFactionByName(String name) {
+    public IFaction getFactionByID(ResourceLocation id) {
         if (allFactions == null) {
             return null;
         }
         for (IFaction f : allFactions) {
-            if (f.name().equals(name)) {
+            if (f.getID().equals(id)) {
                 return f;
             }
         }
@@ -93,7 +93,7 @@ public class FactionRegistry implements IFactionRegistry {
     public Predicate<LivingEntity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction) {
         int key = 0;
         if (otherFaction != null) {
-            int id = ((Faction) otherFaction).getId();
+            int id = otherFaction.hashCode();
             if (id > 63) {
                 LOGGER.warn("Faction id over 64, predicates won't work");
             }
@@ -111,7 +111,7 @@ public class FactionRegistry implements IFactionRegistry {
         if (ignoreDisguise) {
             key |= (1 << 6);
         }
-        int id = ((Faction) thisFaction).getId();
+        int id = thisFaction.hashCode();
         if (id > 64) {
             LOGGER.warn("Faction id over 64, predicates won't work");
         }
@@ -130,22 +130,22 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public <T extends IFactionEntity> IFaction registerFaction(String name, Class<T> entityInterface, int color) {
-        if (!UtilLib.isNonNull(name, entityInterface)) {
+    public <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, int color) {
+        if (!UtilLib.isNonNull(id, entityInterface)) {
             throw new IllegalArgumentException("[Vampirism]Parameter for faction cannot be null");
         }
-        Faction<T> f = new Faction<>(name, entityInterface, color);
+        Faction<T> f = new Faction<>(id, entityInterface, color);
         addFaction(f);
         return f;
     }
 
     @Override
-    public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
-        if (!UtilLib.isNonNull(name, entityInterface, playerCapabilitySupplier)) {
+    public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
+        if (!UtilLib.isNonNull(id, entityInterface, playerCapabilitySupplier)) {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
 
-        PlayableFaction<T> f = new PlayableFaction<>(name, entityInterface, color, key, playerCapabilitySupplier, highestLevel);
+        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, playerCapabilitySupplier, highestLevel);
         addFaction(f);
         return f;
     }
@@ -153,7 +153,7 @@ public class FactionRegistry implements IFactionRegistry {
     @ThreadSafeAPI
     private void addFaction(Faction faction) {
         if (temp == null) {
-            throw new IllegalStateException(String.format("[Vampirism]You have to register factions during InterModEnqueueEvent. (%s)", faction.name));
+            throw new IllegalStateException(String.format("[Vampirism]You have to register factions during InterModEnqueueEvent. (%s)", faction.getID()));
         } else {
             temp.add(faction);
         }

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -245,9 +244,9 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
     @Nullable
     public ITextComponent getDisplayName() { //TODO the method doesnt exist anymore
         if (capturingFaction != null) {
-            return new TranslationTextComponent("text.vampirism.village.faction_capturing", new TranslationTextComponent(capturingFaction.getTranslationKeyPlural()));
+            return new TranslationTextComponent("text.vampirism.village.faction_capturing", capturingFaction.getNamePlural());
         } else if (controllingFaction != null) {
-            return new TranslationTextComponent("text.vampirism.village.faction_controlling", new TranslationTextComponent(controllingFaction.getTranslationKeyPlural()));
+            return new TranslationTextComponent("text.vampirism.village.faction_controlling", controllingFaction.getNamePlural());
         } else {
             return new TranslationTextComponent("text.vampirism.village.neutral");
         }
@@ -322,10 +321,10 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
 
         if (this.controllingFaction == null) {
             this.capture_phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
-            notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.neutral_village_under_attack", new TranslationTextComponent(faction.getTranslationKeyPlural())));
+            notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.neutral_village_under_attack", faction.getNamePlural()));
         } else {
             this.capture_phase = CAPTURE_PHASE.PHASE_1_OPPOSITE;
-            notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.faction_village_under_attack", new TranslationTextComponent(this.controllingFaction.getTranslationKey()), new TranslationTextComponent(faction.getTranslationKeyPlural())));
+            notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.faction_village_under_attack", this.controllingFaction.getNamePlural(), faction.getNamePlural()));
         }
         this.capture_timer = 0;
         force_village_update = true;
@@ -357,17 +356,17 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
         IPlayableFaction controllingFaction = null;
         IPlayableFaction capturingFaction = null;
         if (!"".equals(controlling)) {
-            IFaction f = VampirismAPI.factionRegistry().getFactionByName(controlling);
+            IFaction f = null;//VampirismAPI.factionRegistry().getFactionByName(controlling);
             if (!(f instanceof IPlayableFaction)) {
-                LOGGER.warn("Stored faction %s does not exist or is not playable", controlling);
+                LOGGER.warn("Stored faction {} does not exist or is not playable", controlling);
             } else {
                 controllingFaction = (IPlayableFaction) f;
             }
         }
         if (!"".equals(capturing)) {
-            IFaction f = VampirismAPI.factionRegistry().getFactionByName(capturing);
+            IFaction f = null;//VampirismAPI.factionRegistry().getFactionByName(capturing);
             if (!(f instanceof IPlayableFaction)) {
-                LOGGER.warn("Stored faction %s does not exist or is not playable", capturing);
+                LOGGER.warn("Stored faction {} does not exist or is not playable", capturing);
             } else {
                 capturingFaction = (IPlayableFaction) f;
             }
@@ -709,8 +708,8 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
     @Nonnull
     @Override
     public CompoundNBT write(CompoundNBT compound) {
-        compound.putString("controlling", controllingFaction == null ? "" : controllingFaction.name());
-        compound.putString("capturing", capturingFaction == null ? "" : capturingFaction.name());
+        compound.putString("controlling", controllingFaction == null ? "" : controllingFaction.getID().toString());
+        compound.putString("capturing", capturingFaction == null ? "" : capturingFaction.getID().toString());
         if (capturingFaction != null) {
             compound.putInt("timer", capture_timer);
             compound.putInt("abort_timer", capture_abort_timer);
@@ -746,7 +745,7 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
         //VampirismMod.log.t("Completed capture");
         informEntitiesAboutCaptureStop();
         if (notifyPlayer)
-            notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_captured_by", new TranslationTextComponent(controllingFaction.getTranslationKeyPlural())));
+            notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_captured_by", controllingFaction.getNamePlural()));
         updateBossinfoPlayers(null);
     }
 
@@ -864,7 +863,7 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
             id = getEntityForFaction(this.controllingFaction);
         }
         if (id == null) {
-            LOGGER.warn("No village capture entity registered for %s", attack ? this.capturingFaction : this.controllingFaction);
+            LOGGER.warn("No village capture entity registered for {}", attack ? this.capturingFaction : this.controllingFaction);
             return;
         }
         Optional<EntityType<?>> type = EntityType.byKey(id.toString());

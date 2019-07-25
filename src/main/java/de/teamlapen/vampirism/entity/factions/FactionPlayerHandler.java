@@ -227,12 +227,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         int oldLevel = currentLevel;
         if (currentFaction != null && (!currentFaction.equals(faction) || level == 0)) {
             if (!currentFaction.getPlayerCapability(player).canLeaveFaction()) {
-                LOGGER.info("You cannot leave faction {}, it is prevented by respective mod", currentFaction.getKey());
+                LOGGER.info("You cannot leave faction {}, it is prevented by respective mod", currentFaction.getID());
                 return false;
             }
         }
         if (faction != null && (level < 0 || level > faction.getHighestReachableLevel())) {
-            LOGGER.warn("Level {} in faction {} cannot be reached", level, faction.getKey());
+            LOGGER.warn("Level {} in faction {} cannot be reached", level, faction.getID());
             return false;
         }
         FactionEvent.ChangeLevelOrFaction event = new FactionEvent.ChangeLevelOrFaction(this, old, oldLevel, faction, faction == null ? 0 : level);
@@ -265,7 +265,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Override
     public void writeFullUpdateToNBT(CompoundNBT nbt) {
-        nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getKey().toString());
+        nbt.putString("faction", currentFaction == null ? "null" : currentFaction.getID().toString());
         nbt.putInt("level", currentLevel);
         if (getBoundAction1() != null) nbt.putString("bound1", getBoundAction1().toString());
         if (getBoundAction2() != null) nbt.putString("bound2", getBoundAction2().toString());
@@ -273,7 +273,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     private IPlayableFaction getFactionFromKey(ResourceLocation key) {
         for (IPlayableFaction p : VampirismAPI.factionRegistry().getPlayableFactions()) {
-            if (p.getKey().equals(key)) {
+            if (p.getID().equals(key)) {
                 return p;
             }
         }
@@ -307,7 +307,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      */
     private void notifyFaction(IPlayableFaction oldFaction, int oldLevel) {
         if (oldFaction != null && !oldFaction.equals(currentFaction)) {
-            LOGGER.debug("Leaving faction {}", oldFaction.getKey());
+            LOGGER.debug("Leaving faction {}", oldFaction.getID());
             oldFaction.getPlayerCapability(player).onLevelChanged(0, oldLevel);
         }
         if (currentFaction != null) {
@@ -317,7 +317,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (!Objects.equals(currentFaction, oldFaction)) {
             onChangedFaction();
         }
-        ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getKey().hashCode());
+        ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getID().hashCode());
     }
 
     /**
@@ -331,7 +331,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     private void saveNBTData(CompoundNBT nbt) {
         //Don't forget to also add things to copyFrom
         if (currentFaction != null) {
-            nbt.putString("faction", currentFaction.getKey().toString());
+            nbt.putString("faction", currentFaction.getID().toString());
             nbt.putInt("level", currentLevel);
         }
         if (getBoundAction1() != null) nbt.putString("bound1", getBoundAction1().toString());

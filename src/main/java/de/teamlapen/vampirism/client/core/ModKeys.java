@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -185,7 +184,7 @@ public class ModKeys {
                 if (action == null) {
                     LOGGER.info("Bound action {} not found", key);
                 } else if (!action.getFaction().equals(player.getFaction())) {
-                    player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.only_faction", UtilLib.translate(action.getFaction().getTranslationKey())), true);
+                    player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.only_faction", action.getFaction().getName()), true);
                 } else {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + key));
                 }

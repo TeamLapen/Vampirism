@@ -222,7 +222,7 @@ public class InputEventPacket implements IMessage {
                             player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));
                         }
                     } else {
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", new TranslationTextComponent(VReference.HUNTER_FACTION.getTranslationKey())));
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.HUNTER_FACTION.getName()));
                     }
                     break;
                 case BASICHUNTERLEVELUP:

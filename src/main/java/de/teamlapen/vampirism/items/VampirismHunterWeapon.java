@@ -51,7 +51,8 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (getUsingFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
             TextFormatting color = Minecraft.getInstance().player != null && Helper.canUseFactionItem(stack, this, FactionPlayerHandler.get(Minecraft.getInstance().player)) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
-            tooltip.add(new TranslationTextComponent(getUsingFaction(stack) == null ? "text.vampirism.all" : getUsingFaction(stack).getTranslationKeyPlural()).appendText(":" + getMinLevel(stack)).applyTextStyle(color));
+            IFaction f = getUsingFaction(stack);
+            tooltip.add(((f == null ? new TranslationTextComponent("text.vampirism.all") : f.getNamePlural())).appendText(":" + getMinLevel(stack)).applyTextStyle(color));
             ISkill reqSkill = this.getRequiredSkill(stack);
             if (reqSkill != null) {
                 tooltip.add(new TranslationTextComponent("text.vampirism.required_skill", new TranslationTextComponent(reqSkill.getTranslationKey())).applyTextStyle(color));

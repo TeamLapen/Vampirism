@@ -32,15 +32,14 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
 
         IPlayableFaction faction = null;
         if (json.has("faction")) {
-            String name = json.get("faction").getAsString();
-            if (!"any".equals(name)) {
-                IFaction faction1 = VampirismAPI.factionRegistry().getFactionByName(name);
+            ResourceLocation id = new ResourceLocation(json.get("faction").getAsString());
+            IFaction faction1 = VampirismAPI.factionRegistry().getFactionByID(id);
                 if (faction1 == null || !(faction1 instanceof IPlayableFaction)) {
-                    LOGGER.warn("Given faction name does not exist or is not a playable faction: {}", name);
+                    LOGGER.warn("Given faction name does not exist or is not a playable faction: {}", id);
                 } else {
                     faction = (IPlayableFaction) faction1;
                 }
-            }
+
         }
         int level = json.has("level") ? json.get("level").getAsInt() : 1;
         return new Instance(faction, level);

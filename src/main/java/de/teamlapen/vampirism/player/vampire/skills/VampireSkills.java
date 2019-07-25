@@ -57,7 +57,7 @@ public class VampireSkills {
     public static final ISkill garlic_blood_vision = UtilLib.getNull();
 
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
-        registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getKey(), 32, 0, false));
+        registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getID(), 32, 0, false));
         registry.register(new VampirismSkill.SimpleVampireSkill("night_vision", 48, 0, false) {
 
             @Override

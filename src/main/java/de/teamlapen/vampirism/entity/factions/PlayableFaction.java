@@ -14,14 +14,12 @@ import net.minecraftforge.common.util.NonNullSupplier;
 public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implements IPlayableFaction<T> {
     private final int highestLevel;
     private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
-    private final ResourceLocation key;
     private boolean renderLevel = true;
 
-    PlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
-        super(name, entityInterface, color);
+    PlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
+        super(id, entityInterface, color);
         this.highestLevel = highestLevel;
         this.playerCapabilitySupplier = playerCapabilitySupplier;
-        this.key = key;
     }
 
     @Override
@@ -39,10 +37,7 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
         return highestLevel;
     }
 
-    @Override
-    public ResourceLocation getKey() {
-        return key;
-    }
+
 
     @Override
     public T getPlayerCapability(PlayerEntity player) {
@@ -63,7 +58,7 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
     @Override
     public String toString() {
         return "PlayableFaction{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
                 '}';
     }
 }

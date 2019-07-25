@@ -66,15 +66,15 @@ public class SkillManager implements ISkillManager {
      */
     @OnlyIn(Dist.CLIENT)
     public Integer[] getDisplayInfo(IPlayableFaction faction) {
-        if (!skillNodeSizeMap.containsKey(faction.getKey())) {
-            skillNodeSizeMap.put(faction.getKey(), createDisplayInfo(getRootSkillNode(faction)));
+        if (!skillNodeSizeMap.containsKey(faction.getID())) {
+            skillNodeSizeMap.put(faction.getID(), createDisplayInfo(getRootSkillNode(faction)));
         }
-        return skillNodeSizeMap.get(faction.getKey());
+        return skillNodeSizeMap.get(faction.getID());
     }
 
     @Override
     public SkillNode getRootSkillNode(IPlayableFaction faction) {
-        return rootNodes.get(faction.getKey());
+        return rootNodes.get(faction.getID());
     }
 
     @Override
@@ -100,7 +100,7 @@ public class SkillManager implements ISkillManager {
     private void buildSkillTree(IPlayableFaction faction) {
         ISkill root = getRootSkill(faction);
         SkillNode rootNode = new SkillNode(faction, root);
-        rootNodes.put(faction.getKey(), rootNode);
+        rootNodes.put(faction.getID(), rootNode);
         MinecraftForge.EVENT_BUS.post(new SkillEvent.CreatedNode(faction, rootNode));
         setRenderPos(rootNode, 0);
     }
@@ -164,10 +164,10 @@ public class SkillManager implements ISkillManager {
      */
     private @Nonnull
     ISkill getRootSkill(IPlayableFaction faction) {
-        ISkill skill = ModRegistries.SKILLS.getValue(faction.getKey());
+        ISkill skill = ModRegistries.SKILLS.getValue(faction.getID());
         if (skill == null) {
-            LOGGER.warn("No root skill exists for faction {}", faction.getKey());
-            throw new IllegalStateException("You need to register a root skill for your faction " + faction.getKey());
+            LOGGER.warn("No root skill exists for faction {}", faction.getID());
+            throw new IllegalStateException("You need to register a root skill for your faction " + faction.getID());
         }
         return skill;
     }

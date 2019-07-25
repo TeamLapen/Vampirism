@@ -3,29 +3,37 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+
+import javax.annotation.Nullable;
 
 /**
  * Represents a entity faction (e.g. Vampires)
  */
 public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private static int nextId = 0;
-    protected final String name;
     private final Class<T> entityInterface;
     private final int color;
+    protected final ResourceLocation id;
+    @Nullable
     private String translationKey;
+    @Nullable
     private String translationKeyPlural;
     /**
      * Id used for hashing
      */
-    private int id;
+    private int integerId;
     private TextFormatting chatColor;
 
-    Faction(String name, Class<T> entityInterface, int color) {
-        this.name = name;
+    Faction(ResourceLocation id, Class<T> entityInterface, int color) {
+        this.id = id;
         this.entityInterface = entityInterface;
         this.color = color;
-        id = nextId++;
+        integerId = nextId++;
     }
 
     @Override
@@ -54,18 +62,23 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public String getTranslationKey() {
-        return translationKey == null ? name : translationKey;
+    public ResourceLocation getID() {
+        return id;
     }
 
     @Override
-    public String getTranslationKeyPlural() {
-        return translationKeyPlural == null ? name : translationKeyPlural;
+    public ITextComponent getName() {
+        return translationKey == null ? new StringTextComponent(id.toString()) : new TranslationTextComponent(translationKey);
+    }
+
+    @Override
+    public ITextComponent getNamePlural() {
+        return translationKeyPlural == null ? new StringTextComponent(id.toString()) : new TranslationTextComponent(translationKeyPlural);
     }
 
     @Override
     public int hashCode() {
-        return id;
+        return integerId;
     }
 
     @Override
@@ -73,10 +86,6 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         return entityInterface.isInstance(creature);
     }
 
-    @Override
-    public String name() {
-        return name;
-    }
 
     public Faction<T> setTranslationKeys(String unlocalizedName, String unlocalizedNamePlural) {
         this.translationKey = unlocalizedName;
@@ -87,12 +96,8 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     @Override
     public String toString() {
         return "Faction{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
+                "id='" + integerId + '\'' +
+                ", hash=" + integerId +
                 '}';
-    }
-
-    protected int getId() {
-        return id;
     }
 }

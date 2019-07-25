@@ -30,7 +30,7 @@ public interface IFactionRegistry {
      * Get a faction by it's name
      */
     @Nullable
-    IFaction getFactionByName(String name);
+    IFaction getFactionByID(ResourceLocation id);
 
     /**
      * @return All factions after post init
@@ -67,27 +67,26 @@ public interface IFactionRegistry {
     /**
      * Create and registerAdvancements a non playable faction. Has to be called during InterModEnqueueEvent
      *
-     * @param name            Faction name e.g. for level command
+     * @param id            Faction id e.g. for level command
      * @param entityInterface Interface all entities implement
      * @param color           Color e.g. for level rendering
      * @param <T>             Interface all entities implement
      * @return The created faction
      */
     @ThreadSafeAPI
-    <T extends IFactionEntity> IFaction registerFaction(String name, Class<T> entityInterface, int color);
+    <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, int color);
 
     /**
      * Create and registerAdvancements a playable faction. Has to be called during InterModEnqueueEvent
      *
-     * @param name             Faction name e.g. for level command
+     * @param id             Faction id e.g. for level command
      * @param entityInterface  Interface all entities or (the given capability for players) implement
      * @param color            Color e.g. for level rendering
-     * @param playerCapability The capability which is attached to all players
-     * @param key              Unique key, preferable the one used for registering the capability
+     * @param playerCapabilitySupplier The capability which is attached to all players
      * @param highestLevel     The highest reachable player level
      * @param <T>              nterface all entities or (the given capability for players)  implement
      * @return The created faction
      */
     @ThreadSafeAPI
-    <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
+    <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
 }

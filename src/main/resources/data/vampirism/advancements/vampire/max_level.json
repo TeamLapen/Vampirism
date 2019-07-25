@@ -19,7 +19,7 @@
     "level": {
       "trigger": "vampirism:faction",
       "conditions": {
-        "faction": "Vampire",
+        "faction": "vampirism:vampire",
         "level": 14
       }
     }

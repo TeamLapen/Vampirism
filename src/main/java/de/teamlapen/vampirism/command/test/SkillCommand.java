@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -56,7 +55,7 @@ public class SkillCommand extends BasicCommand {//TODO add compability for other
         }
         ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(REFERENCE.MODID, type));
         if (skill == null) {
-            commandSource.sendFeedback(new StringTextComponent("Skill with id " + type + " could not be found for faction " + factionPlayer.getFaction().name()), true);
+            commandSource.sendFeedback(new StringTextComponent("Skill with id " + type + " could not be found for faction " + factionPlayer.getFaction().getID()), true);
             return 0;
         }
         if (factionPlayer.getSkillHandler().isSkillEnabled(skill)) {

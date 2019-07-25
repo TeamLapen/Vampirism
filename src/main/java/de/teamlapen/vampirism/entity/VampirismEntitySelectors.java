@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.command.arguments.EntityOptions;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Creates and adds custom entity selectors based on Vampirism's properties
  */
-public class VampirismEntitySelectors {//TODO @maxanier
+public class VampirismEntitySelectors {
 
     private final static Logger LOGGER = LogManager.getLogger(VampirismEntitySelectors.class);
     private static final String FACTION = "vampirism:faction";
@@ -32,10 +33,10 @@ public class VampirismEntitySelectors {//TODO @maxanier
     public static void registerSelectors() {
         EntityOptions.register(FACTION, (parser) -> {
             boolean invert = parser.shouldInvertValue();
-            String faction = parser.getReader().readString();
+            ResourceLocation factionID = new ResourceLocation(parser.getReader().readString());
             IFaction[] factions = VampirismAPI.factionRegistry().getFactions();
             for (final IFaction f : factions) {
-                if (f.name().equalsIgnoreCase(faction)) {
+                if (f.getID().equals(factionID)) {
                     parser.addFilter(input -> {
                         if (input instanceof IFactionEntity) {
                             boolean flag1 = f.equals(((IFactionEntity) input).getFaction());
@@ -49,7 +50,7 @@ public class VampirismEntitySelectors {//TODO @maxanier
                     return;
                 }
             }
-            throw FACTION_NOT_FOUND.createWithContext(parser.getReader(), faction);
+            throw FACTION_NOT_FOUND.createWithContext(parser.getReader(), factionID);
         }, (parser) -> {
             return true;
         }, new TranslationTextComponent("vampirism.argument.entity.options.faction.desc"));

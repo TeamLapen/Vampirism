@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -263,11 +262,11 @@ public class ModPlayerEventHandler {
             if (usingFaction != null && !handler.isInFaction(usingFaction)) {
 
                 if (message)
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", new TranslationTextComponent(usingFaction.getTranslationKeyPlural())));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()));
                 return false;
             } else if (handler.getCurrentLevel() < item.getMinLevel(stack)) {
                 if (message)
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by_level", new TranslationTextComponent(usingFaction == null ? "text.vampirism.all" : usingFaction.getTranslationKeyPlural()), item.getMinLevel(stack)));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by_level", usingFaction == null ? new TranslationTextComponent("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)));
                 return false;
             } else if (requiredSkill != null) {
                 IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer();

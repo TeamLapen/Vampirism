@@ -56,7 +56,7 @@ public class HunterSkills {
     public static final ISkill hunter_awareness = UtilLib.getNull();
 
     public static void registerHunterSkills(IForgeRegistry<ISkill> registry) {
-        registry.register(new VampirismSkill.SimpleHunterSkill(VReference.HUNTER_FACTION.getKey(), 0, 32, false));
+        registry.register(new VampirismSkill.SimpleHunterSkill(VReference.HUNTER_FACTION.getID(), 0, 32, false));
         registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", 192, 32, false));
         registry.register(new VampirismSkill.SimpleHunterSkill("weapon_table", 48, 32, true));
         registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_crossbow", 208, 32, false));
