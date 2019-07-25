@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.inventory.container.AltarInfusionContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -36,7 +37,7 @@ public class AltarInfusionScreen extends ContainerScreen<AltarInfusionContainer>
 
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        this.font.drawString(this.title.getFormattedText(), this.xSize / 2 - this.font.getStringWidth(this.title.getFormattedText()) / 2 + 6, 6.0F, 4210752);
+        this.font.drawString(this.title.getFormattedText(), this.xSize / 2 - this.font.getStringWidth(this.title.getFormattedText()) / 2, 6.0F, 4210752);
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 4210752);//TODO 1.14 test and #77
     }
 

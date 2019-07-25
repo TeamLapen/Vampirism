@@ -84,7 +84,7 @@ public class WeaponTableBlock extends VampirismBlock {
                     player.openContainer(state.getContainer(world, pos));
                 }
                 else {
-                    player.sendMessage(new TranslationTextComponent("tile.vampirism." + regName + ".cannot_use"));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.weapon_table.cannot_use"));
                 }
             }
         }

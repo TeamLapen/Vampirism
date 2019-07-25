@@ -77,10 +77,10 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {//T
                 if (ownerID == player.getUniqueID()) {
                     return true;
                 } else {
-                    player.sendMessage(new TranslationTextComponent("tile.vampirism.alchemical_cauldron.other", ownerName));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.other", ownerName));
                 }
             } else {
-                player.sendMessage(new TranslationTextComponent("tile.vampirism.alchemical_cauldron.cannot_use", ownerName));
+                player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.cannot_use", ownerName));
             }
         }
         return false;
@@ -248,7 +248,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {//T
 
     @Override
     protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("container.alchemical_cauldron");
+        return new TranslationTextComponent("tile.vampirism.alchemical_cauldron");
     }
 
     @Nonnull

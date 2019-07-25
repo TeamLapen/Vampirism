@@ -97,7 +97,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
             if (p.world.isRemote)
-                p.sendMessage(new TranslationTextComponent("text.vampirism.ritual_level_wrong"));
+                p.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"));
             return;
         }
         int neededBlood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;

@@ -5,6 +5,8 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * Base class for most of Vampirism's tileInventory
@@ -37,6 +39,10 @@ public class VampirismItem extends Item {
      */
     protected void setTranslation_key(String name) {
         this.translation_key = Util.makeTranslationKey("item", new ResourceLocation(REFERENCE.MODID, name));
+    }
+
+    public ITextComponent getCustomName() {
+        return new TranslationTextComponent(this.getDefaultTranslationKey());
     }
 
 }

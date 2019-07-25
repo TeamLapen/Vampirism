@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,7 +15,7 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TranslationTextComponent;
 
 /**
@@ -23,23 +24,24 @@ import net.minecraft.util.text.TranslationTextComponent;
 public class HunterBasicContainer extends InventoryContainer {
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 27, 32)};
     private final IHunterPlayer player;
+    private final BasicHunterEntity entity;
 
     @Deprecated
     public HunterBasicContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, IWorldPosCallable.DUMMY);
-
+        this(id, playerInventory, null);
     }
 
-    public HunterBasicContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosIn) {
-        super(ModContainer.hunter_basic, id, playerInventory, worldPosIn, SELECTOR_INFOS);
+    public HunterBasicContainer(int id, PlayerInventory playerInventory, BasicHunterEntity hunter) {
+        super(ModContainer.hunter_basic, id, playerInventory, SELECTOR_INFOS);
         player = HunterPlayer.get(playerInventory.player);
         this.addPlayerSlots(playerInventory);
-
+        this.entity = hunter;
     }
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return true;
+        if (entity == null) return false;
+        return new Vec3d(playerIn.posX, playerIn.posY, playerIn.posZ).distanceTo(new Vec3d(entity.posX, entity.posY, entity.posZ)) < 5;
     }
 
     public boolean canLevelUp() {
@@ -76,9 +78,9 @@ public class HunterBasicContainer extends InventoryContainer {
     public void onLevelUpClicked() {
         if (!canLevelUp()) return;
         int target = player.getLevel() + 1;
-        ItemStackHelper.getAndSplit(inventoryItemStacks, 0, HunterLevelingConf.instance().getVampireBloodCountForBasicHunter(target));
+        ItemStackHelper.getAndSplit(inventoryItemStacks, 0, HunterLevelingConf.instance().getVampireBloodCountForBasicHunter(target));//TODO 1.14 client not synchronized after itemstack decrease until itemstack clicked
         FactionPlayerHandler.get(player.getRepresentingPlayer()).setFactionLevel(VReference.HUNTER_FACTION, target);
-        player.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.levelup"));
+        player.getRepresentingPlayer().sendMessage(new TranslationTextComponent("container.vampirism.basic_hunter.levelup"));
         player.getRepresentingPlayer().closeScreen();
 
     }

@@ -275,6 +275,7 @@ public class VampirismMod {
      */
     private void finishAPI2() {
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
+        ((BloodPotionRegistry) VampirismAPI.bloodPotionRegistry()).finish();
     }
 
     /**

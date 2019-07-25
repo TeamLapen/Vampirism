@@ -16,6 +16,7 @@ public class BloodGrinderContainer extends InventoryContainer {
     private static final Function<ItemStack, Boolean> canProcess = stack -> BloodConversionRegistry.getImpureBloodValue(stack) > 0;
     public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(canProcess, 80, 34)};
 
+    @Deprecated
     public BloodGrinderContainer(int id, PlayerInventory playerInventory) {
         this(id, playerInventory, NonNullList.withSize(1, ItemStack.EMPTY), IWorldPosCallable.DUMMY);
     }

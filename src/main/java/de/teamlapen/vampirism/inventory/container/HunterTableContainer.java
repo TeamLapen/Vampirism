@@ -8,21 +8,19 @@ import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.items.HunterIntelItem;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.util.IWorldPosCallable;
 
 /**
  * Container for the hunter table.
@@ -35,8 +33,13 @@ public class HunterTableContainer extends InventoryContainer {
     private final HunterLevelingConf levelingConf = HunterLevelingConf.instance();
     private ItemStack missing = ItemStack.EMPTY;
 
+    @Deprecated
     public HunterTableContainer(int id, PlayerInventory playerInventory) {
-        super(ModContainer.hunter_table, id, playerInventory, SELECTOR_INFOS);
+        this(id, playerInventory, IWorldPosCallable.DUMMY);
+    }
+
+    public HunterTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
+        super(ModContainer.hunter_table, id, playerInventory, worldPosCallable, SELECTOR_INFOS);
         slotResult = new SlotResult(this, new CraftResultInventory() {
             @Override
             public int getInventoryStackLimit() {
@@ -64,15 +67,8 @@ public class HunterTableContainer extends InventoryContainer {
     @Override
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
-
         if (!playerIn.getEntityWorld().isRemote) {
-            for (int i = 0; i < 4; ++i) {
-                ItemStack itemstack = ItemStackHelper.getAndRemove(this.inventoryItemStacks, i);
-
-                if (!itemstack.isEmpty()) {
-                    playerIn.dropItem(itemstack, false);
-                }
-            }
+            clearContainer(playerIn, 3);
         }
     }
 
@@ -82,7 +78,7 @@ public class HunterTableContainer extends InventoryContainer {
             int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
             missing = checkItems(req[0], req[1], req[2], req[3]);
             if (missing.isEmpty()) {
-                slotResult.inventory.setInventorySlotContents(0, new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(REFERENCE.MODID, "hunter_intel" + levelingConf.getHunterIntelMetaForLevel(hunterLevel + 1))), 1));
+                slotResult.inventory.setInventorySlotContents(0, new ItemStack(HunterIntelItem.getIntelForExactlyLevel(hunterLevel + 1)));
             } else {
                 slotResult.inventory.setInventorySlotContents(0, ItemStack.EMPTY);
             }
@@ -144,7 +140,7 @@ public class HunterTableContainer extends InventoryContainer {
 
             slot.onTake(playerEntity, slotStack);
         }
-
+        onCraftMatrixChanged(null);
         return result;
     }
 

@@ -38,7 +38,7 @@ public class HunterTableBlock extends VampirismBlock {
     @Override
     public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
         return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
-            return new HunterTableContainer(id, playerInventory);
+            return new HunterTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos));
         }, containerName);
     }
 

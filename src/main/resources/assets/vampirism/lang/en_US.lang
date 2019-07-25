@@ -155,9 +155,9 @@ entity.Villager.vampirism.vampire_expert=Vampire Expert
 entity.Villager.vampirism.hunter_expert=Hunter Expert
 
 #RITUALS
-text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual
-text.vampirism.ritual_night_only=You can only perform this ritual at night
-text.vampirism.trainer_level_wrong=This trainer cannot train you at your level
+text.vampirism.altar_infusion.ritual_missing_items=Missing %s of "%s" for this ritual
+text.vampirism.altar_infusion.ritual_night_only=You can only perform this ritual at night
+text.vampirism.hunter_trainer.trainer_level_wrong=This trainer cannot train you at your level
 
 #BLOCKS
 tile.vampirism.hunter_table.name=Hunter Research Table
@@ -470,10 +470,10 @@ death.attack.holy_water=%1$s was burned with holy water
 death.attack.holy_water.player=%2$s burned %1$s with holy water
 text.vampirism.skill.level_to_low=Your vampire level is too low for that
 text.vampirism.skill.cooldown_not_over=Please wait until the cooldown is over
-text.vampirism.ritual_missing_times=You are missing items for this ritual
-text.vampirism.ritual_structure_wrong=The structure is wrong for this ritual
-text.vampirism.ritual_level_wrong=You cannot use this altar at this level
-text.vampirism.ritual_still_running=The ritual is still running
+text.vampirism.altar_infusion.ritual_missing_times=You are missing items for this ritual
+text.vampirism.altar_infusion.ritual_structure_wrong=The structure is wrong for this ritual
+text.vampirism.altar_infusion.ritual_level_wrong=You cannot use this altar at this level
+text.vampirism.altar_infusion.ritual_still_running=The ritual is still running
 text.vampirism.not_enough_blood=There is not enough blood in the altar
 text.vampirism.ritual_requirements_not_met=Not all requirements for this ritual were met
 text.vampirism.purity=Purity

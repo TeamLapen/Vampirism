@@ -1,9 +1,12 @@
 package de.teamlapen.lib.lib.inventory;
 
+import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
@@ -15,6 +18,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -101,6 +105,20 @@ public abstract class InventoryContainer extends Container {
         return true;
     }
 
+    protected void clearContainer(PlayerEntity playerEntity, int lastIndex) {
+        if (!playerEntity.isAlive() || playerEntity instanceof ServerPlayerEntity && ((ServerPlayerEntity) playerEntity).hasDisconnected()) {
+            for (int j = 0; j < lastIndex + 1; ++j) {
+                playerEntity.dropItem(ItemStackHelper.getAndRemove(inventoryItemStacks, j), false);
+            }
+
+        } else {
+            for (int i = 0; i < lastIndex + 1; ++i) {
+                playerEntity.inventory.placeItemBackInInventory(playerEntity.getEntityWorld(), ItemStackHelper.getAndRemove(inventoryItemStacks, i));
+            }
+
+        }
+    }
+
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
@@ -135,22 +153,34 @@ public abstract class InventoryContainer extends Container {
 
     public static class ItemHandler extends ItemStackHandler {
         private final NonNullList<Either<Ingredient, Function<ItemStack, Boolean>>> selector = NonNullList.create();
+        private final List<Integer> limits = Lists.newArrayList();
+        private final List<Boolean> inverted = Lists.newArrayList();
 
         public ItemHandler(NonNullList<ItemStack> inventoryIn, SelectorInfo... selectorIn) {
             super(inventoryIn);
             for (SelectorInfo info : selectorIn) {
                 selector.add(info.ingredient);
+                limits.add(info.stackLimit);
+                inverted.add(info.inverted);
             }
         }
 
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            boolean result = false;
             if (selector.get(slot).left().isPresent()) {
-                return selector.get(slot).left().get().test(stack) || selector.get(slot).left().get().hasNoMatchingItems();
+                result = selector.get(slot).left().get().test(stack) || selector.get(slot).left().get().hasNoMatchingItems();
             } else if (selector.get(slot).right().isPresent()) {
-                return selector.get(slot).right().get().apply(stack);
+                result = selector.get(slot).right().get().apply(stack);
+            } else {
+                return false;
             }
-            return false;
+            return inverted.get(slot) ? !result : result;
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return limits.get(slot);
         }
     }
 
@@ -158,19 +188,47 @@ public abstract class InventoryContainer extends Container {
         public final Either<Ingredient, Function<ItemStack, Boolean>> ingredient;
         public final int xDisplay;
         public final int yDisplay;
+        public final int stackLimit;
+        public final boolean inverted;
 
-        public SelectorInfo(Either<Ingredient, Function<ItemStack, Boolean>> ingredient, int x, int y) {
+        public SelectorInfo(Either<Ingredient, Function<ItemStack, Boolean>> ingredient, int x, int y, boolean inverted, int limit) {
             this.ingredient = ingredient;
             this.xDisplay = x;
             this.yDisplay = y;
+            this.stackLimit = limit;
+            this.inverted = inverted;
         }
 
         public SelectorInfo(Ingredient ingredient, int x, int y) {
-            this(Either.left(ingredient), x, y);
+            this(ingredient, x, y, false);
+        }
+
+        public SelectorInfo(Ingredient ingredient, int x, int y, boolean inverted) {
+            this(ingredient, x, y, inverted, 64);
+        }
+
+        public SelectorInfo(Ingredient ingredient, int x, int y, boolean inverted, int stackLimit) {
+            this(Either.left(ingredient), x, y, inverted, stackLimit);
+        }
+
+        public SelectorInfo(Ingredient ingredient, int x, int y, int stackLimit) {
+            this(Either.left(ingredient), x, y, false, stackLimit);
         }
 
         public SelectorInfo(Function<ItemStack, Boolean> ingredient, int x, int y) {
-            this(Either.right(ingredient), x, y);
+            this(ingredient, x, y, false);
+        }
+
+        public SelectorInfo(Function<ItemStack, Boolean> ingredient, int x, int y, boolean inverted) {
+            this(ingredient, x, y, inverted, 64);
+        }
+
+        public SelectorInfo(Function<ItemStack, Boolean> ingredient, int x, int y, boolean inverted, int stackLimit) {
+            this(Either.right(ingredient), x, y, inverted, stackLimit);
+        }
+
+        public SelectorInfo(Function<ItemStack, Boolean> ingredient, int x, int y, int stackLimit) {
+            this(Either.right(ingredient), x, y, false, stackLimit);
         }
     }
 }

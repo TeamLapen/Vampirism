@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.NonNullList;
 
 public class AltarInfusionContainer extends InventoryContainer {
@@ -18,13 +19,21 @@ public class AltarInfusionContainer extends InventoryContainer {
 
     @Deprecated
     public AltarInfusionContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, NonNullList.withSize(3, ItemStack.EMPTY));
+        this(id, playerInventory, NonNullList.withSize(3, ItemStack.EMPTY), IWorldPosCallable.DUMMY);
     }
 
-    public AltarInfusionContainer(int id, PlayerInventory playerInventory, NonNullList<ItemStack> inventory) {
-        super(ModContainer.altar_infusion, id, playerInventory, inventory, SELECTOR_INFOS);
+    public AltarInfusionContainer(int id, PlayerInventory playerInventory, NonNullList<ItemStack> inventory, IWorldPosCallable worldPosCallable) {
+        super(ModContainer.altar_infusion, id, playerInventory, worldPosCallable, inventory, SELECTOR_INFOS);
         this.inventory = inventory;
         this.addPlayerSlots(playerInventory);
+    }
+
+    @Override
+    public void onContainerClosed(PlayerEntity playerIn) {
+        super.onContainerClosed(playerIn);
+        if (!playerIn.getEntityWorld().isRemote) {
+            clearContainer(playerIn, 3);
+        }
     }
 
     @Override

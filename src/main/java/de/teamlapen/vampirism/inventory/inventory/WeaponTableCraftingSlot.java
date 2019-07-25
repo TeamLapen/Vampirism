@@ -52,39 +52,36 @@ public class WeaponTableCraftingSlot extends Slot {
     @Override
     public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
         this.onCrafting(stack);
-        Optional optional = worldPos.apply((world, pos) -> {
-            if (world.getBlockState(pos).getBlock() instanceof WeaponTableBlock) {
-                return Optional.of(world.getFluidState(pos).getLevel());
-            } else {
-                return Optional.empty();
+        final int lava = worldPos.applyOrElse(((world, blockPos) -> {
+            if (world.getBlockState(blockPos).getBlock() instanceof WeaponTableBlock) {
+                return world.getFluidState(blockPos).getLevel();
             }
-        });
-        if (optional.isPresent()) {
-            final int lava = (int) optional.get();
-            final HunterPlayer hunterPlayer = HunterPlayer.get(playerIn);
-            final IWeaponTableRecipe recipe = findMatchingRecipe(playerIn, hunterPlayer, lava);
-            if (recipe != null && recipe.getRequiredLavaUnits() > 0) {
-                worldPos.consume(((world, pos) -> {
-                    int remainingLava = Math.max(0, lava - recipe.getRequiredLavaUnits());
-                    if (world.getBlockState(pos).getBlock() instanceof WeaponTableBlock) {
-                        world.getFluidState(pos);//TODO reduce Lava
-                    }
-                }));
-            }
-            NonNullList<ItemStack> remaining = recipe == null ? playerIn.world.getRecipeManager().getRecipeNonNull(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.world) : recipe.getRemainingItems(this.craftMatrix);//TODO 1.14 func_215369_c -> getRemainingItems
-
-            for (int i = 0; i < remaining.size(); ++i) {
-                ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
-                ItemStack itemstack1 = remaining.get(i);
-
-                if (!itemstack.isEmpty()) {
-                    this.craftMatrix.decrStackSize(i, 1);
-                    itemstack = this.craftMatrix.getStackInSlot(i);
+            return 0;
+        }), 0);
+        final HunterPlayer hunterPlayer = HunterPlayer.get(playerIn);
+        final IWeaponTableRecipe recipe = findMatchingRecipe(playerIn, hunterPlayer, lava);
+        if (recipe != null && recipe.getRequiredLavaUnits() > 0) {
+            worldPos.consume(((world, pos) -> {
+                int remainingLava = Math.max(0, lava - recipe.getRequiredLavaUnits());
+                if (world.getBlockState(pos).getBlock() instanceof WeaponTableBlock) {
+                    world.getFluidState(pos);//TODO reduce Lava
                 }
+            }));
+        }
+        net.minecraftforge.common.ForgeHooks.setCraftingPlayer(playerIn);
+        NonNullList<ItemStack> remaining = playerIn.world.getRecipeManager().getRecipeNonNull(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.world);
+        net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
+        for (int i = 0; i < remaining.size(); ++i) {
+            ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
+            ItemStack itemstack1 = remaining.get(i);
 
-                if (!itemstack1.isEmpty()) {
-                    if (itemstack.isEmpty()) {
-                        this.craftMatrix.setInventorySlotContents(i, itemstack1);
+            if (!itemstack.isEmpty()) {
+                this.craftMatrix.decrStackSize(i, 1);
+                itemstack = this.craftMatrix.getStackInSlot(i);
+            }
+            if (!itemstack1.isEmpty()) {
+                if (itemstack.isEmpty()) {
+                    this.craftMatrix.setInventorySlotContents(i, itemstack1);
                     } else if (ItemStack.areItemsEqual(itemstack, itemstack1) && ItemStack.areItemStackTagsEqual(itemstack, itemstack1)) {
                         itemstack1.grow(itemstack.getCount());
                         this.craftMatrix.setInventorySlotContents(i, itemstack1);
@@ -99,13 +96,12 @@ public class WeaponTableCraftingSlot extends Slot {
                     world.playEvent(1030, pos, 0);
                 }
             }));
-        }
         playerIn.addStat(ModStats.weapon_table);
         return stack;
     }
 
     protected IWeaponTableRecipe findMatchingRecipe(PlayerEntity playerIn, IFactionPlayer<?> factionPlayer, int lava) {
-        Optional<IWeaponTableRecipe> optional = playerIn.getEntityWorld().getServer().getRecipeManager().getRecipe(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.getEntityWorld());
+        Optional<IWeaponTableRecipe> optional = playerIn.getEntityWorld().getRecipeManager().getRecipe(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, this.craftMatrix, playerIn.getEntityWorld());
         if (optional.isPresent()) {
             IWeaponTableRecipe recipe = optional.get();
             if (factionPlayer.getLevel() >= recipe.getRequiredLevel() && lava >= recipe.getRequiredLavaUnits() && Helper.areSkillsEnabled(factionPlayer.getSkillHandler(), recipe.getRequiredSkills())) {

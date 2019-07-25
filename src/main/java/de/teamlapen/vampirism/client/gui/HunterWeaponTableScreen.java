@@ -52,4 +52,10 @@ public class HunterWeaponTableScreen extends ContainerScreen<WeaponTableContaine
             this.blit(i, j, 0, 0, this.xSize, this.ySize);
         }
     }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
+        this.font.drawString(title.getFormattedText(), this.xSize / 2 - this.font.getStringWidth(title.getString()) / 2, 6.0F, 0x404040);//TODO 1.14 test
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);//TODO 1.14 test
+    }
 }

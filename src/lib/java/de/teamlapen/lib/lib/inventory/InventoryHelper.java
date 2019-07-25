@@ -18,9 +18,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * Helper method for Inventories respectively {@link InventorySlot.IInventorySlotInventory}
- */
 public class InventoryHelper {
 
 
@@ -34,10 +31,10 @@ public class InventoryHelper {
      * @return Null if all tileInventory are present otherwise an itemstack which represents the missing tileInventory
      */
     public static ItemStack checkItems(NonNullList<ItemStack> inventory, Item[] items, int[] amounts) {
-        if (inventory.size() != amounts.length || items.length != amounts.length) {
-            throw new IllegalArgumentException("There has to be one amount and meta value for each slot");
+        if (inventory.size() < amounts.length || items.length != amounts.length) {
+            throw new IllegalArgumentException("There has to be one itemstack and amount value for each item");
         }
-        for (int i = 0; i < inventory.size(); i++) {
+        for (int i = 0; i < items.length; i++) {
             ItemStack stack = inventory.get(i);
             int actual = (!stack.isEmpty() && stack.getItem().equals(items[i])) ? stack.getCount() : 0;
             if (actual < amounts[i]) {
@@ -54,14 +51,13 @@ public class InventoryHelper {
      * @param amounts   Has to have the same size as the inventory
      */
     public static void removeItems(NonNullList<ItemStack> inventory, int[] amounts) {
-        if (inventory.size() != amounts.length) {
-            throw new IllegalArgumentException("There has to be one amount and meta value for each slot");
+        if (inventory.size() < amounts.length) {
+            throw new IllegalArgumentException("There has to be one itemstack value for each amount");
         }
-        for (int i = 0; i < inventory.size(); i++) {
+        for (int i = 0; i < amounts.length; i++) {
             ItemStackHelper.getAndSplit(inventory, i, amounts[i]);
         }
     }
-
 
     @Nonnull
     public static LazyOptional<Pair<IItemHandler, TileEntity>> tryGetItemHandler(IBlockReader world, BlockPos pos, @Nullable Direction side) {
