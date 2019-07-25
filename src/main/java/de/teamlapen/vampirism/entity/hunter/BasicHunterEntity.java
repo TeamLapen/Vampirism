@@ -36,7 +36,6 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -415,7 +414,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                 if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
                     if (trainee == null) {
                         player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
-                            return new HunterBasicContainer(id, playerInventory, IWorldPosCallable.of(player.getEntityWorld(), this.getPosition()));
+                            return new HunterBasicContainer(id, playerInventory, this);
                         }, name));
                         trainee = player;
                     } else {

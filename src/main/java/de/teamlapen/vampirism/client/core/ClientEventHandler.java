@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
+import de.teamlapen.vampirism.client.gui.SkillsScreen;
 import de.teamlapen.vampirism.client.gui.SleepCoffinScreen;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
@@ -18,7 +20,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.SleepInMultiplayerScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelRotation;
@@ -49,6 +50,7 @@ import java.util.Set;
 public class ClientEventHandler {
     private final static Logger LOGGER = LogManager.getLogger();
     private final static ResourceLocation INVENTORY_SKILLS = new ResourceLocation("vampirism", "textures/gui/inventory_skills.png");
+    private ImageButton button;//TODO 1.14 find a better way
 
 
     @SubscribeEvent
@@ -73,10 +75,18 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onInitGuiEventPost(GuiScreenEvent.InitGuiEvent.Post event) {
         if (VampirismConfig.CLIENT.guiSkillButton.get() && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.get(event.getGui().getMinecraft().player).getCurrentFactionPlayer() != null) {
-            Button button = new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22, 20, 18, 178, 0, 19, INVENTORY_SKILLS, (context) -> {
-                //TODO open SkillGui
+            button = new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22, 20, 18, 178, 0, 19, INVENTORY_SKILLS, (context) -> {
+                Minecraft.getInstance().displayGuiScreen(new SkillsScreen());
             });
             event.addWidget(button);
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public void onButtonClicked(GuiScreenEvent.MouseReleasedEvent event) {//TODO 1.14 button gets ne position after mouse is released :(
+        if (VampirismConfig.CLIENT.guiSkillButton.get() && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.get(event.getGui().getMinecraft().player).getCurrentFactionPlayer() != null) {
+            button.setPosition(((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22);
         }
     }
 

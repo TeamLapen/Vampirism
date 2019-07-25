@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
@@ -79,12 +80,12 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
         this.font.drawString(this.title.getFormattedText(), 8.0F, 6.0F, 0x404040);
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);
 
-        String text = null;
+        ITextComponent text = null;
         if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
-            ITextComponent item = missing.getItem() instanceof HunterIntelItem ? missing.getItem().getDisplayName(missing) : new TranslationTextComponent(missing.getTranslationKey() + ".name");
-            text = I18n.format("text.vampirism.ritual_missing_items", missing.getCount(), item.getUnformattedComponentText());
+            ITextComponent item = missing.getItem() instanceof HunterIntelItem ? ((HunterIntelItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
+            text = new TranslationTextComponent("text.vampirism.hunter_trainer.ritual_missing_items", missing.getCount(), item.getFormattedText());
         }
-        if (text != null) this.font.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
+        if (text != null) this.font.drawSplitString(text.getFormattedText(), 8, 50, this.xSize - 10, 0x000000);
     }
 }

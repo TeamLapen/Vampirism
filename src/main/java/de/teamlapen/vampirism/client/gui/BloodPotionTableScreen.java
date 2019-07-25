@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.inventory.container.BloodPotionTableContainer;
-import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
@@ -41,7 +40,7 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
     @Override
     public void init() {
         super.init();
-        this.addButton(this.craftBtn = new Button(this.width / 2 - 77, this.height / 2 - 78, font.getStringWidth(UtilLib.translate("gui.vampirism.blood_potion_table.create")) + 5, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create"), (context) -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.CRAFT_BLOOD_POTION, ""))));
+        this.addButton(this.craftBtn = new Button(this.width / 2 - 77, this.height / 2 - 78, font.getStringWidth(UtilLib.translate("gui.vampirism.blood_potion_table.create")) + 5, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create"), (context) -> container.onCraftingClicked()));
         craftBtn.active = false;
     }
 
@@ -54,6 +53,7 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
     @Override
     public void tick() {
         super.tick();
+        container.tick();
         this.craftBtn.active = container.canCurrentlyStartCrafting();
         if (container.getCraftingPercentage() == 0 || container.getCraftingPercentage() == 1) {
             stopSound();

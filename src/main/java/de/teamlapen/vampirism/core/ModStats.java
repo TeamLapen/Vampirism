@@ -17,6 +17,7 @@ public class ModStats {
     public static void registerStats(IForgeRegistry<StatType<?>> registry) {
         register(weapon_table);
         register(interact_alchemical_cauldron);
+        register(blood_table);
     }
 
     private static void register(ResourceLocation id) {

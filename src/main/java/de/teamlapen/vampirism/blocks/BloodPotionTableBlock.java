@@ -55,7 +55,7 @@ public class BloodPotionTableBlock extends VampirismBlock {
                 player.openContainer(state.getContainer(worldIn, pos));
             }
             else {
-                player.sendMessage(new TranslationTextComponent("tile.vampirism." + regName + ".cannot_use"));
+                player.sendMessage(new TranslationTextComponent("text.vampirism.blood_potion_table.cannot_use"));
             }
         }
 

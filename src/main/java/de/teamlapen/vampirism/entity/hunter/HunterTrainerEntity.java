@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -109,7 +108,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
                 if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
                     if (trainee == null) {
                         player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
-                            return new HunterTrainerContainer(id, playerInventory, IWorldPosCallable.of(player.getEntityWorld(), this.getPosition()));
+                            return new HunterTrainerContainer(id, playerInventory, this);
                         }, name));
                         this.trainee = player;
                     } else {
@@ -117,7 +116,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
                     }
 
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_level_wrong"));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_trainer.trainer_level_wrong"));
                 }
 
             }

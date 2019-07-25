@@ -79,18 +79,18 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         AltarInfusionTileEntity te = (AltarInfusionTileEntity) worldIn.getTileEntity(pos);
         //If empty hand and can start -> StartAdvanced
         if (worldIn.isRemote || te == null) return true;
-        int result = te.canActivate(player, true);
+        AltarInfusionTileEntity.Result result = te.canActivate(player, true);
         if (heldItem.isEmpty()) {
-            if (result == 1) {
+            if (result == AltarInfusionTileEntity.Result.OK) {
                 te.startRitual(player);
                 return true;
             }
 
         }
         //If non empty hand or missing tileInventory -> open GUI
-        if (!heldItem.isEmpty() || result == -4) {
+        if (!heldItem.isEmpty() || result == AltarInfusionTileEntity.Result.INVMISSING) {
             if (te.getCurrentPhase() != AltarInfusionTileEntity.PHASE.NOT_RUNNING) {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.ritual_still_running"));
+                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"));
                 return true;
             }
             player.openContainer(te);

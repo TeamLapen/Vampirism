@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
 import de.teamlapen.vampirism.items.PureBloodItem;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
@@ -53,14 +53,14 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
         this.font.drawString(this.title.getFormattedText(), 8.0F, 6.0F, 0x404040);
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);
 
-        String text = null;
+        ITextComponent text = null;
         if (!container.isLevelValid()) {
-            text = I18n.format("text.vampirism.ritual_level_wrong");
+            text = new TranslationTextComponent("container.vampirism.hunter_table.ritual_level_wrong");
         } else if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
-            ITextComponent item = missing.getItem() instanceof PureBloodItem ? missing.getDisplayName() : new TranslationTextComponent(missing.getTranslationKey() + ".name");
-            text = I18n.format("text.vampirism.ritual_missing_items", missing.getCount(), item.getUnformattedComponentText());
+            ITextComponent item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
+            text = new TranslationTextComponent("text.vampirism.hunter_table.ritual_missing_items", missing.getCount(), item.getFormattedText());
         }
-        if (text != null) this.font.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
+        if (text != null) this.font.drawSplitString(text.getFormattedText(), 8, 50, this.xSize - 10, 0x000000);
     }
 }

@@ -76,15 +76,15 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
         return super.getCapability(cap, side);
     }
 
-    @Nullable
-    @Override
-    public ITextComponent getCustomName() {
-        return new TranslationTextComponent("tile.vampirism.blood_grinder.name");
-    }
+//    @Nullable
+//    @Override
+//    public ITextComponent getCustomName() {
+//        return new TranslationTextComponent("tile.vampirism.blood_grinder.name");
+//    }
 
     @Override
     protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("tile.vampirism.blood_grinder.name");
+        return new TranslationTextComponent("tile.vampirism.blood_grinder");
     }
 
     @Override

@@ -153,6 +153,7 @@ public class Helper {
      * @return Checks if all given skills are enabled
      */
     public static boolean areSkillsEnabled(ISkillHandler skillHandler, ISkill... skills) {
+        if (skills == null) return true;
         for (ISkill skill : skills) {
             if (!skillHandler.isSkillEnabled(skill)) {
                 return false;

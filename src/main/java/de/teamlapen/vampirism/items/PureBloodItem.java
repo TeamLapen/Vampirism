@@ -31,6 +31,10 @@ public class PureBloodItem extends VampirismItem {
         this.setTranslation_key(name);
     }
 
+    @Override
+    public ITextComponent getCustomName() {
+        return super.getCustomName().appendText(" " + (level + 1));
+    }
 
     @OnlyIn(Dist.CLIENT)
     @Override
