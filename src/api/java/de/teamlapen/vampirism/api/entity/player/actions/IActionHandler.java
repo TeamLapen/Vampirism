@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
 
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -22,6 +24,10 @@ public interface IActionHandler<T extends IActionPlayer> {
      */
     List<IAction> getAvailableActions();
 
+    /**
+     * @return A list of actions which are unlocked for the player
+     */
+    ImmutableList<IAction> getUnlockedActions();
 
     /**
      * Returns +Ticks_Left/Total_Duration(Positive) if action is active

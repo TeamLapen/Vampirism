@@ -3,6 +3,7 @@ package de.teamlapen.lib.lib.client.gui;
 
 import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.lib.util.UtilLib;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
@@ -79,24 +80,17 @@ public abstract class GuiPieMenu<T> extends Screen {
         this.onGuiInit();
         this.elementCount = elements.size();
         radDiff = 2D * Math.PI / elementCount;// gap in rad
-        // Disable cursor
-        /*
-        //TODO 1.13
-        try {
-            GLFW.glfwSetCursor();
-            Mouse.setNativeCursor(new Cursor(1, 1, 0, 0, 1, BufferUtils.createIntBuffer(1), null));
-        } catch (LWJGLException e) {
-            VampLib.log.e("GuiPieMenu", "Failed to set empty cursor", e);
-        }
-        */
-
+        GLFW.glfwSetInputMode(minecraft.mainWindow.getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
         ForgeIngameGui.renderCrosshairs = false;
     }
 
     @Override
     public boolean keyReleased(int key, int scancode, int modifiers) {
         if (getMenuKeyBinding().matchesKey(key, scancode)) {
-            //Menu key released
+            onClose();
+            if (selectedElement >= 0) {
+                this.onElementSelected(elements.get(selectedElement));
+            }
         }
         return false;
     }
@@ -107,17 +101,16 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public void onClose() {
+    public void removed() {
+        super.removed();
+        GLFW.glfwSetInputMode(Minecraft.getInstance().mainWindow.getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
         ForgeIngameGui.renderCrosshairs = true;
-        // Enable cursor
-        /*
-        //TODO 1.13
-        try {
-            Mouse.setNativeCursor(null);
-        } catch (LWJGLException e) {
-            VampLib.log.e("GuiPieMenu", "Could not reset cursor", e);
-        }
-         */
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        ForgeIngameGui.renderCrosshairs = true;
     }
 
     @Override
@@ -165,7 +158,7 @@ public abstract class GuiPieMenu<T> extends Screen {
             }
             // Draw Icon
             this.minecraft.getTextureManager().bindTexture(getIconLoc(element));
-            UtilLib.drawTexturedModalRect(blitOffset, x, y, getMinU(element), getMinV(element), IS, IS, textureWidth, textureHeight);
+            UtilLib.drawTexturedModalRect(blitOffset, x, y, 0, 0, IS, IS, 16, 16);
 
             this.afterIconDraw(element, x, y);
 
@@ -185,14 +178,6 @@ public abstract class GuiPieMenu<T> extends Screen {
     public void tick() {
         super.tick();
         this.minecraft.player.movementInput.tick(this.minecraft.player.shouldRenderSneaking(), this.minecraft.player.isSpectator());
-
-        if (!getMenuKeyBinding().isKeyDown()) { //TODO 1.13 if this does not work, move to #keyReleased
-            if (selectedElement >= 0) {
-                this.onElementSelected(elements.get(selectedElement));
-            }
-
-            this.minecraft.displayGuiScreen(null);
-        }
     }
 
     protected void afterIconDraw(T element, int x, int y) {
@@ -237,18 +222,6 @@ public abstract class GuiPieMenu<T> extends Screen {
      * @return the menu key binding set in the game settings
      */
     protected abstract KeyBinding getMenuKeyBinding();
-
-    /**
-     * @param item
-     * @return the min U texture coordinate within the icon map
-     */
-    protected abstract int getMinU(T item);
-
-    /**
-     * @param item
-     * @return the min V texture coordinate within the icon map
-     */
-    protected abstract int getMinV(T item);
 
     protected abstract String getUnlocalizedName(T item);
 
@@ -388,7 +361,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         double rad = (Math.atan2(dy, -dx) + Math.PI);
 
         if (Math.abs(dx) > Math.abs(Math.cos(rad) * r) + 8 || Math.abs(dy) > Math.abs(Math.sin(rad) * r) + 8) {
-            setAbsoluteMouse(dx / 1.5 + cX + 4, dy / 1.5 + cY);
+            setAbsoluteMouse(dx / 1.5 + cX + 4, cY - dy / 1.5);
         }
         return rad;
     }

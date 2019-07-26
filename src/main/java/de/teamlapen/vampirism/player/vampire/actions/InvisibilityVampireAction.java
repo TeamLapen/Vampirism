@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.config.Balance;
 
 public class InvisibilityVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
     public InvisibilityVampireAction() {
-        super(null);
+        super();
     }
 
     @Override
@@ -25,21 +25,6 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     @Override
     public int getDuration(int level) {
         return Balance.vpa.INVISIBILITY_DURATION * 20;
-    }
-
-    @Override
-    public int getMinU() {
-        return 128;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.vampire.invisibility";
     }
 
     @Override

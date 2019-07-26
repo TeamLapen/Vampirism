@@ -20,7 +20,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
 
     public TeleportVampireAction() {
-        super(null);
+        super();
     }
 
     @Override
@@ -84,21 +84,6 @@ public class TeleportVampireAction extends DefaultVampireAction {
     @Override
     public int getCooldown() {
         return Balance.vpa.TELEPORT_COOLDOWN * 20;
-    }
-
-    @Override
-    public int getMinU() {
-        return 112;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.vampire.teleport";
     }
 
     @Override

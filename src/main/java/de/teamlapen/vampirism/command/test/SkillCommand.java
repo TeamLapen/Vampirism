@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -22,7 +23,7 @@ import net.minecraft.util.text.StringTextComponent;
  * 
  * @authors Cheaterpaul, Maxanier
  */
-public class SkillCommand extends BasicCommand {//TODO add compability for other mods
+public class SkillCommand extends BasicCommand {
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("skill")

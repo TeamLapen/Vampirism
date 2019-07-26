@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.actions;
 
+import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
@@ -90,6 +91,11 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         }
 
         return actions;
+    }
+
+    @Override
+    public ImmutableList<IAction> getUnlockedActions() {
+        return ImmutableList.copyOf(unlockedActions);
     }
 
     @Override

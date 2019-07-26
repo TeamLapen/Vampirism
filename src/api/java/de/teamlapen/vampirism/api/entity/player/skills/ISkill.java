@@ -9,7 +9,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Skill that can be unlocked
@@ -22,32 +21,10 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
     IPlayableFaction getFaction();
 
     /**
-     * Should return the location of the icon map where the icon is in
-     * Texture must be 256x80
-     *
-     * @return null to use vampirism's default one
-     */
-    @OnlyIn(Dist.CLIENT)
-    @Nullable
-    ResourceLocation getIconLoc();
-
-    /**
      * The description for this skill. Can be null
      */
     @OnlyIn(Dist.CLIENT)
     ITextComponent getDescription();
-
-    /**
-     * Should return the min U texture coordinate within the icon map
-     */
-    @OnlyIn(Dist.CLIENT)
-    int getMinU();
-
-    /**
-     * Should return the min V texture coordinate within the icon map
-     */
-    @OnlyIn(Dist.CLIENT)
-    int getMinV();
 
     /**
      * Can return null if not registered, but since this has to be registered, we don't want annoying null warnings everywhere

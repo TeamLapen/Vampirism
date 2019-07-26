@@ -18,7 +18,7 @@ import net.minecraft.potion.Effects;
 public class HalfInvulnerableAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer>{
 
     public HalfInvulnerableAction() {
-        super(null);
+        super();
     }
 
     @Override
@@ -29,24 +29,6 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     @Override
     public int getDuration(int level) {
         return 20 * (Balance.vpa.HALFINVULNERABLE_DURATION);
-    }
-
-    @Override
-    public int getMinU() {
-
-        return 208;
-    }
-
-    @Override
-    public int getMinV() {
-
-        return 0;
-    }
-
-    @Override
-    public String getTranslationKey() {
-
-        return "action.vampirism.vampire.halfinvulnerable_skill";
     }
 
     @Override

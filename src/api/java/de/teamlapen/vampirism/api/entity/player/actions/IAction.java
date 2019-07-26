@@ -2,9 +2,6 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -30,27 +27,6 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
      */
     @Nonnull
     IPlayableFaction getFaction();
-
-    /**
-     * Should return the location of the icon map where the icon is in
-     * Texture has to be 256x80
-     *
-     * @return Texture resource location
-     */
-    @OnlyIn(Dist.CLIENT)
-    ResourceLocation getIconLoc();
-
-    /**
-     * @return the min U texture coordinate within the icon map
-     */
-    @OnlyIn(Dist.CLIENT)
-    int getMinU();
-
-    /**
-     * @return the min V texture coordinate within the icon map
-     */
-    @OnlyIn(Dist.CLIENT)
-    int getMinV();
 
     String getTranslationKey();
 

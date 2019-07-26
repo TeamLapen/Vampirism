@@ -24,12 +24,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class SelectActionScreen extends GuiPieMenu<IAction> {
     private final static int ICON_TEXTURE_WIDTH = 256;
     private final static int ICON_TEXTURE_HEIGHT = 80;
-    private final static ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/actions.png");
     private IActionHandler actionHandler;
     /**
      * Fake skill which represents the cancel button
      */
-    private IAction fakeAction = new DefaultVampireAction(null) {
+    private IAction fakeAction = new DefaultVampireAction() {
         @Override
         public boolean activate(IVampirePlayer vampire) {
             return true;
@@ -37,16 +36,6 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
 
         @Override
         public int getCooldown() {
-            return 0;
-        }
-
-        @Override
-        public int getMinU() {
-            return 16;
-        }
-
-        @Override
-        public int getMinV() {
             return 0;
         }
 
@@ -59,7 +48,6 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         public boolean isEnabled() {
             return true;
         }
-
     };
 
     public SelectActionScreen() {
@@ -75,32 +63,32 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         if (active > 0) {
 
             float h = active * IS;
-            this.blit(x, (int) (y + h), x + IS, y + IS, 0xDDE0E000, 0x88E0E000);
+            this.fillGradient(x, (int) (y + h), x + 16, y + 16, 0xDDE0E000, 0x88E0E000);
         } else if (active < 0) {
 
             float h = (1F + (active)) * IS;
-            this.blit(x, (int) (y + h), x + IS, y + IS, 0x880E0E0E, 0xEE0E0E0E);
+            this.fillGradient(x, (int) (y + h), x + 16, y + 16, 0x880E0E0E, 0xEE0E0E0E);
         }
     }
 
     @Override
     protected ResourceLocation getIconLoc(IAction item) {
-        return item.getIconLoc() == null ? defaultIcons : item.getIconLoc();
+        if (item == fakeAction) return new ResourceLocation(REFERENCE.MODID, "textures/actions/cancel.png");
+        return new ResourceLocation(item.getRegistryName().getNamespace(), "textures/actions/" + item.getRegistryName().getPath() + ".png");
+    }
+
+    @Override
+    protected float[] getColor(IAction s) {
+        if (s != fakeAction && !(s.canUse(FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer()) == IAction.PERM.ALLOWED)) {
+            return new float[]{0.8125f, 0.0859375f, 0.20703125f, 1f};
+        } else {
+            return super.getColor(s);
+        }
     }
 
     @Override
     protected KeyBinding getMenuKeyBinding() {
         return ModKeys.getKeyBinding(ModKeys.KEY.ACTION);
-    }
-
-    @Override
-    protected int getMinU(IAction item) {
-        return item.getMinU();
-    }
-
-    @Override
-    protected int getMinV(IAction item) {
-        return item.getMinV();
     }
 
     @Override
@@ -110,7 +98,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
 
     @Override
     protected void onElementSelected(IAction action) {
-        if (action != fakeAction) {
+        if (action != fakeAction && action.canUse(FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer()) == IAction.PERM.ALLOWED) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName().toString()));
         }
     }
@@ -120,7 +108,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         IFactionPlayer player = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
         if (player != null) {
             actionHandler = player.getActionHandler();
-            elements.addAll(actionHandler.getAvailableActions());
+            elements.addAll(actionHandler.getUnlockedActions());
             elements.add(fakeAction);
         }
 

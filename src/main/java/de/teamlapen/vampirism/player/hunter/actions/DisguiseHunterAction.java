@@ -13,7 +13,7 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     public static final int FADE_TICKS = 20;
 
     public DisguiseHunterAction() {
-        super(null);
+        super();
     }
 
     @Override
@@ -30,21 +30,6 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     @Override
     public int getDuration(int level) {
         return Integer.MAX_VALUE;
-    }
-
-    @Override
-    public int getMinU() {
-        return 0;
-    }
-
-    @Override
-    public int getMinV() {
-        return 48;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.hunter.disguise";
     }
 
     @Override

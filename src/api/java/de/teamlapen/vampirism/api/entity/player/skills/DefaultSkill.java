@@ -21,6 +21,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     private final IPlayableFaction<T> faction;
     private int renderRow;
     private int renderColumn;
+    private String translationKey;
 
     protected DefaultSkill(IPlayableFaction<T> faction) {
         this.faction = faction;
@@ -84,6 +85,10 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
         return getRegistryName() + "(" + getClass().getSimpleName() + ")";
     }
 
+    @Override
+    public String getTranslationKey() {
+        return translationKey == null ? translationKey = "skill." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() : translationKey;
+    }
 
     /**
      * Add actions that should be added to the list

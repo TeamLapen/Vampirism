@@ -14,8 +14,7 @@ import java.util.List;
 public class AwarenessHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
 
     public AwarenessHunterAction() {
-        super(null);
-        // TODO Auto-generated constructor stub
+        super();
     }
 
     @Override
@@ -26,21 +25,6 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     @Override
     public boolean canBeUsedBy(IHunterPlayer player) {
         return !player.getActionHandler().isActionActive(HunterActions.disguise_hunter);
-    }
-
-    @Override
-    public int getMinU() {
-        return 16;
-    }
-
-    @Override
-    public int getMinV() {
-        return 48;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.hunter.awareness";
     }
 
     @Override

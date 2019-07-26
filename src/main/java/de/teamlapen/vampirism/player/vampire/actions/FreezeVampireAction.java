@@ -21,7 +21,7 @@ import java.util.List;
 public class FreezeVampireAction extends DefaultVampireAction {
 
     public FreezeVampireAction() {
-        super(null);
+        super();
     }
 
     @Override
@@ -43,21 +43,6 @@ public class FreezeVampireAction extends DefaultVampireAction {
     @Override
     public int getCooldown() {
         return Balance.vpa.FREEZE_COOLDOWN * 20;
-    }
-
-    @Override
-    public int getMinU() {
-        return 144;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.vampire.freeze";
     }
 
     @Override

@@ -12,7 +12,7 @@ import net.minecraft.potion.Effects;
 public class RegenVampireAction extends DefaultVampireAction {
 
     public RegenVampireAction() {
-        super(null);
+        super();
     }
 
     @Override
@@ -27,21 +27,6 @@ public class RegenVampireAction extends DefaultVampireAction {
     @Override
     public int getCooldown() {
         return Balance.vpa.REGEN_COOLDOWN * 20;
-    }
-
-    @Override
-    public int getMinU() {
-        return 80;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.vampire.regen";
     }
 
     @Override
