@@ -53,10 +53,9 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     private static final int SLOT_LIQUID = 1;
     private static final int SLOT_INGREDIENT = 2;
     private static final int SLOT_FUEL = 3;
-    private static final int[] SLOTS_TOP = new int[]{SLOT_RESULT};
-    private static final int[] SLOTS_WEST = new int[]{SLOT_LIQUID};
-    private static final int[] SLOTS_EAST = new int[]{SLOT_INGREDIENT};
-    private static final int[] SLOTS_BOTTOM = new int[]{SLOT_FUEL};
+    private static final int[] SLOTS_DOWN = new int[]{SLOT_RESULT};
+    private static final int[] SLOTS_SIDE = new int[]{SLOT_FUEL};
+    private static final int[] SLOTS_TOP = new int[]{SLOT_INGREDIENT, SLOT_LIQUID};
 
     /**
      * @return The liquid color of the given stack. -1 if not a (registered) liquid stack
@@ -129,11 +128,12 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
 
     @Override
     public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-        return true;
+        return index == 0;
     }
 
     @Override
     public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+        if (direction == EnumFacing.UP && index == 2 && isItemValidForSlot(1, itemStackIn)) return false;
         return this.isItemValidForSlot(index, itemStackIn);
     }
 
@@ -208,16 +208,12 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     @Override
     public int[] getSlotsForFace(EnumFacing side) {
         switch (side) {
-            case WEST:
-                return SLOTS_WEST;
-            case EAST:
-                return SLOTS_EAST;
-            case DOWN:
-                return SLOTS_BOTTOM;
             case UP:
                 return SLOTS_TOP;
+            case DOWN:
+                return SLOTS_DOWN;
             default:
-                return new int[0];
+                return SLOTS_SIDE;
         }
     }
 
