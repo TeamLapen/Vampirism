@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -12,6 +13,7 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -48,9 +50,6 @@ import java.util.Random;
 @OnlyIn(Dist.CLIENT)
 public class SkillsScreen extends Screen {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills_window.png");
-    private static final ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills.png");
-    private final static int ICON_TEXTURE_WIDTH = 256;
-    private final static int ICON_TEXTURE_HEIGHT = 80;
     private final int area_min_y = -77;
     private final int skill_width = 24;
     private final List<SkillNode> skillNodes = new ArrayList<>();
@@ -75,7 +74,7 @@ public class SkillsScreen extends Screen {
     private int field_146554_D;
 
     public SkillsScreen() {
-        super(new TranslationTextComponent("skillsscreen_title"));//TODO 1.14 name
+        super(new TranslationTextComponent("screen.vampirism.skills"));
     }
 
     @Override
@@ -84,72 +83,41 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
+    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+        displayY -= p_mouseDragged_8_;
+        displayX -= p_mouseDragged_6_;
+        checkDisplay();
+        return true;
+    }
+
+    private void checkDisplay() {
+        displayY = MathHelper.clamp(displayY, -20 / zoomOut, 350 / zoomOut);
+        displayX = MathHelper.clamp(displayX, -400 / zoomOut + (zoomOut - 2.0F) * (-1) * 250, -300 / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
+        displayXNew = displayX;
+        displayYNew = displayY;
+    }
+
+    @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         if (!display) {
             super.render(mouseX, mouseY, partialTicks);
             return;
         }
-        if (Minecraft.getInstance().mouseHelper.isLeftDown()) {
-            int centerX = (this.width - this.display_width) / 2;
-            int centerY = (this.height - this.display_height) / 2;
-            int k = centerX + 8;
-            int l = centerY + 17;
-
-            if ((this.field_146554_D == 0 || this.field_146554_D == 1) && mouseX >= k && mouseX < k + 224 && mouseY >= l && mouseY < l + 155) {
-                if (this.field_146554_D == 0) {
-                    this.field_146554_D = 1;
-                } else {
-                    this.displayXNew -= (double) ((float) (mouseX - this.field_146563_h) * this.zoomOut);
-                    this.displayYNew -= (double) ((float) (mouseY - this.field_146564_i) * this.zoomOut);
-                    this.field_146565_w = this.displayX = this.displayXNew;
-                    this.field_146573_x = this.displayY = this.displayYNew;
-                }
-
-                this.field_146563_h = mouseX;
-                this.field_146564_i = mouseY;
-            }
-        } else {
-            this.field_146554_D = 0;
-        }
-
-        float zoomOutOld = this.zoomOut;
-
-        if (weelmovement < 0) {
-            this.zoomOut += 0.25F;
-        } else if (weelmovement > 0) {
-            this.zoomOut -= 0.25F;
-        }
-        weelmovement = 0;
-
-        this.zoomOut = MathHelper.clamp(this.zoomOut, 1.0F, 2.0F);
-
-        if (this.zoomOut != zoomOutOld) {
-            float f5 = zoomOutOld - this.zoomOut;
-            float f4 = zoomOutOld * (float) this.display_width;
-            float f = zoomOutOld * (float) this.display_height;
-            float f1 = this.zoomOut * (float) this.display_width;
-            float f2 = this.zoomOut * (float) this.display_height;
-            this.displayXNew -= (double) ((f1 - f4) * 0.5F);
-            this.displayYNew -= (double) ((f2 - f) * 0.5F);
-            this.field_146565_w = this.displayX = this.displayXNew;
-            this.field_146573_x = this.displayY = this.displayYNew;
-        }
-
-        if (this.field_146565_w < (double) area_min_x) {
-            this.field_146565_w = (double) area_min_x;
-        }
-
-        if (this.field_146573_x < (double) area_min_y) {
-            this.field_146573_x = (double) area_min_y;
-        }
-
-        if (this.field_146565_w >= (double) area_max_x) {
-            this.field_146565_w = (double) (area_max_x - 1);
-        }
-
-        if (this.field_146573_x >= (double) area_max_y) {
-            this.field_146573_x = (double) (area_max_y - 1);
-        }
+//        if (this.field_146565_w < (double) area_min_x) {
+//            this.field_146565_w = (double) area_min_x;
+//        }
+//
+//        if (this.field_146573_x < (double) area_min_y) {
+//            this.field_146573_x = (double) area_min_y;
+//        }
+//
+//        if (this.field_146565_w >= (double) area_max_x) {
+//            this.field_146565_w = (double) (area_max_x - 1);
+//        }
+//
+//        if (this.field_146573_x >= (double) area_max_y) {
+//            this.field_146573_x = (double) (area_max_y - 1);
+//        }
 
         this.renderBackground();
         this.drawSkills(mouseX, mouseY, partialTicks);
@@ -162,7 +130,9 @@ public class SkillsScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
-        this.weelmovement += p_mouseScrolled_5_;
+        zoomOut += p_mouseScrolled_5_ > 0 ? -0.25 : 0.25;
+        zoomOut = MathHelper.clamp(this.zoomOut, 1.0F, 2.0F);
+        checkDisplay();
         return true;
     }
 
@@ -184,7 +154,6 @@ public class SkillsScreen extends Screen {
         }
         this.addButton(new Button(this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done"), (context) -> {
             this.minecraft.displayGuiScreen(null);
-            this.minecraft.mouseHelper.grabMouse();
         }));
         if (display) {
             Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("text.vampirism.skill.resetall"), (context) -> {
@@ -211,20 +180,20 @@ public class SkillsScreen extends Screen {
 
     @Override
     public void tick() {
-        if (display) {
-            this.displayX = this.displayXNew;
-            this.displayY = this.displayYNew;
-            double d0 = this.field_146565_w - this.displayXNew;
-            double d1 = this.field_146573_x - this.displayYNew;
-
-            if (d0 * d0 + d1 * d1 < 4.0D) {
-                this.displayXNew += d0;
-                this.displayYNew += d1;
-            } else {
-                this.displayXNew += d0 * 0.85D;
-                this.displayYNew += d1 * 0.85D;
-            }
-        }
+//        if (display) {
+//            this.displayX = this.displayXNew;
+//            this.displayY = this.displayYNew;
+//            double d0 = this.field_146565_w - this.displayXNew;
+//            double d1 = this.field_146573_x - this.displayYNew;
+//
+//            if (d0 * d0 + d1 * d1 < 4.0D) {
+//                this.displayXNew += d0;
+//                this.displayYNew += d1;
+//            } else {
+//                this.displayXNew += d0 * 0.85D;
+//                this.displayYNew += d1 * 0.85D;
+//            }
+//        }
     }
 
     protected void drawTitle() {
@@ -448,7 +417,7 @@ public class SkillsScreen extends Screen {
                     GlStateManager.disableLighting();
                     //GlStateManager.enableCull();
                     GlStateManager.enableBlend();
-                    UtilLib.drawTexturedModalRect(this.blitOffset, x + 3, y + 3, skill.getMinU(), skill.getMinV(), 16, 16, ICON_TEXTURE_WIDTH, ICON_TEXTURE_HEIGHT);
+                    UtilLib.drawTexturedModalRect(this.blitOffset, x + 3, y + 3, 0, 0, 16, 16, 16, 16);
                     //GlStateManager.blendFunc(770, 771);
                     GlStateManager.disableLighting();
 
@@ -496,7 +465,7 @@ public class SkillsScreen extends Screen {
             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
             int width_name = Math.max(this.font.getStringWidth(name), 110);
-            int height_desc = desc == null ? 0 : font.getWordWrappedHeight(desc.getString(), width_name);
+            int height_desc = desc == null ? 0 : font.getWordWrappedHeight(desc.getFormattedText(), width_name);
 
             if (result == ISkillHandler.Result.ALREADY_ENABLED || result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
                 height_desc += 12;
@@ -505,7 +474,7 @@ public class SkillsScreen extends Screen {
 
             this.font.drawStringWithShadow(name, (float) m2MouseX, (float) m2MouseY, 0xff808080);
             if (desc != null)
-                this.font.drawSplitString(desc.toString(), m2MouseX, m2MouseY + 12, width_name, 0xff505050);
+                this.font.drawSplitString(desc.getFormattedText(), m2MouseX, m2MouseY + 12, width_name, 0xff505050);
             if (result == ISkillHandler.Result.ALREADY_ENABLED) {
                 this.font.drawStringWithShadow(I18n.format("text.vampirism.skill.unlocked"), m2MouseX, m2MouseY + height_desc + 3, 0xFFFBAE00);
             } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
@@ -525,7 +494,11 @@ public class SkillsScreen extends Screen {
     }
 
     private ResourceLocation getIconLoc(ISkill skill) {
-        return skill.getIconLoc() == null ? defaultIcons : skill.getIconLoc();
+        if (skill instanceof ActionSkill) {
+            return new ResourceLocation(((ActionSkill) skill).getActionID().getNamespace(), "textures/actions/" + ((ActionSkill) skill).getActionID().getPath() + ".png");
+        } else {
+            return new ResourceLocation(skill.getRegistryName().getNamespace(), "textures/skills/" + skill.getRegistryName().getPath() + ".png");
+        }
     }
 
 

@@ -11,27 +11,12 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
 
 
     public DarkBloodProjectileAction() {
-        super(null);
+        super();
     }
 
     @Override
     public int getCooldown() {
         return Balance.vpa.DARK_BLOOD_PROJECTILE_COOLDOWN * 20;
-    }
-
-    @Override
-    public int getMinU() {
-        return 192;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.vampire.dark_blood_projectile";
     }
 
     @Override

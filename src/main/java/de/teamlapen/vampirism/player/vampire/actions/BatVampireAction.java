@@ -60,7 +60,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     private final float PLAYER_HEIGHT = 1.8F;
 
     public BatVampireAction() {
-        super(null);
+        super();
     }
 
     @Override
@@ -95,21 +95,6 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public int getDuration(int level) {
         return MathHelper.clamp(Balance.vpa.BAT_DURATION, 10, Integer.MAX_VALUE / 20 - 1) * 20;
-    }
-
-    @Override
-    public int getMinU() {
-        return 64;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.vampire.bat_skill";
     }
 
     @Override

@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 public class DisguiseVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     public DisguiseVampireAction() {
-        super(null);
+        super();
     }
 
     @Override
@@ -32,21 +32,6 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     @Override
     public int getDuration(int level) {
         return Balance.vpa.DISGUISE_DURATION * 20;
-    }
-
-    @Override
-    public int getMinU() {
-        return 160;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.vampire.disguise";
     }
 
     @Override

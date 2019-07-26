@@ -10,7 +10,7 @@ import net.minecraft.potion.Effects;
 public class RageVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     public RageVampireAction() {
-        super(null);
+        super();
     }
 
     @Override
@@ -33,21 +33,6 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     @Override
     public int getDuration(int level) {
         return 20 * (Balance.vpa.RAGE_MIN_DURATION + Balance.vpa.RAGE_DUR_PL);
-    }
-
-    @Override
-    public int getMinU() {
-        return 32;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.vampire.vampire_rage";
     }
 
     @Override

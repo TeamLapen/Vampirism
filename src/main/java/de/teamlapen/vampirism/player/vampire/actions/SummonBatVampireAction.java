@@ -15,7 +15,7 @@ import net.minecraft.util.SoundCategory;
 public class SummonBatVampireAction extends DefaultVampireAction {
 
     public SummonBatVampireAction() {
-        super(null);
+        super();
     }
 
     @Override
@@ -40,21 +40,6 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     @Override
     public int getCooldown() {
         return Balance.vpa.SUMMON_BAT_COOLDOWN * 20;
-    }
-
-    @Override
-    public int getMinU() {
-        return 96;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.vampire.summon_bats";
     }
 
     @Override

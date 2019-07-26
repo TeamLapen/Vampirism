@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -11,15 +10,13 @@ import javax.annotation.Nonnull;
  * Default implementation for an action
  */
 public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegistryEntry<IAction> implements IAction {
-    private final ResourceLocation icons;
     private final IPlayableFaction<T> faction;
+    private String translationKey;
 
     /**
      * @param faction
-     * @param icons   If null Vampirism's default one will be used
      */
-    public DefaultAction(IPlayableFaction<T> faction, ResourceLocation icons) {
-        this.icons = icons;
+    public DefaultAction(IPlayableFaction<T> faction) {
         this.faction = faction;
     }
 
@@ -50,11 +47,6 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
         return faction;
     }
 
-    @Override
-    public ResourceLocation getIconLoc() {
-        return icons;
-    }
-
     /**
      * @return Should return false if deactivated in configs
      */
@@ -68,6 +60,11 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
         } else {
             throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + faction.getFactionPlayerInterface());
         }
+    }
+
+    @Override
+    public String getTranslationKey() {
+        return translationKey == null ? translationKey = "action." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() : translationKey;
     }
 
     @Override

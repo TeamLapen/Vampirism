@@ -56,17 +56,17 @@ public class HunterSkills {
     public static final ISkill hunter_awareness = UtilLib.getNull();
 
     public static void registerHunterSkills(IForgeRegistry<ISkill> registry) {
-        registry.register(new VampirismSkill.SimpleHunterSkill(VReference.HUNTER_FACTION.getID(), 0, 32, false));
-        registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", 192, 32, false));
-        registry.register(new VampirismSkill.SimpleHunterSkill("weapon_table", 48, 32, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_crossbow", 208, 32, false));
-        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_armor", 0, 48, false));
-        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_weapons", 16, 48, false));
-        registry.register(new VampirismSkill.SimpleHunterSkill("tech_weapons", 240, 32, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("stake1", 16, 32, false) {
+        registry.register(new VampirismSkill.SimpleHunterSkill(VReference.HUNTER_FACTION.getID(), false));
+        registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", false));
+        registry.register(new VampirismSkill.SimpleHunterSkill("weapon_table", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_crossbow", false));
+        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_armor", false));
+        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_weapons", false));
+        registry.register(new VampirismSkill.SimpleHunterSkill("tech_weapons", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("stake1", false) {
             @Override
             public ITextComponent getDescription() {
-                ITextComponent desc = new TranslationTextComponent("text.vampirism.skill.stake1.desc", (int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100));
+                ITextComponent desc = new TranslationTextComponent("skill.vampirism.stake1.desc", (int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100));
                 if (Balance.hps.INSTANT_KILL_SKILL_1_FROM_BEHIND) {
                     desc.appendText(" " + new TranslationTextComponent("text.vampirism.from_behind"));
                 }
@@ -74,56 +74,51 @@ public class HunterSkills {
             }
         });
 
-        registry.register(new VampirismSkill.SimpleHunterSkill("stake2", 224, 32, false) {
+        registry.register(new VampirismSkill.SimpleHunterSkill("stake2", false) {
             @Override
             public ITextComponent getDescription() {
                 StringTextComponent desc = null;
                 if (Balance.hps.INSTANT_KILL_SKILL_2_ONLY_NPC) {
-                    new TranslationTextComponent("text.vampirism.skill.stake2.desc_npc", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                    new TranslationTextComponent("skill.vampirism.stake2.desc_npc", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
                 } else {
-                    new TranslationTextComponent("text.vampirism.skill.stake2.desc_all", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                    new TranslationTextComponent("skill.vampirism.stake2.desc_all", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
 
                 }
                 return desc;
             }
         });
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_table", 64, 32, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad", 80, 32, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_good_or_bad", 96, 32, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_identify_some", 112, 32, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_category_hint", 128, 32, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", 80, 32, true) {
+        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_table", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_good_or_bad", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_identify_some", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_category_hint", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", true) {
             @Override
             public ITextComponent getDescription() {
-                return new TranslationTextComponent("text.vampirism.skill.blood_potion_less_bad.desc");
+                return new TranslationTextComponent("skill.vampirism.blood_potion_less_bad.desc");
             }
 
             @Override
             public String getTranslationKey() {
-                return "text.vampirism.skill.blood_potion_less_bad";
+                return "skill.vampirism.blood_potion_less_bad";
             }
         });
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_faster_crafting", 144, 32, false));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_portable_crafting", 176, 32, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_duration", 160, 32, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("basic_alchemy", 32, 48, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon", 48, 48, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", 80, 48, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", 64, 48, true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", 96, 48, true));
-        DefaultSkill<IHunterPlayer> attackSpeed = new VampirismSkill.SimpleHunterSkill("hunter_attack_speed", 32, 32, false);
+        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_faster_crafting", false));
+        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_portable_crafting", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_duration", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("basic_alchemy", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", true));
+        DefaultSkill<IHunterPlayer> attackSpeed = new VampirismSkill.SimpleHunterSkill("hunter_attack_speed", false);
         attackSpeed.registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", Balance.hps.SMALL_ATTACK_SPEED_MODIFIER, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
         registry.register(attackSpeed);
-        registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter) {
-            @Override
-            public ITextComponent getDescription() {
-                return new TranslationTextComponent("text.vampirism.skill.disguise_hunter.desc");
-            }
-        });
+        registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter, true));
         registry.register(new ActionSkill<IHunterPlayer>(new ResourceLocation("vampirism", "hunter_awareness"), HunterActions.awareness_hunter));
 
-        DefaultSkill<IHunterPlayer> advancedAttackSpeed = new VampirismSkill.SimpleHunterSkill("hunter_advanced_attack_speed", 32, 32, false);
+        DefaultSkill<IHunterPlayer> advancedAttackSpeed = new VampirismSkill.SimpleHunterSkill("hunter_advanced_attack_speed", false);
         advancedAttackSpeed.registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", Balance.hps.MAJOR_ATTACK_SPEED_MODIFIER, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
         registry.register(advancedAttackSpeed);

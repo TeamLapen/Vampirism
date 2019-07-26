@@ -57,15 +57,8 @@ public class VampireSkills {
     public static final ISkill garlic_blood_vision = UtilLib.getNull();
 
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
-        registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getID(), 32, 0, false));
-        registry.register(new VampirismSkill.SimpleVampireSkill("night_vision", 48, 0, false) {
-
-            @Override
-            public String getTranslationKey() {
-                return "text.vampirism.skill.night_vision";
-            }
-
-
+        registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getID(), false));
+        registry.register(new VampirismSkill.SimpleVampireSkill("night_vision", false) {
             @Override
             protected void onDisabled(IVampirePlayer player) {
                 player.unUnlockVision(VReference.vision_nightVision);
@@ -80,10 +73,10 @@ public class VampireSkills {
         registry.register(new ActionSkill<>("vampire_regeneration", VampireActions.regen));
         registry.register(new ActionSkill<>("bat", VampireActions.bat));
         registry.register(new ActionSkill<>("summon_bats", VampireActions.summon_bat, true));
-        DefaultSkill<IVampirePlayer> damage = new VampirismSkill.SimpleVampireSkill("less_sundamage", 96, 0, false);
+        DefaultSkill<IVampirePlayer> damage = new VampirismSkill.SimpleVampireSkill("less_sundamage", false);
         damage.registerAttributeModifier(VReference.sunDamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", Balance.vps.SUNDAMAGE_REDUCTION1, AttributeModifier.Operation.MULTIPLY_TOTAL);
         registry.register(damage);
-        DefaultSkill<IVampirePlayer> damage2 = new VampirismSkill.SimpleVampireSkill("water_resistance", 208, 0, true) {
+        DefaultSkill<IVampirePlayer> damage2 = new VampirismSkill.SimpleVampireSkill("water_resistance", true) {
             @Override
             protected void onDisabled(IVampirePlayer player) {
                 ((VampirePlayer) player).getSpecialAttributes().waterResistance = false;
@@ -95,12 +88,12 @@ public class VampireSkills {
             }
         };
         registry.register(damage2);
-        registry.register((new VampirismSkill.SimpleVampireSkill("less_blood_thirst", 80, 0, true)).registerAttributeModifier(VReference.bloodExhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", Balance.vps.BLOOD_THIRST_REDUCTION1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register((new VampirismSkill.SimpleVampireSkill("less_blood_thirst", true)).registerAttributeModifier(VReference.bloodExhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", Balance.vps.BLOOD_THIRST_REDUCTION1, AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new ActionSkill<>("vampire_disguise", VampireActions.disguise_vampire));
         registry.register(new ActionSkill<>("vampire_invisibility", VampireActions.vampire_invisibility));
         registry.register(new ActionSkill<>("vampire_rage", VampireActions.vampire_rage, true));
 
-        VampirismSkill.SimpleVampireSkill advanced_biter = new VampirismSkill.SimpleVampireSkill("advanced_biter", 128, 0, false) {
+        VampirismSkill.SimpleVampireSkill advanced_biter = new VampirismSkill.SimpleVampireSkill("advanced_biter", false) {
             @Override
             protected void onDisabled(IVampirePlayer player) {
                 ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false;
@@ -115,14 +108,14 @@ public class VampireSkills {
         advanced_biter.registerAttributeModifier(VReference.biteDamage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", Balance.vps.BITE_DAMAGE_MULT, AttributeModifier.Operation.MULTIPLY_BASE);
         registry.register(advanced_biter);
 
-        registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", 240, 0, true));
+        registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", true));
         registry.register(new ActionSkill<>("freeze", VampireActions.freeze, true));
         registry.register(new ActionSkill<>("sunscreen", VampireActions.sunscreen, true));
-        DefaultSkill<IVampirePlayer> jump = new VampirismSkill.SimpleVampireSkill("vampire_jump", 160, 0, false) {
+        DefaultSkill<IVampirePlayer> jump = new VampirismSkill.SimpleVampireSkill("vampire_jump", false) {
 
             @Override
             public String getTranslationKey() {
-                return "effect.jump";
+                return "effect.minecraft.jump_boost";
             }
 
             @Override
@@ -136,16 +129,16 @@ public class VampireSkills {
             }
         };
         registry.register(jump);
-        DefaultSkill<IVampirePlayer> speed = new VampirismSkill.SimpleVampireSkill("vampire_speed", 144, 0, false) {
+        DefaultSkill<IVampirePlayer> speed = new VampirismSkill.SimpleVampireSkill("vampire_speed", false) {
 
             @Override
             public String getTranslationKey() {
-                return "effect.moveSpeed";
+                return "effect.minecraft.speed";
             }
         };
         speed.registerAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, "96dc968d-818f-4271-8dbf-6b799d603ad8", Balance.vps.SPEED_BOOST, AttributeModifier.Operation.MULTIPLY_TOTAL);
         registry.register(speed);
-        registry.register(new VampirismSkill.SimpleVampireSkill("blood_vision", 176, 0, true) {
+        registry.register(new VampirismSkill.SimpleVampireSkill("blood_vision", true) {
 
 
             @Override
@@ -158,7 +151,7 @@ public class VampireSkills {
                 player.unlockVision(VReference.vision_bloodVision);
             }
         });
-        registry.register(new VampirismSkill.SimpleVampireSkill("creeper_avoided", 192, 0, false) {
+        registry.register(new VampirismSkill.SimpleVampireSkill("creeper_avoided", false) {
 
 
             @Override
@@ -167,12 +160,6 @@ public class VampireSkills {
                     return new StringTextComponent("Disabled by admin").applyTextStyle(TextFormatting.RED);
                 }
                 return super.getDescription();
-            }
-
-
-            @Override
-            public String getTranslationKey() {
-                return "text.vampirism.skill.avoided_by_creepers";
             }
 
             @Override
@@ -185,7 +172,7 @@ public class VampireSkills {
                 ((VampirePlayer) player).getSpecialAttributes().avoided_by_creepers = true;
             }
         });
-        registry.register(new VampirismSkill.SimpleVampireSkill("vampire_forest_fog", 224, 0, true) {
+        registry.register(new VampirismSkill.SimpleVampireSkill("vampire_forest_fog", true) {
             @Override
             protected void onDisabled(IVampirePlayer player) {
                 ((VampirePlayer) player).getSpecialAttributes().increasedVampireFogDistance = false;
@@ -198,15 +185,15 @@ public class VampireSkills {
             }
         });
         registry.register(new ActionSkill<>("teleport", VampireActions.teleport));
-        registry.register(new VampirismSkill.SimpleVampireSkill("sword_finisher", 0, 16, true) {
+        registry.register(new VampirismSkill.SimpleVampireSkill("sword_finisher", true) {
             @Override
             public ITextComponent getDescription() {
-                return new TranslationTextComponent("text.vampirism.skill.sword_finisher.desc", (int) (Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC * 100));
+                return new TranslationTextComponent("skill.vampirism.sword_finisher.desc", (int) (Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC * 100));
             }
         });
         registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile));
         registry.register(new ActionSkill<>("half_invulnerable", VampireActions.half_invulnerable, true));
-        registry.register(new VampirismSkill.SimpleVampireSkill(new ResourceLocation("vampirism", "garlic_blood_vision"), 16, 16, true) {
+        registry.register(new VampirismSkill.SimpleVampireSkill("garlic_blood_vision", true) {
             @Override
             protected void onDisabled(IVampirePlayer player) {
                 ((VampirePlayer) player).getSpecialAttributes().garlic_blood_vision = false;

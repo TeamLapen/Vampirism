@@ -9,24 +9,16 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Extension of {@link DefaultSkill} with vampirism default unloc names/descriptions
  */
 public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSkill<T> {
     private String description = null;
+    private String translationKey;
 
     public VampirismSkill(IPlayableFaction<T> faction) {
         super(faction);
-    }
-
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public ResourceLocation getIconLoc() {
-        return null;
     }
 
     @Override
@@ -34,49 +26,39 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         return description == null ? null : new TranslationTextComponent(description);
     }
 
-    @Override
-    public String getTranslationKey() {
-        return "text.vampirism.skill." + getRegistryName().getPath();
-    }
+//   @Override
+//    public String getTranslationKey() {
+//        if (this.translationKey == null) {
+//            this.translationKey = Util.makeTranslationKey("skill", getRegistryName());
+//        }
+//        return this.translationKey;
+//    }
 
     /**
      * Enable description using "text.vampirism.skill."+getID()+".desc" as unloc key
      */
     public void setHasDefaultDescription() {
-        description = "text.vampirism.skill." + getRegistryName().getPath() + ".desc";
+        description = getTranslationKey() + ".desc";
     }
 
     /**
      * Simple hunter skill implementation. Does nothing by itself
      */
     public static class SimpleHunterSkill extends VampirismSkill<IHunterPlayer> {
-        private final int u, v;
 
         /**
          * @param id   Registry name
          * @param desc Enable description using the default unlocalized key
          */
-        public SimpleHunterSkill(ResourceLocation id, int u, int v, boolean desc) {
+        public SimpleHunterSkill(ResourceLocation id, boolean desc) {
             super(VReference.HUNTER_FACTION);
             this.setRegistryName(id);
-            this.u = u;
-            this.v = v;
             if (desc) this.setHasDefaultDescription();
         }
 
         @Deprecated
-        public SimpleHunterSkill(String id, int u, int v, boolean desc) {
-            this(new ResourceLocation("vampirism", id), u, v, desc);
-        }
-
-        @Override
-        public int getMinU() {
-            return u;
-        }
-
-        @Override
-        public int getMinV() {
-            return v;
+        public SimpleHunterSkill(String id, boolean desc) {
+            this(new ResourceLocation("vampirism", id), desc);
         }
     }
 
@@ -85,34 +67,19 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
      * Simple vampire skill implementation. Does nothing by itself
      */
     public static class SimpleVampireSkill extends VampirismSkill<IVampirePlayer> {
-        private final int u, v;
-
-
         @Deprecated
-        public SimpleVampireSkill(String id, int u, int v, boolean desc) {
-            this(new ResourceLocation("vampirism", id), u, v, desc);
+        public SimpleVampireSkill(String id, boolean desc) {
+            this(new ResourceLocation("vampirism", id), desc);
         }
 
         /**
          * @param id   Registry name
          * @param desc Enable description using the default unlocalized key
          */
-        public SimpleVampireSkill(ResourceLocation id, int u, int v, boolean desc) {
+        public SimpleVampireSkill(ResourceLocation id, boolean desc) {
             super(VReference.VAMPIRE_FACTION);
             this.setRegistryName(id);
-            this.u = u;
-            this.v = v;
             if (desc) setHasDefaultDescription();
-        }
-
-        @Override
-        public int getMinU() {
-            return u;
-        }
-
-        @Override
-        public int getMinV() {
-            return v;
         }
     }
 }

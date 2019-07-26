@@ -13,7 +13,7 @@ import net.minecraft.potion.EffectInstance;
 public class SunscreenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     public SunscreenVampireAction() {
-        super(null);
+        super();
     }
 
     @Override
@@ -30,21 +30,6 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
     @Override
     public int getDuration(int level) {
         return 20 * (Balance.vpa.SUNSCREEN_DURATION);
-    }
-
-    @Override
-    public int getMinU() {
-        return 176;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "action.vampirism.vampire.sunscreen";
     }
 
     @Override
