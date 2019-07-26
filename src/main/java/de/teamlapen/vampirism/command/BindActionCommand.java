@@ -22,10 +22,10 @@ public class BindActionCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("bind-action")
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
-                .then(Commands.argument("shortcut number", IntegerArgumentType.integer(1, 2))
+                .then(Commands.argument("shortcutnumber", IntegerArgumentType.integer(1, 2))
                         .then(Commands.argument("action", ActionArgument.actions())
                                 .executes(context->{
-                                    return bindAction(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "shortcut number"), ActionArgument.getAction(context, "action"));
+                                    return bindAction(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "shortcutnumber"), ActionArgument.getAction(context, "action"));
                                 })))
                 .then(Commands.literal("help")
                         .executes(context -> {

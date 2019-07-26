@@ -39,9 +39,8 @@ public class HunterIntelItem extends VampirismItem {
         tooltip.add(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").appendText(": " + (level + 5)).applyTextStyle(TextFormatting.RED));
     }
 
-    @Override
     public ITextComponent getCustomName() {
-        return super.getCustomName().appendText(" ").appendSibling(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").appendText(" " + (level + 5)));
+        return new TranslationTextComponent(this.getDefaultTranslationKey()).appendText(" ").appendSibling(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").appendText(" " + (level + 5)));
     }
 
     @OnlyIn(Dist.CLIENT)
