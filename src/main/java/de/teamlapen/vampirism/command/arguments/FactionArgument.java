@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.command;
+package de.teamlapen.vampirism.command.arguments;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -7,6 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -24,8 +25,8 @@ import java.util.concurrent.CompletableFuture;
 public class FactionArgument implements ArgumentType<IPlayableFaction> {
     private static final Collection<String> EXAMPLES = Arrays.asList("vampirism:vampire", "vampirism:hunter");
 
-    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((id) -> new TranslationTextComponent("command.vampirism.base.level.faction_not_found", id));
-    private static final DynamicCommandExceptionType FACTION_NOT_PLAYABLE = new DynamicCommandExceptionType((id) -> new TranslationTextComponent("command.vampirism.base.level.faction_not_playable", id));
+    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((id) -> new TranslationTextComponent("command.vampirism.argument.faction.notfound", id));
+    private static final DynamicCommandExceptionType FACTION_NOT_PLAYABLE = new DynamicCommandExceptionType((id) -> new TranslationTextComponent("command.vampirism.argument.faction.notplayable", id));
 
     public static IPlayableFaction<IFactionPlayer> getFaction(CommandContext<CommandSource> context, String id) throws CommandSyntaxException {
         return (IPlayableFaction) context.getArgument(id, IFaction.class);

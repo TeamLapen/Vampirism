@@ -96,7 +96,7 @@ public class ClientEventHandler {
             // load the fluid models for the different levels from the .json files
 
             for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
-                containerFluidModels[x] = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/blood_container/fluid_" + (x + 1)));
+                containerFluidModels[x] = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID, "models/block/blood_container/fluid_" + (x + 1)));//TODO 1.14 puts /models/models/ infront of the path !? waiting for fluid
             }
 
             //For each registered fluid: Replace the fluid model texture by fluid (still) texture and cache the retextured model
@@ -145,8 +145,8 @@ public class ClientEventHandler {
 
         try {
             for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
-                IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/altar_inspiration/blood" + (x + 1)));
-                BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT);//TODO test
+                IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID, "models/block/altar_inspiration/blood" + (x + 1)));//TODO 1.14 Test & waiting for fluids
+                BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT);
             }
             Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();

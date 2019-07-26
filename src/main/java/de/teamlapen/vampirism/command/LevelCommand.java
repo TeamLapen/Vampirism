@@ -5,9 +5,11 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.command.arguments.FactionArgument;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
