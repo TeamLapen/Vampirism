@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.client.gui.SelectActionScreen;
@@ -15,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -175,18 +173,15 @@ public class ModKeys {
      *
      * @param player if null nothing happens
      */
-    private void toggleBoundAction(@Nullable IFactionPlayer player, @Nullable ResourceLocation key) {
+    private void toggleBoundAction(@Nullable IFactionPlayer player, @Nullable IAction action) {
         if (player != null) {
-            if (key == null) {
+            if (action == null) {
                 player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
             } else {
-                IAction action = VampirismAPI.actionManager().getRegistry().getValue(key);
-                if (action == null) {
-                    LOGGER.info("Bound action {} not found", key);
-                } else if (!action.getFaction().equals(player.getFaction())) {
+                if (!action.getFaction().equals(player.getFaction())) {
                     player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.only_faction", action.getFaction().getName()), true);
                 } else {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + key));
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName()));
                 }
             }
         }

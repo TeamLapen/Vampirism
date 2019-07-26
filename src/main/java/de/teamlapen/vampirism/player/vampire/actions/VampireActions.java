@@ -24,16 +24,16 @@ public class VampireActions {
     public static final HalfInvulnerableAction half_invulnerable = UtilLib.getNull();
 
     public static void registerDefaultActions(IForgeRegistry<IAction> registry) {
-        registry.register(new FreezeVampireAction().setRegistryName("vampirism", "freeze"));
-        registry.register(new InvisibilityVampireAction().setRegistryName("vampirism", "vampire_invisibility"));
-        registry.register(new RegenVampireAction().setRegistryName("vampirism", "regen"));
-        registry.register(new TeleportVampireAction().setRegistryName("vampirism", "teleport"));
-        registry.register(new RageVampireAction().setRegistryName("vampirism", "vampire_rage"));
-        registry.register(new BatVampireAction().setRegistryName("vampirism", "bat"));
-        registry.register(new DisguiseVampireAction().setRegistryName("vampirism", "disguise_vampire"));
-        registry.register(new SummonBatVampireAction().setRegistryName("vampirism", "summon_bat"));
-        registry.register(new SunscreenVampireAction().setRegistryName("vampirism", "sunscreen"));
-        registry.register(new DarkBloodProjectileAction().setRegistryName("vampirism", "dark_blood_projectile"));
-        registry.register(new HalfInvulnerableAction().setRegistryName("vampirism", "half_invulnerable"));
+        registry.register(new FreezeVampireAction().setRegistryName(REFERENCE.MODID, "freeze"));
+        registry.register(new InvisibilityVampireAction().setRegistryName(REFERENCE.MODID, "vampire_invisibility"));
+        registry.register(new RegenVampireAction().setRegistryName(REFERENCE.MODID, "regen"));
+        registry.register(new TeleportVampireAction().setRegistryName(REFERENCE.MODID, "teleport"));
+        registry.register(new RageVampireAction().setRegistryName(REFERENCE.MODID, "vampire_rage"));
+        registry.register(new BatVampireAction().setRegistryName(REFERENCE.MODID, "bat"));
+        registry.register(new DisguiseVampireAction().setRegistryName(REFERENCE.MODID, "disguise_vampire"));
+        registry.register(new SummonBatVampireAction().setRegistryName(REFERENCE.MODID, "summon_bat"));
+        registry.register(new SunscreenVampireAction().setRegistryName(REFERENCE.MODID, "sunscreen"));
+        registry.register(new DarkBloodProjectileAction().setRegistryName(REFERENCE.MODID, "dark_blood_projectile"));
+        registry.register(new HalfInvulnerableAction().setRegistryName(REFERENCE.MODID, "half_invulnerable"));
     }
 }
