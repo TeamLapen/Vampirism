@@ -52,16 +52,16 @@ public class BlindingBatEntity extends BatEntity {
         this.restrictLiveSpan = true;
     }
 
-    public static boolean spawnPredicate(EntityType<? extends BlindingBatEntity> p_223369_0_, IWorld p_223369_1_, SpawnReason p_223369_2_, BlockPos p_223369_3_, Random p_223369_4_) {
-        if (p_223369_3_.getY() >= p_223369_1_.getSeaLevel()) {
+    public static boolean spawnPredicate(EntityType<? extends BlindingBatEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        if (blockPos.getY() >= iWorld.getSeaLevel()) {
             return false;
         } else {
-            int i = p_223369_1_.getLight(p_223369_3_);
+            int i = iWorld.getLight(blockPos);
             int j = 4;
-            if (p_223369_4_.nextBoolean())
+            if (random.nextBoolean())
                 return false;
 
-            return i > p_223369_4_.nextInt(j) ? false : func_223315_a(p_223369_0_, p_223369_1_, p_223369_2_, p_223369_3_, p_223369_4_);
+            return i > random.nextInt(j) ? false : func_223315_a(entityType, iWorld, spawnReason, blockPos, random);
         }
     }
 }

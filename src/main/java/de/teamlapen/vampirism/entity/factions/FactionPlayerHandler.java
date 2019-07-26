@@ -193,11 +193,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
         }
         if (nbt.contains("bound1")) {
-            LOGGER.info(nbt.getString("bound1"));
             setBoundAction1(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound1"))), false);
         }
         if (nbt.contains("bound2")) {
-            LOGGER.info(nbt.getString("bound2"));
             setBoundAction2(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))), false);
         }
         notifyFaction(old, oldLevel);
