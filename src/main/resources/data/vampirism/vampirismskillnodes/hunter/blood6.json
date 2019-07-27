@@ -1,0 +1,8 @@
+{
+  "parent": "vampirism:hunter/blood5",
+  "faction": "vampirism:hunter",
+  "skills": [
+    "vampirism:blood_potion_less_bad_2",
+    "vampirism:blood_potion_identify_some"
+  ]
+}

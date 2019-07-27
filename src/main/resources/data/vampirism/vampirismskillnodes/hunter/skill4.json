@@ -1,0 +1,7 @@
+{
+  "parent": "vampirism:hunter/skill3",
+  "faction": "vampirism:hunter",
+  "skills": [
+    "vampirism:hunter_disguise"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "vampirism:hunter/skill4",
+  "faction": "vampirism:hunter",
+  "skills": [
+    "vampirism:blood_potion_table"
+  ]
+}

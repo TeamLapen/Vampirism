@@ -1,0 +1,7 @@
+{
+  "parent": "vampirism:vampire",
+  "faction": "vampirism:vampire",
+  "skills": [
+    "vampirism:night_vision"
+  ]
+}

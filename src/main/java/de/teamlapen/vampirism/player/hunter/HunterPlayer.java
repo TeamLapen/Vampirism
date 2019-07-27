@@ -84,7 +84,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     public HunterPlayer(PlayerEntity player) {
         super(player);
         actionHandler = new ActionHandler<>(this);
-        skillHandler = new SkillHandler<>(this);
+        skillHandler = new SkillHandler<>(this, VReference.HUNTER_FACTION);
         specialAttributes = new HunterPlayerSpecialAttribute();
     }
 

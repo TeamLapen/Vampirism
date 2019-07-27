@@ -1,21 +1,19 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
-import de.teamlapen.vampirism.player.skills.SkillManager;
+import de.teamlapen.vampirism.player.skills.SkillNode;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -140,9 +138,10 @@ public class SkillsScreen extends Screen {
     public void init() {
         IFactionPlayer factionPlayer = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
         if (factionPlayer != null) {
+            IPlayableFaction faction = factionPlayer.getFaction();
             display = true;
             skillHandler = (SkillHandler) factionPlayer.getSkillHandler();
-            Integer[] info = ((SkillManager) VampirismAPI.skillManager()).getDisplayInfo(factionPlayer.getFaction());
+            Integer[] info = VampirismMod.proxy.getSkillTree(true).getDisplayInfo(faction.getID());
             int w = info[0] * info[1] * skill_width * 2;
             area_max_x = w + 10 - display_width;
             area_min_x = -w - 10 - display_width;
@@ -150,7 +149,8 @@ public class SkillsScreen extends Screen {
             this.displayX = displayXNew = field_146565_w = -100;
             this.displayY = displayYNew = field_146573_x = -10;
             skillNodes.clear();
-            addToList(skillNodes, skillHandler.getRootNode());
+            SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
+            addToList(skillNodes, root);
         }
         this.addButton(new Button(this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done"), (context) -> {
             this.minecraft.displayGuiScreen(null);

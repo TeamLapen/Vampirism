@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import com.mojang.datafixers.util.Either;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -149,7 +148,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         applyEntityAttributes();
         bloodStats = new BloodStats(player);
         actionHandler = new ActionHandler<>(this);
-        skillHandler = new SkillHandler<>(this);
+        skillHandler = new SkillHandler<>(this, VReference.VAMPIRE_FACTION);
     }
 
     @Override

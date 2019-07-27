@@ -8,6 +8,9 @@ import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.core.RegistryManager;
+import de.teamlapen.vampirism.network.SkillTreePacket;
+import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
+import de.teamlapen.vampirism.player.skills.SkillTree;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -37,6 +40,7 @@ public class ClientProxy extends CommonProxy {
     private final static Logger LOGGER = LogManager.getLogger(ClientProxy.class);
 
     private VampirismHUDOverlay overlay;
+    private ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
 
     public ClientProxy() {
         RegistryManager.setupClientRegistryManager();
@@ -61,18 +65,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void onInitStep(Step step, ModLifecycleEvent event) {
-        super.onInitStep(step, event);
-        RegistryManager.getRegistryManagerClient().onInitStep(step, event);
-        switch (step) {
-            case CLIENT_SETUP:
-                ModKeys.register();
-                registerSubscriptions();
-                break;
-            case LOAD_COMPLETE:
-                registerVampireEntityOverlays();
-                break;
-        }
+    public SkillTree getSkillTree(boolean client) {
+        return client ? skillTreeManager.getSkillTree() : super.getSkillTree(false);
     }
 
     @Override
@@ -120,4 +114,24 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
+    @Override
+    public void handleSkillTree(SkillTreePacket msg) {
+        skillTreeManager.loadUpdate(msg);
+    }
+
+    @Override
+    public void onInitStep(Step step, ModLifecycleEvent event) {
+        super.onInitStep(step, event);
+        RegistryManager.getRegistryManagerClient().onInitStep(step, event);
+        switch (step) {
+            case CLIENT_SETUP:
+                ModKeys.register();
+                registerSubscriptions();
+                break;
+            case LOAD_COMPLETE:
+                skillTreeManager.init();
+                registerVampireEntityOverlays();
+                break;
+        }
+    }
 }

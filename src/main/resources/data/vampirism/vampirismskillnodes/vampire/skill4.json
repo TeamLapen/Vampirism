@@ -1,0 +1,7 @@
+{
+  "parent": "vampirism:vampire/skill3",
+  "faction": "vampirism:vampire",
+  "skills": [
+    "vampirism:bat"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "vampirism:hunter/skill2",
+  "faction": "vampirism:hunter",
+  "skills": [
+    "vampirism:hunter_attack_speed"
+  ]
+}

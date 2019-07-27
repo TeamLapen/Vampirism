@@ -2,11 +2,8 @@ package de.teamlapen.vampirism.player.vampire.skills;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
@@ -207,57 +204,6 @@ public class VampireSkills {
 
     }
 
-    public static void buildSkillTree(SkillNode root) {
-        ISkillManager skillManager = VampirismAPI.skillManager();
-        SkillNode skill2 = skillManager.createSkillNode(root, night_vision);
-        SkillNode skill3 = skillManager.createSkillNode(skill2, vampire_regeneration);
-        SkillNode skill4 = skillManager.createSkillNode(skill3, bat);
-        registerOffensiveSkills(skillManager, skill4);
-        registerUtilSkills(skillManager, skill4);
-        registerDefensiveSkills(skillManager, skill4);
-    }
-
-
-    private static void registerUtilSkills(ISkillManager skillManager, SkillNode start) {
-        SkillNode skill1 = skillManager.createSkillNode(start, summon_bats);
-
-
-        SkillNode skill2 = skillManager.createSkillNode(skill1, less_sundamage, water_resistance);
-
-        SkillNode skill3 = skillManager.createSkillNode(skill2, less_blood_thirst);
-        SkillNode skill4 = skillManager.createSkillNode(skill3, vampire_disguise);
-        SkillNode skill5 = skillManager.createSkillNode(skill4, half_invulnerable);
-        SkillNode skill6 = skillManager.createSkillNode(skill5, vampire_invisibility);
-    }
-
-    private static void registerOffensiveSkills(ISkillManager skillManager, SkillNode start) {
-        SkillNode skill1 = skillManager.createSkillNode(start, vampire_rage);
-
-
-        SkillNode skill2 = skillManager.createSkillNode(skill1, advanced_biter);
-        SkillNode skill3 = skillManager.createSkillNode(skill2, sword_finisher);
-        SkillNode skill4 = skillManager.createSkillNode(skill3, dark_blood_projectile);
-        SkillNode skill5 = skillManager.createSkillNode(skill4, blood_charge);
-        SkillNode skill6 = skillManager.createSkillNode(skill5, freeze);
-
-        //TODO add lighting or so
-
-    }
-
-    private static void registerDefensiveSkills(ISkillManager skillManager, SkillNode start) {
-        SkillNode skill1 = skillManager.createSkillNode(start, sunscreen);
-
-
-        SkillNode skill2 = skillManager.createSkillNode(skill1, vampire_jump, vampire_speed);
-
-        SkillNode skill3 = skillManager.createSkillNode(skill2, blood_vision);
-        SkillNode skill4 = skillManager.createSkillNode(skill3, creeper_avoided);
-
-        SkillNode skill5 = skillManager.createSkillNode(skill4, vampire_forest_fog, garlic_blood_vision);
-        SkillNode skill6 = skillManager.createSkillNode(skill5, teleport);
-
-
-    }
 
     public static void fixMapping(RegistryEvent.MissingMappings.Mapping<ISkill> m) {
         if (new ResourceLocation("vampirism:bite1").equals(m.key) || new ResourceLocation("vampirism:bite2").equals(m.key)) {
