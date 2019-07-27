@@ -105,6 +105,10 @@ processLibResources {
     from(sourceSets.lib.resources.srcDirs) {
         exclude 'META-INF/mods.toml'
     }
+
+     outputs.upToDateWhen { false }
+    
+
 }
 
 
