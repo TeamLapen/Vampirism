@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api;
 
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -80,18 +79,6 @@ public class VampirismAPI {
      * @return The vampirism entity registry
      */
     public static IVampirismEntityRegistry entityRegistry() {
-        return entityRegistry;
-    }
-
-
-    /**
-     * TODO REMOVE
-     * Use {@link #entityRegistry()}
-     *
-     * @return The biteable registry
-     */
-    @Deprecated
-    public static IVampirismEntityRegistry biteableRegistry() {
         return entityRegistry;
     }
 

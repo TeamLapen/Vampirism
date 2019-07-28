@@ -2,8 +2,6 @@ package de.teamlapen.lib.proxy;
 
 
 import de.teamlapen.lib.util.ISoundReference;
-import de.teamlapen.lib.util.ParticleHandler;
-import de.teamlapen.lib.util.ParticleHandlerClient;
 import de.teamlapen.lib.util.SoundReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
@@ -24,8 +22,6 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
 
-    private final ParticleHandler clientParticleHandler = new ParticleHandlerClient();
-
     @Nonnull
     @Override
     public ISoundReference createSoundReference(SoundEvent event, SoundCategory category, BlockPos pos, float volume, float pinch) {
@@ -41,11 +37,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public String getActiveLanguage() {
         return Minecraft.getInstance().getLanguageManager().getCurrentLanguage().toString();
-    }
-
-    @Override
-    public ParticleHandler getParticleHandler() {
-        return EffectiveSide.get() == LogicalSide.CLIENT ? clientParticleHandler : serverParticleHandler;
     }
 
     @Override

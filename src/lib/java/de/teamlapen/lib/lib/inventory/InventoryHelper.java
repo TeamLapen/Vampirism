@@ -23,7 +23,6 @@ public class InventoryHelper {
 
     /**
      * Checks if the given inventory contains at least the given amount of tileInventory in the respective slots.
-     * TODO 1.13 probably has to be modified/removed since meta data does not exist
      *
      * @param inventory
      * @param items     Has to have the same size as the inventory

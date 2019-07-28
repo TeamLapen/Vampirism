@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.tileentity.BloodGrinderTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -22,7 +23,10 @@ import javax.annotation.Nullable;
 public class GrinderBlock extends VampirismBlockContainer {
     private final static String regName = "blood_grinder";
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-    protected static final VoxelShape grinderShape = makeShape();//TODO 1.14 make shape for all directions
+    private static final VoxelShape SOUTH = makeShape();
+    private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
+    private static final VoxelShape NORTH = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
+    private static final VoxelShape EAST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
 
 
     public GrinderBlock() {
@@ -39,7 +43,17 @@ public class GrinderBlock extends VampirismBlockContainer {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return grinderShape;
+        switch (state.get(FACING)) {
+            case NORTH:
+                return NORTH;
+            case EAST:
+                return EAST;
+            case SOUTH:
+                return SOUTH;
+            case WEST:
+                return WEST;
+        }
+        return NORTH;
     }
 
     @Override

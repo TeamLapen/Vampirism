@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,20 +27,20 @@ import javax.annotation.Nullable;
 
 /**
  * Table for hunter "education/leveling"
- * TODO create a unique texture for the top side
  */
 public class HunterTableBlock extends VampirismBlock {
     public static final String name = "hunter_table";
     public static final ITextComponent containerName = new TranslationTextComponent("container.hunter_table");
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-    private static final VoxelShape shape = makeShape();//TODO 1.14 make shape for all directions
+    private static final VoxelShape SOUTH = makeShape();
+    private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
+    private static final VoxelShape NORTH = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
+    private static final VoxelShape EAST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
 
     @Nullable
     @Override
     public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
-            return new HunterTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos));
-        }, containerName);
+        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos)), containerName);
     }
 
     public HunterTableBlock() {
@@ -80,8 +81,18 @@ public class HunterTableBlock extends VampirismBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-        return shape;
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        switch (state.get(FACING)) {
+            case NORTH:
+                return NORTH;
+            case EAST:
+                return EAST;
+            case SOUTH:
+                return SOUTH;
+            case WEST:
+                return WEST;
+        }
+        return NORTH;
     }
 
     @Override

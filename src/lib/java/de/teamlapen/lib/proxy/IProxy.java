@@ -1,7 +1,6 @@
 package de.teamlapen.lib.proxy;
 
 import de.teamlapen.lib.util.ISoundReference;
-import de.teamlapen.lib.util.ParticleHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -35,8 +34,6 @@ public interface IProxy {
      * @return The string describing the currently active language. "English" on server side
      */
     String getActiveLanguage();
-
-    ParticleHandler getParticleHandler();//TODO delete particlehandler
 
     PlayerEntity getPlayerEntity(NetworkEvent.Context context);
 

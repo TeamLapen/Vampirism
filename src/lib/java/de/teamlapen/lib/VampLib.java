@@ -33,7 +33,6 @@ public class VampLib {
     }
 
     private void checkDevEnv() {
-        //TODO test
         String launchTarget = System.getenv().get("target");
         if (launchTarget != null && launchTarget.contains("dev")) {
             inDev = true;

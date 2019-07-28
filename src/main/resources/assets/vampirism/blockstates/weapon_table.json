@@ -22,6 +22,19 @@
       "5": {
         "submodel": "vampirism:block/weapon_table/weapon_table_lava5"
       }
+    },
+    "facing": {
+      "north": {
+      },
+      "east": {
+        "y": 90
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      }
     }
   }
 }

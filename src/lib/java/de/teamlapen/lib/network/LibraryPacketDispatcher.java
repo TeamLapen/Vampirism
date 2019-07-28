@@ -19,7 +19,6 @@ public class LibraryPacketDispatcher extends AbstractPacketDispatcher {
     @Override
     public void registerPackets() {
         dispatcher.registerMessage(nextID(), RequestPlayerUpdatePacket.class, RequestPlayerUpdatePacket::encode, RequestPlayerUpdatePacket::decode, RequestPlayerUpdatePacket::handle);
-        dispatcher.registerMessage(nextID(), SpawnCustomParticlePacket.class, SpawnCustomParticlePacket::encode, SpawnCustomParticlePacket::decode, SpawnCustomParticlePacket::handle);
         dispatcher.registerMessage(nextID(), UpdateEntityPacket.class, UpdateEntityPacket::encode, UpdateEntityPacket::decode, UpdateEntityPacket::handle);
     }
 }

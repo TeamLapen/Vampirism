@@ -2,7 +2,6 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -25,6 +24,9 @@ import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
@@ -42,10 +44,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * General Utility Class
@@ -586,7 +585,36 @@ public class UtilLib {
     }
 
     /**
-     * TODO 1.13 inline this method with IntelliJ
+     * Rotate voxel. Credits to JTK222|Lukas
+     * Cache the result
+     * @param shape
+     * @param rotation
+     * @return
+     */
+    public static VoxelShape rotateShape(VoxelShape shape, RotationAmount rotation) {
+        Set<VoxelShape> rotatedShapes = new HashSet<VoxelShape>();
+
+        shape.forEachBox((x1, y1, z1, x2, y2, z2) -> {
+            x1 = (x1 * 16) - 8;
+            x2 = (x2 * 16) - 8;
+            z1 = (z1 * 16) - 8;
+            z2 = (z2 * 16) - 8;
+
+            if (rotation == RotationAmount.NINETY)
+                rotatedShapes.add(Block.makeCuboidShape(8 - z1, y1 * 16, 8 + x1, 8 - z2, y2 * 16, 8 + x2));
+            else if (rotation == RotationAmount.HUNDRED_EIGHTY)
+                rotatedShapes.add(Block.makeCuboidShape(8 - x1, y1 * 16, 8 - z1, 8 - x2, y2 * 16, 8 - z2));
+            else if (rotation == RotationAmount.TWO_HUNDRED_SEVENTY)
+                rotatedShapes.add(Block.makeCuboidShape(8 + z1, y1 * 16, 8 - x1, 8 + z2, y2 * 16, 8 - x2));
+        });
+
+        return rotatedShapes.stream().reduce((v1, v2) -> {
+            return VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR);
+        }).get();
+    }
+
+    /**
+     * TODO 1.14 inline this method with IntelliJ
      *
      * @param key
      * @param format
@@ -594,6 +622,12 @@ public class UtilLib {
      */
     public static ITextComponent translated(String key, Object... format) {
         return new TranslationTextComponent(key, format);
+    }
+
+    public enum RotationAmount {
+        NINETY,
+        HUNDRED_EIGHTY,
+        TWO_HUNDRED_SEVENTY
     }
 
 

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
@@ -37,7 +38,8 @@ public class ChurchAltarBlock extends VampirismBlock {
 
     private final static String regName = "church_altar";
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-    private static final VoxelShape shape = makeShape();//TODO 1.14 make shape for all directions
+    private static final VoxelShape SHAPEX = makeShape();
+    private static final VoxelShape SHAPEZ = UtilLib.rotateShape(SHAPEX, UtilLib.RotationAmount.NINETY);
 
 
     public ChurchAltarBlock() {
@@ -60,7 +62,9 @@ public class ChurchAltarBlock extends VampirismBlock {
 
     @Override
     public VoxelShape getShape(BlockState blockState, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-        return shape;
+        Direction dir = blockState.get(FACING);
+        if (dir == Direction.NORTH || dir == Direction.SOUTH) return SHAPEX;
+        return SHAPEZ;
     }
 
     @Override
