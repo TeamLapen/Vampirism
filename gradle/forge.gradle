@@ -50,7 +50,7 @@ minecraft {
         client = {
             property 'forge.logging.console.level', 'debug'
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            workingDirectory project.file('run').canonicalPath
+            workingDirectory project.file('run/client1').canonicalPath
 
             mods {
                 teamlapenlib {
@@ -68,7 +68,7 @@ minecraft {
         server = {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            workingDirectory project.file('run').canonicalPath
+            workingDirectory project.file('run/server').canonicalPath
             source sourceSets.main
             source sourceSets.lib
             source sourceSets.api
