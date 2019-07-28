@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:vampire/util1",
-  "faction": "vampirism:vampire",
   "skills": [
     "vampirism:less_sundamage",
     "vampirism:water_resistance"

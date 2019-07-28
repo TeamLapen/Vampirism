@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:vampire/util3",
-  "faction": "vampirism:vampire",
   "skills": [
     "vampirism:vampire_disguise"
   ]

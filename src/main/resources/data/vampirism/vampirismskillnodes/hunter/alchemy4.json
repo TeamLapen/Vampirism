@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:hunter/alchemy3",
-  "faction": "vampirism:hunter",
   "skills": [
     "vampirism:purified_garlic",
     "vampirism:holy_water_enhanced"

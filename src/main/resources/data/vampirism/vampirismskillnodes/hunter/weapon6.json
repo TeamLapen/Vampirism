@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:hunter/weapon5",
-  "faction": "vampirism:hunter",
   "skills": [
     "vampirism:stake2"
   ]

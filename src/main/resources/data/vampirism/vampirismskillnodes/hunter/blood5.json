@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:hunter/blood4",
-  "faction": "vampirism:hunter",
   "skills": [
     "vampirism:blood_potion_portable_crafting"
   ]

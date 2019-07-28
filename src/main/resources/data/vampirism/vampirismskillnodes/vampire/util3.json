@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:vampire/util2",
-  "faction": "vampirism:vampire",
   "skills": [
     "vampirism:less_blood_thirst"
   ]

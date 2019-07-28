@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:vampire/offensive4",
-  "faction": "vampirism:vampire",
   "skills": [
     "vampirism:blood_charge"
   ]

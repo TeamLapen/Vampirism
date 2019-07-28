@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:vampire/util5",
-  "faction": "vampirism:vampire",
   "skills": [
     "vampirism:vampire_invisibility"
   ]

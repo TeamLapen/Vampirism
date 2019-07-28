@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:vampire/skill4",
-  "faction": "vampirism:vampire",
   "skills": [
     "vampirism:summon_bats"
   ]

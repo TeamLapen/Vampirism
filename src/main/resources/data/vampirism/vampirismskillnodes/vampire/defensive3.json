@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:vampire/defensive2",
-  "faction": "vampirism:vampire",
   "skills": [
     "vampirism:blood_vision"
   ]

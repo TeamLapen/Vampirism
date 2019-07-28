@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:vampire/offensive2",
-  "faction": "vampirism:vampire",
   "skills": [
     "vampirism:sword_finisher"
   ]

@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:vampire/offensive1",
-  "faction": "vampirism:vampire",
   "skills": [
     "vampirism:advanced_biter"
   ]

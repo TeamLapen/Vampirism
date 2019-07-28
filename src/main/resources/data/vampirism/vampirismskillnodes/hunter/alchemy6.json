@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:hunter/alchemy5",
-  "faction": "vampirism:hunter",
   "skills": [
     "vampirism:hunter_awareness"
   ]

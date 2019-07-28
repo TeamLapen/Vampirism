@@ -103,8 +103,8 @@ public class SkillTree {
                 if (builder.parentId != null) {
                     SkillNode parent = builtNodes.get(builder.parentId);
                     if (parent != null) {
-                        if (!parent.getFaction().getID().equals(builder.faction.getID())) {
-                            LOGGER.error("Cannot create skill node {} as parent {} is of a different faction {} vs {}", id, builder.parentId, parent.getFaction().getID(), builder.faction.getID());
+                        if (!builder.checkSkillFaction(parent.getFaction())) {
+                            LOGGER.error("Cannot create skill node {} because skills do not match the derived faction {}", id, parent.getFaction());
                         } else {
                             builtNodes.put(id, new SkillNode(id, parent, builder.skills.toArray(new ISkill[0])));
                         }

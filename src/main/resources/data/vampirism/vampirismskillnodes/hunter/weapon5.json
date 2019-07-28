@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:hunter/weapon4",
-  "faction": "vampirism:hunter",
   "skills": [
     "vampirism:tech_weapons"
   ]

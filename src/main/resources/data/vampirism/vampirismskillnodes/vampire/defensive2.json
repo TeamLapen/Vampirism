@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:vampire/defensive1",
-  "faction": "vampirism:vampire",
   "skills": [
     "vampirism:vampire_jump",
     "vampirism:vampire_speed"

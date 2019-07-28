@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:hunter/skill4",
-  "faction": "vampirism:hunter",
   "skills": [
     "vampirism:weapon_table"
   ]

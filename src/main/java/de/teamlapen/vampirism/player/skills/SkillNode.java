@@ -3,9 +3,6 @@ package de.teamlapen.vampirism.player.skills;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRegistries;
@@ -73,7 +70,7 @@ public class SkillNode {
     }
 
     public Builder getCopy() {
-        return new Builder(faction, parent.id, null, Arrays.asList(elements));
+        return new Builder(parent.id, null, Arrays.asList(elements));
     }
 
     public int getDepth() {
@@ -113,11 +110,6 @@ public class SkillNode {
         public static Builder deserialize(JsonObject json, JsonDeserializationContext context) {
             if (json.has("remove") && JSONUtils.getBoolean(json, "remove")) return null;
             ResourceLocation parent = json.has("parent") ? new ResourceLocation(JSONUtils.getString(json, "parent")) : null;
-            ResourceLocation factionId = new ResourceLocation(JSONUtils.getString(json, "faction"));
-            IFaction faction = VampirismAPI.factionRegistry().getFactionByID(factionId);
-            if (!(faction instanceof IPlayableFaction)) {
-                throw new IllegalArgumentException("Faction " + factionId + " is not registered or not playable");
-            }
             ResourceLocation merge = json.has("merge") ? new ResourceLocation(JSONUtils.getString(json, "merge")) : null;
             JsonArray skills = JSONUtils.getJsonArray(json, "skills", new JsonArray());
             List<ISkill> skillList = new ArrayList<>();
@@ -129,19 +121,13 @@ public class SkillNode {
                 }
                 skillList.add(s);
             }
-            return new Builder((IPlayableFaction) faction, parent, merge, skillList);
+            return new Builder(parent, merge, skillList);
         }
 
         public static Builder readFrom(PacketBuffer buf) {
             ResourceLocation parent = buf.readBoolean() ? buf.readResourceLocation() : null;
             ResourceLocation merge = buf.readBoolean() ? buf.readResourceLocation() : null;
 
-            ResourceLocation factionId = buf.readResourceLocation();
-            IFaction faction = VampirismAPI.factionRegistry().getFactionByID(factionId);
-            if (!(faction instanceof IPlayableFaction)) {
-                LOGGER.error("Faction {} is not registered or not playable", factionId);
-                faction = VReference.VAMPIRE_FACTION;
-            }
             List<ISkill> skillList = new ArrayList<>();
             int count = buf.readVarInt();
             for (int i = 0; i < count; i++) {
@@ -154,19 +140,26 @@ public class SkillNode {
             }
 
 
-            return new Builder((IPlayableFaction) faction, parent, merge, skillList);
+            return new Builder(parent, merge, skillList);
         }
 
         public final ResourceLocation parentId;
         public final List<ISkill> skills;
-        public final IPlayableFaction faction;
         public final ResourceLocation mergeId;
 
-        private Builder(IPlayableFaction faction, ResourceLocation parentId, ResourceLocation mergeId, List<ISkill> skills) {
+        private Builder(ResourceLocation parentId, ResourceLocation mergeId, List<ISkill> skills) {
             this.mergeId = mergeId;
             this.parentId = parentId;
             this.skills = skills;
-            this.faction = faction;
+        }
+
+        public boolean checkSkillFaction(IPlayableFaction faction) {
+            for (ISkill s : skills) {
+                if (!faction.getID().equals(s.getFaction().getID())) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public JsonObject serialize() {
@@ -178,7 +171,6 @@ public class SkillNode {
                 jsonobject.addProperty("merge", mergeId.toString());
             }
 
-            jsonobject.addProperty("faction", this.faction.getID().toString());
             JsonArray skillIds = new JsonArray();
 
             for (ISkill s : skills) {
@@ -191,7 +183,7 @@ public class SkillNode {
 
         @Override
         public String toString() {
-            return "SkillNode.Builder{parent=" + parentId + ",merge=" + mergeId + ",faction=" + faction.getID() + ",skills" + skills.toString() + "}";
+            return "SkillNode.Builder{parent=" + parentId + ",merge=" + mergeId + "skills" + skills.toString() + "}";
         }
 
         public void writeTo(PacketBuffer buf) {
@@ -209,7 +201,6 @@ public class SkillNode {
                 buf.writeResourceLocation(this.mergeId);
             }
 
-            buf.writeResourceLocation(faction.getID());
             buf.writeVarInt(this.skills.size());
             for (ISkill s : skills) {
                 buf.writeResourceLocation(s.getRegistryName());

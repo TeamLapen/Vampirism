@@ -1,6 +1,5 @@
 {
   "parent": "vampirism:hunter/weapon3",
-  "faction": "vampirism:hunter",
   "skills": [
     "vampirism:enhanced_armor"
   ]
