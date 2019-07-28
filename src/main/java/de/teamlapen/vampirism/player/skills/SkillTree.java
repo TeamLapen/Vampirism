@@ -120,6 +120,7 @@ public class SkillTree {
                 break;
             }
         }
+        LOGGER.info("Loaded {} skill nodes", builtNodes.size() - rootNodes.size());
     }
 
     @OnlyIn(Dist.CLIENT)

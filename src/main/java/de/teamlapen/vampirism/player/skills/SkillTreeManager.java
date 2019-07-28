@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.player.skills;
 
 import com.google.gson.*;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.network.SkillTreePacket;
 import net.minecraft.client.resources.JsonReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
@@ -45,13 +47,16 @@ public class SkillTreeManager extends JsonReloadListener {
         resourceLocationJsonObjectMap.forEach((id, object) -> {
             try {
                 SkillNode.Builder builder = GSON.fromJson(object, SkillNode.Builder.class);
-                parsed.put(id, builder);
+                if (builder != null) {
+                    parsed.put(id, builder);
+                }
             } catch (IllegalArgumentException | JsonParseException e) {
                 LOGGER.error("Failed to load skill node {}: {}", id, e.getMessage());
             }
         });
 
         skillTree.loadNodes(parsed);
+        VampirismMod.dispatcher.sendToAll(new SkillTreePacket(skillTree.getCopy()));
     }
 
 

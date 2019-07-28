@@ -111,6 +111,7 @@ public class SkillNode {
 
     public static class Builder {
         public static Builder deserialize(JsonObject json, JsonDeserializationContext context) {
+            if (json.has("remove") && JSONUtils.getBoolean(json, "remove")) return null;
             ResourceLocation parent = json.has("parent") ? new ResourceLocation(JSONUtils.getString(json, "parent")) : null;
             ResourceLocation factionId = new ResourceLocation(JSONUtils.getString(json, "faction"));
             IFaction faction = VampirismAPI.factionRegistry().getFactionByID(factionId);
