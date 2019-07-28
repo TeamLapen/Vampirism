@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.world.gen.biome;
 
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModWorldFeatures;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;

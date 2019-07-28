@@ -19,6 +19,7 @@ public class ModWorld {
     public static class StructurePieceTypes {
         public static final IStructurePieceType HUNTERCAMPFIRE = IStructurePieceType.register(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":huntercampfire");
         public static final IStructurePieceType HUNTERCAMPTENT = IStructurePieceType.register(HunterCampPieces.Tent::new, REFERENCE.MODID + ":huntercamptent");
+        public static final IStructurePieceType HUNTERCAMPTABLE = IStructurePieceType.register(HunterCampPieces.CraftingTable::new, REFERENCE.MODID + ":huntercamptable");
     }
 
     static void modifyVillageSize(GenerationSettings settings) {
