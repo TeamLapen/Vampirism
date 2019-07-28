@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/util4",
+  "skills": [
+    "vampirism:half_invulnerable"
+  ]
+}

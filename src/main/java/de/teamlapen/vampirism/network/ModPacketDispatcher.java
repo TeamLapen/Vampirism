@@ -19,6 +19,7 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
     @Override
     public void registerPackets() {
         dispatcher.registerMessage(nextID(), InputEventPacket.class, InputEventPacket::encode, InputEventPacket::decode, InputEventPacket::handle);
+        dispatcher.registerMessage(nextID(), SkillTreePacket.class, SkillTreePacket::encode, SkillTreePacket::decode, SkillTreePacket::handle);
         //registerMessage(SyncConfigPacket.Handler.class, SyncConfigPacket.class, Dist.CLIENT);
         //registerMessage(BloodValuePacket.Handler.class, BloodValuePacket.class, Dist.CLIENT);
     }

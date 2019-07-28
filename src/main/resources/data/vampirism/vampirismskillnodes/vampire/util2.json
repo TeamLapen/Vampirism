@@ -1,0 +1,7 @@
+{
+  "parent": "vampirism:vampire/util1",
+  "skills": [
+    "vampirism:less_sundamage",
+    "vampirism:water_resistance"
+  ]
+}

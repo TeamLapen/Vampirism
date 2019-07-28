@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/offensive1",
+  "skills": [
+    "vampirism:advanced_biter"
+  ]
+}

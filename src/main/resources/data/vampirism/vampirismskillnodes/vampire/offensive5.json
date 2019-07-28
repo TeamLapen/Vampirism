@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/offensive4",
+  "skills": [
+    "vampirism:blood_charge"
+  ]
+}

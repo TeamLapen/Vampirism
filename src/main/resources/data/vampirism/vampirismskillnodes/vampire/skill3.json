@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/skill2",
+  "skills": [
+    "vampirism:vampire_regeneration"
+  ]
+}

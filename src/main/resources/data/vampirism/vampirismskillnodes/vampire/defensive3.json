@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/defensive2",
+  "skills": [
+    "vampirism:blood_vision"
+  ]
+}

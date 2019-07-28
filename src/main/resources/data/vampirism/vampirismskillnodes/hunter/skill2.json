@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:hunter",
+  "skills": [
+    "vampirism:stake1"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/offensive5",
+  "skills": [
+    "vampirism:freeze"
+  ]
+}

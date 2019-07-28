@@ -2,12 +2,9 @@ package de.teamlapen.vampirism.player.hunter.skills;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
@@ -123,46 +120,5 @@ public class HunterSkills {
 
         registry.register(advancedAttackSpeed);
 
-    }
-
-    public static void buildSkillTree(SkillNode root) {
-        ISkillManager skillManager = VampirismAPI.skillManager();
-        SkillNode skill2 = skillManager.createSkillNode(root, stake1);
-
-
-        SkillNode skill3 = skillManager.createSkillNode(skill2, hunter_attack_speed);
-        SkillNode skill4 = skillManager.createSkillNode(skill3, hunter_disguise);
-        registerAlchemy(skillManager, skill4);
-        registerBloodAlchemy(skillManager, skill4);
-        registerWeaponSkills(skillManager, skill4);
-    }
-
-
-    private static void registerWeaponSkills(ISkillManager skillManager, SkillNode root) {
-        SkillNode skill5 = skillManager.createSkillNode(root, weapon_table);
-
-
-        SkillNode skill6 = skillManager.createSkillNode(skill5, hunter_advanced_attack_speed, double_crossbow);
-        SkillNode skill7 = skillManager.createSkillNode(skill6, enhanced_weapons, enhanced_crossbow);
-        SkillNode skill8 = skillManager.createSkillNode(skill7, enhanced_armor);
-        SkillNode skill9 = skillManager.createSkillNode(skill8, tech_weapons);
-        SkillNode skill10 = skillManager.createSkillNode(skill9, stake2);
-    }
-
-    private static void registerAlchemy(ISkillManager skillManager, SkillNode root) {
-        SkillNode skill5 = skillManager.createSkillNode(root, basic_alchemy);
-        SkillNode skill6 = skillManager.createSkillNode(skill5, garlic_beacon);
-        SkillNode skill7 = skillManager.createSkillNode(skill6, purified_garlic, holy_water_enhanced);
-        SkillNode skill8 = skillManager.createSkillNode(skill7, garlic_beacon_improved);
-        SkillNode skill9 = skillManager.createSkillNode(skill8, hunter_awareness);
-    }
-
-    private static void registerBloodAlchemy(ISkillManager skillManager, SkillNode root) {
-        SkillNode skill5 = skillManager.createSkillNode(root, blood_potion_table);
-        SkillNode skill6 = skillManager.createSkillNode(skill5, blood_potion_less_bad, blood_potion_good_or_bad);
-        SkillNode skill7 = skillManager.createSkillNode(skill6, blood_potion_faster_crafting, blood_potion_category_hint);
-        SkillNode skill8 = skillManager.createSkillNode(skill7, blood_potion_duration);
-        SkillNode skill9 = skillManager.createSkillNode(skill8, blood_potion_portable_crafting);
-        SkillNode skill10 = skillManager.createSkillNode(skill9, blood_potion_less_bad_2, blood_potion_identify_some);
     }
 }

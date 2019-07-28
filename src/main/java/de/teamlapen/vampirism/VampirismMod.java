@@ -27,6 +27,7 @@ import de.teamlapen.vampirism.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.player.actions.ActionManager;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.skills.SkillManager;
+import de.teamlapen.vampirism.player.skills.SkillTreeManager;
 import de.teamlapen.vampirism.player.vampire.BloodVision;
 import de.teamlapen.vampirism.player.vampire.NightVision;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -53,6 +54,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
@@ -155,10 +157,16 @@ public class VampirismMod {
     }
 
     @SubscribeEvent
+    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+        event.getServer().getResourceManager().addReloadListener(SkillTreeManager.getInstance());
+    }
+
+    @SubscribeEvent
     public void onServerStart(FMLServerStartingEvent event) {
         ModCommands.registerCommands(event.getCommandDispatcher());
         VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
         BloodValueLoader.onServerStarting(event.getServer());
+
     }
 
     @SubscribeEvent
@@ -267,7 +275,6 @@ public class VampirismMod {
     private void finishAPI1() {
         ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
         BloodConversionRegistry.finish();
-        ((SkillManager) VampirismAPI.skillManager()).buildSkillTrees();
     }
 
     /**

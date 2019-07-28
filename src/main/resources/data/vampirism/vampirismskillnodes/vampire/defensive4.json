@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/defensive3",
+  "skills": [
+    "vampirism:creeper_avoided"
+  ]
+}

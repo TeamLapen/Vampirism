@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:hunter/skill2",
+  "skills": [
+    "vampirism:hunter_attack_speed"
+  ]
+}

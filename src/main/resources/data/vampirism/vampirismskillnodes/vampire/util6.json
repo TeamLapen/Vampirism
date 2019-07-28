@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/util5",
+  "skills": [
+    "vampirism:vampire_invisibility"
+  ]
+}

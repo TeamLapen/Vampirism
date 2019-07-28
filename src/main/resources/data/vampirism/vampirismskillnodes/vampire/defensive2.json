@@ -1,0 +1,7 @@
+{
+  "parent": "vampirism:vampire/defensive1",
+  "skills": [
+    "vampirism:vampire_jump",
+    "vampirism:vampire_speed"
+  ]
+}

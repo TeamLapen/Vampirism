@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/util2",
+  "skills": [
+    "vampirism:less_blood_thirst"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:hunter/skill4",
+  "skills": [
+    "vampirism:weapon_table"
+  ]
+}

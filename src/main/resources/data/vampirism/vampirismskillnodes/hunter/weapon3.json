@@ -1,0 +1,7 @@
+{
+  "parent": "vampirism:hunter/weapon2",
+  "skills": [
+    "vampirism:enhanced_weapons",
+    "vampirism:enhanced_crossbow"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/skill4",
+  "skills": [
+    "vampirism:summon_bats"
+  ]
+}

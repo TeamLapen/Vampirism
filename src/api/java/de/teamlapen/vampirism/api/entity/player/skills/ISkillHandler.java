@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
+
 /**
  * Handles the players skills
  */
@@ -30,8 +31,6 @@ public interface ISkillHandler<T extends ISkillPlayer> {
      * @return The count of additional skills that can be currently unlocked
      */
     int getLeftSkillPoints();
-
-    boolean isNodeEnabled(SkillNode node);
 
     boolean isSkillEnabled(ISkill skill);
 

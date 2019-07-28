@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/offensive3",
+  "skills": [
+    "vampirism:dark_blood_projectile"
+  ]
+}

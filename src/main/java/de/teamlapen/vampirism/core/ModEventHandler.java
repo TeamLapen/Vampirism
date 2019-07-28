@@ -3,18 +3,16 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillEvent;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.tileentity.TotemTile;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -80,17 +78,6 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
         }
     }
 
-    @SubscribeEvent
-    public void onSkillNodeCreated(SkillEvent.CreatedNode event) {
-
-        if (event.getNode().isRoot()) {
-            if (event.getNode().getFaction().equals(VReference.HUNTER_FACTION)) {
-                HunterSkills.buildSkillTree(event.getNode());
-            } else if (event.getNode().getFaction().equals(VReference.VAMPIRE_FACTION)) {
-                VampireSkills.buildSkillTree(event.getNode());
-            }
-        }
-    }
 
     @SubscribeEvent
     public void onHarvestDrops(BlockEvent.HarvestDropsEvent event) {
@@ -136,6 +123,9 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
             }
 
         }
+        VampirismMod.dispatcher.sendTo(new SkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), (ServerPlayerEntity) event.getPlayer());
+
+
 //        if (Configs.updated_vampirism) { TODO 1.14 Balance
 //            if (!ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.getPlayer())) {
 //

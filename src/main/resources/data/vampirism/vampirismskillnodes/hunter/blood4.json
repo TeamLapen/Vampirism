@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:hunter/blood3",
+  "skills": [
+    "vampirism:blood_potion_duration"
+  ]
+}

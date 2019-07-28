@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:vampire/util3",
+  "skills": [
+    "vampirism:vampire_disguise"
+  ]
+}
