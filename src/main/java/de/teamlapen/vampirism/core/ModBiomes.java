@@ -39,11 +39,11 @@ public class ModBiomes {
         }
     }
 
-    static void registerFeatures() {
-        List nonHunterCampBiomeCategories = Lists.newArrayList(Biome.Category.OCEAN, Biome.Category.THEEND, Biome.Category.NETHER, Biome.Category.ICY);
+    static void addFeatures() {
+        List nonHunterCampBiomeCategories = Lists.newArrayList(Biome.Category.OCEAN, Biome.Category.THEEND, Biome.Category.NETHER, Biome.Category.ICY, Biome.Category.BEACH);
             for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
                 if (nonHunterCampBiomeCategories.contains(biome.getCategory())) continue;
-                if (biome == ModBiomes.vampire_forest) continue;//TODO wait for forge: custome biomecategory
+                if (biome == ModBiomes.vampire_forest) continue;
                 VampirismBiomeFeatures.addHunterTent(biome);
             }
     }

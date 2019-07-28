@@ -66,6 +66,7 @@ public class RegistryManager implements IInitListener {
         switch (step) {
             case COMMON_SETUP:
                 ModBiomes.addBiome();
+                ModBiomes.addFeatures();
                 ModFluids.registerFluids();
                 ModEntities.registerConvertibles();
                 ModEntities.registerSpawns();
@@ -102,7 +103,6 @@ public class RegistryManager implements IInitListener {
     public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
 
         ModBiomes.registerBiomes(event.getRegistry());
-        ModBiomes.registerFeatures();
     }
 
     @SubscribeEvent

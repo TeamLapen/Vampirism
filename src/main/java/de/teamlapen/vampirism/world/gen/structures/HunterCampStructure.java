@@ -40,12 +40,12 @@ public class HunterCampStructure extends ScatteredStructure<NoFeatureConfig> {
 
     @Override
     protected int getBiomeFeatureDistance(ChunkGenerator<?> p_204030_1_) {
-        return 2;//Balance.general.HUNTER_CAMP_DENSITY;
+        return 2;//Balance.general.HUNTER_CAMP_DENSITY;//TODO 1.14 Structure
     }
 
     @Override
     protected int getBiomeFeatureSeparation(ChunkGenerator<?> p_211745_1_) {
-        return 1;//super.getBiomeFeatureSeparation(p_211745_1_) >= Balance.general.HUNTER_CAMP_DENSITY?Balance.general.HUNTER_CAMP_DENSITY-1:super.getBiomeFeatureSeparation(p_211745_1_);
+        return 1;//super.getBiomeFeatureSeparation(p_211745_1_) >= Balance.general.HUNTER_CAMP_DENSITY?Balance.general.HUNTER_CAMP_DENSITY-1:super.getBiomeFeatureSeparation(p_211745_1_);//TODO 1.14 Structure
     }
 
     public static class Start extends StructureStart {
