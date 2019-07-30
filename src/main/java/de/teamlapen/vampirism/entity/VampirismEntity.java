@@ -86,11 +86,6 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         return flag;
     }
 
-    @Override
-    public boolean detachHome() {
-        this.home = null;
-        return true;
-    }
 
     @Override
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
@@ -106,17 +101,11 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     @Override
     public void setHome(@Nullable AxisAlignedBB home) {
         this.home = home;
-    }
-
-    @Override
-    public BlockPos getHomePosition() {
-        if (home == null)
-            return new BlockPos(0, 0, 0);
         int posX, posY, posZ;
         posX = (int) (home.minX + (home.maxX - home.minX) / 2);
         posY = (int) (home.minY + (home.maxY - home.minY) / 2);
         posZ = (int) (home.minZ + (home.maxZ - home.minZ) / 2);
-        return new BlockPos(posX, posY, posZ);
+        super.setHomePosAndDistance(new BlockPos(posX, posY, posZ), (int) home.getAverageEdgeLength());
     }
 
     @Override
@@ -279,7 +268,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     /**
      * Add the MoveTowardsRestriction task with the given priority.
      * Overrides prior priorities if existent
-     *
+     *e
      * @param prio
      *            Priority of the task
      * @param active

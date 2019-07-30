@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -116,7 +117,7 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
         if (spawn) {
             spawnerLogic.updateSpawner();
             if (!this.world.isRemote && this.world.getGameTime() % 64 == 0) {
-                if (this.world.findNearestStructure("Village", pos, 5, false) != null) {
+                if (Feature.VILLAGE.isPositionInsideStructure(world, pos)) {
                     this.spawn = false; //Disable spawning inside villages
                 }
             }

@@ -46,22 +46,27 @@ public class TentBlock extends VampirismBlock {
     public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         super.onReplaced(state, world, pos, newState, isMoving);
         if (newState.getBlock() != state.getBlock()) {
+            BlockPos main = pos;
             Direction dir = state.get(FACING);
             int p = state.get(POSITION);
             if (p == 0) {
                 dir = dir.getOpposite();
             } else if (p == 1) {
-                pos = pos.offset(dir.rotateY());
+                main = pos.offset(dir.rotateY());
             } else if (p == 2) {
-                pos = pos.offset(dir.rotateY()).offset(dir.getOpposite());
+                main = pos.offset(dir.rotateY()).offset(dir.getOpposite());
             } else if (p == 3) {
-                pos = pos.offset(dir);
+                main = pos.offset(dir);
                 dir = dir.getOpposite();
             }
-            world.removeBlock(pos, isMoving);
-            world.removeBlock(pos.offset(dir), isMoving);
-            world.removeBlock(pos.offset(dir.rotateYCCW()), isMoving);
-            world.removeBlock(pos.offset(dir).offset(dir.rotateYCCW()), isMoving);
+            BlockPos cur = main;
+            if (cur != pos) world.destroyBlock(cur, true);
+            cur = main.offset(dir);
+            if (cur != pos) world.destroyBlock(cur, true);
+            cur = main.offset(dir.rotateYCCW());
+            if (cur != pos) world.destroyBlock(cur, true);
+            cur = main.offset(dir).offset(dir.rotateYCCW());
+            if (cur != pos) world.destroyBlock(cur, true);
         }
 
     }

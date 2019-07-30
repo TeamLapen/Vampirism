@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.world.loot;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;
@@ -67,6 +66,7 @@ public class LootHandler {
         LootFunctionManager.registerFunction(new SetMetaBasedOnLevel.Serializer());
         LootConditionManager.registerCondition(new StakeCondition.Serializer());
         LootConditionManager.registerCondition(new AdjustableLevelCondition.Serializer());
+        LootConditionManager.registerCondition(new TentSpawnerCondition.Serializer());
     }
 
     public boolean checkAndResetInsertedAll() {

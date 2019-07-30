@@ -71,8 +71,9 @@ public class TentItem extends VampirismItem {
     }
 
     public TentItem(boolean spawner) {
-        super(spawner ? name : name_spawner, new Properties().group(VampirismMod.creativeTab));
+        super(spawner ? name_spawner : name, new Properties().group(VampirismMod.creativeTab));
         this.spawner = spawner;
+        this.setTranslation_key(name);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -83,8 +84,6 @@ public class TentItem extends VampirismItem {
             tooltip.add(UtilLib.translated("tile.vampirism.tent.spawner"));
         }
     }
-
-
 
     @Override
     public ActionResultType onItemUse(ItemUseContext ctx) {
@@ -105,7 +104,7 @@ public class TentItem extends VampirismItem {
                 }
             }
 
-            if (player != null || !player.abilities.isCreativeMode) {
+            if (player == null || !player.abilities.isCreativeMode) {
                 stack.shrink(1);
             }
         }
