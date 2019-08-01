@@ -140,7 +140,7 @@ public class ModKeys {
             FactionPlayerHandler factionHandler = FactionPlayerHandler.get(Minecraft.getInstance().player);
             toggleBoundAction(factionHandler.getCurrentFactionPlayer(), factionHandler.getBoundAction2());
         }
-        if (suckKeyDown && !SUCK.isKeyDown()) {//TODO check if its right
+        if (suckKeyDown && !SUCK.isKeyDown()) {
             suckKeyDown = false;
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
         }

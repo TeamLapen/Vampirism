@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.Validate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 
@@ -22,7 +24,7 @@ import javax.annotation.Nullable;
 @OnlyIn(Dist.CLIENT)
 public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
     private final int MAX_AGE = 60;
-    private final String TAG = "FlyingBloodParticle";
+    private static final Logger LOGGER = LogManager.getLogger();
     private final Entity entity;
 
     @Override
@@ -53,7 +55,7 @@ public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
             this.motionZ = (this.world.rand.nextDouble() - 0.5);
         }
         this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(new ResourceLocation("minecraft", "critical_hit")));
-        this.tick();
+        //this.tick();
     }
 
     @Override
@@ -85,7 +87,12 @@ public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
         @Nullable
         @Override
         public Particle makeParticle(FlyingBloodEntityParticleData typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new FlyingBloodEntityParticle(worldIn, x, y, z, typeIn.getEntity(), typeIn.getDirect());
+            Entity e = worldIn.getEntityByID(typeIn.getEntityID());
+            if (e == null) {
+                LOGGER.warn("Could not find entity {} for flying blood particle", typeIn.getEntityID());
+                return null;
+            }
+            return new FlyingBloodEntityParticle(worldIn, x, y, z, e, typeIn.getDirect());
         }
     }
 

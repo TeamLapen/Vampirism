@@ -69,7 +69,7 @@ public class HalloweenSpecial {
     public static void triggerOverlay(PlayerEntity target) {
 
         render_overlay = 150;
-        ModParticles.spawnParticle(target.getEntityWorld(), ModParticles.halloween, target.posX, target.posY, target.posZ);
+        ModParticles.spawnParticleClient(target.getEntityWorld(), ModParticles.halloween, target.posX, target.posY, target.posZ);
     }
 
     private List<UUID> blacklist = new ArrayList<>();

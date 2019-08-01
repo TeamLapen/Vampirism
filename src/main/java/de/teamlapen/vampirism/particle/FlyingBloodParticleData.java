@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.particle;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
@@ -14,26 +13,28 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class FlyingBloodParticleData implements IParticleData {
     public static final IParticleData.IDeserializer<FlyingBloodParticleData> DESERIALIZER = new IParticleData.IDeserializer<FlyingBloodParticleData>() {
         public FlyingBloodParticleData deserialize(ParticleType<FlyingBloodParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
-            return null;//TODO 1.14 fill
+            return new FlyingBloodParticleData(particleTypeIn, reader.readInt(), reader.readBoolean(), ResourceLocation.read(reader));
         }
 
         public FlyingBloodParticleData read(ParticleType<FlyingBloodParticleData> particleTypeIn, PacketBuffer buffer) {
-            return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readResourceLocation());//TODO 1.14 test
+            return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean(), buffer.readResourceLocation());
         }
     };
 
     private ParticleType<FlyingBloodParticleData> particleType;
     private final int maxAge;
     private final ResourceLocation texture;
+    private final boolean direct;
 
-    public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn, ResourceLocation textureIn) {
+    public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn, boolean direct, ResourceLocation textureIn) {
         this.particleType = particleTypeIn;
         this.maxAge = maxAgeIn;
         this.texture = textureIn;
+        this.direct = direct;
     }
 
-    public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn) {
-        this(particleTypeIn, maxAgeIn, new ResourceLocation("minecraft", "critical_hit"));
+    public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn, boolean direct) {
+        this(particleTypeIn, maxAgeIn, direct, new ResourceLocation("minecraft", "critical_hit"));
     }
 
     @Override
@@ -41,10 +42,9 @@ public class FlyingBloodParticleData implements IParticleData {
         return particleType;
     }
 
-    @Override
-    public void write(PacketBuffer buffer) {
-        buffer.writeVarInt(maxAge);
-        buffer.writeResourceLocation(texture);
+    @OnlyIn(Dist.CLIENT)
+    public boolean isDirect() {
+        return direct;
     }
 
     @Override
@@ -60,5 +60,12 @@ public class FlyingBloodParticleData implements IParticleData {
     @OnlyIn(Dist.CLIENT)
     public ResourceLocation getTexturePos() {
         return texture;
+    }
+
+    @Override
+    public void write(PacketBuffer buffer) {
+        buffer.writeVarInt(maxAge);
+        buffer.writeBoolean(direct);
+        buffer.writeResourceLocation(texture);
     }
 }

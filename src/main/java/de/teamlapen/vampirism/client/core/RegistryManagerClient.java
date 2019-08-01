@@ -14,14 +14,6 @@ public class RegistryManagerClient implements IInitListener {
 
     @Override
     public void onInitStep(Step step, ModLifecycleEvent event) {
-        if (step == Step.LOAD_COMPLETE) {
-            ModBlocksRender.registerColors();
-            ModItemsRender.registerColors();
-            ModBlocksRender.register();
-            ModParticleFactories.registerFactories();
-            ModScreens.registerScreens();
-        } else if (step == Step.CLIENT_SETUP) {
-            ModEntitiesRender.registerEntityRenderer();
-        }
+
     }
 }

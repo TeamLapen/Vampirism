@@ -1,13 +1,12 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.client.core.ClientEventHandler;
-import de.teamlapen.vampirism.client.core.ModKeys;
+import de.teamlapen.vampirism.client.core.*;
+import de.teamlapen.vampirism.client.gui.ModifyInventoryScreen;
 import de.teamlapen.vampirism.client.gui.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
-import de.teamlapen.vampirism.core.RegistryManager;
 import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
@@ -42,9 +41,6 @@ public class ClientProxy extends CommonProxy {
     private VampirismHUDOverlay overlay;
     private ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
 
-    public ClientProxy() {
-        RegistryManager.setupClientRegistryManager();
-    }
 
     @Nullable
     @Override
@@ -79,11 +75,25 @@ public class ClientProxy extends CommonProxy {
         return Minecraft.getInstance().player.equals(player);
     }
 
-    private void registerSubscriptions() {
-        overlay = new VampirismHUDOverlay(Minecraft.getInstance());
-        MinecraftForge.EVENT_BUS.register(overlay);
-        MinecraftForge.EVENT_BUS.register(new RenderHandler(Minecraft.getInstance()));
-        MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+    @Override
+    public void onInitStep(Step step, ModLifecycleEvent event) {
+        super.onInitStep(step, event);
+        switch (step) {
+            case CLIENT_SETUP:
+                ModEntitiesRender.registerEntityRenderer();
+                ModKeys.register();
+                registerSubscriptions();
+                break;
+            case LOAD_COMPLETE:
+                ModBlocksRender.registerColors();
+                ModItemsRender.registerColors();
+                ModBlocksRender.register();
+                ModParticleFactories.registerFactories();
+                ModScreens.registerScreens();
+                skillTreeManager.init();
+                registerVampireEntityOverlays();
+                break;
+        }
     }
 
     private void registerVampireEntityOverlay(EntityRendererManager manager, Class<? extends CreatureEntity> type, ResourceLocation loc) {
@@ -119,19 +129,11 @@ public class ClientProxy extends CommonProxy {
         skillTreeManager.loadUpdate(msg);
     }
 
-    @Override
-    public void onInitStep(Step step, ModLifecycleEvent event) {
-        super.onInitStep(step, event);
-        RegistryManager.getRegistryManagerClient().onInitStep(step, event);
-        switch (step) {
-            case CLIENT_SETUP:
-                ModKeys.register();
-                registerSubscriptions();
-                break;
-            case LOAD_COMPLETE:
-                skillTreeManager.init();
-                registerVampireEntityOverlays();
-                break;
-        }
+    private void registerSubscriptions() {
+        overlay = new VampirismHUDOverlay(Minecraft.getInstance());
+        MinecraftForge.EVENT_BUS.register(overlay);
+        MinecraftForge.EVENT_BUS.register(new RenderHandler(Minecraft.getInstance()));
+        MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+        MinecraftForge.EVENT_BUS.register(new ModifyInventoryScreen());
     }
 }

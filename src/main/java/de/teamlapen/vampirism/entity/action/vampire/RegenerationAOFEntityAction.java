@@ -57,7 +57,7 @@ public class RegenerationAOFEntityAction<T extends CreatureEntity & IEntityActio
             if (VampirismAPI.factionRegistry().getFaction(entity) == VampirismAPI.factionRegistry().getFaction(e)) {
                 e.heal(entity.getMaxHealth() / 100 * Balance.ea.REGENERATION_AMOUNT / (getDuration(entity.getLevel()) * 20));
                 if (duration % 20 == 0) {
-                    ModParticles.spawnParticles(entity.getEntityWorld(), ParticleTypes.HEART, e.posX, e.posY, e.posZ, 3, 0.01D, e.getRNG());//TODO test with Vanilla particles before changing to mod particle
+                    ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.HEART, e.posX, e.posY, e.posZ, 3, 0.01, 0.01, 0.01, 0);//TODO check if particle fits. Test which side this is called on
                 }
             }
         }

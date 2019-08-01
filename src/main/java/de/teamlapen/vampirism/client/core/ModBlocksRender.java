@@ -24,7 +24,7 @@ public class ModBlocksRender {
         registerTileRenderer();
     }
 
-    static void registerColors() {
+    public static void registerColors() {
         Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 1) {
                 return 0x9966FF;

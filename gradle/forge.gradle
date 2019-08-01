@@ -47,10 +47,34 @@ minecraft {
     accessTransformer = file('src/main/resources/META-INF/vampirism_at.cfg')
 
     runs {
-        client = {
+        client {
+            taskName 'client1'
+            main 'net.minecraftforge.userdev.LaunchTesting'
             property 'forge.logging.console.level', 'debug'
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             workingDirectory project.file('run/client1').canonicalPath
+            jvmArg '-ea:de.teamlapen...'
+            
+            mods {
+                teamlapenlib {
+                    source sourceSets.lib
+                }
+                vampirism {
+                    source sourceSets.main
+                    source sourceSets.api
+                }
+
+
+            }
+
+        }
+        client {
+            taskName 'client2'
+            main 'net.minecraftforge.userdev.LaunchTesting'
+            property 'forge.logging.console.level', 'debug'
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            workingDirectory project.file('run/client2').canonicalPath
+            jvmArg '-ea:de.teamlapen...'
 
             mods {
                 teamlapenlib {
@@ -69,9 +93,19 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             workingDirectory project.file('run/server').canonicalPath
-            source sourceSets.main
-            source sourceSets.lib
-            source sourceSets.api
+            jvmArg '-ea:de.teamlapen...'
+
+            mods {
+                teamlapenlib {
+                    source sourceSets.lib
+                }
+                vampirism {
+                    source sourceSets.main
+                    source sourceSets.api
+                }
+
+
+            }
         }
     }
 

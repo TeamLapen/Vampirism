@@ -2,9 +2,6 @@ package de.teamlapen.vampirism.particle;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
@@ -15,21 +12,21 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class FlyingBloodEntityParticleData implements IParticleData {
     public static final IParticleData.IDeserializer<FlyingBloodEntityParticleData> DESERIALIZER = new IParticleData.IDeserializer<FlyingBloodEntityParticleData>() {
         public FlyingBloodEntityParticleData deserialize(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
-            return null;//TODO 1.14 fill
+            return new FlyingBloodEntityParticleData(particleTypeIn, reader.readInt(), reader.readBoolean());
         }
 
         public FlyingBloodEntityParticleData read(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, PacketBuffer buffer) {
-            return new FlyingBloodEntityParticleData(particleTypeIn, Minecraft.getInstance().world.getEntityByID(buffer.readVarInt()), buffer.readBoolean());//TODO 1.14 test
+            return new FlyingBloodEntityParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean());
         }
     };
 
     private ParticleType<FlyingBloodEntityParticleData> particleType;
-    private final Entity entity;
+    private final int entity;
     private final boolean direct;
 
-    public FlyingBloodEntityParticleData(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, Entity entityIn, boolean directIn) {
+    public FlyingBloodEntityParticleData(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, int entityID, boolean directIn) {
         this.particleType = particleTypeIn;
-        this.entity = entityIn;
+        this.entity = entityID;
         this.direct = directIn;
     }
 
@@ -38,20 +35,20 @@ public class FlyingBloodEntityParticleData implements IParticleData {
         return particleType;
     }
 
-    @Override
-    public void write(PacketBuffer buffer) {
-        buffer.writeVarInt(entity.getEntityId());
-        buffer.writeBoolean(direct);
+    @OnlyIn(Dist.CLIENT)
+    public int getEntityID() {
+        return this.entity;
     }
 
     @Override
     public String getParameters() {
-        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + entity.toString() + " " + direct;
+        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + entity + "" + direct;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public Entity getEntity() {
-        return this.entity;
+    @Override
+    public void write(PacketBuffer buffer) {
+        buffer.writeVarInt(entity);
+        buffer.writeBoolean(direct);
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.action;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.actions.*;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
@@ -18,6 +17,7 @@ import java.util.List;
 /**
  * Usage for every {@link IFactionEntity} like Hunter/Vampire entities,
  * is used with {@link ActionHandlerEntity#handle()} in UpdateLiving in an VampirismEntity
+ * Entity Actions are server side only
  */
 public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
 
@@ -142,7 +142,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
     }
 
     public void handle() {
-        if (availableActions != null && !availableActions.isEmpty()) {
+        if (!entity.world.isRemote && availableActions != null && !availableActions.isEmpty()) {
             if (entity.getAttackTarget() instanceof PlayerEntity) {
                 if (isPlayerTarget) {
                     updateHandler();

@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class ModItemsRender {
 
-	static void registerColors() {
+    public static void registerColors() {
 
 		// Swiftness armor
         Minecraft.getInstance().getItemColors().register((stack, tintIndex) -> {

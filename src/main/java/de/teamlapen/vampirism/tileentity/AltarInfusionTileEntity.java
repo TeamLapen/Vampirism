@@ -275,7 +275,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
                 if (runningTick % 15 == 0) {
                     BlockPos pos = getPos();
                     for (BlockPos pTip : tips) {
-                        ModParticles.spawnParticles(world, new FlyingBloodParticleData(ModParticles.flying_blood, 60), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5, 5, 0.1, new Random());
+                        ModParticles.spawnParticlesClient(world, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5, 5, 0.1, new Random());
                     }
                 }
             }

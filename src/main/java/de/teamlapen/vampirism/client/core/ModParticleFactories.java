@@ -15,7 +15,6 @@ public class ModParticleFactories {
         manager.registerFactory(ModParticles.flying_blood, new FlyingBloodParticle.Factory());
         manager.registerFactory(ModParticles.flying_blood_entity, new FlyingBloodEntityParticle.Factory());
         manager.registerFactory(ModParticles.halloween, new HalloweenParticle.Factory());
-        //manager.registerFactory(ModParticles.heal, new HealingParticle.Factory());//TODO test if still needed
         manager.registerFactory(ModParticles.generic, new GenericParticle.Factory());
     }
 }

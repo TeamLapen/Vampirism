@@ -407,7 +407,7 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
                 this.capture_timer++;
             }
             if (controllingFaction != null && time % 10 == 7) {
-                ModParticles.spawnParticles(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, controllingFaction.getColor(), 0.2F), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 3, 30, this.world.rand);
+                ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, controllingFaction.getColor(), 0.2F), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 3, 30, this.world.rand);
 
             }
             return;

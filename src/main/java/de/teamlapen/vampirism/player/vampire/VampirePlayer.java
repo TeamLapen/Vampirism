@@ -1250,7 +1250,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 25, 4, false, false));
 
-        ModParticles.spawnParticles(player.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player, true), e.posX + 0.5, e.posY + 0.5, e.posZ + 0.5, 10, 0.1F, player.getRNG());
+        //ModParticles.spawnParticleClient(player.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player.getEntityId(), true), e.posX , e.posY + e.getEyeHeight()/2, e.posZ, 10, 0.1F, player.getRNG());
+        ModParticles.spawnParticlesServer(player.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player.getEntityId(), true), e.posX, e.posY + e.getEyeHeight() / 2, e.posZ, 10, 0.1f, 0.1f, 0.1f, 0);
 
         if (!biteFeed(e)) {
             endFeeding(true);
