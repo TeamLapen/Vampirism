@@ -74,7 +74,7 @@ public interface IFactionRegistry {
      * @return The created faction
      */
     @ThreadSafeAPI
-    <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, int color);
+    <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral);
 
     /**
      * Create and registerAdvancements a playable faction. Has to be called during InterModEnqueueEvent
@@ -88,5 +88,5 @@ public interface IFactionRegistry {
      * @return The created faction
      */
     @ThreadSafeAPI
-    <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
+    <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
 }

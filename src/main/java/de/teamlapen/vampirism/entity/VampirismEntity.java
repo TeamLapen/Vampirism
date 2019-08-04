@@ -1,15 +1,23 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.IEntityWithHome;
 import de.teamlapen.vampirism.api.entity.IVampirismEntity;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.tileentity.TotemTile;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MoveTowardsRestrictionGoal;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -19,10 +27,13 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -48,6 +59,9 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      */
     private int randomTickDivider;
 
+    private boolean doImobConversion = false;
+
+
     public VampirismEntity(EntityType<? extends VampirismEntity> type, World world) {
         super(type, world);
         moveTowardsRestriction = new MoveTowardsRestrictionGoal(this, 1.0F);
@@ -66,7 +80,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
 
         if (flag) {
             if (i > 0) {
-                entity.addVelocity((double) (-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F));
+                entity.addVelocity(-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F);
                 this.setMotion(this.getMotion().mul(0.6D, 1D, 0.6D));
             }
 
@@ -148,12 +162,8 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-        if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == Difficulty.PEACEFUL) {
-            this.remove();
-        }
+    public boolean getAlwaysRenderNameTagForRender() {
+        return true;
     }
 
     @Override
@@ -287,6 +297,69 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
             moveTowardsRestrictionPrio = prio;
         }
 
+    }
+
+    @Override
+    public ITextComponent getDisplayName() {
+        return this instanceof IMob ? new StringTextComponent("IMob") : new StringTextComponent("NonImob"); //TODO remove
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        this.checkImobConversion();
+        if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == Difficulty.PEACEFUL) {
+            this.remove();
+        }
+    }
+
+    protected void enableImobConversion() {
+        if (this instanceof IFactionEntity) {
+            this.doImobConversion = true;
+        } else {
+            throw new IllegalStateException("Can only do IMob conversion for IFactionEntity");
+        }
+    }
+
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return this.getType();
+    }
+
+    private void checkImobConversion() {
+        if (doImobConversion && !this.world.isRemote) {
+            if (this.ticksExisted % 256 == 0) {
+                boolean current = this instanceof IMob;
+                boolean convert = false;
+                VampirismConfig.Server.IMobOptions opt = VampirismConfig.SERVER.entityIMob.get();
+                if (ServerLifecycleHooks.getCurrentServer().isDedicatedServer()) {
+                    convert = (opt == VampirismConfig.Server.IMobOptions.ALWAYS_IMOB) != current;
+                } else {
+                    if (opt == VampirismConfig.Server.IMobOptions.SMART) {
+                        PlayerEntity player = VampirismMod.proxy.getClientPlayer();
+                        if (player != null) {
+                            IPlayableFaction f = FactionPlayerHandler.get(player).getCurrentFaction();
+                            IFaction thisFaction = ((IFactionEntity) this).getFaction();
+
+                            boolean hostile = f == null ? thisFaction.isHostileTowardsNeutral() : !thisFaction.equals(f);
+                            convert = hostile != current;
+
+                        }
+                    } else {
+                        convert = (opt == VampirismConfig.Server.IMobOptions.ALWAYS_IMOB) != current;
+                    }
+                }
+                if (convert) {
+                    EntityType t = getIMobTypeOpt(!current);
+                    Entity newEntity = t.create(this.world);
+                    CompoundNBT nbt = new CompoundNBT();
+                    this.writeWithoutTypeId(nbt);
+                    newEntity.read(nbt);
+                    newEntity.setUniqueId(MathHelper.getRandomUUID(this.rand));
+                    this.remove();
+                    this.world.addEntity(newEntity);
+                }
+            }
+        }
     }
 
     /**

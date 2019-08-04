@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
@@ -116,6 +117,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         entityclass = EntityClassType.getRandomClass(this.getRNG());
         IEntityActionUser.applyAttributes(this);
         this.entityActionHandler = new ActionHandlerEntity<>(this);
+        this.enableImobConversion();
     }
 
     @Override
@@ -125,6 +127,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             this.swingArm(Hand.MAIN_HAND);  //Swing stake if nothing else is held
         }
         return flag;
+    }
+
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.vampire_hunter_imob : ModEntities.vampire_hunter;
     }
 
     @Override
@@ -489,5 +496,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return entitytier;
     }
 
+    public static class IMob extends BasicHunterEntity implements net.minecraft.entity.monster.IMob {
+
+        public IMob(EntityType<? extends BasicHunterEntity> type, World world) {
+            super(type, world);
+        }
+    }
 
 }

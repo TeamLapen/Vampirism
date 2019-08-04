@@ -11,16 +11,11 @@ import javax.annotation.Nullable;
 public class ServerProxy extends CommonProxy {
 
 
+    @Nullable
     @Override
-    public boolean isClientPlayerNull() {
-        return false;
+    public PlayerEntity getClientPlayer() {
+        return null;
     }
-
-    @Override
-    public boolean isPlayerThePlayer(PlayerEntity player) {
-        return false;
-    }
-
 
     @Override
     public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {

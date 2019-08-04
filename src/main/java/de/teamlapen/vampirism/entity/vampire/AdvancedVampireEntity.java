@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
@@ -67,6 +68,12 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         entityclass = EntityClassType.getRandomClass(this.getRNG());
         IEntityActionUser.applyAttributes(this);
         this.entityActionHandler = new ActionHandlerEntity<>(this);
+        this.enableImobConversion();
+    }
+
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.advanced_vampire_imob : ModEntities.advanced_vampire;
     }
 
     @Override
@@ -271,4 +278,10 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
 
+    public static class IMob extends AdvancedVampireEntity implements net.minecraft.entity.monster.IMob {
+
+        public IMob(EntityType<? extends AdvancedVampireEntity> type, World world) {
+            super(type, world);
+        }
+    }
 }

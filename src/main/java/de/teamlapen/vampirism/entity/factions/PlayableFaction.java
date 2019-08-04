@@ -16,8 +16,8 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
     private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
     private boolean renderLevel = true;
 
-    PlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
-        super(id, entityInterface, color);
+    PlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
+        super(id, entityInterface, color, hostileTowardsNeutral);
         this.highestLevel = highestLevel;
         this.playerCapabilitySupplier = playerCapabilitySupplier;
     }

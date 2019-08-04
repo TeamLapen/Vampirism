@@ -101,6 +101,8 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue autoConvertGlassBottles;
         public final ForgeConfigSpec.BooleanValue playerCanTurnPlayer;
         public final ForgeConfigSpec.BooleanValue factionColorInChat;
+        public final ForgeConfigSpec.EnumValue<IMobOptions> entityIMob;
+
 
         public final ForgeConfigSpec.BooleanValue sundamageUnknownDimension;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverridePositive;
@@ -131,6 +133,7 @@ public class VampirismConfig {
             autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
             playerCanTurnPlayer = builder.comment("Whether players can infect other players").define("playersCanTurnPlayers", true);
             factionColorInChat = builder.comment("Whether to color player names in chat based on their current faction").define("factionColorInChat", true);
+            entityIMob = builder.comment("Changes if entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers ").defineEnum("entitiesIMob", IMobOptions.SMART);
 
 
             builder.push("sundamage");
@@ -189,6 +192,10 @@ public class VampirismConfig {
             builder.pop();
 
             builder.pop();
+        }
+
+        public enum IMobOptions {
+            ALWAYS_IMOB, NEVER_IMOB, SMART
         }
     }
 
@@ -249,8 +256,8 @@ public class VampirismConfig {
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
             disableVampireForest = builder.comment("Disable vampire forest generation").define("disableVampireForest", false);
-
             builder.pop();
         }
+
     }
 }

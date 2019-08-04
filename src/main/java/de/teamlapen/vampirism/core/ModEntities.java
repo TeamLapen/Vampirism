@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -47,11 +46,14 @@ public class ModEntities {
 
     public static final EntityType<BlindingBatEntity> blinding_bat = prepareEntityType("blinding_bat", EntityType.Builder.create(BlindingBatEntity::new, EntityClassification.MISC).size(0.5F, 0.9F), true);
     public static final EntityType<GhostEntity> ghost = prepareEntityType("ghost", EntityType.Builder.create(GhostEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.8F, 1.95F), true);
-    public static final EntityType<ConvertedCreatureEntity> converted_creature = prepareEntityType("converted_creature", EntityType.Builder.<ConvertedCreatureEntity>create(ConvertedCreatureEntity::new, EntityClassification.CREATURE), false);
+    public static final EntityType<ConvertedCreatureEntity> converted_creature = prepareEntityType("converted_creature", EntityType.Builder.create(ConvertedCreatureEntity::new, EntityClassification.CREATURE), false);
+    public static final EntityType<ConvertedCreatureEntity.IMob> converted_creature_imob = prepareEntityType("converted_creature_imob", EntityType.Builder.create(ConvertedCreatureEntity.IMob::new, EntityClassification.CREATURE), false);
     public static final EntityType<ConvertedSheepEntity> converted_sheep = prepareEntityType("converted_sheep", EntityType.Builder.create(ConvertedSheepEntity::new, EntityClassification.CREATURE).size(0.9F, 1.3F), false);
     public static final EntityType<BasicHunterEntity> vampire_hunter = prepareEntityType("vampire_hunter", EntityType.Builder.create(BasicHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
+    public static final EntityType<BasicHunterEntity.IMob> vampire_hunter_imob = prepareEntityType("vampire_hunter_imob", EntityType.Builder.create(BasicHunterEntity.IMob::new, VReference.HUNTER_CREATURE_TYPE).size(0.6f, 1.95f), false);
     public static final EntityType<HunterTrainerEntity> hunter_trainer = prepareEntityType("hunter_trainer", EntityType.Builder.create(HunterTrainerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
     public static final EntityType<AdvancedHunterEntity> advanced_hunter = prepareEntityType("advanced_hunter", EntityType.Builder.create(AdvancedHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
+    public static final EntityType<AdvancedHunterEntity.IMob> advanced_hunter_imob = prepareEntityType("advanced_hunter_imob", EntityType.Builder.create(AdvancedHunterEntity.IMob::new, VReference.HUNTER_CREATURE_TYPE).size(0.6f, 1.95f), false);
     public static final EntityType<VampireBaronEntity> vampire_baron = prepareEntityType("vampire_baron", EntityType.Builder.create(VampireBaronEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
     public static final EntityType<VampireMinionSaveableEntity> vampire_minion_s = prepareEntityType("vampire_minion_s", EntityType.Builder.create(VampireMinionSaveableEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.5F, 1.1F), false);
     public static final EntityType<DummyBittenAnimalEntity> dummy_creature = prepareEntityType("dummy_creature", EntityType.Builder.create(DummyBittenAnimalEntity::new, EntityClassification.CREATURE), false);
@@ -67,7 +69,9 @@ public class ModEntities {
     public static final EntityType<VampireFactionVillagerEntity> villager_vampire_faction = prepareEntityType("villager_vampire_faction", EntityType.Builder.create(VampireFactionVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
     public static final EntityType<DummyHunterTrainerEntity> hunter_trainer_dummy = prepareEntityType("hunter_trainer_dummy", EntityType.Builder.create(DummyHunterTrainerEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), true);
     public static final EntityType<BasicVampireEntity> vampire = prepareEntityType("vampire", EntityType.Builder.create(BasicVampireEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
+    public static final EntityType<BasicVampireEntity.IMob> vampire_imob = prepareEntityType("vampire_imob", EntityType.Builder.create(BasicVampireEntity.IMob::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6f, 1.95f), false);
     public static final EntityType<AdvancedVampireEntity> advanced_vampire = prepareEntityType("advanced_vampire", EntityType.Builder.create(AdvancedVampireEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
+    public static final EntityType<AdvancedVampireEntity.IMob> advanced_vampire_imob = prepareEntityType("advanced_vampire_imob", EntityType.Builder.create(AdvancedVampireEntity.IMob::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6f, 1.95f), false);
 
     public static final VillagerProfession hunter_expert = getNull();
     public static final VillagerProfession vampire_expert = getNull();
@@ -105,10 +109,13 @@ public class ModEntities {
         registry.register(blinding_bat);
         registry.register(ghost);
         registry.register(converted_creature);
+        registry.register(converted_creature_imob);
         registry.register(converted_sheep);
         registry.register(vampire_hunter);
+        registry.register(vampire_hunter_imob);
         registry.register(hunter_trainer);
         registry.register(advanced_hunter);
+        registry.register(advanced_hunter_imob);
         registry.register(vampire_baron);
         registry.register(vampire_minion_s);
         registry.register(dummy_creature);
@@ -124,7 +131,9 @@ public class ModEntities {
         registry.register(villager_vampire_faction);
         registry.register(hunter_trainer_dummy);
         registry.register(vampire);
+        registry.register(vampire_imob);
         registry.register(advanced_vampire);
+        registry.register(advanced_vampire_imob);
         //add to biomes
         for (Biome e : getZombieBiomes()) {
             e.getSpawns(VReference.VAMPIRE_CREATURE_TYPE).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));

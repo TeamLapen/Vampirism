@@ -23,16 +23,20 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private String translationKey;
     @Nullable
     private String translationKeyPlural;
+
+    private final boolean hostileTowardsNeutral;
+
     /**
      * Id used for hashing
      */
     private int integerId;
     private TextFormatting chatColor;
 
-    Faction(ResourceLocation id, Class<T> entityInterface, int color) {
+    Faction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral) {
         this.id = id;
         this.entityInterface = entityInterface;
         this.color = color;
+        this.hostileTowardsNeutral = hostileTowardsNeutral;
         integerId = nextId++;
     }
 
@@ -99,5 +103,10 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
                 "id='" + integerId + '\'' +
                 ", hash=" + integerId +
                 '}';
+    }
+
+    @Override
+    public boolean isHostileTowardsNeutral() {
+        return hostileTowardsNeutral;
     }
 }

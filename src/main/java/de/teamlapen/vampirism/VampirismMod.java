@@ -307,9 +307,10 @@ public class VampirismMod {
      * Setup API during pre-init before configs are loaded
      */
     private void setupAPI2() {
-        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, 0XFF780DA3, () -> VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
+        //TODO add faction entity interface
+        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, 0XFF780DA3, true, () -> VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
         VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setTranslationKeys("text.vampirism.vampire", "text.vampirism.vampires");
-        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, Color.BLUE.getRGB(), () -> HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);
+        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, Color.BLUE.getRGB(), false, () -> HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);
         VReference.HUNTER_FACTION.setChatColor(TextFormatting.DARK_BLUE).setTranslationKeys("text.vampirism.hunter", "text.vampirism.hunters");
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
