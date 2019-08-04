@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import net.minecraft.block.Blocks;
@@ -37,14 +38,19 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     private boolean entityChanged = false;
     private boolean canDespawn = false;
 
-    public ConvertedCreatureEntity(EntityType<? extends CreatureEntity> type, World world) {
+    public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity> type, World world) {
         super(type, world, false);
-
+        this.enableImobConversion();
     }
 
     @Override
     public ITextComponent getName() {
         return new StringTextComponent(new TranslationTextComponent("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName()));
+    }
+
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.converted_creature_imob : ModEntities.converted_creature;
     }
 
     public T getOldCreature() {
@@ -267,5 +273,12 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
 
     public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         return (iWorld.getBlockState(blockPos.down()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.down()).getBlock() == ModBlocks.cursed_earth) && iWorld.getLightSubtracted(blockPos, 0) > 8;
+    }
+
+    public static class IMob extends ConvertedCreatureEntity implements net.minecraft.entity.monster.IMob {
+
+        public IMob(EntityType<? extends ConvertedCreatureEntity> type, World world) {
+            super(type, world);
+        }
     }
 }

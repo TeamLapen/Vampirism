@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.special;
 
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
@@ -97,7 +96,7 @@ public class DraculaHalloweenEntity extends VampirismEntity {
         }
         if (this.world.isRemote) {
             LivingEntity owner = getOwner();
-            if (owner != null && !isInvisible() && !VampirismMod.proxy.isPlayerThePlayer((PlayerEntity) owner)) {
+            if (owner != null && !isInvisible() && !((PlayerEntity) owner).isUser()) {
                 this.setInvisible(true);
                 LOGGER.info("Setting invisible on other client");
             }

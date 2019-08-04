@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.*;
@@ -102,9 +103,15 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         entityclass = EntityClassType.getRandomClass(this.getRNG());
         IEntityActionUser.applyAttributes(this);
         this.entityActionHandler = new ActionHandlerEntity<>(this);
+        this.enableImobConversion();
     }
 
-//    @Nullable
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.vampire_imob : ModEntities.vampire;
+    }
+
+    //    @Nullable
 //    @Override
 //    public IVampirismVillage getCurrentFriendlyVillage() {
 //        return cachedVillage != null ? cachedVillage.getControllingFaction() == VReference.VAMPIRE_FACTION ? cachedVillage : null : null;
@@ -390,5 +397,12 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public List<IEntityAction> getAvailableActions() {
         return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
+    }
+
+    public static class IMob extends BasicVampireEntity implements net.minecraft.entity.monster.IMob {
+
+        public IMob(EntityType<? extends BasicVampireEntity> type, World world) {
+            super(type, world);
+        }
     }
 }

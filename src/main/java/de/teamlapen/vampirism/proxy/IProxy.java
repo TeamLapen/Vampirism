@@ -17,16 +17,8 @@ public interface IProxy extends IInitListener {
         return 1F;
     }
 
-    boolean isClientPlayerNull();
-
-    /**
-     * Probably just check {@link PlayerEntity#isUser()}
-     *
-     * @param player
-     * @return
-     */
-    @Deprecated
-    boolean isPlayerThePlayer(PlayerEntity player);
+    @Nullable
+    PlayerEntity getClientPlayer();
 
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
 

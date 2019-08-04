@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerFace;
@@ -63,6 +64,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         entityclass = EntityClassType.getRandomClass(this.getRNG());
         IEntityActionUser.applyAttributes(this);
         this.entityActionHandler = new ActionHandlerEntity<>(this);
+        this.enableImobConversion();
     }
 
     @Override
@@ -72,6 +74,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             this.swingArm(Hand.MAIN_HAND);  //Swing stake if nothing else is held
         }
         return flag;
+    }
+
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.advanced_hunter_imob : ModEntities.advanced_hunter;
     }
 
     @Override
@@ -251,4 +258,10 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return entitytier;
     }
 
+    public static class IMob extends AdvancedHunterEntity implements net.minecraft.entity.monster.IMob {
+
+        public IMob(EntityType<? extends AdvancedHunterEntity> type, World world) {
+            super(type, world);
+        }
+    }
 }

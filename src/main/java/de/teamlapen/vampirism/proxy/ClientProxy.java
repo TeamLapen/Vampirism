@@ -55,10 +55,7 @@ public class ClientProxy extends CommonProxy {
         return Minecraft.getInstance().getRenderPartialTicks();
     }
 
-    @Override
-    public boolean isClientPlayerNull() {
-        return Minecraft.getInstance().player == null;
-    }
+
 
     @Override
     public SkillTree getSkillTree(boolean client) {
@@ -70,9 +67,10 @@ public class ClientProxy extends CommonProxy {
         if (overlay != null) overlay.makeRenderFullColor(ticksOn, ticksOff, color);
     }
 
+    @Nullable
     @Override
-    public boolean isPlayerThePlayer(PlayerEntity player) {
-        return Minecraft.getInstance().player.equals(player);
+    public PlayerEntity getClientPlayer() {
+        return Minecraft.getInstance().player;
     }
 
     @Override

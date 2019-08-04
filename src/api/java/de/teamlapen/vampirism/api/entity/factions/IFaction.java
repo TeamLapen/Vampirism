@@ -56,4 +56,9 @@ public interface IFaction<T extends IFactionEntity> {
      * @return The same instance
      */
     IFaction<T> setTranslationKeys(String name, String plural);
+
+    /**
+     * @return Whether entities of this faction are hostile towards neutral entities
+     */
+    boolean isHostileTowardsNeutral();
 }
