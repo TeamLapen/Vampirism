@@ -14,9 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 
-/**
- * 1.14
- */
+
 public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {
 
     @Deprecated
@@ -52,7 +50,7 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
-        Slot slot = (Slot) this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             result = slotStack.copy();

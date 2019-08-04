@@ -50,7 +50,6 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
         }
 
         this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(particleId));
-        //this.tick();
     }
 
     @Override
@@ -92,7 +91,7 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
         @Nullable
         @Override
         public Particle makeParticle(FlyingBloodParticleData typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new FlyingBloodParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.getMaxAge(), typeIn.isDirect(), typeIn.getTexturePos());
+            return new FlyingBloodParticle(worldIn, x, y, z, typeIn.getTargetX(), typeIn.getTargetY(), typeIn.getTargetZ(), typeIn.getMaxAge(), typeIn.isDirect(), typeIn.getTexturePos());
         }
     }
 }

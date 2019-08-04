@@ -21,6 +21,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.Vec3d;
 
+import javax.annotation.Nullable;
+
 /**
  * Container which handles hunter levelup at an hunter trainer
  */
@@ -29,6 +31,7 @@ public class HunterTrainerContainer extends InventoryContainer {
     private final PlayerEntity player;
     private boolean changed = false;
     private ItemStack missing = ItemStack.EMPTY;
+    @Nullable
     private final HunterTrainerEntity entity;
 
     @Deprecated
@@ -36,8 +39,8 @@ public class HunterTrainerContainer extends InventoryContainer {
         this(id, playerInventory, null);
     }
 
-    public HunterTrainerContainer(int id, PlayerInventory playerInventory, HunterTrainerEntity trainer) {
-        super(ModContainer.hunter_trainer, id, playerInventory, IWorldPosCallable.DUMMY, SELECTOR_INFOS);
+    public HunterTrainerContainer(int id, PlayerInventory playerInventory, @Nullable HunterTrainerEntity trainer) {
+        super(ModContainer.hunter_trainer, id, trainer == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(trainer.world, trainer.getPosition()), SELECTOR_INFOS);
         this.player = playerInventory.player;
         this.addPlayerSlots(playerInventory);
         this.entity = trainer;
@@ -105,7 +108,7 @@ public class HunterTrainerContainer extends InventoryContainer {
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
-        Slot slot = (Slot) this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             result = slotStack.copy();

@@ -23,14 +23,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Table to create blood potions
  */
 public class BloodPotionTableContainer extends InventoryContainer {
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 115, 55, 1), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 137, 55, 1), new SelectorInfo(Ingredient.fromItems(ModItems.item_garlic), 126, 14), new SelectorInfo(Ingredient.fromItems(ModItems.item_garlic, ModItems.vampire_blood_bottle), 101, 22, true)};
-    private final IWorldPosCallable worldPos;
     private final HunterPlayer hunterPlayer;
     private final int max_crafting_time;
     private final boolean portable;
@@ -43,15 +41,9 @@ public class BloodPotionTableContainer extends InventoryContainer {
     }
 
     public BloodPotionTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosIn) {
-        super(ModContainer.blood_potion_table, id, playerInventory, SELECTOR_INFOS);
-        this.worldPos = worldPosIn;
+        super(ModContainer.blood_potion_table, id, worldPosIn, SELECTOR_INFOS);
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
-        portable = worldPos.apply(((world, pos) -> {
-            if (ModBlocks.blood_potion_table.equals(world.getBlockState(pos).getBlock())) {
-                return Optional.empty();
-            }
-            return Optional.of(true);
-        })).isPresent();
+        portable = worldPos.applyOrElse(((world, blockPos) -> !ModBlocks.blood_potion_table.equals(world.getBlockState(blockPos).getBlock())), true);
         int crafting_time = portable ? 500 : 250;
         if (hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_faster_crafting)) {
             crafting_time /= 2;

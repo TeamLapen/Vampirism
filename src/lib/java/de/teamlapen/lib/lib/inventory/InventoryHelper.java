@@ -24,6 +24,7 @@ public class InventoryHelper {
     /**
      * Checks if the given inventory contains at least the given amount of tileInventory in the respective slots.
      *
+     * TODO maybe rework to use IItemHandler/Inventory and maybe Ingridient
      * @param inventory
      * @param items     Has to have the same size as the inventory
      * @param amounts   Has to have the same size as the inventory

@@ -13,11 +13,11 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class FlyingBloodParticleData implements IParticleData {
     public static final IParticleData.IDeserializer<FlyingBloodParticleData> DESERIALIZER = new IParticleData.IDeserializer<FlyingBloodParticleData>() {
         public FlyingBloodParticleData deserialize(ParticleType<FlyingBloodParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
-            return new FlyingBloodParticleData(particleTypeIn, reader.readInt(), reader.readBoolean(), ResourceLocation.read(reader));
+            return new FlyingBloodParticleData(particleTypeIn, reader.readInt(), reader.readBoolean(), reader.readDouble(), reader.readDouble(), reader.readDouble(), ResourceLocation.read(reader));
         }
 
         public FlyingBloodParticleData read(ParticleType<FlyingBloodParticleData> particleTypeIn, PacketBuffer buffer) {
-            return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean(), buffer.readResourceLocation());
+            return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readResourceLocation());
         }
     };
 
@@ -25,16 +25,34 @@ public class FlyingBloodParticleData implements IParticleData {
     private final int maxAge;
     private final ResourceLocation texture;
     private final boolean direct;
+    private final double targetX;
+    private final double targetY;
+    private final double targetZ;
 
-    public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn, boolean direct, ResourceLocation textureIn) {
+    public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn, boolean direct, double targetX, double targetY, double targetZ, ResourceLocation textureIn) {
         this.particleType = particleTypeIn;
         this.maxAge = maxAgeIn;
         this.texture = textureIn;
         this.direct = direct;
+        this.targetX = targetX;
+        this.targetY = targetY;
+        this.targetZ = targetZ;
     }
 
-    public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn, boolean direct) {
-        this(particleTypeIn, maxAgeIn, direct, new ResourceLocation("minecraft", "critical_hit"));
+    public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn, boolean direct, double targetX, double targetY, double targetZ) {
+        this(particleTypeIn, maxAgeIn, direct, targetX, targetY, targetZ, new ResourceLocation("minecraft", "critical_hit"));
+    }
+
+    public double getTargetX() {
+        return targetX;
+    }
+
+    public double getTargetY() {
+        return targetY;
+    }
+
+    public double getTargetZ() {
+        return targetZ;
     }
 
     @Override
@@ -66,6 +84,9 @@ public class FlyingBloodParticleData implements IParticleData {
     public void write(PacketBuffer buffer) {
         buffer.writeVarInt(maxAge);
         buffer.writeBoolean(direct);
+        buffer.writeDouble(targetX);
+        buffer.writeDouble(targetY);
+        buffer.writeDouble(targetZ);
         buffer.writeResourceLocation(texture);
     }
 }

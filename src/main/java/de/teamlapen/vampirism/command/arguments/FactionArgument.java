@@ -7,7 +7,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -49,5 +48,9 @@ public class FactionArgument implements ArgumentType<IPlayableFaction> {
         if (faction == null) throw FACTION_NOT_FOUND.create(id);
         if (!(faction instanceof IPlayableFaction)) throw FACTION_NOT_PLAYABLE.create(id);
         return (IPlayableFaction) faction;
+    }
+
+    public static FactionArgument factionArgument() {
+        return new FactionArgument();
     }
 }

@@ -39,7 +39,7 @@ public class HunterTableContainer extends InventoryContainer {
     }
 
     public HunterTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
-        super(ModContainer.hunter_table, id, playerInventory, worldPosCallable, SELECTOR_INFOS);
+        super(ModContainer.hunter_table, id, worldPosCallable, SELECTOR_INFOS);
         slotResult = new SlotResult(this, new CraftResultInventory() {
             @Override
             public int getInventoryStackLimit() {
@@ -104,7 +104,7 @@ public class HunterTableContainer extends InventoryContainer {
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
-        Slot slot = (Slot) this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             result = slotStack.copy();

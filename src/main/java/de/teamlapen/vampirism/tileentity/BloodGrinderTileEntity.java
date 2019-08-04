@@ -16,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -30,7 +29,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -55,16 +53,19 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
     //Used to provide ItemHandler compatibility
-    private IItemHandler itemHandler = new InvWrapper(this);
-    private LazyOptional<IItemHandler> itemHandlerOptional = LazyOptional.of(() -> itemHandler);
+    private IItemHandler itemHandler;
+    private LazyOptional<IItemHandler> itemHandlerOptional;
 
     public BloodGrinderTileEntity() {
-        super(ModTiles.grinder, NonNullList.withSize(1, ItemStack.EMPTY), BloodGrinderContainer.SELECTOR_INFOS);
+        super(ModTiles.grinder, 1, BloodGrinderContainer.SELECTOR_INFOS);
+        this.itemHandler = createWrapper();
+        this.itemHandlerOptional = LazyOptional.of(() -> itemHandler);
     }
 
+    @Nonnull
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
-        return new BloodGrinderContainer(id, player, inventorySlots, IWorldPosCallable.of(player.player.getEntityWorld(), this.getPos()));
+        return new BloodGrinderContainer(id, player, this, IWorldPosCallable.of(player.player.getEntityWorld(), this.getPos()));
     }
 
     @Nonnull
@@ -76,11 +77,6 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
         return super.getCapability(cap, side);
     }
 
-//    @Nullable
-//    @Override
-//    public ITextComponent getCustomName() {
-//        return new TranslationTextComponent("tile.vampirism.blood_grinder.name");
-//    }
 
     @Override
     protected ITextComponent getDefaultName() {

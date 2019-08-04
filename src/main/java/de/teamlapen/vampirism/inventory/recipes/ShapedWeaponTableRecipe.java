@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
-
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -17,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -33,10 +33,11 @@ public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRec
     private final NonNullList<Ingredient> recipeItems;
     private final ItemStack recipeOutput;
     private final int requiredLevel;
-    private final ISkill[] requiredSkills;
+    private final @Nonnull
+    ISkill[] requiredSkills;
     private final int requiredLava;
 
-    public ShapedWeaponTableRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn, int requiredLevel, ISkill[] requiredSkills, int requiredLava) {
+    public ShapedWeaponTableRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn, int requiredLevel, @Nonnull ISkill[] requiredSkills, int requiredLava) {
         this.id = idIn;
         this.group = groupIn;
         this.recipeWidth = recipeWidthIn;

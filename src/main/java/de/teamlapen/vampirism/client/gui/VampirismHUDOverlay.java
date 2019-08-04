@@ -89,8 +89,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
 
-        if (mc.player == null || !mc.player.isAlive())
+        if (mc.player == null || !mc.player.isAlive()) {
+            renderFullTick = 0;
+            screenPercentage = 0;
             return;
+        }
         if (event.phase == TickEvent.Phase.END)
             return;
         IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer();
@@ -269,10 +272,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder worldrenderer = tessellator.getBuffer();
                 worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-                worldrenderer.pos(0, h, (double) this.blitOffset).color(r, g, b, a).endVertex();
-                worldrenderer.pos(w, h, (double) this.blitOffset).color(r, g, b, a).endVertex();
-                worldrenderer.pos(w, 0, (double) this.blitOffset).color(r, g, b, a).endVertex();
-                worldrenderer.pos(0, 0, (double) this.blitOffset).color(r, g, b, a).endVertex();
+                worldrenderer.pos(0, h, this.blitOffset).color(r, g, b, a).endVertex();
+                worldrenderer.pos(w, h, this.blitOffset).color(r, g, b, a).endVertex();
+                worldrenderer.pos(w, 0, this.blitOffset).color(r, g, b, a).endVertex();
+                worldrenderer.pos(0, 0, this.blitOffset).color(r, g, b, a).endVertex();
 
                 tessellator.draw();
                 GlStateManager.shadeModel(7424);

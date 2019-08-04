@@ -15,8 +15,11 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TranslationTextComponent;
+
+import javax.annotation.Nullable;
 
 /**
  * Container for interacting with basic hunters to level up as a hunter
@@ -24,6 +27,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 public class HunterBasicContainer extends InventoryContainer {
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 27, 32)};
     private final IHunterPlayer player;
+    @Nullable
     private final BasicHunterEntity entity;
 
     @Deprecated
@@ -31,8 +35,8 @@ public class HunterBasicContainer extends InventoryContainer {
         this(id, playerInventory, null);
     }
 
-    public HunterBasicContainer(int id, PlayerInventory playerInventory, BasicHunterEntity hunter) {
-        super(ModContainer.hunter_basic, id, playerInventory, SELECTOR_INFOS);
+    public HunterBasicContainer(int id, PlayerInventory playerInventory, @Nullable BasicHunterEntity hunter) {
+        super(ModContainer.hunter_basic, id, hunter == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(hunter.world, hunter.getPosition()), SELECTOR_INFOS);
         player = HunterPlayer.get(playerInventory.player);
         this.addPlayerSlots(playerInventory);
         this.entity = hunter;
@@ -88,7 +92,7 @@ public class HunterBasicContainer extends InventoryContainer {
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
-        Slot slot = (Slot) this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             result = slotStack.copy();

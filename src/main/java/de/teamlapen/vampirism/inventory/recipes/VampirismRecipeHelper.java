@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.inventory.recipes;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.*;
-
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.item.Item;
@@ -14,14 +13,16 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 
 class VampirismRecipeHelper {
 
+    @Nonnull
     static ISkill[] deserializeSkills(JsonArray jsonObject) {
         if (jsonObject == null || jsonObject.size() == 0)
-            return null;
+            return new ISkill[0];
         ISkill[] skills = new ISkill[jsonObject.size()];
         for (int i = 0; i < skills.length; ++i) {
             String s = JSONUtils.getString(jsonObject.get(i), "skill[" + i + "]");
@@ -73,7 +74,6 @@ class VampirismRecipeHelper {
     private static int firstNonSpace(String str) {
         int i;
         for (i = 0; i < str.length() && str.charAt(i) == ' '; ++i) {
-            ;
         }
 
         return i;
@@ -82,7 +82,6 @@ class VampirismRecipeHelper {
     private static int lastNonSpace(String str) {
         int i;
         for (i = str.length() - 1; i >= 0 && str.charAt(i) == ' '; --i) {
-            ;
         }
 
         return i;

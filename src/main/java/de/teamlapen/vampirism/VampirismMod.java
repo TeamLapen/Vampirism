@@ -256,6 +256,7 @@ public class VampirismMod {
         BloodPotions.register();
         StructureManager.init();
         VampirismEntitySelectors.registerSelectors();
+        ModCommands.registerArgumentTypes();
 
         MinecraftForge.EVENT_BUS.register(new HalloweenSpecial());
 

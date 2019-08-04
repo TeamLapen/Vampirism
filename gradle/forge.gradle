@@ -48,34 +48,13 @@ minecraft {
 
     runs {
         client {
-            taskName 'client1'
+            taskName 'runClient1'
             main 'net.minecraftforge.userdev.LaunchTesting'
             property 'forge.logging.console.level', 'debug'
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             workingDirectory project.file('run/client1').canonicalPath
             jvmArg '-ea:de.teamlapen...'
             
-            mods {
-                teamlapenlib {
-                    source sourceSets.lib
-                }
-                vampirism {
-                    source sourceSets.main
-                    source sourceSets.api
-                }
-
-
-            }
-
-        }
-        client {
-            taskName 'client2'
-            main 'net.minecraftforge.userdev.LaunchTesting'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            workingDirectory project.file('run/client2').canonicalPath
-            jvmArg '-ea:de.teamlapen...'
-
             mods {
                 teamlapenlib {
                     source sourceSets.lib

@@ -301,7 +301,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         Vec3d mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
             Vec3d pos = mainPos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
-            ModParticles.spawnParticleClient(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.9F + 0.1F)), true, new ResourceLocation("minecraft", "glitter_1")), pos.x, pos.y, pos.z, pos.x + (player.getRNG().nextFloat() - 0.5D) * 0.1D, pos.y + (player.getRNG().nextFloat() - 0.5D) * 0.1D, pos.z + (player.getRNG().nextFloat() - 0.5D) * 0.1D);
+            ModParticles.spawnParticleClient(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.9F + 0.1F)), true, pos.x + (player.getRNG().nextFloat() - 0.5D) * 0.1D, pos.y + (player.getRNG().nextFloat() - 0.5D) * 0.1D, pos.z + (player.getRNG().nextFloat() - 0.5D) * 0.1D, new ResourceLocation("minecraft", "glitter_1")), pos.x, pos.y, pos.z);
         }
     }
 
@@ -311,6 +311,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         if (player.getSwingProgress(1f) > 0f) return;
         pos = pos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
         Vec3d playerPos = new Vec3d((player).posX, (player).posY + player.getEyeHeight() - 0.2f, (player).posZ);
-        ModParticles.spawnParticleClient(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.6F + 0.1F)), true), playerPos.x, playerPos.y, playerPos.z, pos.x, pos.y, pos.z);
+        ModParticles.spawnParticleClient(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.6F + 0.1F)), true, pos.x, pos.y, pos.z), playerPos.x, playerPos.y, playerPos.z);
     }
 }

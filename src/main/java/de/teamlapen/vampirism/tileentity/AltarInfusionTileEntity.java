@@ -30,8 +30,8 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -40,6 +40,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,6 +57,12 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
 
     private final static Logger LOGGER = LogManager.getLogger(AltarInfusionTileEntity.class);
     private final int DURATION_TICK = 450;
+
+
+    /**
+     * Used to store a saved player UUID during read until world and player are available
+     */
+    private UUID playerToLoadUUID;
     /**
      * Only available when running ({@link #runningTick}>0)
      */
@@ -68,18 +78,10 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
      */
     private int targetLevel;
 
+    private LazyOptional<IItemHandler> itemHandlerOptional = LazyOptional.of(this::createWrapper);
+
     public AltarInfusionTileEntity() {
-        super(ModTiles.altar_infusion, NonNullList.withSize(3, ItemStack.EMPTY), AltarInfusionContainer.SELECTOR_INFOS);
-    }
-
-    @Override
-    protected Container createMenu(int id, PlayerInventory player) {
-        return new AltarInfusionContainer(id, player, this.inventorySlots, IWorldPosCallable.of(world, pos));
-    }
-
-    @Override
-    protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("tile.vampirism.altar_infusion");
+        super(ModTiles.altar_infusion, 3, AltarInfusionContainer.SELECTOR_INFOS);
     }
 
     /**
@@ -96,17 +98,17 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             return Result.ISRUNNING;
         }
         this.player = null;
-        if (player.getEntityWorld().isDaytime()) {
-            if (messagePlayer)
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_night_only"));
-            return Result.NIGHTONLY;
-        }
+
         targetLevel = VampirePlayer.get(player).getLevel() + 1;
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
             if (messagePlayer)
                 player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"));
             return Result.WRONGLEVEL;
+        } else if (player.getEntityWorld().isDaytime()) {
+            if (messagePlayer)
+                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_night_only"));
+            return Result.NIGHTONLY;
         } else if (!checkStructureLevel(requiredLevel)) {
             if (messagePlayer)
                 player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_structure_wrong"));
@@ -117,6 +119,35 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             return Result.INVMISSING;
         }
         return Result.OK;
+
+    }
+
+    @Override
+    protected ITextComponent getDefaultName() {
+        return new TranslationTextComponent("tile.vampirism.altar_infusion");
+    }
+
+    @Nullable
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return itemHandlerOptional.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void read(CompoundNBT tagCompound) {
+        super.read(tagCompound);
+        int tick = tagCompound.getInt("tick");
+        //This is used on both client and server side and has to be prepared for the world not being available yet
+        if (tick > 0 && player == null && tagCompound.hasUniqueId("playerUUID")) {
+            UUID playerID = tagCompound.getUniqueId("playerUUID");
+            if (!loadRitual(playerID)) {
+                this.playerToLoadUUID = playerID;
+            }
+            this.runningTick = tick;
+        }
 
     }
 
@@ -199,29 +230,6 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         this.read(pkt.getNbtCompound());
     }
 
-    @Override
-    public void read(CompoundNBT tagCompound) {
-        super.read(tagCompound);
-        int tick = tagCompound.getInt("tick");
-        if (tick > 0 && player == null) {
-            this.player = this.getWorld().getPlayerByUuid(UUID.fromString(tagCompound.getString("playerUUID")));
-            if (this.player != null) {
-                this.runningTick = tick;
-                this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
-            } else {
-                LOGGER.warn("Failed to find player {}", tagCompound.getInt("playerUUID"));
-
-            }
-
-        }
-        if (player == null) {
-            this.runningTick = 0;
-            this.tips = null;
-        } else {
-            checkStructureLevel(checkRequiredLevel());
-        }
-    }
-
     /**
      * Starts the ritual.
      * ONLY call if {@link AltarInfusionTileEntity#canActivate(PlayerEntity, boolean)} returned 1
@@ -233,14 +241,9 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
 
         this.markDirty();
         if (!this.getWorld().isRemote) {
-//                for (int i = 0; i < tips.length; i++) {
-//                    NBTTagCompound data = new NBTTagCompound();
-//                    data.setInteger("destX", tips[i].posX);
-//                    data.setInteger("destY", tips[i].posY);
-//                    data.setInteger("destZ", tips[i].posZ);
-//                    data.setInteger("age", 100);
-//                    VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
-//                }
+            for (BlockPos pTip : tips) {
+                ModParticles.spawnParticlesServer(world, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
+            }
             BlockState state = this.getWorld().getBlockState(getPos());
             this.getWorld().notifyBlockUpdate(getPos(), state, state, 3); //Notify client about started ritual
         }
@@ -250,14 +253,23 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
 
     @Override
     public void tick() {
+        if (playerToLoadUUID != null) { //Restore loaded ritual
+            if (!loadRitual(playerToLoadUUID)) return;
+            playerToLoadUUID = null;
+            this.markDirty();
+            BlockState state = this.getWorld().getBlockState(getPos());
+            this.getWorld().notifyBlockUpdate(getPos(), state, state, 3); //Notify client about started ritual
+
+        }
         if (runningTick == DURATION_TICK && !world.isRemote) {
             LOGGER.debug("Ritual started");
             consumeItems();
             this.markDirty();
         }
-        runningTick--;
         if (runningTick <= 0)
             return;
+        runningTick--;
+
         if (player == null || !player.isAlive()) {
             runningTick = 1;
         } else {
@@ -275,12 +287,12 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
                 if (runningTick % 15 == 0) {
                     BlockPos pos = getPos();
                     for (BlockPos pTip : tips) {
-                        ModParticles.spawnParticlesClient(world, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5, 5, 0.1, new Random());
+                        ModParticles.spawnParticlesClient(world, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, new Random());
                     }
                 }
             }
             if (runningTick == DURATION_TICK - 200) {
-                if (VampirismMod.proxy.isPlayerThePlayer(getPlayer())) {
+                if (getPlayer().isUser()) {
                     VampirismMod.proxy.renderScreenFullColor(DURATION_TICK - 250, 50, 0xFF0000);
 
                 }
@@ -319,9 +331,30 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         CompoundNBT nbt = super.write(compound);
         nbt.putInt("tick", runningTick);
         if (player != null) {
-            nbt.putString("playerUUID", player.getUniqueID().toString());
+            nbt.putUniqueId("playerUUID", player.getUniqueID());
         }
         return nbt;
+    }
+
+    @Override
+    protected Container createMenu(int id, PlayerInventory player) {
+        return new AltarInfusionContainer(id, player, this, IWorldPosCallable.of(world, pos));
+    }
+
+    private boolean loadRitual(UUID playerID) {
+        if (this.world == null) return false;
+        if (this.world.getPlayers().size() == 0) return false;
+        this.player = this.world.getPlayerByUuid(playerID);
+        if (this.player != null) {
+            this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
+            checkStructureLevel(checkRequiredLevel());
+        } else {
+            runningTick = 0;
+            this.tips = null;
+            LOGGER.warn("Failed to find player {}", playerID);
+
+        }
+        return true;
     }
 
     /**

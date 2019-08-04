@@ -5,10 +5,11 @@ import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.NonNullList;
 
 import java.util.function.Function;
 
@@ -18,10 +19,10 @@ public class BloodGrinderContainer extends InventoryContainer {
 
     @Deprecated
     public BloodGrinderContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, NonNullList.withSize(1, ItemStack.EMPTY), IWorldPosCallable.DUMMY);
+        this(id, playerInventory, new Inventory(1), IWorldPosCallable.DUMMY);
     }
 
-    public BloodGrinderContainer(int id, PlayerInventory playerInventory, NonNullList<ItemStack> inventory, IWorldPosCallable worldPosIn) {
+    public BloodGrinderContainer(int id, PlayerInventory playerInventory, IInventory inventory, IWorldPosCallable worldPosIn) {
         super(ModContainer.blood_grinder, id, playerInventory, worldPosIn, inventory, SELECTOR_INFOS);
         this.addPlayerSlots(playerInventory);
     }
@@ -29,7 +30,7 @@ public class BloodGrinderContainer extends InventoryContainer {
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
-        Slot slot = (Slot) this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
             result = slotStack.copy();

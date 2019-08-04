@@ -1,14 +1,11 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +21,7 @@ import org.lwjgl.opengl.GL11;
 public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
 
 
-    private final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation("textures/entity/endercrystal/endercrystal_beam.png");
+    private final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation("textures/entity/end_crystal/end_crystal_beam.png");
     private final ResourceLocation beaconBeamTexture = new ResourceLocation("textures/entity/beacon_beam.png");
 
 
@@ -40,7 +37,7 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
             double cX = te.getPos().getX() + 0.5;
             double cY = te.getPos().getY() + 3;
             double cZ = te.getPos().getZ() + 0.5;
-            try {
+
                 BlockPos[] tips = te.getTips();
                 for (BlockPos tip : tips) {
                     this.renderBeam(x, y, z, cX, cY, cZ, tip.getX() + 0.5, tip.getY() + 0.5, tip.getZ() + 0.5, te.getRunningTick() + partialTicks, false);
@@ -48,25 +45,24 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
                 if (phase == AltarInfusionTileEntity.PHASE.BEAM2) {
                     PlayerEntity p = te.getPlayer();
                     if (p != null) {
-                        double rX = 0, rZ = 0;
-                        double rY = 1D;//-0.3;
-                        double playerY = p.posY;
-                        /*
-                         * Work around for other players seeing the ritual
-                         */
-                        if (!p.equals(Minecraft.getInstance().player)) {
-                            Entity e = Minecraft.getInstance().player;
-                            rX += p.posX - e.posX;
-                            rY += p.posY - e.posY;
-                            rZ += p.posZ - e.posZ;
-                            playerY += 1.5D;
-                            cY += 1.6;
-                        }
-                        this.renderBeam(rX, rY, rZ, p.posX, playerY, p.posZ, cX, cY - 1.2d, cZ, -(te.getRunningTick() + partialTicks), true);
+//                        double rX = 0, rZ = 0;
+//                        double rY = -0.35;
+//                        double playerY = p.posY+1.2d; TODO 1.14 check second player perspective
+//                        /*
+//                         * Work around for other players seeing the ritual
+//                         */
+//                        if (!p.equals(Minecraft.getInstance().player)) {
+//                            Entity e = Minecraft.getInstance().player;
+//                            rX += p.posX - e.posX;
+//                            rY += p.posY - e.posY;
+//                            rZ += p.posZ - e.posZ;
+//                            playerY += 1.5D;
+//                            cY += 1.6;
+//                        }
+                        this.renderBeam(x, y, z, cX, cY, cZ, p.posX, p.posY + 1.2d, p.posZ, -(te.getRunningTick() + partialTicks), true);
+
                     }
                 }
-            } catch (NullPointerException e) {
-            }
 
 
         }
