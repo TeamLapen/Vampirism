@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.blocks.BlockCastleStairs;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.entity.ai.GolemAITargetVampire;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -27,6 +28,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -137,6 +139,12 @@ public class ModEntityEventHandler {
                         warnAboutCreeper = false;
                     }
                 }
+            }
+        }
+
+        if (!event.getWorld().isRemote && Balance.general.GOLEM_ATTACK_VAMPIRE) {
+            if (event.getEntity() instanceof EntityIronGolem) {
+                ((EntityIronGolem) event.getEntity()).targetTasks.addTask(4, new GolemAITargetVampire((EntityIronGolem) event.getEntity()));
             }
         }
         //------------------
