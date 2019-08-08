@@ -121,6 +121,7 @@ public class ModItemsRender {
 		renderHelper.registerRender(ModItems.soul_orb_vampire, "normal");
 
         registerVampireCloakWithColor(ModItems.vampire_cloak, "vampire_cloak");
+		renderHelper.registerRender(ModItems.garlic_bread, "normal");
 
 		// ----------------------
 	}

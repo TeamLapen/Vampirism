@@ -108,6 +108,7 @@ public class ModItems {
     public static final VampirismItem soul_orb_vampire = getNull();
 
     public static final ItemVampireCloak vampire_cloak = getNull();
+    public static final ItemGarlicBread garlic_bread = getNull();
 
     static void registerCraftingRecipes() {
 
@@ -402,6 +403,7 @@ public class ModItems {
         registry.register(new VampirismItem("soul_orb_vampire"));
 
         registry.register(new ItemVampireCloak());
+        registry.register(new ItemGarlicBread());
     }
 
     /**
