@@ -36,11 +36,8 @@ public class ItemHolyWaterSplashBottle extends ItemHolyWaterBottle implements En
 
     @Override
     public void onImpact(EntityThrowableItem entity, ItemStack stack, RayTraceResult result, boolean remote) {
-
         TIER tier = getTier(stack);
         if (!remote) {
-
-
             AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(4.0D, 2.0D, 4.0D);
             List<EntityLivingBase> list1 = entity.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
             EntityLivingBase thrower = entity.getThrower();
