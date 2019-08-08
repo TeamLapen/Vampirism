@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
@@ -29,6 +30,7 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityIronGolem;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -50,6 +52,7 @@ public class ModEntityEventHandler {
 
     private boolean skipAttackDamageOnce = false;
     private boolean warnAboutCreeper = true;
+    private boolean warnAboutZombie = true;
 
     @SubscribeEvent
     public void onAttachCapabilityEntity(AttachCapabilitiesEvent<Entity> event) {
@@ -136,6 +139,26 @@ public class ModEntityEventHandler {
                 } else {
                     if (warnAboutCreeper) {
                         VampirismMod.log.w("EntityEventHandler", "Could not replace creeper target task");
+                        warnAboutCreeper = false;
+                    }
+                }
+            }
+        }
+
+        if (!event.getWorld().isRemote && Balance.general.ZOMBIE_IGNORE_VAMPIRE) {
+            if (event.getEntity() instanceof EntityZombie) {
+                EntityAIBase target = null;
+                for (EntityAITasks.EntityAITaskEntry t : ((EntityZombie) event.getEntity()).targetTasks.taskEntries) {
+                    if (t.action instanceof EntityAINearestAttackableTarget && t.priority == 2) {
+                        target = t.action;
+                    }
+                }
+                if (target != null) {
+                    ((EntityZombie) event.getEntity()).targetTasks.removeTask(target);
+                    ((EntityZombie) event.getEntity()).targetTasks.addTask(2, new EntityAINearestAttackableTarget<>((EntityZombie) event.getEntity(), EntityPlayer.class, 10, true, false, entity -> !Helper.isVampire(entity)));
+                } else {
+                    if (warnAboutZombie) {
+                        VampirismMod.log.w("EntityEventHandler", "Could not replace zombie target task");
                         warnAboutCreeper = false;
                     }
                 }

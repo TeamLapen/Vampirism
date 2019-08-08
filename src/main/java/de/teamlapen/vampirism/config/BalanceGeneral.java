@@ -53,6 +53,9 @@ public class BalanceGeneral extends BalanceValues {
     @DefaultBoolean(value = true, comment = "If iron golems should attack vampire NPCs if in a non vampire village")
     public boolean GOLEM_ATTACK_VAMPIRE;
 
+    @DefaultBoolean(value = true, comment = "If zombies should ignore vampires")
+    public boolean ZOMBIE_IGNORE_VAMPIRE;
+
     /**
      * Creates a configuration for balance values
      *
