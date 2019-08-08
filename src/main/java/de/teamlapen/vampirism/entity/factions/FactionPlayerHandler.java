@@ -293,7 +293,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             setBoundAction1(new ResourceLocation(nbt.getString("bound1")), false);
         }
         if (nbt.hasKey("bound2")) {
-            setBoundAction1(new ResourceLocation(nbt.getString("bound2")), false);
+            setBoundAction2(new ResourceLocation(nbt.getString("bound2")), false);
         }
     }
 
