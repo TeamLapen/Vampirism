@@ -15,8 +15,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -26,6 +31,7 @@ import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -103,6 +109,28 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             this.updateEntityAttributes();
             entityChanged = false;
         }
+    }
+
+
+    @Nullable
+    @Override
+    public ItemEntity entityDropItem(ItemStack stack, float offsetY) {
+        ItemStack actualDrop = stack;
+        Item item = stack.getItem();
+        if (item.isFood()) {
+            if (item.getFood().isMeat()) {
+                actualDrop = new ItemStack(Items.ROTTEN_FLESH, stack.getCount()); //Replace all meat with rotten flesh
+            }
+        }
+        return super.entityDropItem(actualDrop, offsetY);
+    }
+
+    @Override
+    protected ResourceLocation getLootTable() {
+        if (entityCreature != null) {
+            return entityCreature.func_213346_cF();
+        }
+        return super.getLootTable();
     }
 
     @Override

@@ -4,6 +4,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.player.PlayerEntity;
 
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 /**
@@ -18,7 +19,7 @@ public class LookAtTrainerHunterGoal<T extends MobEntity & LookAtTrainerHunterGo
     public LookAtTrainerHunterGoal(T theTrainer) {
         super(theTrainer, PlayerEntity.class, 8.0F);
         this.theTrainer = theTrainer;
-        this.setMutexFlags(EnumSet.of(Flag.LOOK));
+        this.setMutexFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
     }
 
     /**
@@ -33,6 +34,7 @@ public class LookAtTrainerHunterGoal<T extends MobEntity & LookAtTrainerHunterGo
         }
     }
 
+
     /**
      * Interface used by {@link LookAtTrainerHunterGoal}
      */
@@ -40,6 +42,7 @@ public class LookAtTrainerHunterGoal<T extends MobEntity & LookAtTrainerHunterGo
         /**
          * @return The player currently being trained or null
          */
+        @Nullable
         PlayerEntity getTrainee();
     }
 }

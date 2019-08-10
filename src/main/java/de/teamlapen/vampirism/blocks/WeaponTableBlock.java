@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 
 
 public class WeaponTableBlock extends VampirismBlock {
-    private static final ITextComponent name = new TranslationTextComponent("container.weaponTable");
+    private static final ITextComponent name = new TranslationTextComponent("gui.vampirism.hunter_weapon_table");
     public final static String regName = "weapon_table";
     public static final int MAX_LAVA = 5;
     public static final int MB_PER_META = 200;

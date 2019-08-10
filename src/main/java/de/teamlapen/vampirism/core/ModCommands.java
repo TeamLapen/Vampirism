@@ -49,7 +49,6 @@ public class ModCommands {
                             .then(InfoEntitiesCommand.register())
                             .then(MarkerCommand.register())
                             .then(GiveTestTargetMapCommand.register())
-                            .then(GarlicProfilerCommand.register())
                             .then(SkillCommand.register())
                             .then(EmptyBloodBarCommand.register())
                             .then(EntityCommand.register())

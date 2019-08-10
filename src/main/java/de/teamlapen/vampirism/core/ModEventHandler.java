@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * Handles all events used in central parts of the mod
  */
-public class ModEventHandler {//TODO Mod Events @Maxanier
+public class ModEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger(ModEventHandler.class);
 
@@ -138,7 +138,7 @@ public class ModEventHandler {//TODO Mod Events @Maxanier
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
-        VampirismAPI.getGarlicChunkHandler(event.getWorld().getWorld()).clear();//TODO test is World right (or IWorld)
+        VampirismAPI.getGarlicChunkHandler(event.getWorld().getWorld()).clear();
         TotemTile.clearCacheForDimension(event.getWorld().getDimension());
     }
 

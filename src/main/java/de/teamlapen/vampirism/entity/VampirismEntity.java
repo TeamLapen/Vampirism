@@ -51,6 +51,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      * Whether the home should be saved to nbt or not
      */
     protected boolean saveHome = false;
+    @Nullable
     private AxisAlignedBB home;
     private boolean moveTowardsRestrictionAdded = false;
     private int moveTowardsRestrictionPrio = -1;
@@ -115,11 +116,15 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     @Override
     public void setHome(@Nullable AxisAlignedBB home) {
         this.home = home;
-        int posX, posY, posZ;
-        posX = (int) (home.minX + (home.maxX - home.minX) / 2);
-        posY = (int) (home.minY + (home.maxY - home.minY) / 2);
-        posZ = (int) (home.minZ + (home.maxZ - home.minZ) / 2);
-        super.setHomePosAndDistance(new BlockPos(posX, posY, posZ), (int) home.getAverageEdgeLength());
+        if (home != null) {
+            int posX, posY, posZ;
+            posX = (int) (home.minX + (home.maxX - home.minX) / 2);
+            posY = (int) (home.minY + (home.maxY - home.minY) / 2);
+            posZ = (int) (home.minZ + (home.maxZ - home.minZ) / 2);
+            super.setHomePosAndDistance(new BlockPos(posX, posY, posZ), (int) home.getAverageEdgeLength());
+        } else {
+            super.setHomePosAndDistance(new BlockPos(0, 0, 0), -1);
+        }
     }
 
     @Override
@@ -336,7 +341,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
                 } else {
                     if (opt == VampirismConfig.Server.IMobOptions.SMART) {
                         PlayerEntity player = VampirismMod.proxy.getClientPlayer();
-                        if (player != null) {
+                        if (player != null && player.isAlive()) {
                             IPlayableFaction f = FactionPlayerHandler.get(player).getCurrentFaction();
                             IFaction thisFaction = ((IFactionEntity) this).getFaction();
 

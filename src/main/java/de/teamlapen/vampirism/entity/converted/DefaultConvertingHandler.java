@@ -7,13 +7,6 @@ import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.passive.CowEntity;
-import net.minecraft.entity.passive.PigEntity;
-import net.minecraft.entity.passive.PolarBearEntity;
-import net.minecraft.entity.passive.RabbitEntity;
-import net.minecraft.entity.passive.horse.HorseEntity;
-import net.minecraft.entity.passive.horse.LlamaEntity;
-import net.minecraft.item.Items;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
@@ -30,44 +23,6 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
      * Used if no helper is specified
      */
     private final static IDefaultHelper defaultHelper = new IDefaultHelper() {
-
-
-        @Override
-        public void dropConvertedItems(CreatureEntity converted, CreatureEntity entity, boolean recentlyHit, int looting) {
-            if (entity instanceof CowEntity) {
-                int j = converted.getRNG().nextInt(3) + converted.getRNG().nextInt(1 + looting);
-
-                for (int k = 0; k < j; ++k) {
-                    converted.entityDropItem(Items.LEATHER, 1);
-                }
-                j = converted.getRNG().nextInt(3) + converted.getRNG().nextInt(1 + looting);
-
-                for (int k = 0; k < j; ++k) {
-                    converted.entityDropItem(Items.ROTTEN_FLESH, 1);
-                }
-
-            } else if (entity instanceof PigEntity || entity instanceof HorseEntity) {
-                int j = converted.getRNG().nextInt(2) + converted.getRNG().nextInt(1 + looting);
-
-                for (int k = 0; k < j; ++k) {
-                    converted.entityDropItem(Items.ROTTEN_FLESH, 1);
-                }
-            } else if (entity instanceof LlamaEntity) {
-                int j = converted.getRNG().nextInt(3);
-                if (j > 0) converted.entityDropItem(Items.LEATHER, j);
-            } else if (entity instanceof PolarBearEntity) {
-                int j = converted.getRNG().nextInt(3);
-                if (j > 0) converted.entityDropItem(Items.PUFFERFISH, j);
-                int k = converted.getRNG().nextInt(2);
-                if (k > 0) converted.entityDropItem(Items.ROTTEN_FLESH, k);
-            } else if (entity instanceof RabbitEntity) {
-                int j = converted.getRNG().nextInt(2);
-                if (j > 0) converted.entityDropItem(Items.RABBIT_HIDE, j);
-            } else {
-                //TODO maybe call dropFewItems via reflection
-            }
-
-        }
 
 
         @Override

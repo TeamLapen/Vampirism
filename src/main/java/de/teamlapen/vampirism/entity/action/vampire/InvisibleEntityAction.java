@@ -41,14 +41,14 @@ public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public void activate(T entity) {
-        ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.EXPLOSION, entity.posX, entity.posY, entity.posZ, 60, 1, 1, 1, 0); //TODO check  on which side this is called
+        ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.EXPLOSION, entity.posX, entity.posY, entity.posZ, 60, 1, 1, 1, 0);
 
     }
 
     @Override
     public void updatePreAction(T entity, int duration) {
         if (duration % 5 == 0) {
-            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.EXPLOSION, entity.posX, entity.posY, entity.posZ, 10, 1, 1, 1, 0);//TODO check  on which side this is called
+            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.EXPLOSION, entity.posX, entity.posY, entity.posZ, 10, 1, 1, 1, 0);
         }
     }
 

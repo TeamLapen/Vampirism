@@ -44,7 +44,7 @@ public class HalloweenSpecial {
         }
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         int month = Calendar.getInstance().get(Calendar.MONTH);
-        return day == 31 && month == 9;
+        return false; //day == 31 && month == 9; TODO
     }
 
     public static void checkEnable() {

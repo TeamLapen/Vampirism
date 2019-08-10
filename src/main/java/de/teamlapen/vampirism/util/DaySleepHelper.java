@@ -19,6 +19,9 @@ import net.minecraft.world.World;
  * {@link VampirePlayer} also updates the size every tick to 0.2/0.2 since it is reset by vanilla and sets {@link PlayerEntity#noClip} each tick, so the player does not collide with blocks above the coffin. Because of the we also have to set the motion variables to zero, so the player does no fall.
  * <p>
  *     Unlike the vanilla world we do not keep track of sleeping players as we do not have access to the necessary information/events but we just frequently check if enough palyers are sleeping
+ *
+ *
+ *     TODO check if https://github.com/MinecraftForge/MinecraftForge/pull/5013 helps in any way
  */
 public class DaySleepHelper {
 

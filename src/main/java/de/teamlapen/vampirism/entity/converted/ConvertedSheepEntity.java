@@ -72,15 +72,16 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> i
 
     @Override
     public List<ItemStack> onSheared(ItemStack item, IWorld world, BlockPos pos, int fortune) {
-
-        this.setSheared(true);
-        int i = 1 + this.rand.nextInt(3);
-
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
-        for (int j = 0; j < i; ++j)
-            ret.add(new ItemStack(SheepEntity.WOOL_BY_COLOR.get(this.getFleeceColor())));//TODO make public (is static final)
+        if (!world.isRemote()) {
+            this.setSheared(true);
+            int i = 1 + this.rand.nextInt(3);
 
-        this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+            for (int j = 0; j < i; ++j)
+                ret.add(new ItemStack(SheepEntity.WOOL_BY_COLOR.get(this.getFleeceColor())));
+
+            this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+        }
         return ret;
     }
 

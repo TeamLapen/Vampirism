@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -47,7 +46,7 @@ public class HunterWeaponTableScreen extends ContainerScreen<WeaponTableContaine
             this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_LAVA);
             this.blit(i, j, 0, 0, this.xSize, this.ySize);
         }
-        if (container.isMissingLava()) {
+        if (container.isMissingLava()) { //TODO fix missing lava rendering
             this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_MISSING_LAVA);
             this.blit(i, j, 0, 0, this.xSize, this.ySize);
         }
@@ -55,7 +54,7 @@ public class HunterWeaponTableScreen extends ContainerScreen<WeaponTableContaine
 
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        this.font.drawString(title.getFormattedText(), this.xSize / 2 - this.font.getStringWidth(title.getString()) / 2, 6.0F, 0x404040);//TODO 1.14 test
-        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);//TODO 1.14 test
+        this.font.drawString(title.getFormattedText(), this.xSize / 2 - this.font.getStringWidth(title.getString()) / 2, 6.0F, 0x404040);
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);
     }
 }

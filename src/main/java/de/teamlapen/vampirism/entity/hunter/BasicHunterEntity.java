@@ -151,6 +151,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return getDataManager().get(LEVEL);
     }
 
+    @Nullable
     @Override
     public PlayerEntity getTrainee() {
         return trainee;
@@ -215,8 +216,28 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return this.getDataManager().get(SWINGING_ARMS);
     }
 
-    public void setSwingingArms(boolean b) {
-        this.getDataManager().set(SWINGING_ARMS, b);
+    @Override
+    protected boolean processInteract(PlayerEntity player, Hand hand) {
+        int hunterLevel = HunterPlayer.get(player).getLevel();
+        if (this.isAlive() && !player.isSneaking()) {
+            if (!world.isRemote) {
+                if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
+                    if (trainee == null) {
+                        player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterBasicContainer(id, playerInventory, this), name));
+                        trainee = player;
+                        this.getNavigator().clearPath();
+                    } else {
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"));
+                    }
+                } else if (hunterLevel > 0) {
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"));
+                }
+            }
+            return true;
+        }
+
+
+        return super.processInteract(player, hand);
     }
 
     @Override
@@ -318,17 +339,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     }
 
-    public void updateCombatTask() {
-        if (this.world != null && !this.world.isRemote) {
-            this.goalSelector.removeGoal(attackMelee);
-            this.goalSelector.removeGoal(attackRange);
-            ItemStack stack = this.getHeldItemMainhand();
-            if (!stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow) {
-                this.goalSelector.addGoal(2, this.attackRange);
-            } else {
-                this.goalSelector.addGoal(2, this.attackMelee);
-            }
-        }
+    private void setSwingingArms(boolean b) {
+        this.getDataManager().set(SWINGING_ARMS, b);
     }
 
     @Override
@@ -373,7 +385,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return 6 + getLevel();
     }
 
-    @Nullable
     @Override
     protected ResourceLocation getLootTable() {
         return LootHandler.BASIC_HUNTER;
@@ -413,29 +424,17 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         //Also check the priority of tasks that are dynamically added. See top of class
     }
 
-    @Override
-    protected boolean processInteract(PlayerEntity player, Hand hand) {
-        int hunterLevel = HunterPlayer.get(player).getLevel();
-        if (this.isAlive() && !player.isSneaking()) {
-            if (!world.isRemote) {
-                if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
-                    if (trainee == null) {
-                        player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
-                            return new HunterBasicContainer(id, playerInventory, this);
-                        }, name));
-                        trainee = player;
-                    } else {
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"));
-                    }
-                } else if (hunterLevel > 0) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"));
-                }
+    private void updateCombatTask() {
+        if (this.world != null && !this.world.isRemote) {
+            this.goalSelector.removeGoal(attackMelee);
+            this.goalSelector.removeGoal(attackRange);
+            ItemStack stack = this.getHeldItemMainhand();
+            if (!stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow) {
+                this.goalSelector.addGoal(2, this.attackRange);
+            } else {
+                this.goalSelector.addGoal(2, this.attackMelee);
             }
-            return true;
         }
-
-
-        return super.processInteract(player, hand);
     }
 
     @Override

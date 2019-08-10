@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -42,7 +43,7 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
         }
         if (duration % 5 == 0) {
             double maxDist = 0.5D;
-            entity.getEntityWorld().addParticle(ParticleTypes.CLOUD, entity.posX + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, entity.posY, entity.posZ + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, -entity.getMotion().x, 0.0D, -entity.getMotion().z);
+            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.CLOUD, entity.posX + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, entity.posY, entity.posZ + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, 3, 0.3f, 0.3f, 0.3f, 0.5f);
         }
     }
 

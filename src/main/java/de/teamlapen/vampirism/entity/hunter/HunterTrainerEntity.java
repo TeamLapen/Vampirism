@@ -22,6 +22,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 /**
  * Hunter Trainer which allows Hunter players to level up
  */
@@ -47,6 +49,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
     /**
      * @return The player which has the trainings gui open. Can be null
      */
+    @Nullable
     @Override
     public PlayerEntity getTrainee() {
         return trainee;
@@ -81,24 +84,6 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
     }
 
     @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
-        this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0, false));
-        this.goalSelector.addGoal(5, new LookAtTrainerHunterGoal(this));
-        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
-        this.goalSelector.addGoal(9, new LookAtGoal(this, VampireBaseEntity.class, 17F));
-        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
-    }
-
-
-    @Override
     protected boolean processInteract(PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
@@ -107,10 +92,9 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
             if (!this.world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
                     if (trainee == null) {
-                        player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
-                            return new HunterTrainerContainer(id, playerInventory, this);
-                        }, name));
+                        player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTrainerContainer(id, playerInventory, this), name));
                         this.trainee = player;
+                        this.getNavigator().clearPath();
                     } else {
                         player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"));
                     }
@@ -126,6 +110,23 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
 
 
         return super.processInteract(player, hand);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0, false));
+        this.goalSelector.addGoal(5, new LookAtTrainerHunterGoal<>(this));
+        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
+        this.goalSelector.addGoal(9, new LookAtGoal(this, VampireBaseEntity.class, 17F));
+        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
+
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
 

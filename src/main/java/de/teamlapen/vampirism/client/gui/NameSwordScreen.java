@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.network.InputEventPacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.OptionButton;
@@ -37,7 +37,7 @@ public class NameSwordScreen extends Screen {
     private TextFieldWidget nameField;
 
     public NameSwordScreen(ItemStack sword) {
-        super(new TranslationTextComponent("name_Sword"));//TODO 1.14 name
+        super(new TranslationTextComponent("gui.vampirism.name_sword.title"));
         this.yes = UtilLib.translate("gui.yes");
         this.no = UtilLib.translate("gui.no");
         this.text1 = UtilLib.translate("gui.vampirism.name_sword.title");
@@ -46,19 +46,46 @@ public class NameSwordScreen extends Screen {
     }
 
     @Override
-    public void renderBackground() {
-        super.renderBackground();
+    public void init() {
+        super.init();
+        this.addButton(new OptionButton(this.width / 2 - 155, this.height / 6 + 96, 150, 20, AbstractOption.AO, this.yes, (context) -> {
+            if (!StringUtils.isBlank(nameField.getText())) {
+                NameSwordScreen.this.sword.setDisplayName(new StringTextComponent(nameField.getText()));
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, nameField.getText()));
+            }
+            this.minecraft.displayGuiScreen(null);
+            this.minecraft.setGameFocused(true);
+        }));
+        this.addButton(new OptionButton(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, AbstractOption.AO, this.no, (context) -> {
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
+            this.minecraft.displayGuiScreen(null);
+            this.minecraft.setGameFocused(true);
+        }));
+
+        this.listLines.clear();
+        this.listLines.addAll(this.font.listFormattedStringToWidth(this.text2, this.width - 50));
+
+        this.nameField = new TextFieldWidget(this.font, this.width / 2 - 155 + 77, this.height / 6 + 70, 155, 20, "name_sword");
+        this.nameField.setTextColor(-1);
+        this.nameField.setDisabledTextColour(-1);
+        this.nameField.setEnableBackgroundDrawing(true);
+        this.nameField.setMaxStringLength(35);
+        this.nameField.setText(sword_names[new Random().nextInt(sword_names.length)]);
+        this.children.add(nameField);
+        this.func_212928_a(nameField);
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        //this.drawDefaultBackground();TODO 1.14 needed?
+        this.renderBackground();
         this.drawCenteredString(this.font, this.text1, this.width / 2, 70, 16777215);
         int i = 90;
         for (String s : this.listLines) {
             this.drawCenteredString(this.font, s, this.width / 2, i, 16777215);
             i += this.font.FONT_HEIGHT;
         }
+        this.nameField.render(mouseX, mouseY, partialTicks);
+
 
         super.render(mouseX, mouseY, partialTicks);
         GlStateManager.disableLighting();
@@ -66,43 +93,14 @@ public class NameSwordScreen extends Screen {
     }
 
     @Override
-    public void init() {
-        super.init();
-        this.buttons.add(new OptionButton(this.width / 2 - 155, this.height / 6 + 96, 150, 20, AbstractOption.AO, this.yes, (context) -> {//TODO 1.14 size & Abstract option
-            if (!StringUtils.isBlank(nameField.getText())) {
-                NameSwordScreen.this.sword.setDisplayName(new StringTextComponent(nameField.getText()));
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, nameField.getText()));
-            }
-            NameSwordScreen.this.onClose();
-        }));
-        this.buttons.add(new OptionButton(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, AbstractOption.AO, this.no, (context) -> {//TODO 1.14 size & Abstract option
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
-            NameSwordScreen.this.onClose();
-        }));
-        this.nameField = new TextFieldWidget(this.font, this.width / 2 - 155 + 77, this.height / 6 + 70, 155, 12, "namesword.screen");//TODO 1.14 name
-        this.nameField.setTextColor(-1);
-        this.nameField.setDisabledTextColour(-1);
-        this.nameField.setEnableBackgroundDrawing(true);
-        this.nameField.setMaxStringLength(35);
-        this.listLines.clear();
-        this.listLines.addAll(this.font.listFormattedStringToWidth(this.text2, this.width - 50));
-        this.nameField.setText(sword_names[new Random().nextInt(sword_names.length)]);
-        this.buttons.add(nameField);
+    public void resize(Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
+        String text = nameField.getText();
+        super.resize(p_resize_1_, p_resize_2_, p_resize_3_); //Text gets deleted as this calls init again
+        nameField.setText(text);
     }
 
     @Override
-    public boolean keyPressed(int key1, int key2, int key3) {
-        boolean retur = this.nameField.keyPressed(key1, key2, key3);
-        if (super.keyPressed(key1, key2, key3))
-            return true;
-        return retur;
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        boolean retur = super.mouseClicked(mouseX, mouseY, mouseButton);
-        if (this.nameField.mouseClicked(mouseX, mouseY, mouseButton))
-            return true;
-        return retur;
+    public void tick() {
+        nameField.tick();
     }
 }

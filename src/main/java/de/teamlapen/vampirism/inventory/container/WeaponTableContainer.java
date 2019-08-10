@@ -81,9 +81,8 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     }
 
     /**
-     * Checks if there's a recipe available for the given setup, which requires more lava
      *
-     * @return
+     * @return if there's a recipe available for the given setup, which requires more lava
      */
     public boolean isMissingLava() {
         return missingLava;
@@ -109,7 +108,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     @Override
     public void onCraftMatrixChanged(IInventory inventoryIn) {
         this.worldPos.consume((world, pos) -> {
-            slotChangedCraftingGrid(world, this.player, this.craftMatrix, this.craftResult);
+            slotChangedCraftingGrid(world, this.player, this.hunterPlayer, this.craftMatrix, this.craftResult);
         });
     }
     
@@ -155,11 +154,9 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
         return itemstack;
     }
 
-    protected void slotChangedCraftingGrid(World worldIn, PlayerEntity playerIn, CraftingInventory craftMatrixIn, CraftResultInventory craftResultIn) {
+    private void slotChangedCraftingGrid(World worldIn, PlayerEntity playerIn, HunterPlayer hunter, CraftingInventory craftMatrixIn, CraftResultInventory craftResultIn) {
         if (!worldIn.isRemote) {
             ServerPlayerEntity entityplayermp = (ServerPlayerEntity) playerIn;
-            HunterPlayer hunter = HunterPlayer.get(playerIn);
-            ItemStack itemstack = ItemStack.EMPTY;
             Optional<IWeaponTableRecipe> optional = worldIn.getServer().getRecipeManager().getRecipe(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, craftMatrixIn, worldIn);
             if (optional.isPresent()) {
                 IWeaponTableRecipe recipe = optional.get();

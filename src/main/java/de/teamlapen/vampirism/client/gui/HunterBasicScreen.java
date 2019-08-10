@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
@@ -39,10 +38,12 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
     @Override
     public void init() {
         super.init();
-        int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
+
         String name = I18n.format("text.vampirism.level_up");
-        addButton(buttonLevelup = new Button(i + 37, j + 55, font.getStringWidth(name) + 5, 20, name, (context) -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BASICHUNTERLEVELUP, ""))));
+        int wid = font.getStringWidth(name) + 5;
+        int i = (this.xSize - wid) / 2;
+        int j = (this.height - this.ySize) / 2;
+        addButton(buttonLevelup = new Button(this.guiLeft + i, j + 50, wid, 20, name, (context) -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BASICHUNTERLEVELUP, ""))));
         buttonLevelup.active = false;
     }
 
@@ -68,7 +69,7 @@ public class HunterBasicScreen extends ContainerScreen<HunterBasicContainer> {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         this.font.drawString(this.title.getFormattedText(), 8.0F, 6.0F, 0x404040);
-        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);//TODO 1.14 test and #77
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);
 
         String text = null;
         if (missing == 0) {

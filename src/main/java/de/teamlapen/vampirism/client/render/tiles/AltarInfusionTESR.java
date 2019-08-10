@@ -45,20 +45,6 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
                 if (phase == AltarInfusionTileEntity.PHASE.BEAM2) {
                     PlayerEntity p = te.getPlayer();
                     if (p != null) {
-//                        double rX = 0, rZ = 0;
-//                        double rY = -0.35;
-//                        double playerY = p.posY+1.2d; TODO 1.14 check second player perspective
-//                        /*
-//                         * Work around for other players seeing the ritual
-//                         */
-//                        if (!p.equals(Minecraft.getInstance().player)) {
-//                            Entity e = Minecraft.getInstance().player;
-//                            rX += p.posX - e.posX;
-//                            rY += p.posY - e.posY;
-//                            rZ += p.posZ - e.posZ;
-//                            playerY += 1.5D;
-//                            cY += 1.6;
-//                        }
                         this.renderBeam(x, y, z, cX, cY, cZ, p.posX, p.posY + 1.2d, p.posZ, -(te.getRunningTick() + partialTicks), true);
 
                     }
