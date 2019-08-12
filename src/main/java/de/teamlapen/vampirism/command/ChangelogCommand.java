@@ -33,21 +33,21 @@ public class ChangelogCommand extends BasicCommand {
 
     private static int changelog(CommandContext<CommandSource> context) {
         if (!VampirismMod.instance.getVersionInfo().isNewVersionAvailable()) {
-            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.changelog.newversion"), true);
+            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.changelog.newversion"), false);
             return 0;
         }
         VersionChecker.Version newVersion = VampirismMod.instance.getVersionInfo().getNewVersion();
         List<String> changes = newVersion.getChanges();
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Vampirism " + newVersion.name + "(" + SharedConstants.getVersion().getName() + ")"), true);
         for (String c : changes) {
-            context.getSource().sendFeedback(new StringTextComponent("-" + c), true);
+            context.getSource().sendFeedback(new StringTextComponent("-" + c), false);
         }
-        context.getSource().sendFeedback(new StringTextComponent(""), true);
+        context.getSource().sendFeedback(new StringTextComponent(""), false);
         String template = UtilLib.translate("text.vampirism.update_message");
         String homepage = VampirismMod.instance.getVersionInfo().getHomePage();
         template = template.replaceAll("@download@", newVersion.getUrl() == null ? homepage : newVersion.getUrl()).replaceAll("@forum@", homepage);
         ITextComponent component = ITextComponent.Serializer.fromJson(template);
-        context.getSource().sendFeedback(component, true);
+        context.getSource().sendFeedback(component, false);
         return 1;
     }
 

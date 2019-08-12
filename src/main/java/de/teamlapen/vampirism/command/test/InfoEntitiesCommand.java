@@ -9,7 +9,7 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * 
@@ -28,7 +28,7 @@ public class InfoEntitiesCommand extends BasicCommand {
 
     private static int infoEntities(CommandSource commandSource, ServerPlayerEntity asPlayer) {
         Object2IntMap<EntityClassification> object2intmap = asPlayer.getServerWorld().countEntities();
-        commandSource.sendFeedback(new StringTextComponent(String.format("Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", object2intmap.getOrDefault(EntityClassification.MONSTER, 0), EntityClassification.MONSTER.getMaxNumberOfCreature(), object2intmap.getOrDefault(VReference.HUNTER_CREATURE_TYPE, 0), VReference.HUNTER_CREATURE_TYPE.getMaxNumberOfCreature(), object2intmap.getOrDefault(VReference.VAMPIRE_CREATURE_TYPE, 0), VReference.VAMPIRE_CREATURE_TYPE.getMaxNumberOfCreature())), true);
+        commandSource.sendFeedback(new TranslationTextComponent(String.format("command.vampirism.test.infoentities.count", object2intmap.getOrDefault(EntityClassification.MONSTER, 0), EntityClassification.MONSTER.getMaxNumberOfCreature(), object2intmap.getOrDefault(VReference.HUNTER_CREATURE_TYPE, 0), VReference.HUNTER_CREATURE_TYPE.getMaxNumberOfCreature(), object2intmap.getOrDefault(VReference.VAMPIRE_CREATURE_TYPE, 0), VReference.VAMPIRE_CREATURE_TYPE.getMaxNumberOfCreature())), true);
         return 0;
     }
 }

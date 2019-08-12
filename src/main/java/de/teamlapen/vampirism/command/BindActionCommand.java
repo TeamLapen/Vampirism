@@ -39,12 +39,12 @@ public class BindActionCommand extends BasicCommand {
         } else if (number == 2) {
             FactionPlayerHandler.get(asPlayer).setBoundAction2(action, true);
         }
-        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.success", action.getRegistryName() + " (" + new TranslationTextComponent(action.getTranslationKey()).getFormattedText() + ")", number), true);
+        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.success", action.getRegistryName() + " (" + new TranslationTextComponent(action.getTranslationKey()).getFormattedText() + ")", number), false);
         return 0;
     }
 
     private static int help(CommandContext<CommandSource> context) {
-        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.help"), true);
+        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.help"), false);
         return 0;
     }
 

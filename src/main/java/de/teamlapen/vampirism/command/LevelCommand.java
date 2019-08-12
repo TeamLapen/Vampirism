@@ -47,12 +47,12 @@ public class LevelCommand extends BasicCommand {
         for (ServerPlayerEntity player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             if (level == 0 && !handler.canLeaveFaction()) {
-                context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.base.level.cant_leave"));
+                context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.base.level.cant_leave", players.size() > 1 ? player.getDisplayName() : "Player", handler.getCurrentFaction().getName()));
             }
             if (handler.setFactionAndLevel(faction, level)) {
                 context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), faction.getName(), level), true);
             } else {
-                context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.failed_to_execute"));
+                context.getSource().sendErrorMessage(players.size() > 1 ? new TranslationTextComponent("command.vampirism.failed_to_execute.players", player.getDisplayName()) : new TranslationTextComponent("command.vampirism.failed_to_execute"));
             }
         }
         return 0;

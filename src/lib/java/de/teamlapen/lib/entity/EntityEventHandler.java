@@ -11,13 +11,13 @@ import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
  * Library's entity event handler to do stuff
@@ -31,7 +31,7 @@ public class EntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onChangedDimension(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent event) {
+    public void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         for (Capability listener : listeners) {
             ((IPlayerEventListener) event.getPlayer().getCapability(listener, null)).onChangedDimension(event.getFrom(), event.getTo());
         }
@@ -95,14 +95,14 @@ public class EntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         for (Capability listener : listeners) {
             (event.getPlayer().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onPlayerLoggedIn());
         }
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event) {
+    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         for (Capability listener : listeners) {
             (event.getPlayer().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onPlayerLoggedOut());
         }

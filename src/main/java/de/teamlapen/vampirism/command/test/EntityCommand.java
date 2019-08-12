@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class EntityCommand extends BasicCommand {
                 ResourceLocation id = entity.getType().getRegistryName();
                 commandSource.sendFeedback(new StringTextComponent(id.toString()), true);
             } else {
-                commandSource.sendFeedback(new StringTextComponent("Not biteable " + entity.getClass().getName()), true);
+                commandSource.sendFeedback(new TranslationTextComponent("Not biteable %s", entity.getClass().getName()), true);
             }
         }
 		return 0;

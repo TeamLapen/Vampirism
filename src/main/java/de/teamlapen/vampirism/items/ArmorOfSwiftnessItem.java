@@ -11,6 +11,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.IDyeableArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
@@ -24,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 
-public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemWithTier {
+public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemWithTier, IDyeableArmorItem {
 
     private final static String baseRegName = "armor_of_swiftness";
     private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{2, 5, 6, 2};

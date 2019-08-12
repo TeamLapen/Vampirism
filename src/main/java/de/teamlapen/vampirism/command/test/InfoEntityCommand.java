@@ -1,13 +1,14 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class InfoEntityCommand extends BasicCommand{
             o.writeUnlessRemoved(nbt);
             LogManager.getLogger().info("InfoEntity", "Data %s", nbt);
         }
-        commandSource.sendFeedback(new StringTextComponent("Printed info to log"), true);
+        commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.infoentity.printed"), false);
 		return 0;
 	}
 }

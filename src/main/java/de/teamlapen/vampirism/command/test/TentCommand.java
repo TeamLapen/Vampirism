@@ -11,7 +11,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * 
@@ -34,7 +34,7 @@ public class TentCommand extends BasicCommand{
             TileEntity tent = asPlayer.getEntityWorld().getTileEntity(((BlockRayTraceResult) result).getPos());
             if (tent != null && tent instanceof TentTileEntity) {
                 ((TentTileEntity) tent).setSpawn(true);
-                commandSource.sendFeedback(new StringTextComponent("Success"), true);
+                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.tent.success"), false);
             }
 
         }
