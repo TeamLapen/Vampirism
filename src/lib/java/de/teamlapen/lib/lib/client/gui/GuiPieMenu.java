@@ -1,6 +1,8 @@
 package de.teamlapen.lib.lib.client.gui;
 
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.client.Minecraft;
@@ -15,6 +17,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.util.ArrayList;
 
 
@@ -25,16 +28,17 @@ import java.util.ArrayList;
  * @author maxanier
  */
 @OnlyIn(Dist.CLIENT)
-public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu sometimes get rendered with 1F alpha !?
+public abstract class GuiPieMenu<T> extends Screen {
     private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/pie_menu_bg.png");
     private final static ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/pie_menu_center.png");
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
     protected final ArrayList<T> elements;
 
-    protected final float bgred;
-    protected final float bgblue;
-    protected final float bggreen;
-    protected final float bgalpha;
+    protected final Color backgroundColor;
+    /**
+     * transparency of the background
+     */
+    private final float BGT = 0.7f;
     /**
      * Size of the background image
      */
@@ -47,6 +51,7 @@ public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu someti
      * Size of the images for the center
      */
     private final int CS = 100;
+
     private int selectedElement = -1;
     private int elementCount;
     /**
@@ -54,13 +59,10 @@ public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu someti
      */
     private double radDiff;
 
-    public GuiPieMenu(int backgroundColor, ITextComponent title) {
+    public GuiPieMenu(Color backgroundColorIn, ITextComponent title) {
         super(title);
         this.passEvents = true;
-        this.bgred = (backgroundColor >> 16 & 255) / 255.0F;
-        this.bgblue = (backgroundColor >> 8 & 255) / 255.0F;
-        this.bggreen = (backgroundColor & 255) / 255.0F;
-        this.bgalpha = (backgroundColor >> 24 & 255) / 255.0F;
+        this.backgroundColor = backgroundColorIn;
         this.elements = new ArrayList<>();
     }
 
@@ -136,8 +138,8 @@ public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu someti
             int y = (int) (cY - Math.sin(rad) * radius) - 16 / 2;
 
             // Draw box and, if selected, highlight
-            float[] col = this.getColor(element);
-            GL11.glColor4f(col[0], col[1], col[2], 0.5F);
+            Color col = this.getColor(element);
+            GlStateManager.color4f(col.getRed(), col.getGreen(), col.getBlue(), 0.5F);
             this.minecraft.getTextureManager().bindTexture(WIDGETS);
             blit(x - 2, y - 2, 1, 1, 20, 20);
             if (selected) {
@@ -148,7 +150,7 @@ public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu someti
                 drawSelectedCenter(cX, cY, rad);
             }
             // Draw Icon
-            GL11.glColor4f(1F, 1F, 1F, 1F);
+            GlStateManager.color4f(1F, 1F, 1F, 1F);
             this.minecraft.getTextureManager().bindTexture(getIconLoc(element));
             UtilLib.drawTexturedModalRect(blitOffset, x, y, 0, 0, 16, 16, 16, 16);
 
@@ -161,7 +163,7 @@ public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu someti
             String name = UtilLib.translate(getUnlocalizedName(elements.get(selectedElement)));
             int tx = cX - minecraft.fontRenderer.getStringWidth(name) / 2;
             int ty = this.height / 7;
-            minecraft.fontRenderer.drawStringWithShadow(name, tx, ty, 16777215);
+            minecraft.fontRenderer.drawStringWithShadow(name, tx, ty, Color.WHITE.getRGB());
         }
         super.render(mouseX, mouseY, partialTicks);
     }
@@ -180,28 +182,28 @@ public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu someti
      * Draws a line between the given coordinates
      */
     protected void drawLine(double x1, double y1, double x2, double y2) {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glColor4f(0F, 0F, 0F, 1F);
-        GL11.glLineWidth(2F);
-        GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex3d(x1, y1, this.blitOffset);
-        GL11.glVertex3d(x2, y2, this.blitOffset);
-        GL11.glEnd();
+        GlStateManager.color4f(0F, 0F, 0F, 1F);
+        GlStateManager.lineWidth(2F);
+        GlStateManager.begin(GL11.GL_LINES);
+        GlStateManager.vertex3f((float) x1, (float) y1, this.blitOffset);
+        GlStateManager.vertex3f((float) x2, (float) y2, (float) this.blitOffset);
+        GlStateManager.end();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glColor4f(1, 1, 1, 1);
-        GL11.glPopMatrix();
+        GlStateManager.color4f(0F, 0F, 0F, 1F);
+        GlStateManager.popMatrix();
     }
 
     /**
      * This method is called to retrieve the color for the elements border
      *
      * @param s
-     * @return RGBA array
+     * @return Color
      */
     @Nonnull
-    protected float[] getColor(T s) {
-        return new float[]{1F, 1F, 1F, 1F};
+    protected Color getColor(T s) {
+        return Color.WHITE;
     }
 
     /**
@@ -234,23 +236,24 @@ public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu someti
         // Calculate the scale which has to be applied for the image to fit
         float scale = (this.height / 2F + 16 + 16) / BGS;
 
-        GL11.glPushMatrix();
-        GL11.glTranslatef(cX, cY, this.blitOffset);
-        GL11.glScalef(scale, scale, 1);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.translatef(cX, cY, this.blitOffset);
+        GlStateManager.scalef(scale, scale, 1);
 
         // Draw the cicle image
         this.minecraft.getTextureManager().bindTexture(backgroundTex);
-        GL11.glColor4f(this.bgred, this.bgblue, this.bggreen, this.bgalpha);
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(1F, 1F);
-        GL11.glVertex3f(BGS / 2, BGS / 2, this.blitOffset);
-        GL11.glTexCoord2f(1F, 0F);
-        GL11.glVertex3f(BGS / 2, -BGS / 2, this.blitOffset);
-        GL11.glTexCoord2f(0F, 0F);
-        GL11.glVertex3f(-BGS / 2, -BGS / 2, this.blitOffset);
-        GL11.glTexCoord2f(0F, 1F);
-        GL11.glVertex3f(-BGS / 2, BGS / 2, this.blitOffset);
-        GL11.glEnd();
+        GlStateManager.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
+        GlStateManager.begin(GL11.GL_QUADS);
+        GlStateManager.texCoord2f(1F, 1F);
+        GlStateManager.vertex3f(BGS / 2, BGS / 2, this.blitOffset);
+        GlStateManager.texCoord2f(1F, 0F);
+        GlStateManager.vertex3f(BGS / 2, -BGS / 2, this.blitOffset);
+        GlStateManager.texCoord2f(0F, 0F);
+        GlStateManager.vertex3f(-BGS / 2, -BGS / 2, this.blitOffset);
+        GlStateManager.texCoord2f(0F, 1F);
+        GlStateManager.vertex3f(-BGS / 2, BGS / 2, this.blitOffset);
+        GlStateManager.end();
 
         // Draw the lines
         if (elementCount > 1) {
@@ -261,7 +264,8 @@ public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu someti
                 this.drawLine(cos * RR, sin * RR, +cos * BGS / 2, sin * BGS / 2);
             }
         }
-        GL11.glPopMatrix();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
 
     }
 
@@ -278,53 +282,55 @@ public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu someti
         double deg = Math.toDegrees(-rad);
         float scale = (this.height) / 4F / CS;
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
         // Move origin to center, scale and rotate
-        GL11.glTranslated(cX, cY, this.blitOffset);
-        GL11.glScalef(scale, scale, 1);
-        GL11.glRotated(deg, 0, 0, 1);
+        GlStateManager.translated(cX, cY, this.blitOffset);
+        GlStateManager.scalef(scale, scale, 1);
+        GlStateManager.rotated(deg, 0, 0, 1);
 
         // Draw
         this.minecraft.getTextureManager().bindTexture(centerTex);
-        GL11.glColor4f(this.bgred, this.bgblue, this.bggreen, this.bgalpha);
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0.5F, 1F);
-        GL11.glVertex3d(CS / 2, CS / 2, this.blitOffset);
-        GL11.glTexCoord2f(0.5F, 0F);
-        GL11.glVertex3d(CS / 2, -CS / 2, this.blitOffset);
-        GL11.glTexCoord2f(0F, 0F);
-        GL11.glVertex3d(-CS / 2, -CS / 2, this.blitOffset);
-        GL11.glTexCoord2f(0F, 1F);
-        GL11.glVertex3d(-CS / 2, CS / 2, this.blitOffset);
-        GL11.glEnd();
-
-        GL11.glPopMatrix();
+        GlStateManager.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
+        GlStateManager.begin(GL11.GL_QUADS);
+        GlStateManager.texCoord2f(0.5F, 1F);
+        GlStateManager.vertex3f(CS / 2, CS / 2, this.blitOffset);
+        GlStateManager.texCoord2f(0.5F, 0F);
+        GlStateManager.vertex3f(CS / 2, -CS / 2, this.blitOffset);
+        GlStateManager.texCoord2f(0F, 0F);
+        GlStateManager.vertex3f(-CS / 2, -CS / 2, this.blitOffset);
+        GlStateManager.texCoord2f(0F, 1F);
+        GlStateManager.vertex3f(-CS / 2, CS / 2, this.blitOffset);
+        GlStateManager.end();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
 
     private void drawUnselectedCenter(double cX, double cY) {
 
         float scale = (this.height) / 4F / CS;
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
         // Move origin to center, scale and rotate
-        GL11.glTranslated(cX, cY, this.blitOffset);
-        GL11.glScalef(scale, scale, 1);
+        GlStateManager.translated(cX, cY, this.blitOffset);
+        GlStateManager.scalef(scale, scale, 1);
 
         // Draw
         this.minecraft.getTextureManager().bindTexture(centerTex);
-        GL11.glColor4f(this.bgred, this.bgblue, this.bggreen, this.bgalpha);
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(1F, 1F);
-        GL11.glVertex3d(CS / 2, CS / 2, this.blitOffset);
-        GL11.glTexCoord2f(1F, 0F);
-        GL11.glVertex3d(CS / 2, -CS / 2, this.blitOffset);
-        GL11.glTexCoord2f(0.5F, 0F);
-        GL11.glVertex3d(-CS / 2, -CS / 2, this.blitOffset);
-        GL11.glTexCoord2f(0.5F, 1F);
-        GL11.glVertex3d(-CS / 2, CS / 2, this.blitOffset);
-        GL11.glEnd();
-
-        GL11.glPopMatrix();
+        GlStateManager.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
+        GlStateManager.begin(GL11.GL_QUADS);
+        GlStateManager.texCoord2f(1F, 1F);
+        GlStateManager.vertex3f(CS / 2, CS / 2, this.blitOffset);
+        GlStateManager.texCoord2f(1F, 0F);
+        GlStateManager.vertex3f(CS / 2, -CS / 2, this.blitOffset);
+        GlStateManager.texCoord2f(0.5F, 0F);
+        GlStateManager.vertex3f(-CS / 2, -CS / 2, this.blitOffset);
+        GlStateManager.texCoord2f(0.5F, 1F);
+        GlStateManager.vertex3f(-CS / 2, CS / 2, this.blitOffset);
+        GlStateManager.end();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
 
 
@@ -359,5 +365,9 @@ public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu someti
             setAbsoluteMouse(dx / 1.5 + cX + 4, cY - dy / 1.5);
         }
         return rad;
+    }
+
+    protected int getSelectedElement() {
+        return selectedElement;
     }
 }

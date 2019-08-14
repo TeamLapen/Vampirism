@@ -160,9 +160,9 @@ public class ModKeys {
             return KEY.VISION;
         } else if (BLOOD_POTION.isPressed()) {
             return KEY.BLOOD_POTION;
-        } else if (ACTION1.isPressed()) {
+        } else if (ACTION1.isPressed() && ACTION1.getKeyModifier().isActive(null)) {
             return KEY.ACTION1;
-        } else if (ACTION2.isPressed()) {
+        } else if (ACTION2.isPressed() && ACTION2.getKeyModifier().isActive(null)) {
             return KEY.ACTION2;
         }
         return KEY.UNKNOWN;

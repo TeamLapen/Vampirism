@@ -7,6 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.NonNullSupplier;
 
+import java.awt.*;
+
 /**
  * Represents one playable faction (e.g. Vampire Player)
  * One instance should be used for players and entities at the same time.
@@ -16,7 +18,7 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
     private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
     private boolean renderLevel = true;
 
-    PlayableFaction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
+    PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
         super(id, entityInterface, color, hostileTowardsNeutral);
         this.highestLevel = highestLevel;
         this.playerCapabilitySupplier = playerCapabilitySupplier;

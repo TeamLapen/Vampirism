@@ -179,12 +179,12 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE || mc.player == null || !mc.player.isAlive()) {
             return;
         }
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_LIGHTING);
         IPlayableFaction faction = FactionPlayerHandler.get(mc.player).getCurrentFaction();
         if (mc.playerController.gameIsSurvivalOrAdventure() && faction != null && faction.renderLevel()) {
             // boolean flag1 = false;
-            int color = faction.getColor();
+            int color = faction.getColor().getRGB();
             String text = "" + FactionPlayerHandler.get(mc.player).getCurrentLevel();
             int x = (this.mc.mainWindow.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
             int y = this.mc.mainWindow.getScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
@@ -386,12 +386,12 @@ public class VampirismHUDOverlay extends ExtendedGui {
         int left = width / 2 - 8;
         int top = height / 2 - 4;
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glColor4f(1f, 1f, 1f, 0.7F);
+        GlStateManager.color4f(1f, 1f, 1f, 0.7F);
         blit(left, top, 27, 0, 16, 10);
-        GL11.glColor4f(r, g, b, 0.8F);
+        GlStateManager.color4f(r, g, b, 0.8F);
         int percHeight = (int) (10 * perc);
         blit(left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GlStateManager.color4f(1F, 1F, 1F, 1F);
         GL11.glDisable(GL11.GL_BLEND);
 
     }

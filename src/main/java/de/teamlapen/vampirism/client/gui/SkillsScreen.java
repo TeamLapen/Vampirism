@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -37,6 +38,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -441,11 +443,8 @@ public class SkillsScreen extends Screen {
         GlStateManager.popMatrix();
 
         //Draw "window" and buttons
-        int color = skillHandler.getPlayer().getFaction().getColor();
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = (color) & 0xFF;
-        GlStateManager.color4f(r / 255F, g / 255F, b / 255F, 1.0F);
+        Color color = skillHandler.getPlayer().getFaction().getColor();
+        GlStateManager.color4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
         this.blit(k, l, 0, 0, this.display_width, this.display_height);
         this.blitOffset = 0;

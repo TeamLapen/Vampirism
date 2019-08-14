@@ -5,6 +5,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
+import java.awt.*;
+
 /**
  * Represents a entity faction (e.g. Vampires)
  */
@@ -25,7 +27,7 @@ public interface IFaction<T extends IFactionEntity> {
     /**
      * Used for some rendering, e.g. for displaying the level
      */
-    int getColor();
+    Color getColor();
 
     /**
      * @return The interface all entities of this faction implement (or for players the IExtendedEntityProperty) implements

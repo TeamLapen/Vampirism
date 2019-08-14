@@ -17,8 +17,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 
 /**
  * Gui which is used to select vampire actions
@@ -52,8 +54,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     };
 
     public SelectActionScreen() {
-        // - 0x88000000 for transparency
-        super(FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction().getColor() - 0x88000000, new TranslationTextComponent("selectAction"));
+        super(FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction().getColor(), new TranslationTextComponent("selectAction"));
     }
 
     @Override
@@ -65,11 +66,11 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         if (active > 0) {
 
             float h = active * 16;
-            this.fillGradient(x, (int) (y + h), x + 16, y + 16, 0xDDE0E000, 0x88E0E000);
+            this.fillGradient(x, (int) (y + h), x + 16, y + 16, Color.YELLOW.getRGB() - 0x88000000, Color.YELLOW.getRGB());
         } else if (active < 0) {
 
             float h = (1F + (active)) * 16;
-            this.fillGradient(x, (int) (y + h), x + 16, y + 16, 0x880E0E0E, 0xEE0E0E0E);
+            this.fillGradient(x, (int) (y + h), x + 16, y + 16, Color.BLACK.getRGB() - 0x55000000, Color.BLACK.getRGB());
         }
     }
 
@@ -81,13 +82,13 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
 
     @Override
     @Nonnull
-    protected float[] getColor(IAction s) {
+    protected Color getColor(IAction s) {
         if (s == fakeAction) return super.getColor(s);
         IFactionPlayer factionPlayer = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
         if (!(s.canUse(factionPlayer) == IAction.PERM.ALLOWED) || actionHandler.getPercentageForAction(s) < 0) {
-            return new float[]{0.8125f, 0.0859375f, 0.20703125f, 1f};
+            return Color.RED;
         } else if (actionHandler.getPercentageForAction(s) > 0) {
-            return new float[]{0.94140625f, 0.71484375f, 0f, 1f};
+            return Color.YELLOW;
         } else {
             return super.getColor(s);
         }
@@ -108,6 +109,27 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         if (action != fakeAction && action.canUse(FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer()) == IAction.PERM.ALLOWED) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName().toString()));
         }
+    }
+
+    @Override
+    public boolean keyPressed(int key, int scancode, int modifiers) {
+        if (getSelectedElement() >= 0) {
+            if (elements.get(getSelectedElement()) == fakeAction) {
+                return true;
+            }
+            if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).matchesKey(key, scancode)) {
+                FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction1(elements.get(getSelectedElement()), true);
+                GLFW.glfwSetCursorPos(this.minecraft.mainWindow.getHandle(), this.minecraft.mainWindow.getWidth() / 2, this.minecraft.mainWindow.getHeight() / 2);
+                onClose();
+                return true;
+            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).matchesKey(key, scancode)) {
+                FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction2(elements.get(getSelectedElement()), true);
+                GLFW.glfwSetCursorPos(this.minecraft.mainWindow.getHandle(), this.minecraft.mainWindow.getWidth() / 2, this.minecraft.mainWindow.getHeight() / 2);
+                onClose();
+                return true;
+            }
+        }
+        return super.keyPressed(key, scancode, modifiers);
     }
 
     @Override

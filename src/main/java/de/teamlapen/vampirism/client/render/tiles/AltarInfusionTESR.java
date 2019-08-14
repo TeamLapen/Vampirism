@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
@@ -116,6 +117,6 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.enableCull();
         RenderHelper.enableStandardItemLighting();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 }
