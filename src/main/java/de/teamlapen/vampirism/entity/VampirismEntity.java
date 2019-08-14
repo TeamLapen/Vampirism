@@ -27,8 +27,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
@@ -167,11 +165,6 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     @Override
-    public boolean getAlwaysRenderNameTagForRender() {
-        return true;
-    }
-
-    @Override
     public void setHomeArea(BlockPos pos, int r) {
         this.setHome(new AxisAlignedBB(pos.add(-r, -r, -r), pos.add(r, r, r)));
     }
@@ -305,11 +298,6 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return this instanceof IMob ? new StringTextComponent("IMob") : new StringTextComponent("NonImob"); //TODO remove
-    }
-
-    @Override
     public void tick() {
         super.tick();
         this.checkImobConversion();
@@ -372,7 +360,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.posX, this.posY, this.posZ, 20, 1, 1, 1, 0);//TODO particle textureindex: 134
+        ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.posX, this.posY, this.posZ, 20, 1, 1, 1, 0);
         this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
         this.remove();
