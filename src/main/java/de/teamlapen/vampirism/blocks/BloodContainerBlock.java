@@ -88,7 +88,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
-            FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getFace());//TODO 1.13 check
+            FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getFace());//TODO 1.14 fluids
             /*
             ItemStack stack = playerIn.getHeldItem(hand);
             if (!stack.isEmpty() && FluidLib.hasFluidItemCap(stack)) {

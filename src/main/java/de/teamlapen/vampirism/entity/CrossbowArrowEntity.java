@@ -96,7 +96,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
             if (ignoreHurtTimer && living.hurtResistantTime > 0) {
                 living.hurtResistantTime = 0;
             }
-            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityByUuid(this.shootingEntity) : null); //TODO nonnull server only
+            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityByUuid(this.shootingEntity) : null);
         }
     }
 
@@ -110,7 +110,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
         if (raytraceResultIn.getType() == RayTraceResult.Type.BLOCK) {
             Item item = arrowStack.getItem();
             if (item instanceof IVampirismCrossbowArrow) {
-                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, ((BlockRayTraceResult) raytraceResultIn).getPos(), this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityByUuid(this.shootingEntity) : null);//TODO nonnull server only
+                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, ((BlockRayTraceResult) raytraceResultIn).getPos(), this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityByUuid(this.shootingEntity) : null);
             }
         }
         super.onHit(raytraceResultIn);

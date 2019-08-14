@@ -25,7 +25,7 @@ import java.util.Arrays;
 /**
  * 1.14
  */
-public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {//TODO 1.14 fluidsystem
+public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {//TODO 1.14 fluid
     private static final ISkill[] EMPTY_SKILLS = {};
     private final ItemStack fluid;
     @Nullable

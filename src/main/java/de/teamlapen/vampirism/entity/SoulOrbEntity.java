@@ -185,7 +185,7 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
 
     @Override
     public IPacket<?> createSpawnPacket() {
-        return new SSpawnObjectPacket();//TODO 1.14 check
+        return new SSpawnObjectPacket(this);//TODO 1.14 check
     }
 
     @Override

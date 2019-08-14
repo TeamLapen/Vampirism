@@ -11,19 +11,20 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 /**
  * Gui which is used to select vampire actions
  */
 @OnlyIn(Dist.CLIENT)
 public class SelectActionScreen extends GuiPieMenu<IAction> {
-    private final static int ICON_TEXTURE_WIDTH = 256;
-    private final static int ICON_TEXTURE_HEIGHT = 80;
     private IActionHandler actionHandler;
     /**
      * Fake skill which represents the cancel button
@@ -51,7 +52,8 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     };
 
     public SelectActionScreen() {
-        super(ICON_TEXTURE_WIDTH, ICON_TEXTURE_HEIGHT, 2298478591L, new TranslationTextComponent("selectAction"));
+        // - 0x88000000 for transparency
+        super(FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction().getColor() - 0x88000000, new TranslationTextComponent("selectAction"));
     }
 
     @Override
@@ -62,11 +64,11 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         float active = actionHandler.getPercentageForAction(p);
         if (active > 0) {
 
-            float h = active * IS;
+            float h = active * 16;
             this.fillGradient(x, (int) (y + h), x + 16, y + 16, 0xDDE0E000, 0x88E0E000);
         } else if (active < 0) {
 
-            float h = (1F + (active)) * IS;
+            float h = (1F + (active)) * 16;
             this.fillGradient(x, (int) (y + h), x + 16, y + 16, 0x880E0E0E, 0xEE0E0E0E);
         }
     }
@@ -78,9 +80,14 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     }
 
     @Override
+    @Nonnull
     protected float[] getColor(IAction s) {
-        if (s != fakeAction && !(s.canUse(FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer()) == IAction.PERM.ALLOWED)) {
+        if (s == fakeAction) return super.getColor(s);
+        IFactionPlayer factionPlayer = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
+        if (!(s.canUse(factionPlayer) == IAction.PERM.ALLOWED) || actionHandler.getPercentageForAction(s) < 0) {
             return new float[]{0.8125f, 0.0859375f, 0.20703125f, 1f};
+        } else if (actionHandler.getPercentageForAction(s) > 0) {
+            return new float[]{0.94140625f, 0.71484375f, 0f, 1f};
         } else {
             return super.getColor(s);
         }

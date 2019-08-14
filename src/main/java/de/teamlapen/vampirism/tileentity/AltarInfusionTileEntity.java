@@ -317,7 +317,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
                 }
             } else {
                 this.world.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
-                this.world.addParticle(ParticleTypes.EXPLOSION, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);//TODO was Explosion_huge
+                this.world.addParticle(ParticleTypes.EXPLOSION, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);//TODO 1.14 test, was Explosion_huge
             }
 
             player.addPotionEffect(new EffectInstance(ModEffects.saturation, 400, 2));

@@ -22,7 +22,6 @@ public class ModParticles {
     public static final ParticleType<FlyingBloodParticleData> flying_blood = getNull();
     public static final ParticleType<FlyingBloodEntityParticleData> flying_blood_entity = getNull();
     public static final BasicParticleType halloween = getNull();
-    public static final BasicParticleType heal = getNull();
     public static final ParticleType<GenericParticleData> generic = getNull();
 
     static void registerParticles(IForgeRegistry<ParticleType<?>> registry) {

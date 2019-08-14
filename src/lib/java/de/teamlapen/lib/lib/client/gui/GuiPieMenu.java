@@ -14,6 +14,7 @@ import net.minecraftforge.client.ForgeIngameGui;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 
@@ -24,15 +25,12 @@ import java.util.ArrayList;
  * @author maxanier
  */
 @OnlyIn(Dist.CLIENT)
-public abstract class GuiPieMenu<T> extends Screen {
-    private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie_menu_bg.png");
-    private final static ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie_menu_center.png");
+public abstract class GuiPieMenu<T> extends Screen { //TODO 1.14 pie menu sometimes get rendered with 1F alpha !?
+    private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/pie_menu_bg.png");
+    private final static ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/pie_menu_center.png");
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
     protected final ArrayList<T> elements;
-    /**
-     * Icon width/height
-     */
-    protected final int IS = 16;
+
     protected final float bgred;
     protected final float bgblue;
     protected final float bggreen;
@@ -49,8 +47,6 @@ public abstract class GuiPieMenu<T> extends Screen {
      * Size of the images for the center
      */
     private final int CS = 100;
-    private final int textureWidth;
-    private final int textureHeight;
     private int selectedElement = -1;
     private int elementCount;
     /**
@@ -58,7 +54,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     private double radDiff;
 
-    public GuiPieMenu(int textureWidth, int textureHeight, long backgroundColor, ITextComponent title) {
+    public GuiPieMenu(int backgroundColor, ITextComponent title) {
         super(title);
         this.passEvents = true;
         this.bgred = (backgroundColor >> 16 & 255) / 255.0F;
@@ -66,8 +62,6 @@ public abstract class GuiPieMenu<T> extends Screen {
         this.bggreen = (backgroundColor & 255) / 255.0F;
         this.bgalpha = (backgroundColor >> 24 & 255) / 255.0F;
         this.elements = new ArrayList<>();
-        this.textureHeight = textureHeight;
-        this.textureWidth = textureWidth;
     }
 
     @Override
@@ -138,27 +132,25 @@ public abstract class GuiPieMenu<T> extends Screen {
             } else if (!center && rad == 0 && mouseRad > 2D * Math.PI - radDiff / 2D) {
                 selected = true;
             }
-            int x = (int) (cX + Math.cos(rad) * radius) - IS / 2;
-            int y = (int) (cY - Math.sin(rad) * radius) - IS / 2;
+            int x = (int) (cX + Math.cos(rad) * radius) - 16 / 2;
+            int y = (int) (cY - Math.sin(rad) * radius) - 16 / 2;
 
             // Draw box and, if selected, highlight
             float[] col = this.getColor(element);
-            if (col != null) {
-                GL11.glColor4f(col[0], col[1], col[2], 0.5F);
-            }
+            GL11.glColor4f(col[0], col[1], col[2], 0.5F);
             this.minecraft.getTextureManager().bindTexture(WIDGETS);
             blit(x - 2, y - 2, 1, 1, 20, 20);
             if (selected) {
                 blit(x - 3, y - 3, 1, 23, 22, 22);
             }
-            GL11.glColor4f(1F, 1F, 1F, 1F);
             if (selected) {
                 selectedElement = i;
                 drawSelectedCenter(cX, cY, rad);
             }
             // Draw Icon
+            GL11.glColor4f(1F, 1F, 1F, 1F);
             this.minecraft.getTextureManager().bindTexture(getIconLoc(element));
-            UtilLib.drawTexturedModalRect(blitOffset, x, y, 0, 0, IS, IS, 16, 16);
+            UtilLib.drawTexturedModalRect(blitOffset, x, y, 0, 0, 16, 16, 16, 16);
 
             this.afterIconDraw(element, x, y);
 
@@ -205,10 +197,11 @@ public abstract class GuiPieMenu<T> extends Screen {
      * This method is called to retrieve the color for the elements border
      *
      * @param s
-     * @return Can be null (-> 255,255,255)
+     * @return RGBA array
      */
+    @Nonnull
     protected float[] getColor(T s) {
-        return null;
+        return new float[]{1F, 1F, 1F, 1F};
     }
 
     /**
@@ -239,7 +232,7 @@ public abstract class GuiPieMenu<T> extends Screen {
      */
     private void drawBackground(float cX, float cY) {
         // Calculate the scale which has to be applied for the image to fit
-        float scale = (this.height / 2F + IS + IS) / BGS;
+        float scale = (this.height / 2F + 16 + 16) / BGS;
 
         GL11.glPushMatrix();
         GL11.glTranslatef(cX, cY, this.blitOffset);
@@ -247,7 +240,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         // Draw the cicle image
         this.minecraft.getTextureManager().bindTexture(backgroundTex);
-        GL11.glColor4f(this.bgred, this.bggreen, this.bgblue, this.bgalpha);
+        GL11.glColor4f(this.bgred, this.bgblue, this.bggreen, this.bgalpha);
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(1F, 1F);
         GL11.glVertex3f(BGS / 2, BGS / 2, this.blitOffset);
@@ -293,6 +286,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         // Draw
         this.minecraft.getTextureManager().bindTexture(centerTex);
+        GL11.glColor4f(this.bgred, this.bgblue, this.bggreen, this.bgalpha);
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(0.5F, 1F);
         GL11.glVertex3d(CS / 2, CS / 2, this.blitOffset);
@@ -318,6 +312,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         // Draw
         this.minecraft.getTextureManager().bindTexture(centerTex);
+        GL11.glColor4f(this.bgred, this.bgblue, this.bggreen, this.bgalpha);
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(1F, 1F);
         GL11.glVertex3d(CS / 2, CS / 2, this.blitOffset);

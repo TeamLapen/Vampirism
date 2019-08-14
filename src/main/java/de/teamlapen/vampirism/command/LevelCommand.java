@@ -28,17 +28,24 @@ public class LevelCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         LiteralArgumentBuilder<CommandSource> argument = Commands.literal("level")
-                .requires(context->context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT));
-
-        argument.then(Commands.argument("faction", new FactionArgument())
-                .then(Commands.argument("level", IntegerArgumentType.integer(0))
+                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
+                .then(Commands.argument("faction", new FactionArgument())
+                        .then(Commands.argument("level", IntegerArgumentType.integer(0))
                         .executes(context -> {
                             return setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().asPlayer()));
                         })
                         .then(Commands.argument("player", EntityArgument.entities())
                                 .executes(context -> {
                                     return setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "player"));
-                                }))));
+                                }))))
+                .then(Commands.literal("none")
+                        .executes(context -> {
+                            return noFaction(Lists.newArrayList(context.getSource().asPlayer()));
+                        })
+                        .then(Commands.argument("player", EntityArgument.entities())
+                                .executes(context -> {
+                                    return noFaction(EntityArgument.getPlayers(context, "player"));
+                                })));
 
         return argument;
     }
@@ -54,6 +61,14 @@ public class LevelCommand extends BasicCommand {
             } else {
                 context.getSource().sendErrorMessage(players.size() > 1 ? new TranslationTextComponent("command.vampirism.failed_to_execute.players", player.getDisplayName()) : new TranslationTextComponent("command.vampirism.failed_to_execute"));
             }
+        }
+        return 0;
+    }
+
+    private static int noFaction(Collection<ServerPlayerEntity> players) {
+        for (ServerPlayerEntity player : players) {
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            handler.setFactionAndLevel(null, 0);
         }
         return 0;
     }

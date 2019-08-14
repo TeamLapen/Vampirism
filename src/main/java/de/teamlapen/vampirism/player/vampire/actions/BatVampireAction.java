@@ -194,7 +194,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     private void setPlayerBat(PlayerEntity player, boolean bat) {
         if (bat) updatePlayerBatSize(player);
         if (bat) player.setPosition(player.posX, player.posY + (PLAYER_HEIGHT - BAT_HEIGHT), player.posZ);
-        //player.eyeHeight = (bat ? BAT_EYE_HEIGHT : player.getDefaultEyeHeight()); TODO 1.14
+        player.eyeHeight = (bat ? BAT_EYE_HEIGHT : player.getStandingEyeHeight(player.getPose(), player.size));
     }
 
 }

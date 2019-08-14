@@ -64,7 +64,7 @@ public class WeaponTableCraftingSlot extends Slot {
             worldPos.consume(((world, pos) -> {
                 int remainingLava = Math.max(0, lava - recipe.getRequiredLavaUnits());
                 if (world.getBlockState(pos).getBlock() instanceof WeaponTableBlock) {
-                    world.getFluidState(pos);//TODO reduce Lava
+                    world.getFluidState(pos);//TODO 1.14 fluid reduce Lava
                 }
             }));
         }

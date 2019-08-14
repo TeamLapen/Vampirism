@@ -43,7 +43,7 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
         }
         if (duration % 5 == 0) {
             double maxDist = 0.5D;
-            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.CLOUD, entity.posX + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, entity.posY, entity.posZ + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, 3, 0.3f, 0.3f, 0.3f, 0.5f);
+            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.CLOUD, entity.posX + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, entity.posY + 0.1, entity.posZ + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, 3, 0.3f, 0.3f, 0.3f, 0.02f);
         }
     }
 

@@ -28,7 +28,6 @@ public class CoffinItem extends VampirismItem {
 
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        //TODO 1.13 Test
 
         ItemStack stack = context.getItem();
         World world = context.getWorld();
