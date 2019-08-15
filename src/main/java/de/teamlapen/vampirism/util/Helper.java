@@ -188,7 +188,7 @@ public class Helper {
     public static int getExperiencePoints(LivingEntity entity, PlayerEntity player) {
         try {
             if (reflectionMethodExperiencePoints == null) {
-                reflectionMethodExperiencePoints = ObfuscationReflectionHelper.findMethod(LivingEntity.class, SRGNAMES.MobEntity_getExperiencePoints, PlayerEntity.class); //TODO 1.14 make sure this works, mcpbot cannot find the mapping for LivingEntity#getExperiencePoints, but MobEntity overrides it
+                reflectionMethodExperiencePoints = ObfuscationReflectionHelper.findMethod(LivingEntity.class, SRGNAMES.MobEntity_getExperiencePoints, PlayerEntity.class); //mcpbot cannot find the mapping for LivingEntity#getExperiencePoints, but MobEntity overrides it
             }
             return (int) reflectionMethodExperiencePoints.invoke(entity, player);
         } catch (Exception e) {

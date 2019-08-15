@@ -39,18 +39,14 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     private int ritualTicksLeft = 0;
     private PlayerEntity ritualPlayer;
 
-    public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
+    private static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
+    private IModelData modelData;
 
     @Nonnull
     @Override
     public IModelData getModelData() {
-        FluidStack fluid = tank.getFluid();
-        int l = 0;
-        if (fluid != null) {
-            float i = (fluid.amount / (float) AltarInspirationTileEntity.CAPACITY * 10);
-            l = (i > 0 && i < 1) ? 1 : (int) i;
-        }
-        return new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).build(); //TODO 1.13 is it good to recreate is all the time
+        if (modelData == null) updateModelData(false);
+        return modelData;
     }
 
     public AltarInspirationTileEntity() {
@@ -73,20 +69,32 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         return write(new CompoundNBT());
     }
 
-    @Override
-    public void markDirty() {//TODO test
-        ModelDataManager.requestModelDataRefresh(this);
-        //world.markForRerender(getPos()); //TODO 1.14 still needed world.func_225319_b(BlockPos,BlockState(Pre),Blockstate(Post))
-        super.markDirty();
-    }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         FluidStack old = tank.getFluid();
         this.read(pkt.getNbtCompound());
         if (old != null && !old.isFluidStackIdentical(tank.getFluid()) || old == null && tank.getFluid() != null) {
-            markDirty(); //TODO 1.13 do we even need this
+            updateModelData(true);
+        }
+    }
+
+    @Override
+    public void markDirty() {//TODO test
+        //world.markForRerender(getPos()); //TODO 1.14 still needed world.func_225319_b(BlockPos,BlockState(Pre),Blockstate(Post))
+        super.markDirty();
+    }
+
+    private void updateModelData(boolean refresh) {
+        FluidStack fluid = tank.getFluid();
+        int l = 0;
+        if (fluid != null) {
+            float i = (fluid.amount / (float) AltarInspirationTileEntity.CAPACITY * 10);
+            l = (i > 0 && i < 1) ? 1 : (int) i;
+        }
+        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).build();
+        if (refresh) {
+            ModelDataManager.requestModelDataRefresh(this);
         }
     }
 

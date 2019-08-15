@@ -31,8 +31,9 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
 
     private int lastSyncedAmount = Integer.MIN_VALUE;
 
-    public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
-    public static final ModelProperty<String> FLUID_NAME_PROP = new ModelProperty<>();
+    private static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
+    private static final ModelProperty<String> FLUID_NAME_PROP = new ModelProperty<>();
+    private IModelData modelData;
 
 
     public BloodContainerTileEntity() {
@@ -44,15 +45,20 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     @Nonnull
     @Override
     public IModelData getModelData() {
-        FluidStack fluid = getTankInfo().fluid;
-        String n = "";
-        int l = 0;
-        if (fluid != null) {
-            float amount = fluid == null ? 0 : fluid.amount / (float) BloodContainerTileEntity.LEVEL_AMOUNT;
-            l = (amount > 0 && amount < 1) ? 1 : (int) amount;
-            n = fluid.getFluid().getName();
+        if (modelData == null) updateModelData(false);
+        return modelData;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        FluidStack old = tank.getFluid();
+        this.read(pkt.getNbtCompound());
+        if (old != null && !old.isFluidStackIdentical(tank.getFluid()) || old == null && tank.getFluid() != null) {
+            this.world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+            updateModelData(true);
+
         }
-        return new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_NAME_PROP, n).build();
     }
 
     public FluidTankInfo getTankInfo() {
@@ -71,16 +77,17 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
         return write(new CompoundNBT());
     }
 
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        FluidStack old = tank.getFluid();
-        this.read(pkt.getNbtCompound());
-        if (old != null && !old.isFluidStackIdentical(tank.getFluid()) || old == null && tank.getFluid() != null) {
-            this.world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
-            ModelDataManager.requestModelDataRefresh(this);
-
+    private void updateModelData(boolean refresh) {
+        FluidStack fluid = getTankInfo().fluid;
+        String n = "";
+        int l = 0;
+        if (fluid != null) {
+            float amount = fluid.amount / (float) BloodContainerTileEntity.LEVEL_AMOUNT;
+            l = (amount > 0 && amount < 1) ? 1 : (int) amount;
+            n = fluid.getFluid().getName();
         }
+        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_NAME_PROP, n).build();
+        if (refresh) ModelDataManager.requestModelDataRefresh(this);
     }
 
     @Override

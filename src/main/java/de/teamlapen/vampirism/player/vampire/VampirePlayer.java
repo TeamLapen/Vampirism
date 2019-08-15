@@ -810,7 +810,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * @return
      */
     public boolean setEntitySize(float width, float height) {
-        //TODO 1.14 this is not going to work
+        //TODO 1.14 this is not going to work wait for https://github.com/MinecraftForge/MinecraftForge/pull/6059
         try {
             if (reflectionMethodSetSize == null) {
                 reflectionMethodSetSize = ObfuscationReflectionHelper.findMethod(Entity.class, SRGNAMES.Entity_setSize, float.class, float.class);
