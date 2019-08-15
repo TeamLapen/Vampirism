@@ -53,8 +53,8 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         }
     };
 
-    public SelectActionScreen() {
-        super(FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction().getColor(), new TranslationTextComponent("selectAction"));
+    public SelectActionScreen(Color backgroundColor) {
+        super(backgroundColor, new TranslationTextComponent("selectAction"));
     }
 
     @Override

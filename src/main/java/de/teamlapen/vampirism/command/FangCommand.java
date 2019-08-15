@@ -20,7 +20,7 @@ public class FangCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("eye")
-                .then(Commands.argument("type", IntegerArgumentType.integer(0, REFERENCE.FANG_TYPE_COUNT))
+                .then(Commands.argument("type", IntegerArgumentType.integer(0, REFERENCE.FANG_TYPE_COUNT - 1))
                         .executes(context -> {
                             return setFang(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "type"));
                         }));

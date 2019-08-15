@@ -20,7 +20,7 @@ public class EyeCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("eye")
-                .then(Commands.argument("type", IntegerArgumentType.integer(0, REFERENCE.EYE_TYPE_COUNT))
+                .then(Commands.argument("type", IntegerArgumentType.integer(0, REFERENCE.EYE_TYPE_COUNT - 1))
                         .executes(context -> {
                             return setEye(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "type"));
                         }));
