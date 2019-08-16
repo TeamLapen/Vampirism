@@ -70,7 +70,6 @@ public abstract class VampireMinionBaseEntity extends VampireBaseEntity implemen
 
     @Override
     public boolean canAttack(EntityType<?> typeIn) {
-        //if(typeIn.equals(ModEntities.portal_guard) return false;
         return super.canAttack(typeIn);
     }
 

@@ -10,6 +10,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 
 /**
  * Represents a entity faction (e.g. Vampires)
@@ -17,7 +18,7 @@ import javax.annotation.Nullable;
 public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private static int nextId = 0;
     private final Class<T> entityInterface;
-    private final int color;
+    private final Color color;
     protected final ResourceLocation id;
     @Nullable
     private String translationKey;
@@ -32,7 +33,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private int integerId;
     private TextFormatting chatColor;
 
-    Faction(ResourceLocation id, Class<T> entityInterface, int color, boolean hostileTowardsNeutral) {
+    Faction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral) {
         this.id = id;
         this.entityInterface = entityInterface;
         this.color = color;
@@ -56,7 +57,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public int getColor() {
+    public Color getColor() {
         return color;
     }
 

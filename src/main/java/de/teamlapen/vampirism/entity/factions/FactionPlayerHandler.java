@@ -21,6 +21,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
@@ -214,13 +215,18 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     public void setBoundAction1(@Nullable IAction boundAction1, boolean sync) {
         this.boundAction1 = boundAction1;
-        if (sync) this.sync(false);
-
+        if (sync) {
+            this.sync(false);
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", new TranslationTextComponent(boundAction1.getTranslationKey()).getFormattedText(), "1"), true);
+        }
     }
 
     public void setBoundAction2(@Nullable IAction boundAction2, boolean sync) {
         this.boundAction2 = boundAction2;
-        if (sync) this.sync(false);
+        if (sync) {
+            this.sync(false);
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", new TranslationTextComponent(boundAction1.getTranslationKey()).getFormattedText(), "2"), true);
+        }
     }
 
     @Override
@@ -298,7 +304,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         if (nbt.contains("bound2")) {
             LOGGER.info(new ResourceLocation(nbt.getString("bound1")));
-            setBoundAction1(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))), false);
+            setBoundAction2(ModRegistries.ACTIONS.getValue(new ResourceLocation(nbt.getString("bound2"))), false);
         }
     }
 
@@ -328,7 +334,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * Called when the faction has changed
      */
     private void onChangedFaction() {
-        //TODO still needed?
+        //TODO 1.14 still needed?
         //player.refreshDisplayName();
     }
 

@@ -35,14 +35,14 @@ public class LevelUpCommand extends BasicCommand {
         for (ServerPlayerEntity player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             if (handler.getCurrentLevel() == 0) {
-                context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.base.levelup.nofaction"));
+                context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.base.levelup.nofaction", players.size() > 1 ? player.getDisplayName() : "Player"));
             } else if (handler.getCurrentLevel() == handler.getCurrentFaction().getHighestReachableLevel()) {
-                context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.levelup.max"), true);
+                context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.levelup.max", players.size() > 1 ? player.getDisplayName() : "Player"), true);
             } else {
                 if (handler.setFactionAndLevel(handler.getCurrentFaction(), handler.getCurrentLevel() + 1)) {
                     context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.levelup.newlevel", player.getName(), handler.getCurrentFaction().getName(), handler.getCurrentLevel()), true);
                 } else {
-                    context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.failed_to_execute"));
+                    context.getSource().sendErrorMessage(players.size() > 1 ? new TranslationTextComponent("command.vampirism.failed_to_execute.players", player.getDisplayName()) : new TranslationTextComponent("command.vampirism.failed_to_execute"));
                 }
             }
         }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.network.OpenVampireBookPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -72,9 +73,8 @@ public class VampireBookItem extends VampirismItem {
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
             this.resolveContents(stack, playerIn);
+            VampirismMod.dispatcher.sendTo(new OpenVampireBookPacket(stack), (ServerPlayerEntity) playerIn);
         }
-
-        //playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_VAMPIRE_BOOK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);//TODO 1.14
         return new ActionResult(ActionResultType.SUCCESS, stack);
     }
 

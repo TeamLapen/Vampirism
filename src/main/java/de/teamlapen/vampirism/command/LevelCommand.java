@@ -28,17 +28,16 @@ public class LevelCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         LiteralArgumentBuilder<CommandSource> argument = Commands.literal("level")
-                .requires(context->context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT));
-
-        argument.then(Commands.argument("faction", new FactionArgument())
-                .then(Commands.argument("level", IntegerArgumentType.integer(0))
-                        .executes(context -> {
-                            return setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().asPlayer()));
-                        })
+                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
+                .then(Commands.argument("faction", new FactionArgument())
+                        .then(Commands.argument("level", IntegerArgumentType.integer(0))
+                                .executes(context -> setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().asPlayer())))
                         .then(Commands.argument("player", EntityArgument.entities())
-                                .executes(context -> {
-                                    return setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "player"));
-                                }))));
+                                .executes(context -> setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "player"))))))
+                .then(Commands.literal("none")
+                        .executes(context -> leaveFaction(Lists.newArrayList(context.getSource().asPlayer())))
+                        .then(Commands.argument("player", EntityArgument.entities())
+                                .executes(context -> leaveFaction(EntityArgument.getPlayers(context, "player")))));
 
         return argument;
     }
@@ -47,13 +46,21 @@ public class LevelCommand extends BasicCommand {
         for (ServerPlayerEntity player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             if (level == 0 && !handler.canLeaveFaction()) {
-                context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.base.level.cant_leave"));
+                context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.base.level.cant_leave", players.size() > 1 ? player.getDisplayName() : "Player", handler.getCurrentFaction().getName()));
             }
             if (handler.setFactionAndLevel(faction, level)) {
                 context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), faction.getName(), level), true);
             } else {
-                context.getSource().sendErrorMessage(new TranslationTextComponent("command.vampirism.failed_to_execute"));
+                context.getSource().sendErrorMessage(players.size() > 1 ? new TranslationTextComponent("command.vampirism.failed_to_execute.players", player.getDisplayName()) : new TranslationTextComponent("command.vampirism.failed_to_execute"));
             }
+        }
+        return 0;
+    }
+
+    private static int leaveFaction(Collection<ServerPlayerEntity> players) {
+        for (ServerPlayerEntity player : players) {
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            handler.setFactionAndLevel(null, 0);
         }
         return 0;
     }

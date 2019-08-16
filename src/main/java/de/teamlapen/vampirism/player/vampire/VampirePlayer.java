@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import com.mojang.datafixers.util.Either;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -54,10 +55,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -741,7 +742,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (feed_victim != -1 && feedBiteTickCounter++ >= 5) {
                 Entity e = VampirismMod.proxy.getMouseOverEntity();
                 if (e == null || e.getEntityId() != feed_victim) {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));//TODO Dispatcher
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
                     return;
                 }
                 feedBiteTickCounter = 0;
@@ -906,7 +907,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         }
 
-        player.startSleeping(bedLocation); //TODO 1.14 check if this actually replaces most of the commented code below
+        player.startSleeping(bedLocation); //TODO 1.14 check if this actually replaces most of the commented code below //TODO wait for PR (https://github.com/MinecraftForge/MinecraftForge/pull/6043)
         //if (!setEntitySize(0.2F, 0.2F)) return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
 
 
@@ -1229,7 +1230,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
             vec31 = vec31.add(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
 
-            //TODO 1.13 check if there are still particle effects when eating an apple player.world.addParticle(EnumParticleTypes.ITEM_CRACK, vec31.x, vec31.yDisplay, vec31.z, vec3.x, vec3.yDisplay + 0.05D, vec3.z, Item.getIdFromItem(Items.APPLE));
+            //TODO 1.14 check if there are still particle effects when eating an apple (ItemParticleData?->BreakingParticle)                player.world.addParticle(EnumParticleTypes.ITEM_CRACK, vec31.x, vec31.yDisplay, vec31.z, vec3.x, vec3.yDisplay + 0.05D, vec3.z, Item.getIdFromItem(Items.APPLE));
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
         player.world.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);

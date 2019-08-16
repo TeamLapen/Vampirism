@@ -23,7 +23,7 @@ public class HealEntityAction<T extends CreatureEntity & IEntityActionUser> exte
     @Override
     public boolean activate(T entity) {
         entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * Balance.ea.HEAL_AMOUNT);
-        ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.HEART, entity.posX, entity.posY + 1, entity.posZ, 10, 0.3, 0.3, 0.3, 0);//TODO test with Vanilla particles before changing to mod particle
+        ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.HEART, entity.posX, entity.posY + 1, entity.posZ, 10, 0.3, 0.3, 0.3, 0);
         return true;
     }
 

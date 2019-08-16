@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.client.gui.SelectActionScreen;
@@ -120,9 +121,9 @@ public class ModKeys {
                 }
             }
         } else if (keyPressed == KEY.ACTION) {
-            PlayerEntity player = Minecraft.getInstance().player;
-            if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
-                Minecraft.getInstance().displayGuiScreen(new SelectActionScreen());
+            IPlayableFaction faction = FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction();
+            if (faction != null) {
+                Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(faction.getColor()));
             }
         } else if (keyPressed == KEY.SKILL) {
             PlayerEntity player = Minecraft.getInstance().player;
@@ -160,9 +161,9 @@ public class ModKeys {
             return KEY.VISION;
         } else if (BLOOD_POTION.isPressed()) {
             return KEY.BLOOD_POTION;
-        } else if (ACTION1.isPressed()) {
+        } else if (ACTION1.isPressed() && ACTION1.getKeyModifier().isActive(null)) {
             return KEY.ACTION1;
-        } else if (ACTION2.isPressed()) {
+        } else if (ACTION2.isPressed() && ACTION2.getKeyModifier().isActive(null)) {
             return KEY.ACTION2;
         }
         return KEY.UNKNOWN;

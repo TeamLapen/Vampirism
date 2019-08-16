@@ -46,7 +46,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
     }
 
     @Override
-    public int getMaxEnchantability(int enchantmentLevel) {//TODO maping -> getMaxEnchantability()
+    public int getMaxEnchantability(int enchantmentLevel) {
         return getMinEnchantability(enchantmentLevel) + 20;
     }
 

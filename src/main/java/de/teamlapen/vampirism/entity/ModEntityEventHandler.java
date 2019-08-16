@@ -121,7 +121,7 @@ public class ModEntityEventHandler {
                 ((CreeperEntity) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 20, 1.1, 1.3, input -> input != null && VampirePlayer.get((PlayerEntity) input).getSpecialAttributes().avoided_by_creepers));
 
                 Goal target = null;
-                for (PrioritizedGoal t : ((CreeperEntity) event.getEntity()).targetSelector.goals) {//TODO private
+                for (PrioritizedGoal t : ((CreeperEntity) event.getEntity()).targetSelector.goals) {
                     if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 1) {
                         target = t.getGoal();
                     }

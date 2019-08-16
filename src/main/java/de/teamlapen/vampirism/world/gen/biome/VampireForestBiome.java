@@ -26,8 +26,8 @@ public class VampireForestBiome extends Biome {
 
         VampirismBiomeFeatures.addVampireTrees(this);
         VampirismBiomeFeatures.addVampirismFlowers(this);
-        DefaultBiomeFeatures.addGrass(this);//was frequency 4
-        DefaultBiomeFeatures.addDeadBushes(this);//was frequency 3
+        DefaultBiomeFeatures.addGrass(this);
+        DefaultBiomeFeatures.addDeadBushes(this);
 
         this.addSpawn(VReference.VAMPIRE_CREATURE_TYPE, new SpawnListEntry(ModEntities.ghost, Balance.mobProps.GHOST_SPAWN_CHANCE, 1, 1));
         this.addSpawn(VReference.VAMPIRE_CREATURE_TYPE, new SpawnListEntry(ModEntities.vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 3));

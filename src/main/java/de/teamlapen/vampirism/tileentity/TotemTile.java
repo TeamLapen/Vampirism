@@ -407,7 +407,7 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
                 this.capture_timer++;
             }
             if (controllingFaction != null && time % 10 == 7) {
-                ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, controllingFaction.getColor(), 0.2F), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 3, 30, this.world.rand);
+                ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, controllingFaction.getColor().getRGB(), 0.2F), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 3, 30, this.world.rand);
 
             }
             return;
@@ -830,7 +830,7 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
 
     private void setCapturingFaction(@Nullable IPlayableFaction faction) {
         this.capturingFaction = faction;
-        this.capturingColors = faction != null ? UtilLib.getColorComponents(faction.getColor()) : DyeColor.WHITE.getColorComponentValues();
+        this.capturingColors = faction != null ? UtilLib.getColorComponents(faction.getColor().getRGB()) : DyeColor.WHITE.getColorComponentValues();
     }
 
     private void registerVampireArea(MutableBoundingBox box) {
@@ -845,7 +845,7 @@ public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 vill
 
     private void setControllingFaction(@Nullable IPlayableFaction faction) {
         this.controllingFaction = faction;
-        this.baseColors = faction != null ? UtilLib.getColorComponents(faction.getColor()) : DyeColor.WHITE.getColorComponentValues();
+        this.baseColors = faction != null ? UtilLib.getColorComponents(faction.getColor().getRGB()) : DyeColor.WHITE.getColorComponentValues();
     }
 
     /**

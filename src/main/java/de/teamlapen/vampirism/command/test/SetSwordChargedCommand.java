@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import net.minecraft.command.CommandSource;
@@ -9,7 +10,7 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * 
@@ -33,7 +34,7 @@ public class SetSwordChargedCommand extends BasicCommand {
             ((VampirismVampireSword) held.getItem()).setCharged(held, charge);
             asPlayer.setHeldItem(Hand.MAIN_HAND, held);
         } else {
-            commandSource.sendFeedback(new StringTextComponent("You have to hold a vampire sword in your main hand"), true);
+            commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.swordcharged.nosword"), false);
         }
         return 0;
     }

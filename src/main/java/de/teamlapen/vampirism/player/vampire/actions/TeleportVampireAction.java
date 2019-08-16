@@ -47,10 +47,9 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
         if (pos != null) {
             player.setPosition(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-            if (!(player.getEntityWorld().isCollisionBoxesEmpty(player, player.getBoundingBox()) || player.getEntityWorld().containsAnyLiquid(player.getBoundingBox()))) {//TODO verify if true
+            if (!(!player.getEntityWorld().containsAnyLiquid(player.getBoundingBox()) && player.getEntityWorld().isCollisionBoxesEmpty(player, player.getBoundingBox()))) {
                 pos = null;
             }
-
         }
 
 

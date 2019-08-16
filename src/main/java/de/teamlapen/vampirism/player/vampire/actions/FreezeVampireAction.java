@@ -27,7 +27,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(final IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
-        List<LivingEntity> l = player.getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, player.getBoundingBox().grow(10, 5, 10), vampire.getNonFriendlySelector(true, false));//TODO @Maxanier needs Predicate<Entity>
+        List<LivingEntity> l = player.getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, player.getBoundingBox().grow(10, 5, 10), vampire.getNonFriendlySelector(true, false));
         for (LivingEntity e : l) {
             if (player.equals(e)) continue;
             if (e instanceof BlindingBatEntity) continue;
@@ -35,7 +35,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
             e.addPotionEffect(new EffectInstance(Effects.SLOWNESS, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new EffectInstance(Effects.RESISTANCE, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, Balance.vpa.FREEZE_DURATION * 20, 128));
-            ModParticles.spawnParticlesServer(player.getEntityWorld(), new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_2"), 20, 0xF0F0F0, 0.4F), e.posX, e.posY, e.posZ, 20, 1, 1, 1, 0);//TODO particle textureindex: 2
+            ModParticles.spawnParticlesServer(player.getEntityWorld(), new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_2"), 20, 0xF0F0F0, 0.4F), e.posX, e.posY, e.posZ, 20, 1, 1, 1, 0);
         }
         return l.size() > 0;
     }

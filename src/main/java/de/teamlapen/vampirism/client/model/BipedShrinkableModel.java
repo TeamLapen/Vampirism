@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -54,13 +55,6 @@ public class BipedShrinkableModel<T extends LivingEntity> extends BipedModel<T> 
      * @param f
      */
     public void setSize(float f) {
-        if (f > 1) {
-            size = 1.0F;
-        } else if (f < 0) {
-            f = 0;
-        } else {
-            size = f;
-        }
-
+        size = MathHelper.clamp(f, 0, 1);
     }
 }

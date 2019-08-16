@@ -4,9 +4,11 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.client.gui.RevertBackScreen;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
@@ -43,8 +45,9 @@ public class InjectionItem extends VampirismItem {
         if (type == TYPE.SANGUINARE) {
             IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
             if (handler.getCurrentLevel(VReference.HUNTER_FACTION) > 0) {
-                //playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ); TODO 1.14
-
+                if (worldIn.isRemote()) {
+                    Minecraft.getInstance().displayGuiScreen(new RevertBackScreen());
+                }
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {
                     if (VampirismConfig.SERVER.disableFangInfection.get()) {

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.command;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.command.CommandSource;
@@ -27,9 +28,9 @@ public class GlowingEyeCommand extends BasicCommand {
     private static int setGlowingEye(CommandContext<CommandSource> context, PlayerEntity player, boolean on) {
         VampirePlayer.get(player).setGlowingEyes(on);
         if (on) {
-            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.glowing_eyes.enabled", on), true);
+            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.glowing_eyes.enabled", on), false);
         }else {
-            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.glowing_eyes.disabled", on), true);
+            context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.glowing_eyes.disabled", on), false);
         }
         return 0;
     }
