@@ -36,7 +36,7 @@ import java.util.List;
 public class SelectActionScreen extends GuiPieMenu<IAction> {
     private IActionHandler actionHandler;
     public final static List<IAction> ACTIONORDER = Lists.newArrayList();
-    public static IAction ACTION;
+    public static IAction SELECTEDACTION;
     private boolean editActions;
     /**
      * Fake skill which represents the cancel button
@@ -70,7 +70,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
 
     @Override
     protected void afterIconDraw(IAction p, int x, int y) {
-        if (p == fakeAction) return;
+        if (p == fakeAction || editActions) return;
         // Draw usage indicator
 
         float active = actionHandler.getPercentageForAction(p);
@@ -95,6 +95,11 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     @Nonnull
     protected Color getColor(IAction s) {
         if (s == fakeAction) return super.getColor(s);
+        if (editActions) {
+            if (SELECTEDACTION != null && (s == SELECTEDACTION || (getSelectedElement() >= 0 && elements.get(getSelectedElement()) == s)))
+                return Color.GREEN;
+            else return Color.WHITE;
+        }
         IFactionPlayer factionPlayer = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
         if (!(s.canUse(factionPlayer) == IAction.PERM.ALLOWED) || actionHandler.getPercentageForAction(s) < 0) {
             return Color.RED;
@@ -126,6 +131,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     public void onClose() {
         if (editActions) {
             saveActionOrder();
+            SELECTEDACTION = null;
         }
         super.onClose();
     }
@@ -167,8 +173,12 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (editActions && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && getSelectedElement() >= 0 && elements.get(getSelectedElement()) != fakeAction) {
-            ACTION = elements.get(getSelectedElement());
+        if (editActions && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && getSelectedElement() >= 0) {
+            if (elements.get(getSelectedElement()) != fakeAction) {
+                SELECTEDACTION = elements.get(getSelectedElement());
+            } else {
+                onClose();
+            }
         }
         return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
@@ -176,12 +186,12 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
         super.mouseReleased(mouseX, mouseY, mouseButton);
-        if (editActions && ACTION != null) {
+        if (editActions && SELECTEDACTION != null) {
             if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && getSelectedElement() >= 0 && elements.get(getSelectedElement()) != fakeAction) {
-                switchActions(ACTION, elements.get(getSelectedElement()));
+                switchActions(SELECTEDACTION, elements.get(getSelectedElement()));
                 updateElements();
             }
-            ACTION = null;
+            SELECTEDACTION = null;
         }
         return true;
     }
@@ -208,6 +218,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
      * switches the position of the given actions
      */
     private void switchActions(IAction first, IAction second) {
+        if (first == second) return;
         int a = ACTIONORDER.indexOf(first);
         int b = ACTIONORDER.indexOf(second);
         ACTIONORDER.set(a, second);
