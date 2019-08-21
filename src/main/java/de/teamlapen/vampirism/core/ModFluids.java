@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.fluids.FluidBlood;
 import net.minecraftforge.fluids.Fluid;
 
@@ -13,6 +12,5 @@ public class ModFluids {
     static void registerFluids() {
         //FluidRegistry.registerFluid(blood); TODO 1.14
         //FluidRegistry.registerFluid(impure_blood); TODO 1.14
-        BloodConversionRegistry.registerFluidConversionRatio(VReference.FLUID_IMPURE_BLOOD_NAME, VReference.BLOOD_IMPURE_TO_PURE);
     }
 }

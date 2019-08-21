@@ -2,10 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.config.BloodGrinderValueLoader;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -15,7 +12,6 @@ import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,7 +24,6 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
@@ -365,13 +360,5 @@ public class ModItems {
         registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.ghost, 0x626262, 0xbcbcbc, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "ghost_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "hunter_trainer_spawn_egg"));
-    }
-
-    static void registerBloodConversionRates() {
-
-        Map<ResourceLocation, Integer> valuesIn = BloodGrinderValueLoader.getBloodGrinderValues();
-        for (ResourceLocation e : valuesIn.keySet()) {
-            BloodConversionRegistry.registerItem(e, valuesIn.get(e) * VReference.FOOD_TO_FLUID_BLOOD);
-        }
     }
 }

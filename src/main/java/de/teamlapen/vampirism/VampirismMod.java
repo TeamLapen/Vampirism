@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.config.*;
 import de.teamlapen.vampirism.core.*;
@@ -146,8 +145,6 @@ public class VampirismMod {
 
         File vampConfigDir = new File(FMLPaths.CONFIGDIR.get().toFile(), REFERENCE.MODID);
         Balance.init(vampConfigDir, inDev);
-        BloodValueLoader.init(vampConfigDir);
-        BloodGrinderValueLoader.init(vampConfigDir);
 
     }
 
@@ -159,13 +156,14 @@ public class VampirismMod {
     @SubscribeEvent
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
         event.getServer().getResourceManager().addReloadListener(SkillTreeManager.getInstance());
+        event.getServer().getResourceManager().addReloadListener(BloodValueLoaderEntites.getInstance());
+        event.getServer().getResourceManager().addReloadListener(BloodValueLoaderItems.getInstance());
     }
 
     @SubscribeEvent
     public void onServerStart(FMLServerStartingEvent event) {
         ModCommands.registerCommands(event.getCommandDispatcher());
-        VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
-        BloodValueLoader.onServerStarting(event.getServer());
+        BloodValueLoaderEntites.onServerStarting(event.getServer());
 
     }
 
@@ -180,7 +178,7 @@ public class VampirismMod {
 
     @SubscribeEvent
     public void onServerStopping(FMLServerStoppingEvent event) {
-        BloodValueLoader.onServerStopping();
+        BloodValueLoaderEntites.onServerStopping();
     }
 
     private void addModCompats() {
@@ -274,7 +272,6 @@ public class VampirismMod {
      */
     private void finishAPI1() {
         ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
-        BloodConversionRegistry.finish();
     }
 
     /**

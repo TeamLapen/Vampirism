@@ -1,0 +1,7 @@
+#Multiplier
+minecraft:multiplier=100
+
+#Vanilla
+minecraft:beef=2
+minecraft:mutton=1
+minecraft:porkchop=1

@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.entity.converted;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
+import de.teamlapen.vampirism.config.BloodValueLoaderEntites;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -12,6 +13,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
@@ -20,72 +22,62 @@ import java.util.Set;
 /**
  * Manages biteable entries.
  * Get's values from various sources
- * Static values (included in Vampirism jar) from {@link VampirismEntityRegistry}
+ * Static values present in datapacks from {@link BloodValueLoaderEntites}
  * Dynamically calculated values from itself
- * Dynamically saved values on world load from {@link de.teamlapen.vampirism.config.BloodValueLoader}
+ * Dynamically saved values on world load from {@link BloodValueLoaderEntites}
  * <p>
  * <p>
- * Dynamic values are reset on starting (server)/ on connecting (client).
  * Dynamic values are calculated during gameplay and saved on stopping (server).
  * Values are currently not synced between server and client, however, ExtendedCreatures do so.
  */
 public class BiteableEntryManager {
+    private final static Logger LOGGER = LogManager.getLogger();
 
-    private final static Logger LOGGER = LogManager.getLogger(BiteableEntryManager.class);
-    private final Map<ResourceLocation, BiteableEntry> hardcoded;
+    private @Nonnull
+    final Map<ResourceLocation, BiteableEntry> biteableEntries = Maps.newHashMap();
+    private @Nonnull
+    final Map<ResourceLocation, BiteableEntry> calculated = Maps.newHashMap();
+    private @Nonnull
+    final Set<ResourceLocation> blacklist = Sets.newHashSet();
 
-    private final Map<ResourceLocation, BiteableEntry> dynamic = Maps.newHashMap();
-    private final Set<ResourceLocation> blacklist = Sets.newHashSet();
-    private boolean init;
+    private boolean initialized = false;
 
-    /**
-     * @param hardcoded Values added from JAR or API
-     * @param blacklist IDs for which no dynamic values should be calculated
-     */
-    public BiteableEntryManager(Map<ResourceLocation, BiteableEntry> hardcoded, Set<ResourceLocation> blacklist) {
-        this.hardcoded = ImmutableMap.copyOf(hardcoded);
+    void setNewBiteables(Map<ResourceLocation, BiteableEntry> biteableEntries, Set<ResourceLocation> blacklist) {
+        this.biteableEntries.clear();
+        this.blacklist.clear();
+        this.biteableEntries.putAll(biteableEntries);
         this.blacklist.addAll(blacklist);
-        init = false;
+        initialized = true;
     }
 
     /**
-     * Adds a dynamic value.
-     * Respects the convertible status from the hardcoded list
+     * Adds a calculated value.
      *
      * @return The created entry
      */
-    public BiteableEntry addDynamic(ResourceLocation id, int blood) {
-        BiteableEntry existing = dynamic.get(id);
-        if (existing != null) {
-            existing = existing.modifyBloodValue(blood);
-        } else {
-            existing = new BiteableEntry(blood);
-        }
-        dynamic.put(id, existing);
-//        sendToClients(id,blood);
+    private BiteableEntry addCalculated(ResourceLocation id, int blood) {
+        BiteableEntry existing = calculated.containsKey(id) ? calculated.get(id).modifyBloodValue(blood) : new BiteableEntry(blood);
+        calculated.put(id, existing);
         return existing;
     }
 
-    public void addDynamic(Map<ResourceLocation, Integer> map) {
+    /**
+     * see {@link #addCalculated(ResourceLocation, int)}
+     */
+    public void addCalculated(Map<ResourceLocation, Integer> map) {
         for (Map.Entry<ResourceLocation, Integer> e : map.entrySet()) {
-            addDynamic(e.getKey(), e.getValue());
+            addCalculated(e.getKey(), e.getValue());
         }
     }
 
     /**
      * Calculate the blood value for the given creature
      * If the result is 0 blood this returns null and the entity is blacklisted
-     * If the entity is blacklisted this returns null immediately
-     * If the bitableentry already exists it is returned
      *
-     * @return The created/existing entry or null
+     * @return The created entry or null
      */
-    public @Nullable
-    BiteableEntry calculate(CreatureEntity creature) {
-        ResourceLocation id = new ResourceLocation(creature.getEntityString());
-        if (blacklist.contains(id)) return null;
-        BiteableEntry entry = get(id);
-        if (entry != null) return entry;
+    private @Nullable
+    BiteableEntry calculate(CreatureEntity creature, ResourceLocation id) {
         if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get() || !(creature instanceof AnimalEntity)) {
             blacklist.add(id);
             return null;
@@ -106,74 +98,47 @@ public class BiteableEntryManager {
         if (creature.getMaxHealth() > 50) {
             blood = 0;//Make sure very strong creatures cannot be easily killed by sucking their blood
         }
-        LOGGER.debug("Calculated size %s and blood value %s for entity %s", Math.round(v * 100) / 100F, blood, id);
+        LOGGER.debug("Calculated size {} and blood value {} for entity {}", Math.round(v * 100) / 100F, blood, id);
         if (blood == 0) {
             blacklist.add(id);
             return null;
         } else {
-            return addDynamic(id, blood);
+            return addCalculated(id, blood);
         }
-    }
-
-    public @Nullable
-    BiteableEntry get(ResourceLocation id) {
-        return init ? dynamic.get(id) : hardcoded.get(id);
-    }
-
-    public Map<ResourceLocation, Integer> getDynamicAll() {
-        Map<ResourceLocation, Integer> map = Maps.newHashMap();
-
-        for (Map.Entry<ResourceLocation, BiteableEntry> entry : dynamic.entrySet()) {
-            map.put(entry.getKey(), entry.getValue().blood);
-        }
-        return map;
     }
 
     /**
-     * Get all dynamic values which id's are not present in the hardcoded list
+     * @param creature for which a {@link BiteableEntry} is requested
+     * @return {@code null} if resources aren't loaded or the creatures type is blacklisted. Otherwise the corresponding entry or a new {@link #calculate} entry
+     */
+    @SuppressWarnings("ConstantConditions")
+    public @Nullable
+    BiteableEntry get(CreatureEntity creature) {
+        if (!initialized) return null;
+        ResourceLocation id = new ResourceLocation(creature.getEntityString());
+        if (blacklist.contains(id)) return null;
+        if (biteableEntries.containsKey(id) || calculated.containsKey(id)) {
+            return biteableEntries.containsKey(id) ? biteableEntries.get(id) : calculated.get(id);
+        }
+        return calculate(creature, id);
+    }
+
+    /**
+     * Get all calculated values
      *
-     * @return
+     * @return map of entities, which are not present in data folder, to calculated blood values
      */
     public Map<ResourceLocation, Integer> getValuesToSave() {
         Map<ResourceLocation, Integer> map = Maps.newHashMap();
-        for (Map.Entry<ResourceLocation, BiteableEntry> entry : dynamic.entrySet()) {
-            if (!hardcoded.containsKey(entry.getKey())) {
+        for (Map.Entry<ResourceLocation, BiteableEntry> entry : calculated.entrySet()) {
+            if (!biteableEntries.containsKey(entry.getKey())) {
                 map.put(entry.getKey(), entry.getValue().blood);
             }
         }
         return map;
     }
 
-    /**
-     * Prepare the dynamic list
-     */
-    public void initDynamic() {
-        dynamic.clear();
-        dynamic.putAll(hardcoded);
-        init = true;
+    public boolean init() {
+        return initialized;
     }
-
-//    Not used for now. Values are only used in ExtendedCreatures and we can sync values there
-//
-//    private void sendToClients(ResourceLocation id, int value){
-//        Map<ResourceLocation,Integer> map=Maps.newHashMap();
-//        map.put(id,value);
-//        sendToClients(map);
-//    }
-//    private void sendToClients(Map<ResourceLocation,Integer> map){
-//        BloodValuePacket packet = new BloodValuePacket(map);
-//        VampirismMod.dispatcher.sendToAll(packet);
-//    }
-//
-//    public void sendDynamicToClient(EntityPlayerMP player){
-//        BloodValuePacket packet = new BloodValuePacket(getDynamicAll());
-//        VampirismMod.dispatcher.sendTo(packet,player);
-//    }
-
-    public void resetDynamic() {
-        init = false;
-        dynamic.clear();
-    }
-
-
 }

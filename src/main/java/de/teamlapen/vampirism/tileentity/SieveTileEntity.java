@@ -146,7 +146,7 @@ public class SieveTileEntity extends TileEntity implements ITickable, FluidTankW
 
         @Override
         public int fillInternal(FluidStack resource, boolean doFill) {
-            float factor = BloodConversionRegistry.getFluidBloodConversionFactor(resource.getFluid().getName());
+            float factor = BloodConversionRegistry.getBloodValue(resource);
             if (factor == 0f) {
                 return 0;
             }

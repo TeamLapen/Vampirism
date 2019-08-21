@@ -1,0 +1,4 @@
+#Values are declared as x/divider(see minecraft.txt)
+
+#Vampirism
+vampirism:impure_vampirismblood=75

@@ -20,8 +20,4 @@ public class LogUtil {
     public static void testLog(String msg, Object... args) {
         LOGGER.warn(msg, args);
     }
-
-    private LogUtil() {
-
-    }
 }

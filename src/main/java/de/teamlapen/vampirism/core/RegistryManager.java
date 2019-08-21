@@ -53,7 +53,6 @@ public class RegistryManager implements IInitListener {
                 ModEntities.registerSpawns();
                 ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
-                ModItems.registerBloodConversionRates();
                 ModAdvancements.registerAdvancements();
                 break;
             case LOAD_COMPLETE:
