@@ -39,12 +39,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     static final BiteableEntryManager biteableEntryManager = new BiteableEntryManager();
 
     /**
-     * Used to store blood values before added to biteableEntryManager
-     */
-    private @Nullable
-    Map<ResourceLocation, Integer> bloodValues_temp;
-
-    /**
      * Used to store convertible handlers after {@link FMLCommonSetupEvent}
      */
     private @Nonnull
@@ -62,20 +56,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * denies convertible addition after {@link InterModProcessEvent}
      */
     private boolean finished = false;
-
-    @Override
-    public void addBloodValue(ResourceLocation entityId, int value) {
-        if (bloodValues_temp == null)
-            throw new IllegalStateException("The blood value can not be added outside reloading of resources");
-        bloodValues_temp.put(entityId, value);
-    }
-
-    @Override
-    public void addBloodValues(Map<ResourceLocation, Integer> values) {
-        for (Map.Entry<ResourceLocation, Integer> e : values.entrySet()) {
-            addBloodValue(e.getKey(), e.getValue());
-        }
-    }
 
     @Override
     @ThreadSafeAPI
@@ -123,25 +103,10 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         finished = true;
     }
 
-    /**
-     * prepare for resource reload
-     */
-    @Override
-    @Deprecated
-    public void prepareBloodValues() {
-        bloodValues_temp = Maps.newConcurrentMap();
-    }
-
-    /**
-     * Replaces all blood values with new ones.
-     */
-    @Override
-    @Deprecated
-    @SuppressWarnings("ConstantConditions")
-    public void processBloodValues(int multiplier) {
+    public void applyNewResources(Map<ResourceLocation, Integer> valuesIn, int multiplier) {
         Map<ResourceLocation, BiteableEntry> biteables = Maps.newHashMap();
         Set<ResourceLocation> blacklist = Sets.newHashSet();
-        float bloodValueMultiplier = multiplier == 0 ? 1F : multiplier / 10F;
+        float bloodValueMultiplier = multiplier / 10F;
         final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.apply(null);
         for (Map.Entry<EntityType<? extends CreatureEntity>, IConvertingHandler> entry : convertibles.entrySet()) {
             ResourceLocation id = entry.getKey().getRegistryName();
@@ -149,7 +114,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
                 LOGGER.warn("Cannot register convertible {} since there is no EntityString for it", entry.getKey());
                 continue;
             }
-            Integer blood = bloodValues_temp.remove(id);
+            Integer blood = valuesIn.remove(id);
             if (blood == null) {
                 LOGGER.warn("Missing blood value for convertible creature {} ({})", entry.getKey().getName(), id);
                 continue;
@@ -159,7 +124,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
             BiteableEntry biteEntry = new BiteableEntry(blood, (entry.getValue() == null ? defaultHandler : entry.getValue()));
             biteables.put(id, biteEntry);
         }
-        for (Map.Entry<ResourceLocation, Integer> entry : bloodValues_temp.entrySet()) {
+        for (Map.Entry<ResourceLocation, Integer> entry : valuesIn.entrySet()) {
             int blood = Math.abs(Math.round(entry.getValue() * bloodValueMultiplier));
             if (blood == 0) {
                 blacklist.add(entry.getKey());
@@ -167,7 +132,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
                 biteables.put(entry.getKey(), new BiteableEntry(blood));
             }
         }
-        bloodValues_temp = null;
         biteableEntryManager.setNewBiteables(biteables, blacklist);
     }
 

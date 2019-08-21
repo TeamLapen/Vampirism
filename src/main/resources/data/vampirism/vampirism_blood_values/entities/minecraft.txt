@@ -1,5 +1,5 @@
 #General Multiplier. Is divided by 10.
-#minecraft:multiplier=10
+minecraft:multiplier=10
 
 #Vanilla
 minecraft:cow=10

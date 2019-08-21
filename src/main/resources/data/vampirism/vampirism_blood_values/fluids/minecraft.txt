@@ -1,2 +1,2 @@
 #Divider
-minecraft:divider
+minecraft:divider=100
