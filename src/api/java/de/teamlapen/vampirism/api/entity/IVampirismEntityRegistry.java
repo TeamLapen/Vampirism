@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -18,21 +17,6 @@ import java.util.function.Function;
  * Adding entries is only possible during init.
  */
 public interface IVampirismEntityRegistry {
-
-    /**
-     * Add a blood value for an creature
-     *
-     * @param entityId Entity id
-     * @param value    blood value
-     */
-    @ThreadSafeAPI
-    void addBloodValue(ResourceLocation entityId, int value);
-
-    /**
-     * Add a set of entity id -> blood value pairs
-     */
-    @ThreadSafeAPI
-    void addBloodValues(Map<ResourceLocation, Integer> values);
 
     /**
      * Register a {@link EntityType} which can be converted using Vampirism's default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
@@ -100,8 +84,4 @@ public interface IVampirismEntityRegistry {
      */
     @Nullable
     BiteableEntry getEntry(CreatureEntity creature);
-
-    void processBloodValues(int multiplier);
-
-    void prepareBloodValues();
 }

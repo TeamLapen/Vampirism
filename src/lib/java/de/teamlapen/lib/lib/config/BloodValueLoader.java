@@ -1,5 +1,7 @@
 package de.teamlapen.lib.lib.config;
 
+import com.google.common.collect.Maps;
+
 import de.teamlapen.lib.lib.util.LogUtil;
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
@@ -17,24 +19,24 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public abstract class BloodValueLoader extends ReloadListener {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private final String folderLocation;
-    private final Consumer<Map<ResourceLocation, Integer>> consumer;
+    private final BiConsumer<Map<ResourceLocation, Integer>, Integer> consumer;
     private @Nullable
     final ResourceLocation multiplierName;
+    private int multiplier;
 
     /**
      * @param locationIn data path folder with blood value files
      * @param consumerIn the consumer which gets the ResourceLocation to Integer Map from the files
      * @param multiplierNameIn the ResourceLocation which declares a multiplier in data pack
      */
-    public BloodValueLoader(String locationIn, Consumer<Map<ResourceLocation, Integer>> consumerIn, @Nullable ResourceLocation multiplierNameIn) {
+    public BloodValueLoader(String locationIn, BiConsumer<Map<ResourceLocation, Integer>, Integer> consumerIn, @Nullable ResourceLocation multiplierNameIn) {
         this.folderLocation = locationIn;
         this.consumer = consumerIn;
         this.multiplierName = multiplierNameIn;
@@ -49,14 +51,16 @@ public abstract class BloodValueLoader extends ReloadListener {
     @Override
     @SuppressWarnings("unchecked")
     protected void apply(@Nonnull Object splashList, @Nonnull IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
+        Map<ResourceLocation, Integer> values = Maps.newConcurrentMap();
         for (ResourceLocation location : (Collection<ResourceLocation>) splashList) {
             String modId = location.getPath().substring(folderLocation.length() + 1, location.getPath().length() - 4);
-            Map<ResourceLocation, Integer> values = loadBloodValuesFromDataPack(location, modId, resourceManagerIn);
-            if (values != null) {
-                consumer.accept(values);
-                LOGGER.info(LogUtil.CONFIG, "Loaded {} blood values for {} from {}", values.size(), this.getClass().getName(), modId);
+            Map<ResourceLocation, Integer> values_tmp = loadBloodValuesFromDataPack(location, modId, resourceManagerIn);
+            if (values_tmp != null) {
+                values.putAll(values_tmp);
+                LOGGER.info(LogUtil.CONFIG, "Loaded {} blood values for {} from {}", values_tmp.size(), this.getClass().getName(), modId);
             }
         }
+        consumer.accept(values, multiplier != 0 ? multiplier : 1);
     }
 
     /**
@@ -80,7 +84,7 @@ public abstract class BloodValueLoader extends ReloadListener {
      * @param modId Just for logging of errors
      */
     protected <T> Map<ResourceLocation, Integer> loadBloodValuesFromReader(Reader r, String modId) throws IOException {
-        Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
+        Map<ResourceLocation, Integer> bloodValues = Maps.newConcurrentMap();
         BufferedReader br = null;
         try {
             br = new BufferedReader(r);
@@ -108,7 +112,7 @@ public abstract class BloodValueLoader extends ReloadListener {
                     LOGGER.warn(LogUtil.CONFIG, "Wrong namespace for entry {} in {}", p[0], modId + ".txt");
                 } else {
                     if (resourceLocation.equals(multiplierName)) {
-                        handleMultiplier(val);
+                        multiplier = val;
                     } else if (bloodValues.put(resourceLocation, val) != null) {
                         LOGGER.warn(LogUtil.CONFIG, "Duplicated entry for {} is being overridden in {}", modId + ".txt", p[0]);
                     }
@@ -121,10 +125,6 @@ public abstract class BloodValueLoader extends ReloadListener {
             r.close();
         }
         return bloodValues;
-
-    }
-
-    protected void handleMultiplier(int multiplier) {
 
     }
 }

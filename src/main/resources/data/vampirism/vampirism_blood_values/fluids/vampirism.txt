@@ -1,4 +1,4 @@
 #Values are declared as x/divider(see minecraft.txt)
 
-#Vampirism
+#Vampirism TODO 1.14 fluid registryname
 vampirism:impure_vampirismblood=75

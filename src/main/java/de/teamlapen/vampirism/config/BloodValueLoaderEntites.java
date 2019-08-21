@@ -5,15 +5,12 @@ import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.dimension.DimensionType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.util.Map;
@@ -35,22 +32,8 @@ public class BloodValueLoaderEntites extends BloodValueLoader {
         return INSTANCE;
     }
 
-    private int multiplier;
-
     private BloodValueLoaderEntites() {
-        super("vampirism_blood_values/entities", (values) -> VampirismAPI.entityRegistry().addBloodValues(values), new ResourceLocation("multiplier"));
-    }
-
-    @Override
-    protected void apply(@Nonnull Object splashList, @Nonnull IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
-        VampirismAPI.entityRegistry().prepareBloodValues();
-        super.apply(splashList, resourceManagerIn, profilerIn);
-        VampirismAPI.entityRegistry().processBloodValues(multiplier);
-    }
-
-    @Override
-    protected void handleMultiplier(int multiplier) {
-        this.multiplier = multiplier;
+        super("vampirism_blood_values/entities", (values, multiplier) -> ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(values, multiplier), new ResourceLocation("multiplier"));
     }
 
     /**
