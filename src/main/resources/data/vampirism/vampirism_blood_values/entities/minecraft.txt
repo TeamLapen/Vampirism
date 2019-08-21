@@ -1,5 +1,5 @@
 #General Multiplier. Is divided by 10.
-minecraft:multiplier=10
+#minecraft:multiplier=10
 
 #Vanilla
 minecraft:cow=10
@@ -9,7 +9,7 @@ minecraft:donkey=13
 minecraft:villager=15
 minecraft:pig=5
 minecraft:sheep=5
-minecraft:ocelot=5
+minecraft:ocelot=4
 minecraft:wolf=5
 minecraft:mooshroom=10
 minecraft:polar_bear=10
@@ -17,3 +17,7 @@ minecraft:rabbit=2
 minecraft:llama=8
 minecraft:chicken=0
 minecraft:panda=13
+minecraft:parrot=0
+minecraft:cat=3
+minecraft:turtle=5
+minecraft:fox=4

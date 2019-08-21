@@ -101,15 +101,7 @@ public interface IVampirismEntityRegistry {
     @Nullable
     BiteableEntry getEntry(CreatureEntity creature);
 
+    void processBloodValues(int multiplier);
 
-    @Nullable
-    BiteableEntry getEntry(ResourceLocation entity_id);
-
-    /**
-     * Add blood values that override previously registered values.
-     *
-     * @param values
-     */
-    @ThreadSafeAPI
-    void overrideBloodValues(Map<ResourceLocation, Integer> values);
+    void prepareBloodValues();
 }
