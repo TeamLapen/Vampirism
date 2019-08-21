@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
-import de.teamlapen.vampirism.client.gui.SelectActionScreen;
 import de.teamlapen.vampirism.config.*;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -268,7 +267,6 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
         proxy.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
         modCompatLoader.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
-        SelectActionScreen.loadActionOrder();
     }
 
     /**

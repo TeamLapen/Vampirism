@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.proxy;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ModifyInventoryScreen;
+import de.teamlapen.vampirism.client.gui.SelectActionScreen;
 import de.teamlapen.vampirism.client.gui.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
@@ -81,6 +82,7 @@ public class ClientProxy extends CommonProxy {
                 ModEntitiesRender.registerEntityRenderer();
                 ModKeys.register();
                 registerSubscriptions();
+                SelectActionScreen.loadActionOrder();
                 break;
             case LOAD_COMPLETE:
                 ModBlocksRender.registerColors();

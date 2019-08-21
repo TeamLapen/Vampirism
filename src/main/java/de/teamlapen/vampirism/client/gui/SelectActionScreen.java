@@ -267,6 +267,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
             ResourceLocation name = ResourceLocation.tryCreate(s);
             if (name != null) {
                 IAction a = ModRegistries.ACTIONS.getValue(name);
+                if (a == null) continue;
                 ACTIONORDER.add(a);
                 actions.remove(a);
             }
