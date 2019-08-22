@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.potion;
 
 import com.google.common.base.Preconditions;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -32,8 +33,11 @@ public class PotionSanguinare extends VampirismPotion {
         if (!Balance.general.CAN_CANCEL_SANGUINARE) {
             effect.setCurativeItems(new ArrayList<>());
         }
-        entity.addPotionEffect(effect);
-
+        try {
+            entity.addPotionEffect(effect);
+        } catch (Exception e) {
+            VampirismMod.log.e("PotionSanguinare", e, "Somehow failed to add potion effect "); //https://github.com/TeamLapen/Vampirism/issues/502
+        }
     }
 
     public PotionSanguinare(String name, boolean badEffect, int potionColor) {
