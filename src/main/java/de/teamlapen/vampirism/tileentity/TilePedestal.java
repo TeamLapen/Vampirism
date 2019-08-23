@@ -41,7 +41,11 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     private int chargeRate = 30;
 
     @Nonnull
-    private ItemStack internalStack = ItemStack.EMPTY;
+    private ItemStack internalStack;
+
+    public TilePedestal() {
+        this.internalStack = ItemStack.EMPTY;
+    }
 
     @Nonnull
     @Override
@@ -61,7 +65,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing != EnumFacing.DOWN)) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing != EnumFacing.DOWN)) {
             return (T) this;
         }
         return super.getCapability(capability, facing);
@@ -107,7 +111,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == null || facing != EnumFacing.DOWN)) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing != EnumFacing.DOWN)) {
             return true;
         }
         return super.hasCapability(capability, facing);
@@ -145,6 +149,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
         if (compound.hasKey("item")) {
             this.internalStack = new ItemStack(compound.getCompoundTag("item"));
         } else {
