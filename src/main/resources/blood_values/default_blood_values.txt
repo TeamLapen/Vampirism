@@ -18,5 +18,9 @@ minecraft:llama=8
 minecraft:chicken=0
 
 
-#MCA
+#Misc Villagers
 mca:EntityHuman=15
+mca:entityvillagermca=15
+cedunleashedcontrol:custom_villager=15
+toroquest:toroquest_fugitive=15
+iceandfire:snowvillager=15

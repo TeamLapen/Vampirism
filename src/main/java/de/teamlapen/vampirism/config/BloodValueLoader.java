@@ -58,6 +58,9 @@ public class BloodValueLoader {
         loadBloodValuesModCompat("ancientwarfarenpc");
         loadBloodValuesModCompat("twilightforest");
         loadBloodValuesModCompat("sophisticatedwolves");
+        loadBloodValuesModCompat("erebus");
+        loadBloodValuesModCompat("grimoireofgaia");
+        loadBloodValuesModCompat("tektopia");
     }
 
 
