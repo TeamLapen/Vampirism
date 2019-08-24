@@ -211,6 +211,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue renderVampireEyes;
         public final ForgeConfigSpec.BooleanValue renderVampireForestFog;
         public final ForgeConfigSpec.BooleanValue renderScreenOverlay;
+        public final ForgeConfigSpec.ConfigValue<String> actionOrder;
 
         Client(ForgeConfigSpec.Builder builder) {
             builder.comment("Client configuration settings")
@@ -230,6 +231,9 @@ public class VampirismConfig {
             guiLevelOffsetX = builder.comment("X-Offset of the level indicator from the center in pixels").defineInRange("levelOffsetX", 0, -250, 250);
             guiLevelOffsetY = builder.comment("Y-Offset of the level indicator from the bottom in pixels").defineInRange("levelOffsetY", 47, 0, 270);
             guiSkillButton = builder.comment("Render skill menu button in inventory").define("skillButtonEnable", true);
+
+            actionOrder = builder.comment("Action Order in Select Action Screen (reset with \"\"), unnamed actions will appended").define("actionOrder", "");
+
             builder.pop();
 
             builder.pop();

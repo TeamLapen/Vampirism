@@ -225,7 +225,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         this.boundAction2 = boundAction2;
         if (sync) {
             this.sync(false);
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", new TranslationTextComponent(boundAction1.getTranslationKey()).getFormattedText(), "2"), true);
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.actions.bind_action", new TranslationTextComponent(boundAction2.getTranslationKey()).getFormattedText(), "2"), true);
         }
     }
 

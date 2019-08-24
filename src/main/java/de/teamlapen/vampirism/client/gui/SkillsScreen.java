@@ -24,6 +24,7 @@ import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -50,6 +51,7 @@ import java.util.Random;
 @OnlyIn(Dist.CLIENT)
 public class SkillsScreen extends Screen {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills_window.png");
+    private static final ResourceLocation ACTIONBUTTON = new ResourceLocation(REFERENCE.MODID, "textures/gui/action_configure.png");
     private final int area_min_y = -77;
     private final int skill_width = 24;
     private final List<SkillNode> skillNodes = new ArrayList<>();
@@ -58,20 +60,14 @@ public class SkillsScreen extends Screen {
     private int area_min_x = 0;
     private int area_max_x = 0;
     private int area_max_y;
-    private int field_146563_h;
-    private int field_146564_i;
     private float zoomOut = 1.0F;
-    private double weelmovement = 0D;
     private double displayX;
     private double displayY;
     private double displayXNew;
     private double displayYNew;
-    private double field_146565_w;
-    private double field_146573_x;
     private SkillHandler skillHandler;
     private boolean display;
     private ISkill selected;
-    private int field_146554_D;
 
     public SkillsScreen() {
         super(new TranslationTextComponent("screen.vampirism.skills"));
@@ -103,21 +99,6 @@ public class SkillsScreen extends Screen {
             super.render(mouseX, mouseY, partialTicks);
             return;
         }
-//        if (this.field_146565_w < (double) area_min_x) {
-//            this.field_146565_w = (double) area_min_x;
-//        }
-//
-//        if (this.field_146573_x < (double) area_min_y) {
-//            this.field_146573_x = (double) area_min_y;
-//        }
-//
-//        if (this.field_146565_w >= (double) area_max_x) {
-//            this.field_146565_w = (double) (area_max_x - 1);
-//        }
-//
-//        if (this.field_146573_x >= (double) area_max_y) {
-//            this.field_146573_x = (double) (area_max_y - 1);
-//        }
 
         this.renderBackground();
         this.drawSkills(mouseX, mouseY, partialTicks);
@@ -148,8 +129,8 @@ public class SkillsScreen extends Screen {
             area_max_x = w + 10 - display_width;
             area_min_x = -w - 10 - display_width;
             area_max_y = info[2] * skill_width * 2;
-            this.displayX = displayXNew = field_146565_w = -100;
-            this.displayY = displayYNew = field_146573_x = -10;
+            this.displayX = displayXNew = -100;
+            this.displayY = displayYNew = -10;
             skillNodes.clear();
             SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
             addToList(skillNodes, root);
@@ -158,7 +139,7 @@ public class SkillsScreen extends Screen {
             this.minecraft.displayGuiScreen(null);
         }));
         if (display) {
-            Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("text.vampirism.skill.resetall"), (context) -> {
+            Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 20, this.height / 2 + 74, 80, 20, UtilLib.translate("text.vampirism.skill.resetall"), (context) -> {
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
                 ConfirmScreen resetGui = new ConfirmScreen((cxt) -> {
                     if (cxt) {
@@ -169,6 +150,11 @@ public class SkillsScreen extends Screen {
                     }
                 }, new TranslationTextComponent("gui.vampirism.reset_skills.title"), new TranslationTextComponent("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")));
                 Minecraft.getInstance().displayGuiScreen(resetGui);
+            }));
+            this.addButton(new ImageButton((this.width - display_width) / 2 + 10, this.height / 2 + 74, 20, 20, 0, 0, 20, ACTIONBUTTON, 20, 40, (context) -> {
+
+                IPlayableFaction faction = FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction();
+                Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(faction.getColor(), true));
             }));
 
             if (factionPlayer.getLevel() < 2) {
@@ -182,20 +168,6 @@ public class SkillsScreen extends Screen {
 
     @Override
     public void tick() {
-//        if (display) {
-//            this.displayX = this.displayXNew;
-//            this.displayY = this.displayYNew;
-//            double d0 = this.field_146565_w - this.displayXNew;
-//            double d1 = this.field_146573_x - this.displayYNew;
-//
-//            if (d0 * d0 + d1 * d1 < 4.0D) {
-//                this.displayXNew += d0;
-//                this.displayYNew += d1;
-//            } else {
-//                this.displayXNew += d0 * 0.85D;
-//                this.displayYNew += d1 * 0.85D;
-//            }
-//        }
     }
 
     protected void drawTitle() {

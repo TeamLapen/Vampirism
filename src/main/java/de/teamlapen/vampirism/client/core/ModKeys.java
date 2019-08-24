@@ -123,7 +123,7 @@ public class ModKeys {
         } else if (keyPressed == KEY.ACTION) {
             IPlayableFaction faction = FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction();
             if (faction != null) {
-                Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(faction.getColor()));
+                Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(faction.getColor(), false));
             }
         } else if (keyPressed == KEY.SKILL) {
             PlayerEntity player = Minecraft.getInstance().player;
