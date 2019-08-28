@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -65,7 +64,7 @@ public class ModEntities {
     public static final EntityType<ThrowableItemEntity> throwable_item = prepareEntityType("throwable_item", EntityType.Builder.<ThrowableItemEntity>create(ThrowableItemEntity::new, EntityClassification.MISC).size(0.25F, 0.25F), false);
     public static final EntityType<DraculaHalloweenEntity> special_dracula_halloween = prepareEntityType("special_dracula_halloween", EntityType.Builder.create(DraculaHalloweenEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
     public static final EntityType<DarkBloodProjectileEntity> dark_blood_projectile = prepareEntityType("dark_blood_projectile", EntityType.Builder.<DarkBloodProjectileEntity>create(DarkBloodProjectileEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), false);
-    public static final EntityType<SoulOrbEntity> soul_orb = prepareEntityType("soul_orb", EntityType.Builder.<SoulOrbEntity>create(SoulOrbEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).immuneToFire(), false);
+    public static final EntityType<SoulOrbEntity> soul_orb = prepareEntityType("soul_orb", EntityType.Builder.<SoulOrbEntity>create(SoulOrbEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).immuneToFire().setCustomClientFactory((spawnEntity, world) -> new SoulOrbEntity(ModEntities.soul_orb, world)), false);
     public static final EntityType<HunterFactionVillagerEntity> villager_hunter_faction = prepareEntityType("villager_hunter_faction", EntityType.Builder.create(HunterFactionVillagerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
     public static final EntityType<VampireFactionVillagerEntity> villager_vampire_faction = prepareEntityType("villager_vampire_faction", EntityType.Builder.create(VampireFactionVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
     public static final EntityType<DummyHunterTrainerEntity> hunter_trainer_dummy = prepareEntityType("hunter_trainer_dummy", EntityType.Builder.create(DummyHunterTrainerEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), true);

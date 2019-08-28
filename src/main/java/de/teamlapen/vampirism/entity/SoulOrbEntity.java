@@ -16,14 +16,17 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,7 +49,7 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         delayBeforePickup = 10;
         this.setPosition(x, y, z);
         this.rotationYaw = (float) (Math.random() * 360.0D);
-        this.setMotion((double) ((float) (Math.random() * 0.20000000298023224D - 0.10000000149011612D) * 2.0F), (double) ((float) (Math.random() * 0.2D) * 2.0F), (double) ((float) (Math.random() * 0.20000000298023224D - 0.10000000149011612D) * 2.0F));
+        this.setMotion((this.rand.nextDouble() * (double) 0.2F - (double) 0.1F) * 2.0D, this.rand.nextDouble() * 0.2D * 2.0D, (this.rand.nextDouble() * (double) 0.2F - (double) 0.1F) * 2.0D);
     }
 
     public SoulOrbEntity(EntityType<? extends SoulOrbEntity> type, World worldIn) {
@@ -54,8 +57,8 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     }
 
     @Override
-    public ItemStack getItem() {
-        return soulItemStack;
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
@@ -83,6 +86,7 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
 
         return j | k << 16;
     }
+
 
     @Nonnull
     public ItemStack getSoulItemStack() {
@@ -122,6 +126,11 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     }
 
     @Override
+    public ItemStack getItem() {
+        return getSoulItemStack();
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (delayBeforePickup > 0) {
@@ -132,31 +141,36 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        if (!this.hasNoGravity()) {
-            this.setMotion(this.getMotion().subtract(0D, 0.03D, 0D));
+        if (this.areEyesInFluid(FluidTags.WATER)) {
+            Vec3d vec3d = this.getMotion();
+            this.setMotion(vec3d.x * (double) 0.99F, Math.min(vec3d.y + (double) 5.0E-4F, 0.06F), vec3d.z * (double) 0.99F);
+        } else if (!this.hasNoGravity()) {
+            this.setMotion(this.getMotion().add(0.0D, -0.03D, 0.0D));
         }
 
-        if (this.world.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA) {
-            this.setMotion((double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F), 0.2D, (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F));
+        if (this.world.getFluidState(new BlockPos(this)).isTagged(FluidTags.LAVA)) {
+            this.setMotion((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F, 0.2F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
+            this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
         }
 
-        this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
+        if (!this.world.areCollisionShapesEmpty(this.getBoundingBox())) {
+            this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
+        }
+
+        if (!this.world.areCollisionShapesEmpty(this.getBoundingBox())) {
+            this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
+        }
 
         if (this.age % 10 == 5 & (this.player == null || !this.player.isAlive() || this.player.getDistanceSq(this) > 64)) {
             this.player = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 8, EntityPredicates.NOT_SPECTATING.and(Helper::isHunter));
         }
 
         if (this.player != null) {
-            //Calculate relative (to the 8 block max) distance to the player
-            double relDiffX = (this.player.posX - this.posX) / 8.0D;
-            double relDiffY = (this.player.posY + (double) this.player.getEyeHeight() / 2.0D - this.posY) / 8.0D;
-            double relDiffZ = (this.player.posZ - this.posZ) / 8.0D;
-            double relDist = Math.sqrt(relDiffX * relDiffX + relDiffY * relDiffY + relDiffZ * relDiffZ);
-            double d5 = 1.0D - relDist;
-
-            if (d5 > 0.0D) {
-                d5 = d5 * d5;
-                this.setMotion(this.getMotion().add(relDiffX / relDist * d5 * 0.08D, relDiffY / relDist * d5 * 0.08D, relDiffZ / relDist * d5 * 0.08D));
+            Vec3d vec3d = new Vec3d(this.player.posX - this.posX, this.player.posY + (double) this.player.getEyeHeight() / 2.0D - this.posY, this.player.posZ - this.posZ);
+            double d1 = vec3d.lengthSquared();
+            if (d1 < 64.0D) {
+                double d2 = 1.0D - Math.sqrt(d1) / 8.0D;
+                this.setMotion(this.getMotion().add(vec3d.normalize().scale(d2 * d2 * 0.1D)));
             }
         }
 
@@ -181,11 +195,6 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         if (this.age >= 6000) {
             this.remove();
         }
-    }
-
-    @Override
-    public IPacket<?> createSpawnPacket() {
-        return new SSpawnObjectPacket(this);//TODO 1.14 check
     }
 
     @Override

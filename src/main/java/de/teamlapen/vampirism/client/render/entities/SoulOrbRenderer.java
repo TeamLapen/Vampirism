@@ -11,7 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 
 @OnlyIn(Dist.CLIENT)
-public class SoulOrbRenderer extends SpriteRenderer<SoulOrbEntity> {//TODO 1.14 doesnt get rendered
+public class SoulOrbRenderer extends SpriteRenderer<SoulOrbEntity> {
 
     public SoulOrbRenderer(EntityRendererManager renderManager, ItemRenderer renderItem) {
         super(renderManager, renderItem);
