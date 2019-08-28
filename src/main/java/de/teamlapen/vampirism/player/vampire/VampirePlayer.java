@@ -41,9 +41,12 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.network.play.server.SAnimateHandPacket;
+import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -608,7 +611,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (Helper.canBecomeVampire(player) && !isRemote()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             handler.joinFaction(getFaction());
-            player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 300));//TODO add saturation as well
+            player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 300));
+            player.addPotionEffect(new EffectInstance(Effects.SATURATION, 300));
 //            ((WorldServer) player.world).addScheduledTask(new Runnable() {
 //                @Override
 //                public void run() {
@@ -1230,7 +1234,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
             vec31 = vec31.add(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
 
-            //TODO 1.14 check if there are still particle effects when eating an apple (ItemParticleData?->BreakingParticle)                player.world.addParticle(EnumParticleTypes.ITEM_CRACK, vec31.x, vec31.yDisplay, vec31.z, vec3.x, vec3.yDisplay + 0.05D, vec3.z, Item.getIdFromItem(Items.APPLE));
+            player.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Items.APPLE)), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
         player.world.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);

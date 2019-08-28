@@ -84,7 +84,7 @@ public class ClientEventHandler {
                             .put("fluid", f.getStill().toString())
                             .build());
 
-                    BakedBloodContainerModel.FLUID_MODELS[x].put(f.getName(), retexturedModel.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT));//TODO fluid test
+                    BakedBloodContainerModel.FLUID_MODELS[x].put(f.getName(), retexturedModel.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT));//TODO 1.14 fluid test
 
                 }
             }
@@ -126,7 +126,7 @@ public class ClientEventHandler {
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(AltarInspirationBlock.regName)) {//TODO fluid test
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(AltarInspirationBlock.regName)) {//TODO 1.14 fluid test
                     modelLocations.add(modelLoc);
                 }
             }
@@ -148,13 +148,13 @@ public class ClientEventHandler {
         try {
             for (int x = 0; x < BakedWeaponTableModel.FLUID_LEVELS; x++) {
                 IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/weapon_table/weapon_table_lava" + (x + 1)));
-                BakedWeaponTableModel.FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT);//TODO fluid test
+                BakedWeaponTableModel.FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT);//TODO 1.14 fluid test
             }
             Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(WeaponTableBlock.regName)) {//TODO fluid test
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(WeaponTableBlock.regName)) {//TODO 1.14 fluid test
                     modelLocations.add(modelLoc);
                 }
             }

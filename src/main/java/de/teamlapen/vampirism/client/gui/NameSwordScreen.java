@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
@@ -72,7 +73,7 @@ public class NameSwordScreen extends Screen {
         this.nameField.setMaxStringLength(35);
         this.nameField.setText(sword_names[new Random().nextInt(sword_names.length)]);
         this.children.add(nameField);
-        this.func_212928_a(nameField);
+        this.setFocused(nameField);
     }
 
     @Override

@@ -20,7 +20,6 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,6 +28,7 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -55,7 +55,7 @@ import java.util.*;
  * This tile entity is used to store the controlling faction, update the VampirismVillage instance and manages capturing progress.
  * It displays the current status and allows players to capture the village.
  */
-public class TotemTile extends TileEntity implements ITickable {//TODO 1.14 village
+public class TotemTile extends TileEntity implements ITickableTileEntity {//TODO 1.14 village
     private final static Logger LOGGER = LogManager.getLogger(TotemTile.class);
     private final static int NOTIFY_DISTANCE_SQ = 40000;
     private final static int DURATION_PHASE_1 = 60;

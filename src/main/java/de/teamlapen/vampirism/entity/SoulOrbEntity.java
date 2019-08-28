@@ -34,6 +34,10 @@ import javax.annotation.Nullable;
 /**
  * Similar to EntityXPOrb
  */
+@OnlyIn(
+        value = Dist.CLIENT,
+        _interface = IRendersAsItem.class
+)
 public class SoulOrbEntity extends Entity implements IRendersAsItem {
 
     public static final DataParameter<String> TYPE_PARAMETER = EntityDataManager.createKey(SoulOrbEntity.class, DataSerializers.STRING);

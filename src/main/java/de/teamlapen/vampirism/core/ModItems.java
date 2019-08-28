@@ -35,20 +35,30 @@ public class ModItems {
 
     //Items
     public static final VampireFangItem vampire_fang = getNull();
-    public static final VampirismItemBloodFood human_heart = getNull();
-    public static final VampirismItemBloodFood weak_human_heart = getNull();
     public static final BloodBottleIItem blood_bottle = getNull();
+    public static final GarlicItem item_garlic = getNull();
+    public static final VampirismItem blood_infused_iron_ingot = getNull();
+    public static final VampirismItem blood_infused_enhanced_iron_ingot = getNull();
+    public static final VampirismItem soul_orb_vampire = getNull();
+    public static final VampireBookItem vampire_book = getNull();
+    public static final VampireBloodBottleItem vampire_blood_bottle = getNull();
+    public static final BloodPotionItem blood_potion = getNull();
+
+    public static final CoffinItem item_coffin = getNull();
+    public static final MedChairItem item_med_chair = getNull();
+
     public static final TentItem item_tent = getNull();
     public static final TentItem item_tent_spawner = getNull();
 
-    public static final CoffinItem item_coffin = getNull();
+    public static final VampirismItemBloodFood human_heart = getNull();
+    public static final VampirismItemBloodFood weak_human_heart = getNull();
+
     public static final PureBloodItem pure_blood_0 = getNull();
     public static final PureBloodItem pure_blood_1 = getNull();
     public static final PureBloodItem pure_blood_2 = getNull();
     public static final PureBloodItem pure_blood_3 = getNull();
     public static final PureBloodItem pure_blood_4 = getNull();
 
-    public static final GarlicItem item_garlic = getNull();
     public static final InjectionItem injection_garlic = getNull();
     public static final InjectionItem injection_sanguinare = getNull();
     public static final InjectionItem injection_empty = getNull();
@@ -63,8 +73,6 @@ public class ModItems {
     public static final HunterIntelItem hunter_intel_7 = getNull();
     public static final HunterIntelItem hunter_intel_8 = getNull();
 
-    public static final MedChairItem item_med_chair = getNull();
-    public static final PitchforkItem pitchfork = getNull();
     public static final SimpleCrossbowItem basic_crossbow = getNull();
     public static final DoubleCrossbowItem basic_double_crossbow = getNull();
     public static final SimpleCrossbowItem enhanced_crossbow = getNull();
@@ -72,18 +80,14 @@ public class ModItems {
     public static final CrossbowArrowItem crossbow_arrow_normal = getNull();
     public static final CrossbowArrowItem crossbow_arrow_spitfire = getNull();
     public static final CrossbowArrowItem crossbow_arrow_vampire_killer = getNull();
-
-    public static final StakeItem stake = getNull();
-    public static final VampireBloodBottleItem vampire_blood_bottle = getNull();
-    public static final BloodPotionItem blood_potion = getNull();
     public static final TechCrossbowItem basic_tech_crossbow = getNull();
     public static final TechCrossbowItem enhanced_tech_crossbow = getNull();
+
     public static final VampirismItem tech_crossbow_ammo_package = getNull();
-    public static final VampireBookItem vampire_book = getNull();
+
     public static final HolyWaterBottleItem holy_water_bottle_normal = getNull();
     public static final HolyWaterBottleItem holy_water_bottle_enhanced = getNull();
     public static final HolyWaterBottleItem holy_water_bottle_ultimate = getNull();
-
     public static final HolyWaterSplashBottleItem holy_water_splash_bottle_normal = getNull();
     public static final HolyWaterSplashBottleItem holy_water_splash_bottle_enhanced = getNull();
     public static final HolyWaterSplashBottleItem holy_water_splash_bottle_ultimate = getNull();
@@ -144,6 +148,8 @@ public class ModItems {
     public static final HunterAxeItem hunter_axe_enhanced = getNull();
     public static final HunterAxeItem hunter_axe_ultimate = getNull();
 
+    public static final PitchforkItem pitchfork = getNull();
+    public static final StakeItem stake = getNull();
 
     public static final HeartSeekerItem heart_seeker_normal = getNull();
     public static final HeartSeekerItem heart_seeker_enhanced = getNull();
@@ -151,9 +157,6 @@ public class ModItems {
     public static final HeartStrikerItem heart_striker_normal = getNull();
     public static final HeartStrikerItem heart_striker_enhanced = getNull();
     public static final HeartStrikerItem heart_striker_ultimate = getNull();
-    public static final VampirismItem blood_infused_iron_ingot = getNull();
-    public static final VampirismItem blood_infused_enhanced_iron_ingot = getNull();
-    public static final VampirismItem soul_orb_vampire = getNull();
 
     public static final VampireCloakItem vampire_cloak_red_black = getNull();
     public static final VampireCloakItem vampire_cloak_black_blue = getNull();

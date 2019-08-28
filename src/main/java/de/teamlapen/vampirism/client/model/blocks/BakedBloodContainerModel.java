@@ -78,7 +78,7 @@ public class BakedBloodContainerModel implements IBakedModel {
         List<BakedQuad> quads = new LinkedList<>();
 
         try {
-            String fluidName = state.getFluidState().getFluid().toString();//TODO name of Fluid
+            String fluidName = state.getFluidState().getFluid().toString();//TODO 1.14 fluid name of Fluid
             int fluidLevel = state.getFluidState().getLevel();
 
             quads.addAll(baseModel.getQuads(state, side, rand));

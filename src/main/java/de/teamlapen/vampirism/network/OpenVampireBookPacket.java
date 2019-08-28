@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.network.IMessage;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ReadBookScreen;
+import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -13,7 +12,7 @@ import java.util.function.Supplier;
  * open a vampire book on client
  */
 public class OpenVampireBookPacket implements IMessage {
-    private final ItemStack itemStack;
+    public final ItemStack itemStack;
 
     public OpenVampireBookPacket(ItemStack itemStack) {
         this.itemStack = itemStack;
@@ -23,7 +22,7 @@ public class OpenVampireBookPacket implements IMessage {
         final NetworkEvent.Context ctx = contextSupplier.get();
 
         ctx.enqueueWork(() -> {
-            Minecraft.getInstance().displayGuiScreen(new ReadBookScreen(new ReadBookScreen.WrittenBookInfo(msg.itemStack)));
+            VampirismMod.proxy.handleVampireBookPacket(msg);
         });
     }
 

@@ -13,6 +13,8 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,6 +25,10 @@ import javax.annotation.Nonnull;
  *
  * @author maxanier
  */
+@OnlyIn(
+        value = Dist.CLIENT,
+        _interface = IRendersAsItem.class
+)
 public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsItem {
 
     private final static Logger LOGGER = LogManager.getLogger(ThrowableItemEntity.class);

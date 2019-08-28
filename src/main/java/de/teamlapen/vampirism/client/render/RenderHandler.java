@@ -193,7 +193,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderLivingPost(RenderLivingEvent.Post event) {
-        if (bloodVisionTicks > 0 && !renderingBloodVision) {
+        if (bloodVisionTicks > 0 && !renderingBloodVision) {//TODO 1.14 entity outlines are rendered above the entity and not synced with player sneaking
             Entity entity = event.getEntity();
 
             boolean flag = true;

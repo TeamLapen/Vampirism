@@ -4,16 +4,16 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 import java.util.function.Predicate;
 
-public class SunscreenBeaconTileEntity extends TileEntity implements ITickable {
+public class SunscreenBeaconTileEntity extends TileEntity implements ITickableTileEntity {
 
     private BlockPos oldPos;
     private Predicate<PlayerEntity> selector;

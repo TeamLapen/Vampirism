@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -46,7 +47,7 @@ public class HunterWeaponTableScreen extends ContainerScreen<WeaponTableContaine
             this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_LAVA);
             this.blit(i, j, 0, 0, this.xSize, this.ySize);
         }
-        if (container.isMissingLava()) { //TODO fix missing lava rendering
+        if (container.isMissingLava()) { //TODO 1.14 fluid fix missing lava rendering
             this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_MISSING_LAVA);
             this.blit(i, j, 0, 0, this.xSize, this.ySize);
         }
