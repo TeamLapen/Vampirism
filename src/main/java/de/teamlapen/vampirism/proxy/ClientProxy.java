@@ -2,16 +2,16 @@ package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.core.*;
-import de.teamlapen.vampirism.client.gui.ModifyInventoryScreen;
-import de.teamlapen.vampirism.client.gui.SelectActionScreen;
-import de.teamlapen.vampirism.client.gui.VampirismHUDOverlay;
+import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
+import de.teamlapen.vampirism.network.OpenVampireBookPacket;
 import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.ReadBookScreen;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -125,8 +126,23 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void handleSkillTree(SkillTreePacket msg) {
+    public void handleSkillTreePacket(SkillTreePacket msg) {
         skillTreeManager.loadUpdate(msg);
+    }
+
+    @Override
+    public void handleVampireBookPacket(OpenVampireBookPacket msg) {
+        Minecraft.getInstance().displayGuiScreen(new ReadBookScreen(new ReadBookScreen.WrittenBookInfo(msg.itemStack)));
+    }
+
+    @Override
+    public void displayRevertBackScreen() {
+        Minecraft.getInstance().displayGuiScreen(new RevertBackScreen());
+    }
+
+    @Override
+    public void displayNameSwordScreen(ItemStack stack) {
+        Minecraft.getInstance().displayGuiScreen(new NameSwordScreen(stack));
     }
 
     private void registerSubscriptions() {

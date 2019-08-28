@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
-import de.teamlapen.vampirism.client.gui.NameSwordScreen;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -203,7 +203,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      */
     public void tryName(ItemStack stack, PlayerEntity player) {
         if (!stack.hasDisplayName() && player instanceof ServerPlayerEntity && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
-            Minecraft.getInstance().displayGuiScreen(new NameSwordScreen(stack));
+            VampirismMod.proxy.displayNameSwordScreen(stack);
             player.world.playSound((player).posX, (player).posY, (player).posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
         }
     }

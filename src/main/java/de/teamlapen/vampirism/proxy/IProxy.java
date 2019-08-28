@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.vampirism.network.OpenVampireBookPacket;
 import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
@@ -33,6 +35,15 @@ public interface IProxy extends IInitListener {
      */
     SkillTree getSkillTree(boolean client);
 
-    default void handleSkillTree(SkillTreePacket msg) {
+    default void handleSkillTreePacket(SkillTreePacket msg) {
+    }
+
+    default void handleVampireBookPacket(OpenVampireBookPacket msg) {
+    }
+
+    default void displayRevertBackScreen() {
+    }
+
+    default void displayNameSwordScreen(ItemStack stack) {
     }
 }

@@ -2,6 +2,7 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -28,6 +29,7 @@ import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
@@ -222,7 +224,7 @@ public class UtilLib {
      * @param reason          Spawn reason
      * @return Successful spawn
      */
-    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, SpawnReason reason) {//TODO this method is only called for EntityLiving -> modify?
+    public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, SpawnReason reason) {
         if (!world.isAreaLoaded((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
             return false;
         }
@@ -560,7 +562,7 @@ public class UtilLib {
                 long op = (((long) i) * i + i) / 2;
                 double perc = ((double) op / maxop) * 100;
                 LOGGER.trace("Search {} percent finished", (int) perc);
-                //listener.addChatMessage(new TextComponentString(((int) perc) + "% finished")); //TODO maybe add back async
+                listener.sendFeedback(new StringTextComponent(((int) perc) + "% finished"), false);
             }
 
         }

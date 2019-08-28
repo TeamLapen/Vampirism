@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.ToolType;
@@ -32,6 +33,12 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
     @Override
     public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction direction, IPlantable plantable) {
         return plantable instanceof BushBlock || plantable.getPlantType(world, pos).equals(VReference.VAMPIRE_PLANT_TYPE);
+    }
+
+    @Override
+    public void onPlantGrow(BlockState state, IWorld world, BlockPos pos, BlockPos source) {
+        if (Block.isDirt(getBlock()))
+            world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState(), 2);
     }
 
     @Override

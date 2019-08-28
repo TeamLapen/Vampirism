@@ -324,19 +324,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             LOGGER.debug("Changing to {} {}", currentFaction, currentLevel);
             currentFaction.getPlayerCapability(player).onLevelChanged(currentLevel, Objects.equals(oldFaction, currentFaction) ? oldLevel : 0);
         }
-        if (!Objects.equals(currentFaction, oldFaction)) {
-            onChangedFaction();
-        }
         ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getID().hashCode());
     }
 
-    /**
-     * Called when the faction has changed
-     */
-    private void onChangedFaction() {
-        //TODO 1.14 still needed?
-        //player.refreshDisplayName();
-    }
 
     private void saveNBTData(CompoundNBT nbt) {
         //Don't forget to also add things to copyFrom

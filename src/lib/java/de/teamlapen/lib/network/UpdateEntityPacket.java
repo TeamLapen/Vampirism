@@ -1,19 +1,15 @@
 package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.HelperRegistry;
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.network.ISyncable;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,70 +60,12 @@ public class UpdateEntityPacket implements IMessage {
         return pkt;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private static void handleCapability(Entity e, ResourceLocation key, CompoundNBT data) {
-        Capability cap = HelperRegistry.getSyncableEntityCaps().get(key);
-        if (cap == null && e instanceof PlayerEntity) {
-            cap = HelperRegistry.getSyncablePlayerCaps().get(key);
-        }
-        if (cap == null) {
-            LOGGER.warn("Capability with key {} is not registered in the HelperRegistry", key);
-        } else {
-            LazyOptional opt = e.getCapability(cap, null); //Lazy Optional is kinda strange
-            opt.ifPresent(inst -> {
-                if (inst instanceof ISyncable) {
-                    ((ISyncable) inst).loadUpdateFromNBT(data);
-                } else {
-                    LOGGER.warn("Target entity's capability {} ({})does not implement ISyncable", inst, key);
-                }
-            });
-            if (!opt.isPresent()) {
-                LOGGER.warn("Target entity {} does not have capability {}", e, cap);
-
-            }
-        }
-    }
-
     public static void handle(final UpdateEntityPacket message, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-        PlayerEntity player = Minecraft.getInstance().player;
-        if (player == null) {
-            LOGGER.error("Cannot handle update package because sending player entity is null. Message: {}", message);
-        } else {
             ctx.enqueueWork(() -> { //Execute on main thread
-                Entity e = player.getEntityWorld().getEntityByID(message.id);
-                if (e == null) {
-                    LOGGER.error("Did not find entity {}", message.id);
-                    if (message.playerItself) {
-                        LOGGER.error("Message is meant for player itself, but id mismatch {} {}. Loading anyway.", player.getEntityId(), message.id);
-                        e = player;
-                    }
-                }
-                if (e != null) {
-                    if (message.data != null) {
-                        ISyncable syncable;
-                        try {
-                            syncable = (ISyncable) e;
-                            syncable.loadUpdateFromNBT(message.data);
-
-                        } catch (ClassCastException ex) {
-                            LOGGER.warn("Target entity {} does not implement ISyncable ({})", e, ex);
-                        }
-                    }
-                    if (message.caps != null) {
-
-                        for (String key : message.caps.keySet()) {
-                            handleCapability(e, new ResourceLocation(key), message.caps.getCompound(key));
-                        }
-
-
-                    }
-                }
-
+                VampLib.proxy.handleUpdateEntityPacket(message);
             });
             ctx.setPacketHandled(true);
-        }
-
     }
 
     /**
@@ -279,5 +217,21 @@ public class UpdateEntityPacket implements IMessage {
         return this;
     }
 
+
+    public int getId() {
+        return id;
+    }
+
+    public CompoundNBT getData() {
+        return data;
+    }
+
+    public CompoundNBT getCaps() {
+        return caps;
+    }
+
+    public boolean isPlayerItself() {
+        return playerItself;
+    }
 
 }

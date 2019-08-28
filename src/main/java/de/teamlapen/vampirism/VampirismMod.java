@@ -67,7 +67,7 @@ import java.io.File;
 import java.util.Optional;
 
 /**
- * Main class for Vampirism TODO readd "required-after:teamlapen-lib;"
+ * Main class for Vampirism
  */
 @Mod(value = REFERENCE.MODID)
 public class VampirismMod {
@@ -87,13 +87,13 @@ public class VampirismMod {
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private final static EntityClassification HUNTER_CREATURE_TYPE = EntityClassification.create("vampirism_hunter", "test1", 25, false, false); //TODO 1.14 use debugger to find out what test1 does
+    private final static EntityClassification HUNTER_CREATURE_TYPE = EntityClassification.create("vampirism_hunter", "vampirism_hunter", 25, false, false);
     /**
      * Vampire creatures are of this creature type. Use the instance in
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private static final EntityClassification VAMPIRE_CREATURE_TYPE = EntityClassification.create("vampirism_vampire", "test2", 30, false, false);
+    private static final EntityClassification VAMPIRE_CREATURE_TYPE = EntityClassification.create("vampirism_vampire", "vampirism_vampire", 30, false, false);
     /**
      * Vampire creatures have this attribute Vampire creatures are of this creature
      * type. Use the instance in {@link VReference} instead of this one. This is
@@ -103,7 +103,7 @@ public class VampirismMod {
 
     public static VampirismMod instance;
     @SuppressWarnings("Convert2MethodRef")
-    public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
+    public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean inDev = false;
 
     public static boolean isRealism() {
@@ -304,7 +304,6 @@ public class VampirismMod {
      * Setup API during pre-init before configs are loaded
      */
     private void setupAPI2() {
-        //TODO add faction entity interface
         VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.VAMPIRE_PLAYER_KEY, IVampirePlayer.class, Color.MAGENTA.darker().darker(), true, () -> VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
         VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setTranslationKeys("text.vampirism.vampire", "text.vampirism.vampires");
         VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction(REFERENCE.HUNTER_PLAYER_KEY, IHunterPlayer.class, Color.BLUE, false, () -> HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);

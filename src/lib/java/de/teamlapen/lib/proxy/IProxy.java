@@ -1,5 +1,6 @@
 package de.teamlapen.lib.proxy;
 
+import de.teamlapen.lib.network.UpdateEntityPacket;
 import de.teamlapen.lib.util.ISoundReference;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
@@ -41,5 +42,8 @@ public interface IProxy {
      * Uses font rendere on client side to wrap the given string to the given width
      */
     List<String> listFormattedStringToWidth(String str, int wrapWidth);
+
+    default void handleUpdateEntityPacket(UpdateEntityPacket msg) {
+    }
 
 }

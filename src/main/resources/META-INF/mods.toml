@@ -20,5 +20,5 @@ issueTrackerURL="https://github.com/TeamLapen/Vampirism/issues"
         modId="teamlapenlib"
         mandatory=true
         versionRange="[${version},)"
-        ordering="NONE"
+        ordering="AFTER"
         side="BOTH"

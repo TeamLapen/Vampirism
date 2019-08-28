@@ -43,7 +43,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      */
     private @Nonnull
     final Map<EntityType<? extends CreatureEntity>, IConvertingHandler> convertibles = new ConcurrentHashMap<>();
-    @OnlyIn(Dist.CLIENT)
     private @Nonnull
     final Map<Class<? extends CreatureEntity>, String> convertibleOverlay = new ConcurrentHashMap<>();
     /**
