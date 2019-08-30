@@ -21,7 +21,6 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
@@ -87,7 +86,7 @@ public class InputEventPacket implements IMessage {
     public static void handle(final InputEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         Validate.notNull(msg.action);
-        PlayerEntity player = ctx.getSender();
+        ServerPlayerEntity player = ctx.getSender();
         Validate.notNull(player);
         ctx.enqueueWork(() -> {
             IFactionPlayer factionPlayer = FactionPlayerHandler.get(player).getCurrentFactionPlayer();
@@ -221,10 +220,8 @@ public class InputEventPacket implements IMessage {
                     IHunterPlayer hunter = HunterPlayer.get(player);
                     if (hunter.getLevel() > 0) {
                         if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_portable_crafting)) {
-                            if (!player.world.isRemote()) {//TODO 1.14 gui closes instantly
-                                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> {
-                                    return new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, new BlockPos(playerIn.posX, playerIn.posY, player.posZ)));
-                                }, new TranslationTextComponent("container.crafting")));
+                            if (!player.world.isRemote()) {
+                                NetworkHooks.openGui(player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, new BlockPos(playerIn.posX, playerIn.posY, player.posZ))), new TranslationTextComponent("container.crafting")));
                             }
                         } else {
                             player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));

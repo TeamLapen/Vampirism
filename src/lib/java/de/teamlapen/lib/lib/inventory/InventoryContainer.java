@@ -5,7 +5,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
@@ -13,15 +12,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
 
+/**
+ * TODO rewrite at some point. Create separate classes for external inventory based and internal item list
+ */
 public abstract class InventoryContainer extends Container {
 
     protected final IWorldPosCallable worldPos;
@@ -31,6 +34,7 @@ public abstract class InventoryContainer extends Container {
      */
     @Nullable
     private IInventory inventoryToClose;
+    protected IItemHandlerModifiable itemHandler;
 
 
     public InventoryContainer(ContainerType<? extends InventoryContainer> containerType, int id, PlayerInventory playerInventory, IWorldPosCallable worldPos, @Nonnull IInventory inventory, SelectorInfo... selectorInfos) {
@@ -40,6 +44,7 @@ public abstract class InventoryContainer extends Container {
         }
         inventory.openInventory(playerInventory.player);
         inventoryToClose = inventory;
+        itemHandler = new InvWrapper(inventory);
         for (int i = 0; i < selectorInfos.length; i++) {
             this.addSlot(new SelectorSlot(inventory, i, selectorInfos[i]) {
                 @Override
@@ -54,9 +59,10 @@ public abstract class InventoryContainer extends Container {
 
     public InventoryContainer(ContainerType<? extends InventoryContainer> containerType, int id, IWorldPosCallable worldPos, SelectorInfo... selectorInfos) {
         this(containerType, id, worldPos, selectorInfos.length);
-        IItemHandler handler = new ItemHandler(NonNullList.withSize(selectorInfos.length, ItemStack.EMPTY), selectorInfos);
-        for (int i = 0; i < selectorInfos.length; i++) {
-            this.addSlot(new SlotItemHandler(handler, i, selectorInfos[i].xDisplay, selectorInfos[i].yDisplay) {
+        SelectedItemStackHandler handler = new SelectedItemStackHandler(NonNullList.withSize(selectorInfos.length, ItemStack.EMPTY), selectorInfos);
+        itemHandler = handler;
+        for (int i = 0; i < handler.size; i++) {
+            this.addSlot(new SlotItemHandler(handler, i, handler.selectors[i].xDisplay, handler.selectors[i].yDisplay) {
                 @Override
                 public void onSlotChange(@Nonnull ItemStack p_75220_1_, @Nonnull ItemStack p_75220_2_) {
                     super.onSlotChange(p_75220_1_, p_75220_2_);
@@ -65,6 +71,20 @@ public abstract class InventoryContainer extends Container {
             });
         }
 
+    }
+
+    protected void clearContainer(PlayerEntity playerIn) {
+        if (!playerIn.isAlive() || playerIn instanceof ServerPlayerEntity && ((ServerPlayerEntity) playerIn).hasDisconnected()) {
+            for (int j = 0; j < itemHandler.getSlots(); ++j) {
+                playerIn.dropItem(itemHandler.getStackInSlot(j), false);
+            }
+
+        } else {
+            for (int i = 0; i < itemHandler.getSlots(); ++i) {
+                playerIn.inventory.placeItemBackInInventory(playerIn.getEntityWorld(), itemHandler.getStackInSlot(i));
+            }
+
+        }
     }
 
     private InventoryContainer(ContainerType<? extends InventoryContainer> containerType, int id, IWorldPosCallable worldPos, int size) {
@@ -98,19 +118,6 @@ public abstract class InventoryContainer extends Container {
         return true;
     }
 
-    protected void clearContainer(PlayerEntity playerEntity, int lastIndex) {
-        if (!playerEntity.isAlive() || playerEntity instanceof ServerPlayerEntity && ((ServerPlayerEntity) playerEntity).hasDisconnected()) {
-            for (int j = 0; j < lastIndex + 1; ++j) {
-                playerEntity.dropItem(ItemStackHelper.getAndRemove(inventoryItemStacks, j), false);
-            }
-
-        } else {
-            for (int i = 0; i < lastIndex + 1; ++i) {
-                playerEntity.inventory.placeItemBackInInventory(playerEntity.getEntityWorld(), ItemStackHelper.getAndRemove(inventoryItemStacks, i));
-            }
-
-        }
-    }
 
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
@@ -143,12 +150,14 @@ public abstract class InventoryContainer extends Container {
         return result;
     }
 
-    public static class ItemHandler extends ItemStackHandler {
+    public static class SelectedItemStackHandler extends ItemStackHandler {
         private final SelectorInfo[] selectors;
+        public final int size;
 
-        ItemHandler(NonNullList<ItemStack> inventoryIn, SelectorInfo... selectorIn) {
+        SelectedItemStackHandler(NonNullList<ItemStack> inventoryIn, SelectorInfo... selectorIn) {
             super(inventoryIn);
             this.selectors = selectorIn;
+            this.size = selectorIn.length;
         }
 
         @Override

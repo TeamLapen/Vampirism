@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -62,7 +61,7 @@ public class BloodPotionTableContainer extends InventoryContainer {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(this.worldPos, playerIn, ModBlocks.blood_potion_table);
+        return portable || isWithinUsableDistance(this.worldPos, playerIn, ModBlocks.blood_potion_table);
     }
 
     @Override
@@ -92,7 +91,7 @@ public class BloodPotionTableContainer extends InventoryContainer {
     public
     @Nullable
     List<String> getLocalizedCraftingHint() {
-        ItemStack extra = inventoryItemStacks.get(3);
+        ItemStack extra = itemHandler.getStackInSlot(3);
         if (extra.isEmpty()) return null;
         if (!hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_category_hint)) return null;
         List<String> hints = BloodPotions.getLocalizedCategoryHint(extra);
@@ -108,7 +107,7 @@ public class BloodPotionTableContainer extends InventoryContainer {
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         if (!playerIn.getEntityWorld().isRemote) {
-            clearContainer(playerIn, 3);
+            clearContainer(playerIn);
         }
     }
 
@@ -192,11 +191,11 @@ public class BloodPotionTableContainer extends InventoryContainer {
      * @return if all required tileInventory are in the container
      */
     private boolean areRequirementsMet() {
-        ItemStack garlic = inventoryItemStacks.get(2);
+        ItemStack garlic = itemHandler.getStackInSlot(2);
         if (garlic.isEmpty() || !ModItems.item_garlic.equals(garlic.getItem())) return false;
         boolean bottle = false;
-        ItemStack bottle1 = inventoryItemStacks.get(0);
-        ItemStack bottle2 = inventoryItemStacks.get(1);
+        ItemStack bottle1 = itemHandler.getStackInSlot(0);
+        ItemStack bottle2 = itemHandler.getStackInSlot(1);
         if (!bottle1.isEmpty() && bottle1.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
         if (!bottle2.isEmpty() && bottle2.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
         return bottle;
@@ -207,15 +206,10 @@ public class BloodPotionTableContainer extends InventoryContainer {
      */
     private void onCraftingTimerFinished() {
         if (!areRequirementsMet()) return;
-        ItemStack extraItem = inventoryItemStacks.get(3);
-        if (!extraItem.isEmpty()) {
-            extraItem = extraItem.copy();
-            extraItem.setCount(1);
-            ItemStackHelper.getAndSplit(inventoryItemStacks, 3, 1);
-        }
-        ItemStackHelper.getAndSplit(inventoryItemStacks, 2, 1);//Reduce garlic
-        ItemStack bottle1 = inventoryItemStacks.get(0);
-        ItemStack bottle2 = inventoryItemStacks.get(1);
+        ItemStack extraItem = itemHandler.extractItem(3, 1, false);
+        itemHandler.extractItem(2, 1, false);
+        ItemStack bottle1 = itemHandler.getStackInSlot(0);
+        ItemStack bottle2 = itemHandler.getStackInSlot(1);
         if (!bottle1.isEmpty() && bottle1.getItem().equals(ModItems.vampire_blood_bottle)) {
             bottle1 = new ItemStack(ModItems.blood_potion);
             BloodPotions.chooseAndAddEffects(bottle1, hunterPlayer, extraItem);
@@ -224,8 +218,8 @@ public class BloodPotionTableContainer extends InventoryContainer {
             bottle2 = new ItemStack(ModItems.blood_potion);
             BloodPotions.chooseAndAddEffects(bottle2, hunterPlayer, extraItem);
         }
-        inventoryItemStacks.set(0, bottle1);
-        inventoryItemStacks.set(1, bottle2);
+        itemHandler.setStackInSlot(0, bottle1);
+        itemHandler.setStackInSlot(1, bottle2);
         hunterPlayer.getRepresentingPlayer().addStat(ModStats.blood_table);
     }
 }

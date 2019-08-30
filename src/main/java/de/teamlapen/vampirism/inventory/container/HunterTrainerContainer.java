@@ -87,7 +87,7 @@ public class HunterTrainerContainer extends InventoryContainer {
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         if (!playerIn.getEntityWorld().isRemote) {
-            clearContainer(playerIn, 2);
+            clearContainer(playerIn);
         }
     }
 

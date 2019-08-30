@@ -68,13 +68,13 @@ public class HunterTableContainer extends InventoryContainer {
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         if (!playerIn.getEntityWorld().isRemote) {
-            clearContainer(playerIn, 3);
+            clearContainer(playerIn);
         }
     }
 
     @Override
     public void onCraftMatrixChanged(IInventory inventoryIn) {
-        if (inventoryItemStacks != null && isLevelValid()) {
+        if (isLevelValid()) {
             int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
             missing = checkItems(req[0], req[1], req[2], req[3]);
             if (missing.isEmpty()) {

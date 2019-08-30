@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -57,7 +56,7 @@ public class HunterBasicContainer extends InventoryContainer {
      */
     public int getMissingCount() {
         int targetLevel = player.getLevel() + 1;
-        ItemStack blood = this.inventoryItemStacks.get(0);
+        ItemStack blood = this.itemHandler.getStackInSlot(0);
 
         HunterLevelingConf conf = HunterLevelingConf.instance();
         if (!conf.isLevelValidForBasicHunter(targetLevel)) return -1;
@@ -69,20 +68,14 @@ public class HunterBasicContainer extends InventoryContainer {
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         if (!playerIn.getEntityWorld().isRemote) {
-            for (int i = 0; i < 1; ++i) {
-                ItemStack itemstack = ItemStackHelper.getAndRemove(inventoryItemStacks, i);
-
-                if (!itemstack.isEmpty()) {
-                    playerIn.dropItem(itemstack, false);
-                }
-            }
+            this.clearContainer(playerIn);
         }
     }
 
     public void onLevelUpClicked() {
         if (!canLevelUp()) return;
         int target = player.getLevel() + 1;
-        ItemStackHelper.getAndSplit(inventoryItemStacks, 0, HunterLevelingConf.instance().getVampireBloodCountForBasicHunter(target));//TODO 1.14 client not synchronized after itemstack decrease until itemstack clicked
+        itemHandler.extractItem(0, HunterLevelingConf.instance().getVampireBloodCountForBasicHunter(target), false);
         FactionPlayerHandler.get(player.getRepresentingPlayer()).setFactionLevel(VReference.HUNTER_FACTION, target);
         player.getRepresentingPlayer().sendMessage(new TranslationTextComponent("container.vampirism.basic_hunter.levelup"));
         player.getRepresentingPlayer().closeScreen();

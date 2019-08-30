@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import de.teamlapen.vampirism.inventory.container.BloodPotionTableContainer;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
@@ -50,12 +51,17 @@ public class ModEntityEventHandler {
     private boolean warnAboutCreeper = true;
 
     @SubscribeEvent
-    public void baseTick(LivingEvent.LivingUpdateEvent event) {
+    public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() instanceof CreatureEntity) {
             event.getEntity().getEntityWorld().getProfiler().startSection("vampirism_extended_creature");
             ExtendedCreature.get((CreatureEntity) event.getEntity()).tick();
             event.getEntity().getEntityWorld().getProfiler().endSection();
 
+        } else if (!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) event.getEntity();
+            if (player.openContainer instanceof BloodPotionTableContainer) {
+                ((BloodPotionTableContainer) player.openContainer).tick();
+            }
         }
     }
 
