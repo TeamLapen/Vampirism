@@ -365,7 +365,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     private boolean checkItemRequirements(PlayerEntity player, boolean messagePlayer) {
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
-        ItemStack missing = InventoryHelper.checkItems(this.inventorySlots, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel), ModItems.human_heart, ModItems.vampire_book}, new int[]{requirements.blood, requirements.heart, requirements.vampireBook});
+        ItemStack missing = InventoryHelper.checkItems(this, new Item[]{PureBloodItem.getBloodItemForLevel(requirements.pureBloodLevel), ModItems.human_heart, ModItems.vampire_book}, new int[]{requirements.blood, requirements.heart, requirements.vampireBook});
         if (!missing.isEmpty()) {
             if (messagePlayer) {
                 ITextComponent item = missing.getItem().equals(ModItems.pure_blood_0) ? ModItems.pure_blood_0.getDisplayName(missing) : new TranslationTextComponent(missing.getTranslationKey() + ".name");
@@ -449,7 +449,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
      */
     private void consumeItems() {
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(targetLevel);
-        InventoryHelper.removeItems(this.inventorySlots, new int[]{requirements.blood, requirements.heart, requirements.vampireBook});
+        InventoryHelper.removeItems(this, new int[]{requirements.blood, requirements.heart, requirements.vampireBook});
     }
 
     /**

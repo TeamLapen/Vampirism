@@ -1,12 +1,11 @@
 package de.teamlapen.lib.lib.inventory;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.util.LazyOptional;
@@ -24,18 +23,17 @@ public class InventoryHelper {
     /**
      * Checks if the given inventory contains at least the given amount of tileInventory in the respective slots.
      *
-     * TODO maybe rework to use IItemHandler/Inventory and maybe Ingridient
      * @param inventory
      * @param items     Has to have the same size as the inventory
      * @param amounts   Has to have the same size as the inventory
      * @return Null if all tileInventory are present otherwise an itemstack which represents the missing tileInventory
      */
-    public static ItemStack checkItems(NonNullList<ItemStack> inventory, Item[] items, int[] amounts) {
-        if (inventory.size() < amounts.length || items.length != amounts.length) {
+    public static ItemStack checkItems(IInventory inventory, Item[] items, int[] amounts) {
+        if (inventory.getSizeInventory() < amounts.length || items.length != amounts.length) {
             throw new IllegalArgumentException("There has to be one itemstack and amount value for each item");
         }
         for (int i = 0; i < items.length; i++) {
-            ItemStack stack = inventory.get(i);
+            ItemStack stack = inventory.getStackInSlot(i);
             int actual = (!stack.isEmpty() && stack.getItem().equals(items[i])) ? stack.getCount() : 0;
             if (actual < amounts[i]) {
                 return new ItemStack(items[i], amounts[i] - actual);
@@ -50,12 +48,12 @@ public class InventoryHelper {
      * @param inventory
      * @param amounts   Has to have the same size as the inventory
      */
-    public static void removeItems(NonNullList<ItemStack> inventory, int[] amounts) {
-        if (inventory.size() < amounts.length) {
+    public static void removeItems(IInventory inventory, int[] amounts) {
+        if (inventory.getSizeInventory() < amounts.length) {
             throw new IllegalArgumentException("There has to be one itemstack value for each amount");
         }
         for (int i = 0; i < amounts.length; i++) {
-            ItemStackHelper.getAndSplit(inventory, i, amounts[i]);
+            inventory.decrStackSize(i, amounts[i]);
         }
     }
 

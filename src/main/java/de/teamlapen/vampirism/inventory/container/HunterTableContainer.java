@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -39,7 +40,7 @@ public class HunterTableContainer extends InventoryContainer {
     }
 
     public HunterTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
-        super(ModContainer.hunter_table, id, worldPosCallable, SELECTOR_INFOS);
+        super(ModContainer.hunter_table, id, playerInventory, worldPosCallable, new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
         slotResult = new SlotResult(this, new CraftResultInventory() {
             @Override
             public int getInventoryStackLimit() {
@@ -68,7 +69,7 @@ public class HunterTableContainer extends InventoryContainer {
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         if (!playerIn.getEntityWorld().isRemote) {
-            clearContainer(playerIn);
+            clearContainer(playerIn, playerIn.world, inventory);
         }
     }
 
@@ -90,7 +91,7 @@ public class HunterTableContainer extends InventoryContainer {
      */
     protected void onPickupResult() {
         int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
-        InventoryHelper.removeItems(inventoryItemStacks, new int[]{1, req[0], req[1], req[3]});
+        InventoryHelper.removeItems(inventory, new int[]{1, req[0], req[1], req[3]});
     }
 
     /**
@@ -98,7 +99,7 @@ public class HunterTableContainer extends InventoryContainer {
 
      */
     private ItemStack checkItems(int fangs, int blood, int bloodLevel, int par3) {
-        return InventoryHelper.checkItems(inventoryItemStacks, new Item[]{Items.BOOK, ModItems.vampire_fang, PureBloodItem.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
+        return InventoryHelper.checkItems(inventory, new Item[]{Items.BOOK, ModItems.vampire_fang, PureBloodItem.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
     }
 
     @Override

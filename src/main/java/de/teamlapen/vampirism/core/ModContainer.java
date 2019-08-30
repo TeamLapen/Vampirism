@@ -23,7 +23,7 @@ public class ModContainer {
     public static void registerContainer(IForgeRegistry<ContainerType<?>> registry) {
         registry.register(new ContainerType<>(HunterTrainerContainer::new).setRegistryName(REFERENCE.MODID, "hunter_trainer"));
         registry.register(new ContainerType<>(AlchemicalCauldronContainer::new).setRegistryName(REFERENCE.MODID, "alchemical_cauldron"));
-        registry.register(new ContainerType<>(BloodPotionTableContainer::new).setRegistryName(REFERENCE.MODID, "blood_potion_table"));
+        registry.register(new ContainerType<>(new BloodPotionTableContainer.Factory()).setRegistryName(REFERENCE.MODID, "blood_potion_table"));
         registry.register(new ContainerType<>(HunterBasicContainer::new).setRegistryName(REFERENCE.MODID, "hunter_basic"));
         registry.register(new ContainerType<>(HunterTableContainer::new).setRegistryName(REFERENCE.MODID, "hunter_table"));
         registry.register(new ContainerType<>(WeaponTableContainer::new).setRegistryName(REFERENCE.MODID, "weapon_table"));

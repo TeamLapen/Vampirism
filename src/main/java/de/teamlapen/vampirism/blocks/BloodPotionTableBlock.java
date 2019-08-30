@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Hand;
@@ -23,8 +23,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 
 public class BloodPotionTableBlock extends VampirismBlock {
@@ -51,8 +50,9 @@ public class BloodPotionTableBlock extends VampirismBlock {
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
-            if (canUse(player)) {
-                player.openContainer(state.getContainer(worldIn, pos));
+            if (canUse(player) && player instanceof ServerPlayerEntity) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), new TranslationTextComponent("container.crafting")), pos);
+
             }
             else {
                 player.sendMessage(new TranslationTextComponent("text.vampirism.blood_potion_table.cannot_use"));
@@ -60,14 +60,6 @@ public class BloodPotionTableBlock extends VampirismBlock {
         }
 
         return true;
-    }
-
-    @Nullable
-    @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        return new SimpleNamedContainerProvider((id, playerInventory, player) -> {
-            return new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos));
-        }, name);
     }
 
     private boolean canUse(PlayerEntity player) {

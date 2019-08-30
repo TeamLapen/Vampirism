@@ -221,7 +221,7 @@ public class InputEventPacket implements IMessage {
                     if (hunter.getLevel() > 0) {
                         if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_portable_crafting)) {
                             if (!player.world.isRemote()) {
-                                NetworkHooks.openGui(player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, new BlockPos(playerIn.posX, playerIn.posY, player.posZ))), new TranslationTextComponent("container.crafting")));
+                                NetworkHooks.openGui(player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, new BlockPos(playerIn.posX, playerIn.posY, playerIn.posZ))), new TranslationTextComponent("container.crafting")), player.getPosition());
                             }
                         } else {
                             player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));

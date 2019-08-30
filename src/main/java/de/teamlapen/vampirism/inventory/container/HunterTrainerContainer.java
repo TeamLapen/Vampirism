@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.items.HunterIntelItem;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -40,7 +41,7 @@ public class HunterTrainerContainer extends InventoryContainer {
     }
 
     public HunterTrainerContainer(int id, PlayerInventory playerInventory, @Nullable HunterTrainerEntity trainer) {
-        super(ModContainer.hunter_trainer, id, trainer == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(trainer.world, trainer.getPosition()), SELECTOR_INFOS);
+        super(ModContainer.hunter_trainer, id, playerInventory, trainer == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(trainer.world, trainer.getPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
         this.player = playerInventory.player;
         this.addPlayerSlots(playerInventory);
         this.entity = trainer;
@@ -61,7 +62,7 @@ public class HunterTrainerContainer extends InventoryContainer {
         if (!levelingConf.isLevelValidForTrainer(targetLevel)) return false;
         int[] req = levelingConf.getItemRequirementsForTrainer(targetLevel);
         int level = levelingConf.getHunterIntelMetaForLevel(targetLevel);
-        missing = InventoryHelper.checkItems(inventoryItemStacks, new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, HunterIntelItem.getIntelForLevel(level)}, new int[]{req[0], req[1], 1});
+        missing = InventoryHelper.checkItems(inventory, new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, HunterIntelItem.getIntelForLevel(level)}, new int[]{req[0], req[1], 1});
         return missing.isEmpty();
     }
 
@@ -87,7 +88,7 @@ public class HunterTrainerContainer extends InventoryContainer {
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         if (!playerIn.getEntityWorld().isRemote) {
-            clearContainer(playerIn);
+            clearContainer(playerIn, playerIn.getEntityWorld(), inventory);
         }
     }
 
@@ -99,7 +100,7 @@ public class HunterTrainerContainer extends InventoryContainer {
             int old = FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION);
             FactionPlayerHandler.get(player).setFactionLevel(VReference.HUNTER_FACTION, old + 1);
             int[] req = HunterLevelingConf.instance().getItemRequirementsForTrainer(old + 1);
-            InventoryHelper.removeItems(inventoryItemStacks, new int[]{req[0], req[1], 1});//TODO 1.14 client not synchronized after itemstack decrease until itemstack clicked
+            InventoryHelper.removeItems(inventory, new int[]{req[0], req[1], 1});//TODO 1.14 client not synchronized after itemstack decrease until itemstack clicked
             player.addPotionEffect(new EffectInstance(ModEffects.saturation, 400, 2));
             changed = true;
         }
