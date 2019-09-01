@@ -19,6 +19,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**
  * Stores blood
@@ -39,14 +40,11 @@ public class BloodBottleIItem extends VampirismItem {
         super(name, new Properties().containerItem(Items.GLASS_BOTTLE).defaultMaxDamage(AMOUNT).group(VampirismMod.creativeTab));
     }
 
-
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
         TileEntity t = world.getTileEntity(pos);
         return t != null && t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).isPresent();
     }
-
-
 
     @Override
     public UseAction getUseAction(ItemStack stack) {
@@ -96,7 +94,7 @@ public class BloodBottleIItem extends VampirismItem {
         if (blood > 0 && count == 1) {
             Hand activeHand = player.getActiveHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
-            if (BloodHelper.drain(stack, drink, true, true) > 0) {
+            if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true) > 0) {
                 vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false);
             }
             player.setHeldItem(activeHand, stack);

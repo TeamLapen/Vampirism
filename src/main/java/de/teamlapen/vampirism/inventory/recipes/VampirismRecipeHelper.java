@@ -3,14 +3,18 @@ package de.teamlapen.vampirism.inventory.recipes;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.*;
+import com.mojang.datafixers.util.Either;
+
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
@@ -121,6 +125,18 @@ class VampirismRecipeHelper {
         }
     }
 
+    static FluidStack deserializeFluid(JsonObject p_199798_0_) {
+        String s = JSONUtils.getString(p_199798_0_, "fluid");
+        Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(s));
+        if (fluid == null) throw new JsonSyntaxException("Unknown fluid '" + s + "'");
+        if (p_199798_0_.has("data")) {
+            throw new JsonParseException("Disallowed data tag found");
+        } else {
+            int i = JSONUtils.getInt(p_199798_0_, "amount", 1);
+            return new FluidStack(fluid, i);
+        }
+    }
+
     /**
      * Returns a key json object as a Java HashMap.
      */
@@ -205,6 +221,18 @@ class VampirismRecipeHelper {
             }
 
             return astring;
+        }
+    }
+
+    static Either<Ingredient, FluidStack> getFluidOrItem(JsonObject json) {
+        try {
+            return Either.left(Ingredient.deserialize(json.get("fluidItem")));
+        } catch (JsonSyntaxException e) {
+            try {
+                return Either.right(deserializeFluid(json.getAsJsonObject("fluid")));
+            } catch (JsonSyntaxException r) {
+                throw new JsonSyntaxException(e.getMessage() + r.getMessage());
+            }
         }
     }
 }

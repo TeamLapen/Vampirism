@@ -1,12 +1,10 @@
 package de.teamlapen.lib.lib.util;
 
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 
-import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
-public class FluidTankWithListener extends FluidTank {
+public class FluidTankWithListener extends NotDrainableTank {
 
     private IFluidTankListener listener;
 
@@ -14,12 +12,8 @@ public class FluidTankWithListener extends FluidTank {
         super(capacity);
     }
 
-    public FluidTankWithListener(@Nullable FluidStack fluidStack, int capacity) {
-        super(fluidStack, capacity);
-    }
-
-    public FluidTankWithListener(Fluid fluid, int amount, int capacity) {
-        super(fluid, amount, capacity);
+    public FluidTankWithListener(int capacity, Predicate<FluidStack> validator) {
+        super(capacity, validator);
     }
 
     /**

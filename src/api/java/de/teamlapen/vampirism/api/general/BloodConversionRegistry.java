@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -59,21 +60,22 @@ public class BloodConversionRegistry {
      * @param fluid FluidStack
      * @return Impure blood amount in mB or 0
      */
-    //TODO 1.14 fluid
     public static float getBloodValue(@Nonnull FluidStack fluid) {
-//        if(fluids.containsKey(fluid.getFluid().getRegistryName())){
-//            return fluids.get(fluid.getFluid().getRegistryName());
-//        }
+        if (fluids.containsKey(fluid.getFluid().getRegistryName())) {
+            return fluids.get(fluid.getFluid().getRegistryName());
+        }
         return 0f;
     }
-//    /**
-//     * Get the FluidStack of blood equivalent to the given fluid.
-//     *
-//     * @param fluid FluidStack
-//     * @return Impure blood amount in mB or 0
-//     */
-//    public static FluidStack getBloodFromFluid(@Nonnull FluidStack fluid){
-//        if(fluid == ModFluids.blood)return fluid;
-//        return new FluidStack(ModFluids.blood,getBloodValue(fluid));
-//    }
+
+    /**
+     * Get the FluidStack of blood equivalent to the given fluid.
+     *
+     * @param fluid FluidStack
+     * @return Impure blood amount in mB or 0
+     */
+    public static FluidStack getBloodFromFluid(@Nonnull FluidStack fluid) {
+        if (fluid.getFluid().isEquivalentTo(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("vampirism:blood"))))
+            return fluid;
+        return new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("vampirism:blood")), (int) (getBloodValue(fluid) * fluid.getAmount()));
+    }
 }

@@ -15,14 +15,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Gui for the weapon table. Only draws the background and the lava status
  */
 @OnlyIn(Dist.CLIENT)
-public class HunterWeaponTableScreen extends ContainerScreen<WeaponTableContainer> {
+public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> {
 
     private static final ResourceLocation TABLE_GUI_TEXTURES = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table.png");
     private static final ResourceLocation TABLE_GUI_TEXTURES_LAVA = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_lava.png");
     private static final ResourceLocation TABLE_GUI_TEXTURES_MISSING_LAVA = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_missing_lava.png");
     private int lava = 0;
 
-    public HunterWeaponTableScreen(WeaponTableContainer inventorySlotsIn, PlayerInventory inventoryPlayer, ITextComponent name) {
+    public WeaponTableScreen(WeaponTableContainer inventorySlotsIn, PlayerInventory inventoryPlayer, ITextComponent name) {
         super(inventorySlotsIn, inventoryPlayer, name);
         this.xSize = 196;
         this.ySize = 191;
@@ -43,11 +43,11 @@ public class HunterWeaponTableScreen extends ContainerScreen<WeaponTableContaine
         int j = (this.height - this.ySize) / 2;
         this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES);
         this.blit(i, j, 0, 0, this.xSize, this.ySize);
-        if (lava > 0) {
+        if (container.hasLava()) { //TODO 1.14 fluid fix missing lava rendering (client-server)(create tileentity?)
             this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_LAVA);
             this.blit(i, j, 0, 0, this.xSize, this.ySize);
         }
-        if (container.isMissingLava()) { //TODO 1.14 fluid fix missing lava rendering
+        if (container.isMissingLava()) { //TODO 1.14 fluid fix missing lava rendering (client-server)(create tileentity?)
             this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_MISSING_LAVA);
             this.blit(i, j, 0, 0, this.xSize, this.ySize);
         }

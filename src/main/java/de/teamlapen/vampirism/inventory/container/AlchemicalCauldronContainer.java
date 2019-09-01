@@ -12,18 +12,20 @@ import net.minecraft.inventory.container.FurnaceResultSlot;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIntArray;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntArray;
 
 
-public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {
-
+public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {//TODO 1.14 items should be shift-clicked into furnace
+    IWorldPosCallable worldPosCallable;
     @Deprecated
     public AlchemicalCauldronContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(4), new IntArray(4));
+        this(id, playerInventory, new Inventory(4), new IntArray(4), IWorldPosCallable.DUMMY);
     }
 
-    public AlchemicalCauldronContainer(int id, PlayerInventory playerInventory, IInventory inv, IIntArray data) {
+    public AlchemicalCauldronContainer(int id, PlayerInventory playerInventory, IInventory inv, IIntArray data, IWorldPosCallable worldPos) {
         super(ModContainer.alchemical_cauldron, ModRecipes.ALCHEMICAL_CAULDRON_TYPE, id, playerInventory, inv, data);
+        worldPosCallable = worldPos;
         setSlots(playerInventory);
     }
 
@@ -58,7 +60,6 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {
                 if (!this.mergeItemStack(slotStack, 4, 40, true)) {
                     return ItemStack.EMPTY;
                 }
-
                 slot.onSlotChange(slotStack, result);
             } else if (index != 1 && index != 0 && index != 3) {
                 if (this.func_217057_a(slotStack)) {

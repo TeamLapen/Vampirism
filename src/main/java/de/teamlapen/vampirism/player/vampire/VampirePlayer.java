@@ -61,6 +61,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -1113,11 +1114,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).ifPresent(handler -> {
                     int blood = 0;
 
-                    FluidStack drainable = handler.drain(new FluidStack(ModFluids.blood, need * VReference.FOOD_TO_FLUID_BLOOD), false);
-                    if (drainable != null && drainable.amount >= VReference.FOOD_TO_FLUID_BLOOD) {
-                        FluidStack drained = handler.drain((drainable.amount / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, true);
+                    FluidStack drainable = handler.drain(new FluidStack(ModFluids.blood, need * VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
+                    if (drainable != null && drainable.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
+                        FluidStack drained = handler.drain((drainable.getAmount() / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, IFluidHandler.FluidAction.EXECUTE);
                         if (drained != null) {
-                            blood = drained.amount / VReference.FOOD_TO_FLUID_BLOOD;
+                            blood = drained.getAmount() / VReference.FOOD_TO_FLUID_BLOOD;
                         }
                     }
                     if (blood > 0) {

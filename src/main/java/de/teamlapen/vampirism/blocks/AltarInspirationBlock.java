@@ -81,26 +81,23 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack stack = player.getHeldItem(hand);
-        if (!stack.isEmpty() && !worldIn.isRemote) {
+        if (!stack.isEmpty()) {
             LazyOptional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
             if (opt.isPresent()) {
                 AltarInspirationTileEntity tileEntity = (AltarInspirationTileEntity) worldIn.getTileEntity(pos);
                 if (!player.isSneaking() && tileEntity != null) {
-                    tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map((handler) -> {
+                    tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent((handler) -> {
                         FluidActionResult result = FluidUtil.tryEmptyContainer(stack, handler, Integer.MAX_VALUE, player, true);
                         if (result.isSuccess()) {
                             player.setHeldItem(hand, result.getResult());
-                            return true;
                         }
-                        return false;
                     });
 
                 }
                 tileEntity.markDirty();
                 return true;
             }
-        }
-        if (stack.isEmpty()) {
+        } else {
             AltarInspirationTileEntity tileEntity = (AltarInspirationTileEntity) worldIn.getTileEntity(pos);
             tileEntity.startRitual(player);
         }

@@ -1,16 +1,19 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.fluids.FluidBlood;
-import net.minecraftforge.fluids.Fluid;
+import de.teamlapen.vampirism.fluids.BloodFluid;
+import de.teamlapen.vampirism.fluids.ImpureBloodFluid;
+import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.fluid.Fluid;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
+@ObjectHolder(REFERENCE.MODID)
 public class ModFluids {
-    public static Fluid blood = new FluidBlood(VReference.FLUID_BLOOD_NAME);
-    public static Fluid impure_blood = new FluidBlood(VReference.FLUID_IMPURE_BLOOD_NAME);
+    public static Fluid blood = new BloodFluid();
+    public static Fluid impure_blood = new ImpureBloodFluid();
 
-
-    static void registerFluids() {
-        //FluidRegistry.registerFluid(blood); TODO 1.14
-        //FluidRegistry.registerFluid(impure_blood); TODO 1.14
+    static void registerFluids(IForgeRegistry<Fluid> registry) {
+        registry.register(blood);
+        registry.register(impure_blood);
     }
 }

@@ -12,7 +12,7 @@ public class LogUtil {
     public static final Marker COMPAT = new MarkerManager.Log4jMarker("compat");
 
 
-    private static final Logger LOGGER = LogManager.getLogger("TestLogger");
+    public static final Logger LOGGER = LogManager.getLogger("TestLogger");
 
     /**
      * Can be used to create temporary log messages during development. These can easy be found to be removed by checking the reference to this method.

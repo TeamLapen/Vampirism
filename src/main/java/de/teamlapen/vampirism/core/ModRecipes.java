@@ -12,7 +12,7 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.IConditionSerializer;
+import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -37,7 +37,7 @@ public class ModRecipes {
     @ObjectHolder(REFERENCE.MODID + ":alchemical_cauldron")
     public static final IRecipeSerializer<AlchemicalCauldronRecipe> alchemical_cauldron = getNull();
 
-    public static final IConditionSerializer CONFIG_CONDITION = CraftingHelper.register(new ResourceLocation(REFERENCE.MODID, "config_condition"), new ConfigEntryConditionSerializer());
+    public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(AutoConvertGlassBottleCondition.Serializer.INSTANCE);
 
     private static final Map<Object, Integer> liquidColors = Maps.newHashMap();
 
@@ -48,8 +48,8 @@ public class ModRecipes {
 
         registerLiquidColor(ModItems.item_garlic, 0xBBBBBB);
 
-        for (Fluid fluid : ForgeRegistries.FLUIDS.getValues()) {
-            registerLiquidColor(fluid, 0xFFFFFF);
+        for (Fluid fluid : ForgeRegistries.FLUIDS.getValues()) {//TODO 1.14 remove and check somewhere else if the item is a fluid (fluid.getAttributes().getColor())
+            registerLiquidColor(fluid, fluid.getAttributes().getColor());
         }
     }
 

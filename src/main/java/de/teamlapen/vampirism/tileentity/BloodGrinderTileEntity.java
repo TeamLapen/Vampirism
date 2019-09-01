@@ -26,6 +26,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -162,10 +163,10 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
                 if (blood > 0) {
                     FluidStack fluid = new FluidStack(ModFluids.impure_blood, blood);
                     FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), Direction.UP).ifPresent(handler -> {
-                        int filled = handler.fill(fluid, false);
+                        int filled = handler.fill(fluid, IFluidHandler.FluidAction.SIMULATE);
                         if (filled >= 0.9f * blood) {
                             ItemStack extractedStack = itemHandler.extractItem(slot, 1, false);
-                            handler.fill(fluid, true);
+                            handler.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
                             this.cooldownProcess = MathHelper.clamp(20 * filled / VReference.FOOD_TO_FLUID_BLOOD, 20, 100);
                         }
                     });

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Either;
 
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -16,23 +17,27 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 1.14
  */
-public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {//TODO 1.14 fluid
+public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     private static final ISkill[] EMPTY_SKILLS = {};
-    private final ItemStack fluid;
+    private final Either<Ingredient, FluidStack> fluid;
     @Nullable
     private final ISkill[] skills;
     private final int reqLevel;
 
-    public AlchemicalCauldronRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, ItemStack fluidIn, ItemStack resultIn, ISkill[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
+    public AlchemicalCauldronRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, ItemStack resultIn, ISkill[] skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
         super(ModRecipes.ALCHEMICAL_CAULDRON_TYPE, idIn, groupIn, ingredientIn, resultIn, 0.2F, 400);//TODO 1.14 default cooktime 200?
         this.fluid = fluidIn;
         this.skills = skillsIn;
@@ -46,9 +51,15 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {//TODO 1.14
 
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        boolean match = this.ingredient.test(inv.getStackInSlot(3));
-        boolean fluidMatch = true;//TODO 1.14 fluids
-        return match & fluidMatch;
+        boolean match = this.ingredient.test(inv.getStackInSlot(0));
+        AtomicBoolean fluidMatch = new AtomicBoolean(true);
+        fluid.ifLeft((ingredient1 -> fluidMatch.set(fluid.left().get().test(inv.getStackInSlot(3)))));
+        fluid.ifRight((ingredient1 -> {
+            fluidMatch.set(false);
+            LazyOptional<FluidStack> stack = FluidUtil.getFluidContained(inv.getStackInSlot(3));
+            stack.ifPresent((handlerItem) -> fluidMatch.set(fluid.right().get().isFluidEqual(handlerItem) && fluid.right().get().getAmount() <= handlerItem.getAmount()));
+        }));
+        return match && fluidMatch.get();
     }
 
     public boolean canBeCooked(int level, ISkillHandler<IHunterPlayer> skillHandler) {
@@ -60,7 +71,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {//TODO 1.14
         return true;
     }
 
-    public ItemStack getFluid() {
+    public Either<Ingredient, FluidStack> getFluid() {
         return fluid;
     }
 
@@ -83,7 +94,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {//TODO 1.14
                 ", ingredient=" + ingredient +
                 ", reqLevel=" + reqLevel +
                 ", experience=" + experience +
-                ", fluidStack=" + fluid +
+                ", fluid=" + fluid +
                 '}';
     }
 
@@ -95,7 +106,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {//TODO 1.14
             int level = JSONUtils.getInt(json, "level", 1);
             ISkill[] skills = VampirismRecipeHelper.deserializeSkills(JSONUtils.getJsonArray(json, "skill", null));
             ItemStack result = VampirismRecipeHelper.deserializeItem(JSONUtils.getJsonObject(json, "result"));
-            ItemStack fluid = VampirismRecipeHelper.deserializeItem(JSONUtils.getJsonObject(json, "fluid"));
+            Either<Ingredient, FluidStack> fluid = VampirismRecipeHelper.getFluidOrItem(json);
             int cookTime = JSONUtils.getInt(json, "cookTime", 400);
             float exp = JSONUtils.getFloat(json, "experience", 0.2F);
             return new AlchemicalCauldronRecipe(recipeId, group, ingredients, fluid, result, skills, level, cookTime, exp);
@@ -106,7 +117,12 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {//TODO 1.14
             String group = buffer.readString(32767);
             ItemStack result = buffer.readItemStack();
             Ingredient ingredient = Ingredient.read(buffer);
-            ItemStack fluid = buffer.readItemStack();
+            Either<Ingredient, FluidStack> fluid;
+            if (buffer.readBoolean()) {
+                fluid = Either.left(Ingredient.read(buffer));
+            } else {
+                fluid = Either.right(FluidStack.readFromPacket(buffer));
+            }
             float exp = buffer.readFloat();
             int cookingtime = buffer.readVarInt();
             int level = buffer.readVarInt();
@@ -122,7 +138,13 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {//TODO 1.14
             buffer.writeString(recipe.group);
             buffer.writeItemStack(recipe.result);
             recipe.ingredient.write(buffer);
-            buffer.writeItemStack(recipe.fluid);
+            if (recipe.fluid.left().isPresent()) {
+                buffer.writeBoolean(true);
+                recipe.fluid.left().get().write(buffer);
+            } else {
+                buffer.writeBoolean(false);
+                recipe.fluid.right().get().writeToPacket(buffer);
+            }
             buffer.writeFloat(recipe.experience);
             buffer.writeVarInt(recipe.cookTime);
             buffer.writeVarInt(recipe.reqLevel);

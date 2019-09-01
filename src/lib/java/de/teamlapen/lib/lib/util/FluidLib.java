@@ -1,8 +1,8 @@
 package de.teamlapen.lib.lib.util;
 
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -45,8 +45,8 @@ public class FluidLib {
     }
 
     public static int getFluidAmount(@Nonnull IFluidHandler handler, @Nullable Fluid f) {
-        FluidStack s = f == null ? handler.drain(Integer.MAX_VALUE, false) : handler.drain(new FluidStack(f, Integer.MAX_VALUE), false);
-        if (s != null) return s.amount;
+        FluidStack s = f == null ? handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE) : handler.drain(new FluidStack(f, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
+        if (s != null) return s.getAmount();
         return 0;
     }
 

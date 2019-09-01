@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.tests;
 
 import com.google.common.base.Stopwatch;
+
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.fluids.BloodHelper;
@@ -20,8 +21,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidActionResult;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -140,7 +141,7 @@ public class Tests {
         info.world.setBlockState(info.pos, ModBlocks.blood_container.getDefaultState());
         TileEntity t = info.world.getTileEntity(info.pos);
         LazyOptional<IFluidHandler> opt = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.random(info.world.rand));
-        opt.ifPresent(handler -> handler.fill(new FluidStack(ModFluids.blood, 10000000), true));
+        opt.ifPresent(handler -> handler.fill(new FluidStack(ModFluids.blood, 10000000), IFluidHandler.FluidAction.EXECUTE));
         int blood = BloodHelper.getBlood(opt);
         assert blood > 0 : "Could not fill blood container";
 
@@ -174,7 +175,7 @@ public class Tests {
         block = info.world.getBlockState(info.pos);
         assert info.player.getHeldItem(info.player.getActiveHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
         LOGGER.warn("Block lava level: {}", new Object[]{block.get(WeaponTableBlock.LAVA)});
-        assert (block.get(WeaponTableBlock.LAVA) * WeaponTableBlock.MB_PER_META) == Fluid.BUCKET_VOLUME : "Incorrect Fluid Transaction";
+        assert (block.get(WeaponTableBlock.LAVA) * WeaponTableBlock.MB_PER_META) == FluidAttributes.BUCKET_VOLUME : "Incorrect Fluid Transaction";
         return true;
     }
 

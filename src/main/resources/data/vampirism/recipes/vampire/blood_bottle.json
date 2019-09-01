@@ -3,7 +3,7 @@
     {
       "type": "forge:not",
       "value": {
-        "type": "vampirism:config_condition",
+        "type": "vampirism:auto_convert_glass_bottle",
         "key": "auto_convert_blood_bottles"
       }
     }

@@ -30,7 +30,7 @@ public class BakedWeaponTableModel implements IBakedModel {
      * Stores a fluid level -> fluid model array
      * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)} )}
      */
-    public static final IBakedModel[] FLUID_MODELS = new IBakedModel[FLUID_LEVELS];
+    public static final IBakedModel[][] FLUID_MODELS = new IBakedModel[FLUID_LEVELS][4];
 
     private final IBakedModel baseModel;
 
@@ -45,7 +45,7 @@ public class BakedWeaponTableModel implements IBakedModel {
 
     @Override
     public ItemOverrideList getOverrides() {
-        return null;
+        return baseModel.getOverrides();
     }
 
     @Override
@@ -57,12 +57,11 @@ public class BakedWeaponTableModel implements IBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
         List<BakedQuad> quads = new LinkedList<>();
 
-
-        int fluidLevel = state.get(WeaponTableBlock.LAVA);
+        int fluidLevel = state == null ? 0 : state.get(WeaponTableBlock.LAVA);
 
         quads.addAll(baseModel.getQuads(state, side, rand));
         if (fluidLevel > 0 && fluidLevel <= FLUID_LEVELS) {
-            quads.addAll(FLUID_MODELS[fluidLevel - 1].getQuads(state, side, rand));
+            quads.addAll(FLUID_MODELS[fluidLevel - 1][state == null ? 0 : state.get(WeaponTableBlock.FACING).getHorizontalIndex()].getQuads(state, side, rand));
         }
 
         return quads;

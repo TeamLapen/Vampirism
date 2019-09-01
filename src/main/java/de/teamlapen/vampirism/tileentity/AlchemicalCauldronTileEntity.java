@@ -20,6 +20,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
@@ -36,7 +37,7 @@ import java.util.UUID;
 /**
  * slots:  0: ingredient, 1: fuel, 2: result, 3: liquid
  */
-public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {//TODO 1.14 fluidsystem
+public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     private static final int[] SLOTS_DOWN = new int[]{0, 2, 3};
     private static final int[] SLOTS_UP = new int[]{0};
     private static final int[] SLOTS_WEST = new int[]{3};
@@ -56,7 +57,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {//T
 
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
-        return new AlchemicalCauldronContainer(id, player, this, this.furnaceData);
+        return new AlchemicalCauldronContainer(id, player, this, this.furnaceData, IWorldPosCallable.of(world, pos));
     }
 
     @Override
