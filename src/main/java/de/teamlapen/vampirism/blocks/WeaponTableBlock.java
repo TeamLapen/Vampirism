@@ -11,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
@@ -28,6 +29,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nullable;
 
@@ -90,27 +96,27 @@ public class WeaponTableBlock extends VampirismBlock {
     @Override
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isRemote) {
-            int lava = state.get(LAVA);
+            int fluid = world.getBlockState(pos).get(LAVA);
             boolean flag = false;
             ItemStack heldItem = player.getHeldItem(hand);
-//            if (lava < MAX_LAVA) { TODO 1.14 Fluid
-//                LazyOptional<IFluidHandlerItem> opt = FluidUtil.getFluidHandler(heldItem);
-//                opt.ifPresent(fluidHandler -> {
-//                    FluidStack missing = new FluidStack(Fluids.LAVA, (MAX_LAVA - lava) * MB_PER_META);
-//                    FluidStack drainable = fluidHandler.drain(missing, false);
-//                    if (drainable != null && drainable.amount >= MB_PER_META) {
-//                        FluidStack drained = fluidHandler.drain(missing, true);
-//                        if (drained != null) {
-//                            IBlockState changed = state.with(LAVA, Math.min(MAX_LAVA, lava + drained.amount / MB_PER_META));
-//                            world.setBlockState(pos, changed);
-//                            player.setHeldItem(hand, fluidHandler.getContainer());
-//                        }
-//                    }
-//                });
-//                if (opt.isPresent()) {
-//                    flag = true;
-//                }
-//            }
+            if (fluid < MAX_LAVA) {
+                LazyOptional<IFluidHandlerItem> opt = FluidUtil.getFluidHandler(heldItem);
+                opt.ifPresent(fluidHandler -> {
+                    FluidStack missing = new FluidStack(Fluids.LAVA, (MAX_LAVA - fluid) * MB_PER_META);
+                    FluidStack drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);//TODO 1.14 weapontable cannt be filled from not empty to full when using lava bucket
+                    if (drainable.getAmount() >= MB_PER_META) {
+                        FluidStack drained = fluidHandler.drain(missing, IFluidHandler.FluidAction.EXECUTE);
+                        if (drained.getAmount() > 0) {
+                            BlockState changed = state.with(LAVA, Math.min(MAX_LAVA, fluid + drained.getAmount() / MB_PER_META));
+                            world.setBlockState(pos, changed);
+                            player.setHeldItem(hand, fluidHandler.getContainer());
+                        }
+                    }
+                });
+                if (opt.isPresent()) {
+                    flag = true;
+                }
+            }
             if (!flag) {
 
                 if (canUse(player)) {

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.inventory.container;
 
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -89,6 +90,10 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
 
     }
 
+    public boolean hasLava() {
+        return worldPos.applyOrElse(((world, blockPos) -> world.getBlockState(blockPos).get(WeaponTableBlock.LAVA) > 0), false);
+    }
+
     @Override
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
@@ -158,13 +163,13 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
         if (!worldIn.isRemote) {
             ServerPlayerEntity entityplayermp = (ServerPlayerEntity) playerIn;
             Optional<IWeaponTableRecipe> optional = worldIn.getServer().getRecipeManager().getRecipe(ModRecipes.WEAPONTABLE_CRAFTING_TYPE, craftMatrixIn, worldIn);
+            this.missingLava = false;
+            craftResultIn.setInventorySlotContents(0, ItemStack.EMPTY);
             if (optional.isPresent()) {
                 IWeaponTableRecipe recipe = optional.get();
-                this.missingLava = false;
-                craftResultIn.setInventorySlotContents(0, ItemStack.EMPTY);
                 if (craftResultIn.canUseRecipe(worldIn, entityplayermp, recipe) && recipe.getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.getRequiredSkills())) {
                     this.worldPos.consume((world, pos) -> {
-                        if (world.getFluidState(pos).getLevel() >= recipe.getRequiredLavaUnits()) {
+                        if (world.getBlockState(pos).get(WeaponTableBlock.LAVA) >= recipe.getRequiredLavaUnits()) {
                             craftResultIn.setInventorySlotContents(0, recipe.getCraftingResult(craftMatrixIn));
                         } else {
                             this.missingLava = true;

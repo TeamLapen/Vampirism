@@ -1,7 +1,7 @@
 {
   "__comment": "Designed by Maxanier ",
   "textures": {
-    "texture": "vampirism:block/vampirismblood_still"
+    "texture": "vampirism:block/blood_still"
   },
   "elements": [
     {

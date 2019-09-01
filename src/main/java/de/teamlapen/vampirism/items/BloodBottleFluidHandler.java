@@ -12,9 +12,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,21 +49,21 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
 
     @Nullable
     @Override
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
-        if (container.getCount() != 1 || resource == null || resource.amount <= 0 || !ModFluids.blood.equals(resource.getFluid())) {
+    public FluidStack drain(FluidStack resource, FluidAction action) {
+        if (container.getCount() != 1 || resource == null || resource.getAmount() <= 0 || !ModFluids.blood.equals(resource.getFluid())) {
             return null;
         }
-        return drain(resource.amount, doDrain);
+        return drain(resource.getAmount(), action);
     }
 
     @Nullable
     @Override
-    public FluidStack drain(int maxDrain, boolean doDrain) {
+    public FluidStack drain(int maxDrain, FluidAction action) {
         int currentAmt = getBlood(container);
-        if (currentAmt == 0) return null;
+        if (currentAmt == 0) return FluidStack.EMPTY;
         FluidStack stack = new FluidStack(ModFluids.blood, Math.min(currentAmt, getAdjustedAmount(maxDrain)));
-        if (doDrain) {
-            setBlood(container, currentAmt - stack.amount);
+        if (action.execute()) {
+            setBlood(container, currentAmt - stack.getAmount());
             /*
              might cause crashes with other mods, although this is probably legit as forge does something similar in {@link net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack.SwapEmpty}
              */
@@ -77,17 +75,16 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     }
 
     @Override
-    public int fill(FluidStack resource, boolean doFill) {
+    public int fill(FluidStack resource, FluidAction action) {
         if (resource == null) return 0;
         if (!resource.getFluid().equals(ModFluids.blood)) {
             return 0;
         }
-        if (!doFill) {
-            return Math.min(capacity - getBlood(container), getAdjustedAmount(resource.amount));
+        if (action.simulate()) {
+            return Math.min(capacity - getBlood(container), getAdjustedAmount(resource.getAmount()));
         }
-
         int itemamt = getBlood(container);
-        int toFill = Math.min(capacity - itemamt, getAdjustedAmount(resource.amount));
+        int toFill = Math.min(capacity - itemamt, getAdjustedAmount(resource.getAmount()));
         setBlood(container, itemamt + toFill);
         return toFill;
     }
@@ -104,8 +101,24 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     }
 
     @Override
-    public IFluidTankProperties[] getTankProperties() {
-        return new IFluidTankProperties[]{new FluidTankProperties(new FluidStack(ModFluids.blood, getBlood(container)), capacity)};
+    public int getTanks() {
+        return 1;
+    }
+
+    @Nonnull
+    @Override
+    public FluidStack getFluidInTank(int tank) {
+        return null;
+    }
+
+    @Override
+    public int getTankCapacity(int tank) {
+        return 0;
+    }
+
+    @Override
+    public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
+        return ModFluids.blood.isEquivalentTo(stack.getFluid());
     }
 
     @Nonnull

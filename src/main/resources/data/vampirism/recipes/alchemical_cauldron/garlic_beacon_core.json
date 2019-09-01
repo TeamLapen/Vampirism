@@ -7,7 +7,7 @@
   "ingredient": {
     "item": "minecraft:black_wool"
   },
-  "fluid": {
+  "fluidItem": {
     "item": "vampirism:item_garlic"
   },
   "skill": [

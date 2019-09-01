@@ -9,14 +9,21 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.data.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.logging.log4j.LogManager;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,14 +34,14 @@ import java.util.Random;
  * TODO 1.14 check
  */
 @OnlyIn(Dist.CLIENT)
-public class BakedBloodContainerModel implements IBakedModel {
+public class BakedBloodContainerModel implements IDynamicBakedModel {
 
     public static final int FLUID_LEVELS = 14;
     /**
      * Stores a FluidName-> Baked Fluid model map for each possible fluid level
      * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)} )}
      */
-    public static final HashMap<String, IBakedModel>[] FLUID_MODELS = new HashMap[FLUID_LEVELS];
+    public static final HashMap<Fluid, IBakedModel>[] FLUID_MODELS = new HashMap[FLUID_LEVELS];
     private final static ItemOverrideList overrideList = new CustomItemOverride();
 
     static {
@@ -43,55 +50,62 @@ public class BakedBloodContainerModel implements IBakedModel {
         }
     }
 
+    private Fluid fluid;
+    private int fluidLevel = 0;
 
     private final IBakedModel baseModel;
-    private String fluidNameItem;
-    private int fluidLevelItem;
+    private boolean item;
 
     public BakedBloodContainerModel(IBakedModel baseModel) {
         this.baseModel = baseModel;
     }
 
-    public BakedBloodContainerModel(IBakedModel baseModel, String fluidName, int fluidLevel) {
-        this(baseModel);
-        this.fluidNameItem = fluidName;
-        this.fluidLevelItem = fluidLevel;
+    public BakedBloodContainerModel(IBakedModel baseModel, FluidStack stack) {
+        this.baseModel = baseModel;
+        this.fluid = stack.getFluid();
+        LogManager.getLogger().info(1 + " " + stack.getAmount() / BloodContainerTileEntity.LEVEL_AMOUNT);
+        this.fluidLevel = MathHelper.clamp(stack.getAmount() / BloodContainerTileEntity.LEVEL_AMOUNT, 1, FLUID_LEVELS) - 1;
+        LogManager.getLogger().info(fluidLevel);
+        item = true;
     }
 
+    @Nonnull
     @Override
     public ItemCameraTransforms getItemCameraTransforms() {
         return baseModel.getItemCameraTransforms();
     }
 
+    @Nonnull
     @Override
     public ItemOverrideList getOverrides() {
         return overrideList;
     }
 
+    @Nonnull
     @Override
     public TextureAtlasSprite getParticleTexture() {
         return baseModel.getParticleTexture();
     }
 
+    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
-        List<BakedQuad> quads = new LinkedList<>();
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+        List<BakedQuad> quads = new LinkedList<>(baseModel.getQuads(state, side, rand));
 
-        try {
-            String fluidName = state.getFluidState().getFluid().toString();//TODO 1.14 fluid name of Fluid
-            int fluidLevel = state.getFluidState().getLevel();
-
-            quads.addAll(baseModel.getQuads(state, side, rand));
-            if (fluidLevel > 0 && fluidLevel <= FLUID_LEVELS) {
-                HashMap<String, IBakedModel> fluidModels = FLUID_MODELS[fluidLevel - 1];
-
-                if (fluidModels.containsKey(fluidName)) {
-                    quads.addAll(fluidModels.get(fluidName).getQuads(state, side, rand));
+        if (!item) {
+            Integer level = extraData.getData(BloodContainerTileEntity.FLUID_LEVEL_PROP);
+            Fluid fluid = extraData.getData(BloodContainerTileEntity.FLUID_PROP);
+            if (fluid != null && level != null && level > 0 && level <= FLUID_LEVELS) {
+                HashMap<Fluid, IBakedModel> fluidModels = FLUID_MODELS[level - 1];
+                if (FLUID_MODELS[level - 1].containsKey(fluid)) {
+                    quads.addAll(fluidModels.get(fluid).getQuads(state, side, rand));
                 }
             }
-        } catch (NullPointerException e) {
-            //Occurs when the block is destroyed since the it is not the correct extended block state
-            //TODO remove when forge is fixed
+        } else {
+            HashMap<Fluid, IBakedModel> fluidModels = FLUID_MODELS[fluidLevel];
+            if (FLUID_MODELS[fluidLevel].containsKey(fluid)) {
+                quads.addAll(fluidModels.get(fluid).getQuads(state, side, rand));
+            }
         }
         return quads;
     }
@@ -118,15 +132,12 @@ public class BakedBloodContainerModel implements IBakedModel {
         }
 
         @Override
-        public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack stack, World world, LivingEntity entity) {
+        public IBakedModel getModelWithOverrides(@Nonnull IBakedModel originalModel, @Nonnull ItemStack stack, World world, LivingEntity entity) {
             if (originalModel instanceof BakedBloodContainerModel) {
                 if (stack.hasTag() && stack.getTag().contains("fluid")) {
                     FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound("fluid"));
-                    if (fluid != null) {
-
-                        float amount = fluid.amount / (float) BloodContainerTileEntity.LEVEL_AMOUNT;
-
-                        return new BakedBloodContainerModel(originalModel, fluid.getFluid().getName(), (amount > 0 && amount < 1) ? 1 : (int) amount);
+                    if (!fluid.isEmpty()) {
+                        return new BakedBloodContainerModel(originalModel, fluid);
                     }
                 }
             }

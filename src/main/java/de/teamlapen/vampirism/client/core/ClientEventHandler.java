@@ -11,13 +11,14 @@ import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.SleepInMultiplayerScreen;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelRotation;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,14 +29,12 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Handle general client side events
@@ -49,13 +48,13 @@ public class ClientEventHandler {
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
             Minecraft mc = Minecraft.getInstance();
-            if (mc.world != null && mc.world != null) {
+            if (mc.world != null) {
                 if ((mc.currentScreen == null || mc.currentScreen instanceof SleepInMultiplayerScreen) && mc.player.isSleeping()) {
                     BlockState state = mc.player.getEntityWorld().getBlockState(mc.player.getBedLocation());
                     if (state.getBlock().equals(ModBlocks.block_coffin)) {
                         mc.displayGuiScreen(new SleepCoffinScreen());
                     }
-                } else if (mc.currentScreen != null && mc.currentScreen instanceof SleepCoffinScreen && !mc.player.isSleeping()) {
+                } else if (mc.currentScreen instanceof SleepCoffinScreen && !mc.player.isSleeping()) {
                     mc.displayGuiScreen(null);
                 }
             }
@@ -63,28 +62,25 @@ public class ClientEventHandler {
         }
     }
 
-
+    @SubscribeEvent
     public static void onModelBakeEvent(ModelBakeEvent event) {
         IModel[] containerFluidModels = new IModel[BakedBloodContainerModel.FLUID_LEVELS];
         try {
             // load the fluid models for the different levels from the .json files
 
             for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
-                containerFluidModels[x] = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID, "models/block/blood_container/fluid_" + (x + 1)));//TODO 1.14 fluid puts /models/models/ infront of the path !? waiting for fluid
+                containerFluidModels[x] = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID, "block/blood_container/fluid_" + (x + 1)));
             }
 
             //For each registered fluid: Replace the fluid model texture by fluid (still) texture and cache the retextured model
 
-            Set<Fluid> temp = new LinkedHashSet<>();
-            temp.add(ModFluids.blood);
-            temp.add(ModFluids.impure_blood);
-            for (Fluid f : temp) {//TODO 1.14 fluid create for all fluids
-                for (int x = 0; x < containerFluidModels.length; x++) {
-                    IModel<?> retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder<String, String>()
-                            .put("fluid", f.getStill().toString())
-                            .build());
+            for (Fluid f : ForgeRegistries.FLUIDS) {
+                if (f.isEquivalentTo(Fluids.EMPTY))
+                    continue;
+                for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
+                    IModel<?> retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder<String, String>().put("fluid", f.getAttributes().getStill(null).toString()).build());
 
-                    BakedBloodContainerModel.FLUID_MODELS[x].put(f.getName(), retexturedModel.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT));//TODO 1.14 fluid test
+                    BakedBloodContainerModel.FLUID_MODELS[x].put(f, retexturedModel.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT));
 
                 }
             }
@@ -112,21 +108,18 @@ public class ClientEventHandler {
 
         } catch (Exception e) {
             LOGGER.error("Failed to load fluid models for blood container", e);
-
-            return;
         }
-
 
         try {
             for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
-                IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID, "models/block/altar_inspiration/blood" + (x + 1)));//TODO 1.14 fluid Test & waiting for fluids
+                IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID, "block/altar_inspiration/blood" + (x + 1)));
                 BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT);
             }
             Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(AltarInspirationBlock.regName)) {//TODO 1.14 fluid test
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(AltarInspirationBlock.regName)) {
                     modelLocations.add(modelLoc);
                 }
             }
@@ -142,19 +135,21 @@ public class ClientEventHandler {
             }
         } catch (Exception e) {
             LOGGER.error("Failed to load fluid models for altar inspiration", e);
-
         }
 
         try {
             for (int x = 0; x < BakedWeaponTableModel.FLUID_LEVELS; x++) {
-                IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/weapon_table/weapon_table_lava" + (x + 1)));
-                BakedWeaponTableModel.FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT);//TODO 1.14 fluid test
+                IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID, "block/weapon_table/weapon_table_lava" + (x + 1)));
+                BakedWeaponTableModel.FLUID_MODELS[x][0] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y180, Attributes.DEFAULT_BAKED_FORMAT);
+                BakedWeaponTableModel.FLUID_MODELS[x][1] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y270, Attributes.DEFAULT_BAKED_FORMAT);
+                BakedWeaponTableModel.FLUID_MODELS[x][2] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT);
+                BakedWeaponTableModel.FLUID_MODELS[x][3] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y90, Attributes.DEFAULT_BAKED_FORMAT);
             }
             Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ResourceLocation modelLoc : registry.keySet()) {
-                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(WeaponTableBlock.regName)) {//TODO 1.14 fluid test
+                if (modelLoc.getNamespace().equals(REFERENCE.MODID) && modelLoc.getPath().equals(WeaponTableBlock.regName)) {
                     modelLocations.add(modelLoc);
                 }
             }

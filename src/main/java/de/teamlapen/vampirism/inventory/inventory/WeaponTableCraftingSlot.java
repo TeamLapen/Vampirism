@@ -54,7 +54,7 @@ public class WeaponTableCraftingSlot extends Slot {
         this.onCrafting(stack);
         final int lava = worldPos.applyOrElse(((world, blockPos) -> {
             if (world.getBlockState(blockPos).getBlock() instanceof WeaponTableBlock) {
-                return world.getFluidState(blockPos).getLevel();
+                return world.getBlockState(blockPos).get(WeaponTableBlock.LAVA);
             }
             return 0;
         }), 0);
@@ -64,7 +64,7 @@ public class WeaponTableCraftingSlot extends Slot {
             worldPos.consume(((world, pos) -> {
                 int remainingLava = Math.max(0, lava - recipe.getRequiredLavaUnits());
                 if (world.getBlockState(pos).getBlock() instanceof WeaponTableBlock) {
-                    world.getFluidState(pos);//TODO 1.14 fluid reduce Lava
+                    world.setBlockState(pos, world.getBlockState(pos).with(WeaponTableBlock.LAVA, remainingLava));
                 }
             }));
         }

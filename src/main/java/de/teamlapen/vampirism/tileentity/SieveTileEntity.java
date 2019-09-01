@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
+import de.teamlapen.lib.lib.util.NotDrainableTank;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.SieveBlock;
@@ -16,9 +17,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 public class SieveTileEntity extends TileEntity implements ITickableTileEntity, FluidTankWithListener.IFluidTankListener {
 
 
-    private FluidTank tank;
+    private NotDrainableTank tank;
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
     private boolean active;
@@ -38,8 +38,8 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
 
     public SieveTileEntity() {
         super(ModTiles.sieve);
-        tank = new FilteringFluidTank(2 * Fluid.BUCKET_VOLUME).setListener(this);
-        tank.setCanDrain(false);
+        tank = new FilteringFluidTank(2 * FluidAttributes.BUCKET_VOLUME).setListener(this);
+        tank.setDrainable(false);
         cap = LazyOptional.of(() -> tank);
     }
 
@@ -107,10 +107,10 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
             cooldownProcess = 15;
             if (tank.getFluidAmount() > 0) {
                 FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), Direction.UP).ifPresent(handler -> {
-                    tank.setCanDrain(true);
+                    tank.setDrainable(true);
                     FluidStack transferred = FluidUtil.tryFluidTransfer(handler, tank, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
-                    tank.setCanDrain(false);
-                    if (transferred != null && transferred.amount > 0) {
+                    tank.setDrainable(false);
+                    if (transferred != null && transferred.getAmount() > 0) {
                         cooldownProcess = 30;
                         setActive(true);
                     }
@@ -145,14 +145,14 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
         }
 
         @Override
-        public int fillInternal(FluidStack resource, boolean doFill) {
+        public int fill(FluidStack resource, FluidAction action) {
             float factor = BloodConversionRegistry.getBloodValue(resource);
             if (factor == 0f) {
                 return 0;
             }
-            FluidStack converted = new FluidStack(ModFluids.blood, (int) (factor * resource.amount));
-            int filled = super.fillInternal(converted, doFill);
-            if (doFill) SieveTileEntity.this.cooldownPull = 10;
+            FluidStack converted = new FluidStack(ModFluids.blood, (int) (factor * resource.getAmount()));
+            int filled = super.fill(converted, action);
+            if (action.execute()) SieveTileEntity.this.cooldownPull = 10;
             return (int) (filled / factor);
         }
     }

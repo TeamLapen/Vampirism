@@ -8,7 +8,7 @@
         "predicate": {
           "damage": 0.0000000
         },
-        "model": "vampirism:item/blood_bottle"
+        "model": "vampirism:item/blood_bottle_0"
       },
       {
         "predicate": {

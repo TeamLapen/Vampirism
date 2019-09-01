@@ -8,8 +8,7 @@
     "item": "vampirism:item_garlic"
   },
   "fluid": {
-    "item": "minecraft:water",
-    "__comment": "waiting for forge"
+    "fluid": "minecraft:water"
   },
   "skill": [
     "vampirism:basic_alchemy"

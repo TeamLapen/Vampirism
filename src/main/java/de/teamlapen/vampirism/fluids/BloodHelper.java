@@ -42,7 +42,7 @@ public class BloodHelper {
      * Checks if the given stack can store blood
      */
     public static boolean canStoreBlood(@Nonnull ItemStack stack) {
-        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, 1000), false) > 0).orElse(false);
+        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, 1000), IFluidHandler.FluidAction.SIMULATE) > 0).orElse(false);
     }
 
     /**
@@ -66,41 +66,41 @@ public class BloodHelper {
      * Returns the amount of blood stored in the given stack
      */
     public static int getBlood(@Nonnull ItemStack stack) {
-        return FluidUtil.getFluidContained(stack).map(s -> s.amount).orElse(0);
+        return FluidUtil.getFluidContained(stack).map(s -> s.getAmount()).orElse(0);
 
     }
 
     public static int getBlood(@Nonnull IFluidHandler cap) {
-        FluidStack stack = cap.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), false);
-        return stack == null ? 0 : stack.amount;
+        FluidStack stack = cap.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
+        return stack == null ? 0 : stack.getAmount();
     }
 
     public static int getBlood(@Nonnull LazyOptional<IFluidHandler> opt) {
         return opt.map(handler -> {
-            FluidStack stack = handler.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), false);
-            return stack == null ? 0 : stack.amount;
+            FluidStack stack = handler.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
+            return stack == null ? 0 : stack.getAmount();
         }).orElse(0);
     }
 
     /**
      * Tries to drain the given amount out of the stack.
      *
-     * @param doDrain actually drain
+     * @param action actually drain
      * @param exact   If only the exact amount should be drained or if less is ok too
      * @return Drained amount
      */
-    public static int drain(@Nonnull ItemStack stack, int amount, boolean doDrain, boolean exact) {
-        if (exact && doDrain) {
-            if (drain(stack, amount, false, false) != amount) return 0;
+    public static int drain(@Nonnull ItemStack stack, int amount, IFluidHandler.FluidAction action, boolean exact) {
+        if (exact && action.execute()) {
+            if (drain(stack, amount, IFluidHandler.FluidAction.SIMULATE, false) != amount) return 0;
         }
         return FluidUtil.getFluidHandler(stack).map(handler -> {
-            FluidStack fluidStack = handler.drain(amount, doDrain);
-            return fluidStack == null ? 0 : fluidStack.amount;
+            FluidStack fluidStack = handler.drain(amount, action);
+            return fluidStack == null ? 0 : fluidStack.getAmount();
         }).orElse(0);
     }
 
-    public static int fill(@Nonnull ItemStack stack, int amount, boolean doFill) {
-        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, amount), doFill)).orElse(0);
+    public static int fill(@Nonnull ItemStack stack, int amount, IFluidHandler.FluidAction action) {
+        return FluidUtil.getFluidHandler(stack).map(handler -> handler.fill(new FluidStack(ModFluids.blood, amount), action)).orElse(0);
     }
 
     /**
@@ -114,7 +114,7 @@ public class BloodHelper {
         if (amt <= 0) return 0;
         ItemStack stack = getBloodContainerInHotbar(player.inventory);
         if (!stack.isEmpty()) {
-            int filled = fill(stack, amt, true);
+            int filled = fill(stack, amt, IFluidHandler.FluidAction.EXECUTE);
             if (filled > 0) {
                 if (filled < amt) {
                     return fillBloodIntoInventory(player, amt - filled);
@@ -127,7 +127,7 @@ public class BloodHelper {
         ItemStack glas = getGlassBottleInHotbar(player.inventory);
         if (!glas.isEmpty() && VampirismConfig.SERVER.autoConvertGlassBottles.get()) {
             ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
-            int filled = fill(bloodBottle, amt, true);
+            int filled = fill(bloodBottle, amt, IFluidHandler.FluidAction.EXECUTE);
             if (filled == 0) {
                 LOGGER.warn("Failed to fill blood bottle with blood");
             }
