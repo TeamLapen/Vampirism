@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.inventory.container.AltarInfusionContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;

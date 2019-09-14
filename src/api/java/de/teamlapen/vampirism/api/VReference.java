@@ -10,6 +10,7 @@ import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.PlantType;
 
@@ -22,9 +23,7 @@ public class VReference {
      * One blood in the players blood stats represents this amount of mB fluid blood
      */
     public static final int FOOD_TO_FLUID_BLOOD = 100;
-    public static final float BLOOD_IMPURE_TO_PURE = 0.75f;
-    public static final String FLUID_BLOOD_NAME = "vampirismblood";
-    public static final String FLUID_IMPURE_BLOOD_NAME = "impure_vampirismblood";
+    public static Fluid blood_fluid;
 
     /**
      * Attribute which defines sundamage. Registered for all IVampire mobs as well as the EntityPlayer.

@@ -14,7 +14,7 @@ import net.minecraft.util.IWorldPosCallable;
 import java.util.function.Function;
 
 public class BloodGrinderContainer extends InventoryContainer {
-    private static final Function<ItemStack, Boolean> canProcess = stack -> BloodConversionRegistry.getImpureBloodValue(stack) > 0;
+    private static final Function<ItemStack, Boolean> canProcess = stack -> BloodConversionRegistry.existsImpureBloodValue(stack.getItem());
     public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(canProcess, 80, 34)};
 
     @Deprecated

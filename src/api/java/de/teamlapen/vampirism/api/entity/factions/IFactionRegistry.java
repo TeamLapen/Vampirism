@@ -89,5 +89,5 @@ public interface IFactionRegistry {
      * @return The created faction
      */
     @ThreadSafeAPI
-    <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
+    <T extends IFactionPlayer> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
 }

@@ -17,8 +17,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.SleepInMultiplayerScreen;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelRotation;
+import net.minecraft.fluid.EmptyFluid;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -75,7 +75,7 @@ public class ClientEventHandler {
             //For each registered fluid: Replace the fluid model texture by fluid (still) texture and cache the retextured model
 
             for (Fluid f : ForgeRegistries.FLUIDS) {
-                if (f.isEquivalentTo(Fluids.EMPTY))
+                if (f instanceof EmptyFluid)
                     continue;
                 for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
                     IModel<?> retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder<String, String>().put("fluid", f.getAttributes().getStill(null).toString()).build());

@@ -49,8 +49,6 @@ public class CoffinBlock extends VampirismBlockContainer {
     public static final BooleanProperty OCCUPIED = BooleanProperty.create("occupied");
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
-    private static final Logger LOGGER = LogManager.getLogger();
-
     public static boolean isOccupied(IBlockReader world, BlockPos pos) {
         return world.getBlockState(pos).get(OCCUPIED);
     }

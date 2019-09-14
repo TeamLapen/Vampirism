@@ -66,19 +66,19 @@ public class BloodHelper {
      * Returns the amount of blood stored in the given stack
      */
     public static int getBlood(@Nonnull ItemStack stack) {
-        return FluidUtil.getFluidContained(stack).map(s -> s.getAmount()).orElse(0);
+        return FluidUtil.getFluidContained(stack).map(FluidStack::getAmount).orElse(0);
 
     }
 
     public static int getBlood(@Nonnull IFluidHandler cap) {
         FluidStack stack = cap.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
-        return stack == null ? 0 : stack.getAmount();
+        return stack.getAmount();
     }
 
     public static int getBlood(@Nonnull LazyOptional<IFluidHandler> opt) {
         return opt.map(handler -> {
             FluidStack stack = handler.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
-            return stack == null ? 0 : stack.getAmount();
+            return stack.getAmount();
         }).orElse(0);
     }
 
@@ -95,7 +95,7 @@ public class BloodHelper {
         }
         return FluidUtil.getFluidHandler(stack).map(handler -> {
             FluidStack fluidStack = handler.drain(amount, action);
-            return fluidStack == null ? 0 : fluidStack.getAmount();
+            return fluidStack.getAmount();
         }).orElse(0);
     }
 

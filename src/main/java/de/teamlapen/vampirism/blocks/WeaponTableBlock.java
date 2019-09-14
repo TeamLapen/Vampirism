@@ -96,7 +96,8 @@ public class WeaponTableBlock extends VampirismBlock {
     @Override
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isRemote) {
-            int fluid = world.getBlockState(pos).get(LAVA);
+            int fluid = state.getFluidState().isEmpty() ? 0 : world.getFluidState(pos).get(LAVA);
+            //int fluid = world.getBlockState(pos).get(LAVA);
             boolean flag = false;
             ItemStack heldItem = player.getHeldItem(hand);
             if (fluid < MAX_LAVA) {
@@ -108,6 +109,7 @@ public class WeaponTableBlock extends VampirismBlock {
                         FluidStack drained = fluidHandler.drain(missing, IFluidHandler.FluidAction.EXECUTE);
                         if (drained.getAmount() > 0) {
                             BlockState changed = state.with(LAVA, Math.min(MAX_LAVA, fluid + drained.getAmount() / MB_PER_META));
+                            state.getFluidState().with(LAVA, Math.min(MAX_LAVA, fluid + drained.getAmount() / MB_PER_META));
                             world.setBlockState(pos, changed);
                             player.setHeldItem(hand, fluidHandler.getContainer());
                         }

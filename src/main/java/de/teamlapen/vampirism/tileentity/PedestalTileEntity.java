@@ -224,11 +224,9 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     private void drainBlood() {
         FluidUtil.getFluidHandler(this.world, this.pos.down(), Direction.UP).ifPresent(handler -> {
             FluidStack drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
-            if (drained != null && drained.getAmount() == VReference.FOOD_TO_FLUID_BLOOD) {
+            if (!drained.isEmpty() && drained.getAmount() == VReference.FOOD_TO_FLUID_BLOOD) {
                 drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.EXECUTE);
-                if (drained != null) {//Just to be safe
-                    bloodStored += drained.getAmount();
-                }
+                bloodStored += drained.getAmount();
             }
         });
     }

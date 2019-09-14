@@ -94,7 +94,6 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
                     });
 
                 }
-                tileEntity.markDirty();
                 return true;
             }
         } else {

@@ -20,7 +20,6 @@ public class AltarInfusionContainer extends InventoryContainer {
     @Deprecated
     public AltarInfusionContainer(int id, PlayerInventory playerInventory) {
         this(id, playerInventory, new Inventory(3), IWorldPosCallable.DUMMY);
-        //super(ModContainer.altar_infusion,id,IWorldPosCallable.DUMMY,SELECTOR_INFOS);
         this.addPlayerSlots(playerInventory);
     }
 

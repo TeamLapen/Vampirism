@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.fluids.BloodFluid;
 import de.teamlapen.vampirism.fluids.ImpureBloodFluid;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -15,5 +16,7 @@ public class ModFluids {
     static void registerFluids(IForgeRegistry<Fluid> registry) {
         registry.register(blood);
         registry.register(impure_blood);
+
+        VReference.blood_fluid = blood;
     }
 }

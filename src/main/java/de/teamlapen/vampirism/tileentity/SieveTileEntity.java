@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.util.NotDrainableTank;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.SieveBlock;
-import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -89,7 +88,6 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
     @Override
     public void onTankContentChanged() {
         this.setActive(true);
-
     }
 
     @Override
@@ -110,7 +108,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
                     tank.setDrainable(true);
                     FluidStack transferred = FluidUtil.tryFluidTransfer(handler, tank, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
                     tank.setDrainable(false);
-                    if (transferred != null && transferred.getAmount() > 0) {
+                    if (!transferred.isEmpty()) {
                         cooldownProcess = 30;
                         setActive(true);
                     }
@@ -146,14 +144,12 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
 
         @Override
         public int fill(FluidStack resource, FluidAction action) {
-            float factor = BloodConversionRegistry.getBloodValue(resource);
-            if (factor == 0f) {
+            if (!BloodConversionRegistry.existsBloodValue(resource.getFluid()))
                 return 0;
-            }
-            FluidStack converted = new FluidStack(ModFluids.blood, (int) (factor * resource.getAmount()));
+            FluidStack converted = BloodConversionRegistry.getBloodFromFluid(resource);
             int filled = super.fill(converted, action);
             if (action.execute()) SieveTileEntity.this.cooldownPull = 10;
-            return (int) (filled / factor);
+            return (int) (filled / BloodConversionRegistry.getBloodValue(resource));
         }
     }
 }

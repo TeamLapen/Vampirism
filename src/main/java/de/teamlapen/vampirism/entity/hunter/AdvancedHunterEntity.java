@@ -33,6 +33,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -70,7 +71,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Override
     public boolean attackEntityAsMob(Entity entity) {
         boolean flag = super.attackEntityAsMob(entity);
-        if (flag && this.getHeldItemMainhand() == null) {
+        if (flag && this.getHeldItemMainhand().isEmpty()) {
             this.swingArm(Hand.MAIN_HAND);  //Swing stake if nothing else is held
         }
         return flag;
@@ -96,6 +97,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return getDataManager().get(LEVEL);
     }
 
+    @Nonnull
     @Override
     public ITextComponent getName() {
         String senderName = this.getDataManager().get(NAME);

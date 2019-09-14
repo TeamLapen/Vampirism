@@ -4,7 +4,9 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
+import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.block.StairsBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -25,7 +27,8 @@ public class ModBlocks {
     public static final CastleBricksBlock castle_block_dark_stone = getNull();
     public static final CastleBricksBlock castle_block_normal_brick = getNull();
     public static final CursedEarthBlock cursed_earth = getNull();
-    public static final VampirismFlowerBlock vampirism_flower_vampire_orchid = getNull();
+    public static final VampirismFlowerBlock vampirism_flower_vampire_orchid = new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID);
+    public static final FlowerPotBlock potted_vampire_orchid = getNull();
     public static final TentBlock tent = getNull();
     public static final TentMainBlock tent_main = getNull();
     public static final CoffinBlock block_coffin = getNull();
@@ -117,7 +120,7 @@ public class ModBlocks {
         registry.register(castleBlock_purple_brick);
         registry.register(new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_BRICK_BLOODY));
         registry.register(new CastleBricksBlock(CastleBricksBlock.EnumVariant.NORMAL_BRICK));
-        registry.register(new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID));
+        registry.register(vampirism_flower_vampire_orchid);
         registry.register(new CursedEarthBlock());
         registry.register(new TentBlock());
         registry.register(new TentMainBlock());
@@ -140,6 +143,7 @@ public class ModBlocks {
         registry.register(new GarlicBeaconBlock(GarlicBeaconBlock.Type.NORMAL));
         registry.register(new GarlicBeaconBlock(GarlicBeaconBlock.Type.WEAK));
         registry.register(new GarlicBeaconBlock(GarlicBeaconBlock.Type.IMPROVED));
+        registry.register(new FlowerPotBlock(vampirism_flower_vampire_orchid, Block.Properties.create(Material.MISCELLANEOUS).zeroHardnessAndResistance()).setRegistryName(REFERENCE.MODID, "potted_vampire_orchid"));
 
 
         registry.register(new CastleStairsBlock(castleBlock_dark_brick.getDefaultState(), "dark_brick"));
@@ -155,6 +159,4 @@ public class ModBlocks {
         registry.register(new TotemTopBlock());
         registry.register(new TotemBaseBlock());
     }
-
-
 }
