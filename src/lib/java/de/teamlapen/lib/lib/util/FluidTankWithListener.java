@@ -2,6 +2,7 @@ package de.teamlapen.lib.lib.util;
 
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 public class FluidTankWithListener extends NotDrainableTank {
@@ -27,6 +28,21 @@ public class FluidTankWithListener extends NotDrainableTank {
     @Override
     protected void onContentsChanged() {
         if (listener != null) listener.onTankContentChanged();
+    }
+
+    @Override
+    public int fill(FluidStack resource, FluidAction action) {
+        int amount = super.fill(resource, action);
+        listener.onTankContentChanged();
+        return amount;
+    }
+
+    @Nonnull
+    @Override
+    public FluidStack drain(int maxDrain, FluidAction action) {
+        FluidStack stack = super.drain(maxDrain, action);
+        listener.onTankContentChanged();
+        return stack;
     }
 
     public interface IFluidTankListener {

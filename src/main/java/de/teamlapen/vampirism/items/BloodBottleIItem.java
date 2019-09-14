@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.UseAction;
@@ -14,12 +16,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import javax.annotation.Nonnull;
 
 /**
  * Stores blood
@@ -47,6 +52,17 @@ public class BloodBottleIItem extends VampirismItem {
     }
 
     @Override
+    public void fillItemGroup(@Nonnull ItemGroup group, @Nonnull NonNullList<ItemStack> list) {
+        super.fillItemGroup(group, list);
+        if (this.isInGroup(group)) {
+            ItemStack stack = new ItemStack(ModItems.blood_bottle);
+            stack.setDamage(9);
+            list.add(stack);
+        }
+    }
+
+    @Nonnull
+    @Override
     public UseAction getUseAction(ItemStack stack) {
         return UseAction.DRINK;
     }
@@ -62,8 +78,9 @@ public class BloodBottleIItem extends VampirismItem {
         return new BloodBottleFluidHandler(stack, capacity);
     }
 
+    @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
         VampirePlayer vampire = VampirePlayer.get(playerIn);
         if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
@@ -104,5 +121,10 @@ public class BloodBottleIItem extends VampirismItem {
                 player.setActiveHand(player.getActiveHand());
             }
         }
+    }
+
+    @Override
+    public boolean showDurabilityBar(ItemStack stack) {
+        return false;
     }
 }

@@ -4,9 +4,9 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.fluid.Fluid;
 
 public abstract class VampirismFluid extends Fluid {
-    protected final String fluidname;
+    private final String fluidname;
 
-    public VampirismFluid(String name) {
+    VampirismFluid(String name) {
         this.setRegistryName(REFERENCE.MODID, name);
         this.fluidname = name;
     }

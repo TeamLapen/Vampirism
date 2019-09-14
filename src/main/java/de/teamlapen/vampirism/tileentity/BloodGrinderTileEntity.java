@@ -40,7 +40,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
 
 
     private static boolean canProcess(ItemStack stack) {
-        return BloodConversionRegistry.getImpureBloodValue(stack) > 0;
+        return BloodConversionRegistry.existsImpureBloodValue(stack.getItem());
     }
 
 
@@ -160,6 +160,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
                 final int slot = i;
                 ItemStack stack = itemHandler.extractItem(i, 1, true);
                 int blood = BloodConversionRegistry.getImpureBloodValue(stack);
+                //LogUtil.LOGGER.info(blood);
                 if (blood > 0) {
                     FluidStack fluid = new FluidStack(ModFluids.impure_blood, blood);
                     FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), Direction.UP).ifPresent(handler -> {

@@ -79,9 +79,11 @@ public class HunterIntelItem extends VampirismItem {
                 return ModItems.hunter_intel_7;
             case 8:
                 return ModItems.hunter_intel_8;
+            case 9:
+                return ModItems.hunter_intel_9;
             default:
                 LOGGER.warn("HunterIntel of level {} does not exist", level);
-                return ModItems.hunter_intel_8;
+                return ModItems.hunter_intel_9;
 
         }
     }

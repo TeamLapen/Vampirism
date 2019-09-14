@@ -12,6 +12,8 @@ import de.teamlapen.vampirism.items.HunterIntelItem;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
@@ -27,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * Container which handles hunter levelup at an hunter trainer
  */
-public class HunterTrainerContainer extends InventoryContainer {
+public class HunterTrainerContainer extends InventoryContainer implements IInventoryChangedListener {
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(Items.IRON_INGOT), 27, 26), new SelectorInfo(Ingredient.fromItems(Items.GOLD_INGOT), 57, 26), new SelectorInfo(Ingredient.fromTag(ModTags.Items.HUNTER_INTEL), 86, 26)};
     private final PlayerEntity player;
     private boolean changed = false;
@@ -42,6 +44,7 @@ public class HunterTrainerContainer extends InventoryContainer {
 
     public HunterTrainerContainer(int id, PlayerInventory playerInventory, @Nullable HunterTrainerEntity trainer) {
         super(ModContainer.hunter_trainer, id, playerInventory, trainer == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(trainer.world, trainer.getPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        ((Inventory) this.inventory).addListener(this);
         this.player = playerInventory.player;
         this.addPlayerSlots(playerInventory);
         this.entity = trainer;
@@ -141,7 +144,12 @@ public class HunterTrainerContainer extends InventoryContainer {
 
             slot.onTake(playerEntity, slotStack);
         }
-        changed = true;
+        //changed = true;
         return result;
+    }
+
+    @Override
+    public void onInventoryChanged(IInventory iInventory) {
+        changed = true;
     }
 }

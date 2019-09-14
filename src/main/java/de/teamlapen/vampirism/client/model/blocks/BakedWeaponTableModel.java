@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,30 +39,32 @@ public class BakedWeaponTableModel implements IBakedModel {
         this.baseModel = baseModel;
     }
 
+    @Nonnull
     @Override
     public ItemCameraTransforms getItemCameraTransforms() {
         return baseModel.getItemCameraTransforms();
     }
 
+    @Nonnull
     @Override
     public ItemOverrideList getOverrides() {
         return baseModel.getOverrides();
     }
 
+    @Nonnull
     @Override
     public TextureAtlasSprite getParticleTexture() {
         return baseModel.getParticleTexture();
     }
 
+    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
-        List<BakedQuad> quads = new LinkedList<>();
-
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand) {
+        List<BakedQuad> quads = new LinkedList<>(baseModel.getQuads(state, side, rand));
         int fluidLevel = state == null ? 0 : state.get(WeaponTableBlock.LAVA);
 
-        quads.addAll(baseModel.getQuads(state, side, rand));
         if (fluidLevel > 0 && fluidLevel <= FLUID_LEVELS) {
-            quads.addAll(FLUID_MODELS[fluidLevel - 1][state == null ? 0 : state.get(WeaponTableBlock.FACING).getHorizontalIndex()].getQuads(state, side, rand));
+            quads.addAll(FLUID_MODELS[fluidLevel - 1][state.get(WeaponTableBlock.FACING).getHorizontalIndex()].getQuads(state, side, rand));
         }
 
         return quads;

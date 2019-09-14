@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.OpenVampireBookPacket;
 import de.teamlapen.vampirism.util.VampireBookManager;
@@ -46,7 +45,7 @@ public class VampireBookItem extends VampirismItem {
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         if (isInGroup(group)) {
-            items.add(VampireBookManager.getInstance().getRandomBook(new Random()).setDisplayName(UtilLib.translated("item.vampirism.vampire_book.name")));
+            items.add(VampireBookManager.getInstance().getRandomBook(new Random()));
         }
     }
 

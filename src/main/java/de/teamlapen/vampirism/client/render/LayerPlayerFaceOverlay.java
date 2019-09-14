@@ -25,7 +25,7 @@ public class LayerPlayerFaceOverlay<T extends CreatureEntity & IPlayerFace> exte
 
     @Override
     public void render(T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-
+        //TODO 1.14 check overlay rendering
         String name = entitylivingbaseIn.getPlayerFaceName();
         ResourceLocation loc = name == null ? null : AbstractClientPlayerEntity.getLocationSkin(name);
         AbstractClientPlayerEntity.getDownloadImageSkin(loc, name);

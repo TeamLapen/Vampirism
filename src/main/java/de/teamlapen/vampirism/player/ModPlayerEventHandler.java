@@ -181,7 +181,7 @@ public class ModPlayerEventHandler {
                             convert = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace()).map(fluidHandler -> {
                                 boolean flag = false;
                                 FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.blood, 1000), IFluidHandler.FluidAction.SIMULATE);
-                                if (drain != null && drain.getAmount() >= BloodBottleFluidHandler.MULTIPLIER) {
+                                if (drain.getAmount() >= BloodBottleFluidHandler.MULTIPLIER) {
                                     flag = true;
                                 }
                                 if (flag && block instanceof AltarInspirationBlock) {

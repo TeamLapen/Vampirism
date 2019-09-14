@@ -50,6 +50,9 @@ public class ModItems {
     public static final TentItem item_tent = getNull();
     public static final TentItem item_tent_spawner = getNull();
 
+    public static final BucketItem blood_bucket = getNull();
+    public static final BucketItem impure_blood_bucket = getNull();
+
     public static final VampirismItemBloodFood human_heart = getNull();
     public static final VampirismItemBloodFood weak_human_heart = getNull();
 
@@ -72,6 +75,7 @@ public class ModItems {
     public static final HunterIntelItem hunter_intel_6 = getNull();
     public static final HunterIntelItem hunter_intel_7 = getNull();
     public static final HunterIntelItem hunter_intel_8 = getNull();
+    public static final HunterIntelItem hunter_intel_9 = getNull();
 
     public static final SimpleCrossbowItem basic_crossbow = getNull();
     public static final DoubleCrossbowItem basic_double_crossbow = getNull();
@@ -363,5 +367,8 @@ public class ModItems {
         registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.ghost, 0x626262, 0xbcbcbc, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "ghost_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "hunter_trainer_spawn_egg"));
+
+        registry.register(new BucketItem(ModFluids.blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "blood_bucket"));
+        registry.register(new BucketItem(ModFluids.impure_blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "impure_blood_bucket"));
     }
 }

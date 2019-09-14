@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.tileentity;
 
-import de.teamlapen.lib.lib.util.NotDrainableTank;
+import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModParticles;
@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
 /**
  * Handle blood storage and leveling
  */
-public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements ITickableTileEntity {
+public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements ITickableTileEntity, FluidTankWithListener.IFluidTankListener {
     public static final int CAPACITY = 100 * VReference.FOOD_TO_FLUID_BLOOD;
     private final int RITUAL_TIME = 60;
     private int ritualTicksLeft = 0;
@@ -51,7 +51,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
 
     public AltarInspirationTileEntity() {
         super(ModTiles.altar_inspiration);
-        this.tank = new InternalTank(CAPACITY);
+        this.tank = new InternalTank(CAPACITY).setListener(this);
     }
 
     @Override
@@ -116,7 +116,6 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         } else {
             tank.drain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }
-        markDirty();
         ritualPlayer = p;
         ritualTicksLeft = RITUAL_TIME;
     }
@@ -130,8 +129,6 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
                 case 5:
                     ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), true));
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
-                    VampirePlayer.get(ritualPlayer).drinkBlood(100, 0);
-
                     break;
                 case 1:
                     VampirePlayer player = VampirePlayer.get(ritualPlayer);
@@ -143,7 +140,6 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
                     ritualPlayer.addPotionEffect(new EffectInstance(Effects.REGENERATION, targetLevel * 10 * 20));
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
                     VampirePlayer.get(ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false);
-                    markDirty();
                     break;
                 default:
                     break;
@@ -154,7 +150,12 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         ritualTicksLeft--;
     }
 
-    private static class InternalTank extends NotDrainableTank {
+    @Override
+    public void onTankContentChanged() {
+        markDirty();
+    }
+
+    private static class InternalTank extends FluidTankWithListener {
 
         private InternalTank(int capacity) {
             super(capacity, fluidStack -> ModFluids.blood.isEquivalentTo(fluidStack.getFluid()));

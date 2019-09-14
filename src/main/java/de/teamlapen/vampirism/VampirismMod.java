@@ -102,7 +102,6 @@ public class VampirismMod {
     private static final CreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = new CreatureAttribute();
 
     public static VampirismMod instance;
-    @SuppressWarnings("Convert2MethodRef")
     public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean inDev = false;
 
@@ -158,6 +157,7 @@ public class VampirismMod {
         event.getServer().getResourceManager().addReloadListener(SkillTreeManager.getInstance());
         event.getServer().getResourceManager().addReloadListener(BloodValueLoaderEntites.getInstance());
         event.getServer().getResourceManager().addReloadListener(BloodValueLoaderItems.getInstance());
+        event.getServer().getResourceManager().addReloadListener(BloodValueLoaderFluids.getInstance());
     }
 
     @SubscribeEvent

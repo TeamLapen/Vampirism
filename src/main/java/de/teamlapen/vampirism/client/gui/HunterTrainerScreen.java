@@ -53,6 +53,7 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
             PlayerEntity player = Minecraft.getInstance().player;
             UtilLib.spawnParticles(player.getEntityWorld(), ParticleTypes.ENCHANT, player.posX, player.posY, player.posZ, 1, 1, 1, 100, 1);
             player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
+            this.onClose();
         }));
         this.buttonLevelup.active = false;
     }

@@ -20,7 +20,6 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidStack;
-import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,9 +62,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
     public BakedBloodContainerModel(IBakedModel baseModel, FluidStack stack) {
         this.baseModel = baseModel;
         this.fluid = stack.getFluid();
-        LogManager.getLogger().info(1 + " " + stack.getAmount() / BloodContainerTileEntity.LEVEL_AMOUNT);
         this.fluidLevel = MathHelper.clamp(stack.getAmount() / BloodContainerTileEntity.LEVEL_AMOUNT, 1, FLUID_LEVELS) - 1;
-        LogManager.getLogger().info(fluidLevel);
         item = true;
     }
 

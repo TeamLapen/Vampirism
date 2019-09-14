@@ -54,8 +54,7 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
         FluidStack old = tank.getFluid();
         this.read(pkt.getNbtCompound());
         if (!old.isEmpty() && !old.isFluidStackIdentical(tank.getFluid()) || old.isEmpty() && !tank.getFluid().isEmpty()) {
-            updateModelData(true);
-            this.world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+            markDirty();
         }
     }
 
@@ -85,7 +84,7 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     @Override
     public void onTankContentChanged() {
         FluidStack fluid = tank.getFluid();
-        if (fluid.isEmpty() && lastSyncedAmount != Integer.MIN_VALUE || !fluid.isEmpty() && Math.abs(fluid.getAmount() - lastSyncedAmount) >= VReference.FOOD_TO_FLUID_BLOOD) {
+        if (lastSyncedAmount != Integer.MIN_VALUE || !fluid.isEmpty() && Math.abs(fluid.getAmount() - lastSyncedAmount) >= VReference.FOOD_TO_FLUID_BLOOD) {
             this.markDirty();
             this.lastSyncedAmount = fluid.isEmpty() ? Integer.MIN_VALUE : fluid.getAmount();
         }

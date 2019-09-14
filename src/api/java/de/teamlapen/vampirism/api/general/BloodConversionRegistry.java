@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.api.general;
 
 import com.google.common.collect.Maps;
 
+import de.teamlapen.vampirism.api.VReference;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -27,10 +29,10 @@ public class BloodConversionRegistry {
     private @Nonnull
     static final Map<ResourceLocation, Float> fluids = Maps.newHashMap();
 
-    public static void applyNewFluidResources(Map<ResourceLocation, Integer> values, int multiplier) {
+    public static void applyNewFluidResources(Map<ResourceLocation, Integer> values, int divider) {
         fluids.clear();
         for (Map.Entry<ResourceLocation, Integer> entry : values.entrySet()) {
-            fluids.put(entry.getKey(), ((float) entry.getValue()) / multiplier);
+            fluids.put(entry.getKey(), ((float) entry.getValue()) / divider);
         }
     }
 
@@ -54,6 +56,10 @@ public class BloodConversionRegistry {
         return 0;
     }
 
+    public static boolean existsImpureBloodValue(@Nonnull Item item) {
+        return items.containsKey(item.getRegistryName());
+    }
+
     /**
      * Get the amount of blood the given fluid is worth.
      *
@@ -67,6 +73,10 @@ public class BloodConversionRegistry {
         return 0f;
     }
 
+    public static boolean existsBloodValue(@Nonnull Fluid fluid) {
+        return fluids.containsKey(fluid.getRegistryName());
+    }
+
     /**
      * Get the FluidStack of blood equivalent to the given fluid.
      *
@@ -74,8 +84,8 @@ public class BloodConversionRegistry {
      * @return Impure blood amount in mB or 0
      */
     public static FluidStack getBloodFromFluid(@Nonnull FluidStack fluid) {
-        if (fluid.getFluid().isEquivalentTo(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("vampirism:blood"))))
+        if (fluid.getFluid().isEquivalentTo(VReference.blood_fluid))
             return fluid;
-        return new FluidStack(ForgeRegistries.FLUIDS.getValue(new ResourceLocation("vampirism:blood")), (int) (getBloodValue(fluid) * fluid.getAmount()));
+        return new FluidStack(VReference.blood_fluid, (int) (getBloodValue(fluid) * fluid.getAmount()));
     }
 }

@@ -112,10 +112,14 @@ public class BloodContainerBlock extends VampirismBlockContainer {
                     playerIn.setHeldItem(hand, result.getResult());
                 }
             }
-            bloodContainer.markDirty();
             return true;
         }
         return true;
+    }
+
+    @Override
+    public void onBlockClicked(BlockState p_196270_1_, World p_196270_2_, BlockPos p_196270_3_, PlayerEntity p_196270_4_) {
+        super.onBlockClicked(p_196270_1_, p_196270_2_, p_196270_3_, p_196270_4_);
     }
 
     @Override
