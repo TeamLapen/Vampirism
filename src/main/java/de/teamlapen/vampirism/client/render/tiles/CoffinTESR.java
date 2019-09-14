@@ -37,18 +37,23 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
     @Override
     public void render(CoffinTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
         CoffinTileEntity tile = te;
-        if (!isHeadSafe(te.getWorld(), te.getPos())) return;
+        if (!tile.item) {
+            if (!isHeadSafe(te.getWorld(), te.getPos())) return;
 
-        // Calculate lid position
-        boolean occupied = CoffinBlock.isOccupied(te.getWorld(), te.getPos());
-        if (!occupied && tile.lidPos > 0)
-            tile.lidPos--;
-        else if (occupied && tile.lidPos < maxLidPos)
-            tile.lidPos++;
+            // Calculate lid position
+            boolean occupied = tile.item || CoffinBlock.isOccupied(te.getWorld(), te.getPos());
+            if (!occupied && tile.lidPos > 0)
+                tile.lidPos--;
+            else if (occupied && tile.lidPos < maxLidPos)
+                tile.lidPos++;
+        } else {
+            tile.lidPos = maxLidPos;
+        }
+
         // Logger.i("RendererCoffin", String.format("Rendering at x=%s, yDisplay=%s, z=%s, occupied=%s, lidpos=%s", te.xCoord, te.yCoord, te.zCoord, occupied, tile.lidPos));
         GlStateManager.pushMatrix();
         GlStateManager.translatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-        int color = Math.min(tile.color, 15);
+        int color = Math.min(tile.color.getId(), 15);
         bindTexture(textures[color]);
         GlStateManager.pushMatrix();
         adjustRotatePivotViaState(te);

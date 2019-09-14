@@ -10,6 +10,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeItem;
@@ -24,6 +25,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
@@ -31,23 +34,30 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraftforge.common.extensions.IForgeDimension;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+
 /**
  * Block coffin.
  */
 public class CoffinBlock extends VampirismBlockContainer {
 
-    public static final String name = "block_coffin";
+    public static final String name = "coffin";
     public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
     public static final BooleanProperty OCCUPIED = BooleanProperty.create("occupied");
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    private static final VoxelShape shape = makeShape();
+
+    public CoffinBlock() {
+        super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.2f));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(OCCUPIED, Boolean.FALSE).with(PART, CoffinPart.FOOT).with(FACING, Direction.NORTH));
+
+    }
 
     public static boolean isOccupied(IBlockReader world, BlockPos pos) {
         return world.getBlockState(pos).get(OCCUPIED);
@@ -64,12 +74,6 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     private static Direction getDirectionToOther(CoffinPart type, Direction facing) {
         return type == CoffinPart.FOOT ? facing : facing.getOpposite();
-    }
-
-    public CoffinBlock() {
-        super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.2f));
-        this.setDefaultState(this.getStateContainer().getBaseState().with(OCCUPIED, Boolean.TRUE).with(PART, CoffinPart.FOOT).with(FACING, Direction.NORTH));
-
     }
 
     @Override
@@ -105,7 +109,12 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Nonnull
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.INVISIBLE;
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return shape;
     }
 
     @Override
@@ -226,9 +235,15 @@ public class CoffinBlock extends VampirismBlockContainer {
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         CoffinPart part = state.get(PART);
         BlockPos blockpos = pos.offset(getDirectionToOther(part, state.get(FACING)));
-        BlockState iblockstate = worldIn.getBlockState(blockpos);
-        if (iblockstate.getBlock() == this && iblockstate.get(PART) != part) {
+        BlockState blockstate = worldIn.getBlockState(blockpos);
+        if (blockstate.getBlock() == this && blockstate.get(PART) != part) {
             worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 35);
+            worldIn.playEvent(player, 2001, blockpos, Block.getStateId(blockstate));
+            if (!worldIn.isRemote && !player.isCreative()) {
+                ItemStack itemstack = player.getHeldItemMainhand();
+                spawnDrops(state, worldIn, pos, null, player, itemstack);
+                spawnDrops(blockstate, worldIn, blockpos, null, player, itemstack);
+            }
             player.addStat(Stats.BLOCK_MINED.get(this));
         }
 
@@ -249,8 +264,16 @@ public class CoffinBlock extends VampirismBlockContainer {
         builder.add(FACING, OCCUPIED, PART);
     }
 
-
-
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
+        super.onBlockPlacedBy(worldIn, pos, state, entity, itemStack);
+        if (!worldIn.isRemote) {
+            BlockPos blockpos = pos.offset(state.get(HORIZONTAL_FACING));
+            worldIn.setBlockState(blockpos, state.with(PART, CoffinPart.HEAD), 3);
+            worldIn.notifyNeighbors(pos, Blocks.AIR);
+            state.updateNeighbors(worldIn, pos, 3);
+        }
+    }
 
     /**
      * Finds the player that is currently sleeping in this coffin
@@ -290,5 +313,7 @@ public class CoffinBlock extends VampirismBlockContainer {
         }
     }
 
-
+    private static VoxelShape makeShape() {
+        return Block.makeCuboidShape(0, 0, 0, 16, 13, 16);
+    }
 }

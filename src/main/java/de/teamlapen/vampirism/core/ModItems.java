@@ -44,7 +44,6 @@ public class ModItems {
     public static final VampireBloodBottleItem vampire_blood_bottle = getNull();
     public static final BloodPotionItem blood_potion = getNull();
 
-    public static final CoffinItem item_coffin = getNull();
     public static final MedChairItem item_med_chair = getNull();
 
     public static final TentItem item_tent = getNull();
@@ -212,7 +211,6 @@ public class ModItems {
         registry.register(new TentItem(true));
         registry.register(new TentItem(false));
 
-        registry.register(new CoffinItem());
         registry.register(new PureBloodItem(0));
         registry.register(new PureBloodItem(1));
         registry.register(new PureBloodItem(2));

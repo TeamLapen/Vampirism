@@ -31,7 +31,7 @@ public class ModTiles {
 
     static void registerTiles(IForgeRegistry<TileEntityType<?>> registry) {
         registry.register(create("tent", TentTileEntity::new, ModBlocks.tent_main));
-        registry.register(create("coffin", TentTileEntity::new, ModBlocks.block_coffin));
+        registry.register(create("coffin", CoffinTileEntity::new, ModBlocks.coffin));
         registry.register(create("altar_infusion", AltarInfusionTileEntity::new, ModBlocks.altar_infusion));
         registry.register(create("blood_container", BloodContainerTileEntity::new, ModBlocks.blood_container));
         registry.register(create("altar_inspiration", AltarInspirationTileEntity::new, ModBlocks.altar_inspiration));
