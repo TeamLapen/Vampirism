@@ -51,7 +51,7 @@ public class ClientEventHandler {
             if (mc.world != null) {
                 if ((mc.currentScreen == null || mc.currentScreen instanceof SleepInMultiplayerScreen) && mc.player.isSleeping()) {
                     BlockState state = mc.player.getEntityWorld().getBlockState(mc.player.getBedLocation());
-                    if (state.getBlock().equals(ModBlocks.block_coffin)) {
+                    if (state.getBlock().equals(ModBlocks.coffin)) {
                         mc.displayGuiScreen(new SleepCoffinScreen());
                     }
                 } else if (mc.currentScreen instanceof SleepCoffinScreen && !mc.player.isSleeping()) {

@@ -14,6 +14,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -21,18 +22,29 @@ import javax.annotation.Nullable;
  */
 public class CoffinTileEntity extends TileEntity implements ITickableTileEntity {
     public int lidPos;
-    public int color = 15;
+    public DyeColor color = DyeColor.BLACK;
+    public final boolean item;
 
     private boolean lastTickOccupied;
 
     public CoffinTileEntity() {
         super(ModTiles.coffin);
+        this.item = false;
+    }
+
+    public CoffinTileEntity(boolean item) {
+        super(ModTiles.coffin);
+        this.item = item;
+    }
+
+    public CoffinTileEntity(DyeColor color) {
+        this();
+        this.changeColor(color);
     }
 
     public void changeColor(DyeColor color) {
-        this.color = color.getId();
+        this.color = color;
         markDirty();
-        //TODO
     }
 
     @Override
@@ -46,6 +58,7 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
         return new SUpdateTileEntityPacket(this.getPos(), 1, getUpdateTag());
     }
 
+    @Nonnull
     @Override
     public CompoundNBT getUpdateTag() {
         return write(new CompoundNBT());
@@ -54,7 +67,8 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     @Override
     public void markDirty() {
         super.markDirty();
-        world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+        if (world != null)
+            world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
     }
 
 
@@ -65,10 +79,9 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     }
 
     @Override
-    public void read(CompoundNBT par1NBTTagCompound) {
-        super.read(par1NBTTagCompound);
-
-        this.color = par1NBTTagCompound.getInt("color");
+    public void read(CompoundNBT compound) {
+        super.read(compound);
+        this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
 
     }
 
@@ -91,7 +104,7 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         CompoundNBT nbt = super.write(compound);
-        nbt.putInt("color", color);
+        nbt.putInt("color", color.getId());
         return nbt;
     }
 }

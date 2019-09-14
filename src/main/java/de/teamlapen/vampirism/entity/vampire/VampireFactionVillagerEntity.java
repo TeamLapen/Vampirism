@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
@@ -29,7 +30,7 @@ public class VampireFactionVillagerEntity extends VampireFactionVillagerBaseEnti
                     new ItemsForHeart(new Price(10, 15), ModItems.pure_blood_0, new Price(1, 1)),
                     new ItemsForHeart(new Price(25, 30), ModItems.pure_blood_1, new Price(1, 1)),
                     new ItemsForHeart(new Price(30, 40), ModItems.pure_blood_2, new Price(1, 1)),
-                    new ItemsForHeart(new Price(1, 5), ModItems.item_coffin, new Price(1, 1))
+                    new ItemsForHeart(new Price(1, 5), ModBlocks.coffin, new Price(1, 1))
             }, {
             new BloodBottleForHeart(new Price(3, 12), new Price(1, 15), 9),
             new ItemsForHeart(new Price(30, 40), ModItems.pure_blood_4, new Price(1, 1)),

@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
 import de.teamlapen.vampirism.api.items.IBloodPotionPropertyRandomizer;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -58,7 +59,7 @@ public class BloodPotions {
         //Normal vampire skills
         //IBloodPotionCategory normalVampireSkills = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_NORMAL_VAMPIRE_SKILLS, false, "text.vampirism.blood_potion.category.normal_vampire_skills");
         registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "night_vision"), IBloodPotionRegistry.CATEGORY_NORMAL_VAMPIRE_SKILLS, false, Effects.NIGHT_VISION, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(600, 6000, 0));
-        registry.addItemsToCategory(false, IBloodPotionRegistry.CATEGORY_NORMAL_VAMPIRE_SKILLS, ModItems.vampire_fang, ModItems.blood_bottle, ModItems.item_coffin);
+        registry.addItemsToCategory(false, IBloodPotionRegistry.CATEGORY_NORMAL_VAMPIRE_SKILLS, ModItems.vampire_fang, ModItems.blood_bottle, ModBlocks.coffin.asItem());
         //Special vampire skills
         //IBloodPotionCategory specialVampireSkills = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, "text.vampirism.blood_potion.category.special_vampire_skills");
         registry.registerPotionEffect(new ResourceLocation(REFERENCE.MODID, "disguise"), IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, ModEffects.disguise_as_vampire, 5, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 0));
