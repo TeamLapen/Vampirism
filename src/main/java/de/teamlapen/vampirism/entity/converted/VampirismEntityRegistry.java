@@ -35,16 +35,19 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Filled after ResourceManager reload (after 1 tick in game)
      * Stores biteable entries
      */
-    public @Nonnull
-    static final BiteableEntryManager biteableEntryManager = new BiteableEntryManager();
+    @Nonnull
+    public static final BiteableEntryManager biteableEntryManager = new BiteableEntryManager();
 
     /**
      * Used to store convertible handlers after {@link FMLCommonSetupEvent}
      */
-    private @Nonnull
-    final Map<EntityType<? extends CreatureEntity>, IConvertingHandler> convertibles = new ConcurrentHashMap<>();
-    private @Nonnull
-    final Map<Class<? extends CreatureEntity>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
+    @Nonnull
+    private final Map<EntityType<? extends CreatureEntity>, IConvertingHandler> convertibles = new ConcurrentHashMap<>();
+    @Nonnull
+    private final Map<Class<? extends CreatureEntity>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
+    @Nonnull
+    private final Map<ResourceLocation, Integer> bloodValues = Maps.newHashMap();
+    private int bloodMultiplier = 100;
     /**
      * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
      */
@@ -103,9 +106,11 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     }
 
     public void applyNewResources(Map<ResourceLocation, Integer> valuesIn, int multiplier) {
+        this.bloodValues.putAll(valuesIn);
+        this.bloodMultiplier = multiplier;
         Map<ResourceLocation, BiteableEntry> biteables = Maps.newHashMap();
         Set<ResourceLocation> blacklist = Sets.newHashSet();
-        float bloodValueMultiplier = multiplier / 10F;
+        float bloodValueMultiplier = bloodMultiplier / 10F;
         final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.apply(null);
         for (Map.Entry<EntityType<? extends CreatureEntity>, IConvertingHandler> entry : convertibles.entrySet()) {
             ResourceLocation id = entry.getKey().getRegistryName();
@@ -132,6 +137,15 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
             }
         }
         biteableEntryManager.setNewBiteables(biteables, blacklist);
+    }
+
+    @Nonnull
+    public Map<ResourceLocation, Integer> getBloodValues() {
+        return bloodValues;
+    }
+
+    public int getBloodMultiplier() {
+        return bloodMultiplier;
     }
 
     @Nonnull

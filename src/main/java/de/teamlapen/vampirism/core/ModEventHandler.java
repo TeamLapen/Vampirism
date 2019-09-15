@@ -1,11 +1,17 @@
 package de.teamlapen.vampirism.core;
 
+import com.google.common.collect.Maps;
+import com.mojang.datafixers.util.Pair;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import de.teamlapen.vampirism.network.BloodValuePacket;
 import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.tileentity.TotemTile;
 import de.teamlapen.vampirism.util.DaySleepHelper;
@@ -14,6 +20,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -34,6 +41,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Handles all events used in central parts of the mod
@@ -124,6 +132,12 @@ public class ModEventHandler {
 
         }
         VampirismMod.dispatcher.sendTo(new SkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), (ServerPlayerEntity) event.getPlayer());
+
+        Map<ResourceLocation, Pair<Map<ResourceLocation, Integer>, Integer>> bloodValues = Maps.newConcurrentMap();
+        bloodValues.put(new ResourceLocation(REFERENCE.MODID, "entities"), new Pair<>(((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getBloodValues(), ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getBloodMultiplier()));
+        bloodValues.put(new ResourceLocation(REFERENCE.MODID, "items"), new Pair<>(BloodConversionRegistry.getItemValues(), BloodConversionRegistry.getItemMultiplier()));
+        bloodValues.put(new ResourceLocation(REFERENCE.MODID, "fluids"), new Pair<>(BloodConversionRegistry.getFluidValues(), BloodConversionRegistry.getFluidDivider()));
+        VampirismMod.dispatcher.sendTo(new BloodValuePacket(bloodValues), (ServerPlayerEntity) event.getPlayer());
 
 
 //        if (Configs.updated_vampirism) { TODO 1.14 Balance

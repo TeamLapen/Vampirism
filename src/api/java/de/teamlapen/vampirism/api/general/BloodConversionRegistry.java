@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Store blood conversion factors.
@@ -21,26 +22,43 @@ public class BloodConversionRegistry {
     /**
      * stores conversion rate from items to impure blood
      */
-    private @Nonnull
-    static final Map<ResourceLocation, Integer> items = Maps.newHashMap();
+    @Nonnull
+    private static final Map<ResourceLocation, Integer> items = Maps.newHashMap();
     /**
      * stores conversion rate from fluids to blood
      */
-    private @Nonnull
-    static final Map<ResourceLocation, Float> fluids = Maps.newHashMap();
+    @Nonnull
+    private static final Map<ResourceLocation, Integer> fluids = Maps.newHashMap();
+
+    private static int fluidDivider = 100;
+    private static int itemMultiplier = 100;
 
     public static void applyNewFluidResources(Map<ResourceLocation, Integer> values, int divider) {
         fluids.clear();
-        for (Map.Entry<ResourceLocation, Integer> entry : values.entrySet()) {
-            fluids.put(entry.getKey(), ((float) entry.getValue()) / divider);
-        }
+        fluidDivider = divider;
+        fluids.putAll(values);
     }
 
     public static void applyNewItemResources(Map<ResourceLocation, Integer> values, int multiplier) {
         items.clear();
-        for (Map.Entry<ResourceLocation, Integer> entry : values.entrySet()) {
-            items.put(entry.getKey(), entry.getValue() * multiplier);
-        }
+        itemMultiplier = multiplier;
+        items.putAll(values);
+    }
+
+    public static Map<ResourceLocation, Integer> getItemValues() {
+        return new ConcurrentHashMap<>(items);
+    }
+
+    public static Map<ResourceLocation, Integer> getFluidValues() {
+        return new ConcurrentHashMap<>(fluids);
+    }
+
+    public static int getFluidDivider() {
+        return fluidDivider;
+    }
+
+    public static int getItemMultiplier() {
+        return itemMultiplier;
     }
 
     /**
@@ -51,7 +69,7 @@ public class BloodConversionRegistry {
      */
     public static int getImpureBloodValue(@Nonnull ItemStack item) {
         if (items.containsKey(item.getItem().getRegistryName())) {
-            return items.get(item.getItem().getRegistryName());
+            return items.get(item.getItem().getRegistryName()) * itemMultiplier;
         }
         return 0;
     }
@@ -68,7 +86,7 @@ public class BloodConversionRegistry {
      */
     public static float getBloodValue(@Nonnull FluidStack fluid) {
         if (fluids.containsKey(fluid.getFluid().getRegistryName())) {
-            return fluids.get(fluid.getFluid().getRegistryName());
+            return (float) fluids.get(fluid.getFluid().getRegistryName()) / fluidDivider;
         }
         return 0f;
     }

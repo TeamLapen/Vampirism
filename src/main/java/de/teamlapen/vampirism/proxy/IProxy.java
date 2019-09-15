@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.vampirism.network.BloodValuePacket;
 import de.teamlapen.vampirism.network.OpenVampireBookPacket;
 import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.player.skills.SkillTree;
@@ -39,6 +40,9 @@ public interface IProxy extends IInitListener {
     }
 
     default void handleVampireBookPacket(OpenVampireBookPacket msg) {
+    }
+
+    default void handleBloodValuePacket(BloodValuePacket msg) {
     }
 
     default void displayRevertBackScreen() {
