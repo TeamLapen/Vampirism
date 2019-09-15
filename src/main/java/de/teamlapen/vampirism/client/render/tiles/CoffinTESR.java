@@ -49,8 +49,6 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         } else {
             tile.lidPos = maxLidPos;
         }
-
-        // Logger.i("RendererCoffin", String.format("Rendering at x=%s, yDisplay=%s, z=%s, occupied=%s, lidpos=%s", te.xCoord, te.yCoord, te.zCoord, occupied, tile.lidPos));
         GlStateManager.pushMatrix();
         GlStateManager.translatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
         int color = Math.min(tile.color.getId(), 15);

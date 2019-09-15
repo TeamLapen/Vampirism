@@ -18,13 +18,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class CastleStairsBlock extends StairsBlock {
-    private final static String REGNAME_BASE = "castle_stairs_";
+    private final static String REGNAME_BASE = "castle_stairs";
     private final CastleBricksBlock.EnumVariant variant;
 
-    public CastleStairsBlock(BlockState state, String name) {
+    public CastleStairsBlock(BlockState state, CastleBricksBlock.EnumVariant variant) {
         super(state, Properties.create(Material.ROCK).hardnessAndResistance(2, 10).sound(SoundType.STONE));
-        setRegistryName(REFERENCE.MODID, REGNAME_BASE + name);
-        variant = ((CastleBricksBlock) state.getBlock()).getVariant();
+        this.setRegistryName(REFERENCE.MODID, REGNAME_BASE + "_" + variant.getName());
+        this.variant = variant;
     }
 
 
@@ -35,5 +35,4 @@ public class CastleStairsBlock extends StairsBlock {
         tooltip.add(new TranslationTextComponent("block.vampirism.castle_block" + (variant == CastleBricksBlock.EnumVariant.DARK_STONE ? ".no_spawn" : ".vampire_spawn")).applyTextStyle(TextFormatting.ITALIC));
 
     }
-
 }

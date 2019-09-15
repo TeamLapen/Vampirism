@@ -44,7 +44,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     private @Nonnull
     final Map<EntityType<? extends CreatureEntity>, IConvertingHandler> convertibles = new ConcurrentHashMap<>();
     private @Nonnull
-    final Map<Class<? extends CreatureEntity>, String> convertibleOverlay = new ConcurrentHashMap<>();
+    final Map<Class<? extends CreatureEntity>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
     /**
      * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
      */
@@ -58,19 +58,19 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, String overlayLocation) {
+    public void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, ResourceLocation overlayLocation) {
         addConvertible(type, clazz, overlayLocation, new DefaultConvertingHandler(null));
     }
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, String overlay_loc, IConvertingHandler.IDefaultHelper helper) {
+    public void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, ResourceLocation overlay_loc, IConvertingHandler.IDefaultHelper helper) {
         addConvertible(type, clazz, overlay_loc, defaultConvertingHandlerCreator.apply(helper));
     }
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, String overlay_loc, @Nonnull IConvertingHandler handler) {
+    public void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, ResourceLocation overlay_loc, @Nonnull IConvertingHandler handler) {
         if (finished) throw new IllegalStateException("Register convertibles during InterModEnqueueEvent");
         convertibles.put(type, handler);
 
@@ -137,7 +137,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Nonnull
     @Override
     @OnlyIn(Dist.CLIENT)
-    public Map<Class<? extends CreatureEntity>, String> getConvertibleOverlay() {
+    public Map<Class<? extends CreatureEntity>, ResourceLocation> getConvertibleOverlay() {
         return convertibleOverlay;
     }
 
