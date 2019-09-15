@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:vampirism_flower_vampire_orchid"
+          "name": "vampirism:vampire_orchid"
         }
       ],
       "conditions": [

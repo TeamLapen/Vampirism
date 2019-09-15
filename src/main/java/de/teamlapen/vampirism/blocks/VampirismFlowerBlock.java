@@ -16,7 +16,7 @@ public class VampirismFlowerBlock extends BushBlock {
     public VampirismFlowerBlock(TYPE type) {
         super(Properties.create(Material.PLANTS).hardnessAndResistance(0).doesNotBlockMovement().sound(SoundType.PLANT));
         this.type = type;
-        setRegistryName(REFERENCE.MODID, regName + "_" + type.getName());
+        setRegistryName(REFERENCE.MODID, type.getName());
 
     }
 

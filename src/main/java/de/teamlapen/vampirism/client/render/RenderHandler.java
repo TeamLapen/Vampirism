@@ -207,7 +207,7 @@ public class RenderHandler {
                 if (creature != null && creature.getBlood() > 0 && !creature.hasPoisonousBlood()) {
                     renderedEntitiesWithBlood.add(event.getEntity());
 
-                } else if (VampirePlayer.get(mc.player).getSpecialAttributes().garlic_blood_vision && ((creature != null && creature.hasPoisonousBlood()) || Helper.isHunter(entity))) {
+                } else if (VampirePlayer.get(mc.player).getSpecialAttributes().blood_vision_garlic && ((creature != null && creature.hasPoisonousBlood()) || Helper.isHunter(entity))) {
                     renderedEntitiesWithGarlicInfused.add(event.getEntity());
 
                 } else {

@@ -18,6 +18,6 @@ public class VampireForestFlowerFeature extends FlowersFeature {
 
     @Override
     public BlockState getRandomFlower(Random p_202355_1_, BlockPos p_202355_2_) {
-        return ModBlocks.vampirism_flower_vampire_orchid.getDefaultState();
+        return ModBlocks.vampire_orchid.getDefaultState();
     }
 }

@@ -9,7 +9,7 @@
           "conditions": [
             {
               "condition": "minecraft:block_state_property",
-              "block": "vampirism:block_coffin",
+              "block": "vampirism:coffin",
               "properties": {
                 "part": "head"
               }

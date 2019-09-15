@@ -2,6 +2,6 @@
   "parent": "vampirism:vampire/defensive4",
   "skills": [
     "vampirism:vampire_forest_fog",
-    "vampirism:garlic_blood_vision"
+    "vampirism:blood_vision_garlic"
   ]
 }

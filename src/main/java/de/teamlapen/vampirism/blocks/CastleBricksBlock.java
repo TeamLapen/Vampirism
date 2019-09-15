@@ -54,35 +54,14 @@ public class CastleBricksBlock extends VampirismBlock {
 
 
     public enum EnumVariant implements IStringSerializable {
-        DARK_BRICK(0, "dark_brick"),
-        PURPLE_BRICK(1, "purple_brick"),
-        DARK_BRICK_BLOODY(2, "dark_brick_bloody"),
-        NORMAL_BRICK(3, "normal_brick"),
-        DARK_STONE(4, "dark_stone");
-
-
-        /**
-         * The BlockState's metadata.
-         */
-        private final int meta;
-
-        /**
-         * The EnumType's name.
-         */
-        private final String name;
-
-        EnumVariant(int metaIn, String nameIn) {
-            this.meta = metaIn;
-            this.name = nameIn;
-        }
-
+        DARK_BRICK(),
+        PURPLE_BRICK(),
+        DARK_BRICK_BLOODY(),
+        NORMAL_BRICK(),
+        DARK_STONE();
 
         public String getName() {
-            return this.name;
+            return name().toLowerCase();
         }
-
-
     }
-
-
 }

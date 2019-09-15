@@ -9,7 +9,7 @@
         "model": "vampirism:block/castle_slab_dark_stone_top"
       },
       "double": {
-        "model": "vampirism:block/castle_slab_dark_stone_double"
+        "model": "vampirism:block/castle_block_dark_stone"
       }
     }
   }

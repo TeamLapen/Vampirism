@@ -31,6 +31,7 @@ import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
@@ -49,6 +50,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         this.enableImobConversion();
     }
 
+    @Nonnull
     @Override
     public ITextComponent getName() {
         return new StringTextComponent(new TranslationTextComponent("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName()));
@@ -125,6 +127,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         return super.entityDropItem(actualDrop, offsetY);
     }
 
+    @Nonnull
     @Override
     protected ResourceLocation getLootTable() {
         if (entityCreature != null) {
@@ -200,6 +203,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         }
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "[" + super.toString() + " representing " + entityCreature + "]";
