@@ -108,7 +108,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     @Nonnull
     @Override
     public FluidStack getFluidInTank(int tank) {
-        return null;
+        return new FluidStack(ModFluids.blood, getBlood(container));
     }
 
     @Override

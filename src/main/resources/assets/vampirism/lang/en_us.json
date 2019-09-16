@@ -460,6 +460,8 @@
   "item.vampirism.vampire_baron_spawn_egg": "Vampire Baron Spawn Egg",
   "item.vampirism.ghost_spawn_egg": "Ghost Spawn Egg",
   "item.vampirism.hunter_trainer_spawn_egg": "Hunter Trainer Spawn Egg",
+  "item.vampirism.blood_bucket": "Blood Bucket",
+  "item.vampirism.impure_blood_bucket": "Impure Blood Bucket",
   "__comment": "item_old",
   "item.vampirism.vampires_fear": "Vampire's fear",
   "item.vampirism.torch": "Torch",

@@ -156,14 +156,6 @@ public class ModItems {
     public static final VampirismItem pure_salt = getNull();
     public static final VampirismItem soul_orb_vampire = getNull();
 
-    public static final SpawnEggItem spawn_egg_vampire = getNull();
-    public static final SpawnEggItem spawn_egg_vampire_hunter = getNull();
-    public static final SpawnEggItem spawn_egg_advanced_vampire = getNull();
-    public static final SpawnEggItem spawn_egg_advanced_vampire_hunter = getNull();
-    public static final SpawnEggItem spawn_egg_ghost = getNull();
-    public static final SpawnEggItem spawn_egg_vampire_baron = getNull();
-    public static final SpawnEggItem spawn_egg_hunter_trainer = getNull();
-
     public static final StakeItem stake = getNull();
     public static final VampirismItem tech_crossbow_ammo_package = getNull();
 
@@ -177,6 +169,14 @@ public class ModItems {
     public static final VampireBookItem vampire_book = getNull();
     public static final VampireFangItem vampire_fang = getNull();
     public static final VampirismItemBloodFood weak_human_heart = getNull();
+
+    public static final SpawnEggItem vampire_spawn_egg = getNull();
+    public static final SpawnEggItem vampire_hunter_spawn_egg = getNull();
+    public static final SpawnEggItem advanced_vampire_spawn_egg = getNull();
+    public static final SpawnEggItem advanced_vampire_hunter_spawn_egg = getNull();
+    public static final SpawnEggItem ghost_spawn_egg = getNull();
+    public static final SpawnEggItem vampire_baron_spawn_egg = getNull();
+    public static final SpawnEggItem hunter_trainer_spawn_egg = getNull();
 
 
 
@@ -364,13 +364,13 @@ public class ModItems {
         registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.BLACKWHITE));
         registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.WHITEBLACK));
 
-        registry.register(new SpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "spawn_egg_vampire"));
-        registry.register(new SpawnEggItem(ModEntities.vampire_hunter, 0x2d05f2, 0x2600e0, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "spawn_egg_vampire_hunter"));
-        registry.register(new SpawnEggItem(ModEntities.advanced_vampire, 0x8B15A3, 0x560a7e, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "spawn_egg_advanced_vampire"));
-        registry.register(new SpawnEggItem(ModEntities.advanced_hunter, 0x2d05f2, 0x1a028c, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "spawn_egg_advanced_vampire_hunter"));
-        registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "spawn_egg_vampire_baron"));
-        registry.register(new SpawnEggItem(ModEntities.ghost, 0x626262, 0xbcbcbc, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "spawn_egg_ghost"));
-        registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "spawn_egg_hunter_trainer"));
+        registry.register(new SpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.vampire_hunter, 0x2d05f2, 0x2600e0, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_hunter_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.advanced_vampire, 0x8B15A3, 0x560a7e, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.advanced_hunter, 0x2d05f2, 0x1a028c, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_hunter_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.ghost, 0x626262, 0xbcbcbc, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "ghost_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "hunter_trainer_spawn_egg"));
 
         registry.register(new BucketItem(ModFluids.blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "blood_bucket"));
         registry.register(new BucketItem(ModFluids.impure_blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "impure_blood_bucket"));
