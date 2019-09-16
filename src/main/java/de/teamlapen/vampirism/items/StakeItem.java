@@ -49,7 +49,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher {
                         }
                     }
                 } else if (attacker instanceof IAdvancedHunter) {
-                    instaKillLowHealth = true;//TODO make more out of this
+                    instaKillLowHealth = true;// make more out of this
                 }
                 boolean instaKill = false;
                 if (instaKillFromBehind && !UtilLib.canReallySee(target, attacker, true)) {

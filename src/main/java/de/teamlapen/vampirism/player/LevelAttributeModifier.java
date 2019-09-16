@@ -49,7 +49,7 @@ public class LevelAttributeModifier {
      * @param max         the max modifier value
      * @param type        the exponent used to calculate the actual value depending on level, levelcap and max value
      * @param operation   The operation applied to the attribute
-     * @param evenIntOnly If the modifier should be rounded to an even integer TODO maybe move this
+     * @param evenIntOnly If the modifier should be rounded to an even integer
      */
     public static void applyModifier(PlayerEntity player, IAttribute attribute, String name, int level, int lcap, double max, double type, AttributeModifier.Operation operation, boolean evenIntOnly) {
         UUID mod = modifiers.get(attribute);

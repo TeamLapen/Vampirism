@@ -103,7 +103,7 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
             int old = FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION);
             FactionPlayerHandler.get(player).setFactionLevel(VReference.HUNTER_FACTION, old + 1);
             int[] req = HunterLevelingConf.instance().getItemRequirementsForTrainer(old + 1);
-            InventoryHelper.removeItems(inventory, new int[]{req[0], req[1], 1});//TODO 1.14 client not synchronized after itemstack decrease until itemstack clicked
+            InventoryHelper.removeItems(inventory, new int[]{req[0], req[1], 1});
             player.addPotionEffect(new EffectInstance(ModEffects.saturation, 400, 2));
             changed = true;
         }

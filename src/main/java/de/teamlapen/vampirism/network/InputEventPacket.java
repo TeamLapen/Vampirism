@@ -153,7 +153,7 @@ public class InputEventPacket implements IMessage {
                             if (result == ISkillHandler.Result.OK) {
                                 skillHandler.enableSkill(skill);
                                 if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
-                                    //TODO does this cause problems with addons?
+                                    //does this cause problems with addons?
                                     CompoundNBT sync = new CompoundNBT();
                                     ((SkillHandler) skillHandler).writeUpdateForClient(sync);
                                     HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
@@ -182,7 +182,7 @@ public class InputEventPacket implements IMessage {
                             }
                         }
                         if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
-                            //TODO does this cause problems with addons?
+                            //does this cause problems with addons?
                             CompoundNBT sync = new CompoundNBT();
                             ((SkillHandler) skillHandler).writeUpdateForClient(sync);
                             HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);

@@ -50,7 +50,7 @@ public class ModEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger(ModEventHandler.class);
 
-//  TODO 1.14 wait for https://github.com/MinecraftForge/MinecraftForge/issues/5536 or find a different solution
+//  TODO 1.14 do we need this for the new system? events have been renamed
 
 //    @OnlyIn(Dist.CLIENT)
 //    @SubscribeEvent

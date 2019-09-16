@@ -180,13 +180,9 @@ public class BloodStats implements IBloodStats {
         if (ignoreModifier) {
             mult = 1F;
         } else {
-            if (attribute == null) {
-                //Probably not needed anymore TODO remove
-                LOGGER.warn("Blood exhaustion attribute is null for player %s (%s)", player, player == null ? null : player.getAttributes());
-                mult = (float) VReference.bloodExhaustion.getDefaultValue();
-            } else {
-                mult = (float) attribute.getValue();
-            }
+
+            mult = (float) attribute.getValue();
+
         }
 
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * mult, 40F);

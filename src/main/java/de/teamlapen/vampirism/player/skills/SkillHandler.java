@@ -188,7 +188,6 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     public void resetSkills() {
         disableAllSkills();
         enableRootSkill();
-        //TODO make this cost something
     }
 
     public void saveToNbt(CompoundNBT nbt) {
