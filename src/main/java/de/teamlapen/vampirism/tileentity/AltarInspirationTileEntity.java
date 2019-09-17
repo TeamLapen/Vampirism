@@ -114,7 +114,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         if (!p.world.isRemote) {
             ModParticles.spawnParticlesServer(p.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player.getRepresentingEntity().getEntityId(), false), this.pos.getX() + 0.5, this.pos.getY() + 1, this.pos.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
         } else {
-            tank.drain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
+            ((InternalTank) tank).doDrain(neededBlood, IFluidHandler.FluidAction.EXECUTE);
         }
         ritualPlayer = p;
         ritualTicksLeft = RITUAL_TIME;
@@ -135,7 +135,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
                     int targetLevel = player.getLevel() + 1;
                     VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
                     int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
-                    tank.drain(blood, IFluidHandler.FluidAction.EXECUTE);
+                    ((InternalTank) tank).doDrain(blood, IFluidHandler.FluidAction.EXECUTE);
 
                     ritualPlayer.addPotionEffect(new EffectInstance(Effects.REGENERATION, targetLevel * 10 * 20));
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
@@ -162,8 +162,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
             setDrainable(false);
         }
 
-        @Override
-        public FluidStack drain(int maxDrain, FluidAction action) {
+        public FluidStack doDrain(int maxDrain, FluidAction action) {
             this.setDrainable(true);
             FluidStack s = super.drain(maxDrain, action);
             this.setDrainable(false);

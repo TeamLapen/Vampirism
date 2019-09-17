@@ -9,35 +9,33 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.lang.reflect.Array;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public class BloodValuePacket implements IMessage {
 
     static void encode(BloodValuePacket msg, PacketBuffer buf) {
-        buf.writeVarInt(msg.values.size());
-        for (Map.Entry<ResourceLocation, Pair<Map<ResourceLocation, Integer>, Integer>> e : msg.values.entrySet()) {
-            buf.writeResourceLocation(e.getKey());
-            buf.writeVarInt(e.getValue().getFirst().size());
-            for (Map.Entry<ResourceLocation, Integer> f : e.getValue().getFirst().entrySet()) {
+        for (Pair<Map<ResourceLocation, Integer>, Integer> e : msg.values) {
+            buf.writeVarInt(e.getFirst().size());
+            for (Map.Entry<ResourceLocation, Integer> f : e.getFirst().entrySet()) {
                 buf.writeResourceLocation(f.getKey());
                 buf.writeVarInt(f.getValue());
             }
-            buf.writeVarInt(e.getValue().getSecond());
+            buf.writeVarInt(e.getSecond());
         }
     }
 
     static BloodValuePacket decode(PacketBuffer buf) {
-        Map<ResourceLocation, Pair<Map<ResourceLocation, Integer>, Integer>> values = Maps.newConcurrentMap();
-        int t = buf.readVarInt();
-        for (int i = 0; i < t; i++) {
-            ResourceLocation resourceLocation = buf.readResourceLocation();
+        @SuppressWarnings("unchecked")
+        Pair<Map<ResourceLocation, Integer>, Integer>[] values = (Pair<Map<ResourceLocation, Integer>, Integer>[]) Array.newInstance(Pair.class, 3);
+        for (int i = 0; i < 3; i++) {
             Map<ResourceLocation, Integer> map = Maps.newConcurrentMap();
             int z = buf.readVarInt();
             for (int u = 0; u < z; u++) {
                 map.put(buf.readResourceLocation(), buf.readVarInt());
             }
-            values.put(resourceLocation, new Pair<>(map, buf.readVarInt()));
+            values[i] = new Pair<>(map, buf.readVarInt());
         }
         return new BloodValuePacket(values);
     }
@@ -48,13 +46,13 @@ public class BloodValuePacket implements IMessage {
         ctx.enqueueWork(() -> VampirismMod.proxy.handleBloodValuePacket(msg));
     }
 
-    private Map<ResourceLocation, Pair<Map<ResourceLocation, Integer>, Integer>> values;
+    private Pair<Map<ResourceLocation, Integer>, Integer>[] values;
 
-    public BloodValuePacket(Map<ResourceLocation, Pair<Map<ResourceLocation, Integer>, Integer>> values) {
+    public BloodValuePacket(Pair<Map<ResourceLocation, Integer>, Integer>[] values) {
         this.values = values;
     }
 
-    public Pair<Map<ResourceLocation, Integer>, Integer> getValues(ResourceLocation resourceLocation) {
-        return values.get(resourceLocation);
+    public Pair<Map<ResourceLocation, Integer>, Integer>[] getValues() {
+        return values;
     }
 }

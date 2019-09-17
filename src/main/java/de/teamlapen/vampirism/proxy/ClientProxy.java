@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.proxy;
 
-import com.mojang.datafixers.util.Pair;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.client.core.*;
@@ -15,7 +13,6 @@ import de.teamlapen.vampirism.network.OpenVampireBookPacket;
 import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ReadBookScreen;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -138,12 +135,9 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void handleBloodValuePacket(BloodValuePacket msg) {
-        Pair<Map<ResourceLocation, Integer>, Integer> items = msg.getValues(new ResourceLocation(REFERENCE.MODID, "items"));
-        Pair<Map<ResourceLocation, Integer>, Integer> fluids = msg.getValues(new ResourceLocation(REFERENCE.MODID, "fluids"));
-        Pair<Map<ResourceLocation, Integer>, Integer> entites = msg.getValues(new ResourceLocation(REFERENCE.MODID, "entities"));
-        BloodConversionRegistry.applyNewItemResources(items.getFirst(), items.getSecond());
-        BloodConversionRegistry.applyNewFluidResources(fluids.getFirst(), fluids.getSecond());
-        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(entites.getFirst(), entites.getSecond());
+        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(msg.getValues()[0].getFirst(), msg.getValues()[0].getSecond());
+        BloodConversionRegistry.applyNewItemResources(msg.getValues()[1].getFirst(), msg.getValues()[1].getSecond());
+        BloodConversionRegistry.applyNewFluidResources(msg.getValues()[2].getFirst(), msg.getValues()[2].getSecond());
     }
 
     @Override
