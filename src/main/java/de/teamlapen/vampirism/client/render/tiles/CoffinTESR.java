@@ -37,11 +37,11 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
     @Override
     public void render(CoffinTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
         CoffinTileEntity tile = te;
-        if (!tile.item) {
+        if (!tile.renderAsItem) {
             if (!isHeadSafe(te.getWorld(), te.getPos())) return;
 
             // Calculate lid position
-            boolean occupied = tile.item || CoffinBlock.isOccupied(te.getWorld(), te.getPos());
+            boolean occupied = tile.renderAsItem || CoffinBlock.isOccupied(te.getWorld(), te.getPos());
             if (!occupied && tile.lidPos > 0)
                 tile.lidPos--;
             else if (occupied && tile.lidPos < maxLidPos)

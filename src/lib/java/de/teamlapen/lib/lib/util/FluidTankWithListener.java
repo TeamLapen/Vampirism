@@ -1,12 +1,17 @@
 package de.teamlapen.lib.lib.util;
 
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
-public class FluidTankWithListener extends NotDrainableTank {
+/**
+ * normal {@link FluidTank} with the ability do disable the draining out of this tank and adding a listener for notifications if the content of the tank changes
+ */
+public class FluidTankWithListener extends FluidTank {
 
+    private boolean drainable = true;
     private IFluidTankListener listener;
 
     public FluidTankWithListener(int capacity) {
@@ -17,12 +22,13 @@ public class FluidTankWithListener extends NotDrainableTank {
         super(capacity, validator);
     }
 
-    /**
-     * @return This
-     */
     public FluidTankWithListener setListener(IFluidTankListener listener) {
         this.listener = listener;
         return this;
+    }
+
+    public void setDrainable(boolean drainable) {
+        this.drainable = drainable;
     }
 
     @Override
@@ -40,6 +46,7 @@ public class FluidTankWithListener extends NotDrainableTank {
     @Nonnull
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
+        if (!drainable) return FluidStack.EMPTY;
         FluidStack stack = super.drain(maxDrain, action);
         listener.onTankContentChanged();
         return stack;

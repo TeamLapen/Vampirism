@@ -22,9 +22,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
@@ -86,13 +84,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
             if (opt.isPresent()) {
                 AltarInspirationTileEntity tileEntity = (AltarInspirationTileEntity) worldIn.getTileEntity(pos);
                 if (!player.isSneaking() && tileEntity != null) {
-                    tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent((handler) -> {
-                        FluidActionResult result = FluidUtil.tryEmptyContainer(stack, handler, Integer.MAX_VALUE, player, true);
-                        if (result.isSuccess()) {
-                            player.setHeldItem(hand, result.getResult());
-                        }
-                    });
-
+                    FluidUtil.interactWithFluidHandler(player, hand, worldIn, pos, hit.getFace());
                 }
                 return true;
             }

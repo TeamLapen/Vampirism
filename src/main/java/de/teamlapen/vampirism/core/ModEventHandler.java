@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 
 import de.teamlapen.lib.lib.util.UtilLib;
@@ -39,6 +38,7 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -133,10 +133,12 @@ public class ModEventHandler {
         }
         VampirismMod.dispatcher.sendTo(new SkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), (ServerPlayerEntity) event.getPlayer());
 
-        Map<ResourceLocation, Pair<Map<ResourceLocation, Integer>, Integer>> bloodValues = Maps.newConcurrentMap();
-        bloodValues.put(new ResourceLocation(REFERENCE.MODID, "entities"), new Pair<>(((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getBloodValues(), ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getBloodMultiplier()));
-        bloodValues.put(new ResourceLocation(REFERENCE.MODID, "items"), new Pair<>(BloodConversionRegistry.getItemValues(), BloodConversionRegistry.getItemMultiplier()));
-        bloodValues.put(new ResourceLocation(REFERENCE.MODID, "fluids"), new Pair<>(BloodConversionRegistry.getFluidValues(), BloodConversionRegistry.getFluidDivider()));
+        @SuppressWarnings("unchecked")
+        Pair<Map<ResourceLocation, Integer>, Integer>[] bloodValues = (Pair<Map<ResourceLocation, Integer>, Integer>[]) Array.newInstance(Pair.class, 3);
+        bloodValues[0] = new Pair<>(((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getBloodValues(), ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).getBloodMultiplier());
+        bloodValues[1] = new Pair<>(BloodConversionRegistry.getItemValues(), BloodConversionRegistry.getItemMultiplier());
+        bloodValues[2] = new Pair<>(BloodConversionRegistry.getFluidValues(), BloodConversionRegistry.getFluidDivider());
+
         VampirismMod.dispatcher.sendTo(new BloodValuePacket(bloodValues), (ServerPlayerEntity) event.getPlayer());
 
 

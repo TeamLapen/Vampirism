@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
-import de.teamlapen.lib.lib.util.NotDrainableTank;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.SieveBlock;
@@ -28,7 +27,7 @@ import javax.annotation.Nullable;
 public class SieveTileEntity extends TileEntity implements ITickableTileEntity, FluidTankWithListener.IFluidTankListener {
 
 
-    private NotDrainableTank tank;
+    private FluidTankWithListener tank;
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
     private boolean active;
