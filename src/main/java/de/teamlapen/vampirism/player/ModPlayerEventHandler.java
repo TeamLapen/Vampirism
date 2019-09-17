@@ -188,7 +188,7 @@ public class ModPlayerEventHandler {
                                     flag = false;
                                 }
                                 if (flag && block instanceof BloodContainerBlock) {
-                                    flag = event.getEntityPlayer().isSneaking();
+                                    flag = false;
                                 }
                                 return flag;
                             }).orElse(false);

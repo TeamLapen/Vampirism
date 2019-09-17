@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.tileentity.BloodContainerTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -11,6 +13,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -87,7 +90,23 @@ public class BloodContainerBlock extends VampirismBlockContainer {
 
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
-        FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getFace());
+        if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getFace()) && playerIn.getHeldItem(hand).getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.SERVER.autoConvertGlassBottles.get()) {
+            FluidUtil.getFluidHandler(worldIn, pos, hit.getFace()).ifPresent((fluidHandler -> {
+                if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.blood)) {
+                    ItemStack glass = playerIn.getHeldItem(hand);
+                    ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1);
+                    playerIn.setHeldItem(hand, bloodBottle);
+                    bloodBottle = FluidUtil.tryFillContainer(bloodBottle, fluidHandler, Integer.MAX_VALUE, playerIn, true).getResult();
+                    if (glass.getCount() > 1) {
+                        glass.shrink(1);
+                        playerIn.setHeldItem(hand, glass);
+                        playerIn.addItemStackToInventory(bloodBottle);
+                    } else {
+                        playerIn.setHeldItem(hand, bloodBottle);
+                    }
+                }
+            }));
+        }
         return true;
     }
 
