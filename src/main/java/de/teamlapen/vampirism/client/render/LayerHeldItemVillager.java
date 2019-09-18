@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.client.model.VillagerWithArmsModel;
 import de.teamlapen.vampirism.entity.hunter.AggressiveVillagerEntity;
 import net.minecraft.client.Minecraft;

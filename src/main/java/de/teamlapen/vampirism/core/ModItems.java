@@ -179,9 +179,6 @@ public class ModItems {
     public static final SpawnEggItem hunter_trainer_spawn_egg = getNull();
 
 
-
-
-
     static void registerCraftingRecipes() {
         // Brewing
         BrewingRecipeRegistry.addRecipe(Ingredient.fromStacks(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER)), Ingredient.fromStacks(new ItemStack(holy_salt)), new ItemStack(holy_salt_water));

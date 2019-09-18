@@ -27,11 +27,9 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
 
     public static final int LEVEL_AMOUNT = BloodBottleIItem.AMOUNT * VReference.FOOD_TO_FLUID_BLOOD;
     public static final int CAPACITY = LEVEL_AMOUNT * 14;
-
-    private int lastSyncedAmount = Integer.MIN_VALUE;
-
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
     public static final ModelProperty<Fluid> FLUID_PROP = new ModelProperty<>();
+    private int lastSyncedAmount = Integer.MIN_VALUE;
     private IModelData modelData;
 
 
@@ -42,20 +40,15 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     }
 
     @Nonnull
+    public FluidStack getFluid() {
+        return tank.getFluid();
+    }
+
+    @Nonnull
     @Override
     public IModelData getModelData() {
         if (modelData == null) updateModelData(false);
         return modelData;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        FluidStack old = tank.getFluid();
-        this.read(pkt.getNbtCompound());
-        if (!old.isEmpty() && !old.isFluidStackIdentical(tank.getFluid()) || old.isEmpty() && !tank.getFluid().isEmpty()) {
-            markDirty();
-        }
     }
 
     @Override
@@ -71,15 +64,25 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
         return write(new CompoundNBT());
     }
 
-    private void updateModelData(boolean refresh) {
-        FluidStack fluid = tank.getFluid();
-        int l = 0;
-        if (!fluid.isEmpty()) {
-            float amount = fluid.getAmount() / (float) BloodContainerTileEntity.LEVEL_AMOUNT;
-            l = (amount > 0 && amount < 1) ? 1 : (int) amount;
+    @Override
+    public void markDirty() {
+        if (world != null) {
+            if (world.isRemote)
+                updateModelData(true);
+            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+            super.markDirty();
         }
-        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_PROP, fluid.getFluid()).build();
-        if (refresh) ModelDataManager.requestModelDataRefresh(this);
+
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        FluidStack old = tank.getFluid();
+        this.read(pkt.getNbtCompound());
+        if (!old.isEmpty() && !old.isFluidStackIdentical(tank.getFluid()) || old.isEmpty() && !tank.getFluid().isEmpty()) {
+            markDirty();
+        }
     }
 
     @Override
@@ -92,23 +95,18 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
 
     }
 
-    @Override
-    public void markDirty() {
-        if (world != null) {
-            if (world.isRemote)
-                updateModelData(true);
-            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-            super.markDirty();
-        }
-
-    }
-
     public void setFluidStack(FluidStack stack) {
         tank.setFluid(stack);
     }
 
-    @Nonnull
-    public FluidStack getFluid() {
-        return tank.getFluid();
+    private void updateModelData(boolean refresh) {
+        FluidStack fluid = tank.getFluid();
+        int l = 0;
+        if (!fluid.isEmpty()) {
+            float amount = fluid.getAmount() / (float) BloodContainerTileEntity.LEVEL_AMOUNT;
+            l = (amount > 0 && amount < 1) ? 1 : (int) amount;
+        }
+        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_PROP, fluid.getFluid()).build();
+        if (refresh) ModelDataManager.requestModelDataRefresh(this);
     }
 }

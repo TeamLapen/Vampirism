@@ -78,7 +78,6 @@ public class VampireCloakItem extends ArmorItem {
                 "white_black"), BLACKBLUE("black_blue");
 
 
-
         private final String name;
 
         EnumCloakColor(String nameIn) {

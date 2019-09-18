@@ -35,23 +35,22 @@ import javax.annotation.Nonnull;
  */
 public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements ITickableTileEntity, FluidTankWithListener.IFluidTankListener {
     public static final int CAPACITY = 100 * VReference.FOOD_TO_FLUID_BLOOD;
+    public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
     private final int RITUAL_TIME = 60;
     private int ritualTicksLeft = 0;
     private PlayerEntity ritualPlayer;
-
-    public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
     private IModelData modelData;
+
+    public AltarInspirationTileEntity() {
+        super(ModTiles.altar_inspiration);
+        this.tank = new InternalTank(CAPACITY).setListener(this);
+    }
 
     @Nonnull
     @Override
     public IModelData getModelData() {
         if (modelData == null) updateModelData(false);
         return modelData;
-    }
-
-    public AltarInspirationTileEntity() {
-        super(ModTiles.altar_inspiration);
-        this.tank = new InternalTank(CAPACITY).setListener(this);
     }
 
     @Override
@@ -65,6 +64,16 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         return write(new CompoundNBT());
     }
 
+    @Override
+    public void markDirty() {
+        if (world != null) {
+            if (world.isRemote)
+                updateModelData(true);
+            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+            super.markDirty();
+        }
+    }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
@@ -76,26 +85,8 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     }
 
     @Override
-    public void markDirty() {
-        if (world != null) {
-            if (world.isRemote)
-                updateModelData(true);
-            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-            super.markDirty();
-        }
-    }
-
-    private void updateModelData(boolean refresh) {
-        FluidStack fluid = tank.getFluid();
-        int l = 0;
-        if (!fluid.isEmpty()) {
-            float i = (fluid.getAmount() / (float) AltarInspirationTileEntity.CAPACITY * 10);
-            l = (i > 0 && i < 1) ? 1 : (int) i;
-        }
-        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).build();
-        if (refresh) {
-            ModelDataManager.requestModelDataRefresh(this);
-        }
+    public void onTankContentChanged() {
+        markDirty();
     }
 
     public void startRitual(PlayerEntity p) {
@@ -152,9 +143,17 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         ritualTicksLeft--;
     }
 
-    @Override
-    public void onTankContentChanged() {
-        markDirty();
+    private void updateModelData(boolean refresh) {
+        FluidStack fluid = tank.getFluid();
+        int l = 0;
+        if (!fluid.isEmpty()) {
+            float i = (fluid.getAmount() / (float) AltarInspirationTileEntity.CAPACITY * 10);
+            l = (i > 0 && i < 1) ? 1 : (int) i;
+        }
+        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).build();
+        if (refresh) {
+            ModelDataManager.requestModelDataRefresh(this);
+        }
     }
 
     private static class InternalTank extends FluidTankWithListener {

@@ -40,6 +40,12 @@ public class TotemTopBlock extends VampirismBlockContainer {
 
     private final static String regName = "totem_top";
 
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 10, 13);
+        VoxelShape b = Block.makeCuboidShape(1, 1, 1, 15, 9, 15);
+        return VoxelShapes.or(a, b);
+    }
+
     public TotemTopBlock() {
         super(regName, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
 
@@ -57,16 +63,15 @@ public class TotemTopBlock extends VampirismBlockContainer {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
     public float getExplosionResistance() {
         return Float.MAX_VALUE;
     }
 
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
@@ -74,13 +79,13 @@ public class TotemTopBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return shape;
     }
 
     @Override
-    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-        return shape;
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return false;
     }
 
     @Override
@@ -109,15 +114,6 @@ public class TotemTopBlock extends VampirismBlockContainer {
         super.onReplaced(p_196243_1_, p_196243_2_, p_196243_3_, p_196243_4_, p_196243_5_);
     }
 
-
-
-    @Nullable
-    private TotemTile getTile(World world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TotemTile) return (TotemTile) tile;
-        return null;
-    }
-
     @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
         TotemTile tile = getTile(world, pos);
@@ -129,9 +125,10 @@ public class TotemTopBlock extends VampirismBlockContainer {
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
 
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 10, 13);
-        VoxelShape b = Block.makeCuboidShape(1, 1, 1, 15, 9, 15);
-        return VoxelShapes.or(a, b);
+    @Nullable
+    private TotemTile getTile(World world, BlockPos pos) {
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof TotemTile) return (TotemTile) tile;
+        return null;
     }
 }

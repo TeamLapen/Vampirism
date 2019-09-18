@@ -32,9 +32,9 @@ import java.util.Optional;
 public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory> {
     private final IWorldPosCallable worldPos;
     private final HunterPlayer hunterPlayer;
+    private final PlayerEntity player;
     private CraftingInventory craftMatrix = new CraftingInventory(this, 4, 4);
     private CraftResultInventory craftResult = new CraftResultInventory();
-    private final PlayerEntity player;
     private boolean missingLava = false;
 
     @Deprecated
@@ -81,8 +81,42 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
         return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);
     }
 
+    @Override
+    public void clear() {
+        craftMatrix.clear();
+        craftResult.clear();
+    }
+
+    @Override
+    public void func_201771_a(RecipeItemHelper recipeItemHelper) {
+        craftMatrix.fillStackedContents(recipeItemHelper);
+    }
+
+    @Override
+    public int getHeight() {
+        return craftMatrix.getHeight();
+    }
+
+    @Override
+    public int getOutputSlot() {
+        return 0;
+    }
+
+    @Override
+    public int getSize() {
+        return 17;
+    }
+
+    @Override
+    public int getWidth() {
+        return craftMatrix.getWidth();
+    }
+
+    public boolean hasLava() {
+        return worldPos.applyOrElse(((world, blockPos) -> world.getBlockState(blockPos).get(WeaponTableBlock.LAVA) > 0), false);
+    }
+
     /**
-     *
      * @return if there's a recipe available for the given setup, which requires more lava
      */
     public boolean isMissingLava() {
@@ -90,8 +124,9 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
 
     }
 
-    public boolean hasLava() {
-        return worldPos.applyOrElse(((world, blockPos) -> world.getBlockState(blockPos).get(WeaponTableBlock.LAVA) > 0), false);
+    @Override
+    public boolean matches(IRecipe<? super CraftingInventory> recipeIn) {
+        return recipeIn.matches(craftMatrix, this.player.world);
     }
 
     @Override
@@ -116,7 +151,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
             slotChangedCraftingGrid(world, this.player, this.hunterPlayer, this.craftMatrix, this.craftResult);
         });
     }
-    
+
     @Nonnull
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
@@ -179,41 +214,5 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
             }
             entityplayermp.connection.sendPacket(new SSetSlotPacket(this.windowId, 0, craftResultIn.getStackInSlot(0)));
         }
-    }
-
-    @Override
-    public void func_201771_a(RecipeItemHelper recipeItemHelper) {
-        craftMatrix.fillStackedContents(recipeItemHelper);
-    }
-
-    @Override
-    public void clear() {
-        craftMatrix.clear();
-        craftResult.clear();
-    }
-
-    @Override
-    public boolean matches(IRecipe<? super CraftingInventory> recipeIn) {
-        return recipeIn.matches(craftMatrix, this.player.world);
-    }
-
-    @Override
-    public int getOutputSlot() {
-        return 0;
-    }
-
-    @Override
-    public int getWidth() {
-        return craftMatrix.getWidth();
-    }
-
-    @Override
-    public int getHeight() {
-        return craftMatrix.getHeight();
-    }
-
-    @Override
-    public int getSize() {
-        return 17;
     }
 }

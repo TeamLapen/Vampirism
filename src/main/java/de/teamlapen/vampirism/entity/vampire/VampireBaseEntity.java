@@ -38,11 +38,51 @@ import javax.annotation.Nonnull;
 @SuppressWarnings("EntityConstructor")
 public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob {
 
+    private final boolean countAsMonsterForSpawn;
     /**
      * Rules to consider for {@link #canSpawn(IWorld, SpawnReason)}
      */
     protected SpawnRestriction spawnRestriction = SpawnRestriction.NORMAL;
-    private final boolean countAsMonsterForSpawn;
+    protected EnumStrength garlicResist = EnumStrength.NONE;
+    protected boolean canSuckBloodFromPlayer = false;
+    protected boolean vulnerableToFire = true;
+    private boolean sundamageCache;
+    private EnumStrength garlicCache = EnumStrength.NONE;
+    /**
+     * If the vampire should spawn a vampire soul at the end of its death animation.
+     * No need to store this in NBT as it is only set during onDeath() so basically 20 ticks beforehand.
+     */
+    private boolean dropSoul = false;
+    /**
+     * @param countAsMonsterForSpawn If this entity should be counted as vampire and as monster during spawning
+     */
+    public VampireBaseEntity(EntityType type, World world, boolean countAsMonsterForSpawn) {
+        super(type, world);
+        this.countAsMonsterForSpawn = countAsMonsterForSpawn;
+
+    }
+
+    @Override
+    public boolean attackEntityAsMob(Entity entity) {
+        if (canSuckBloodFromPlayer && !world.isRemote && entity instanceof PlayerEntity && !UtilLib.canReallySee((LivingEntity) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
+            int amt = VampirePlayer.get((PlayerEntity) entity).onBite(this);
+            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
+            return true;
+        }
+        return super.attackEntityAsMob(entity);
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
+        if (vulnerableToFire) {
+            if (DamageSource.IN_FIRE.equals(damageSource)) {
+                return this.attackEntityFrom(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
+            } else if (DamageSource.ON_FIRE.equals(damageSource)) {
+                return this.attackEntityFrom(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amount));
+            }
+        }
+        return super.attackEntityFrom(damageSource, amount);
+    }
 
     @Override
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
@@ -69,54 +109,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
         return super.canSpawn(worldIn, spawnReasonIn);
     }
-    protected EnumStrength garlicResist = EnumStrength.NONE;
-    protected boolean canSuckBloodFromPlayer = false;
-    protected boolean vulnerableToFire = true;
-    private boolean sundamageCache;
-    private EnumStrength garlicCache = EnumStrength.NONE;
-    /**
-     * If the vampire should spawn a vampire soul at the end of its death animation.
-     * No need to store this in NBT as it is only set during onDeath() so basically 20 ticks beforehand.
-     */
-    private boolean dropSoul = false;
-
-    /**
-     * @param countAsMonsterForSpawn If this entity should be counted as vampire and as monster during spawning
-     */
-    public VampireBaseEntity(EntityType type, World world, boolean countAsMonsterForSpawn) {
-        super(type, world);
-        this.countAsMonsterForSpawn = countAsMonsterForSpawn;
-
-    }
-
-    /**
-     * Select rules to consider for {@link #canSpawn(IWorld, SpawnReason)}
-     */
-    public void setSpawnRestriction(SpawnRestriction r) {
-        this.spawnRestriction = r;
-    }
-
-    @Override
-    public boolean attackEntityAsMob(Entity entity) {
-        if (canSuckBloodFromPlayer && !world.isRemote && entity instanceof PlayerEntity && !UtilLib.canReallySee((LivingEntity) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
-            int amt = VampirePlayer.get((PlayerEntity) entity).onBite(this);
-            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
-            return true;
-        }
-        return super.attackEntityAsMob(entity);
-    }
-
-    @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
-        if (vulnerableToFire) {
-            if (DamageSource.IN_FIRE.equals(damageSource)) {
-                return this.attackEntityFrom(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
-            } else if (DamageSource.ON_FIRE.equals(damageSource)) {
-                return this.attackEntityFrom(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amount));
-            }
-        }
-        return super.attackEntityFrom(damageSource, amount);
-    }
 
     @Override
     public boolean doesResistGarlic(EnumStrength strength) {
@@ -126,31 +118,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
         this.addPotionEffect(new EffectInstance(Effects.REGENERATION, amt * 20));
-    }
-
-    public enum SpawnRestriction {
-        /**
-         * Only entity spawn checks
-         */
-        NONE(0),
-        /**
-         * +No direct sunlight or garlic
-         */
-        SIMPLE(1),
-        /**
-         * +Avoid villages and daytime (random chance)
-         */
-        NORMAL(2),
-        /**
-         * +Only at low light level or in vampire biome on cursed earth
-         */
-        SPECIAL(3);
-
-        int level;
-
-        SpawnRestriction(int level) {
-            this.level = level;
-        }
     }
 
     @Override
@@ -226,6 +193,13 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         }
     }
 
+    /**
+     * Select rules to consider for {@link #canSpawn(IWorld, SpawnReason)}
+     */
+    public void setSpawnRestriction(SpawnRestriction r) {
+        this.spawnRestriction = r;
+    }
+
     @Override
     public boolean useBlood(int amt, boolean allowPartial) {
         this.addPotionEffect(new EffectInstance(Effects.WEAKNESS, amt * 20));
@@ -235,12 +209,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public boolean wantsBlood() {
         return false;
-    }
-
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     /**
@@ -254,12 +222,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
-    }
-
-    @Override
     protected void onDeathUpdate() {
         if (this.deathTime == 19) {
             if (!this.world.isRemote && (dropSoul && this.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT))) {
@@ -267,6 +229,18 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             }
         }
         super.onDeathUpdate();
+    }
+
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(0, new SwimGoal(this));
     }
 
     /**
@@ -278,5 +252,30 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         if (!vampireBiome) return isLowLightLevel();
         BlockState iblockstate = this.world.getBlockState((new BlockPos(this)).down());
         return ModBlocks.cursed_earth.equals(iblockstate.getBlock());
+    }
+
+    public enum SpawnRestriction {
+        /**
+         * Only entity spawn checks
+         */
+        NONE(0),
+        /**
+         * +No direct sunlight or garlic
+         */
+        SIMPLE(1),
+        /**
+         * +Avoid villages and daytime (random chance)
+         */
+        NORMAL(2),
+        /**
+         * +Only at low light level or in vampire biome on cursed earth
+         */
+        SPECIAL(3);
+
+        int level;
+
+        SpawnRestriction(int level) {
+            this.level = level;
+        }
     }
 }

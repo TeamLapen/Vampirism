@@ -115,7 +115,7 @@ public class VampirismAPI {
      * FOR INTERNAL USAGE ONLY
      */
     public static void setUpRegistries(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IVampirismEntityRegistry biteableReg, IActionManager actionMan, ISkillManager skillMan,
-            IVampireVisionRegistry vampireVisionReg, IBloodPotionRegistry bloodPotionReg, IEntityActionManager entityActionMan) {
+                                       IVampireVisionRegistry vampireVisionReg, IBloodPotionRegistry bloodPotionReg, IEntityActionManager entityActionMan) {
         factionRegistry = factionReg;
         sundamageRegistry = sundamageReg;
         entityRegistry = biteableReg;

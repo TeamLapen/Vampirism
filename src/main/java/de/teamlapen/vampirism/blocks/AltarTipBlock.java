@@ -17,8 +17,17 @@ import javax.annotation.Nullable;
  * Part of the Altar of Infusion structure
  */
 public class AltarTipBlock extends VampirismBlock {
-    private final static String name = "altar_tip";
     protected static final VoxelShape tipShape = makeShape();
+    private final static String name = "altar_tip";
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 3, 13);
+        VoxelShape b = Block.makeCuboidShape(4, 3, 4, 12, 4, 12);
+        VoxelShape c = Block.makeCuboidShape(5, 4, 5, 11, 5, 11);
+        VoxelShape d = Block.makeCuboidShape(6, 5, 6, 10, 6, 10);
+        VoxelShape e = Block.makeCuboidShape(7, 6, 7, 9, 7, 9);
+        return VoxelShapes.or(a, b, c, d, e);
+    }
 
     public AltarTipBlock() {
         super(name, Properties.create(Material.IRON).hardnessAndResistance(1f));
@@ -36,6 +45,11 @@ public class AltarTipBlock extends VampirismBlock {
     }
 
     @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return tipShape;
     }
@@ -43,19 +57,5 @@ public class AltarTipBlock extends VampirismBlock {
     @Override
     public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 3, 13);
-        VoxelShape b = Block.makeCuboidShape(4, 3, 4, 12, 4, 12);
-        VoxelShape c = Block.makeCuboidShape(5, 4, 5, 11, 5, 11);
-        VoxelShape d = Block.makeCuboidShape(6, 5, 6, 10, 6, 10);
-        VoxelShape e = Block.makeCuboidShape(7, 6, 7, 9, 7, 9);
-        return VoxelShapes.or(a, b, c, d, e);
     }
 }

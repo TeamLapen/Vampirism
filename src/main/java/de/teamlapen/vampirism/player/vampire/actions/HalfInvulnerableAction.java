@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.teamlapen.vampirism.player.vampire.actions;
 
@@ -15,7 +15,7 @@ import net.minecraft.potion.Effects;
  * @author cheaterpaul
  *
  */
-public class HalfInvulnerableAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer>{
+public class HalfInvulnerableAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     public HalfInvulnerableAction() {
         super();

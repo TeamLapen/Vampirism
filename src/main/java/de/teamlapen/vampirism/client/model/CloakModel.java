@@ -81,7 +81,7 @@ public class CloakModel<T extends LivingEntity> extends BipedModel<T> {
 
     @Override
     public void setRotationAngles(T entityIn, float f, float f1, float f2, float f3, float f4, float f5) {
-        boolean flag = entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getTicksElytraFlying() > 4;
+        boolean flag = entityIn instanceof LivingEntity && entityIn.getTicksElytraFlying() > 4;
 
         float f6 = 1.0F;
         if (flag) {

@@ -75,11 +75,6 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterEntityActions(RegistryEvent.Register<IEntityAction> event) {
-        EntityActions.registerDefaultActions(event.getRegistry());
-    }
-
-    @SubscribeEvent
     public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
 
         ModBiomes.registerBiomes(event.getRegistry());
@@ -90,6 +85,11 @@ public class RegistryManager implements IInitListener {
     public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
 
         ModBlocks.registerBlocks(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterContainer(RegistryEvent.Register<ContainerType<?>> event) {
+        ModContainer.registerContainer(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -105,6 +105,21 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onRegisterEntityActions(RegistryEvent.Register<IEntityAction> event) {
+        EntityActions.registerDefaultActions(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterFeatures(RegistryEvent.Register<Feature<?>> event) {
+        ModWorldFeatures.registerFeatures(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterFluids(RegistryEvent.Register<Fluid> event) {
+        ModFluids.registerFluids(event.getRegistry());
+    }
+
+    @SubscribeEvent
     public void onRegisterItems(RegistryEvent.Register<Item> event) {
 
         ModItems.registerItems(event.getRegistry());
@@ -112,8 +127,8 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> event) {
-        ModTiles.registerTiles(event.getRegistry());
+    public void onRegisterParticles(RegistryEvent.Register<ParticleType<?>> event) {
+        ModParticles.registerParticles(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -125,6 +140,11 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterProfessions(RegistryEvent.Register<VillagerProfession> event) {
         ModEntities.registerProfessions(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterRecipeSerializer(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+        ModRecipes.registerSerializer(event.getRegistry());
     }
 
     @SubscribeEvent
@@ -141,32 +161,12 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterContainer(RegistryEvent.Register<ContainerType<?>> event) {
-        ModContainer.registerContainer(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterParticles(RegistryEvent.Register<ParticleType<?>> event) {
-        ModParticles.registerParticles(event.getRegistry());
-    }
-
-    @SubscribeEvent
     public void onRegisterStats(RegistryEvent.Register<StatType<?>> event) {
         ModStats.registerStats(event.getRegistry());
     }
 
     @SubscribeEvent
-    public void onRegisterFeatures(RegistryEvent.Register<Feature<?>> event) {
-        ModWorldFeatures.registerFeatures(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterRecipeSerializer(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        ModRecipes.registerSerializer(event.getRegistry());
-    }
-
-    @SubscribeEvent
-    public void onRegisterFluids(RegistryEvent.Register<Fluid> event) {
-        ModFluids.registerFluids(event.getRegistry());
+    public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> event) {
+        ModTiles.registerTiles(event.getRegistry());
     }
 }

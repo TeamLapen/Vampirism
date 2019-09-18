@@ -32,41 +32,6 @@ public class BloodValueLoaderEntites extends BloodValueLoader {
         return INSTANCE;
     }
 
-    private BloodValueLoaderEntites() {
-        super("vampirism_blood_values/entities", (values, multiplier) -> ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(values, multiplier), new ResourceLocation("multiplier"));
-    }
-
-    /**
-     * Reads automatically calculated values from world file
-     */
-    private void loadDynamicBloodValues(File f) {
-        try {
-            Map<ResourceLocation, Integer> saved = loadBloodValuesFromReader(new InputStreamReader(new FileInputStream(f)), f.getName());
-            VampirismEntityRegistry.biteableEntryManager.addCalculated(saved);
-        } catch (IOException e) {
-            LOGGER.error(LogUtil.CONFIG, "[ModCompat]Could not read saved blood values from world from file {} {}", f, e);
-        }
-    }
-
-    /**
-     * Saves blood values to file to be saved in world dir
-     */
-    private void saveDynamicBloodValues(File f) {
-        Map<ResourceLocation, Integer> values = VampirismEntityRegistry.biteableEntryManager.getValuesToSave();
-        if (!f.exists() && values.isEmpty()) return; //Don't create a empty file
-        if (!f.exists()) {
-            if (f.getParentFile() != null) f.getParentFile().mkdirs();
-        }
-        try {
-            if (!writeBloodValues(new FileWriter(f), values, "Dynamically calculated blood values - DON'T EDIT")) {
-                LOGGER.warn(LogUtil.CONFIG, "Could not write calculated values to file");
-            }
-        } catch (IOException e) {
-            LOGGER.error(LogUtil.CONFIG, "Failed to write calculated values to file", e);
-        }
-    }
-
-
     public static void onServerStarting(MinecraftServer server) {
         bloodValueWorldFile = new File(new File(server.getWorld(DimensionType.OVERWORLD).getSaveHandler().getWorldDirectory(), REFERENCE.MODID), "calculated-blood-values.txt");
         if (bloodValueWorldFile.exists()) {
@@ -107,5 +72,40 @@ public class BloodValueLoaderEntites extends BloodValueLoader {
             w.close();
         }
         return false;
+    }
+
+
+    private BloodValueLoaderEntites() {
+        super("vampirism_blood_values/entities", (values, multiplier) -> ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).applyNewResources(values, multiplier), new ResourceLocation("multiplier"));
+    }
+
+    /**
+     * Reads automatically calculated values from world file
+     */
+    private void loadDynamicBloodValues(File f) {
+        try {
+            Map<ResourceLocation, Integer> saved = loadBloodValuesFromReader(new InputStreamReader(new FileInputStream(f)), f.getName());
+            VampirismEntityRegistry.biteableEntryManager.addCalculated(saved);
+        } catch (IOException e) {
+            LOGGER.error(LogUtil.CONFIG, "[ModCompat]Could not read saved blood values from world from file {} {}", f, e);
+        }
+    }
+
+    /**
+     * Saves blood values to file to be saved in world dir
+     */
+    private void saveDynamicBloodValues(File f) {
+        Map<ResourceLocation, Integer> values = VampirismEntityRegistry.biteableEntryManager.getValuesToSave();
+        if (!f.exists() && values.isEmpty()) return; //Don't create a empty file
+        if (!f.exists()) {
+            if (f.getParentFile() != null) f.getParentFile().mkdirs();
+        }
+        try {
+            if (!writeBloodValues(new FileWriter(f), values, "Dynamically calculated blood values - DON'T EDIT")) {
+                LOGGER.warn(LogUtil.CONFIG, "Could not write calculated values to file");
+            }
+        } catch (IOException e) {
+            LOGGER.error(LogUtil.CONFIG, "Failed to write calculated values to file", e);
+        }
     }
 }

@@ -24,7 +24,6 @@ public class ModBiomes {
     public static VampireForestBiome vampire_forest;
 
 
-
     static void registerBiomes(IForgeRegistry<Biome> registry) {
         registry.register(new VampireForestBiome());
     }
@@ -37,11 +36,11 @@ public class ModBiomes {
     }
 
     static void registerFeatures() {
-            for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
-                if (new ResourceLocation("the_end").equals(biome.getRegistryName()) || new ResourceLocation("nether").equals(biome.getRegistryName()))
-                    continue;
-                VampirismBiomeFeatures.addHunterTent(biome);
-            }
+        for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
+            if (new ResourceLocation("the_end").equals(biome.getRegistryName()) || new ResourceLocation("nether").equals(biome.getRegistryName()))
+                continue;
+            VampirismBiomeFeatures.addHunterTent(biome);
+        }
     }
 
 

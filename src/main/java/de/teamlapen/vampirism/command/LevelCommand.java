@@ -5,7 +5,6 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -20,7 +19,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.Collection;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class LevelCommand extends BasicCommand {
@@ -32,8 +30,8 @@ public class LevelCommand extends BasicCommand {
                 .then(Commands.argument("faction", new FactionArgument())
                         .then(Commands.argument("level", IntegerArgumentType.integer(0))
                                 .executes(context -> setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().asPlayer())))
-                        .then(Commands.argument("player", EntityArgument.entities())
-                                .executes(context -> setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "player"))))))
+                                .then(Commands.argument("player", EntityArgument.entities())
+                                        .executes(context -> setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "player"))))))
                 .then(Commands.literal("none")
                         .executes(context -> leaveFaction(Lists.newArrayList(context.getSource().asPlayer())))
                         .then(Commands.argument("player", EntityArgument.entities())

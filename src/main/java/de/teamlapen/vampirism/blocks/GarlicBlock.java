@@ -31,31 +31,8 @@ import javax.annotation.Nonnull;
  */
 public class GarlicBlock extends CropsBlock {
 
-    private static final VoxelShape[] shape = makeShape();
     public static final String regName = "garlic";
-
-    public GarlicBlock() {
-        super(Properties.create(Material.PLANTS));
-        setRegistryName(REFERENCE.MODID, regName);
-    }
-
-    @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (state.get(AGE) > 5 && Helper.isVampire(entity)) {
-            DamageHandler.affectVampireGarlicDirect(entity instanceof PlayerEntity ? VReference.VAMPIRE_FACTION.getPlayerCapability((PlayerEntity) entity) : (IVampire) entity, EnumStrength.WEAK);
-        }
-    }
-
-    @Override
-    protected IItemProvider getSeedsItem() {
-        return ModItems.item_garlic;
-    }
-
-    @Nonnull
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return shape[state.get(this.getAgeProperty())];
-    }
+    private static final VoxelShape[] shape = makeShape();
 
     private static VoxelShape[] makeShape() {
         return new VoxelShape[]{
@@ -68,5 +45,28 @@ public class GarlicBlock extends CropsBlock {
                 Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D),
                 Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D)
         };
+    }
+
+    public GarlicBlock() {
+        super(Properties.create(Material.PLANTS));
+        setRegistryName(REFERENCE.MODID, regName);
+    }
+
+    @Nonnull
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return shape[state.get(this.getAgeProperty())];
+    }
+
+    @Override
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (state.get(AGE) > 5 && Helper.isVampire(entity)) {
+            DamageHandler.affectVampireGarlicDirect(entity instanceof PlayerEntity ? VReference.VAMPIRE_FACTION.getPlayerCapability((PlayerEntity) entity) : (IVampire) entity, EnumStrength.WEAK);
+        }
+    }
+
+    @Override
+    protected IItemProvider getSeedsItem() {
+        return ModItems.item_garlic;
     }
 }

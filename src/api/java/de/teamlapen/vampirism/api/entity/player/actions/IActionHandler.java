@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -25,11 +24,6 @@ public interface IActionHandler<T extends IActionPlayer> {
     List<IAction> getAvailableActions();
 
     /**
-     * @return A list of actions which are unlocked for the player
-     */
-    ImmutableList<IAction> getUnlockedActions();
-
-    /**
      * Returns +Ticks_Left/Total_Duration(Positive) if action is active
      * Returns -Cooldown_Left/Total_Cooldown(Negative) if action is in cooldown
      *
@@ -37,6 +31,11 @@ public interface IActionHandler<T extends IActionPlayer> {
      * @return
      */
     float getPercentageForAction(@Nonnull IAction action);
+
+    /**
+     * @return A list of actions which are unlocked for the player
+     */
+    ImmutableList<IAction> getUnlockedActions();
 
     /**
      * Checks if the action is currently activated

@@ -22,6 +22,14 @@ public class GarlicAOFEntityAction<T extends CreatureEntity & IEntityActionUser>
     }
 
     @Override
+    public void activate(T entity) {
+    }
+
+    @Override
+    public void deactivate(T entity) {
+    }
+
+    @Override
     public int getCooldown(int level) {
         return Balance.ea.GARLIC_COOLDOWN * 20;
     }
@@ -29,10 +37,6 @@ public class GarlicAOFEntityAction<T extends CreatureEntity & IEntityActionUser>
     @Override
     public int getDuration(int level) {
         return Balance.ea.GARLIC_DURATION * 20;
-    }
-
-    @Override
-    public void deactivate(T entity) {
     }
 
     @Override
@@ -45,10 +49,6 @@ public class GarlicAOFEntityAction<T extends CreatureEntity & IEntityActionUser>
                 }
             }
         }
-    }
-
-    @Override
-    public void activate(T entity) {
     }
 
 }

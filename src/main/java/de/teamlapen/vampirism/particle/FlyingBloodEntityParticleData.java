@@ -19,10 +19,9 @@ public class FlyingBloodEntityParticleData implements IParticleData {
             return new FlyingBloodEntityParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean());
         }
     };
-
-    private ParticleType<FlyingBloodEntityParticleData> particleType;
     private final int entity;
     private final boolean direct;
+    private ParticleType<FlyingBloodEntityParticleData> particleType;
 
     public FlyingBloodEntityParticleData(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, int entityID, boolean directIn) {
         this.particleType = particleTypeIn;
@@ -30,9 +29,9 @@ public class FlyingBloodEntityParticleData implements IParticleData {
         this.direct = directIn;
     }
 
-    @Override
-    public ParticleType<?> getType() {
-        return particleType;
+    @OnlyIn(Dist.CLIENT)
+    public boolean getDirect() {
+        return this.direct;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -46,13 +45,13 @@ public class FlyingBloodEntityParticleData implements IParticleData {
     }
 
     @Override
+    public ParticleType<?> getType() {
+        return particleType;
+    }
+
+    @Override
     public void write(PacketBuffer buffer) {
         buffer.writeVarInt(entity);
         buffer.writeBoolean(direct);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public boolean getDirect() {
-        return this.direct;
     }
 }

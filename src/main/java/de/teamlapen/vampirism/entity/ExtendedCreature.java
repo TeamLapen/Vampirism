@@ -37,12 +37,11 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  */
 public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst, IExtendedCreatureVampirism {
 
-    @CapabilityInject(IExtendedCreatureVampirism.class)
-    public static Capability<IExtendedCreatureVampirism> CAP = getNull();
     private final static String KEY_BLOOD = "bloodLevel";
     private final static String KEY_MAX_BLOOD = "maxBlood";
     private final static String POISONOUS_BLOOD = "poisonousBlood";
-
+    @CapabilityInject(IExtendedCreatureVampirism.class)
+    public static Capability<IExtendedCreatureVampirism> CAP = getNull();
 
     public static IExtendedCreatureVampirism get(CreatureEntity mob) {
         return mob.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get ExtendedCreature from EntityCreature " + mob));
@@ -173,6 +172,11 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
+    public boolean hasPoisonousBlood() {
+        return poisonousBlood;
+    }
+
+    @Override
     public void loadUpdateFromNBT(CompoundNBT nbt) {
         if (nbt.contains(KEY_BLOOD)) {
             setBlood(nbt.getInt(KEY_BLOOD));
@@ -253,6 +257,14 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
+    public void setPoisonousBlood(boolean poisonous) {
+        if (poisonous == !poisonousBlood) {
+            poisonousBlood = poisonous;
+            sync();
+        }
+    }
+
+    @Override
     public void tick() {
         if (!entity.getEntityWorld().isRemote) {
             if (blood > 0 && blood < getMaxBlood() && entity.ticksExisted % 40 == 8) {
@@ -324,19 +336,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             CompoundNBT nbt = new CompoundNBT();
             ((ExtendedCreature) instance).saveNBTData(nbt);
             return nbt;
-        }
-    }
-
-    @Override
-    public boolean hasPoisonousBlood() {
-        return poisonousBlood;
-    }
-
-    @Override
-    public void setPoisonousBlood(boolean poisonous) {
-        if (poisonous == !poisonousBlood) {
-            poisonousBlood = poisonous;
-            sync();
         }
     }
 

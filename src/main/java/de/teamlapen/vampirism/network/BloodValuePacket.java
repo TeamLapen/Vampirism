@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.network;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
-
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.network.PacketBuffer;

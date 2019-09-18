@@ -64,13 +64,13 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
-        return false;
+    public TIER getVampirismTier() {
+        return tier;
     }
 
     @Override
-    public TIER getVampirismTier() {
-        return tier;
+    public boolean hasEffect(ItemStack stack) {
+        return false;
     }
 
     private int getKnockback() {

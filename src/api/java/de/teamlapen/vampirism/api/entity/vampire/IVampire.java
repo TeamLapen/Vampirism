@@ -19,7 +19,6 @@ public interface IVampire extends IFactionEntity {
     boolean doesResistGarlic(EnumStrength strength);
 
     /**
-     *
      * Adds blood to the vampires blood stats
      * Consume blood. Any remaining blood might be filled into blood bottles or used otherwise
      *
@@ -42,6 +41,13 @@ public interface IVampire extends IFactionEntity {
     @Override
     default IFaction getFaction() {
         return VReference.VAMPIRE_FACTION;
+    }
+
+    /**
+     * @return Whether the entity is a skilled biter which  is able to suck blood more efficiently
+     */
+    default boolean isAdvancedBiter() {
+        return false;
     }
 
     /**
@@ -94,13 +100,6 @@ public interface IVampire extends IFactionEntity {
      * If the entity currently does not care about being damaged by the sun, because it is e.g. angry or has sunscreen
      */
     boolean isIgnoringSundamage();
-
-    /**
-     * @return Whether the entity is a skilled biter which  is able to suck blood more efficiently
-     */
-    default boolean isAdvancedBiter() {
-        return false;
-    }
 
     /**
      * Consumes blood (removes).

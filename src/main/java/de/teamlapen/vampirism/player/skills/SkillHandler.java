@@ -25,8 +25,8 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
      */
     private final ArrayList<ISkill> enabledSkills = new ArrayList<>();
     private final T player;
-    private boolean dirty = false;
     private final IPlayableFaction<T> faction;
+    private boolean dirty = false;
 
     public SkillHandler(T player, IPlayableFaction<T> faction) {
         this.player = player;
@@ -88,15 +88,6 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
 
     }
 
-    @Override
-    public ISkill[] getParentSkills(ISkill skill) {
-        SkillNode node = findSkillNode(getRootNode(), skill);
-        if (node == null)
-            return null;
-        else
-            return node.getParent().getElements();
-    }
-
     public SkillNode findSkillNode(SkillNode base, ISkill skill) {
         for (ISkill s : base.getElements()) {
             if (s.equals(skill)) {
@@ -112,20 +103,6 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         return null;
     }
 
-    public void loadFromNbt(CompoundNBT nbt) {
-        if (!nbt.contains("skills")) return;
-        for (String id : nbt.getCompound("skills").keySet()) {
-            ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
-            if (skill == null) {
-                LOGGER.warn("Skill {} does not exist anymore", id);
-                continue;
-            }
-            enableSkill(skill);
-
-        }
-
-    }
-
     @Override
     public int getLeftSkillPoints() {
         int level = player.getLevel();
@@ -135,10 +112,18 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         return player.getLevel() - enabledSkills.size();
     }
 
+    @Override
+    public ISkill[] getParentSkills(ISkill skill) {
+        SkillNode node = findSkillNode(getRootNode(), skill);
+        if (node == null)
+            return null;
+        else
+            return node.getParent().getElements();
+    }
+
     public IFactionPlayer<T> getPlayer() {
         return player;
     }
-
 
     /**
      * @return If an update should be send to the client
@@ -157,6 +142,20 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     @Override
     public boolean isSkillEnabled(ISkill skill) {
         return enabledSkills.contains(skill);
+    }
+
+    public void loadFromNbt(CompoundNBT nbt) {
+        if (!nbt.contains("skills")) return;
+        for (String id : nbt.getCompound("skills").keySet()) {
+            ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));
+            if (skill == null) {
+                LOGGER.warn("Skill {} does not exist anymore", id);
+                continue;
+            }
+            enableSkill(skill);
+
+        }
+
     }
 
     public void readUpdateFromServer(CompoundNBT nbt) {
@@ -181,10 +180,6 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         }
     }
 
-    private SkillNode getRootNode() {
-        return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(faction.getID());
-    }
-
     public void resetSkills() {
         disableAllSkills();
         enableRootSkill();
@@ -206,5 +201,9 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         }
         nbt.put("skills", skills);
         dirty = false;
+    }
+
+    private SkillNode getRootNode() {
+        return VampirismMod.proxy.getSkillTree(player.isRemote()).getRootNodeForFaction(faction.getID());
     }
 }

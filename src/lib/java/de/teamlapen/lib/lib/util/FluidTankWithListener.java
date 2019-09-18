@@ -22,18 +22,13 @@ public class FluidTankWithListener extends FluidTank {
         super(capacity, validator);
     }
 
-    public FluidTankWithListener setListener(IFluidTankListener listener) {
-        this.listener = listener;
-        return this;
-    }
-
-    public void setDrainable(boolean drainable) {
-        this.drainable = drainable;
-    }
-
+    @Nonnull
     @Override
-    protected void onContentsChanged() {
-        if (listener != null) listener.onTankContentChanged();
+    public FluidStack drain(int maxDrain, FluidAction action) {
+        if (!drainable) return FluidStack.EMPTY;
+        FluidStack stack = super.drain(maxDrain, action);
+        listener.onTankContentChanged();
+        return stack;
     }
 
     @Override
@@ -43,13 +38,18 @@ public class FluidTankWithListener extends FluidTank {
         return amount;
     }
 
-    @Nonnull
+    public void setDrainable(boolean drainable) {
+        this.drainable = drainable;
+    }
+
+    public FluidTankWithListener setListener(IFluidTankListener listener) {
+        this.listener = listener;
+        return this;
+    }
+
     @Override
-    public FluidStack drain(int maxDrain, FluidAction action) {
-        if (!drainable) return FluidStack.EMPTY;
-        FluidStack stack = super.drain(maxDrain, action);
-        listener.onTankContentChanged();
-        return stack;
+    protected void onContentsChanged() {
+        if (listener != null) listener.onTankContentChanged();
     }
 
     public interface IFluidTankListener {

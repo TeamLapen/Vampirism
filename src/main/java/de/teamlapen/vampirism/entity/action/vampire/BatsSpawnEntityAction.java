@@ -18,11 +18,6 @@ public class BatsSpawnEntityAction<T extends CreatureEntity & IEntityActionUser>
     }
 
     @Override
-    public int getCooldown(int level) {
-        return Balance.ea.BATSPAWN_COOLDOWN * 20;
-    }
-
-    @Override
     public boolean activate(T entity) {
         for (int i = 0; i < Balance.ea.BATSPAWN_AMOUNT; i++) {
             BlindingBatEntity e = ModEntities.blinding_bat.create(entity.getEntityWorld());
@@ -33,5 +28,10 @@ public class BatsSpawnEntityAction<T extends CreatureEntity & IEntityActionUser>
         }
         entity.getEntityWorld().playSound(null, entity.posX, entity.posY, entity.posZ, ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entity.getEntityWorld().rand.nextFloat() * 0.2F + 1.3F);
         return true;
+    }
+
+    @Override
+    public int getCooldown(int level) {
+        return Balance.ea.BATSPAWN_COOLDOWN * 20;
     }
 }

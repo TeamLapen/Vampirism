@@ -60,6 +60,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
             final IHunterPlayer inst = new HunterPlayer(player);
             final LazyOptional<IHunterPlayer> opt = LazyOptional.of(() -> inst);
+
             @Override
             public void deserializeNBT(CompoundNBT nbt) {
                 CAP.getStorage().readNBT(CAP, inst, null, nbt);

@@ -39,9 +39,9 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  * Extended entity property that handles factions and levels for the player
  */
 public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapabilityInst, IFactionPlayerHandler {
+    private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
     @CapabilityInject(IFactionPlayerHandler.class)
     public static Capability<IFactionPlayerHandler> CAP = getNull();
-    private final static Logger LOGGER = LogManager.getLogger(FactionPlayerHandler.class);
 
     public static FactionPlayerHandler get(PlayerEntity player) {
         return (FactionPlayerHandler) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get FactionPlayerHandler from EntityPlayer " + player));

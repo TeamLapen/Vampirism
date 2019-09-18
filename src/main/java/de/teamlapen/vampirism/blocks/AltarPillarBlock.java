@@ -30,10 +30,27 @@ import java.util.List;
  * Pillar for Altar of Infusion structure
  */
 public class AltarPillarBlock extends VampirismBlock {
-    private final static String name = "altar_pillar";
     public final static EnumProperty<EnumPillarType> TYPE_PROPERTY = EnumProperty.create("type", EnumPillarType.class);
     protected static final VoxelShape pillarShape = makeShape();
     protected static final VoxelShape pillarShapeFilled = makeShapeFull();
+    private final static String name = "altar_pillar";
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 1, 13);
+        VoxelShape b1 = Block.makeCuboidShape(3, 0, 3, 4, 16, 4);
+        VoxelShape b2 = Block.makeCuboidShape(12, 0, 3, 13, 16, 4);
+        VoxelShape b3 = Block.makeCuboidShape(3, 0, 12, 4, 16, 13);
+        VoxelShape b4 = Block.makeCuboidShape(12, 0, 12, 13, 16, 13);
+        VoxelShape c = Block.makeCuboidShape(3, 15, 3, 13, 16, 13);
+        return VoxelShapes.or(a, b1, b2, b3, b4, c);
+    }
+
+    private static VoxelShape makeShapeFull() {
+        VoxelShape a = pillarShape;
+        VoxelShape b = Block.makeCuboidShape(4, 1, 2, 12, 15, 14);
+        VoxelShape c = Block.makeCuboidShape(2, 1, 4, 14, 15, 12);
+        return VoxelShapes.or(a, b, c);
+    }
 
     public AltarPillarBlock() {
         super(name, Properties.create(Material.ROCK).hardnessAndResistance(0.9f));
@@ -60,6 +77,11 @@ public class AltarPillarBlock extends VampirismBlock {
     @Override
     public ToolType getHarvestTool(BlockState p_getHarvestTool_1_) {
         return ToolType.PICKAXE;
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Override
@@ -104,12 +126,6 @@ public class AltarPillarBlock extends VampirismBlock {
         p_206840_1_.add(TYPE_PROPERTY);
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-
     public enum EnumPillarType implements IStringSerializable {
         NONE(0, "none", 0, Blocks.AIR), STONE(1, "stone", 1, Blocks.STONE_BRICKS), IRON(2, "iron", 2, Blocks.IRON_BLOCK), GOLD(3, "gold", 3, Blocks.GOLD_BLOCK), BONE(4, "bone", 1.5F, Blocks.BONE_BLOCK);
 
@@ -137,23 +153,6 @@ public class AltarPillarBlock extends VampirismBlock {
         public float getValue() {
             return value;
         }
-    }
-
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 1, 13);
-        VoxelShape b1 = Block.makeCuboidShape(3, 0, 3, 4, 16, 4);
-        VoxelShape b2 = Block.makeCuboidShape(12, 0, 3, 13, 16, 4);
-        VoxelShape b3 = Block.makeCuboidShape(3, 0, 12, 4, 16, 13);
-        VoxelShape b4 = Block.makeCuboidShape(12, 0, 12, 13, 16, 13);
-        VoxelShape c = Block.makeCuboidShape(3, 15, 3, 13, 16, 13);
-        return VoxelShapes.or(a, b1, b2, b3, b4, c);
-    }
-
-    private static VoxelShape makeShapeFull() {
-        VoxelShape a = pillarShape;
-        VoxelShape b = Block.makeCuboidShape(4, 1, 2, 12, 15, 14);
-        VoxelShape c = Block.makeCuboidShape(2, 1, 4, 14, 15, 12);
-        return VoxelShapes.or(a, b, c);
     }
 
 

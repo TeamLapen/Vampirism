@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
-
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -51,6 +50,75 @@ public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRec
     }
 
     @Override
+    public boolean canFit(int width, int height) {
+        return width >= this.recipeWidth && height >= this.recipeHeight;
+    }
+
+    @Override
+    public ItemStack getCraftingResult(CraftingInventory inv) {
+        return this.recipeOutput.copy();
+    }
+
+    public String getGroup() {
+        return this.group;
+    }
+
+    public int getHeight() {
+        return this.recipeHeight;
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return this.id;
+    }
+
+    public NonNullList<Ingredient> getIngredients() {
+        return this.recipeItems;
+    }
+
+    @Override
+    public int getRecipeHeight() {
+        return getHeight();
+    }
+
+    @Override
+    public ItemStack getRecipeOutput() {
+        return this.recipeOutput;
+    }
+
+    @Override
+    public int getRecipeWidth() {
+        return getWidth();
+    }
+
+    public int getRequiredLavaUnits() {
+        return requiredLava;
+    }
+
+    public int getRequiredLevel() {
+        return requiredLevel;
+    }
+
+    @Override
+    public ISkill[] getRequiredSkills() {
+        return requiredSkills;
+    }
+
+    @Override
+    public IRecipeSerializer<?> getSerializer() {
+        return ModRecipes.shaped_crafting_weapontable;
+    }
+
+    @Override
+    public IRecipeType<? extends IRecipe> getType() {
+        return ModRecipes.WEAPONTABLE_CRAFTING_TYPE;
+    }
+
+    public int getWidth() {
+        return this.recipeWidth;
+    }
+
+    @Override
     public boolean matches(CraftingInventory inv, World worldIn) {
         for (int i = 0; i <= inv.getWidth() - this.recipeWidth; ++i) {
             for (int j = 0; j <= inv.getHeight() - this.recipeHeight; ++j) {
@@ -90,75 +158,6 @@ public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRec
         }
 
         return true;
-    }
-
-    @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
-        return this.recipeOutput.copy();
-    }
-
-    @Override
-    public boolean canFit(int width, int height) {
-        return width >= this.recipeWidth && height >= this.recipeHeight;
-    }
-
-    @Override
-    public ItemStack getRecipeOutput() {
-        return this.recipeOutput;
-    }
-
-    public NonNullList<Ingredient> getIngredients() {
-        return this.recipeItems;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return this.id;
-    }
-
-    @Override
-    public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.shaped_crafting_weapontable;
-    }
-
-    public String getGroup() {
-        return this.group;
-    }
-
-    public int getWidth() {
-        return this.recipeWidth;
-    }
-
-    @Override
-    public int getRecipeWidth() {
-        return getWidth();
-    }
-
-    public int getHeight() {
-        return this.recipeHeight;
-    }
-
-    @Override
-    public int getRecipeHeight() {
-        return getHeight();
-    }
-
-    public int getRequiredLevel() {
-        return requiredLevel;
-    }
-
-    public int getRequiredLavaUnits() {
-        return requiredLava;
-    }
-
-    @Override
-    public ISkill[] getRequiredSkills() {
-        return requiredSkills;
-    }
-
-    @Override
-    public IRecipeType<? extends IRecipe> getType() {
-        return ModRecipes.WEAPONTABLE_CRAFTING_TYPE;
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapedWeaponTableRecipe> {

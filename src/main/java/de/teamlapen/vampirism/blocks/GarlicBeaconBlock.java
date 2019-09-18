@@ -35,20 +35,21 @@ import java.util.List;
 public class GarlicBeaconBlock extends VampirismBlockContainer {
 
     public final static String regName = "garlic_beacon";
-    private final static AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.75, 0.93);
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-    private final Type type;
+    private final static AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.75, 0.93);
     private static final VoxelShape shape = makeShape();
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(1, 0, 1, 15, 2, 15);
+        VoxelShape b = Block.makeCuboidShape(3, 2, 3, 13, 12, 13);
+        return VoxelShapes.or(a, b);
+    }
+    private final Type type;
 
     public GarlicBeaconBlock(Type type) {
         super(regName + "_" + type.getName(), Properties.create(Material.ROCK).hardnessAndResistance(3f).sound(SoundType.STONE));
         this.type = type;
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "block.vampirism.garlic_beacon";
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -72,14 +73,29 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return shape;
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
+    }
+
+    @Override
+    public String getTranslationKey() {
+        return "block.vampirism.garlic_beacon";
     }
 
     @Override
@@ -93,11 +109,6 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     @Override
     public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
     }
 
     @Override
@@ -145,8 +156,6 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         builder.add(FACING);
     }
 
-
-
     @Nullable
     private GarlicBeaconTileEntity getTile(IBlockReader world, BlockPos pos) {
         TileEntity t = world.getTileEntity(pos);
@@ -154,11 +163,6 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
             return (GarlicBeaconTileEntity) t;
         }
         return null;
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-        return shape;
     }
 
     public enum Type implements IStringSerializable {
@@ -178,11 +182,5 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         public String getName() {
             return name;
         }
-    }
-
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(1, 0, 1, 15, 2, 15);
-        VoxelShape b = Block.makeCuboidShape(3, 2, 3, 13, 12, 13);
-        return VoxelShapes.or(a, b);
     }
 }

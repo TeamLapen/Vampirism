@@ -33,6 +33,7 @@ import java.util.Random;
 public class PedestalTileEntity extends TileEntity implements ITickableTileEntity, IItemHandler {
 
     private final Random rand = new Random();
+    private final LazyOptional<IItemHandler> opt = LazyOptional.of(() -> this);
     private int ticksExistedClient;
     /**
      * If larger zero: Charging
@@ -42,16 +43,12 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     private int chargingTicks;
     private int bloodStored = 0;
     private int chargeRate = 30;
-
-    private final LazyOptional<IItemHandler> opt = LazyOptional.of(() -> this);
-
+    @Nonnull
+    private ItemStack internalStack = ItemStack.EMPTY;
 
     public PedestalTileEntity() {
         super(ModTiles.blood_pedestal);
     }
-
-    @Nonnull
-    private ItemStack internalStack = ItemStack.EMPTY;
 
     @Nonnull
     @Override
@@ -80,11 +77,6 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     @Override
     public int getSlotLimit(int slot) {
         return 1;
-    }
-
-    @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return true;
     }
 
     @Override
@@ -120,7 +112,6 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
         return write(new CompoundNBT());
     }
 
-
     public boolean hasStack() {
         return !this.internalStack.isEmpty();
     }
@@ -137,6 +128,34 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
                 return ItemStack.EMPTY;
             }
         }
+        return stack;
+    }
+
+    @Override
+    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        handleUpdateTag(pkt.getNbtCompound());
+    }
+
+    @Override
+    public void read(CompoundNBT compound) {
+        if (compound.contains("item")) {
+            this.internalStack = ItemStack.read(compound.getCompound("item"));
+        } else {
+            this.internalStack = ItemStack.EMPTY;
+        }
+        this.bloodStored = compound.getInt("blood_stored");
+        this.chargingTicks = compound.getInt("charging_ticks");
+    }
+
+    @Nonnull
+    public ItemStack removeStack() {
+        ItemStack stack = this.internalStack;
+        this.internalStack = ItemStack.EMPTY;
         return stack;
     }
 
@@ -182,27 +201,15 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
         }
     }
 
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        handleUpdateTag(pkt.getNbtCompound());
-    }
-
-    @Override
-    public void read(CompoundNBT compound) {
-        if (compound.contains("item")) {
-            this.internalStack = ItemStack.read(compound.getCompound("item"));
-        } else {
-            this.internalStack = ItemStack.EMPTY;
-        }
-        this.bloodStored = compound.getInt("blood_stored");
-        this.chargingTicks = compound.getInt("charging_ticks");
-    }
-
     @Nonnull
-    public ItemStack removeStack() {
-        ItemStack stack = this.internalStack;
-        this.internalStack = ItemStack.EMPTY;
-        return stack;
+    @Override
+    public CompoundNBT write(CompoundNBT compound) {
+        if (hasStack()) {
+            compound.put("item", this.internalStack.serializeNBT());
+        }
+        compound.putInt("blood_stored", bloodStored);
+        compound.putInt("charging_ticks", chargingTicks);
+        return super.write(compound);
     }
 
     private void drainBlood() {
@@ -216,15 +223,14 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
         });
     }
 
-    @Nonnull
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        if (hasStack()) {
-            compound.put("item", this.internalStack.serializeNBT());
-        }
-        compound.putInt("blood_stored", bloodStored);
-        compound.putInt("charging_ticks", chargingTicks);
-        return super.write(compound);
+    /**
+     * Tries to retrieve a {@link IBloodChargeable} instance from the given stack
+     *
+     * @return May be null
+     */
+    @Nullable
+    private IBloodChargeable getChargeItem(@Nonnull ItemStack stack) {
+        return stack.isEmpty() ? null : (stack.getItem() instanceof IBloodChargeable ? (IBloodChargeable) stack.getItem() : null);
     }
 
     private void markDirtyAndUpdateClient() {
@@ -236,18 +242,7 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     }
 
     /**
-     * Tries to retrieve a {@link IBloodChargeable} instance from the given stack
-     *
-     * @return May be null
-     */
-    @Nullable
-    private IBloodChargeable getChargeItem(@Nonnull ItemStack stack) {
-        return stack.isEmpty() ? null : (stack.getItem() instanceof IBloodChargeable ? (IBloodChargeable) stack.getItem() : null);
-    }
-
-    /**
      * Set the held stack.
-     *
      */
     private void setStack(@Nonnull ItemStack stack) {
         this.chargingTicks = 0;

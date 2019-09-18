@@ -34,10 +34,20 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> i
         super(type, world);
     }
 
+    @Override
+    public void baseTick() {
+        super.baseTick();
+        boolean t = getSheared();
+        if (!nil() && (lastSheared == null || lastSheared != t)) {
+            lastSheared = t;
+            getOldCreature().setSheared(lastSheared);
+
+        }
+    }
+
     public DyeColor getFleeceColor() {
         return nil() ? DyeColor.WHITE : this.getOldCreature().getFleeceColor();
     }
-
 
     public boolean getSheared() {
         return (this.dataManager.get(COAT) & 16) != 0;
@@ -56,18 +66,6 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> i
     @Override
     public boolean isShearable(@Nonnull ItemStack item, IWorldReader world, BlockPos pos) {
         return !getSheared() && !isChild();
-    }
-
-
-    @Override
-    public void baseTick() {
-        super.baseTick();
-        boolean t = getSheared();
-        if (!nil() && (lastSheared == null || lastSheared != t)) {
-            lastSheared = t;
-            getOldCreature().setSheared(lastSheared);
-
-        }
     }
 
     @Override

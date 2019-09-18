@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
@@ -13,7 +12,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TranslationTextComponent;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class GarlicCheckCommand extends BasicCommand {
@@ -25,7 +23,7 @@ public class GarlicCheckCommand extends BasicCommand {
                     return garlicCheck(context.getSource(), context.getSource().asPlayer(), false);
                 })
                 .then(Commands.literal("print"))
-                        .executes(context -> {
+                .executes(context -> {
                     return garlicCheck(context.getSource(), context.getSource().asPlayer(), true);
                 });
     }
@@ -33,7 +31,7 @@ public class GarlicCheckCommand extends BasicCommand {
     private static int garlicCheck(CommandSource commandSource, ServerPlayerEntity asPlayer, boolean print) {
         if (commandSource.getEntity() != null && commandSource.getEntity() instanceof PlayerEntity)
             commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.garliccheck.strength" + VampirismAPI.getGarlicChunkHandler(asPlayer.getEntityWorld()).getStrengthAtChunk(new ChunkPos(asPlayer.getPosition()))), true);
-        if(print)
+        if (print)
             ((GarlicChunkHandler) VampirismAPI.getGarlicChunkHandler(asPlayer.getEntityWorld())).printDebug(commandSource);
         return 0;
     }

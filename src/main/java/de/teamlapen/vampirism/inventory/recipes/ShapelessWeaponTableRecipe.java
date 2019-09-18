@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -45,23 +44,18 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv) {
-        return this.recipeOutput.copy();
-    }
-
-    @Override
     public boolean canFit(int width, int height) {
         return width * height >= this.recipeItems.size();
     }
 
     @Override
-    public String getGroup() {
-        return group;
+    public ItemStack getCraftingResult(CraftingInventory inv) {
+        return this.recipeOutput.copy();
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
-        return recipeOutput;
+    public String getGroup() {
+        return group;
     }
 
     @Override
@@ -72,6 +66,11 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
     @Override
     public NonNullList<Ingredient> getIngredients() {
         return recipeItems;
+    }
+
+    @Override
+    public ItemStack getRecipeOutput() {
+        return recipeOutput;
     }
 
     public int getRequiredLavaUnits() {

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
-
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModRecipes;
 import net.minecraft.inventory.CraftingInventory;

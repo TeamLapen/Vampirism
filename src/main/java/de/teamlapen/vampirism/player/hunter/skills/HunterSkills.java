@@ -89,9 +89,9 @@ public class HunterSkills {
                 .setDescription(() -> {
                     StringTextComponent desc = null;
                     if (Balance.hps.INSTANT_KILL_SKILL_2_ONLY_NPC) {
-                        new TranslationTextComponent("skill.vampirism.stake2.desc_npc", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                        new TranslationTextComponent("skill.vampirism.stake2.desc_npc", Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
                     } else {
-                        new TranslationTextComponent("skill.vampirism.stake2.desc_all", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                        new TranslationTextComponent("skill.vampirism.stake2.desc_all", Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
 
                     }
                     return desc;

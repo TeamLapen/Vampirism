@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.util.IPlayerFace;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
@@ -14,7 +13,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Renders an overlay over the entities face
- *
  */
 @OnlyIn(Dist.CLIENT)
 public class LayerPlayerFaceOverlay<T extends CreatureEntity & IPlayerFace> extends LayerRenderer<T, BipedModel<T>> {

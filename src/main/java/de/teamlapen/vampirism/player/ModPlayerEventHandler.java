@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -57,6 +56,7 @@ import org.apache.logging.log4j.Logger;
 public class ModPlayerEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger(ModPlayerEventHandler.class);
+
     @SubscribeEvent
     public void onAttachCapability(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof PlayerEntity) {
@@ -149,7 +149,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onLivingJump(LivingEvent.LivingJumpEvent event) {
         if (event.getEntity() instanceof PlayerEntity) {
-            event.getEntity().setMotion(event.getEntity().getMotion().add(0.0D, (double) ((float) (VampirePlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().getJumpBoost()) * 0.1F), 0.0D));
+            event.getEntity().setMotion(event.getEntity().getMotion().add(0.0D, (float) (VampirePlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().getJumpBoost()) * 0.1F, 0.0D));
         }
     }
 

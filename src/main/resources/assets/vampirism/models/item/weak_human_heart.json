@@ -1,6 +1,6 @@
 {
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "vampirism:item/weak_human_heart"
-	}
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "vampirism:item/weak_human_heart"
+  }
 }

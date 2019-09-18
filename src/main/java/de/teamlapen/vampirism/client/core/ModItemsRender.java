@@ -15,27 +15,27 @@ public class ModItemsRender {
 
     public static void registerColors() {
 
-		// Swiftness armor
+        // Swiftness armor
         Minecraft.getInstance().getItemColors().register((stack, tintIndex) -> {
-			if (tintIndex == 0) {
-				return 10511680;
-			} else {
+            if (tintIndex == 0) {
+                return 10511680;
+            } else {
                 switch (((ArmorOfSwiftnessItem) stack.getItem()).getVampirismTier()) {
-					case ENHANCED:
-						return 0x007CFF;
-					case ULTIMATE:
-						return 0x07F8FF;
-					default:
-						return 0xFFF100;
-				}
-			}
+                    case ENHANCED:
+                        return 0x007CFF;
+                    case ULTIMATE:
+                        return 0x07F8FF;
+                    default:
+                        return 0xFFF100;
+                }
+            }
         }, ModItems.armor_of_swiftness_feet_normal, ModItems.armor_of_swiftness_chest_normal, ModItems.armor_of_swiftness_head_normal, ModItems.armor_of_swiftness_legs_normal, ModItems.armor_of_swiftness_feet_enhanced, ModItems.armor_of_swiftness_chest_enhanced, ModItems.armor_of_swiftness_head_enhanced, ModItems.armor_of_swiftness_legs_enhanced, ModItems.armor_of_swiftness_feet_ultimate, ModItems.armor_of_swiftness_chest_ultimate, ModItems.armor_of_swiftness_head_ultimate, ModItems.armor_of_swiftness_legs_ultimate);
         //Crossbow arrow
         Minecraft.getInstance().getItemColors().register((stack, tintIndex) -> {
-			if (tintIndex == 1) {
+            if (tintIndex == 1) {
                 return ((CrossbowArrowItem) stack.getItem()).getType().color;
-			}
-			return 0xFFFFFF;
+            }
+            return 0xFFFFFF;
         }, ModItems.crossbow_arrow_normal, ModItems.crossbow_arrow_vampire_killer, ModItems.crossbow_arrow_spitfire);
-	}
+    }
 }

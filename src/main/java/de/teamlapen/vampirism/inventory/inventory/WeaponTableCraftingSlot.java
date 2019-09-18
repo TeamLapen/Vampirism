@@ -82,20 +82,20 @@ public class WeaponTableCraftingSlot extends Slot {
             if (!itemstack1.isEmpty()) {
                 if (itemstack.isEmpty()) {
                     this.craftMatrix.setInventorySlotContents(i, itemstack1);
-                    } else if (ItemStack.areItemsEqual(itemstack, itemstack1) && ItemStack.areItemStackTagsEqual(itemstack, itemstack1)) {
-                        itemstack1.grow(itemstack.getCount());
-                        this.craftMatrix.setInventorySlotContents(i, itemstack1);
-                    } else if (!this.player.inventory.addItemStackToInventory(itemstack1)) {
-                        this.player.dropItem(itemstack1, false);
-                    }
+                } else if (ItemStack.areItemsEqual(itemstack, itemstack1) && ItemStack.areItemStackTagsEqual(itemstack, itemstack1)) {
+                    itemstack1.grow(itemstack.getCount());
+                    this.craftMatrix.setInventorySlotContents(i, itemstack1);
+                } else if (!this.player.inventory.addItemStackToInventory(itemstack1)) {
+                    this.player.dropItem(itemstack1, false);
                 }
             }
-            worldPos.consume(((world, pos) -> {
-                if (recipe != null && !world.isRemote) {
-                    //Play anvil sound
-                    world.playEvent(1030, pos, 0);
-                }
-            }));
+        }
+        worldPos.consume(((world, pos) -> {
+            if (recipe != null && !world.isRemote) {
+                //Play anvil sound
+                world.playEvent(1030, pos, 0);
+            }
+        }));
         playerIn.addStat(ModStats.weapon_table);
         return stack;
     }

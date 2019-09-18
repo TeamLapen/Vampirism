@@ -23,8 +23,6 @@ public class VReference {
      * One blood in the players blood stats represents this amount of mB fluid blood
      */
     public static final int FOOD_TO_FLUID_BLOOD = 100;
-    public static Fluid blood_fluid;
-
     /**
      * Attribute which defines sundamage. Registered for all IVampire mobs as well as the EntityPlayer.
      * Applied every 2 seconds if in sun
@@ -35,14 +33,11 @@ public class VReference {
      * Registered for EntityPlayer
      */
     public final static IAttribute bloodExhaustion = (new RangedAttribute(null, "vampirism.blood_exhaustion", 1.0, 0.0, 10)).setShouldWatch(true);
-
     /**
      * Allows modifying bite damage.
      * Registered for EntityPlayer
      */
     public final static IAttribute biteDamage = (new RangedAttribute(null, "vampirism.bite_damage", 0.0, 0.0, 100));
-
-
     /**
      * Plant type for plants that grow on cursed earth;
      */
@@ -51,11 +46,11 @@ public class VReference {
     public static final DamageSource VAMPIRE_ON_FIRE = new DamageSource("vampire_on_fire").setDamageBypassesArmor().setMagicDamage();
     public static final DamageSource VAMPIRE_IN_FIRE = new DamageSource("vampire_in_fire").setMagicDamage();
     public static final DamageSource HOLY_WATER = new DamageSource("holy_water").setMagicDamage();
-
     /**
      * Enchantment type for crossbows
      */
     public static final EnchantmentType CROSSBOW_ENCHANTMENT = EnchantmentType.create("VAMPIRISM_CROSSBOW", input -> input instanceof IVampirismCrossbow);
+    public static Fluid blood_fluid;
     /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EntityClassification#MONSTER}
      */

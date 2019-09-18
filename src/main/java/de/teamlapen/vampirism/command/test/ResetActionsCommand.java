@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.command.test;
 
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -16,7 +15,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.List;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class ResetActionsCommand extends BasicCommand {

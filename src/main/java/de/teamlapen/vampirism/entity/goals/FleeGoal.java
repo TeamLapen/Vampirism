@@ -68,7 +68,7 @@ public abstract class FleeGoal extends Goal {
 
                     if (!theCreature.isWithinHomeDistanceFromPosition(blockpos1)) continue;
                 }
-                return new Vec3d((double) blockpos1.getX(), (double) blockpos1.getY(), (double) blockpos1.getZ());
+                return new Vec3d(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ());
             }
         }
 

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.tests;
 
 import com.google.common.base.Stopwatch;
-
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.fluids.BloodHelper;

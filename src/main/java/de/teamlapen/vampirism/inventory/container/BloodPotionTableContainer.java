@@ -56,22 +56,6 @@ public class BloodPotionTableContainer extends InventoryContainer {
         this(id, playerInventory, IWorldPosCallable.DUMMY);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public
-    @Nullable
-    List<String> getLocalizedCraftingHint() {
-        ItemStack extra = inventory.getStackInSlot(3);
-        if (extra.isEmpty()) return null;
-        if (!hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_category_hint)) return null;
-        List<String> hints = BloodPotions.getLocalizedCategoryHint(extra);
-        if (hints.isEmpty()) {
-            hints.add(UtilLib.translate("text.vampirism.blood_potion.any_effect"));
-        } else {
-            hints.add(0, UtilLib.translate("text.vampirism.blood_potion.might_cause"));
-        }
-        return hints;
-    }
-
     /**
      * @return If requirements met and not currently crafting
      */
@@ -97,15 +81,31 @@ public class BloodPotionTableContainer extends InventoryContainer {
         this.prevCraftingTimer = craftingTimer;
     }
 
-    public IWorldPosCallable getWorldPosCallable() {
-        return worldPos;
-    }
-
     /**
      * @return The current crafting progress in 0..1
      */
     public float getCraftingPercentage() {
         return craftingTimer == 0 ? 0 : (1F - craftingTimer / (float) max_crafting_time);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public
+    @Nullable
+    List<String> getLocalizedCraftingHint() {
+        ItemStack extra = inventory.getStackInSlot(3);
+        if (extra.isEmpty()) return null;
+        if (!hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_category_hint)) return null;
+        List<String> hints = BloodPotions.getLocalizedCategoryHint(extra);
+        if (hints.isEmpty()) {
+            hints.add(UtilLib.translate("text.vampirism.blood_potion.any_effect"));
+        } else {
+            hints.add(0, UtilLib.translate("text.vampirism.blood_potion.might_cause"));
+        }
+        return hints;
+    }
+
+    public IWorldPosCallable getWorldPosCallable() {
+        return worldPos;
     }
 
     @Override
@@ -114,20 +114,6 @@ public class BloodPotionTableContainer extends InventoryContainer {
         if (!playerIn.getEntityWorld().isRemote) {
             clearContainer(playerIn, playerIn.world, inventory);
         }
-    }
-
-    /**
-     * @return if all required tileInventory are in the container
-     */
-    private boolean areRequirementsMet() {
-        ItemStack garlic = inventory.getStackInSlot(2);
-        if (garlic.isEmpty() || !ModItems.item_garlic.equals(garlic.getItem())) return false;
-        boolean bottle = false;
-        ItemStack bottle1 = inventory.getStackInSlot(0);
-        ItemStack bottle2 = inventory.getStackInSlot(1);
-        if (!bottle1.isEmpty() && bottle1.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
-        if (!bottle2.isEmpty() && bottle2.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
-        return bottle;
     }
 
     /**
@@ -204,6 +190,20 @@ public class BloodPotionTableContainer extends InventoryContainer {
         if (id == 0 && data >= 0 && data <= max_crafting_time) {
             craftingTimer = data;
         }
+    }
+
+    /**
+     * @return if all required tileInventory are in the container
+     */
+    private boolean areRequirementsMet() {
+        ItemStack garlic = inventory.getStackInSlot(2);
+        if (garlic.isEmpty() || !ModItems.item_garlic.equals(garlic.getItem())) return false;
+        boolean bottle = false;
+        ItemStack bottle1 = inventory.getStackInSlot(0);
+        ItemStack bottle2 = inventory.getStackInSlot(1);
+        if (!bottle1.isEmpty() && bottle1.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
+        if (!bottle2.isEmpty() && bottle2.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
+        return bottle;
     }
 
     /**

@@ -55,24 +55,6 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
-    @Nonnull
-    @Override
-    public int[] getSlotsForFace(Direction side) {
-        if (side == Direction.DOWN)
-            return SLOTS_DOWN;
-        else
-            return side == Direction.UP ? SLOTS_UP : side == Direction.WEST ? SLOTS_WEST : SLOTS_FUEL;
-    }
-
-    @Nonnull
-    @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT compound = super.getUpdateTag();
-        compound.putUniqueId("owner", ownerID);
-        compound.putString("owner_name", ownerName.toString());
-        return compound;
-    }
-
     @Override
     public boolean canOpen(PlayerEntity player) {
         if (super.canOpen(player)) {
@@ -90,6 +72,84 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
             }
         }
         return false;
+    }
+
+    @Nonnull
+    @Override
+    public ITextComponent getCustomName() {
+        return new TranslationTextComponent("tile.vampirism.alchemical_cauldron.name");
+    }
+
+    @Nonnull
+    @Override
+    public ITextComponent getDisplayName() {
+        return new TranslationTextComponent("tile.vampirism.alchemical_cauldron.display", ownerName, new TranslationTextComponent("tile.vampirism.alchemical_cauldron.name"));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public int getLiquidColorClient() {
+        return ModRecipes.getLiquidColor(this.items.get(3));
+    }
+
+    public ITextComponent getOwnerName() {
+        return ownerName != null ? ownerName : new StringTextComponent("Unknown");
+    }
+
+    @Nonnull
+    @Override
+    public int[] getSlotsForFace(Direction side) {
+        if (side == Direction.DOWN)
+            return SLOTS_DOWN;
+        else
+            return side == Direction.UP ? SLOTS_UP : side == Direction.WEST ? SLOTS_WEST : SLOTS_FUEL;
+    }
+
+    @Nullable
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
+    }
+
+    @Nonnull
+    @Override
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT compound = super.getUpdateTag();
+        compound.putUniqueId("owner", ownerID);
+        compound.putString("owner_name", ownerName.toString());
+        return compound;
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundNBT compound) {
+        super.handleUpdateTag(compound);
+        ownerID = compound.getUniqueId("owner");
+        ownerName = new StringTextComponent(compound.getString("owner_name"));
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        CompoundNBT nbt = pkt.getNbtCompound();
+        handleUpdateTag(nbt);
+    }
+
+    @Override
+    public void read(CompoundNBT compound) {
+        ownerID = compound.getUniqueId("owner");
+        ownerName = new StringTextComponent(compound.getString("owner_name"));
+        super.read(compound);
+    }
+
+    public void setOwnerID(PlayerEntity player) {
+        ownerID = player.getUniqueID();
+        ownerName = player.getDisplayName();
+        this.markDirty();
     }
 
     /**
@@ -157,10 +217,22 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
 
     }
 
+    @Override
+    public CompoundNBT write(CompoundNBT compound) {
+        compound.putUniqueId("owner", ownerID);
+        compound.putString("owner_name", ownerName.toString());
+        return super.write(compound);
+    }
+
     @Nonnull
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
         return new AlchemicalCauldronContainer(id, player, this, this.furnaceData, world == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(world, pos));
+    }
+
+    @Override
+    protected ITextComponent getDefaultName() {
+        return new TranslationTextComponent("tile.vampirism.alchemical_cauldron");
     }
 
     private boolean canPlayerCook(AlchemicalCauldronRecipe recipe) {
@@ -177,32 +249,6 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
             recipeChecked = null;
             return false;
         }
-    }
-
-    public void setOwnerID(PlayerEntity player) {
-        ownerID = player.getUniqueID();
-        ownerName = player.getDisplayName();
-        this.markDirty();
-    }
-
-    @Override
-    public void markDirty() {
-        super.markDirty();
-        this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        compound.putUniqueId("owner", ownerID);
-        compound.putString("owner_name", ownerName.toString());
-        return super.write(compound);
-    }
-
-    @Override
-    public void read(CompoundNBT compound) {
-        ownerID = compound.getUniqueId("owner");
-        ownerName = new StringTextComponent(compound.getString("owner_name"));
-        super.read(compound);
     }
 
     /**
@@ -231,58 +277,11 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         }
     }
 
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundNBT compound) {
-        super.handleUpdateTag(compound);
-        ownerID = compound.getUniqueId("owner");
-        ownerName = new StringTextComponent(compound.getString("owner_name"));
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT nbt = pkt.getNbtCompound();
-        handleUpdateTag(nbt);
-    }
-
-
-    @Override
-    protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("tile.vampirism.alchemical_cauldron");
-    }
-
-    @Nonnull
-    @Override
-    public ITextComponent getDisplayName() {
-        return new TranslationTextComponent("tile.vampirism.alchemical_cauldron.display", ownerName, new TranslationTextComponent("tile.vampirism.alchemical_cauldron.name"));
-    }
-
-    @Nonnull
-    @Override
-    public ITextComponent getCustomName() {
-        return new TranslationTextComponent("tile.vampirism.alchemical_cauldron.name");
-    }
-
     private boolean isBurning() {
         return this.furnaceData.get(1) > 0;
     }
 
     private boolean isCooking() {
         return this.furnaceData.get(2) > 0;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public int getLiquidColorClient() {
-        return ModRecipes.getLiquidColor(this.items.get(3));
-    }
-
-    public ITextComponent getOwnerName() {
-        return ownerName != null ? ownerName : new StringTextComponent("Unknown");
     }
 }

@@ -12,7 +12,6 @@ import java.util.List;
 public interface ISkillManager {
 
 
-
     /**
      * A mutable copied list of all skills registered for this faction
      *

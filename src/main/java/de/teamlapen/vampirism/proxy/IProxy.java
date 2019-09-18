@@ -16,17 +16,21 @@ import javax.annotation.Nullable;
  */
 public interface IProxy extends IInitListener {
 
-    default float getRenderPartialTick() {
-        return 1F;
+    default void displayNameSwordScreen(ItemStack stack) {
+    }
+
+    default void displayRevertBackScreen() {
     }
 
     @Nullable
     PlayerEntity getClientPlayer();
 
-    void renderScreenFullColor(int ticksOn, int ticksOff, int color);
-
     @Nullable
     Entity getMouseOverEntity();
+
+    default float getRenderPartialTick() {
+        return 1F;
+    }
 
     /**
      * Only call after client_load/server started
@@ -36,18 +40,14 @@ public interface IProxy extends IInitListener {
      */
     SkillTree getSkillTree(boolean client);
 
+    default void handleBloodValuePacket(BloodValuePacket msg) {
+    }
+
     default void handleSkillTreePacket(SkillTreePacket msg) {
     }
 
     default void handleVampireBookPacket(OpenVampireBookPacket msg) {
     }
 
-    default void handleBloodValuePacket(BloodValuePacket msg) {
-    }
-
-    default void displayRevertBackScreen() {
-    }
-
-    default void displayNameSwordScreen(ItemStack stack) {
-    }
+    void renderScreenFullColor(int ticksOn, int ticksOff, int color);
 }

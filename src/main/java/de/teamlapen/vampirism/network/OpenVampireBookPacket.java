@@ -12,12 +12,6 @@ import java.util.function.Supplier;
  * open a vampire book on client
  */
 public class OpenVampireBookPacket implements IMessage {
-    public final ItemStack itemStack;
-
-    public OpenVampireBookPacket(ItemStack itemStack) {
-        this.itemStack = itemStack;
-    }
-
     public static void handle(final OpenVampireBookPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
 
@@ -32,5 +26,10 @@ public class OpenVampireBookPacket implements IMessage {
 
     static OpenVampireBookPacket decode(PacketBuffer buf) {
         return new OpenVampireBookPacket(buf.readItemStack());
+    }
+    public final ItemStack itemStack;
+
+    public OpenVampireBookPacket(ItemStack itemStack) {
+        this.itemStack = itemStack;
     }
 }

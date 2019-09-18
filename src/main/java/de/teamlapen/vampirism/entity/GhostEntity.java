@@ -26,6 +26,10 @@ import java.util.Random;
  * Entity Ghost
  */
 public class GhostEntity extends VampirismEntity implements IMob {
+    public static boolean spawnPredicateGhost(EntityType<? extends GhostEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        return world.getDifficulty() != Difficulty.PEACEFUL && spawnPredicateVampireFog(world, blockPos) && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random) && ModTags.Blocks.CURSEDEARTH.contains(world.getBlockState(blockPos.down()).getBlock());
+    }
+
     public GhostEntity(EntityType<? extends GhostEntity> type, World worldIn) {
         super(type, worldIn);
         getNavigator().setCanSwim(true);
@@ -53,6 +57,20 @@ public class GhostEntity extends VampirismEntity implements IMob {
         return 0.1F;
     }
 
+    @Nullable
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootHandler.GHOST;
+    }
+
+    /**
+     * Ghost do not make any step sounds
+     */
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState blockIn) {
+        return;
+    }
+
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
@@ -60,12 +78,6 @@ public class GhostEntity extends VampirismEntity implements IMob {
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(Balance.mobProps.GHOST_FOLLOW_RANGE);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.GHOST_SPEED);
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.GHOST_HEALTH);
-    }
-
-    @Nullable
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootHandler.GHOST;
     }
 
     @Override
@@ -78,17 +90,5 @@ public class GhostEntity extends VampirismEntity implements IMob {
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 0, true, false, null));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
-    }
-
-    /**
-     * Ghost do not make any step sounds
-     */
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState blockIn) {
-        return;
-    }
-
-    public static boolean spawnPredicateGhost(EntityType<? extends GhostEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && spawnPredicateVampireFog(world, blockPos) && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random) && ModTags.Blocks.CURSEDEARTH.contains(world.getBlockState(blockPos.down()).getBlock()) ? true : false;
     }
 }

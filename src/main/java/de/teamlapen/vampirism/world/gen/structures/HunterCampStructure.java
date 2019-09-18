@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world.gen.structures;
 
 import com.mojang.datafixers.Dynamic;
-
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
@@ -21,16 +20,8 @@ public class HunterCampStructure extends Structure<NoFeatureConfig> {
     }
 
     @Override
-    public boolean hasStartAt(ChunkGenerator<?> chunkGen, Random rand, int chunkPosX, int chunkPosZ) {
-        ChunkPos chunkpos = this.getStartPositionForPosition(chunkGen, rand, chunkPosX, chunkPosZ, 0, 0);
-        if (chunkPosX == chunkpos.x && chunkPosZ == chunkpos.z) {
-            Biome biome = chunkGen.getBiomeProvider().getBiome(new BlockPos(chunkPosX * 16 + 9, 0, chunkPosZ * 16 + 9));
-            if (chunkGen.hasStructure(biome, this)) {
-                return true;
-            }
-        }
-
-        return false;
+    public int getSize() {
+        return 1;//TODO 1.14 Structure
     }
 
     @Override
@@ -44,8 +35,14 @@ public class HunterCampStructure extends Structure<NoFeatureConfig> {
     }
 
     @Override
-    public int getSize() {
-        return 1;//TODO 1.14 Structure
+    public boolean hasStartAt(ChunkGenerator<?> chunkGen, Random rand, int chunkPosX, int chunkPosZ) {
+        ChunkPos chunkpos = this.getStartPositionForPosition(chunkGen, rand, chunkPosX, chunkPosZ, 0, 0);
+        if (chunkPosX == chunkpos.x && chunkPosZ == chunkpos.z) {
+            Biome biome = chunkGen.getBiomeProvider().getBiome(new BlockPos(chunkPosX * 16 + 9, 0, chunkPosZ * 16 + 9));
+            return chunkGen.hasStructure(biome, this);
+        }
+
+        return false;
     }
 
     public static class Start extends StructureStart {

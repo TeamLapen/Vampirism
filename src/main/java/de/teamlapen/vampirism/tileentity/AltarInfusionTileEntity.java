@@ -120,11 +120,6 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
 
     }
 
-    @Override
-    protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("tile.vampirism.altar_infusion");
-    }
-
     @Nullable
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
@@ -134,24 +129,8 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         return super.getCapability(cap, side);
     }
 
-    @Override
-    public void read(CompoundNBT tagCompound) {
-        super.read(tagCompound);
-        int tick = tagCompound.getInt("tick");
-        //This is used on both client and server side and has to be prepared for the world not being available yet
-        if (tick > 0 && player == null && tagCompound.hasUniqueId("playerUUID")) {
-            UUID playerID = tagCompound.getUniqueId("playerUUID");
-            if (!loadRitual(playerID)) {
-                this.playerToLoadUUID = playerID;
-            }
-            this.runningTick = tick;
-        }
-
-    }
-
     /**
      * Returns the phase the ritual is in
-     *
      */
     public PHASE getCurrentPhase() {
         if (runningTick < 1) {
@@ -226,6 +205,21 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         this.read(pkt.getNbtCompound());
+    }
+
+    @Override
+    public void read(CompoundNBT tagCompound) {
+        super.read(tagCompound);
+        int tick = tagCompound.getInt("tick");
+        //This is used on both client and server side and has to be prepared for the world not being available yet
+        if (tick > 0 && player == null && tagCompound.hasUniqueId("playerUUID")) {
+            UUID playerID = tagCompound.getUniqueId("playerUUID");
+            if (!loadRitual(playerID)) {
+                this.playerToLoadUUID = playerID;
+            }
+            this.runningTick = tick;
+        }
+
     }
 
     /**
@@ -341,20 +335,9 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         return new AltarInfusionContainer(id, player, this, world == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(world, pos));
     }
 
-    private boolean loadRitual(UUID playerID) {
-        if (this.world == null) return false;
-        if (this.world.getPlayers().size() == 0) return false;
-        this.player = this.world.getPlayerByUuid(playerID);
-        if (this.player != null) {
-            this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
-            checkStructureLevel(checkRequiredLevel());
-        } else {
-            runningTick = 0;
-            this.tips = null;
-            LOGGER.warn("Failed to find player {}", playerID);
-
-        }
-        return true;
+    @Override
+    protected ITextComponent getDefaultName() {
+        return new TranslationTextComponent("tile.vampirism.altar_infusion");
     }
 
     /**
@@ -378,7 +361,6 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         return true;
 
     }
-
 
     /**
      * Determines the structure required for leveling up.
@@ -455,7 +437,6 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
 
     /**
      * Finds all {@link AltarTipBlock}'s in the area
-     *
      */
     private BlockPos[] findTips() {
         if (world == null) return new BlockPos[0];
@@ -471,6 +452,22 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             }
         }
         return list.toArray(new BlockPos[0]);
+    }
+
+    private boolean loadRitual(UUID playerID) {
+        if (this.world == null) return false;
+        if (this.world.getPlayers().size() == 0) return false;
+        this.player = this.world.getPlayerByUuid(playerID);
+        if (this.player != null) {
+            this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
+            checkStructureLevel(checkRequiredLevel());
+        } else {
+            runningTick = 0;
+            this.tips = null;
+            LOGGER.warn("Failed to find player {}", playerID);
+
+        }
+        return true;
     }
 
     public enum PHASE {

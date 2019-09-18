@@ -25,8 +25,6 @@ import javax.annotation.Nullable;
 public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityProvider {
 
     public static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
-    private final LazyOptional<IFluidHandlerItem> holder = LazyOptional.of(() -> this);
-
 
     /**
      * Returns a amount which is a multiple of capacity%10
@@ -37,7 +35,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     public static int getAdjustedAmount(int amt) {
         return amt - amt % MULTIPLIER;
     }
-
+    private final LazyOptional<IFluidHandlerItem> holder = LazyOptional.of(() -> this);
     private final int capacity;
     @Nonnull
     protected ItemStack container;
@@ -93,16 +91,17 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
         return stack.getItem() == ModItems.blood_bottle ? stack.getDamage() * MULTIPLIER : 0;
     }
 
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.orEmpty(cap, holder);
+
+    }
 
     @Nonnull
     @Override
     public ItemStack getContainer() {
         return container;
-    }
-
-    @Override
-    public int getTanks() {
-        return 1;
     }
 
     @Nonnull
@@ -117,15 +116,13 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     }
 
     @Override
-    public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
-        return ModFluids.blood.isEquivalentTo(stack.getFluid());
+    public int getTanks() {
+        return 1;
     }
 
-    @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.orEmpty(cap, holder);
-
+    public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
+        return ModFluids.blood.isEquivalentTo(stack.getFluid());
     }
 
     public void setBlood(ItemStack stack, int amt) {

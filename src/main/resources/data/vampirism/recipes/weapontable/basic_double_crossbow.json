@@ -3,7 +3,9 @@
     "item": "vampirism:basic_double_crossbow"
   },
   "lava": 1,
-  "skill": ["vampirism:double_crossbow"],
+  "skill": [
+    "vampirism:double_crossbow"
+  ],
   "pattern": [
     "YXXY",
     "YXXY",

@@ -68,28 +68,6 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if (this.world.isRemote) {
-            Vec3d center = this.getPositionVector();
-            ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010), center.x, center.y, center.z, 60, 1, this.rand);
-
-            //Vec3d border=center.addVector(this.getRadius() * (this.rand.nextDouble()-0.5)*2,this.getRadius() * (this.rand.nextDouble()-0.5)*2,this.getRadius() * (this.rand.nextDouble()-0.5)*2);
-
-            if (this.ticksExisted % 3 == 0) {
-                Vec3d border = this.getPositionVector();
-                border = border.add(this.getMotion().scale(-0.1));
-                ModParticles.spawnParticleClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
-            }
-
-        } else {
-            if (this.ticksExisted > 300) {
-                this.remove();
-            }
-        }
-    }
-
-    @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.directDamage = compound.getFloat("direct_damage");
@@ -111,6 +89,28 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 
      */
     public void setInitialNoClip() {
         initialNoClip = true;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.world.isRemote) {
+            Vec3d center = this.getPositionVector();
+            ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010), center.x, center.y, center.z, 60, 1, this.rand);
+
+            //Vec3d border=center.addVector(this.getRadius() * (this.rand.nextDouble()-0.5)*2,this.getRadius() * (this.rand.nextDouble()-0.5)*2,this.getRadius() * (this.rand.nextDouble()-0.5)*2);
+
+            if (this.ticksExisted % 3 == 0) {
+                Vec3d border = this.getPositionVector();
+                border = border.add(this.getMotion().scale(-0.1));
+                ModParticles.spawnParticleClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
+            }
+
+        } else {
+            if (this.ticksExisted > 300) {
+                this.remove();
+            }
+        }
     }
 
     @Override

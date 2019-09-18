@@ -78,13 +78,23 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.advanced_hunter_imob : ModEntities.advanced_hunter;
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return super.canDespawn(distanceToClosestPlayer) && isLookingForHome();
     }
 
     @Override
     public boolean getAlwaysRenderNameTagForRender() {
         return true;
+    }
+
+    @Override
+    public EntityClassType getEntityClass() {
+        return entityclass;
+    }
+
+    @Override
+    public EntityActionTier getEntityTier() {
+        return entitytier;
     }
 
     @Override
@@ -97,11 +107,16 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return getDataManager().get(LEVEL);
     }
 
-    @Nonnull
     @Override
-    public ITextComponent getName() {
-        String senderName = this.getDataManager().get(NAME);
-        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
+    public void setLevel(int level) {
+        if (level >= 0) {
+            getDataManager().set(LEVEL, level);
+            this.updateEntityAttributes();
+            if (level == 1) {
+                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 1));
+            }
+
+        }
     }
 
     @Override
@@ -109,20 +124,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return MAX_LEVEL;
     }
 
+    @Nonnull
     @Override
-    public void read(CompoundNBT tagCompund) {
-        super.read(tagCompund);
-        if (tagCompund.contains("level")) {
-            setLevel(tagCompund.getInt("level"));
-        }
-        if (tagCompund.contains("type")) {
-            getDataManager().set(TYPE, tagCompund.getInt("type"));
-            getDataManager().set(NAME, tagCompund.getString("name"));
-            getDataManager().set(TEXTURE, tagCompund.getString("texture"));
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
-        }
+    public ITextComponent getName() {
+        String senderName = this.getDataManager().get(NAME);
+        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
     }
 
     @Nullable
@@ -152,14 +158,18 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void setLevel(int level) {
-        if (level >= 0) {
-            getDataManager().set(LEVEL, level);
-            this.updateEntityAttributes();
-            if (level == 1) {
-                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 1));
-            }
-
+    public void read(CompoundNBT tagCompund) {
+        super.read(tagCompund);
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
+        }
+        if (tagCompund.contains("type")) {
+            getDataManager().set(TYPE, tagCompund.getInt("type"));
+            getDataManager().set(NAME, tagCompund.getString("name"));
+            getDataManager().set(TEXTURE, tagCompund.getString("texture"));
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
         }
     }
 
@@ -192,15 +202,26 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
+    protected int getExperiencePoints(PlayerEntity player) {
+        return 10 * (1 + getLevel());
+    }
+
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.advanced_hunter_imob : ModEntities.advanced_hunter;
+    }
+
+    @Nullable
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootHandler.ADVANCED_HUNTER;
+    }
+
+    @Override
     protected void registerAttributes() {
         super.registerAttributes();
         this.updateEntityAttributes();
 
-    }
-
-    @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return super.canDespawn(distanceToClosestPlayer) && isLookingForHome();
     }
 
     @Override
@@ -212,17 +233,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.getDataManager().register(NAME, supporter.senderName == null ? "none" : supporter.senderName);
         this.getDataManager().register(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
 
-    }
-
-    @Override
-    protected int getExperiencePoints(PlayerEntity player) {
-        return 10 * (1 + getLevel());
-    }
-
-    @Nullable
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootHandler.ADVANCED_HUNTER;
     }
 
     @Override
@@ -248,16 +258,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH + Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH_PL * l);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE_PL * l);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_SPEED);
-    }
-
-    @Override
-    public EntityClassType getEntityClass() {
-        return entityclass;
-    }
-
-    @Override
-    public EntityActionTier getEntityTier() {
-        return entitytier;
     }
 
     public static class IMob extends AdvancedHunterEntity implements net.minecraft.entity.monster.IMob {

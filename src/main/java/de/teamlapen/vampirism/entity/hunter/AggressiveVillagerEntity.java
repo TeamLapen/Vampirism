@@ -25,7 +25,6 @@ import javax.annotation.Nullable;
  * Villager that is equipped with a fork and hunts vampires
  */
 public class AggressiveVillagerEntity extends VampirismVillagerEntity implements IHunterMob, IAggressiveVillager, IVillageCaptureEntity {
-    private AxisAlignedBB area;
     /**
      * Creates a hunter villager as an copy to the given villager
      *
@@ -41,45 +40,13 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         hunter.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
         return hunter;
     }
+    private AxisAlignedBB area;
 
 
     public AggressiveVillagerEntity(EntityType<? extends AggressiveVillagerEntity> type, World worldIn) {
         super(type, worldIn);
         ((GroundPathNavigator) getNavigator()).setBreakDoors(true);
     }
-
-
-
-    @Override
-    public LivingEntity getRepresentingEntity() {
-        return this;
-    }
-
-    @Override
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        ILivingEntityData data = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
-        return data;
-    }
-
-    @Override
-    public void livingTick() {
-        super.livingTick();
-    }
-
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32);
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_MAX_HEALTH);
-    }
-
-//    @Nullable
-//    @Override
-//    public IVampirismVillage getCurrentFriendlyVillage() { //TODO 1.14 village
-//        return this.cachedVillage != null ? this.cachedVillage.getControllingFaction() == VReference.HUNTER_FACTION ? this.cachedVillage : null : null;
-//    }
 
     @Override
     public void attackVillage(AxisAlignedBB area) {
@@ -92,13 +59,36 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
+    public LivingEntity getRepresentingEntity() {
+        return this;
+    }
+
+    @Override
     public AxisAlignedBB getTargetVillageArea() {
         return area;
     }
 
+//    @Nullable
+//    @Override
+//    public IVampirismVillage getCurrentFriendlyVillage() { //TODO 1.14 village
+//        return this.cachedVillage != null ? this.cachedVillage.getControllingFaction() == VReference.HUNTER_FACTION ? this.cachedVillage : null : null;
+//    }
+
     @Override
     public boolean isAttackingVillage() {
         return false;
+    }
+
+    @Override
+    public void livingTick() {
+        super.livingTick();
+    }
+
+    @Override
+    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        ILivingEntityData data = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
+        return data;
     }
 
     @Override
@@ -110,6 +100,14 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
         world.addEntity(villager);
         this.remove();
+    }
+
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE);
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_MAX_HEALTH);
     }
 
     @Override

@@ -37,10 +37,23 @@ public class HunterTableBlock extends VampirismBlock {
     private static final VoxelShape NORTH = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
     private static final VoxelShape EAST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
 
-    @Nullable
-    @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos)), containerName);
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(0, 0, 0, 2, 10, 2);
+        VoxelShape b = Block.makeCuboidShape(14, 0, 0, 16, 10, 2);
+        VoxelShape c = Block.makeCuboidShape(0, 0, 14, 2, 10, 16);
+        VoxelShape d = Block.makeCuboidShape(14, 0, 14, 16, 10, 16);
+
+        VoxelShape e = Block.makeCuboidShape(1, 8, 1, 15, 10, 15);
+        VoxelShape f = Block.makeCuboidShape(8.5, 10, 3.5, 13.5, 11, 10);
+
+        VoxelShape d1 = VoxelShapes.or(a, b);
+        VoxelShape d2 = VoxelShapes.or(c, d);
+
+        VoxelShape d3 = VoxelShapes.or(d1, d2);
+        VoxelShape f1 = VoxelShapes.or(e, f);
+
+        VoxelShape g = VoxelShapes.or(d3, f1);
+        return g;
     }
 
     public HunterTableBlock() {
@@ -48,9 +61,30 @@ public class HunterTableBlock extends VampirismBlock {
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
     }
 
+    @Nullable
+    @Override
+    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
+        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos)), containerName);
+    }
+
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        switch (state.get(FACING)) {
+            case NORTH:
+                return NORTH;
+            case EAST:
+                return EAST;
+            case SOUTH:
+                return SOUTH;
+            case WEST:
+                return WEST;
+        }
+        return NORTH;
     }
 
     @Nullable
@@ -81,41 +115,7 @@ public class HunterTableBlock extends VampirismBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
-            case NORTH:
-                return NORTH;
-            case EAST:
-                return EAST;
-            case SOUTH:
-                return SOUTH;
-            case WEST:
-                return WEST;
-        }
-        return NORTH;
-    }
-
-    @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
-    }
-
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(0, 0, 0, 2, 10, 2);
-        VoxelShape b = Block.makeCuboidShape(14, 0, 0, 16, 10, 2);
-        VoxelShape c = Block.makeCuboidShape(0, 0, 14, 2, 10, 16);
-        VoxelShape d = Block.makeCuboidShape(14, 0, 14, 16, 10, 16);
-
-        VoxelShape e = Block.makeCuboidShape(1, 8, 1, 15, 10, 15);
-        VoxelShape f = Block.makeCuboidShape(8.5, 10, 3.5, 13.5, 11, 10);
-
-        VoxelShape d1 = VoxelShapes.or(a, b);
-        VoxelShape d2 = VoxelShapes.or(c, d);
-
-        VoxelShape d3 = VoxelShapes.or(d1, d2);
-        VoxelShape f1 = VoxelShapes.or(e, f);
-
-        VoxelShape g = VoxelShapes.or(d3, f1);
-        return g;
     }
 }

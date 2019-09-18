@@ -33,6 +33,29 @@ import java.util.List;
 public class ClientProxy extends CommonProxy {
     private static final Logger LOGGER = LogManager.getLogger();
 
+    private static void handleCapability(Entity e, ResourceLocation key, CompoundNBT data) {
+        Capability cap = HelperRegistry.getSyncableEntityCaps().get(key);
+        if (cap == null && e instanceof PlayerEntity) {
+            cap = HelperRegistry.getSyncablePlayerCaps().get(key);
+        }
+        if (cap == null) {
+            LOGGER.warn("Capability with key {} is not registered in the HelperRegistry", key);
+        } else {
+            LazyOptional opt = e.getCapability(cap, null); //Lazy Optional is kinda strange
+            opt.ifPresent(inst -> {
+                if (inst instanceof ISyncable) {
+                    ((ISyncable) inst).loadUpdateFromNBT(data);
+                } else {
+                    LOGGER.warn("Target entity's capability {} ({})does not implement ISyncable", inst, key);
+                }
+            });
+            if (!opt.isPresent()) {
+                LOGGER.warn("Target entity {} does not have capability {}", e, cap);
+
+            }
+        }
+    }
+
     @Nonnull
     @Override
     public ISoundReference createSoundReference(SoundEvent event, SoundCategory category, BlockPos pos, float volume, float pinch) {
@@ -54,12 +77,6 @@ public class ClientProxy extends CommonProxy {
     public PlayerEntity getPlayerEntity(NetworkEvent.Context ctx) {
         //Need to double check the side for some reason
         return (EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().player : super.getPlayerEntity(ctx));
-    }
-
-    @Override
-    public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
-        str = StringEscapeUtils.unescapeJava(str);
-        return Minecraft.getInstance().fontRenderer.listFormattedStringToWidth(str, wrapWidth);
     }
 
     @Override
@@ -99,26 +116,9 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
-    private static void handleCapability(Entity e, ResourceLocation key, CompoundNBT data) {
-        Capability cap = HelperRegistry.getSyncableEntityCaps().get(key);
-        if (cap == null && e instanceof PlayerEntity) {
-            cap = HelperRegistry.getSyncablePlayerCaps().get(key);
-        }
-        if (cap == null) {
-            LOGGER.warn("Capability with key {} is not registered in the HelperRegistry", key);
-        } else {
-            LazyOptional opt = e.getCapability(cap, null); //Lazy Optional is kinda strange
-            opt.ifPresent(inst -> {
-                if (inst instanceof ISyncable) {
-                    ((ISyncable) inst).loadUpdateFromNBT(data);
-                } else {
-                    LOGGER.warn("Target entity's capability {} ({})does not implement ISyncable", inst, key);
-                }
-            });
-            if (!opt.isPresent()) {
-                LOGGER.warn("Target entity {} does not have capability {}", e, cap);
-
-            }
-        }
+    @Override
+    public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
+        str = StringEscapeUtils.unescapeJava(str);
+        return Minecraft.getInstance().fontRenderer.listFormattedStringToWidth(str, wrapWidth);
     }
 }

@@ -48,6 +48,10 @@ import java.util.function.Function;
  * @param rand
  * @param position Should be (0/height/0) of the chunk
  * @return
+ * @param worldIn
+ * @param rand
+ * @param position Should be (0/height/0) of the chunk
+ * @return
  *//*
 public class HunterCampStructureOLD extends ScatteredStructure<NoFeatureConfig> { //TODO keep for reference
 

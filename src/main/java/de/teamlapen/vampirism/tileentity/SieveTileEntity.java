@@ -27,12 +27,11 @@ import javax.annotation.Nullable;
 public class SieveTileEntity extends TileEntity implements ITickableTileEntity, FluidTankWithListener.IFluidTankListener {
 
 
+    private final LazyOptional<IFluidHandler> cap;
     private FluidTankWithListener tank;
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
     private boolean active;
-
-    private final LazyOptional<IFluidHandler> cap;
 
     public SieveTileEntity() {
         super(ModTiles.sieve);
@@ -66,6 +65,14 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
         return active;
     }
 
+    private void setActive(boolean active) {
+        if (this.active != active) {
+            this.active = active;
+            if (this.world != null)
+                this.world.setBlockState(getPos(), world.getBlockState(pos).with(SieveBlock.PROPERTY_ACTIVE, active));
+        }
+    }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
@@ -74,6 +81,19 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
         if (active != old && world != null)
             this.world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
 
+    }
+
+    @Override
+    public void onTankContentChanged() {
+        this.setActive(true);
+    }
+
+    @Override
+    public void read(CompoundNBT tag) {
+        super.read(tag);
+        tank.readFromNBT(tag);
+        cooldownProcess = tag.getInt("cooldown_process");
+        cooldownPull = tag.getInt("cooldown_pull");
     }
 
     @Override
@@ -104,27 +124,6 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
             });
         }
 
-    }
-
-    @Override
-    public void onTankContentChanged() {
-        this.setActive(true);
-    }
-
-    @Override
-    public void read(CompoundNBT tag) {
-        super.read(tag);
-        tank.readFromNBT(tag);
-        cooldownProcess = tag.getInt("cooldown_process");
-        cooldownPull = tag.getInt("cooldown_pull");
-    }
-
-    private void setActive(boolean active) {
-        if (this.active != active) {
-            this.active = active;
-            if (this.world != null)
-                this.world.setBlockState(getPos(), world.getBlockState(pos).with(SieveBlock.PROPERTY_ACTIVE, active));
-        }
     }
 
     @Override

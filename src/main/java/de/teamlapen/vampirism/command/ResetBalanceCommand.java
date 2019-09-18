@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.command.CommandSource;
@@ -12,7 +11,6 @@ import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.util.text.TranslationTextComponent;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class ResetBalanceCommand extends BasicCommand {//TODO 1.14 Balance category ArgumentType
@@ -27,9 +25,9 @@ public class ResetBalanceCommand extends BasicCommand {//TODO 1.14 Balance categ
                             return ISuggestionProvider.suggest(Balance.getCategories().keySet().stream(), builder);
                         })
                         .suggests((context, builder) -> {
-                            return ISuggestionProvider.suggest(new String[] { "all", "help" }, builder);
+                            return ISuggestionProvider.suggest(new String[]{"all", "help"}, builder);
                         })
-                        .executes(context->{
+                        .executes(context -> {
                             return resetBalance(context, StringArgumentType.getString(context, "category"));
                         }));
     }

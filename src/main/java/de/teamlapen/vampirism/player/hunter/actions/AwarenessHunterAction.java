@@ -18,29 +18,23 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     @Override
-    public int getCooldown() {
-        return Balance.hpa.AWARENESS_COOLDOWN;
-    }
-
-    @Override
     public boolean canBeUsedBy(IHunterPlayer player) {
         return !player.getActionHandler().isActionActive(HunterActions.disguise_hunter);
     }
 
     @Override
-    public boolean isEnabled() {
-        return Balance.hpa.AWARENESS_ENABLED;
-    }
-
-    @Override
-    protected boolean activate(IHunterPlayer player) {
-        onUpdate(player);
-        return true;
+    public int getCooldown() {
+        return Balance.hpa.AWARENESS_COOLDOWN;
     }
 
     @Override
     public int getDuration(int level) {
         return Balance.hpa.AWARENESS_DURATION;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return Balance.hpa.AWARENESS_ENABLED;
     }
 
     @Override
@@ -71,10 +65,16 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
         return false;
     }
 
+    @Override
+    protected boolean activate(IHunterPlayer player) {
+        onUpdate(player);
+        return true;
+    }
+
     private boolean nearbyVampire(IHunterPlayer player) {
         List<LivingEntity> entities = player.getRepresentingEntity().getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(player.getRepresentingEntity().posX - Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posY
                 - Balance.hpa.AWARENESS_RADIUS + 1, player.getRepresentingEntity().posZ
-                        - Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posX + Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posY + Balance.hpa.AWARENESS_RADIUS + 1, player.getRepresentingEntity().posZ + Balance.hpa.AWARENESS_RADIUS));
+                - Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posX + Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posY + Balance.hpa.AWARENESS_RADIUS + 1, player.getRepresentingEntity().posZ + Balance.hpa.AWARENESS_RADIUS));
         for (LivingEntity e : entities) {
             if (Helper.isVampire(e))
                 return true;

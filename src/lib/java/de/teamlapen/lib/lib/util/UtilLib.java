@@ -2,7 +2,6 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -54,6 +53,7 @@ import java.util.*;
 public class UtilLib {
 
     private final static Logger LOGGER = LogManager.getLogger();
+
     public static String entityToString(Entity e) {
         if (e == null) {
             return "Entity is null";
@@ -73,10 +73,10 @@ public class UtilLib {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vertexbuffer.pos((double) (x), (double) (y + height), (double) zLevel).tex((double) ((float) (textureX) * f), (double) ((float) (textureY + height) * f1)).endVertex();
-        vertexbuffer.pos((double) (x + width), (double) (y + height), (double) zLevel).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + height) * f1)).endVertex();
-        vertexbuffer.pos((double) (x + width), (double) (y), (double) zLevel).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY) * f1)).endVertex();
-        vertexbuffer.pos((double) (x), (double) (y), (double) zLevel).tex((double) ((float) (textureX) * f), (double) ((float) (textureY) * f1)).endVertex();
+        vertexbuffer.pos(x, y + height, zLevel).tex((float) (textureX) * f, (float) (textureY + height) * f1).endVertex();
+        vertexbuffer.pos(x + width, y + height, zLevel).tex((float) (textureX + width) * f, (float) (textureY + height) * f1).endVertex();
+        vertexbuffer.pos(x + width, y, zLevel).tex((float) (textureX + width) * f, (float) (textureY) * f1).endVertex();
+        vertexbuffer.pos(x, y, zLevel).tex((float) (textureX) * f, (float) (textureY) * f1).endVertex();
         tessellator.draw();
     }
 
@@ -230,7 +230,7 @@ public class UtilLib {
         }
         boolean flag = false;
         int i = 0;
-        BlockPos backupPos=null; //
+        BlockPos backupPos = null; //
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
             if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(e.getType()), world, c, e.getType())) {//TODO i see no other way
@@ -249,7 +249,7 @@ public class UtilLib {
         if (!flag && backupPos != null) {
             //If we did not find a "hidden" position, use the last valid position (if available)
             e.setPosition(backupPos.getX(), backupPos.getY() + 0.2, backupPos.getZ());
-            flag=true;
+            flag = true;
         }
 
         if (flag) {
@@ -427,11 +427,11 @@ public class UtilLib {
 
     /**
      * Returns null, but makes it look like non null
-     *
+     * <p>
      * If this causes issues when compiling with IntelliJ check the following link and rebuild the entire project afterwards
-     *
+     * <p>
      * https://github.com/TeamLapen/Vampirism#intellij
-     *
+     * <p>
      * Make sure Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled (Unfortunately required)
      */
     @SuppressWarnings("ConstantConditions")
@@ -589,6 +589,7 @@ public class UtilLib {
     /**
      * Rotate voxel. Credits to JTK222|Lukas
      * Cache the result
+     *
      * @param shape
      * @param rotation
      * @return
@@ -625,13 +626,6 @@ public class UtilLib {
     public static ITextComponent translated(String key, Object... format) {
         return new TranslationTextComponent(key, format);
     }
-
-    public enum RotationAmount {
-        NINETY,
-        HUNDRED_EIGHTY,
-        TWO_HUNDRED_SEVENTY
-    }
-
 
     public static String aiTaskListToStringDebug(GoalSelector tasks) {
         Collection c = ObfuscationReflectionHelper.getPrivateValue(GoalSelector.class, tasks, "executingTaskEntries");
@@ -683,5 +677,11 @@ public class UtilLib {
     public static AxisAlignedBB intToBB(int[] array) {
         return new AxisAlignedBB(array[0], array[1], array[2], array[3], array[4], array[5]);
 
+    }
+
+    public enum RotationAmount {
+        NINETY,
+        HUNDRED_EIGHTY,
+        TWO_HUNDRED_SEVENTY
     }
 }

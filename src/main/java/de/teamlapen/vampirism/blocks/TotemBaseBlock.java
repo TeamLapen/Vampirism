@@ -20,38 +20,6 @@ public class TotemBaseBlock extends VampirismBlock {
     private static final VoxelShape shape = makeShape();
     private final static String regName = "totem_base";
 
-    public TotemBaseBlock() {
-        super(regName, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
-
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-        return shape;
-    }
-
-    @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
-        BlockState up = world.getBlockState(pos.up());
-        if (up.getBlock().equals(ModBlocks.totem_top)) {
-            if (!up.getBlock().removedByPlayer(up, world, pos.up(), player, willHarvest, fluid)) {
-                return false;
-            }
-            Block.spawnDrops(state, world, pos);
-        }
-        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
     private static VoxelShape makeShape() {
         VoxelShape a = Block.makeCuboidShape(1, 0, 1, 15, 1, 15);
         VoxelShape b = Block.makeCuboidShape(2, 1, 2, 14, 2, 14);
@@ -65,5 +33,37 @@ public class TotemBaseBlock extends VampirismBlock {
         VoxelShape e = Block.makeCuboidShape(5, 3, 5, 11, 16, 11);
 
         return VoxelShapes.or(a, b, c, d1, d2, d3, d4, e);
+    }
+
+    public TotemBaseBlock() {
+        super(regName, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
+
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return shape;
+    }
+
+    @Override
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return false;
+    }
+
+    @Override
+    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
+        BlockState up = world.getBlockState(pos.up());
+        if (up.getBlock().equals(ModBlocks.totem_top)) {
+            if (!up.getBlock().removedByPlayer(up, world, pos.up(), player, willHarvest, fluid)) {
+                return false;
+            }
+            Block.spawnDrops(state, world, pos);
+        }
+        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
 }

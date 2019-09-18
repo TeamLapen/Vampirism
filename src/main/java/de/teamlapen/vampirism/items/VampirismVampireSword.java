@@ -124,10 +124,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         return super.hitEntity(stack, target, attacker);
     }
 
-    public boolean isFullyCharged(ItemStack stack) {
-        return getCharged(stack) == 1f;
-    }
-
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
@@ -140,6 +136,10 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
                 }
             }
         }
+    }
+
+    public boolean isFullyCharged(ItemStack stack) {
+        return getCharged(stack) == 1f;
     }
 
     @Override

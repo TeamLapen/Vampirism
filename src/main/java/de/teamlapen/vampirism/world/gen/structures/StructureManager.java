@@ -56,14 +56,6 @@ public class StructureManager {
     public enum Structure {
         HOUSE1("house1", true);
 
-        String name;
-        boolean loot;
-
-        Structure(String name, boolean loot) {
-            this.name = name;
-            this.loot = loot;
-        }
-
         public static Set<String> getNames() {
             Set<String> names = Sets.newHashSet();
             for (Structure e : values()) {
@@ -71,6 +63,13 @@ public class StructureManager {
             }
             return names;
 
+        }
+        String name;
+        boolean loot;
+
+        Structure(String name, boolean loot) {
+            this.name = name;
+            this.loot = loot;
         }
     }
 }

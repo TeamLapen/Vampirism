@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world;
 
 import com.google.common.collect.Lists;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;

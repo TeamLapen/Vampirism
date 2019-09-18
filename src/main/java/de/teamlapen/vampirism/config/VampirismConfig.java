@@ -253,7 +253,6 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue disableVampireForest;
 
 
-
         Common(ForgeConfigSpec.Builder builder) {
             builder.comment("Common configuration settings")
                     .push("common");

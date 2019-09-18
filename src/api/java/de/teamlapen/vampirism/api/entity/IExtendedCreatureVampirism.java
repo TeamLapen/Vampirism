@@ -37,6 +37,11 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
     int getMaxBlood();
 
     /**
+     * the bite attacker should get poisoned on bite
+     */
+    boolean hasPoisonousBlood();
+
+    /**
      * Convert this creature into a vampire version if possible
      *
      * @return The converted creature
@@ -45,17 +50,12 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
     IConvertedCreature makeVampire();
 
     /**
-     * Called every tick
-     */
-    void tick();
-
-    /**
-     * the bite attacker should get poisoned on bite
-     */
-    boolean hasPoisonousBlood();
-
-    /**
      * set if the bite attacker should get poisoned on bite
      */
     void setPoisonousBlood(boolean poisonous);
+
+    /**
+     * Called every tick
+     */
+    void tick();
 }

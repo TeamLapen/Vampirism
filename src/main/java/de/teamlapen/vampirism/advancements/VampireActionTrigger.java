@@ -20,10 +20,8 @@ import java.util.List;
  */
 public class VampireActionTrigger extends AbstractCriterionTrigger<VampireActionTrigger.Instance> {
 
-    private final static Logger LOGGER = LogManager.getLogger();
-
-
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "vampire_action");
+    private final static Logger LOGGER = LogManager.getLogger();
 
     public VampireActionTrigger() {
         super(ID, Listeners::new);

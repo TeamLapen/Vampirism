@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
@@ -86,8 +85,8 @@ class BloodPotionCategory implements IBloodPotionCategory {
     }
 
     @Override
-    public List<IBloodPotionRegistry.WeightedEffect> getImmutableEffectsList() {
-        return Collections.unmodifiableList(effects); //Probably better to only create this once. But this isn't called that often
+    public String getDescTranslationKey() {
+        return unlocDesc == null ? "" : unlocDesc;
     }
 
     public ResourceLocation getId() {
@@ -95,8 +94,8 @@ class BloodPotionCategory implements IBloodPotionCategory {
     }
 
     @Override
-    public String getDescTranslationKey() {
-        return unlocDesc == null ? "" : unlocDesc;
+    public List<IBloodPotionRegistry.WeightedEffect> getImmutableEffectsList() {
+        return Collections.unmodifiableList(effects); //Probably better to only create this once. But this isn't called that often
     }
 
     @Override

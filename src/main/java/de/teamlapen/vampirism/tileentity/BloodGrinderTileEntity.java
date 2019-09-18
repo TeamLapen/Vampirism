@@ -58,23 +58,11 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
 
     @Nonnull
     @Override
-    protected Container createMenu(int id, PlayerInventory player) {
-        return new BloodGrinderContainer(id, player, this, IWorldPosCallable.of(player.player.getEntityWorld(), this.getPos()));
-    }
-
-    @Nonnull
-    @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if ((side != Direction.DOWN) && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemHandlerOptional.cast();
         }
         return super.getCapability(cap, side);
-    }
-
-
-    @Override
-    protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("tile.vampirism.blood_grinder");
     }
 
     @Override
@@ -107,6 +95,17 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
         compound.putInt("cooldown_pull", cooldownPull);
         compound.putInt("cooldown_process", cooldownProcess);
         return super.write(compound);
+    }
+
+    @Nonnull
+    @Override
+    protected Container createMenu(int id, PlayerInventory player) {
+        return new BloodGrinderContainer(id, player, this, IWorldPosCallable.of(player.player.getEntityWorld(), this.getPos()));
+    }
+
+    @Override
+    protected ITextComponent getDefaultName() {
+        return new TranslationTextComponent("tile.vampirism.blood_grinder");
     }
 
     private boolean pullItems() {

@@ -7,7 +7,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.command.CommandSource;
@@ -20,10 +19,10 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public class ActionArgument implements ArgumentType<IAction> {
-    private static final Collection<String> EXAMPLES = Arrays.asList("action", "modid:action");
     public static final DynamicCommandExceptionType ACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208673_0_) -> {
         return new TranslationTextComponent("command.vampirism.argument.action.notfound", p_208673_0_);
     });
+    private static final Collection<String> EXAMPLES = Arrays.asList("action", "modid:action");
 
     public static ActionArgument actions() {
         return new ActionArgument();
@@ -34,12 +33,8 @@ public class ActionArgument implements ArgumentType<IAction> {
     }
 
     @Override
-    public IAction parse(StringReader reader) throws CommandSyntaxException {
-        ResourceLocation id = ResourceLocation.read(reader);
-        IAction action = ModRegistries.ACTIONS.getValue(id);
-        if (action == null)
-            throw ACTION_NOT_FOUND.create(id);
-        return action;
+    public Collection<String> getExamples() {
+        return EXAMPLES;
     }
 
     @Override
@@ -48,7 +43,11 @@ public class ActionArgument implements ArgumentType<IAction> {
     }
 
     @Override
-    public Collection<String> getExamples() {
-        return EXAMPLES;
+    public IAction parse(StringReader reader) throws CommandSyntaxException {
+        ResourceLocation id = ResourceLocation.read(reader);
+        IAction action = ModRegistries.ACTIONS.getValue(id);
+        if (action == null)
+            throw ACTION_NOT_FOUND.create(id);
+        return action;
     }
 }

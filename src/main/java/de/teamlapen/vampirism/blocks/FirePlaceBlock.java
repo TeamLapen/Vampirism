@@ -25,15 +25,19 @@ public class FirePlaceBlock extends VampirismBlock {
     private static final VoxelShape shape = makeShape();
     private final static String regName = "fire_place";
 
+    private static VoxelShape makeShape() {
+        return Block.makeCuboidShape(0, 0, 0, 16, 4, 16);
+    }
+
+
     public FirePlaceBlock() {
         super(regName, Properties.create(Material.WOOD).lightValue(15).hardnessAndResistance(1));
 
     }
 
-
     @Override
-    public boolean isNormalCube(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_) {
-        return false;
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Override
@@ -42,8 +46,8 @@ public class FirePlaceBlock extends VampirismBlock {
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
+    public boolean isNormalCube(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_) {
+        return false;
     }
 
     public boolean isOpaqueCube(BlockState state) {
@@ -64,11 +68,10 @@ public class FirePlaceBlock extends VampirismBlock {
         }
     }
 
-
     @OnlyIn(Dist.CLIENT)
     public void randomDisplayTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (rand.nextInt(24) == 0) {
-            worldIn.playSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F), (double) ((float) pos.getZ() + 0.5F), SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
+            worldIn.playSound((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
         }
 
 
@@ -79,9 +82,5 @@ public class FirePlaceBlock extends VampirismBlock {
             worldIn.addParticle(ParticleTypes.LARGE_SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
 
-    }
-
-    private static VoxelShape makeShape() {
-        return Block.makeCuboidShape(0, 0, 0, 16, 4, 16);
     }
 }

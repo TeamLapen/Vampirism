@@ -104,7 +104,7 @@ public class VampireFactionVillagerBaseEntity extends FactionVillagerEntity impl
         super.registerAttributes();
         getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
-    
+
     @Override
     protected void registerGoals() {//TODO 1.14 villager brain
 //        this.goalSelector.addGoal(1, new RestrictSunVampireGoal<>(this));

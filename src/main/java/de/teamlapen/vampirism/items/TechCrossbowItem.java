@@ -116,14 +116,6 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
         }
     }
 
-
-    @Nullable
-    @Override
-    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
-        return HunterSkills.tech_weapons;
-    }
-
-
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         if (this.isInGroup(group)) {
@@ -132,7 +124,11 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
         }
     }
 
-
+    @Nullable
+    @Override
+    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
+        return HunterSkills.tech_weapons;
+    }
 
     @Nonnull
     @Override

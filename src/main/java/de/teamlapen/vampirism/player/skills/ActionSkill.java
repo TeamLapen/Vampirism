@@ -40,6 +40,10 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
         this.customDescription = customDescription;
     }
 
+    public ResourceLocation getActionID() {
+        return action.getRegistryName();
+    }
+
     @Override
     public String getTranslationKey() {
         return action.getTranslationKey();
@@ -48,9 +52,5 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     @Override
     protected void getActions(Collection<IAction> list) {
         list.add(action);
-    }
-
-    public ResourceLocation getActionID() {
-        return action.getRegistryName();
     }
 }

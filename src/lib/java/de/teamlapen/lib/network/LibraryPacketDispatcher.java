@@ -12,6 +12,7 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 public class LibraryPacketDispatcher extends AbstractPacketDispatcher {
 
     private static final String PROTOCOL_VERSION = Integer.toString(1);
+
     public LibraryPacketDispatcher() {
         super(NetworkRegistry.ChannelBuilder.named(new ResourceLocation(LIBREFERENCE.MODID, "main")).clientAcceptedVersions(PROTOCOL_VERSION::equals).serverAcceptedVersions(PROTOCOL_VERSION::equals).networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel());
     }

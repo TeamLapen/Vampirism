@@ -2,7 +2,6 @@ package de.teamlapen.lib.lib.client.gui;
 
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.client.Minecraft;
@@ -67,17 +66,17 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
-    @Override
     public void init() {
         this.onGuiInit();
         this.elementCount = elements.size();
         radDiff = 2D * Math.PI / elementCount;// gap in rad
         GLFW.glfwSetInputMode(minecraft.mainWindow.getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
         ForgeIngameGui.renderCrosshairs = false;
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 
     @Override
@@ -97,15 +96,15 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public void removed() {
-        super.removed();
-        GLFW.glfwSetInputMode(Minecraft.getInstance().mainWindow.getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+    public void onClose() {
+        super.onClose();
         ForgeIngameGui.renderCrosshairs = true;
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void removed() {
+        super.removed();
+        GLFW.glfwSetInputMode(Minecraft.getInstance().mainWindow.getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
         ForgeIngameGui.renderCrosshairs = true;
     }
 
@@ -213,10 +212,13 @@ public abstract class GuiPieMenu<T> extends Screen {
     protected abstract ResourceLocation getIconLoc(T item);
 
     /**
-
      * @return the menu key binding set in the game settings
      */
     protected abstract KeyBinding getMenuKeyBinding();
+
+    protected int getSelectedElement() {
+        return selectedElement;
+    }
 
     protected abstract String getUnlocalizedName(T item);
 
@@ -333,7 +335,6 @@ public abstract class GuiPieMenu<T> extends Screen {
         GlStateManager.popMatrix();
     }
 
-
     /**
      * Calculates the absolute mouse coordinates from the scaled ones and sets the cursor accordingly
      *
@@ -365,9 +366,5 @@ public abstract class GuiPieMenu<T> extends Screen {
             setAbsoluteMouse(dx / 1.5 + cX + 4, cY - dy / 1.5);
         }
         return rad;
-    }
-
-    protected int getSelectedElement() {
-        return selectedElement;
     }
 }

@@ -48,16 +48,16 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     private final int MAX_LEVEL = 1;
     /**
-     * Store the approximate count of entities that are following this advanced vampire.
-     * Not guaranteed to be exact and not saved to nbt
-     */
-    private int followingEntities = 0;
-    /**
      * available actions for AI task & task
      */
     private final ActionHandlerEntity<?> entityActionHandler;
     private final EntityClassType entityclass;
     private final EntityActionTier entitytier;
+    /**
+     * Store the approximate count of entities that are following this advanced vampire.
+     * Not guaranteed to be exact and not saved to nbt
+     */
+    private int followingEntities = 0;
 
     public AdvancedVampireEntity(EntityType<? extends AdvancedVampireEntity> type, World world) {
         super(type, world, true);
@@ -69,11 +69,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         IEntityActionUser.applyAttributes(this);
         this.entityActionHandler = new ActionHandlerEntity<>(this);
         this.enableImobConversion();
-    }
-
-    @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.advanced_vampire_imob : ModEntities.advanced_vampire;
     }
 
     @Override
@@ -95,6 +90,15 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         return true;
     }
 
+    @Override
+    public EntityClassType getEntityClass() {
+        return entityclass;
+    }
+
+    @Override
+    public EntityActionTier getEntityTier() {
+        return entitytier;
+    }
 
     @Override
     public int getEyeType() {
@@ -112,9 +116,14 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public ITextComponent getName() {
-        String senderName = this.getDataManager().get(NAME);
-        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
+    public void setLevel(int level) {
+        if (level >= 0) {
+            getDataManager().set(LEVEL, level);
+            this.updateEntityAttributes();
+            if (level == 1) {
+                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 0));
+            }
+        }
     }
 
     @Override
@@ -128,19 +137,9 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void read(CompoundNBT tagCompund) {
-        super.read(tagCompund);
-        if (tagCompund.contains("level")) {
-            setLevel(tagCompund.getInt("level"));
-        }
-        if (tagCompund.contains("type")) {
-            getDataManager().set(TYPE, tagCompund.getInt("type"));
-            getDataManager().set(NAME, tagCompund.getString("name"));
-            getDataManager().set(TEXTURE, tagCompund.getString("texture"));
-        }
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
-        }
+    public ITextComponent getName() {
+        String senderName = this.getDataManager().get(NAME);
+        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
     }
 
     @Nullable
@@ -165,13 +164,26 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void setLevel(int level) {
-        if (level >= 0) {
-            getDataManager().set(LEVEL, level);
-            this.updateEntityAttributes();
-            if (level == 1) {
-                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 0));
-            }
+    public void livingTick() {
+        super.livingTick();
+        if (entityActionHandler != null) {
+            entityActionHandler.handle();
+        }
+    }
+
+    @Override
+    public void read(CompoundNBT tagCompund) {
+        super.read(tagCompund);
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
+        }
+        if (tagCompund.contains("type")) {
+            getDataManager().set(TYPE, tagCompund.getInt("type"));
+            getDataManager().set(NAME, tagCompund.getString("name"));
+            getDataManager().set(TEXTURE, tagCompund.getString("texture"));
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
         }
     }
 
@@ -198,11 +210,24 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if (entityActionHandler != null) {
-            entityActionHandler.handle();
-        }
+    protected float calculateFireDamage(float amount) {
+        return (float) (amount * Balance.mobProps.ADVANCED_VAMPIRE_FIRE_VULNERABILITY);
+    }
+
+    @Override
+    protected int getExperiencePoints(PlayerEntity player) {
+        return 10 * (1 + getLevel());
+    }
+
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.advanced_vampire_imob : ModEntities.advanced_vampire;
+    }
+
+    @Nullable
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootHandler.ADVANCED_VAMPIRE;
     }
 
     @Override
@@ -210,11 +235,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         super.registerAttributes();
         this.updateEntityAttributes();
 
-    }
-
-    @Override
-    protected float calculateFireDamage(float amount) {
-        return (float) (amount * Balance.mobProps.ADVANCED_VAMPIRE_FIRE_VULNERABILITY);
     }
 
     @Override
@@ -226,17 +246,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.getDataManager().register(NAME, supporter.senderName == null ? "none" : supporter.senderName);
         this.getDataManager().register(TEXTURE, supporter.textureName == null ? "none" : supporter.textureName);
 
-    }
-
-    @Override
-    protected int getExperiencePoints(PlayerEntity player) {
-        return 10 * (1 + getLevel());
-    }
-
-    @Nullable
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootHandler.ADVANCED_VAMPIRE;
     }
 
     @Override
@@ -266,17 +275,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_SPEED);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(13);
     }
-
-    @Override
-    public EntityClassType getEntityClass() {
-        return entityclass;
-    }
-
-    @Override
-    public EntityActionTier getEntityTier() {
-        return entitytier;
-    }
-
 
     public static class IMob extends AdvancedVampireEntity implements net.minecraft.entity.monster.IMob {
 

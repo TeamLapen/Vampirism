@@ -35,14 +35,14 @@ public class VampireFactionVillagerEntity extends VampireFactionVillagerBaseEnti
             new BloodBottleForHeart(new Price(3, 12), new Price(1, 15), 9),
             new ItemsForHeart(new Price(30, 40), ModItems.pure_blood_4, new Price(1, 1)),
             new ItemsForHeart(new Price(20, 30), ModItems.pure_blood_3, new Price(1, 1))
-            }, {
+    }, {
             new ItemsForHeart(new Price(10, 30), new ItemStack[]{
                     new ItemStack(ModItems.vampire_cloak_black_blue),
                     new ItemStack(ModItems.vampire_cloak_black_red),
                     new ItemStack(ModItems.vampire_cloak_black_white),
                     new ItemStack(ModItems.vampire_cloak_red_black),
                     new ItemStack(ModItems.vampire_cloak_white_black)}, new Price(1, 1))
-            }
+    }
     };
 
     public VampireFactionVillagerEntity(EntityType<? extends VampireFactionVillagerEntity> type, World worldIn) {

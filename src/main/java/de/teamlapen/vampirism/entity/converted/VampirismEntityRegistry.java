@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -29,15 +28,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class VampirismEntityRegistry implements IVampirismEntityRegistry {
-    private static final Logger LOGGER = LogManager.getLogger();
-
     /**
      * Filled after ResourceManager reload (after 1 tick in game)
      * Stores biteable entries
      */
     @Nonnull
     public static final BiteableEntryManager biteableEntryManager = new BiteableEntryManager();
-
+    private static final Logger LOGGER = LogManager.getLogger();
     /**
      * Used to store convertible handlers after {@link FMLCommonSetupEvent}
      */
@@ -47,11 +44,11 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     private final Map<Class<? extends CreatureEntity>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
     @Nonnull
     private final Map<ResourceLocation, Integer> bloodValues = Maps.newHashMap();
-    private int bloodMultiplier = 100;
     /**
      * Stores custom extended creature constructors after {@link InterModEnqueueEvent}
      */
     private final Map<Class<? extends CreatureEntity>, Function> extendedCreatureConstructors = new ConcurrentHashMap<>();
+    private int bloodMultiplier = 100;
     private Function<IConvertingHandler.IDefaultHelper, IConvertingHandler> defaultConvertingHandlerCreator;
 
     /**
@@ -89,22 +86,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         extendedCreatureConstructors.put(clazz, constructor);
     }
 
-    @Override
-    @Nullable
-    @SuppressWarnings("unchecked")
-    public IConvertedCreature convert(CreatureEntity entity) {
-        BiteableEntry b = biteableEntryManager.get(entity);
-        if (b != null && b.convertingHandler != null) {
-            return b.convertingHandler.createFrom(entity);
-        }
-        LOGGER.warn("Failed to find convertible entry for {}", entity);
-        return null;
-    }
-
-    public void finishRegistration() {
-        finished = true;
-    }
-
     public void applyNewResources(Map<ResourceLocation, Integer> valuesIn, int multiplier) {
         this.bloodValues.putAll(valuesIn);
         this.bloodMultiplier = multiplier;
@@ -139,13 +120,29 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         biteableEntryManager.setNewBiteables(biteables, blacklist);
     }
 
-    @Nonnull
-    public Map<ResourceLocation, Integer> getBloodValues() {
-        return bloodValues;
+    @Override
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public IConvertedCreature convert(CreatureEntity entity) {
+        BiteableEntry b = biteableEntryManager.get(entity);
+        if (b != null && b.convertingHandler != null) {
+            return b.convertingHandler.createFrom(entity);
+        }
+        LOGGER.warn("Failed to find convertible entry for {}", entity);
+        return null;
+    }
+
+    public void finishRegistration() {
+        finished = true;
     }
 
     public int getBloodMultiplier() {
         return bloodMultiplier;
+    }
+
+    @Nonnull
+    public Map<ResourceLocation, Integer> getBloodValues() {
+        return bloodValues;
     }
 
     @Nonnull

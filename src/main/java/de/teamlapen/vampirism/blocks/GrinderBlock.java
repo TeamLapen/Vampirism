@@ -21,83 +21,12 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 public class GrinderBlock extends VampirismBlockContainer {
-    private final static String regName = "blood_grinder";
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    private final static String regName = "blood_grinder";
     private static final VoxelShape SOUTH = makeShape();
     private static final VoxelShape WEST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.NINETY);
     private static final VoxelShape NORTH = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
     private static final VoxelShape EAST = UtilLib.rotateShape(SOUTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
-
-
-    public GrinderBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(5).sound(SoundType.METAL));
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
-
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new BloodGrinderTileEntity();
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
-            case NORTH:
-                return NORTH;
-            case EAST:
-                return EAST;
-            case SOUTH:
-                return SOUTH;
-            case WEST:
-                return WEST;
-        }
-        return NORTH;
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
-    }
-
-    @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (world.isRemote) return true;
-        player.openContainer(world.getTileEntity(pos) instanceof BloodGrinderTileEntity ? (BloodGrinderTileEntity) world.getTileEntity(pos) : null);
-        return true;
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
-    public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
 
     private static VoxelShape makeShape() {
         VoxelShape a = Block.makeCuboidShape(0, 0, 0, 16, 1, 16);
@@ -137,6 +66,76 @@ public class GrinderBlock extends VampirismBlockContainer {
 
         VoxelShape i = VoxelShapes.or(h, e4);
         return i;
+    }
+
+    public GrinderBlock() {
+        super(regName, Properties.create(Material.IRON).hardnessAndResistance(5).sound(SoundType.METAL));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
+
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+        return new BloodGrinderTileEntity();
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        switch (state.get(FACING)) {
+            case NORTH:
+                return NORTH;
+            case EAST:
+                return EAST;
+            case SOUTH:
+                return SOUTH;
+            case WEST:
+                return WEST;
+        }
+        return NORTH;
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
+    }
+
+    @Override
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return false;
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+    }
+
+    @Override
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (world.isRemote) return true;
+        player.openContainer(world.getTileEntity(pos) instanceof BloodGrinderTileEntity ? (BloodGrinderTileEntity) world.getTileEntity(pos) : null);
+        return true;
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.with(FACING, rot.rotate(state.get(FACING)));
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 
 }

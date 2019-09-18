@@ -15,16 +15,16 @@ import javax.annotation.Nonnull;
  */
 public interface ISkill extends IForgeRegistryEntry<ISkill> {
     /**
-     * @return The faction this skill belongs to
-     */
-    @Nonnull
-    IPlayableFaction getFaction();
-
-    /**
      * The description for this skill. Can be null
      */
     @OnlyIn(Dist.CLIENT)
     ITextComponent getDescription();
+
+    /**
+     * @return The faction this skill belongs to
+     */
+    @Nonnull
+    IPlayableFaction getFaction();
 
     /**
      * Can return null if not registered, but since this has to be registered, we don't want annoying null warnings everywhere

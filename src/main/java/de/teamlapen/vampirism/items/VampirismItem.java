@@ -32,6 +32,7 @@ public class VampirismItem extends Item {
 
         return this.translation_key;
     }
+
     /**
      * Set a custom translation key
      */

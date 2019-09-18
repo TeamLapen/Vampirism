@@ -54,16 +54,15 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 2;
     private final int ANGRY_TICKS_PER_ATTACK = 120;
-    private int bloodtimer = 100;
-    private AdvancedVampireEntity advancedLeader = null;
-    private int angryTimer = 0;
     /**
      * available actions for AI task & task
      */
     private final ActionHandlerEntity<?> entityActionHandler;
     private final EntityClassType entityclass;
     private final EntityActionTier entitytier;
-
+    private int bloodtimer = 100;
+    private AdvancedVampireEntity advancedLeader = null;
+    private int angryTimer = 0;
     private Goal tasks_avoidHunter;
 
 //    /**
@@ -71,18 +70,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 //     */
 //    @Nullable
 //    private IVampirismVillage cachedVillage;
-
-    @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
-        boolean flag = super.attackEntityFrom(damageSource, p_70097_2_);
-        if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
-//        IVampirismVillage v = getCurrentFriendlyVillage();
-//        if (v != null) {
-//            v.addOrRenewAggressor(damageSource.getTrueSource());
-//        }
-        return flag;
-    }
-
     /**
      * If this is non-null we are currently attacking a village center
      */
@@ -93,7 +80,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
      */
     @Nullable
     private AxisAlignedBB village_defense_area;
-
     public BasicVampireEntity(EntityType<? extends BasicVampireEntity> type, World world) {
         super(type, world, true);
         this.canSuckBloodFromPlayer = true;
@@ -107,8 +93,20 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.vampire_imob : ModEntities.vampire;
+    public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
+        boolean flag = super.attackEntityFrom(damageSource, p_70097_2_);
+        if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
+//        IVampirismVillage v = getCurrentFriendlyVillage();
+//        if (v != null) {
+//            v.addOrRenewAggressor(damageSource.getTrueSource());
+//        }
+        return flag;
+    }
+
+    @Override
+    public void attackVillage(AxisAlignedBB area) {
+        this.goalSelector.removeGoal(tasks_avoidHunter);
+        village_attack_area = area;
     }
 
     //    @Nullable
@@ -116,6 +114,12 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 //    public IVampirismVillage getCurrentFriendlyVillage() {
 //        return cachedVillage != null ? cachedVillage.getControllingFaction() == VReference.VAMPIRE_FACTION ? cachedVillage : null : null;
 //    }
+
+    @Override
+    public void defendVillage(AxisAlignedBB area) {
+        this.goalSelector.removeGoal(tasks_avoidHunter);
+        village_defense_area = area;
+    }
 
     @Override
     public void drinkBlood(int amt, float saturationMod) {
@@ -142,10 +146,68 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.advancedLeader = advancedLeader;
     }
 
+    @Override
+    public List<IEntityAction> getAvailableActions() {
+        return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
+    }
+
+    @Override
+    public EntityClassType getEntityClass() {
+        return entityclass;
+    }
+
+    @Override
+    public EntityActionTier getEntityTier() {
+        return entitytier;
+    }
 
     @Override
     public int getLevel() {
         return getDataManager().get(LEVEL);
+    }
+
+    @Override
+    public void setLevel(int level) {
+        if (level >= 0) {
+            getDataManager().set(LEVEL, level);
+            this.updateEntityAttributes();
+            if (level == 2) {
+                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 1));
+            }
+            if (level == 1) {
+                this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_SWORD));
+            } else {
+                this.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+            }
+
+        }
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return MAX_LEVEL;
+    }
+
+    @Override
+    public int getTalkInterval() {
+        return 600;
+    }
+
+    @Nullable
+    @Override
+    public AxisAlignedBB getTargetVillageArea() {
+        return village_attack_area == null ? village_defense_area : village_attack_area;
+    }
+
+    @Override
+    public boolean isAttackingVillage() {
+        return village_attack_area != null;
+    }
+
+    @Override
+    public boolean isIgnoringSundamage() {
+        float health = this.getHealth() / this.getMaxHealth();
+        return super.isIgnoringSundamage() || angryTimer > 0 && health < 0.7f || health < 0.3f;
     }
 
     @Override
@@ -168,22 +230,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         if (entityActionHandler != null) {
             entityActionHandler.handle();
         }
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return MAX_LEVEL;
-    }
-
-    @Override
-    public int getTalkInterval() {
-        return 600;
-    }
-
-    @Override
-    public boolean isIgnoringSundamage() {
-        float health = this.getHealth() / this.getMaxHealth();
-        return super.isIgnoringSundamage() || angryTimer > 0 && health < 0.7f || health < 0.3f;
     }
 
     @Override
@@ -212,30 +258,14 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void setLevel(int level) {
-        if (level >= 0) {
-            getDataManager().set(LEVEL, level);
-            this.updateEntityAttributes();
-            if (level == 2) {
-                this.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1000000, 1));
-            }
-            if (level == 1) {
-                this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.IRON_SWORD));
-            } else {
-                this.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
-            }
-
-        }
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        if (advancedLeader != null && !advancedLeader.isAlive()) {
-            advancedLeader = null;
-        }
-        if (!this.world.isRemote && this.ticksExisted % 40 == 8) {
-//            cachedVillage = VampirismVillageHelper.getNearestVillage(this);
+    public void stopVillageAttackDefense() {
+        this.setCustomName(null);
+        if (village_defense_area != null) {
+            this.goalSelector.addGoal(2, this.tasks_avoidHunter);
+            village_defense_area = null;
+        } else if (village_attack_area != null) {
+            this.goalSelector.addGoal(2, this.tasks_avoidHunter);
+            village_attack_area = null;
         }
     }
 
@@ -250,6 +280,17 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                 return (int) (d.maxPercLevel / 100F * MAX_LEVEL);
             default:
                 return this.rand.nextInt(MAX_LEVEL + 1);
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (advancedLeader != null && !advancedLeader.isAlive()) {
+            advancedLeader = null;
+        }
+        if (!this.world.isRemote && this.ticksExisted % 40 == 8) {
+//            cachedVillage = VampirismVillageHelper.getNearestVillage(this);
         }
     }
 
@@ -274,12 +315,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.updateEntityAttributes();
-    }
-
-    @Override
     protected float calculateFireDamage(float amount) {
         float protectionMod = 1F;
         EffectInstance protection = this.getActivePotionEffect(ModEffects.fire_protection);
@@ -288,12 +323,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         }
 
         return (float) (amount * protectionMod * Balance.mobProps.VAMPIRE_FIRE_VULNERABILITY) * (getLevel() * 0.5F + 1);
-    }
-
-    @Override
-    protected void registerData() {
-        super.registerData();
-        getDataManager().register(LEVEL, -1);
     }
 
     @Override
@@ -306,6 +335,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         return 6 + getLevel();
     }
 
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.vampire_imob : ModEntities.vampire;
+    }
+
     @Nullable
     @Override
     protected ResourceLocation getLootTable() {
@@ -313,38 +347,15 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void attackVillage(AxisAlignedBB area) {
-        this.goalSelector.removeGoal(tasks_avoidHunter);
-        village_attack_area = area;
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.updateEntityAttributes();
     }
 
     @Override
-    public void defendVillage(AxisAlignedBB area) {
-        this.goalSelector.removeGoal(tasks_avoidHunter);
-        village_defense_area = area;
-    }
-
-    @Nullable
-    @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return village_attack_area == null ? village_defense_area : village_attack_area;
-    }
-
-    @Override
-    public boolean isAttackingVillage() {
-        return village_attack_area != null;
-    }
-
-    @Override
-    public void stopVillageAttackDefense() {
-        this.setCustomName(null);
-        if (village_defense_area != null) {
-            this.goalSelector.addGoal(2, this.tasks_avoidHunter);
-            village_defense_area = null;
-        } else if (village_attack_area != null) {
-            this.goalSelector.addGoal(2, this.tasks_avoidHunter);
-            village_attack_area = null;
-        }
+    protected void registerData() {
+        super.registerData();
+        getDataManager().register(LEVEL, -1);
     }
 
     @Override
@@ -382,21 +393,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MAX_HEALTH + Balance.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_SPEED);
-    }
-
-    @Override
-    public EntityClassType getEntityClass() {
-        return entityclass;
-    }
-
-    @Override
-    public EntityActionTier getEntityTier() {
-        return entitytier;
-    }
-
-    @Override
-    public List<IEntityAction> getAvailableActions() {
-        return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
     }
 
     public static class IMob extends BasicVampireEntity implements net.minecraft.entity.monster.IMob {

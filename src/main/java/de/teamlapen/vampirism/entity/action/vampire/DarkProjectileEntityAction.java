@@ -17,11 +17,6 @@ public class DarkProjectileEntityAction<T extends CreatureEntity & IEntityAction
     }
 
     @Override
-    public int getCooldown(int level) {
-        return Balance.ea.DARK_PROJECTILE_COOLDOWN * 20;
-    }
-
-    @Override
     public boolean activate(T entity) {
         LivingEntity shooter = entity.getRepresentingEntity();
 
@@ -34,6 +29,11 @@ public class DarkProjectileEntityAction<T extends CreatureEntity & IEntityAction
 
         shooter.getEntityWorld().addEntity(projectile);
         return true;
+    }
+
+    @Override
+    public int getCooldown(int level) {
+        return Balance.ea.DARK_PROJECTILE_COOLDOWN * 20;
     }
 
     @Override

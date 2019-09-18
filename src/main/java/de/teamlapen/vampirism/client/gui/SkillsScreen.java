@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -74,50 +73,6 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
-    @Override
-    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-        displayY -= p_mouseDragged_8_;
-        displayX -= p_mouseDragged_6_;
-        checkDisplay();
-        return true;
-    }
-
-    private void checkDisplay() {
-        displayY = MathHelper.clamp(displayY, -20 / zoomOut, 350 / zoomOut);
-        displayX = MathHelper.clamp(displayX, -400 / zoomOut + (zoomOut - 2.0F) * (-1) * 250, -300 / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
-        displayXNew = displayX;
-        displayYNew = displayY;
-    }
-
-    @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        if (!display) {
-            super.render(mouseX, mouseY, partialTicks);
-            return;
-        }
-
-        this.renderBackground();
-        this.drawSkills(mouseX, mouseY, partialTicks);
-        GlStateManager.disableLighting();
-        GlStateManager.disableDepthTest();
-        this.drawTitle();
-        GlStateManager.enableLighting();
-        GlStateManager.enableDepthTest();
-    }
-
-    @Override
-    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
-        zoomOut += p_mouseScrolled_5_ > 0 ? -0.25 : 0.25;
-        zoomOut = MathHelper.clamp(this.zoomOut, 1.0F, 2.0F);
-        checkDisplay();
-        return true;
-    }
-
-    @Override
     public void init() {
         IFactionPlayer factionPlayer = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
         if (factionPlayer != null) {
@@ -165,19 +120,9 @@ public class SkillsScreen extends Screen {
 
     }
 
-
     @Override
-    public void tick() {
-    }
-
-    protected void drawTitle() {
-        String title = I18n.format("text.vampirism.skills.gui_title");
-        int x = (this.width - display_width) / 2;
-        int y = (this.height - display_height) / 2;
-        this.font.drawString(title, x + 15, y + 5, 0xFFFFFFFF);
-        String points = I18n.format("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
-        x = (this.width + display_width) / 2 - font.getStringWidth(points);
-        this.font.drawString(points, x - 15, y + 5, 0xFFFFFFFF);
+    public boolean isPauseScreen() {
+        return false;
     }
 
     @Override
@@ -208,6 +153,52 @@ public class SkillsScreen extends Screen {
         return retur;
     }
 
+    @Override
+    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+        displayY -= p_mouseDragged_8_;
+        displayX -= p_mouseDragged_6_;
+        checkDisplay();
+        return true;
+    }
+
+    @Override
+    public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
+        zoomOut += p_mouseScrolled_5_ > 0 ? -0.25 : 0.25;
+        zoomOut = MathHelper.clamp(this.zoomOut, 1.0F, 2.0F);
+        checkDisplay();
+        return true;
+    }
+
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        if (!display) {
+            super.render(mouseX, mouseY, partialTicks);
+            return;
+        }
+
+        this.renderBackground();
+        this.drawSkills(mouseX, mouseY, partialTicks);
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepthTest();
+        this.drawTitle();
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepthTest();
+    }
+
+    @Override
+    public void tick() {
+    }
+
+    protected void drawTitle() {
+        String title = I18n.format("text.vampirism.skills.gui_title");
+        int x = (this.width - display_width) / 2;
+        int y = (this.height - display_height) / 2;
+        this.font.drawString(title, x + 15, y + 5, 0xFFFFFFFF);
+        String points = I18n.format("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
+        x = (this.width + display_width) / 2 - font.getStringWidth(points);
+        this.font.drawString(points, x - 15, y + 5, 0xFFFFFFFF);
+    }
+
     /**
      * Add the given node and all it's child nodes to the list
      *
@@ -220,6 +211,13 @@ public class SkillsScreen extends Screen {
             addToList(list, node);
         }
 
+    }
+
+    private void checkDisplay() {
+        displayY = MathHelper.clamp(displayY, -20 / zoomOut, 350 / zoomOut);
+        displayX = MathHelper.clamp(displayX, -400 / zoomOut + (zoomOut - 2.0F) * (-1) * 250, -300 / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
+        displayXNew = displayX;
+        displayYNew = displayY;
     }
 
     private void drawSkills(int mouseX, int mouseY, float partialTicks) {
@@ -268,7 +266,7 @@ public class SkillsScreen extends Screen {
             GlStateManager.color4f(f2, f2, f2, 1.0F);
 
             for (int x = 0; (float) x * f1 - (float) i2 < 224.0F; ++x) {
-                random.setSeed((long) (this.minecraft.getSession().getPlayerID().hashCode() + k1 + x + (l1 + y) * 16));
+                random.setSeed(this.minecraft.getSession().getPlayerID().hashCode() + k1 + x + (l1 + y) * 16);
                 int j4 = random.nextInt(1 + l1 + y) + (l1 + y) / 2;
                 TextureAtlasSprite textureatlassprite = this.getTexture(Blocks.SAND);
 

@@ -14,12 +14,10 @@
     },
     "Y": {
       "item": "minecraft:white_wool"
-    }
-    ,
+    },
     "Z": {
       "tag": "forge:gems/diamond"
-    }
-    ,
+    },
     "A": {
       "tag": "vampirism:pure_blood"
     }

@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.config.DefaultBoolean;
 import de.teamlapen.lib.lib.config.DefaultDouble;
 import de.teamlapen.lib.lib.config.DefaultInt;
 import de.teamlapen.vampirism.VampirismMod;
+
 import java.io.File;
 
 /**

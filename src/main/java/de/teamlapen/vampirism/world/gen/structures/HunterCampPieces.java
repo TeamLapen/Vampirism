@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world.gen.structures;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModWorld;
@@ -18,6 +17,23 @@ import java.util.List;
 import java.util.Random;
 
 public class HunterCampPieces extends StructurePiece {
+
+    public HunterCampPieces(IStructurePieceType structurePiece, int id) {
+        super(structurePiece, id);
+    }
+
+    public HunterCampPieces(IStructurePieceType structurePiece, CompoundNBT nbt) {
+        super(structurePiece, nbt);
+    }
+
+    @Override
+    public boolean addComponentParts(IWorld worldIn, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos p_74875_4_) {
+        return true;
+    }
+
+    @Override
+    protected void readAdditional(CompoundNBT tagCompound) {
+    }
 
     public static class Fireplace extends HunterCampPieces {
 
@@ -63,22 +79,5 @@ public class HunterCampPieces extends StructurePiece {
             this.setBlockState(worldIn, ModBlocks.tent.getDefaultState().with(TentBlock.FACING, Direction.SOUTH), 2, 1, 2, structureBoundingBoxIn);
             return true;
         }
-    }
-
-    @Override
-    protected void readAdditional(CompoundNBT tagCompound) {
-    }
-
-    @Override
-    public boolean addComponentParts(IWorld worldIn, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos p_74875_4_) {
-        return true;
-    }
-
-    public HunterCampPieces(IStructurePieceType structurePiece, int id) {
-        super(structurePiece, id);
-    }
-
-    public HunterCampPieces(IStructurePieceType structurePiece, CompoundNBT nbt) {
-        super(structurePiece, nbt);
     }
 }

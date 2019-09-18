@@ -43,10 +43,34 @@ import java.util.Random;
  */
 public abstract class VampirismEntity extends CreatureEntity implements IEntityWithHome, IVampirismEntity {
 
+    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        return world.getDifficulty() != Difficulty.PEACEFUL && (spawnPredicateLight(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
+    }
+
+    public static boolean spawnPredicateHunter(EntityType<? extends VampirismEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        return world.getDifficulty() != Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
+    }
+
+    public static boolean spawnPredicateLight(IWorld world, BlockPos blockPos, Random random) {
+        if (world.getLightFor(LightType.SKY, blockPos) > random.nextInt(32)) {
+            return false;
+        } else {
+            int lvt_3_1_ = world.getWorld().isThundering() ? world.getNeighborAwareLightSubtracted(blockPos, 10) : world.getLight(blockPos);
+            return lvt_3_1_ <= random.nextInt(8);
+        }
+    }
+
+    public static boolean spawnPredicateVampireFog(IWorld world, BlockPos blockPos) {
+        return world.getBiome(blockPos).getRegistryName() == ModBiomes.vampire_forest.getRegistryName() || TotemTile.isInsideVampireAreaCached(world.getDimension(), blockPos);
+    }
+
+    public static boolean spawnPredicateCanSpawn(EntityType<? extends MobEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        BlockPos blockpos = blockPos.down();
+        return spawnReason == SpawnReason.SPAWNER || world.getBlockState(blockpos).canEntitySpawn(world, blockpos, entityType);
+    }
     private final Goal moveTowardsRestriction;
     protected boolean hasArms = true;
     protected boolean peaceful = false;
-
     /**
      * Whether the home should be saved to nbt or not
      */
@@ -59,9 +83,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      * Counter which reaches zero every 70 to 120 ticks
      */
     private int randomTickDivider;
-
     private boolean doImobConversion = false;
-
 
     public VampirismEntity(EntityType<? extends VampirismEntity> type, World world) {
         super(type, world);
@@ -101,10 +123,19 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         return flag;
     }
 
-
     @Override
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
         return (peaceful || this.world.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
+    }
+
+    @Override
+    public boolean getAlwaysRenderNameTagForRender() {
+        return true;
+    }
+
+    @Override
+    public ITextComponent getDisplayName() {
+        return this instanceof IMob ? new StringTextComponent("IMob") : new StringTextComponent("NonImob"); //TODO remove
     }
 
     @Nullable
@@ -167,11 +198,6 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     @Override
-    public boolean getAlwaysRenderNameTagForRender() {
-        return true;
-    }
-
-    @Override
     public void setHomeArea(BlockPos pos, int r) {
         this.setHome(new AxisAlignedBB(pos.add(-r, -r, -r), pos.add(r, r, r)));
     }
@@ -182,21 +208,24 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        this.checkImobConversion();
+        if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == Difficulty.PEACEFUL) {
+            this.remove();
+        }
+    }
+
+    @Override
     public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
         if (saveHome && home != null) {
-            int[] h = { (int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ };
+            int[] h = {(int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ};
             nbt.putIntArray("home", h);
             if (moveTowardsRestrictionAdded && moveTowardsRestrictionPrio > -1) {
                 nbt.putInt("homeMovePrio", moveTowardsRestrictionPrio);
             }
         }
-    }
-
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
     }
 
     /**
@@ -210,7 +239,6 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         return true;
     }
 
-
     /**
      * Removes the MoveTowardsRestriction task
      */
@@ -218,6 +246,14 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         if (moveTowardsRestrictionAdded) {
             this.goalSelector.removeGoal(moveTowardsRestriction);
             moveTowardsRestrictionAdded = false;
+        }
+    }
+
+    protected void enableImobConversion() {
+        if (this instanceof IFactionEntity) {
+            this.doImobConversion = true;
+        } else {
+            throw new IllegalStateException("Can only do IMob conversion for IFactionEntity");
         }
     }
 
@@ -232,6 +268,10 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
 
     protected SoundEvent getHurtSound() {
         return SoundEvents.ENTITY_HOSTILE_HURT;
+    }
+
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return this.getType();
     }
 
     @Override
@@ -270,6 +310,12 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
 
     }
 
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+    }
+
     protected void setDontDropEquipment() {
         for (int i = 0; i < this.inventoryArmorDropChances.length; ++i) {
             this.inventoryArmorDropChances[i] = 0;
@@ -283,11 +329,10 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     /**
      * Add the MoveTowardsRestriction task with the given priority.
      * Overrides prior priorities if existent
-     *e
-     * @param prio
-     *            Priority of the task
-     * @param active
-     *            If the task should be active or not
+     * e
+     *
+     * @param prio   Priority of the task
+     * @param active If the task should be active or not
      */
     protected void setMoveTowardsRestriction(int prio, boolean active) {
         if (moveTowardsRestrictionAdded) {
@@ -304,30 +349,24 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
 
     }
 
-    @Override
-    public ITextComponent getDisplayName() {
-        return this instanceof IMob ? new StringTextComponent("IMob") : new StringTextComponent("NonImob"); //TODO remove
+    /**
+     * Fakes a teleportation and actually just kills the entity
+     */
+    protected void teleportAway() {
+        this.setInvisible(true);
+        ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.posX, this.posY, this.posZ, 20, 1, 1, 1, 0);//TODO particle textureindex: 134
+        this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+
+        this.remove();
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        this.checkImobConversion();
-        if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == Difficulty.PEACEFUL) {
-            this.remove();
+    protected void updateAITasks() {
+        super.updateAITasks();
+        if (--this.randomTickDivider <= 0) {
+            this.randomTickDivider = 70 + rand.nextInt(50);
+            onRandomTick();
         }
-    }
-
-    protected void enableImobConversion() {
-        if (this instanceof IFactionEntity) {
-            this.doImobConversion = true;
-        } else {
-            throw new IllegalStateException("Can only do IMob conversion for IFactionEntity");
-        }
-    }
-
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return this.getType();
     }
 
     private void checkImobConversion() {
@@ -365,51 +404,5 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
                 }
             }
         }
-    }
-
-    /**
-     * Fakes a teleportation and actually just kills the entity
-     */
-    protected void teleportAway() {
-        this.setInvisible(true);
-        ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.posX, this.posY, this.posZ, 20, 1, 1, 1, 0);//TODO particle textureindex: 134
-        this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1, 1);
-
-        this.remove();
-    }
-
-    @Override
-    protected void updateAITasks() {
-        super.updateAITasks();
-        if (--this.randomTickDivider <= 0) {
-            this.randomTickDivider = 70 + rand.nextInt(50);
-            onRandomTick();
-        }
-    }
-
-    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && (spawnPredicateLight(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
-    }
-
-    public static boolean spawnPredicateHunter(EntityType<? extends VampirismEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
-    }
-
-    public static boolean spawnPredicateLight(IWorld world, BlockPos blockPos, Random random) {
-        if (world.getLightFor(LightType.SKY, blockPos) > random.nextInt(32)) {
-            return false;
-        } else {
-            int lvt_3_1_ = world.getWorld().isThundering() ? world.getNeighborAwareLightSubtracted(blockPos, 10) : world.getLight(blockPos);
-            return lvt_3_1_ <= random.nextInt(8);
-        }
-    }
-
-    public static boolean spawnPredicateVampireFog(IWorld world, BlockPos blockPos) {
-        return world.getBiome(blockPos).getRegistryName() == ModBiomes.vampire_forest.getRegistryName() || TotemTile.isInsideVampireAreaCached(world.getDimension(), blockPos);
-    }
-
-    public static boolean spawnPredicateCanSpawn(EntityType<? extends MobEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        BlockPos blockpos = blockPos.down();
-        return spawnReason == SpawnReason.SPAWNER || world.getBlockState(blockpos).canEntitySpawn(world, blockpos, entityType);
     }
 }

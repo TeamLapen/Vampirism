@@ -13,14 +13,14 @@ import javax.annotation.Nonnull;
  */
 public interface IEntityAction extends IForgeRegistryEntry<IEntityAction> {
     /**
-     * @return cooldown after completing the action before another action can be used in ticks
-     */
-    int getCooldown(int level);
-
-    /**
      * @return needed {@link EntityClassType} for usage
      */
     EntityClassType[] getClassTypes();
+
+    /**
+     * @return cooldown after completing the action before another action can be used in ticks
+     */
+    int getCooldown(int level);
 
     /**
      * @return needed {@link IPlayableFaction} for usage

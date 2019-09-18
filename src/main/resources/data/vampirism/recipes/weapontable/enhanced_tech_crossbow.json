@@ -3,7 +3,9 @@
     "item": "vampirism:enhanced_tech_crossbow"
   },
   "lava": 5,
-  "skill": ["vampirism:tech_weapons"],
+  "skill": [
+    "vampirism:tech_weapons"
+  ],
   "pattern": [
     "YXXY",
     "XZZX",

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -13,7 +12,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import java.util.List;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class MakeVillagerAgressiveCommand extends BasicCommand {

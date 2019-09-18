@@ -32,10 +32,10 @@ import javax.annotation.Nullable;
 public class HunterTrainerContainer extends InventoryContainer implements IInventoryChangedListener {
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(Items.IRON_INGOT), 27, 26), new SelectorInfo(Ingredient.fromItems(Items.GOLD_INGOT), 57, 26), new SelectorInfo(Ingredient.fromTag(ModTags.Items.HUNTER_INTEL), 86, 26)};
     private final PlayerEntity player;
-    private boolean changed = false;
-    private ItemStack missing = ItemStack.EMPTY;
     @Nullable
     private final HunterTrainerEntity entity;
+    private boolean changed = false;
+    private ItemStack missing = ItemStack.EMPTY;
 
     @Deprecated
     public HunterTrainerContainer(int id, PlayerInventory playerInventory) {
@@ -95,6 +95,11 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
         }
     }
 
+    @Override
+    public void onInventoryChanged(IInventory iInventory) {
+        changed = true;
+    }
+
     /**
      * Called via input packet, when the player clicks the levelup button.
      */
@@ -146,10 +151,5 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
         }
         //changed = true;
         return result;
-    }
-
-    @Override
-    public void onInventoryChanged(IInventory iInventory) {
-        changed = true;
     }
 }

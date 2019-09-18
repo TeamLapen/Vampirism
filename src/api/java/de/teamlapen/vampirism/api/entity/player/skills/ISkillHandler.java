@@ -32,9 +32,9 @@ public interface ISkillHandler<T extends ISkillPlayer> {
      */
     int getLeftSkillPoints();
 
-    boolean isSkillEnabled(ISkill skill);
-
     ISkill[] getParentSkills(ISkill skill);
+
+    boolean isSkillEnabled(ISkill skill);
 
     /**
      * Reset all skills but reactivate the root skill of the faction

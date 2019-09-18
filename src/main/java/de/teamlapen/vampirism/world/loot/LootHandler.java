@@ -54,6 +54,7 @@ public class LootHandler {
         LootTables.register(id);
         return id;
     }
+
     private int injected = 0;
 
     private LootHandler() {

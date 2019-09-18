@@ -86,22 +86,6 @@ public class HunterTableContainer extends InventoryContainer {
         }
     }
 
-    /**
-     * Called when the resulting item is picked up
-     */
-    protected void onPickupResult() {
-        int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
-        InventoryHelper.removeItems(inventory, new int[]{1, req[0], req[1], req[3]});
-    }
-
-    /**
-     * Checks if the given tileInventory are present
-
-     */
-    private ItemStack checkItems(int fangs, int blood, int bloodLevel, int par3) {
-        return InventoryHelper.checkItems(inventory, new Item[]{Items.BOOK, ModItems.vampire_fang, PureBloodItem.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
-    }
-
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
@@ -143,6 +127,21 @@ public class HunterTableContainer extends InventoryContainer {
         }
         onCraftMatrixChanged(null);
         return result;
+    }
+
+    /**
+     * Called when the resulting item is picked up
+     */
+    protected void onPickupResult() {
+        int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
+        InventoryHelper.removeItems(inventory, new int[]{1, req[0], req[1], req[3]});
+    }
+
+    /**
+     * Checks if the given tileInventory are present
+     */
+    private ItemStack checkItems(int fangs, int blood, int bloodLevel, int par3) {
+        return InventoryHelper.checkItems(inventory, new Item[]{Items.BOOK, ModItems.vampire_fang, PureBloodItem.getBloodItemForLevel(bloodLevel), ModItems.vampire_book}, new int[]{1, fangs, blood, par3});
     }
 
     private class SlotResult extends Slot {

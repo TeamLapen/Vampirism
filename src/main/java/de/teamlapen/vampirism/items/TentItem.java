@@ -32,8 +32,6 @@ public class TentItem extends VampirismItem {
     private static final String name = "item_tent";
     private static final String name_spawner = "item_tent_spawner";
 
-    private final boolean spawner;
-
     public static boolean placeAt(IWorld world, BlockPos pos, Direction dir, boolean force, boolean spawner) {
         int x = pos.getX();
         int y = pos.getY();
@@ -69,6 +67,7 @@ public class TentItem extends VampirismItem {
     private static boolean canPlaceAt(BlockState state, Block block, IWorld world, int x, int y, int z) {
         return block.isValidPosition(state, world, new BlockPos(x, y, z));
     }
+    private final boolean spawner;
 
     public TentItem(boolean spawner) {
         super(spawner ? name_spawner : name, new Properties().group(VampirismMod.creativeTab));

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -13,10 +12,9 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
-public class HalloweenCommand extends BasicCommand{
+public class HalloweenCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("halloween")

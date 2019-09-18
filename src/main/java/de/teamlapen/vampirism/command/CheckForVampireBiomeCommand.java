@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class CheckForVampireBiomeCommand extends BasicCommand {

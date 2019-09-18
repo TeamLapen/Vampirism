@@ -17,16 +17,14 @@ import java.awt.*;
  */
 public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private static int nextId = 0;
+    protected final ResourceLocation id;
     private final Class<T> entityInterface;
     private final Color color;
-    protected final ResourceLocation id;
+    private final boolean hostileTowardsNeutral;
     @Nullable
     private String translationKey;
     @Nullable
     private String translationKeyPlural;
-
-    private final boolean hostileTowardsNeutral;
-
     /**
      * Id used for hashing
      */
@@ -91,6 +89,10 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         return entityInterface.isInstance(creature);
     }
 
+    @Override
+    public boolean isHostileTowardsNeutral() {
+        return hostileTowardsNeutral;
+    }
 
     public Faction<T> setTranslationKeys(String unlocalizedName, String unlocalizedNamePlural) {
         this.translationKey = unlocalizedName;
@@ -104,10 +106,5 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
                 "id='" + integerId + '\'' +
                 ", hash=" + integerId +
                 '}';
-    }
-
-    @Override
-    public boolean isHostileTowardsNeutral() {
-        return hostileTowardsNeutral;
     }
 }

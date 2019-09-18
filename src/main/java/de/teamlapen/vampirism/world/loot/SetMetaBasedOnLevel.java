@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.world.loot;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.ItemStack;

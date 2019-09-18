@@ -30,6 +30,7 @@ import java.util.function.Predicate;
 class VampirePlayerDefaultImpl implements IVampirePlayer {
 
     private final static Logger LOGGER = LogManager.getLogger(VampirePlayerDefaultImpl.class);
+
     public VampirePlayerDefaultImpl() {
         LOGGER.error("Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
     }

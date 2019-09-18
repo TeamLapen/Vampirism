@@ -42,14 +42,17 @@ public interface IFaction<T extends IFactionEntity> {
 
     ITextComponent getName();
 
-
-    boolean isEntityOfFaction(CreatureEntity creature);
-
     /**
      * Preferably a TextComponentTranslation
      */
     ITextComponent getNamePlural();
 
+    boolean isEntityOfFaction(CreatureEntity creature);
+
+    /**
+     * @return Whether entities of this faction are hostile towards neutral entities
+     */
+    boolean isHostileTowardsNeutral();
 
     /**
      * Set the unlocalized name
@@ -58,9 +61,4 @@ public interface IFaction<T extends IFactionEntity> {
      * @return The same instance
      */
     IFaction<T> setTranslationKeys(String name, String plural);
-
-    /**
-     * @return Whether entities of this faction are hostile towards neutral entities
-     */
-    boolean isHostileTowardsNeutral();
 }

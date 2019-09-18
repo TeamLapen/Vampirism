@@ -21,8 +21,11 @@ public class RegenerationAOFEntityAction<T extends CreatureEntity & IEntityActio
     }
 
     @Override
-    public int getDuration(int level) {
-        return Balance.ea.REGENERATION_DURATION * 20;
+    public void activate(T entity) {
+    }
+
+    @Override
+    public void deactivate(T entity) {
     }
 
     @Override
@@ -31,7 +34,8 @@ public class RegenerationAOFEntityAction<T extends CreatureEntity & IEntityActio
     }
 
     @Override
-    public void deactivate(T entity) {
+    public int getDuration(int level) {
+        return Balance.ea.REGENERATION_DURATION * 20;
     }
 
     @Override
@@ -44,10 +48,6 @@ public class RegenerationAOFEntityAction<T extends CreatureEntity & IEntityActio
         } else {
             return 1;
         }
-    }
-
-    @Override
-    public void activate(T entity) {
     }
 
     @Override

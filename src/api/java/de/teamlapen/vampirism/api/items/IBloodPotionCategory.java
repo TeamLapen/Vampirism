@@ -37,8 +37,7 @@ public interface IBloodPotionCategory {
      */
     boolean containsItem(@Nonnull ItemStack stack);
 
+    String getDescTranslationKey();
 
     List<IBloodPotionRegistry.WeightedEffect> getImmutableEffectsList();
-
-    String getDescTranslationKey();
 }

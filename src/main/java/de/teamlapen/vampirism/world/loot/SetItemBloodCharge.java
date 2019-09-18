@@ -4,7 +4,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSyntaxException;
-
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.ItemStack;

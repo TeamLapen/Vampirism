@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -40,21 +39,14 @@ public abstract class VampirismHunterArmor extends ArmorItem {
     }
 
     @Override
-    protected String getDefaultTranslationKey() {
-        return translation_key;
-    }
-
-    @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
         Multimap<String, AttributeModifier> map = HashMultimap.create();
         if (slot == this.getEquipmentSlot()) {
-            map.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", (double) this.getDamageReduction(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
+            map.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", this.getDamageReduction(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
             map.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor toughness", this.getToughness(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
         }
         return map;
     }
-
-
 
     @Override
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
@@ -71,6 +63,10 @@ public abstract class VampirismHunterArmor extends ArmorItem {
      */
     protected abstract int getDamageReduction(int slot, ItemStack stack);
 
+    @Override
+    protected String getDefaultTranslationKey() {
+        return translation_key;
+    }
 
     protected String getTextureLocation(String name, EquipmentSlotType slot, String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EquipmentSlotType.LEGS ? 2 : 1, type == null ? "" : "_overlay");

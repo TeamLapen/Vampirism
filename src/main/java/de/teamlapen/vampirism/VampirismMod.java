@@ -72,7 +72,6 @@ import java.util.Optional;
 @Mod(value = REFERENCE.MODID)
 public class VampirismMod {
 
-    private final static Logger LOGGER = LogManager.getLogger();
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
     public static final ItemGroup creativeTab = new ItemGroup(REFERENCE.MODID) {
 
@@ -82,6 +81,7 @@ public class VampirismMod {
             return new ItemStack(ModItems.vampire_fang);
         }
     };
+    private final static Logger LOGGER = LogManager.getLogger();
     /**
      * Hunter creatures are of this creature type. Use the instance in
      * {@link VReference} instead of this one. This is only here to init it as early
@@ -196,7 +196,6 @@ public class VampirismMod {
         finishAPI1();
 
 
-
         HelperRegistry.registerPlayerEventReceivingCapability(VampirePlayer.CAP, VampirePlayer.class);
         HelperRegistry.registerPlayerEventReceivingCapability(HunterPlayer.CAP, HunterPlayer.class);
         HelperRegistry.registerSyncableEntityCapability(ExtendedCreature.CAP, REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.class);
@@ -204,6 +203,29 @@ public class VampirismMod {
         HelperRegistry.registerSyncablePlayerCapability(HunterPlayer.CAP, REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.class);
         HelperRegistry.registerSyncablePlayerCapability(FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
 
+    }
+
+    /**
+     * Finish during init
+     */
+    private void finishAPI1() {
+        ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
+    }
+
+    /**
+     * Finish during post-init
+     */
+    private void finishAPI2() {
+        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
+        ((BloodPotionRegistry) VampirismAPI.bloodPotionRegistry()).finish();
+    }
+
+    private void gatherData(GatherDataEvent event) {
+        DataGenerator gen = event.getGenerator();
+        if (event.includeServer()) {
+            gen.addProvider(new VampirismBlockTagProvider(gen));
+            gen.addProvider(new VampirismItemTagProvider(gen));
+        }
     }
 
     private void loadComplete(final FMLLoadCompleteEvent event) {
@@ -261,27 +283,6 @@ public class VampirismMod {
 
     }
 
-    private void setupClient(FMLClientSetupEvent event) {
-        registryManager.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
-        proxy.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
-        modCompatLoader.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
-    }
-
-    /**
-     * Finish during init
-     */
-    private void finishAPI1() {
-        ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
-    }
-
-    /**
-     * Finish during post-init
-     */
-    private void finishAPI2() {
-        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
-        ((BloodPotionRegistry) VampirismAPI.bloodPotionRegistry()).finish();
-    }
-
     /**
      * Called during construction
      */
@@ -321,12 +322,10 @@ public class VampirismMod {
         VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision("bloodVision", new BloodVision());
     }
 
-    private void gatherData(GatherDataEvent event) {
-        DataGenerator gen = event.getGenerator();
-        if (event.includeServer()) {
-            gen.addProvider(new VampirismBlockTagProvider(gen));
-            gen.addProvider(new VampirismItemTagProvider(gen));
-        }
+    private void setupClient(FMLClientSetupEvent event) {
+        registryManager.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
+        proxy.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
+        modCompatLoader.onInitStep(IInitListener.Step.CLIENT_SETUP, event);
     }
 
 }

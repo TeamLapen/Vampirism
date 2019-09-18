@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.Dynamic;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;

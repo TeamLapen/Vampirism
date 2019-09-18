@@ -13,14 +13,14 @@ public class VampirismBlockTagProvider extends BlockTagsProvider {
     }
 
     @Override
+    public String getName() {
+        return "Vampirism Block Tags";
+    }
+
+    @Override
     protected void registerTags() {
         getBuilder(ModTags.Blocks.OBSIDIAN).add(Blocks.OBSIDIAN);
         getBuilder(Tags.Blocks.DIRT).add(ModBlocks.cursed_earth);
         getBuilder(ModTags.Blocks.CURSEDEARTH).add(ModBlocks.cursed_earth);
-    }
-
-    @Override
-    public String getName() {
-        return "Vampirism Block Tags";
     }
 }

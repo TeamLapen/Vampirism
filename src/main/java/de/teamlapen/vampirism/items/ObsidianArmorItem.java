@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
-
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
@@ -25,8 +24,6 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
 
     private final static String baseRegName = "obsidian_armor";
 
-    private final TIER tier;
-
     public static boolean isFullyEquipped(PlayerEntity player) {
         for (ItemStack stack : player.inventory.armorInventory) {
             if (stack.isEmpty() || !(stack.getItem() instanceof ObsidianArmorItem)) {
@@ -35,7 +32,7 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
         }
         return true;
     }
-
+    private final TIER tier;
     private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{4, 7, 9, 4};
     private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{3, 7, 8, 3};
     private final int[] DAMAGE_REDUCTION_NORMAL = new int[]{3, 6, 7, 3};

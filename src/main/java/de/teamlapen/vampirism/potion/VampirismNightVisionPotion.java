@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 public class VampirismNightVisionPotion extends Effect {
 
     private final static Logger LOGGER = LogManager.getLogger(VampirismNightVisionPotion.class);
+
     public VampirismNightVisionPotion() {
         super(EffectType.BENEFICIAL, 2039713);
         LOGGER.warn("-------Please ignore the following error!------");

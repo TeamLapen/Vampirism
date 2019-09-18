@@ -42,6 +42,11 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
     }
 
     @Override
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
+    }
+
+    @Override
     public boolean getAlwaysRenderNameTagForRender() {
         return true;
     }
@@ -67,20 +72,6 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
     public void setHome(AxisAlignedBB box) {
         super.setHome(box);
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
-    }
-
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
-    }
-
-    @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
     }
 
     @Override
@@ -110,6 +101,15 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
 
 
         return super.processInteract(player, hand);
+    }
+
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
     }
 
     @Override

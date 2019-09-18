@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.command.arguments.ActionArgument;
@@ -14,7 +13,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class BindActionCommand extends BasicCommand {
@@ -24,7 +22,7 @@ public class BindActionCommand extends BasicCommand {
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
                 .then(Commands.argument("shortcutnumber", IntegerArgumentType.integer(1, 2))
                         .then(Commands.argument("action", ActionArgument.actions())
-                                .executes(context->{
+                                .executes(context -> {
                                     return bindAction(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "shortcutnumber"), ActionArgument.getAction(context, "action"));
                                 })))
                 .then(Commands.literal("help")

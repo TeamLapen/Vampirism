@@ -35,8 +35,6 @@ public class InjectionItem extends VampirismItem {
     }
 
 
-
-
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);

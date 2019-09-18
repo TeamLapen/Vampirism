@@ -19,9 +19,8 @@ import java.util.List;
  */
 public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTrigger.Instance> {
 
-    private final static Logger LOGGER = LogManager.getLogger();
-
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter_action");
+    private final static Logger LOGGER = LogManager.getLogger();
 
     public HunterActionTrigger() {
         super(ID, Listeners::new);

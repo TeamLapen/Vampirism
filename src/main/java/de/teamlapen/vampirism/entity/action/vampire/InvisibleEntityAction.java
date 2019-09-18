@@ -17,6 +17,18 @@ public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser>
     }
 
     @Override
+    public void activate(T entity) {
+        ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.EXPLOSION, entity.posX, entity.posY, entity.posZ, 60, 1, 1, 1, 0);
+
+    }
+
+    @Override
+    public void deactivate(T entity) {
+        entity.getRepresentingEntity().setInvisible(false);
+
+    }
+
+    @Override
     public int getCooldown(int level) {
         return Balance.ea.INVISIBLE_COOLDOWN * 20; // seconds into ticks
     }
@@ -27,9 +39,13 @@ public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser>
     }
 
     @Override
-    public void deactivate(T entity) {
-        entity.getRepresentingEntity().setInvisible(false);
-
+    public int getWeight(CreatureEntity entity) {
+        double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).length();
+        if (distanceToTarget > 4) {
+            return 3;
+        } else {
+            return 1;
+        }
     }
 
     @Override
@@ -40,25 +56,9 @@ public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser>
     }
 
     @Override
-    public void activate(T entity) {
-        ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.EXPLOSION, entity.posX, entity.posY, entity.posZ, 60, 1, 1, 1, 0);
-
-    }
-
-    @Override
     public void updatePreAction(T entity, int duration) {
         if (duration % 5 == 0) {
             ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.EXPLOSION, entity.posX, entity.posY, entity.posZ, 10, 1, 1, 1, 0);
-        }
-    }
-
-    @Override
-    public int getWeight(CreatureEntity entity) {
-        double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).length();
-        if (distanceToTarget > 4) {
-            return 3;
-        } else {
-            return 1;
         }
     }
 }

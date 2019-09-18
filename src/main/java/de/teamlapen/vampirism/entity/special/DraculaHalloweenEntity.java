@@ -36,8 +36,8 @@ import java.util.UUID;
  */
 public class DraculaHalloweenEntity extends VampirismEntity {
 
-    private final static Logger LOGGER = LogManager.getLogger(DraculaHalloweenEntity.class);
     protected static final DataParameter<java.util.Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(TameableEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private final static Logger LOGGER = LogManager.getLogger(DraculaHalloweenEntity.class);
     private int seen = 0;
     private int hiding = 0;
     private boolean particle = false;
@@ -49,6 +49,11 @@ public class DraculaHalloweenEntity extends VampirismEntity {
 
     @Override
     public boolean canBeCollidedWith() {
+        return false;
+    }
+
+    @Override
+    public boolean canDespawn(double distanceToClosestPlayer) {
         return false;
     }
 
@@ -77,14 +82,6 @@ public class DraculaHalloweenEntity extends VampirismEntity {
 
     public void setParticle(boolean particle) {
         this.particle = particle;
-    }
-
-    public void makeHide(int time) {
-        seen = 0;
-        this.setInvisible(true);
-        BlockPos spawn = world.getSpawnPoint();
-        this.setPosition(spawn.getX(), 3, spawn.getZ());
-        hiding = time;
     }
 
     @Override
@@ -159,6 +156,14 @@ public class DraculaHalloweenEntity extends VampirismEntity {
 
     }
 
+    public void makeHide(int time) {
+        seen = 0;
+        this.setInvisible(true);
+        BlockPos spawn = world.getSpawnPoint();
+        this.setPosition(spawn.getX(), 3, spawn.getZ());
+        hiding = time;
+    }
+
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
@@ -170,11 +175,6 @@ public class DraculaHalloweenEntity extends VampirismEntity {
     @Override
     public CompoundNBT writeWithoutTypeId(CompoundNBT compound) {
         return super.writeWithoutTypeId(compound);
-    }
-
-    @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return false;
     }
 
     protected void registerData() {

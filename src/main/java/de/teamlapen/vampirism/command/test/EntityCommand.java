@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -15,17 +14,16 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.List;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class EntityCommand extends BasicCommand {
 
-	public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("entity")
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
-        		.executes(context -> {
+                .executes(context -> {
                     return entity(context.getSource(), context.getSource().asPlayer());
-        		});
+                });
     }
 
     private static int entity(CommandSource commandSource, ServerPlayerEntity asPlayer) {
@@ -38,6 +36,6 @@ public class EntityCommand extends BasicCommand {
                 commandSource.sendFeedback(new TranslationTextComponent("Not biteable %s", entity.getClass().getName()), true);
             }
         }
-		return 0;
-	}
+        return 0;
+    }
 }

@@ -18,6 +18,7 @@ import net.minecraft.util.IntArray;
 
 public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {//TODO 1.14 items should be shift-clicked into furnace
     IWorldPosCallable worldPosCallable;
+
     @Deprecated
     public AlchemicalCauldronContainer(int id, PlayerInventory playerInventory) {
         this(id, playerInventory, new Inventory(4), new IntArray(4), IWorldPosCallable.DUMMY);
@@ -27,26 +28,6 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {//TOD
         super(ModContainer.alchemical_cauldron, ModRecipes.ALCHEMICAL_CAULDRON_TYPE, id, playerInventory, inv, data);
         worldPosCallable = worldPos;
         setSlots(playerInventory);
-    }
-
-    private void setSlots(PlayerInventory playerInv) {
-        this.inventorySlots.clear();
-        this.inventoryItemStacks.clear();
-        this.addSlot(new Slot(furnaceInventory, 0, 68, 17));
-        this.addSlot(new FurnaceFuelSlot(this, furnaceInventory, 1, 56, 53));
-        this.addSlot(new FurnaceResultSlot(playerInv.player, furnaceInventory, 2, 116, 35));
-        this.addSlot(new Slot(furnaceInventory, 3, 44, 17));
-
-        int i;
-        for (i = 0; i < 3; ++i) {
-            for (int s = 0; s < 9; ++s) {
-                this.addSlot(new Slot(playerInv, s + i * 9 + 9, 8 + s * 18, 84 + i * 18));
-            }
-        }
-
-        for (i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInv, i, 8 + i * 18, 142));
-        }
     }
 
     @Override
@@ -95,5 +76,25 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {//TOD
         }
 
         return result;
+    }
+
+    private void setSlots(PlayerInventory playerInv) {
+        this.inventorySlots.clear();
+        this.inventoryItemStacks.clear();
+        this.addSlot(new Slot(furnaceInventory, 0, 68, 17));
+        this.addSlot(new FurnaceFuelSlot(this, furnaceInventory, 1, 56, 53));
+        this.addSlot(new FurnaceResultSlot(playerInv.player, furnaceInventory, 2, 116, 35));
+        this.addSlot(new Slot(furnaceInventory, 3, 44, 17));
+
+        int i;
+        for (i = 0; i < 3; ++i) {
+            for (int s = 0; s < 9; ++s) {
+                this.addSlot(new Slot(playerInv, s + i * 9 + 9, 8 + s * 18, 84 + i * 18));
+            }
+        }
+
+        for (i = 0; i < 9; ++i) {
+            this.addSlot(new Slot(playerInv, i, 8 + i * 18, 142));
+        }
     }
 }

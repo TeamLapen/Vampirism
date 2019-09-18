@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.config.BloodValueLoaderEntites;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -42,12 +41,48 @@ public class BiteableEntryManager {
 
     private boolean initialized = false;
 
-    void setNewBiteables(Map<ResourceLocation, BiteableEntry> biteableEntries, Set<ResourceLocation> blacklist) {
-        this.biteableEntries.clear();
-        this.blacklist.clear();
-        this.biteableEntries.putAll(biteableEntries);
-        this.blacklist.addAll(blacklist);
-        initialized = true;
+    /**
+     * see {@link #addCalculated(ResourceLocation, int)}
+     */
+    public void addCalculated(Map<ResourceLocation, Integer> map) {
+        for (Map.Entry<ResourceLocation, Integer> e : map.entrySet()) {
+            addCalculated(e.getKey(), e.getValue());
+        }
+    }
+
+    /**
+     * @param creature for which a {@link BiteableEntry} is requested
+     * @return {@code null} if resources aren't loaded or the creatures type is blacklisted. Otherwise the corresponding entry or a new {@link #calculate} entry
+     */
+    @SuppressWarnings("ConstantConditions")
+    public @Nullable
+    BiteableEntry get(CreatureEntity creature) {
+        if (!initialized) return null;
+        ResourceLocation id = new ResourceLocation(creature.getEntityString());
+        if (blacklist.contains(id)) return null;
+        if (biteableEntries.containsKey(id) || calculated.containsKey(id)) {
+            return biteableEntries.containsKey(id) ? biteableEntries.get(id) : calculated.get(id);
+        }
+        return calculate(creature, id);
+    }
+
+    /**
+     * Get all calculated values
+     *
+     * @return map of entities, which are not present in data folder, to calculated blood values
+     */
+    public Map<ResourceLocation, Integer> getValuesToSave() {
+        Map<ResourceLocation, Integer> map = Maps.newHashMap();
+        for (Map.Entry<ResourceLocation, BiteableEntry> entry : calculated.entrySet()) {
+            if (!biteableEntries.containsKey(entry.getKey())) {
+                map.put(entry.getKey(), entry.getValue().blood);
+            }
+        }
+        return map;
+    }
+
+    public boolean init() {
+        return initialized;
     }
 
     /**
@@ -59,15 +94,6 @@ public class BiteableEntryManager {
         BiteableEntry existing = calculated.containsKey(id) ? calculated.get(id).modifyBloodValue(blood) : new BiteableEntry(blood);
         calculated.put(id, existing);
         return existing;
-    }
-
-    /**
-     * see {@link #addCalculated(ResourceLocation, int)}
-     */
-    public void addCalculated(Map<ResourceLocation, Integer> map) {
-        for (Map.Entry<ResourceLocation, Integer> e : map.entrySet()) {
-            addCalculated(e.getKey(), e.getValue());
-        }
     }
 
     /**
@@ -107,38 +133,11 @@ public class BiteableEntryManager {
         }
     }
 
-    /**
-     * @param creature for which a {@link BiteableEntry} is requested
-     * @return {@code null} if resources aren't loaded or the creatures type is blacklisted. Otherwise the corresponding entry or a new {@link #calculate} entry
-     */
-    @SuppressWarnings("ConstantConditions")
-    public @Nullable
-    BiteableEntry get(CreatureEntity creature) {
-        if (!initialized) return null;
-        ResourceLocation id = new ResourceLocation(creature.getEntityString());
-        if (blacklist.contains(id)) return null;
-        if (biteableEntries.containsKey(id) || calculated.containsKey(id)) {
-            return biteableEntries.containsKey(id) ? biteableEntries.get(id) : calculated.get(id);
-        }
-        return calculate(creature, id);
-    }
-
-    /**
-     * Get all calculated values
-     *
-     * @return map of entities, which are not present in data folder, to calculated blood values
-     */
-    public Map<ResourceLocation, Integer> getValuesToSave() {
-        Map<ResourceLocation, Integer> map = Maps.newHashMap();
-        for (Map.Entry<ResourceLocation, BiteableEntry> entry : calculated.entrySet()) {
-            if (!biteableEntries.containsKey(entry.getKey())) {
-                map.put(entry.getKey(), entry.getValue().blood);
-            }
-        }
-        return map;
-    }
-
-    public boolean init() {
-        return initialized;
+    void setNewBiteables(Map<ResourceLocation, BiteableEntry> biteableEntries, Set<ResourceLocation> blacklist) {
+        this.biteableEntries.clear();
+        this.blacklist.clear();
+        this.biteableEntries.putAll(biteableEntries);
+        this.blacklist.addAll(blacklist);
+        initialized = true;
     }
 }

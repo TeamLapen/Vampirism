@@ -1,17 +1,16 @@
 package de.teamlapen.vampirism.player.actions;
 
 import com.google.common.collect.ImmutableList;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.core.ModRegistries;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -25,10 +24,10 @@ import java.util.List;
 
 /**
  * Handles actions for vampire players
- *
+ * <p>
  * This uses fastutil maps to store the cooldown/active timers for the individual action.
  * Actions are identified by their registry name (ResourceLocation) in the maps.
- *
+ * <p>
  * Probably not the fastest or cleanest approach, but I did not find the perfect solution yet.
  */
 public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T> {
@@ -39,9 +38,8 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      * Holds any action in cooldown state. Maps it to the corresponding cooldown timer
      * Actions represented by any key in this map have to be registered..
      * Values should be larger 0, they will be counted down and removed if they would hit 0.
-     *
+     * <p>
      * Keys should be mutually exclusive with {@link #activeTimers}
-     *
      */
     private final Object2IntMap<ResourceLocation> cooldownTimers;
     /**
@@ -94,11 +92,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public ImmutableList<IAction> getUnlockedActions() {
-        return ImmutableList.copyOf(unlockedActions);
-    }
-
-    @Override
     public float getPercentageForAction(@Nonnull IAction action) {
         if (activeTimers.containsKey(action.getRegistryName())) {
             return activeTimers.get(action.getRegistryName()) / ((float) ((ILastingAction) action).getDuration(player.getLevel()));
@@ -107,6 +100,11 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             return -cooldownTimers.get(action.getRegistryName()) / (float) action.getCooldown();
         }
         return 0f;
+    }
+
+    @Override
+    public ImmutableList<IAction> getUnlockedActions() {
+        return ImmutableList.copyOf(unlockedActions);
     }
 
     @Override
@@ -152,7 +150,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     /**
      * Should only be called by the corresponding Capability instance
-     *
+     * <p>
      * Attention: nbt is modified in the process
      **/
     public void readUpdateFromServer(CompoundNBT nbt) {
@@ -254,7 +252,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             return IAction.PERM.ALLOWED;
         } else if (cooldownTimers.containsKey(id)) {
             return IAction.PERM.COOLDOWN;
-        } else{
+        } else {
             if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Maps;
-
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.inventory.recipes.*;
 import de.teamlapen.vampirism.util.REFERENCE;

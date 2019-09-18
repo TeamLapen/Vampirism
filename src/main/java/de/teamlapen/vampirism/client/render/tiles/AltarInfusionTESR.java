@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
@@ -39,17 +38,17 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
             double cY = te.getPos().getY() + 3;
             double cZ = te.getPos().getZ() + 0.5;
 
-                BlockPos[] tips = te.getTips();
-                for (BlockPos tip : tips) {
-                    this.renderBeam(x, y, z, cX, cY, cZ, tip.getX() + 0.5, tip.getY() + 0.5, tip.getZ() + 0.5, te.getRunningTick() + partialTicks, false);
-                }
-                if (phase == AltarInfusionTileEntity.PHASE.BEAM2) {
-                    PlayerEntity p = te.getPlayer();
-                    if (p != null) {
-                        this.renderBeam(x, y, z, cX, cY, cZ, p.posX, p.posY + 1.2d, p.posZ, -(te.getRunningTick() + partialTicks), true);
+            BlockPos[] tips = te.getTips();
+            for (BlockPos tip : tips) {
+                this.renderBeam(x, y, z, cX, cY, cZ, tip.getX() + 0.5, tip.getY() + 0.5, tip.getZ() + 0.5, te.getRunningTick() + partialTicks, false);
+            }
+            if (phase == AltarInfusionTileEntity.PHASE.BEAM2) {
+                PlayerEntity p = te.getPlayer();
+                if (p != null) {
+                    this.renderBeam(x, y, z, cX, cY, cZ, p.posX, p.posY + 1.2d, p.posZ, -(te.getRunningTick() + partialTicks), true);
 
-                    }
                 }
+            }
 
 
         }

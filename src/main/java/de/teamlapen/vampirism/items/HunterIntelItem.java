@@ -25,35 +25,6 @@ public class HunterIntelItem extends VampirismItem {
 
     private final static Logger LOGGER = LogManager.getLogger();
     private final static String name = "hunter_intel";
-    private final int level;
-
-    public HunterIntelItem(int level) {
-        super(name + "_" + level, new Properties().group(VampirismMod.creativeTab));
-        this.level = level;
-        setTranslation_key(name);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").appendText(": " + (level + 5)).applyTextStyle(TextFormatting.RED));
-    }
-
-    public ITextComponent getCustomName() {
-        return new TranslationTextComponent(this.getDefaultTranslationKey()).appendText(" ").appendSibling(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").appendText(" " + (level + 5)));
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public boolean hasEffect(ItemStack stack) {
-        return true;
-    }
-
-    /**
-     * @return Level of this hunter intel 0 - {@link HunterLevelingConf#HUNTER_INTEL_COUNT}-1
-     */
-    public int getLevel() {
-        return level;
-    }
 
     public static HunterIntelItem getIntelForExactlyLevel(int level) {
         return getIntelForLevel(level - 5);
@@ -86,5 +57,34 @@ public class HunterIntelItem extends VampirismItem {
                 return ModItems.hunter_intel_9;
 
         }
+    }
+    private final int level;
+
+    public HunterIntelItem(int level) {
+        super(name + "_" + level, new Properties().group(VampirismMod.creativeTab));
+        this.level = level;
+        setTranslation_key(name);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").appendText(": " + (level + 5)).applyTextStyle(TextFormatting.RED));
+    }
+
+    public ITextComponent getCustomName() {
+        return new TranslationTextComponent(this.getDefaultTranslationKey()).appendText(" ").appendSibling(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").appendText(" " + (level + 5)));
+    }
+
+    /**
+     * @return Level of this hunter intel 0 - {@link HunterLevelingConf#HUNTER_INTEL_COUNT}-1
+     */
+    public int getLevel() {
+        return level;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public boolean hasEffect(ItemStack stack) {
+        return true;
     }
 }

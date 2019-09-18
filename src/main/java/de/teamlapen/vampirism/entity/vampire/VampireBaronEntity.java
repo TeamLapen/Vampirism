@@ -47,19 +47,20 @@ import java.util.UUID;
 public class VampireBaronEntity extends VampireBaseEntity implements IVampireBaron {
     private final static Logger LOGGER = LogManager.getLogger(VampireBaronEntity.class);
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(VampireBaronEntity.class, DataSerializers.VARINT);
+
+    public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        return world.getBiome(blockPos) == ModBiomes.vampire_forest && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
+    }
     private final SaveableMinionHandler<IVampireMinion.Saveable> minionHandler;
     private final int MAX_LEVEL = 4;
-
     /**
      * Used for ranged vs melee attack decision
      */
     private int attackDecisionCounter = 0;
-
     /**
      * Whether to prefer ranged attack
      */
     private boolean rangedAttack = false;
-
     private boolean prevAttacking = false;
 
     public VampireBaronEntity(EntityType<? extends VampireBaronEntity> type, World world) {
@@ -101,11 +102,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean getAlwaysRenderNameTagForRender() {
-        return true;
-    }
-
-    @Override
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
         int i = MathHelper.floor(this.getBoundingBox().minY);
         //Only spawn on the surface
@@ -117,6 +113,11 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
 
         return ModBlocks.cursed_earth.equals(world.getBlockState(blockpos.down()).getBlock()) && super.canSpawn(worldIn, spawnReasonIn);
+    }
+
+    @Override
+    public boolean getAlwaysRenderNameTagForRender() {
+        return true;
     }
 
     @Override
@@ -296,20 +297,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.updateEntityAttributes(false);
-    }
-
-    @Override
     protected float calculateFireDamage(float amount) {
         return (float) (amount * Balance.mobProps.VAMPIRE_BARON_FIRE_VULNERABILITY);
-    }
-
-    @Override
-    protected void registerData() {
-        super.registerData();
-        getDataManager().register(LEVEL, -1);
     }
 
     @Override
@@ -324,12 +313,24 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.updateEntityAttributes(false);
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        getDataManager().register(LEVEL, -1);
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(4, new FleeGarlicVampireGoal(this, 0.9F, false));
         this.goalSelector.addGoal(5, new BaronAIAttackMelee(this, 1.0F));
         this.goalSelector.addGoal(6, new BaronAIAttackRanged(this, 60, 64, 6, 4));
-        this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, PlayerEntity.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel((PlayerEntity) input)));//TODO Works only partially. Pathfinding somehow does not find escape routes
+        this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, PlayerEntity.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel(input)));//TODO Works only partially. Pathfinding somehow does not find escape routes
         this.goalSelector.addGoal(7, new RandomWalkingGoal(this, 0.2));
         this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
@@ -403,9 +404,5 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         public boolean shouldExecute() {
             return VampireBaronEntity.this.getAttackTarget() != null && (VampireBaronEntity.this.rangedAttack || !VampireBaronEntity.this.hasPath());
         }
-    }
-
-    public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return world.getBiome(blockPos) == ModBiomes.vampire_forest && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
 }

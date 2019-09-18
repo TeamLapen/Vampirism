@@ -41,6 +41,10 @@ import java.util.Random;
  */
 public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBaseEntity implements IConvertedCreature<T>, ISyncable {
     private final static Logger LOGGER = LogManager.getLogger(ConvertedCreatureEntity.class);
+
+    public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        return (iWorld.getBlockState(blockPos.down()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.down()).getBlock() == ModBlocks.cursed_earth) && iWorld.getLightSubtracted(blockPos, 0) > 8;
+    }
     private T entityCreature;
     private boolean entityChanged = false;
     private boolean canDespawn = false;
@@ -48,28 +52,6 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity> type, World world) {
         super(type, world, false);
         this.enableImobConversion();
-    }
-
-    @Nonnull
-    @Override
-    public ITextComponent getName() {
-        return new StringTextComponent(new TranslationTextComponent("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName()));
-    }
-
-    @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.converted_creature_imob : ModEntities.converted_creature;
-    }
-
-    public T getOldCreature() {
-        return entityCreature;
-    }
-
-    @Override
-    public void loadUpdateFromNBT(CompoundNBT nbt) {
-        if (nbt.contains("entity_old")) {
-            setEntityCreature((T) EntityType.loadEntityUnchecked(nbt.getCompound("entity_old"), getEntityWorld()).orElse(null));
-        }
     }
 
     @Override
@@ -113,6 +95,10 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         }
     }
 
+    @Override
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return super.canDespawn(distanceToClosestPlayer) && canDespawn;
+    }
 
     @Nullable
     @Override
@@ -129,19 +115,18 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
 
     @Nonnull
     @Override
-    protected ResourceLocation getLootTable() {
-        if (entityCreature != null) {
-            return entityCreature.func_213346_cF();
-        }
-        return super.getLootTable();
+    public ITextComponent getName() {
+        return new StringTextComponent(new TranslationTextComponent("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName()));
+    }
+
+    public T getOldCreature() {
+        return entityCreature;
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if (!world.isRemote && entityCreature == null) {
-            LOGGER.debug("Setting dead, since creature is null");
-            this.remove();
+    public void loadUpdateFromNBT(CompoundNBT nbt) {
+        if (nbt.contains("entity_old")) {
+            setEntityCreature((T) EntityType.loadEntityUnchecked(nbt.getCompound("entity_old"), getEntityWorld()).orElse(null));
         }
     }
 
@@ -168,17 +153,17 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         }
     }
 
+    @Override
+    public void recalculateSize() {
+        super.recalculateSize();
+        this.eyeHeight = entityCreature == null ? 0.5f : entityCreature.getEyeHeight();
+    }
+
     /**
      * Allows the entity to despawn
      */
     public void setCanDespawn() {
         canDespawn = true;
-    }
-
-    @Override
-    public void recalculateSize() {
-        super.recalculateSize();
-        this.eyeHeight = entityCreature == null ? 0.5f : entityCreature.getEyeHeight();
     }
 
     /**
@@ -203,6 +188,15 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         }
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        if (!world.isRemote && entityCreature == null) {
+            LOGGER.debug("Setting dead, since creature is null");
+            this.remove();
+        }
+    }
+
     @Nonnull
     @Override
     public String toString() {
@@ -223,17 +217,6 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
 
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.updateEntityAttributes();
-    }
-
-    @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return super.canDespawn(distanceToClosestPlayer) && canDespawn;
-    }
-
     /**
      * @return The {@link de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler.IDefaultHelper} for this creature
      */
@@ -243,6 +226,30 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             return ((DefaultConvertingHandler) handler).getHelper();
         }
         return null;
+    }
+
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.converted_creature_imob : ModEntities.converted_creature;
+    }
+
+    @Nonnull
+    @Override
+    protected ResourceLocation getLootTable() {
+        if (entityCreature != null) {
+            return entityCreature.func_213346_cF();
+        }
+        return super.getLootTable();
+    }
+
+    protected boolean nil() {
+        return entityCreature == null;
+    }
+
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.updateEntityAttributes();
     }
 
     @Override
@@ -261,10 +268,6 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
-    }
-
-    protected boolean nil() {
-        return entityCreature == null;
     }
 
     protected void updateEntityAttributes() {
@@ -301,10 +304,6 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
             }
         }
 
-    }
-
-    public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return (iWorld.getBlockState(blockPos.down()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.down()).getBlock() == ModBlocks.cursed_earth) && iWorld.getLightSubtracted(blockPos, 0) > 8;
     }
 
     public static class IMob extends ConvertedCreatureEntity implements net.minecraft.entity.monster.IMob {

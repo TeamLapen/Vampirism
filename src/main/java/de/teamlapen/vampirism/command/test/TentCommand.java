@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.tileentity.TentTileEntity;
@@ -14,10 +13,9 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
-public class TentCommand extends BasicCommand{
+public class TentCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("tent")

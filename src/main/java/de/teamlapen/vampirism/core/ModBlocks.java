@@ -63,6 +63,10 @@ public class ModBlocks {
     public static final VampirismFlowerBlock vampire_orchid;
     public static final WeaponTableBlock weapon_table = getNull();
 
+    static {
+        vampire_orchid = new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID);
+    }
+
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.register(itemBlock(alchemical_cauldron));
         registry.register(itemBlock(altar_infusion));
@@ -158,9 +162,5 @@ public class ModBlocks {
     @Nonnull
     private static BlockItem itemBlock(@Nonnull Block block) {
         return itemBlock(block, new Item.Properties().group(VampirismMod.creativeTab));
-    }
-
-    static {
-        vampire_orchid = new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID);
     }
 }

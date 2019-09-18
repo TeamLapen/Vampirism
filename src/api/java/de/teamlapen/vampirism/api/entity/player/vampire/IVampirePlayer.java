@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
 import com.mojang.datafixers.util.Either;
-
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;

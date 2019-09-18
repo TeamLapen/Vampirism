@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.mojang.datafixers.util.Either;
-
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -53,12 +52,6 @@ public class CoffinBlock extends VampirismBlockContainer {
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     private static final VoxelShape shape = makeShape();
 
-    public CoffinBlock() {
-        super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.2f));
-        this.setDefaultState(this.getStateContainer().getBaseState().with(OCCUPIED, Boolean.FALSE).with(PART, CoffinPart.FOOT).with(FACING, Direction.NORTH));
-
-    }
-
     public static boolean isOccupied(IBlockReader world, BlockPos pos) {
         return world.getBlockState(pos).get(OCCUPIED);
     }
@@ -74,6 +67,16 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     private static Direction getDirectionToOther(CoffinPart type, Direction facing) {
         return type == CoffinPart.FOOT ? facing : facing.getOpposite();
+    }
+
+    private static VoxelShape makeShape() {
+        return Block.makeCuboidShape(0, 0, 0, 16, 13, 16);
+    }
+
+    public CoffinBlock() {
+        super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.2f));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(OCCUPIED, Boolean.FALSE).with(PART, CoffinPart.FOOT).with(FACING, Direction.NORTH));
+
     }
 
     @Override
@@ -97,13 +100,13 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
+    public PushReaction getPushReaction(BlockState state) {
+        return PushReaction.DESTROY;
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Nonnull
@@ -251,6 +254,17 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
+        super.onBlockPlacedBy(worldIn, pos, state, entity, itemStack);
+        if (!worldIn.isRemote) {
+            BlockPos blockpos = pos.offset(state.get(HORIZONTAL_FACING));
+            worldIn.setBlockState(blockpos, state.with(PART, CoffinPart.HEAD), 3);
+            worldIn.notifyNeighbors(pos, Blocks.AIR);
+            state.updateNeighbors(worldIn, pos, 3);
+        }
+    }
+
+    @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (facing == getDirectionToOther(stateIn.get(PART), stateIn.get(FACING))) {
             return facingState.getBlock() == this && facingState.get(PART) != stateIn.get(PART) ? stateIn.with(OCCUPIED, facingState.get(OCCUPIED)) : Blocks.AIR.getDefaultState();
@@ -262,17 +276,6 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, OCCUPIED, PART);
-    }
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
-        super.onBlockPlacedBy(worldIn, pos, state, entity, itemStack);
-        if (!worldIn.isRemote) {
-            BlockPos blockpos = pos.offset(state.get(HORIZONTAL_FACING));
-            worldIn.setBlockState(blockpos, state.with(PART, CoffinPart.HEAD), 3);
-            worldIn.notifyNeighbors(pos, Blocks.AIR);
-            state.updateNeighbors(worldIn, pos, 3);
-        }
     }
 
     /**
@@ -293,7 +296,6 @@ public class CoffinBlock extends VampirismBlockContainer {
         return null;
     }
 
-
     public enum CoffinPart implements IStringSerializable {
         HEAD("head"),
         FOOT("foot");
@@ -311,9 +313,5 @@ public class CoffinBlock extends VampirismBlockContainer {
         public String toString() {
             return this.name;
         }
-    }
-
-    private static VoxelShape makeShape() {
-        return Block.makeCuboidShape(0, 0, 0, 16, 13, 16);
     }
 }

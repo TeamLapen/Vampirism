@@ -21,11 +21,6 @@ public class EnchantmentVampireSlayer extends Enchantment {
     }
 
     @Override
-    protected String getDefaultTranslationKey() {
-        return "vampirism.vampire_slayer";
-    }
-
-    @Override
     public float calcDamageByCreature(int level, CreatureAttribute creatureType) {
         return creatureType == VReference.VAMPIRE_CREATURE_ATTRIBUTE ? level * 2.5F : 0;
     }
@@ -64,5 +59,10 @@ public class EnchantmentVampireSlayer extends Enchantment {
     public void onEntityDamaged(LivingEntity user, Entity target, int level) {
         super.onEntityDamaged(user, target, level);
         //Cannot damage players until https://github.com/MinecraftForge/MinecraftForge/pull/4052
+    }
+
+    @Override
+    protected String getDefaultTranslationKey() {
+        return "vampirism.vampire_slayer";
     }
 }

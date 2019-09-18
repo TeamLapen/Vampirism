@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -463,7 +462,7 @@ public class RenderHandler {
         }
 
         renderedEntitiesWithoutBlood.clear();
-        
+
         if (!renderedEntitiesWithGarlicInfused.isEmpty() || this.bloodVision3Rendered) {
             bloodVision3Rendered = renderEntityOutlines(renderedEntitiesWithGarlicInfused, bloodVisionShader3, bloodVisionFrameBuffer3, partialTicks);
         }

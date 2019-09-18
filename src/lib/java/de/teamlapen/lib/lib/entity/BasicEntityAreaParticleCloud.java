@@ -39,6 +39,11 @@ public class BasicEntityAreaParticleCloud extends Entity {
         this.setRadius(3);
     }
 
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return new SSpawnObjectPacket(this);
+    }
+
     public int getColor() {
         return this.getDataManager().get(COLOR);
     }
@@ -55,18 +60,6 @@ public class BasicEntityAreaParticleCloud extends Entity {
         this.duration = duration;
     }
 
-    public void setHeight(float height) {
-        double d0 = this.posX;
-        double d1 = this.posY;
-        double d2 = this.posZ;
-        this.size = new EntitySize(getRadius() * 2, height, size.fixed);
-        this.setPosition(d0, d1, d2);
-
-        if (!this.world.isRemote) {
-            this.getDataManager().set(HEIGHT, height);
-        }
-    }
-
     public IParticleData getParticle() {
         return this.getDataManager().get(PARTICLE);
     }
@@ -74,7 +67,6 @@ public class BasicEntityAreaParticleCloud extends Entity {
     public void setParticle(IParticleData p_195059_1_) {
         this.getDataManager().set(PARTICLE, p_195059_1_);
     }
-
 
 
     public float getRadius() {
@@ -109,6 +101,22 @@ public class BasicEntityAreaParticleCloud extends Entity {
         this.waitTime = waitTime;
     }
 
+    public void setHeight(float height) {
+        double d0 = this.posX;
+        double d1 = this.posY;
+        double d2 = this.posZ;
+        this.size = new EntitySize(getRadius() * 2, height, size.fixed);
+        this.setPosition(d0, d1, d2);
+
+        if (!this.world.isRemote) {
+            this.getDataManager().set(HEIGHT, height);
+        }
+    }
+
+    public void setRadiusPerTick(float radiusPerTick) {
+        this.radiusPerTick = radiusPerTick;
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -129,7 +137,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
                     int cr = rgb >> 16 & 255;
                     int cg = rgb >> 8 & 255;
                     int cb = rgb & 255;
-                    this.world.addParticle(particle, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (double) ((float) cr / 255.0F), (double) ((float) cg / 255.0F), (double) ((float) cb / 255.0F));
+                    this.world.addParticle(particle, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (float) cr / 255.0F, (float) cg / 255.0F, (float) cb / 255.0F);
                 } else {
                     this.world.addParticle(particle, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (0.5D - this.rand.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.rand.nextDouble()) * 0.15D);
                 }
@@ -152,11 +160,6 @@ public class BasicEntityAreaParticleCloud extends Entity {
                 this.setRadius(radius);
             }
         }
-    }
-
-
-    public void setRadiusPerTick(float radiusPerTick) {
-        this.radiusPerTick = radiusPerTick;
     }
 
     @Override
@@ -187,10 +190,5 @@ public class BasicEntityAreaParticleCloud extends Entity {
     @Override
     protected void writeAdditional(CompoundNBT compound) {
 
-    }
-
-    @Override
-    public IPacket<?> createSpawnPacket() {
-        return new SSpawnObjectPacket(this);
     }
 }

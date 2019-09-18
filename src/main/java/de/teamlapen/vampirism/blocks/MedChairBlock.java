@@ -33,14 +33,19 @@ import javax.annotation.Nullable;
  */
 public class MedChairBlock extends VampirismBlock {
     public static final EnumProperty<EnumPart> PART = EnumProperty.create("part", EnumPart.class);
-    private final static String name = "med_chair";
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    private final static String name = "med_chair";
 
 
     public MedChairBlock() {
         super(name, Properties.create(Material.IRON).hardnessAndResistance(1));
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(PART, EnumPart.TOP));
 
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Nullable
@@ -115,11 +120,6 @@ public class MedChairBlock extends VampirismBlock {
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, PART);
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
     }
 
 

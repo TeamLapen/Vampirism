@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.client.model.CoffinModel;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
@@ -20,11 +19,10 @@ import org.apache.logging.log4j.Logger;
  */
 @OnlyIn(Dist.CLIENT)
 public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
-    private Logger LOGGER = LogManager.getLogger();
-
     private final int maxLidPos = 61;
     private final CoffinModel model;
     private final ResourceLocation[] textures = new ResourceLocation[DyeColor.values().length];
+    private Logger LOGGER = LogManager.getLogger();
 
     public CoffinTESR() {
         this.model = new CoffinModel();

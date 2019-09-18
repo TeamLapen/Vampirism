@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
@@ -42,25 +41,6 @@ import java.util.Map;
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
     private final static Logger LOGGER = LogManager.getLogger();
-
-
-    @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            Minecraft mc = Minecraft.getInstance();
-            if (mc.world != null) {
-                if ((mc.currentScreen == null || mc.currentScreen instanceof SleepInMultiplayerScreen) && mc.player.isSleeping()) {
-                    BlockState state = mc.player.getEntityWorld().getBlockState(mc.player.getBedLocation());
-                    if (state.getBlock().equals(ModBlocks.coffin)) {
-                        mc.displayGuiScreen(new SleepCoffinScreen());
-                    }
-                } else if (mc.currentScreen instanceof SleepCoffinScreen && !mc.player.isSleeping()) {
-                    mc.displayGuiScreen(null);
-                }
-            }
-
-        }
-    }
 
     @SubscribeEvent
     public static void onModelBakeEvent(ModelBakeEvent event) {
@@ -165,6 +145,24 @@ public class ClientEventHandler {
             }
         } catch (Exception e) {
             LOGGER.error("Failed to load fluid models for weapon crafting table", e);
+
+        }
+    }
+
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.world != null) {
+                if ((mc.currentScreen == null || mc.currentScreen instanceof SleepInMultiplayerScreen) && mc.player.isSleeping()) {
+                    BlockState state = mc.player.getEntityWorld().getBlockState(mc.player.getBedLocation());
+                    if (state.getBlock().equals(ModBlocks.coffin)) {
+                        mc.displayGuiScreen(new SleepCoffinScreen());
+                    }
+                } else if (mc.currentScreen instanceof SleepCoffinScreen && !mc.player.isSleeping()) {
+                    mc.displayGuiScreen(null);
+                }
+            }
 
         }
     }

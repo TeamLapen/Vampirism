@@ -49,15 +49,6 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         return this.write(new CompoundNBT());
     }
 
-
-    @Override
-    public void remove() {
-        super.remove();
-        unregister();
-
-    }
-
-
     @Override
     public void markDirty() {
         super.markDirty();
@@ -90,6 +81,13 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         r = compound.getInt("radius");
         defaultStrength = EnumStrength.getFromStrenght(compound.getInt("strength"));
         setFueledTime(compound.getInt("fueled"));
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        unregister();
+
     }
 
     public void setType(GarlicBeaconBlock.Type type) {

@@ -15,13 +15,11 @@ import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 
-
 public abstract class InventoryContainer extends Container {
 
     protected final IWorldPosCallable worldPos;
-    private final int size;
-
     protected final IInventory inventory;
+    private final int size;
 
 
     public InventoryContainer(ContainerType<? extends InventoryContainer> containerType, int id, PlayerInventory playerInventory, IWorldPosCallable worldPos, @Nonnull IInventory inventory, SelectorInfo... selectorInfos) {
@@ -51,28 +49,15 @@ public abstract class InventoryContainer extends Container {
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        inventory.closeInventory(playerIn);
-    }
-
-    protected void addPlayerSlots(PlayerInventory playerInventory) {
-        int i;
-        for (i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-            }
-        }
-        for (i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
-        }
-    }
-
-    @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         return true;
     }
 
+    @Override
+    public void onContainerClosed(PlayerEntity playerIn) {
+        super.onContainerClosed(playerIn);
+        inventory.closeInventory(playerIn);
+    }
 
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
@@ -105,6 +90,17 @@ public abstract class InventoryContainer extends Container {
         return result;
     }
 
+    protected void addPlayerSlots(PlayerInventory playerInventory) {
+        int i;
+        for (i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+            }
+        }
+        for (i = 0; i < 9; ++i) {
+            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
+        }
+    }
 
     public static class SelectorSlot extends Slot {
 

@@ -18,10 +18,10 @@ import net.minecraft.world.World;
  * The player should be waked by {@link VampirePlayer#wakeUpPlayer(boolean, boolean, boolean)}, which uses the vanilla wakeup method, but also sets the vampire player variables and updates this class.
  * {@link VampirePlayer} also updates the size every tick to 0.2/0.2 since it is reset by vanilla and sets {@link PlayerEntity#noClip} each tick, so the player does not collide with blocks above the coffin. Because of the we also have to set the motion variables to zero, so the player does no fall.
  * <p>
- *     Unlike the vanilla world we do not keep track of sleeping players as we do not have access to the necessary information/events but we just frequently check if enough palyers are sleeping
- *
- *
- *     TODO check if https://github.com/MinecraftForge/MinecraftForge/pull/5013 helps in any way
+ * Unlike the vanilla world we do not keep track of sleeping players as we do not have access to the necessary information/events but we just frequently check if enough palyers are sleeping
+ * <p>
+ * <p>
+ * TODO check if https://github.com/MinecraftForge/MinecraftForge/pull/5013 helps in any way
  */
 public class DaySleepHelper {
 
@@ -32,17 +32,17 @@ public class DaySleepHelper {
      * @param world
      */
     public static void checkSleepWorld(World world) {
-            int sleeping = 0;
-            int total = 0;
-            for (PlayerEntity entityplayer : world.getPlayers()) {
-                if (!entityplayer.isSpectator()) {
-                    total++;
-                    if (VampirePlayer.get(entityplayer).isPlayerFullyAsleep()) {
-                        sleeping++;
-                    }
+        int sleeping = 0;
+        int total = 0;
+        for (PlayerEntity entityplayer : world.getPlayers()) {
+            if (!entityplayer.isSpectator()) {
+                total++;
+                if (VampirePlayer.get(entityplayer).isPlayerFullyAsleep()) {
+                    sleeping++;
                 }
             }
-            if (sleeping / (float) total * 100 < VampirismConfig.SERVER.coffinSleepPercentage.get()) return;
+        }
+        if (sleeping / (float) total * 100 < VampirismConfig.SERVER.coffinSleepPercentage.get()) return;
 
         if (world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
             long l = world.getDayTime() + 24000L;

@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 class ExtendedCreatureDefaultImpl implements IExtendedCreatureVampirism {
 
     private final static Logger LOGGER = LogManager.getLogger(ExtendedCreatureDefaultImpl.class);
+
     public ExtendedCreatureDefaultImpl() {
         LOGGER.error("Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
 
@@ -57,6 +58,11 @@ class ExtendedCreatureDefaultImpl implements IExtendedCreatureVampirism {
     }
 
     @Override
+    public boolean hasPoisonousBlood() {
+        return false;
+    }
+
+    @Override
     public
     @Nullable
     IConvertedCreature makeVampire() {
@@ -69,15 +75,10 @@ class ExtendedCreatureDefaultImpl implements IExtendedCreatureVampirism {
     }
 
     @Override
-    public void tick() {
-    }
-
-    @Override
-    public boolean hasPoisonousBlood() {
-        return false;
-    }
-
-    @Override
     public void setPoisonousBlood(boolean poisonous) {
+    }
+
+    @Override
+    public void tick() {
     }
 }

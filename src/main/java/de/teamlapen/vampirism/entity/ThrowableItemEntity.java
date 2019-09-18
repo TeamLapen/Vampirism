@@ -83,11 +83,6 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
         }
     }
 
-    @Override
-    protected void registerData() {
-        this.getDataManager().register(ITEM, ItemStack.EMPTY);
-    }
-
     protected float getGravityVelocity() {
         return 0.05F;
     }
@@ -104,6 +99,11 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
             }
         }
         if (!this.world.isRemote) this.remove();
+    }
+
+    @Override
+    protected void registerData() {
+        this.getDataManager().register(ITEM, ItemStack.EMPTY);
     }
 
     /**

@@ -219,7 +219,6 @@
   "category.vampirism.gui": "GUI Configuration",
   "category.vampirism.gui.tooltip": "Configure display",
   "category.vampirism.worldgen": "World Generation",
-
   "__comment": "actions",
   "action.vampirism.bat": "Toggle Batmode",
   "action.vampirism.freeze": "Freeze",

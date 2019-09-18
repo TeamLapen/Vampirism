@@ -22,6 +22,10 @@ public class HunterPlayerSpecialAttribute {
         return disguiseTicks > DisguiseHunterAction.FADE_TICKS ? 1F : disguiseTicks / (float) DisguiseHunterAction.FADE_TICKS;
     }
 
+    public float getVampireNearbyProgress() {
+        return 0.2F * (vampireNearbyTicks / (float) 20);
+    }
+
     public void increaseDisguiseTicks() {
         disguiseTicks++;
     }
@@ -30,21 +34,17 @@ public class HunterPlayerSpecialAttribute {
         return disguised;
     }
 
-    public void resetDisguise() {
-        disguiseTicks = 0;
-        disguised = false;
+    public boolean isVampireNearby() {
+        return vampireNearbyTicks > 0;
     }
 
     public void nearbyVampire() {
         vampireNearbyTicks = Math.min(20, ++vampireNearbyTicks);
     }
 
-    public float getVampireNearbyProgress() {
-        return 0.2F * (vampireNearbyTicks / (float) 20);
-    }
-
-    public boolean isVampireNearby() {
-        return vampireNearbyTicks > 0;
+    public void resetDisguise() {
+        disguiseTicks = 0;
+        disguised = false;
     }
 
     public void resetVampireNearby() {

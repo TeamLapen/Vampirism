@@ -38,12 +38,12 @@ public interface IProxy {
 
     PlayerEntity getPlayerEntity(NetworkEvent.Context context);
 
+    default void handleUpdateEntityPacket(UpdateEntityPacket msg) {
+    }
+
     /**
      * Uses font rendere on client side to wrap the given string to the given width
      */
     List<String> listFormattedStringToWidth(String str, int wrapWidth);
-
-    default void handleUpdateEntityPacket(UpdateEntityPacket msg) {
-    }
 
 }

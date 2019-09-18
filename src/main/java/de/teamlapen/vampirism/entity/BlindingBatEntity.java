@@ -21,6 +21,18 @@ import java.util.Random;
  * Bat which blinds non vampires for a short time.
  */
 public class BlindingBatEntity extends BatEntity {
+    public static boolean spawnPredicate(EntityType<? extends BlindingBatEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        if (blockPos.getY() >= iWorld.getSeaLevel()) {
+            return false;
+        } else {
+            int i = iWorld.getLight(blockPos);
+            int j = 4;
+            if (random.nextBoolean())
+                return false;
+
+            return i <= random.nextInt(j) && func_223315_a(entityType, iWorld, spawnReason, blockPos, random);
+        }
+    }
     private boolean restrictLiveSpan;
 
     public BlindingBatEntity(EntityType<? extends BlindingBatEntity> type, World worldIn) {
@@ -30,6 +42,10 @@ public class BlindingBatEntity extends BatEntity {
     @Override
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
         return worldIn.checkNoEntityCollision(this, VoxelShapes.create(this.getBoundingBox())) && worldIn.isCollisionBoxesEmpty(this, this.getBoundingBox()) && !worldIn.containsAnyLiquid(this.getBoundingBox());
+    }
+
+    public void restrictLiveSpan() {
+        this.restrictLiveSpan = true;
     }
 
     @Override
@@ -45,23 +61,6 @@ public class BlindingBatEntity extends BatEntity {
                     ((PlayerEntity) e).addPotionEffect(new EffectInstance(Effects.BLINDNESS, Balance.mobProps.BLINDING_BAT_EFFECT_DURATION));
                 }
             }
-        }
-    }
-
-    public void restrictLiveSpan() {
-        this.restrictLiveSpan = true;
-    }
-
-    public static boolean spawnPredicate(EntityType<? extends BlindingBatEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        if (blockPos.getY() >= iWorld.getSeaLevel()) {
-            return false;
-        } else {
-            int i = iWorld.getLight(blockPos);
-            int j = 4;
-            if (random.nextBoolean())
-                return false;
-
-            return i > random.nextInt(j) ? false : func_223315_a(entityType, iWorld, spawnReason, blockPos, random);
         }
     }
 }

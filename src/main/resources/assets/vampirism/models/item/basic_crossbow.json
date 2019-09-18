@@ -1,6 +1,6 @@
 {
-	"parent": "vampirism:item/crossbow",
-	"textures": {
-		"texture": "vampirism:item/crossbow"
-	}
+  "parent": "vampirism:item/crossbow",
+  "textures": {
+    "texture": "vampirism:item/crossbow"
+  }
 }

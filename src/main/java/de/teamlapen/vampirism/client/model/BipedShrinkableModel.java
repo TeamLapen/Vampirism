@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.model;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;

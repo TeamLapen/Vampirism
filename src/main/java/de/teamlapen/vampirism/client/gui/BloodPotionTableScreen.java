@@ -32,28 +32,23 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
-
-    }
-
-    @Override
     public void init() {
         super.init();
         this.addButton(this.craftBtn = new Button(this.width / 2 - 77, this.height / 2 - 78, font.getStringWidth(UtilLib.translate("gui.vampirism.blood_potion_table.create")) + 5, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create"), (context) -> handleClicked()));
         craftBtn.active = false;
     }
 
-
-    private void handleClicked() {
-        VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.CRAFT_BLOOD_POTION, ""));
-    }
-
     @Override
     public void onClose() {
         super.onClose();
         stopSound();
+    }
+
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+
     }
 
     @Override
@@ -66,7 +61,6 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
             startSound();
         }
     }
-
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -102,6 +96,10 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
                 j += this.font.getWordWrappedHeight(hint, 92);
             }
         }
+    }
+
+    private void handleClicked() {
+        VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.CRAFT_BLOOD_POTION, ""));
     }
 
     private void startSound() {

@@ -26,16 +26,16 @@ public interface IWeaponTableRecipe extends IRecipe<CraftingInventory> {
     }
 
     /**
-     * @return The hunter level required to craft this
-     */
-    int getRequiredLevel();
-
-    /**
      * Measured in 1/5 buckets. Min value=0
      *
      * @return The amount of lava required for this recipe.
      */
     int getRequiredLavaUnits();
+
+    /**
+     * @return The hunter level required to craft this
+     */
+    int getRequiredLevel();
 
     /**
      * @return The skills that have to be unlocked to craft this. Can be empty

@@ -53,7 +53,7 @@ public class VampirismVillagerEntity extends VillagerEntity {
 
         if (flag) {
             if (i > 0) {
-                entity.addVelocity((double) (-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F));
+                entity.addVelocity(-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F);
                 this.setMotion(this.getMotion().mul(0.6D, 1D, 0.6D));
             }
 

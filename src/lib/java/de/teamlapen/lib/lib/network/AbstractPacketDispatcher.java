@@ -55,7 +55,7 @@ public abstract class AbstractPacketDispatcher {
     }
 
     public final void sendToAll(IMessage message) {
-        dispatcher.send(PacketDistributor.ALL.noArg(),message);
+        dispatcher.send(PacketDistributor.ALL.noArg(), message);
     }
 
     /**
@@ -64,32 +64,31 @@ public abstract class AbstractPacketDispatcher {
     public final void sendToAllAround(IMessage message, DimensionType dimension, double x, double y, double z,
 
                                       double range) {
-        sendToAllAround(message, new PacketDistributor.TargetPoint( x, y, z,
+        sendToAllAround(message, new PacketDistributor.TargetPoint(x, y, z,
 
-                range,dimension));
+                range, dimension));
     }
 
     /**
      * Send this message to everyone within a certain range of a point.
      */
     public final void sendToAllAround(IMessage message, PacketDistributor.TargetPoint point) {
-        dispatcher.send(PacketDistributor.NEAR.with(() -> point),message);
+        dispatcher.send(PacketDistributor.NEAR.with(() -> point), message);
     }
 
     public final void sendToAllTrackingPlayers(IMessage message, Entity target) {
         dispatcher.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> target), message);
     }
 
-    protected int nextID(){
-        return packetId++;
-    }
-
-
     /**
      * Send this message to the server.
      */
     public final void sendToServer(IMessage message) {
         dispatcher.sendToServer(message);
+    }
+
+    protected int nextID() {
+        return packetId++;
     }
 
 }

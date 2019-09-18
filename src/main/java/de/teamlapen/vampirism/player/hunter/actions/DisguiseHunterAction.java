@@ -23,6 +23,11 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
+    public boolean canBeUsedBy(IHunterPlayer player) {
+        return !player.getActionHandler().isActionActive(HunterActions.awareness_hunter);
+    }
+
+    @Override
     public int getCooldown() {
         return 0;
     }
@@ -59,10 +64,5 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     public boolean onUpdate(IHunterPlayer player) {
         ((HunterPlayer) player).getSpecialAttributes().increaseDisguiseTicks();
         return false;
-    }
-
-    @Override
-    public boolean canBeUsedBy(IHunterPlayer player) {
-        return !player.getActionHandler().isActionActive(HunterActions.awareness_hunter);
     }
 }

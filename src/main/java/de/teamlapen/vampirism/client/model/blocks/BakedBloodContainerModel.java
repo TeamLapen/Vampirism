@@ -49,10 +49,9 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
         }
     }
 
+    private final IBakedModel baseModel;
     private Fluid fluid;
     private int fluidLevel = 0;
-
-    private final IBakedModel baseModel;
     private boolean item;
 
     public BakedBloodContainerModel(IBakedModel baseModel) {

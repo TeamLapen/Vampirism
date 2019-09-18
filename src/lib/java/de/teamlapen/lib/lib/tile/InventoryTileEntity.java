@@ -38,14 +38,13 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
     }
 
     @Override
-    public ItemStack decrStackSize(int slot, int amt) {
-        return ItemStackHelper.getAndSplit(inventorySlots, slot, amt);
+    public void clear() {
+        inventorySlots.clear();
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        if (slot < 0 || slot >= selectors.length) return false;
-        return selectors[slot].validate(stack);
+    public ItemStack decrStackSize(int slot, int amt) {
+        return ItemStackHelper.getAndSplit(inventorySlots, slot, amt);
     }
 
     @Override
@@ -54,19 +53,19 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
     }
 
     @Override
+    public ItemStack getStackInSlot(int index) {
+        return inventorySlots.get(index);
+    }
+
+    @Override
     public boolean isEmpty() {
         return inventorySlots.isEmpty();
     }
 
     @Override
-    public void clear() {
-        inventorySlots.clear();
-    }
-
-
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        return inventorySlots.get(index);
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        if (slot < 0 || slot >= selectors.length) return false;
+        return selectors[slot].validate(stack);
     }
 
     @Override
@@ -112,6 +111,10 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
         return compound;
     }
 
+    @Nonnull
+    protected InvWrapper createWrapper() {
+        return new SelectorInvWrapper(this);
+    }
 
     protected boolean isFull() {
         for (ItemStack s : inventorySlots) {
@@ -120,11 +123,6 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
             }
         }
         return true;
-    }
-
-    @Nonnull
-    protected InvWrapper createWrapper() {
-        return new SelectorInvWrapper(this);
     }
 
     private class SelectorInvWrapper extends InvWrapper {

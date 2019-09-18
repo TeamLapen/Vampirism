@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world.gen.features;
 
 import com.mojang.datafixers.Dynamic;
-
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

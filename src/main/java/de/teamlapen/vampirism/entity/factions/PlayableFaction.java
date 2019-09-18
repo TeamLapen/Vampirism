@@ -40,7 +40,6 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
     }
 
 
-
     @Override
     public T getPlayerCapability(PlayerEntity player) {
         return player.getCapability(playerCapabilitySupplier.get(), null).orElseThrow(() -> new IllegalStateException("Cannot get Faction Capability"));

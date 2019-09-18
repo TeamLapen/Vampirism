@@ -11,12 +11,10 @@ import java.util.List;
 
 public interface IEntityActionUser extends IAdjustableLevel, IFactionEntity {
 
-    default EntityActionTier getEntityTier() {
-        return EntityActionTier.Default;
-    }
-
-    default EntityClassType getEntityClass() {
-        return EntityClassType.None;
+    static <T extends LivingEntity & IEntityActionUser> void applyAttributes(T entity) {
+        entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entity.getEntityClass().getHealthModifier());
+        entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entity.getEntityClass().getDamageModifier());
+        entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entity.getEntityClass().getSpeedModifier());
     }
 
     /**
@@ -26,9 +24,11 @@ public interface IEntityActionUser extends IAdjustableLevel, IFactionEntity {
         return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(this.getFaction(), getEntityTier(), getEntityClass());
     }
 
-    static <T extends LivingEntity & IEntityActionUser> void applyAttributes(T entity) {
-        entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entity.getEntityClass().getHealthModifier());
-        entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entity.getEntityClass().getDamageModifier());
-        entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entity.getEntityClass().getSpeedModifier());
+    default EntityClassType getEntityClass() {
+        return EntityClassType.None;
+    }
+
+    default EntityActionTier getEntityTier() {
+        return EntityActionTier.Default;
     }
 }

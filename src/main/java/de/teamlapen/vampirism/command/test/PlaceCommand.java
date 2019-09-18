@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.world.gen.structures.StructureManager;
 import de.teamlapen.vampirism.world.gen.structures.VampirismTemplate;
@@ -15,7 +14,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class PlaceCommand extends BasicCommand {//TODO structure ArgumentType

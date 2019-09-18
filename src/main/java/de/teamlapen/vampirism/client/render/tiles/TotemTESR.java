@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.tileentity.TotemTile;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;

@@ -2,7 +2,6 @@ package de.teamlapen.lib.lib.client.render;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -17,7 +16,7 @@ public class RenderUtil {
 
     /**
      * Render the given model part using the given texture with a glowing lightmap (like vanilla spider)
-     *
+     * <p>
      * The Texture must set before calling this method
      *
      * @param brightness Between 0 and 255f
@@ -42,7 +41,7 @@ public class RenderUtil {
         endGlowing(entity.getBrightnessForRender());
     }
 
-    private static void startGlowing(boolean entityInvisible, float brightness){
+    private static void startGlowing(boolean entityInvisible, float brightness) {
         GlStateManager.enableBlend();
         GlStateManager.enableAlphaTest();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
@@ -57,7 +56,7 @@ public class RenderUtil {
         Minecraft.getInstance().gameRenderer.setupFogColor(true);
     }
 
-    private static void endGlowing(int brightnessForRender){
+    private static void endGlowing(int brightnessForRender) {
         Minecraft.getInstance().gameRenderer.setupFogColor(false);
         int j = brightnessForRender % 65536;
         int k = brightnessForRender / 65536;

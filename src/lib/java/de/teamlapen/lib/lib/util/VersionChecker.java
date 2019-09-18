@@ -37,8 +37,6 @@ import java.util.Map;
 public class VersionChecker implements Runnable {
     private final static Logger LOGGER = LogManager.getLogger();
 
-    private final boolean stats;
-
     /**
      * Use the other one
      */
@@ -49,15 +47,12 @@ public class VersionChecker implements Runnable {
         return checker.versionInfo;
     }
 
-    private final String UPDATE_FILE_URL;
-    private final VersionInfo versionInfo;
-
     /**
      * Execute an async version check.
      *
      * @param updateUrl
      * @param currentVersion
-     * @param stats if to send very basic stats
+     * @param stats          if to send very basic stats
      * @return a version info object, which is update when the check is finished
      */
     public static VersionInfo executeVersionCheck(String updateUrl, ArtifactVersion currentVersion, boolean stats) {
@@ -65,7 +60,9 @@ public class VersionChecker implements Runnable {
         new Thread(checker).start();
         return checker.versionInfo;
     }
-
+    private final boolean stats;
+    private final String UPDATE_FILE_URL;
+    private final VersionInfo versionInfo;
     private final ArtifactVersion currentVersion;
 
     protected VersionChecker(String update_file_url, ArtifactVersion currentVersion, boolean stats) {

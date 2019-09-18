@@ -28,13 +28,26 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BloodPotionTableBlock extends VampirismBlock {
 
-    private final static String regName = "blood_potion_table";
-    private static final ITextComponent name = new TranslationTextComponent("container.crafting");
     protected static final VoxelShape tableShape = Block.makeCuboidShape(0, 0, 0, 16, 11, 16);
     protected static final VoxelShape shape = makeShape();
+    private final static String regName = "blood_potion_table";
+    private static final ITextComponent name = new TranslationTextComponent("container.crafting");
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(0, 0, 0, 16, 1, 16);
+        VoxelShape b = Block.makeCuboidShape(1, 1, 1, 15, 2, 15);
+        VoxelShape c = Block.makeCuboidShape(2, 2, 2, 14, 9, 14);
+        VoxelShape d = Block.makeCuboidShape(0, 9, 0, 16, 11, 16);
+        return VoxelShapes.or(a, b, c, d);
+    }
 
     public BloodPotionTableBlock() {
         super(regName, Properties.create(Material.IRON).hardnessAndResistance(1f));
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Override
@@ -53,8 +66,7 @@ public class BloodPotionTableBlock extends VampirismBlock {
             if (canUse(player) && player instanceof ServerPlayerEntity) {
                 NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), new TranslationTextComponent("container.crafting")), pos);
 
-            }
-            else {
+            } else {
                 player.sendMessage(new TranslationTextComponent("text.vampirism.blood_potion_table.cannot_use"));
             }
         }
@@ -68,18 +80,5 @@ public class BloodPotionTableBlock extends VampirismBlock {
             return faction.getPlayerCapability(player).getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_table);
         }
         return false;
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(0, 0, 0, 16, 1, 16);
-        VoxelShape b = Block.makeCuboidShape(1, 1, 1, 15, 2, 15);
-        VoxelShape c = Block.makeCuboidShape(2, 2, 2, 14, 9, 14);
-        VoxelShape d = Block.makeCuboidShape(0, 9, 0, 16, 11, 16);
-        return VoxelShapes.or(a, b, c, d);
     }
 }

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import com.mojang.datafixers.util.Either;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -82,8 +81,6 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IVampirePlayer {
 
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
-    @CapabilityInject(IVampirePlayer.class)
-    public static Capability<IVampirePlayer> CAP = getNull();
     private final static String TAG = "VampirePlayer";
     private final static String KEY_EYE = "eye_type";
     private final static String KEY_FANGS = "fang_type";
@@ -91,6 +88,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
     private final static String KEY_VISION = "vision";
     private final static String KEY_VICTIM_ID = "feed_victim";
+    @CapabilityInject(IVampirePlayer.class)
+    public static Capability<IVampirePlayer> CAP = getNull();
 
     /**
      * Don't call before the construction event of the player entity is finished
@@ -389,13 +388,21 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return glowingEyes;
     }
 
-    public void loadData(CompoundNBT nbt) {
-        bloodStats.readNBT(nbt);
-        eyeType = nbt.getInt(KEY_EYE);
-        fangType = nbt.getInt(KEY_FANGS);
-        glowingEyes = !nbt.contains(KEY_GLOWING_EYES) || nbt.getBoolean(KEY_GLOWING_EYES);
-        actionHandler.loadFromNbt(nbt);
-        skillHandler.loadFromNbt(nbt);
+    /**
+     * Sets glowing eyes.
+     * Also sends a sync packet if on server
+     *
+     * @param value
+     */
+    public void setGlowingEyes(boolean value) {
+        if (value != this.glowingEyes) {
+            this.glowingEyes = value;
+            if (!isRemote()) {
+                CompoundNBT nbt = new CompoundNBT();
+                nbt.putBoolean(KEY_GLOWING_EYES, glowingEyes);
+                sync(nbt, true);
+            }
+        }
     }
 
     @Override
@@ -428,6 +435,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
+    public boolean isAdvancedBiter() {
+        return specialAttributes.advanced_biter;
+    }
+
+    @Override
     public boolean isAutoFillEnabled() {
         return false;
     }
@@ -455,11 +467,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    public boolean isAdvancedBiter() {
-        return specialAttributes.advanced_biter;
-    }
-
-    @Override
     public boolean isIgnoringSundamage() {
         return false;
     }
@@ -475,6 +482,15 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public boolean isVampireLord() {
         return false;
+    }
+
+    public void loadData(CompoundNBT nbt) {
+        bloodStats.readNBT(nbt);
+        eyeType = nbt.getInt(KEY_EYE);
+        fangType = nbt.getInt(KEY_FANGS);
+        glowingEyes = !nbt.contains(KEY_GLOWING_EYES) || nbt.getBoolean(KEY_GLOWING_EYES);
+        actionHandler.loadFromNbt(nbt);
+        skillHandler.loadFromNbt(nbt);
     }
 
     @Override
@@ -498,6 +514,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
+    public void onChangedDimension(DimensionType from, DimensionType to) {
+
+    }
+
+    @Override
     public void onDeath(DamageSource src) {
         if (actionHandler.isActionActive(VampireActions.bat) && src.getImmediateSource() instanceof IProjectile) {
             if (player instanceof ServerPlayerEntity) {
@@ -506,24 +527,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         actionHandler.deactivateAllActions();
         wasDead = true;
-    }
-
-    @Override
-    public void onChangedDimension(DimensionType from, DimensionType to) {
-
-    }
-
-    @Override
-    public void onJoinWorld() {
-        if (getLevel() > 0) {
-            actionHandler.onActionsReactivated();
-            ticksInSun = 0;
-            if (wasDead) {
-                player.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 400, 4, true, false));
-                player.setHealth(player.getMaxHealth());
-                bloodStats.setBloodLevel(bloodStats.getMaxBlood());
-            }
-        }
     }
 
     @Override
@@ -552,6 +555,19 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         endFeeding(true);
         return false;
+    }
+
+    @Override
+    public void onJoinWorld() {
+        if (getLevel() > 0) {
+            actionHandler.onActionsReactivated();
+            ticksInSun = 0;
+            if (wasDead) {
+                player.addPotionEffect(new EffectInstance(ModEffects.sunscreen, 400, 4, true, false));
+                player.setHealth(player.getMaxHealth());
+                bloodStats.setBloodLevel(bloodStats.getMaxBlood());
+            }
+        }
     }
 
     @Override
@@ -604,6 +620,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
     }
 
+    @Override
+    public void onPlayerLoggedOut() {
+        endFeeding(false);
+    }
+
     /**
      * Called when a sanguinare effect runs out.
      * DON'T add/remove potions here, since it is called while the potion effect list is modified.
@@ -624,11 +645,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 //            });
 
         }
-    }
-
-    @Override
-    public void onPlayerLoggedOut() {
-        endFeeding(false);
     }
 
     @Override
@@ -787,27 +803,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     /**
-     * Sets the eyeType as long as it is valid.
-     * Also sends a sync packet if on server
-     *
-     * @return Whether the type is valid or not
-     */
-    public boolean setEyeType(int eyeType) {
-        if (eyeType >= REFERENCE.EYE_TYPE_COUNT || eyeType < 0) {
-            return false;
-        }
-        if (eyeType != this.eyeType) {
-            this.eyeType = eyeType;
-            if (!isRemote()) {
-                CompoundNBT nbt = new CompoundNBT();
-                nbt.putInt(KEY_EYE, eyeType);
-                sync(nbt, true);
-            }
-        }
-        return true;
-    }
-
-    /**
      * Set's the players entity size via reflection.
      * Attention: This is reset by EntityPlayer every tick
      *
@@ -830,6 +825,27 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     /**
+     * Sets the eyeType as long as it is valid.
+     * Also sends a sync packet if on server
+     *
+     * @return Whether the type is valid or not
+     */
+    public boolean setEyeType(int eyeType) {
+        if (eyeType >= REFERENCE.EYE_TYPE_COUNT || eyeType < 0) {
+            return false;
+        }
+        if (eyeType != this.eyeType) {
+            this.eyeType = eyeType;
+            if (!isRemote()) {
+                CompoundNBT nbt = new CompoundNBT();
+                nbt.putInt(KEY_EYE, eyeType);
+                sync(nbt, true);
+            }
+        }
+        return true;
+    }
+
+    /**
      * Sets the fangType as long as it is valid.
      * Also sends a sync packet if on server
      *
@@ -848,23 +864,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         }
         return true;
-    }
-
-    /**
-     * Sets glowing eyes.
-     * Also sends a sync packet if on server
-     *
-     * @param value
-     */
-    public void setGlowingEyes(boolean value) {
-        if (value != this.glowingEyes) {
-            this.glowingEyes = value;
-            if (!isRemote()) {
-                CompoundNBT nbt = new CompoundNBT();
-                nbt.putBoolean(KEY_GLOWING_EYES, glowingEyes);
-                sync(nbt, true);
-            }
-        }
     }
 
     /**
@@ -1133,7 +1132,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
             }
         }
-
 
 
     }

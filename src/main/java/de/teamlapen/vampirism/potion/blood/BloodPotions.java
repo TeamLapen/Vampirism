@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.potion.blood;
 
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -36,6 +35,7 @@ import java.util.Random;
 
 public class BloodPotions {
     private static final Logger LOGGER = LogManager.getLogger(BloodPotions.class);
+
     public static void register() {
         IBloodPotionRegistry registry = VampirismAPI.bloodPotionRegistry();
 

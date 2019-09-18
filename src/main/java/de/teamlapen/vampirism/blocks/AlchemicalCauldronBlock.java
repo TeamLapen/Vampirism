@@ -35,35 +35,23 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public static final IntegerProperty LIQUID = IntegerProperty.create("liquid", 0, 2);
     protected static final VoxelShape cauldronShape = makeShape();
 
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(2, 0, 2, 14, 9, 14);
+        VoxelShape b = Block.makeCuboidShape(1, 9, 1, 15, 13, 15);
+        VoxelShape c = Block.makeCuboidShape(2, 13, 2, 14, 14, 14);
+        return VoxelShapes.or(a, b, c);
+    }
+
     public AlchemicalCauldronBlock() {
         super(Block.Properties.create(Material.IRON).hardnessAndResistance(4f));
         this.setDefaultState(this.stateContainer.getBaseState().with(LIQUID, 0).with(FACING, Direction.NORTH).with(LIT, false));
         this.setRegistryName(REFERENCE.MODID, regName);
     }
 
-    @Override
-    protected void interactWith(World world, BlockPos blockPos, PlayerEntity playerEntity) {
-        TileEntity tile = world.getTileEntity(blockPos);
-        if (tile instanceof AlchemicalCauldronTileEntity) {
-            playerEntity.openContainer((INamedContainerProvider) tile);
-            playerEntity.addStat(ModStats.interact_alchemical_cauldron);
-        }
-    }
-
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
         return new AlchemicalCauldronTileEntity();
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-        return cauldronShape;
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_) {
-        return false;
     }
 
     @Override
@@ -74,6 +62,16 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return cauldronShape;
+    }
+
+    @Override
+    public boolean isNormalCube(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_) {
+        return false;
     }
 
     @Override
@@ -90,10 +88,12 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
         builder.add(LIT, FACING, LIQUID);
     }
 
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(2, 0, 2, 14, 9, 14);
-        VoxelShape b = Block.makeCuboidShape(1, 9, 1, 15, 13, 15);
-        VoxelShape c = Block.makeCuboidShape(2, 13, 2, 14, 14, 14);
-        return VoxelShapes.or(a, b, c);
+    @Override
+    protected void interactWith(World world, BlockPos blockPos, PlayerEntity playerEntity) {
+        TileEntity tile = world.getTileEntity(blockPos);
+        if (tile instanceof AlchemicalCauldronTileEntity) {
+            playerEntity.openContainer((INamedContainerProvider) tile);
+            playerEntity.addStat(ModStats.interact_alchemical_cauldron);
+        }
     }
 }

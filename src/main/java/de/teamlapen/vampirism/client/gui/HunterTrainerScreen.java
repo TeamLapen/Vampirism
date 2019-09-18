@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
@@ -36,13 +35,6 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
-
-    }
-
-    @Override
     public void init() {
         super.init();
         int i = (this.width - this.xSize) / 2;
@@ -56,6 +48,13 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
             this.onClose();
         }));
         this.buttonLevelup.active = false;
+    }
+
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+
     }
 
     @Override

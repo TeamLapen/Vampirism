@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -10,7 +9,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class CurrentDimensionCommand extends BasicCommand {

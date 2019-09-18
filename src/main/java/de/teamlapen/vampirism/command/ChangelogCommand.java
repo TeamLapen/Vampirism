@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
@@ -18,7 +17,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.List;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class ChangelogCommand extends BasicCommand {

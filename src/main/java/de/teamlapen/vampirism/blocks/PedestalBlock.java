@@ -36,6 +36,21 @@ public class PedestalBlock extends VampirismBlockContainer {
         }
     }
 
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(1, 0, 1, 15, 1, 15);
+        VoxelShape b = Block.makeCuboidShape(2, 1, 2, 14, 2, 14);
+        VoxelShape c = Block.makeCuboidShape(5, 2, 5, 11, 3, 11);
+        VoxelShape d = Block.makeCuboidShape(6, 3, 6, 10, 7, 10);
+        VoxelShape e = Block.makeCuboidShape(5, 7, 5, 11, 8, 11);
+        VoxelShape f = Block.makeCuboidShape(3, 8, 3, 13, 9, 13);
+        VoxelShape g1 = Block.makeCuboidShape(4, 9, 4, 5, 11, 5);
+        VoxelShape g2 = Block.makeCuboidShape(12, 9, 4, 11, 11, 5);
+        VoxelShape g3 = Block.makeCuboidShape(4, 9, 12, 5, 11, 11);
+        VoxelShape g4 = Block.makeCuboidShape(12, 9, 12, 11, 11, 11);
+
+        return VoxelShapes.or(a, b, c, d, e, f, g1, g2, g3, g4);
+    }
+
     public PedestalBlock() {
         super(regName, Properties.create(Material.ROCK).hardnessAndResistance(3f));
     }
@@ -44,11 +59,6 @@ public class PedestalBlock extends VampirismBlockContainer {
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
         return new PedestalTileEntity();
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return pedestalShape;
     }
 
     @Override
@@ -63,18 +73,23 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return pedestalShape;
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
+    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return false;
     }
 
     @Override
@@ -118,20 +133,5 @@ public class PedestalBlock extends VampirismBlockContainer {
             return (PedestalTileEntity) tile;
         }
         return null;
-    }
-
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(1, 0, 1, 15, 1, 15);
-        VoxelShape b = Block.makeCuboidShape(2, 1, 2, 14, 2, 14);
-        VoxelShape c = Block.makeCuboidShape(5, 2, 5, 11, 3, 11);
-        VoxelShape d = Block.makeCuboidShape(6, 3, 6, 10, 7, 10);
-        VoxelShape e = Block.makeCuboidShape(5, 7, 5, 11, 8, 11);
-        VoxelShape f = Block.makeCuboidShape(3, 8, 3, 13, 9, 13);
-        VoxelShape g1 = Block.makeCuboidShape(4, 9, 4, 5, 11, 5);
-        VoxelShape g2 = Block.makeCuboidShape(12, 9, 4, 11, 11, 5);
-        VoxelShape g3 = Block.makeCuboidShape(4, 9, 12, 5, 11, 11);
-        VoxelShape g4 = Block.makeCuboidShape(12, 9, 12, 11, 11, 11);
-
-        return VoxelShapes.or(a, b, c, d, e, f, g1, g2, g3, g4);
     }
 }

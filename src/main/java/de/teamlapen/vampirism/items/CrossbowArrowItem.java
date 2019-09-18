@@ -66,6 +66,9 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
         return entity;
     }
 
+    public EnumArrowType getType() {
+        return type;
+    }
 
     /**
      * @return If an arrow of this type can be used in an infinite crossbow
@@ -120,10 +123,6 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
                 }
             }
         }
-    }
-
-    public EnumArrowType getType() {
-        return type;
     }
 
 

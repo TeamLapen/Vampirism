@@ -16,8 +16,11 @@ public class RegenerationEntityAction<T extends CreatureEntity & IEntityActionUs
     }
 
     @Override
-    public int getDuration(int level) {
-        return Balance.ea.REGENERATION_DURATION * 20;
+    public void activate(T entity) {
+    }
+
+    @Override
+    public void deactivate(T entity) {
     }
 
     @Override
@@ -26,20 +29,8 @@ public class RegenerationEntityAction<T extends CreatureEntity & IEntityActionUs
     }
 
     @Override
-    public void deactivate(T entity) {
-    }
-
-    @Override
-    public void onUpdate(T entity, int duration) {
-        entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * Balance.ea.REGENERATION_AMOUNT / (getDuration(entity.getLevel()) * 20)); // seconds in ticks
-        if (duration % 15 == 0) {
-            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.HEART, entity.posX, entity.posY + 1, entity.posZ, 3, 0.2, 0.2, 0.2, 0);//TODO Test which side this is called oin
-        }
-
-    }
-
-    @Override
-    public void activate(T entity) {
+    public int getDuration(int level) {
+        return Balance.ea.REGENERATION_DURATION * 20;
     }
 
     @Override
@@ -52,5 +43,14 @@ public class RegenerationEntityAction<T extends CreatureEntity & IEntityActionUs
         } else {
             return 1;
         }
+    }
+
+    @Override
+    public void onUpdate(T entity, int duration) {
+        entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * Balance.ea.REGENERATION_AMOUNT / (getDuration(entity.getLevel()) * 20)); // seconds in ticks
+        if (duration % 15 == 0) {
+            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.HEART, entity.posX, entity.posY + 1, entity.posZ, 3, 0.2, 0.2, 0.2, 0);//TODO Test which side this is called oin
+        }
+
     }
 }

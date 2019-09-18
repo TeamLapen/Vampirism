@@ -31,6 +31,10 @@ public class FactionArgument implements ArgumentType<IPlayableFaction> {
         return (IPlayableFaction) context.getArgument(id, IFaction.class);
     }
 
+    public static FactionArgument factionArgument() {
+        return new FactionArgument();
+    }
+
     @Override
     public Collection<String> getExamples() {
         return EXAMPLES;
@@ -48,9 +52,5 @@ public class FactionArgument implements ArgumentType<IPlayableFaction> {
         if (faction == null) throw FACTION_NOT_FOUND.create(id);
         if (!(faction instanceof IPlayableFaction)) throw FACTION_NOT_PLAYABLE.create(id);
         return (IPlayableFaction) faction;
-    }
-
-    public static FactionArgument factionArgument() {
-        return new FactionArgument();
     }
 }

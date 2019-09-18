@@ -20,14 +20,13 @@ public class FlyingBloodParticleData implements IParticleData {
             return new FlyingBloodParticleData(particleTypeIn, buffer.readVarInt(), buffer.readBoolean(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readResourceLocation());
         }
     };
-
-    private ParticleType<FlyingBloodParticleData> particleType;
     private final int maxAge;
     private final ResourceLocation texture;
     private final boolean direct;
     private final double targetX;
     private final double targetY;
     private final double targetZ;
+    private ParticleType<FlyingBloodParticleData> particleType;
 
     public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn, boolean direct, double targetX, double targetY, double targetZ, ResourceLocation textureIn) {
         this.particleType = particleTypeIn;
@@ -43,6 +42,16 @@ public class FlyingBloodParticleData implements IParticleData {
         this(particleTypeIn, maxAgeIn, direct, targetX, targetY, targetZ, new ResourceLocation("minecraft", "critical_hit"));
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public int getMaxAge() {
+        return maxAge;
+    }
+
+    @Override
+    public String getParameters() {
+        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + maxAge + " " + texture;
+    }
+
     public double getTargetX() {
         return targetX;
     }
@@ -55,6 +64,11 @@ public class FlyingBloodParticleData implements IParticleData {
         return targetZ;
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public ResourceLocation getTexturePos() {
+        return texture;
+    }
+
     @Override
     public ParticleType<?> getType() {
         return particleType;
@@ -63,21 +77,6 @@ public class FlyingBloodParticleData implements IParticleData {
     @OnlyIn(Dist.CLIENT)
     public boolean isDirect() {
         return direct;
-    }
-
-    @Override
-    public String getParameters() {
-        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + maxAge + " " + texture;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public int getMaxAge() {
-        return maxAge;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public ResourceLocation getTexturePos() {
-        return texture;
     }
 
     @Override

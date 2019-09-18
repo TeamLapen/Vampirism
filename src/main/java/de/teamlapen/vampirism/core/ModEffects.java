@@ -24,7 +24,6 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @ObjectHolder(REFERENCE.MODID)
 public class ModEffects {
 
-    private static final Logger LOGGER = LogManager.getLogger(ModEffects.class);
     public static final Effect sanguinare = getNull();
     public static final Effect thirst = getNull();
     public static final Effect saturation = getNull();
@@ -32,6 +31,7 @@ public class ModEffects {
     public static final Effect disguise_as_vampire = getNull();
     public static final Effect fire_protection = getNull();
     public static final Effect garlic = getNull();
+    private static final Logger LOGGER = LogManager.getLogger(ModEffects.class);
     private static Effect modded_night_vision;  //Substituted version
     private static Effect vanilla_night_vision; //Vanilla night vision instance
 

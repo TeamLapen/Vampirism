@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.particle;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
@@ -21,12 +20,11 @@ public class GenericParticleData implements IParticleData {
             return new GenericParticleData(particleTypeIn, buffer.readResourceLocation(), buffer.readVarInt(), buffer.readVarInt(), buffer.readFloat());
         }
     };
-
-    private ParticleType<GenericParticleData> particleType;
     private final ResourceLocation texture;
     private final int color;
     private final int maxAge;
     private final float speed;
+    private ParticleType<GenericParticleData> particleType;
 
     public GenericParticleData(ParticleType<GenericParticleData> particleType, ResourceLocation texture, int maxAge, int color) {
         this(particleType, texture, maxAge, color, 1.0F);
@@ -40,6 +38,31 @@ public class GenericParticleData implements IParticleData {
         this.speed = speed;
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public int getColor() {
+        return color;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public int getMaxAge() {
+        return maxAge;
+    }
+
+    @Override
+    public String getParameters() {
+        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + texture + " " + maxAge + " " + color;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public float getSpeed() {
+        return speed;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public ResourceLocation getTexturePos() {
+        return texture;
+    }
+
     @Override
     public ParticleType<?> getType() {
         return particleType;
@@ -51,30 +74,5 @@ public class GenericParticleData implements IParticleData {
         packetBuffer.writeVarInt(maxAge);
         packetBuffer.writeVarInt(color);
         packetBuffer.writeFloat(speed);
-    }
-
-    @Override
-    public String getParameters() {
-        return ForgeRegistries.PARTICLE_TYPES.getKey(this.getType()) + " " + texture + " " + maxAge + " " + color;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public int getColor() {
-        return color;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public ResourceLocation getTexturePos() {
-        return texture;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public int getMaxAge() {
-        return maxAge;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getSpeed() {
-        return speed;
     }
 }

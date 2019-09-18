@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.tileentity.PedestalTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;

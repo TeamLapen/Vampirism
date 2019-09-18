@@ -35,10 +35,19 @@ import javax.annotation.Nullable;
  */
 public class ChurchAltarBlock extends VampirismBlock {
 
-    private final static String regName = "church_altar";
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    private final static String regName = "church_altar";
     private static final VoxelShape SHAPEX = makeShape();
     private static final VoxelShape SHAPEZ = UtilLib.rotateShape(SHAPEX, UtilLib.RotationAmount.NINETY);
+
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(1, 0, 5, 15, 1, 12);
+        VoxelShape b = Block.makeCuboidShape(7, 1, 7, 9, 12, 11);
+        VoxelShape c = Block.makeCuboidShape(1, 9, 3, 15, 14, 13);
+        VoxelShape r = VoxelShapes.or(a, b);
+        VoxelShape d = VoxelShapes.or(r, c);
+        return d;
+    }
 
 
     public ChurchAltarBlock() {
@@ -47,6 +56,17 @@ public class ChurchAltarBlock extends VampirismBlock {
 
     }
 
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState blockState, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        Direction dir = blockState.get(FACING);
+        if (dir == Direction.NORTH || dir == Direction.SOUTH) return SHAPEX;
+        return SHAPEZ;
+    }
 
     @Nullable
     @Override
@@ -57,13 +77,6 @@ public class ChurchAltarBlock extends VampirismBlock {
     @Override
     public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState blockState, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-        Direction dir = blockState.get(FACING);
-        if (dir == Direction.NORTH || dir == Direction.SOUTH) return SHAPEX;
-        return SHAPEZ;
     }
 
     @Override
@@ -91,19 +104,5 @@ public class ChurchAltarBlock extends VampirismBlock {
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(1, 0, 5, 15, 1, 12);
-        VoxelShape b = Block.makeCuboidShape(7, 1, 7, 9, 12, 11);
-        VoxelShape c = Block.makeCuboidShape(1, 9, 3, 15, 14, 13);
-        VoxelShape r = VoxelShapes.or(a, b);
-        VoxelShape d = VoxelShapes.or(r, c);
-        return d;
     }
 }

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player.actions;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionManager;

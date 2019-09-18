@@ -31,7 +31,7 @@ public interface IEntityWithHome {
      */
     default boolean isWithinHomeDistance(int posX, int posY, int posZ) {
 
-        return this.isWithinHomeDistance((double) posX, (double) posY, (double) posZ);
+        return this.isWithinHomeDistance(posX, posY, posZ);
     }
 
     /**

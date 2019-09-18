@@ -11,10 +11,6 @@ import javax.annotation.Nullable;
 public abstract class VampirismVillageEvent extends Event {
 
 
-
-
-
-
     /**
      * Fired when a new villager will be spawned.
      * Deny if none should spawn, allow and set villager if you own villager should spawn.
@@ -105,19 +101,18 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         /**
+         * Set the aggressive version of the old villager.
+         * Event has to be canceled for this to take effect
+         */
+        public <T extends VillagerEntity & IVillageCaptureEntity> void setAggressiveVillager(@Nullable T captureVillager) {
+            this.captureVillager = captureVillager;
+        }
+
+        /**
          * @return The villager which should be made aggressive
          */
         public VillagerEntity getOldVillager() {
             return oldVillager;
-        }
-
-        /**
-         * Set the aggressive version of the old villager.
-         * Event has to be canceled for this to take effect
-         *
-         */
-        public <T extends VillagerEntity & IVillageCaptureEntity> void setAggressiveVillager(@Nullable T captureVillager) {
-            this.captureVillager = captureVillager;
         }
     }
 }

@@ -36,12 +36,6 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
     }
 
     @Override
-    public void onPlantGrow(BlockState state, IWorld world, BlockPos pos, BlockPos source) {
-        if (Block.isDirt(getBlock()))
-            world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState(), 2);
-    }
-
-    @Override
     public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state) {
         return true;
     }
@@ -96,5 +90,11 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
                 ++j;
             }
         }
+    }
+
+    @Override
+    public void onPlantGrow(BlockState state, IWorld world, BlockPos pos, BlockPos source) {
+        if (Block.isDirt(getBlock()))
+            world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState(), 2);
     }
 }

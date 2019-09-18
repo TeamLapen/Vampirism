@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
-
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
@@ -62,11 +61,6 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     }
 
     @Override
-    public TIER getVampirismTier() {
-        return tier;
-    }
-
-    @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack) {
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
@@ -75,6 +69,11 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
         }
 
         return multimap;
+    }
+
+    @Override
+    public TIER getVampirismTier() {
+        return tier;
     }
 
     @Override

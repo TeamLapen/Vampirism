@@ -62,10 +62,10 @@ public class UpdateEntityPacket implements IMessage {
 
     public static void handle(final UpdateEntityPacket message, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-            ctx.enqueueWork(() -> { //Execute on main thread
-                VampLib.proxy.handleUpdateEntityPacket(message);
-            });
-            ctx.setPacketHandled(true);
+        ctx.enqueueWork(() -> { //Execute on main thread
+            VampLib.proxy.handleUpdateEntityPacket(message);
+        });
+        ctx.setPacketHandled(true);
     }
 
     /**
@@ -212,26 +212,25 @@ public class UpdateEntityPacket implements IMessage {
 
     }
 
-    public UpdateEntityPacket markAsPlayerItself() {
-        playerItself = true;
-        return this;
-    }
-
-
-    public int getId() {
-        return id;
+    public CompoundNBT getCaps() {
+        return caps;
     }
 
     public CompoundNBT getData() {
         return data;
     }
 
-    public CompoundNBT getCaps() {
-        return caps;
+    public int getId() {
+        return id;
     }
 
     public boolean isPlayerItself() {
         return playerItself;
+    }
+
+    public UpdateEntityPacket markAsPlayerItself() {
+        playerItself = true;
+        return this;
     }
 
 }

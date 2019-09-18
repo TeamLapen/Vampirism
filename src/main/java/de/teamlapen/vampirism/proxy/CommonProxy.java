@@ -14,12 +14,11 @@ import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 public abstract class CommonProxy implements IProxy {
 
     @Override
-    public void onInitStep(Step step, ModLifecycleEvent event) {
-    }
-
-
-    @Override
     public SkillTree getSkillTree(boolean client) {
         return SkillTreeManager.getInstance().getSkillTree();
+    }
+
+    @Override
+    public void onInitStep(Step step, ModLifecycleEvent event) {
     }
 }

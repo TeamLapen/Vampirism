@@ -1,7 +1,6 @@
 package de.teamlapen.lib.lib.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -29,7 +28,6 @@ public class ExtendedGui extends AbstractGui {
         float f6 = (float) (endColor >> 8 & 255) / 255.0F;
         float f7 = (float) (endColor & 255) / 255.0F;
         GlStateManager.disableTexture();
-        ;
         GlStateManager.enableBlend();
         GlStateManager.disableAlphaTest();
         GlStateManager.disableAlphaTest();
@@ -38,10 +36,10 @@ public class ExtendedGui extends AbstractGui {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder worldrenderer = tessellator.getBuffer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos((double) right, (double) top, (double) this.blitOffset).color(f1, f2, f3, f).endVertex();
-        worldrenderer.pos((double) left, (double) top, (double) this.blitOffset).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos((double) left, (double) bottom, (double) this.blitOffset).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos((double) right, (double) bottom, (double) this.blitOffset).color(f1, f2, f3, f).endVertex();
+        worldrenderer.pos(right, top, this.blitOffset).color(f1, f2, f3, f).endVertex();
+        worldrenderer.pos(left, top, this.blitOffset).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos(left, bottom, this.blitOffset).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos(right, bottom, this.blitOffset).color(f1, f2, f3, f).endVertex();
         tessellator.draw();
         GlStateManager.shadeModel(7424);
         GlStateManager.disableBlend();

@@ -19,9 +19,8 @@ import java.util.List;
 
 public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Instance> {
 
-    private final static Logger LOGGER = LogManager.getLogger();
-
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "faction");
+    private final static Logger LOGGER = LogManager.getLogger();
 
     public TriggerFaction() {
         super(ID, Listeners::new);
@@ -34,11 +33,11 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
         if (json.has("faction")) {
             ResourceLocation id = new ResourceLocation(json.get("faction").getAsString());
             IFaction faction1 = VampirismAPI.factionRegistry().getFactionByID(id);
-                if (faction1 == null || !(faction1 instanceof IPlayableFaction)) {
-                    LOGGER.warn("Given faction name does not exist or is not a playable faction: {}", id);
-                } else {
-                    faction = (IPlayableFaction) faction1;
-                }
+            if (faction1 == null || !(faction1 instanceof IPlayableFaction)) {
+                LOGGER.warn("Given faction name does not exist or is not a playable faction: {}", id);
+            } else {
+                faction = (IPlayableFaction) faction1;
+            }
 
         }
         int level = json.has("level") ? json.get("level").getAsInt() : 1;

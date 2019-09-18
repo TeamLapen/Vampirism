@@ -13,13 +13,8 @@ import org.apache.logging.log4j.Logger;
 
 @ObjectHolder(REFERENCE.MODID)
 public class ModWorld {
-    public static boolean debug = false;
     private static final Logger LOGGER = LogManager.getLogger();
-
-    public static class StructurePieceTypes {
-        public static final IStructurePieceType HUNTERCAMPFIRE = IStructurePieceType.register(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":huntercampfire");
-        public static final IStructurePieceType HUNTERCAMPTENT = IStructurePieceType.register(HunterCampPieces.Tent::new, REFERENCE.MODID + ":huntercamptent");
-    }
+    public static boolean debug = false;
 
     static void modifyVillageSize(GenerationSettings settings) {
 
@@ -43,5 +38,10 @@ public class ModWorld {
 
         LOGGER.debug("Modified MapGenVillage fields.");
 
+    }
+
+    public static class StructurePieceTypes {
+        public static final IStructurePieceType HUNTERCAMPFIRE = IStructurePieceType.register(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":huntercampfire");
+        public static final IStructurePieceType HUNTERCAMPTENT = IStructurePieceType.register(HunterCampPieces.Tent::new, REFERENCE.MODID + ":huntercamptent");
     }
 }

@@ -1,7 +1,6 @@
 package de.teamlapen.lib.lib.config;
 
 import com.google.common.collect.Maps;
-
 import de.teamlapen.lib.lib.util.LogUtil;
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
@@ -32,20 +31,14 @@ public abstract class BloodValueLoader extends ReloadListener {
     private int multiplier;
 
     /**
-     * @param locationIn data path folder with blood value files
-     * @param consumerIn the consumer which gets the ResourceLocation to Integer Map from the files
+     * @param locationIn       data path folder with blood value files
+     * @param consumerIn       the consumer which gets the ResourceLocation to Integer Map from the files
      * @param multiplierNameIn the ResourceLocation which declares a multiplier in data pack
      */
     public BloodValueLoader(String locationIn, BiConsumer<Map<ResourceLocation, Integer>, Integer> consumerIn, @Nullable ResourceLocation multiplierNameIn) {
         this.folderLocation = locationIn;
         this.consumer = consumerIn;
         this.multiplierName = multiplierNameIn;
-    }
-
-    @Nonnull
-    @Override
-    protected Object prepare(IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
-        return resourceManagerIn.getAllResourceLocations(folderLocation, (file) -> file.endsWith(".txt"));
     }
 
     @Override
@@ -126,5 +119,11 @@ public abstract class BloodValueLoader extends ReloadListener {
         }
         return bloodValues;
 
+    }
+
+    @Nonnull
+    @Override
+    protected Object prepare(IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
+        return resourceManagerIn.getAllResourceLocations(folderLocation, (file) -> file.endsWith(".txt"));
     }
 }

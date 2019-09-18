@@ -41,6 +41,10 @@ public abstract class SimpleSpawnerLogic {
         this.entityType = entityType;
     }
 
+    public int getSpawnedToday() {
+        return spawnedToday;
+    }
+
     public abstract BlockPos getSpawnerPosition();
 
     public abstract World getSpawnerWorld();
@@ -48,7 +52,7 @@ public abstract class SimpleSpawnerLogic {
     public boolean isActivated() {
         if (entityType == null) return false;
         BlockPos blockpos = this.getSpawnerPosition();
-        return this.getSpawnerWorld().isPlayerWithin((double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D, (double) this.activateRange);
+        return this.getSpawnerWorld().isPlayerWithin((double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D, this.activateRange);
     }
 
     public void readFromNbt(CompoundNBT nbt) {
@@ -98,6 +102,10 @@ public abstract class SimpleSpawnerLogic {
 
     public void setMinSpawnDelay(int minSpawnDelay) {
         this.minSpawnDelay = minSpawnDelay;
+    }
+
+    public void setSpawn(boolean spawn) {
+        this.flag = spawn;
     }
 
     public void setSpawnCount(int spawnCount) {
@@ -183,7 +191,7 @@ public abstract class SimpleSpawnerLogic {
 
     protected AxisAlignedBB getSpawningBox() {
         BlockPos blockpos = getSpawnerPosition();
-        return (new AxisAlignedBB((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ(), (double) (blockpos.getX() + 1), (double) (blockpos.getY() + 1), (double) (blockpos.getZ() + 1))).grow((double) this.spawnRange, (double) this.spawnRange, (double) this.spawnRange);
+        return (new AxisAlignedBB(blockpos.getX(), blockpos.getY(), blockpos.getZ(), blockpos.getX() + 1, blockpos.getY() + 1, blockpos.getZ() + 1)).grow(this.spawnRange, this.spawnRange, this.spawnRange);
 
     }
 
@@ -203,13 +211,5 @@ public abstract class SimpleSpawnerLogic {
             this.spawnDelay = this.minSpawnDelay + this.getSpawnerWorld().rand.nextInt(i);
         }
         onReset();
-    }
-
-    public int getSpawnedToday() {
-        return spawnedToday;
-    }
-
-    public void setSpawn(boolean spawn) {
-        this.flag = spawn;
     }
 }

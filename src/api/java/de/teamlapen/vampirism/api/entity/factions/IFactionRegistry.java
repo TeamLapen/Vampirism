@@ -68,7 +68,7 @@ public interface IFactionRegistry {
     /**
      * Create and registerAdvancements a non playable faction. Has to be called during InterModEnqueueEvent
      *
-     * @param id            Faction id e.g. for level command
+     * @param id              Faction id e.g. for level command
      * @param entityInterface Interface all entities implement
      * @param color           Color e.g. for level rendering
      * @param <T>             Interface all entities implement
@@ -80,12 +80,12 @@ public interface IFactionRegistry {
     /**
      * Create and registerAdvancements a playable faction. Has to be called during InterModEnqueueEvent
      *
-     * @param id             Faction id e.g. for level command
-     * @param entityInterface  Interface all entities or (the given capability for players) implement
-     * @param color            Color e.g. for level rendering
+     * @param id                       Faction id e.g. for level command
+     * @param entityInterface          Interface all entities or (the given capability for players) implement
+     * @param color                    Color e.g. for level rendering
      * @param playerCapabilitySupplier The capability which is attached to all players
-     * @param highestLevel     The highest reachable player level
-     * @param <T>              nterface all entities or (the given capability for players)  implement
+     * @param highestLevel             The highest reachable player level
+     * @param <T>                      nterface all entities or (the given capability for players)  implement
      * @return The created faction
      */
     @ThreadSafeAPI

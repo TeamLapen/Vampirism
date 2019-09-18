@@ -51,21 +51,6 @@ public class ModEntityEventHandler {
     private boolean warnAboutCreeper = true;
 
     @SubscribeEvent
-    public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (event.getEntity() instanceof CreatureEntity) {
-            event.getEntity().getEntityWorld().getProfiler().startSection("vampirism_extended_creature");
-            ExtendedCreature.get((CreatureEntity) event.getEntity()).tick();
-            event.getEntity().getEntityWorld().getProfiler().endSection();
-
-        } else if (!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) event.getEntity();
-            if (player.openContainer instanceof BloodPotionTableContainer) {
-                ((BloodPotionTableContainer) player.openContainer).tick();
-            }
-        }
-    }
-
-    @SubscribeEvent
     public void onAttachCapabilityEntity(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof CreatureEntity) {
             event.addCapability(REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.createNewCapability((CreatureEntity) event.getObject()));
@@ -158,6 +143,12 @@ public class ModEntityEventHandler {
         }
     }
 
+    @SubscribeEvent
+    public void onEyeHeightSet(EntityEvent.EyeHeight event) {
+        if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity)
+            event.setNewHeight(event.getOldHeight() * 0.875f);
+    }
+
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
         if (event.getTo().getItem() instanceof VampirismVampireSword) {
@@ -166,8 +157,17 @@ public class ModEntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onEyeHeightSet(EntityEvent.EyeHeight event) {
-        if (event.getEntity() instanceof VampireBaseEntity || event.getEntity() instanceof HunterBaseEntity)
-            event.setNewHeight(event.getOldHeight() * 0.875f);
+    public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
+        if (event.getEntity() instanceof CreatureEntity) {
+            event.getEntity().getEntityWorld().getProfiler().startSection("vampirism_extended_creature");
+            ExtendedCreature.get((CreatureEntity) event.getEntity()).tick();
+            event.getEntity().getEntityWorld().getProfiler().endSection();
+
+        } else if (!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) event.getEntity();
+            if (player.openContainer instanceof BloodPotionTableContainer) {
+                ((BloodPotionTableContainer) player.openContainer).tick();
+            }
+        }
     }
 }

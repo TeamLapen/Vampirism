@@ -23,14 +23,9 @@ import javax.annotation.Nullable;
  */
 @OnlyIn(Dist.CLIENT)
 public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
-    private final int MAX_AGE = 60;
     private static final Logger LOGGER = LogManager.getLogger();
+    private final int MAX_AGE = 60;
     private final Entity entity;
-
-    @Override
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
-    }
 
     public FlyingBloodEntityParticle(World world, double posX, double posY, double posZ, Entity entity, boolean direct) {
         super(world, posX, posY, posZ, 0D, 0D, 0D);
@@ -56,6 +51,11 @@ public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
         }
         this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(new ResourceLocation("minecraft", "critical_hit")));
         //this.tick();
+    }
+
+    @Override
+    public IParticleRenderType getRenderType() {
+        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override

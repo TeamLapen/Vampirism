@@ -22,13 +22,7 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
     }
 
     @Override
-    public int getDuration(int level) {
-        return Balance.ea.SPEED_DURATION * 20;
-    }
-
-    @Override
-    public int getCooldown(int level) {
-        return Balance.ea.SPEED_COOLDOWN * 20;
+    public void activate(T entity) {
     }
 
     @Override
@@ -37,18 +31,13 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
     }
 
     @Override
-    public void onUpdate(T entity, int duration) {
-        if (!entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(new AttributeModifier(UUIDS, "speedaction", Balance.ea.SPEED_AMOUNT, AttributeModifier.Operation.MULTIPLY_TOTAL))) {
-            entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(UUIDS, "speedaction", Balance.ea.SPEED_AMOUNT, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        }
-        if (duration % 5 == 0) {
-            double maxDist = 0.5D;
-            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.CLOUD, entity.posX + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, entity.posY + 0.1, entity.posZ + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, 3, 0.3f, 0.3f, 0.3f, 0.02f);
-        }
+    public int getCooldown(int level) {
+        return Balance.ea.SPEED_COOLDOWN * 20;
     }
 
     @Override
-    public void activate(T entity) {
+    public int getDuration(int level) {
+        return Balance.ea.SPEED_DURATION * 20;
     }
 
     @Override
@@ -60,6 +49,17 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
             return 2;
         } else {
             return 1;
+        }
+    }
+
+    @Override
+    public void onUpdate(T entity, int duration) {
+        if (!entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(new AttributeModifier(UUIDS, "speedaction", Balance.ea.SPEED_AMOUNT, AttributeModifier.Operation.MULTIPLY_TOTAL))) {
+            entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(UUIDS, "speedaction", Balance.ea.SPEED_AMOUNT, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        }
+        if (duration % 5 == 0) {
+            double maxDist = 0.5D;
+            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.CLOUD, entity.posX + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, entity.posY + 0.1, entity.posZ + (entity.getRNG().nextDouble() * maxDist) - maxDist / 2, 3, 0.3f, 0.3f, 0.3f, 0.02f);
         }
     }
 }

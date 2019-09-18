@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Either;
-
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -44,24 +43,6 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
         this.reqLevel = reqLevelIn;
     }
 
-    @Override
-    public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.alchemical_cauldron;
-    }
-
-    @Override
-    public boolean matches(IInventory inv, World worldIn) {
-        boolean match = this.ingredient.test(inv.getStackInSlot(0));
-        AtomicBoolean fluidMatch = new AtomicBoolean(true);
-        fluid.ifLeft((ingredient1 -> fluidMatch.set(fluid.left().get().test(inv.getStackInSlot(3)))));
-        fluid.ifRight((ingredient1 -> {
-            fluidMatch.set(false);
-            LazyOptional<FluidStack> stack = FluidUtil.getFluidContained(inv.getStackInSlot(3));
-            stack.ifPresent((handlerItem) -> fluidMatch.set(fluid.right().get().isFluidEqual(handlerItem) && fluid.right().get().getAmount() <= handlerItem.getAmount()));
-        }));
-        return match && fluidMatch.get();
-    }
-
     public boolean canBeCooked(int level, ISkillHandler<IHunterPlayer> skillHandler) {
         if (level < reqLevel) return false;
         if (skills == null) return true;
@@ -83,6 +64,24 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
     @Nonnull
     public ISkill[] getRequiredSkills() {
         return (skills == null) ? EMPTY_SKILLS : skills;
+    }
+
+    @Override
+    public IRecipeSerializer<?> getSerializer() {
+        return ModRecipes.alchemical_cauldron;
+    }
+
+    @Override
+    public boolean matches(IInventory inv, World worldIn) {
+        boolean match = this.ingredient.test(inv.getStackInSlot(0));
+        AtomicBoolean fluidMatch = new AtomicBoolean(true);
+        fluid.ifLeft((ingredient1 -> fluidMatch.set(fluid.left().get().test(inv.getStackInSlot(3)))));
+        fluid.ifRight((ingredient1 -> {
+            fluidMatch.set(false);
+            LazyOptional<FluidStack> stack = FluidUtil.getFluidContained(inv.getStackInSlot(3));
+            stack.ifPresent((handlerItem) -> fluidMatch.set(fluid.right().get().isFluidEqual(handlerItem) && fluid.right().get().getAmount() <= handlerItem.getAmount()));
+        }));
+        return match && fluidMatch.get();
     }
 
     @Override

@@ -68,7 +68,6 @@ public class Helper {
                                 }
 
 
-
                             }
                         } catch (NullPointerException e) {
                             //Strange thing which happen in 1.7.10, not sure about 1.8

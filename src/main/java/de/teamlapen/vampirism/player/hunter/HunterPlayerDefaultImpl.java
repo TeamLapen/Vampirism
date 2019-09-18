@@ -20,6 +20,7 @@ import java.util.function.Predicate;
 class HunterPlayerDefaultImpl implements IHunterPlayer {
 
     private final static Logger LOGGER = LogManager.getLogger(HunterPlayerDefaultImpl.class);
+
     public HunterPlayerDefaultImpl() {
         LOGGER.error("Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
 

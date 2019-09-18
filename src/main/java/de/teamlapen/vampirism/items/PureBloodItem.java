@@ -20,26 +20,9 @@ import java.util.List;
 
 public class PureBloodItem extends VampirismItem {
 
-    private final static Logger LOGGER = LogManager.getLogger();
     public static final int COUNT = 5;
+    private final static Logger LOGGER = LogManager.getLogger();
     private final static String name = "pure_blood";
-    private final int level;
-
-    public PureBloodItem(int level) {
-        super(name + "_" + level, new Properties().group(VampirismMod.creativeTab));
-        this.level = level;
-        this.setTranslation_key(name);
-    }
-
-    public ITextComponent getCustomName() {
-        return new TranslationTextComponent(this.getDefaultTranslationKey()).appendText(" " + (level + 1));
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("item.vampirism.pure_blood.purity").appendText(": " + (level + 1 + "/" + COUNT)).applyTextStyle(TextFormatting.RED));
-    }
 
     public static Item getBloodItemForLevel(int level) {
         switch (level) {
@@ -57,6 +40,23 @@ public class PureBloodItem extends VampirismItem {
                 LOGGER.warn("Pure blood of level {} does not exist", level);
                 return ModItems.pure_blood_4;
         }
+    }
+    private final int level;
+
+    public PureBloodItem(int level) {
+        super(name + "_" + level, new Properties().group(VampirismMod.creativeTab));
+        this.level = level;
+        this.setTranslation_key(name);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new TranslationTextComponent("item.vampirism.pure_blood.purity").appendText(": " + (level + 1 + "/" + COUNT)).applyTextStyle(TextFormatting.RED));
+    }
+
+    public ITextComponent getCustomName() {
+        return new TranslationTextComponent(this.getDefaultTranslationKey()).appendText(" " + (level + 1));
     }
 
 }

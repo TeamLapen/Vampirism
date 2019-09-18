@@ -9,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class BiomeCommand extends BasicCommand {

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.render.particle;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
 import net.minecraft.client.Minecraft;
@@ -48,16 +47,6 @@ public class HalloweenParticle extends SpriteTexturedParticle {
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if (this.entity == null) {
-            DraculaHalloweenEntity entityelderguardian = ModEntities.special_dracula_halloween.create(this.world);
-            entityelderguardian.setParticle(true);
-            this.entity = entityelderguardian;
-        }
-    }
-
-    @Override
     public void renderParticle(BufferBuilder buffer, ActiveRenderInfo entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         if (this.entity != null) {
             EntityRendererManager rendermanager = Minecraft.getInstance().getRenderManager();
@@ -91,6 +80,16 @@ public class HalloweenParticle extends SpriteTexturedParticle {
             GlStateManager.popMatrix();
 
 
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.entity == null) {
+            DraculaHalloweenEntity entityelderguardian = ModEntities.special_dracula_halloween.create(this.world);
+            entityelderguardian.setParticle(true);
+            this.entity = entityelderguardian;
         }
     }
 

@@ -36,8 +36,8 @@ import org.apache.logging.log4j.Logger;
 public class BloodContainerBlock extends VampirismBlockContainer {
 
     public final static String regName = "blood_container";
-    private final static Logger LOGGER = LogManager.getLogger();
     protected static final VoxelShape containerShape = Block.makeCuboidShape(2, 0, 2, 14, 16, 14);
+    private final static Logger LOGGER = LogManager.getLogger();
 
     public BloodContainerBlock() {
         super(regName, Properties.create(Material.GLASS).hardnessAndResistance(1f));
@@ -49,12 +49,6 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
-
-
-    @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         super.fillItemGroup(group, items);
         ItemStack stack = new ItemStack(this, 1);
@@ -64,8 +58,18 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.TRANSLUCENT;
+    }
+
+    @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return containerShape;
     }
 
     @Override
@@ -76,11 +80,6 @@ public class BloodContainerBlock extends VampirismBlockContainer {
             stack.setTagInfo("fluid", fluid.writeToNBT(new CompoundNBT()));
         }
         spawnAsEntity(worldIn, pos, stack);
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return containerShape;
     }
 
     @Override

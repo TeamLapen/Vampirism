@@ -18,11 +18,6 @@ public class EnchantmentArrowFrugality extends Enchantment {
     }
 
     @Override
-    protected String getDefaultTranslationKey() {
-        return "vampirism.arrow_frugality";
-    }
-
-    @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
         return !stack.isEmpty() && stack.getItem() instanceof TechCrossbowItem;
     }
@@ -40,5 +35,10 @@ public class EnchantmentArrowFrugality extends Enchantment {
     @Override
     public int getMinEnchantability(int enchantmentLevel) {
         return 10 + enchantmentLevel * 5;
+    }
+
+    @Override
+    protected String getDefaultTranslationKey() {
+        return "vampirism.arrow_frugality";
     }
 }

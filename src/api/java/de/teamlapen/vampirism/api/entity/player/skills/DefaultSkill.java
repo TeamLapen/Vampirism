@@ -44,6 +44,11 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     }
 
     @Override
+    public String getTranslationKey() {
+        return translationKey == null ? translationKey = "skill." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() : translationKey;
+    }
+
+    @Override
     public final void onDisable(IFactionPlayer player) {
         removeAttributesModifiersFromEntity(player.getRepresentingPlayer());
         player.getActionHandler().relockActions(getActions());
@@ -83,11 +88,6 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     @Override
     public String toString() {
         return getRegistryName() + "(" + getClass().getSimpleName() + ")";
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return translationKey == null ? translationKey = "skill." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() : translationKey;
     }
 
     /**

@@ -17,13 +17,9 @@ public class IgnoreSunDamageEntityAction<T extends CreatureEntity & IEntityActio
     }
 
     @Override
-    public int getCooldown(int level) {
-        return Balance.ea.IGNORE_SUNDAMAGE_COOLDOWN * 20;
-    }
+    public void activate(T entity) {
+        entity.addPotionEffect(new EffectInstance(ModEffects.sunscreen, getDuration(entity.getLevel()), 0));
 
-    @Override
-    public int getDuration(int level) {
-        return Balance.ea.IGNORE_SUNDAMAGE_DURATION * 20;
     }
 
     @Override
@@ -34,13 +30,13 @@ public class IgnoreSunDamageEntityAction<T extends CreatureEntity & IEntityActio
     }
 
     @Override
-    public void onUpdate(T entity, int duration) {
+    public int getCooldown(int level) {
+        return Balance.ea.IGNORE_SUNDAMAGE_COOLDOWN * 20;
     }
 
     @Override
-    public void activate(T entity) {
-        entity.addPotionEffect(new EffectInstance(ModEffects.sunscreen, getDuration(entity.getLevel()), 0));
-
+    public int getDuration(int level) {
+        return Balance.ea.IGNORE_SUNDAMAGE_DURATION * 20;
     }
 
     @Override
@@ -49,5 +45,9 @@ public class IgnoreSunDamageEntityAction<T extends CreatureEntity & IEntityActio
             return 0;
         }
         return ((IVampire) entity).isGettingSundamage() ? 3 : 1;
+    }
+
+    @Override
+    public void onUpdate(T entity, int duration) {
     }
 }

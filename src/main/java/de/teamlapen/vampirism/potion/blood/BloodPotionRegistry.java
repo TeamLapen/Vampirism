@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
@@ -33,8 +32,30 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
     private final Queue<Triple<ResourceLocation, Boolean, Object[]>> categoryItemsQueue = new ConcurrentLinkedQueue<>();
     private final Queue<Triple<ResourceLocation, Boolean, BloodPotionEffect>> potionsEffectsQueue = new ConcurrentLinkedQueue<>();
 
+    @ThreadSafeAPI
+    @Override
+    public void addItemsToCategory(boolean bad, @Nonnull ResourceLocation categoryId, Item... items) {
+        categoryItemsQueue.add(Triple.of(categoryId, bad, items));
+    }
 
+    public void finish() {
+        for (Triple<ResourceLocation, Boolean, Object[]> t : categoryItemsQueue) {
+            IBloodPotionCategory cat = getOrCreateCategory(t.getLeft(), t.getMiddle());
+            cat.addItems(t.getRight());
+        }
 
+        for (Triple<ResourceLocation, Boolean, BloodPotionEffect> t : potionsEffectsQueue) {
+            IBloodPotionCategory cat = getOrCreateCategory(t.getLeft(), t.getMiddle());
+            BloodPotionEffect effect = t.getRight();
+            if (allEffects.containsKey(effect.getId())) {
+                throw new IllegalArgumentException("Blood Potion Effect with id " + effect.getId() + " is already registered: " + allEffects.get(effect.getId()));
+            }
+            allEffects.put(effect.getId(), effect);
+            ((BloodPotionCategory) cat).addEffect(effect, effect.getWeight());
+        }
+        categoryItemsQueue.clear();
+        potionsEffectsQueue.clear();
+    }
 
     @Nullable
     @Override
@@ -59,12 +80,6 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
         return desc;
     }
 
-    @ThreadSafeAPI
-    @Override
-    public void addItemsToCategory(boolean bad, @Nonnull ResourceLocation categoryId, Item... items) {
-        categoryItemsQueue.add(Triple.of(categoryId, bad, items));
-    }
-
     @Nonnull
     @Override
     public IBloodPotionEffect getRandomEffect(@Nonnull ItemStack item, boolean bad, Random rnd) {
@@ -82,25 +97,6 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
 
         }
         return WeightedRandom.getRandomItem(rnd, effects).effect;
-    }
-
-    public void finish() {
-        for (Triple<ResourceLocation, Boolean, Object[]> t : categoryItemsQueue) {
-            IBloodPotionCategory cat = getOrCreateCategory(t.getLeft(), t.getMiddle());
-            cat.addItems(t.getRight());
-        }
-
-        for (Triple<ResourceLocation, Boolean, BloodPotionEffect> t : potionsEffectsQueue) {
-            IBloodPotionCategory cat = getOrCreateCategory(t.getLeft(), t.getMiddle());
-            BloodPotionEffect effect = t.getRight();
-            if (allEffects.containsKey(effect.getId())) {
-                throw new IllegalArgumentException("Blood Potion Effect with id " + effect.getId() + " is already registered: " + allEffects.get(effect.getId()));
-            }
-            allEffects.put(effect.getId(), effect);
-            ((BloodPotionCategory) cat).addEffect(effect, effect.getWeight());
-        }
-        categoryItemsQueue.clear();
-        potionsEffectsQueue.clear();
     }
 
     @ThreadSafeAPI

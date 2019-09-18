@@ -39,22 +39,57 @@ import javax.annotation.Nullable;
 
 
 public class WeaponTableBlock extends VampirismBlock {
-    private static final ITextComponent name = new TranslationTextComponent("gui.vampirism.hunter_weapon_table");
     public final static String regName = "weapon_table";
     public static final int MAX_LAVA = 5;
     public static final int MB_PER_META = 200;
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-
     public static final IntegerProperty LAVA = IntegerProperty.create("lava", 0, MAX_LAVA);
+    private static final ITextComponent name = new TranslationTextComponent("gui.vampirism.hunter_weapon_table");
     private static final VoxelShape NORTH = makeShape();
     private static final VoxelShape EAST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.NINETY);
     private static final VoxelShape SOUTH = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
     private static final VoxelShape WEST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
 
+    private static VoxelShape makeShape() {
+        VoxelShape a = Block.makeCuboidShape(3, 0, 0, 13, 2, 8);
+        VoxelShape b = Block.makeCuboidShape(4, 2, 1, 12, 3, 7);
+        VoxelShape c = Block.makeCuboidShape(5, 3, 2, 11, 6, 6);
+        VoxelShape d = Block.makeCuboidShape(3, 6, 0, 13, 9.5, 8);
+
+        VoxelShape e = Block.makeCuboidShape(0, 1, 9, 7, 2, 16);
+        VoxelShape e1 = Block.makeCuboidShape(0, 0, 9, 2, 1, 11);
+        VoxelShape e2 = Block.makeCuboidShape(5, 0, 9, 7, 1, 11);
+        VoxelShape e3 = Block.makeCuboidShape(0, 0, 14, 2, 1, 16);
+        VoxelShape e4 = Block.makeCuboidShape(5, 0, 14, 7, 1, 16);
+
+        VoxelShape e5 = Block.makeCuboidShape(0, 1, 9, 1, 7, 16);
+        VoxelShape e6 = Block.makeCuboidShape(0, 1, 9, 7, 7, 10);
+        VoxelShape e7 = Block.makeCuboidShape(7, 1, 16, 0, 7, 15);
+        VoxelShape e8 = Block.makeCuboidShape(7, 1, 16, 6, 7, 9);
+
+        VoxelShape f = Block.makeCuboidShape(10, 0, 11, 15, 3, 14);
+        VoxelShape g = Block.makeCuboidShape(12, 3, 12, 13, 10, 13);
+
+        return VoxelShapes.or(a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, f, g);
+    }
+
     public WeaponTableBlock() {
         super(regName, Properties.create(Material.IRON).hardnessAndResistance(3));
         this.setDefaultState(this.getStateContainer().getBaseState().with(LAVA, 0).with(FACING, Direction.NORTH));
 
+    }
+
+    @Nullable
+    @Override
+    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
+        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
+            return new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos));
+        }, name);
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Override
@@ -79,18 +114,13 @@ public class WeaponTableBlock extends VampirismBlock {
     }
 
     @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
-    }
-
-    @Override
     public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
     }
 
     @Override
@@ -123,8 +153,7 @@ public class WeaponTableBlock extends VampirismBlock {
 
                 if (canUse(player)) {
                     player.openContainer(state.getContainer(world, pos));
-                }
-                else {
+                } else {
                     player.sendMessage(new TranslationTextComponent("text.vampirism.weapon_table.cannot_use"));
                 }
             }
@@ -132,20 +161,15 @@ public class WeaponTableBlock extends VampirismBlock {
         return true;
     }
 
-    @Nullable
-    @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
-            return new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos));
-        }, name);
-    }
-
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
-
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(LAVA, FACING);
+    }
 
     /**
      * @return If the given player is allowed to use this.
@@ -156,34 +180,5 @@ public class WeaponTableBlock extends VampirismBlock {
             return faction.getPlayerCapability(player).getSkillHandler().isSkillEnabled(HunterSkills.weapon_table);
         }
         return false;
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(LAVA, FACING);
-    }
-
-
-    private static VoxelShape makeShape() {
-        VoxelShape a = Block.makeCuboidShape(3, 0, 0, 13, 2, 8);
-        VoxelShape b = Block.makeCuboidShape(4, 2, 1, 12, 3, 7);
-        VoxelShape c = Block.makeCuboidShape(5, 3, 2, 11, 6, 6);
-        VoxelShape d = Block.makeCuboidShape(3, 6, 0, 13, 9.5, 8);
-
-        VoxelShape e = Block.makeCuboidShape(0, 1, 9, 7, 2, 16);
-        VoxelShape e1 = Block.makeCuboidShape(0, 0, 9, 2, 1, 11);
-        VoxelShape e2 = Block.makeCuboidShape(5, 0, 9, 7, 1, 11);
-        VoxelShape e3 = Block.makeCuboidShape(0, 0, 14, 2, 1, 16);
-        VoxelShape e4 = Block.makeCuboidShape(5, 0, 14, 7, 1, 16);
-
-        VoxelShape e5 = Block.makeCuboidShape(0, 1, 9, 1, 7, 16);
-        VoxelShape e6 = Block.makeCuboidShape(0, 1, 9, 7, 7, 10);
-        VoxelShape e7 = Block.makeCuboidShape(7, 1, 16, 0, 7, 15);
-        VoxelShape e8 = Block.makeCuboidShape(7, 1, 16, 6, 7, 9);
-
-        VoxelShape f = Block.makeCuboidShape(10, 0, 11, 15, 3, 14);
-        VoxelShape g = Block.makeCuboidShape(12, 3, 12, 13, 10, 13);
-
-        return VoxelShapes.or(a, b, c, d, e, e1, e2, e3, e4, e5, e6, e7, e8, f, g);
     }
 }

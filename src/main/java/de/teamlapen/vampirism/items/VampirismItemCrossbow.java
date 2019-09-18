@@ -46,10 +46,6 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         return enchantability;
     }
 
-    public void setEnchantability(ItemTier material) {
-        this.enchantability = material.getEnchantability();
-    }
-
     @Override
     public int getMinLevel(@Nonnull ItemStack stack) {
         return 0;
@@ -67,7 +63,6 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         return VReference.HUNTER_FACTION;
     }
 
-
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
@@ -75,6 +70,9 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
+    public void setEnchantability(ItemTier material) {
+        this.enchantability = material.getEnchantability();
+    }
 
     /**
      * Searches Offhand,Mainhand and the inventory afterwards for arrows

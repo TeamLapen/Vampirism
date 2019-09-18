@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.client.model.BipedShrinkableModel;
 import de.teamlapen.vampirism.entity.minions.vampire.VampireMinionBaseEntity;

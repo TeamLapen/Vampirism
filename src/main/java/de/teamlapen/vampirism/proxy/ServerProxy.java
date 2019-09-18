@@ -17,14 +17,14 @@ public class ServerProxy extends CommonProxy {
         return null;
     }
 
-    @Override
-    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
-
-    }
-
     @Nullable
     @Override
     public Entity getMouseOverEntity() {
         return null;
+    }
+
+    @Override
+    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
+
     }
 }

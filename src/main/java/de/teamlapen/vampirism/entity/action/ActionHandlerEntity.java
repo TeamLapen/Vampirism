@@ -35,11 +35,41 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
         this.availableActions = entityIn.getAvailableActions();
     }
 
-    public void startExecuting() {
-        action = null;
-        cooldown = 50;
-        duration = -1;
-        preActivation = -1;
+    public IEntityAction getAction() {
+        return action;
+    }
+
+    public void handle() {
+        if (!entity.world.isRemote && availableActions != null && !availableActions.isEmpty()) {
+            if (entity.getAttackTarget() instanceof PlayerEntity) {
+                if (isPlayerTarget) {
+                    updateHandler();
+                } else {
+                    startExecuting();
+                    isPlayerTarget = true;
+                }
+            } else {
+                if (isPlayerTarget) {
+                    isPlayerTarget = false;
+                    deactivateAction();
+                }
+            }
+        }
+    }
+
+    public boolean isPlayerTarget() {
+        return isPlayerTarget;
+    }
+
+    public void read(CompoundNBT nbt) {
+        if (nbt.contains("activeAction")) {
+            deactivateAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation(nbt.getString("activeAction"))));
+            isPlayerTarget = true;
+        }
+    }
+
+    public void removeAction(IEntityAction actionIn) {
+        availableActions.remove(actionIn);
     }
 
     /**
@@ -51,6 +81,19 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
         this.availableActions = actionsIn;
         if (availableActions.contains(EntityActions.entity_heal)) {
             availableActions.remove(EntityActions.entity_regeneration);
+        }
+    }
+
+    public void startExecuting() {
+        action = null;
+        cooldown = 50;
+        duration = -1;
+        preActivation = -1;
+    }
+
+    public void write(CompoundNBT nbt) {
+        if (isPlayerTarget() && getAction() != null) {
+            nbt.putString("activeAction", action.getRegistryName().toString());
         }
     }
 
@@ -75,6 +118,30 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
     }
 
     /**
+     * elevates the chance of the actions, based on the entity and its target
+     */
+    @Nullable
+    private IEntityAction chooseNewAction() {
+        List<EntityActionEntry> entry = Lists.newArrayList();
+        int weightsum = 0;
+        for (IEntityAction e : availableActions) {
+            int weight = e.getWeight(entity);
+            if (weight > 0) {
+                entry.add(new EntityActionEntry(weight, e));
+                weightsum += weight;
+            }
+        }
+        if (weightsum > 0) {
+            return WeightedRandom.getRandomItem(entity.getRNG(), entry, weightsum).getAction();
+        }
+        return null;
+    }
+
+    private void deactivateAction() {
+        deactivateAction(null);
+    }
+
+    /**
      * reset the given {@link IEntityAction} or if null, reset the {@link ActionHandlerEntity#action}
      *
      * @param actionIn
@@ -84,10 +151,6 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
         if (action instanceof ILastingAction) {
             ((ILastingAction<T>) action).deactivate(entity);
         }
-    }
-
-    private void deactivateAction() {
-        deactivateAction(null);
     }
 
     /**
@@ -141,65 +204,6 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
         }
     }
 
-    public void handle() {
-        if (!entity.world.isRemote && availableActions != null && !availableActions.isEmpty()) {
-            if (entity.getAttackTarget() instanceof PlayerEntity) {
-                if (isPlayerTarget) {
-                    updateHandler();
-                } else {
-                    startExecuting();
-                    isPlayerTarget = true;
-                }
-            } else {
-                if (isPlayerTarget) {
-                    isPlayerTarget = false;
-                    deactivateAction();
-                }
-            }
-        }
-    }
-
-    public void read(CompoundNBT nbt) {
-        if (nbt.contains("activeAction")) {
-            deactivateAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation(nbt.getString("activeAction"))));
-            isPlayerTarget = true;
-        }
-    }
-
-    public IEntityAction getAction() {
-        return action;
-    }
-
-    public boolean isPlayerTarget() {
-        return isPlayerTarget;
-    }
-
-    public void write(CompoundNBT nbt) {
-        if (isPlayerTarget() && getAction() != null) {
-            nbt.putString("activeAction", action.getRegistryName().toString());
-        }
-    }
-
-    /**
-     * elevates the chance of the actions, based on the entity and its target
-     */
-    @Nullable
-    private IEntityAction chooseNewAction() {
-        List<EntityActionEntry> entry = Lists.newArrayList();
-        int weightsum = 0;
-        for (IEntityAction e : availableActions) {
-            int weight = e.getWeight(entity);
-            if (weight > 0) {
-                entry.add(new EntityActionEntry(weight, e));
-                weightsum += weight;
-            }
-        }
-        if (weightsum > 0) {
-            return WeightedRandom.getRandomItem(entity.getRNG(), entry, weightsum).getAction();
-        }
-        return null;
-    }
-
     /**
      * updates the {@link ActionHandlerEntity#action}
      **/
@@ -209,9 +213,5 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
         } else if (action instanceof IInstantAction) {
             ((IInstantAction<T>) action).updatePreAction(entity, preActivation);
         }
-    }
-
-    public void removeAction(IEntityAction actionIn) {
-        availableActions.remove(actionIn);
     }
 }

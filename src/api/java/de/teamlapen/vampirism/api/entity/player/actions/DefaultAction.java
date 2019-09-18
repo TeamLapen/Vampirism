@@ -22,7 +22,6 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
 
     /**
      * Can be overridden to check additional requirements
-     *
      */
     public boolean canBeUsedBy(T player) {
         return true;
@@ -47,6 +46,11 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
         return faction;
     }
 
+    @Override
+    public String getTranslationKey() {
+        return translationKey == null ? translationKey = "action." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() : translationKey;
+    }
+
     /**
      * @return Should return false if deactivated in configs
      */
@@ -60,11 +64,6 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
         } else {
             throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + faction.getFactionPlayerInterface());
         }
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return translationKey == null ? translationKey = "action." + getRegistryName().getNamespace() + "." + getRegistryName().getPath() : translationKey;
     }
 
     @Override

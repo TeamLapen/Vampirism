@@ -22,6 +22,10 @@ public interface IItemWithTier {
         }
     }
 
+    /**
+     * @return The tier of the item stack
+     */
+    TIER getVampirismTier();
 
     enum TIER implements IStringSerializable {
         NORMAL, ENHANCED, ULTIMATE;
@@ -32,10 +36,5 @@ public interface IItemWithTier {
             return name().toLowerCase();
         }
     }
-
-    /**
-     * @return The tier of the item stack
-     */
-    TIER getVampirismTier();
 
 }

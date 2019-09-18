@@ -29,14 +29,13 @@ public class BloodFluid extends VampirismFluid {
 
     @Nonnull
     @Override
-    protected FluidAttributes createAttributes() {
-        return FluidAttributes.builder(new ResourceLocation(REFERENCE.MODID, "block/blood_still"), new ResourceLocation(REFERENCE.MODID, "block/blood_flow")).color(0xEEFF1111).density(1300).temperature(309).viscosity(3000).rarity(Rarity.UNCOMMON).build(this);
+    public VoxelShape func_215664_b(@Nonnull IFluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos) {
+        return VoxelShapes.fullCube();
     }
 
-    @Nonnull
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
+    public float getActualHeight(@Nonnull IFluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos) {
+        return 0;
     }
 
     @Nonnull
@@ -45,31 +44,9 @@ public class BloodFluid extends VampirismFluid {
         return ModItems.blood_bucket;
     }
 
-    @Nonnull
     @Override
-    protected Vec3d getFlow(@Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos, @Nonnull IFluidState fluidState) {
-        return Vec3d.ZERO;
-    }
-
-    @Override
-    public int getTickRate(@Nonnull IWorldReader worldReader) {
-        return 5;
-    }
-
-    @Override
-    protected float getExplosionResistance() {
-        return 100.0F;
-    }
-
-    @Nonnull
-    @Override
-    protected BlockState getBlockState(@Nonnull IFluidState state) {
-        return Blocks.AIR.getDefaultState();
-    }
-
-    @Override
-    public boolean isSource(@Nonnull IFluidState state) {
-        return false;
+    public float getHeight(@Nonnull IFluidState fluidState) {
+        return 0;
     }
 
     @Override
@@ -79,8 +56,18 @@ public class BloodFluid extends VampirismFluid {
 
     @Nonnull
     @Override
-    public VoxelShape func_215664_b(@Nonnull IFluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos) {
-        return VoxelShapes.fullCube();
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.TRANSLUCENT;
+    }
+
+    @Override
+    public int getTickRate(@Nonnull IWorldReader worldReader) {
+        return 5;
+    }
+
+    @Override
+    public boolean isSource(@Nonnull IFluidState state) {
+        return false;
     }
 
     @Override
@@ -88,13 +75,26 @@ public class BloodFluid extends VampirismFluid {
         return false;
     }
 
+    @Nonnull
     @Override
-    public float getActualHeight(@Nonnull IFluidState fluidState, @Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos) {
-        return 0;
+    protected FluidAttributes createAttributes() {
+        return FluidAttributes.builder(new ResourceLocation(REFERENCE.MODID, "block/blood_still"), new ResourceLocation(REFERENCE.MODID, "block/blood_flow")).color(0xEEFF1111).density(1300).temperature(309).viscosity(3000).rarity(Rarity.UNCOMMON).build(this);
+    }
+
+    @Nonnull
+    @Override
+    protected BlockState getBlockState(@Nonnull IFluidState state) {
+        return Blocks.AIR.getDefaultState();
     }
 
     @Override
-    public float getHeight(@Nonnull IFluidState fluidState) {
-        return 0;
+    protected float getExplosionResistance() {
+        return 100.0F;
+    }
+
+    @Nonnull
+    @Override
+    protected Vec3d getFlow(@Nonnull IBlockReader blockReader, @Nonnull BlockPos blockPos, @Nonnull IFluidState fluidState) {
+        return Vec3d.ZERO;
     }
 }

@@ -8,10 +8,9 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
-public class RunTestsCommand extends BasicCommand{
+public class RunTestsCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("runTests")

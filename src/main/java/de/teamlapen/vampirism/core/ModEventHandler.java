@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import com.mojang.datafixers.util.Pair;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
@@ -153,12 +152,6 @@ public class ModEventHandler {
     }
 
     @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event) {
-        VampirismAPI.getGarlicChunkHandler(event.getWorld().getWorld()).clear();
-        TotemTile.clearCacheForDimension(event.getWorld().getDimension());
-    }
-
-    @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.END)) {
             //VampirismVillageHelper.tick(event.world);
@@ -166,5 +159,11 @@ public class ModEventHandler {
                 DaySleepHelper.checkSleepWorld(event.world);
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload event) {
+        VampirismAPI.getGarlicChunkHandler(event.getWorld().getWorld()).clear();
+        TotemTile.clearCacheForDimension(event.getWorld().getDimension());
     }
 }

@@ -44,14 +44,6 @@ import java.util.function.Supplier;
  * Sends any input related event to the server
  */
 public class InputEventPacket implements IMessage {
-    private final static Logger LOGGER = LogManager.getLogger();
-    private final static String SPLIT = "&";
-
-    static void encode(InputEventPacket msg, PacketBuffer buf) {
-        buf.writeString(msg.action + SPLIT + msg.param);
-    }
-
-
     public static final String SUCKBLOOD = "sb";
     public static final String ENDSUCKBLOOD = "esb";
     public static final String TOGGLEACTION = "ta";
@@ -66,7 +58,13 @@ public class InputEventPacket implements IMessage {
     public static final String BASICHUNTERLEVELUP = "bl";
     public static final String DRINK_BLOOD_BLOCK = "db";
     public static final String NAME_ITEM = "ni";
+    private final static Logger LOGGER = LogManager.getLogger();
+    private final static String SPLIT = "&";
     private final static String TAG = "InputEventPacket";
+
+    static void encode(InputEventPacket msg, PacketBuffer buf) {
+        buf.writeString(msg.action + SPLIT + msg.param);
+    }
 
     static InputEventPacket decode(PacketBuffer buf) {
         String[] s = buf.readString(50).split(SPLIT);
@@ -79,9 +77,6 @@ public class InputEventPacket implements IMessage {
         }
         return msg;
     }
-    private String param;
-    private String action;
-
 
     public static void handle(final InputEventPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
@@ -250,6 +245,8 @@ public class InputEventPacket implements IMessage {
             }
         });
     }
+    private String param;
+    private String action;
 
     public InputEventPacket(String action, String param) {
         this.action = action;

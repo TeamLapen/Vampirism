@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.general;
 
 import com.google.common.collect.Maps;
-
 import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -14,14 +13,13 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class SkillCommand extends BasicCommand {
 
-	public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("skill")
-        		.requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
                 .then(Commands.argument("type", SkillArgument.skills())
                         .executes(context -> {
                             return skill(context.getSource(), context.getSource().asPlayer(), SkillArgument.getSkill(context, "type"));
@@ -82,5 +80,5 @@ public class SkillCommand extends BasicCommand {
             default:
         }
         return 0;
-	}
+    }
 }

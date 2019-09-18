@@ -46,6 +46,15 @@ public interface IBloodPotionRegistry {
     ResourceLocation CATEGORY_SPECIAL_VAMPIRE_SKILL = new ResourceLocation("vampirism", "svs");
 
     /**
+     * Add tileInventory to a category
+     * Adds all tileInventory in the list. See {@link IBloodPotionCategory#addItem(Item)},{@link IBloodPotionCategory#addItem(Block)},{@link IBloodPotionCategory#addItemExact(ItemStack)}
+     *
+     * @param categoryId Id of the category. Non-existent ones will be created
+     */
+    @ThreadSafeAPI
+    void addItemsToCategory(boolean bad, @Nonnull ResourceLocation categoryId, Item... items);
+
+    /**
      * Retrieves the potion effect for the given id if registered
      */
     @Nullable
@@ -58,7 +67,6 @@ public interface IBloodPotionRegistry {
     @Nonnull
     List<String> getLocCategoryDescForItem(@Nonnull ItemStack item);
 
-
     /**
      * Retrieve a random effect (under consideration  of the given item)
      *
@@ -67,15 +75,6 @@ public interface IBloodPotionRegistry {
      */
     @Nonnull
     IBloodPotionEffect getRandomEffect(@Nonnull ItemStack item, boolean bad, Random rng);
-
-    /**
-     * Add tileInventory to a category
-     * Adds all tileInventory in the list. See {@link IBloodPotionCategory#addItem(Item)},{@link IBloodPotionCategory#addItem(Block)},{@link IBloodPotionCategory#addItemExact(ItemStack)}
-     *
-     * @param categoryId Id of the category. Non-existent ones will be created
-     */
-    @ThreadSafeAPI
-    void addItemsToCategory(boolean bad, @Nonnull ResourceLocation categoryId, Item... items);
 
     /**
      * Register a new potion effect.

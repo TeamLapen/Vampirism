@@ -1,6 +1,6 @@
 {
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "vampirism:block/vampire_orchid"
-	}
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "vampirism:block/vampire_orchid"
+  }
 }

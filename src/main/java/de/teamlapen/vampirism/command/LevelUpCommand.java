@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.command;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.command.CommandSource;
@@ -15,7 +14,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.Collection;
 
 /**
- * 
  * @authors Cheaterpaul, Maxanier
  */
 public class LevelUpCommand extends BasicCommand {

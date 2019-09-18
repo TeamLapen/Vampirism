@@ -61,11 +61,6 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
         return false;
     }
@@ -73,6 +68,11 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     @Override
     public boolean canBeAttackedWithItem() {
         return false;
+    }
+
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -91,6 +91,10 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         return j | k << 16;
     }
 
+    @Override
+    public ItemStack getItem() {
+        return getSoulItemStack();
+    }
 
     @Nonnull
     public ItemStack getSoulItemStack() {
@@ -98,6 +102,14 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
             soulItemStack = createSoulItemStack();
         }
         return soulItemStack;
+    }
+
+    public VARIANT getVariant() {
+        return VARIANT.valueOf(getDataManager().get(TYPE_PARAMETER));
+    }
+
+    private void setVariant(VARIANT type) {
+        getDataManager().set(TYPE_PARAMETER, type.name());
     }
 
     @Override
@@ -127,11 +139,6 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
                 }
             }
         }
-    }
-
-    @Override
-    public ItemStack getItem() {
-        return getSoulItemStack();
     }
 
     @Override
@@ -231,14 +238,6 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
             default:
                 return new ItemStack(ModItems.soul_orb_vampire);
         }
-    }
-
-    public VARIANT getVariant() {
-        return VARIANT.valueOf(getDataManager().get(TYPE_PARAMETER));
-    }
-
-    private void setVariant(VARIANT type) {
-        getDataManager().set(TYPE_PARAMETER, type.name());
     }
 
 

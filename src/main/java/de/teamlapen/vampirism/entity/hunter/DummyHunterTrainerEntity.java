@@ -31,6 +31,11 @@ public class DummyHunterTrainerEntity extends VampirismEntity {
     }
 
     @Override
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
+    }
+
+    @Override
     public boolean getAlwaysRenderNameTagForRender() {
         return true;
     }
@@ -42,17 +47,32 @@ public class DummyHunterTrainerEntity extends VampirismEntity {
     }
 
     @Override
+    protected boolean processInteract(PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
+
+        if (!flag && this.isAlive() && !player.isSneaking()) {
+            if (!this.world.isRemote) {
+                if (Helper.isHunter(player)) {
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled_hunter"));
+                } else {
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled"));
+                }
+            }
+            return true;
+        }
+
+
+        return super.processInteract(player, hand);
+    }
+
+    @Override
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
-    }
-
-    @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
     }
 
     @Override
@@ -66,27 +86,6 @@ public class DummyHunterTrainerEntity extends VampirismEntity {
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-    }
-
-
-    @Override
-    protected boolean processInteract(PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
-
-        if (!flag && this.isAlive() && !player.isSneaking()) {
-            if (!this.world.isRemote) {
-            	if(Helper.isHunter(player)) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled_hunter"));
-            	}else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled"));
-            	}
-            }
-            return true;
-        }
-
-
-        return super.processInteract(player, hand);
     }
 
 

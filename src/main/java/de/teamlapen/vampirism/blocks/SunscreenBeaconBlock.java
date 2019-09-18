@@ -40,6 +40,12 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
         return VampirismConfig.SERVER.sunscreenBeaconMineable.get();
     }
 
+    @Nullable
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+        return new SunscreenBeaconTileEntity();
+    }
+
     @Override
     public float getBlockHardness(BlockState p_176195_1_, IBlockReader p_176195_2_, BlockPos p_176195_3_) {
         return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : -1;
@@ -48,12 +54,6 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     @Override
     public float getExplosionResistance() {
         return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : 3600000;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new SunscreenBeaconTileEntity();
     }
 
     @Override

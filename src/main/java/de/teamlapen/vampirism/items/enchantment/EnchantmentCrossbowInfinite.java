@@ -19,11 +19,6 @@ public class EnchantmentCrossbowInfinite extends Enchantment {
     }
 
     @Override
-    protected String getDefaultTranslationKey() {
-        return "arrow_infinite";
-    }
-
-    @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
         return !stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow && !(stack.getItem() instanceof TechCrossbowItem);
     }
@@ -41,5 +36,10 @@ public class EnchantmentCrossbowInfinite extends Enchantment {
     @Override
     public int getMinEnchantability(int enchantmentLevel) {
         return 20;
+    }
+
+    @Override
+    protected String getDefaultTranslationKey() {
+        return "arrow_infinite";
     }
 }
