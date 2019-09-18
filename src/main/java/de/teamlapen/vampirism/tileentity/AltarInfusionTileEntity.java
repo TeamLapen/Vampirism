@@ -47,6 +47,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -126,7 +127,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
 
     @Nullable
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemHandlerOptional.cast();
         }
@@ -151,7 +152,6 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     /**
      * Returns the phase the ritual is in
      *
-     * @return
      */
     public PHASE getCurrentPhase() {
         if (runningTick < 1) {
@@ -216,6 +216,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
     }
 
+    @Nonnull
     @Override
     public CompoundNBT getUpdateTag() {
         return write(new CompoundNBT());
@@ -232,17 +233,18 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
      * ONLY call if {@link AltarInfusionTileEntity#canActivate(PlayerEntity, boolean)} returned 1
      */
     public void startRitual(PlayerEntity player) {
+        if (world == null) return;
         LOGGER.debug("Starting ritual for {}", player);
         this.player = player;
         runningTick = DURATION_TICK;
 
         this.markDirty();
-        if (!this.getWorld().isRemote) {
+        if (!this.world.isRemote) {
             for (BlockPos pTip : tips) {
                 ModParticles.spawnParticlesServer(world, new FlyingBloodParticleData(ModParticles.flying_blood, 60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
             }
-            BlockState state = this.getWorld().getBlockState(getPos());
-            this.getWorld().notifyBlockUpdate(getPos(), state, state, 3); //Notify client about started ritual
+            BlockState state = this.world.getBlockState(getPos());
+            this.world.notifyBlockUpdate(getPos(), state, state, 3); //Notify client about started ritual
         }
         player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, DURATION_TICK, 10));
         this.markDirty();
@@ -250,12 +252,13 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
 
     @Override
     public void tick() {
+        if (world == null) return;
         if (playerToLoadUUID != null) { //Restore loaded ritual
             if (!loadRitual(playerToLoadUUID)) return;
             playerToLoadUUID = null;
             this.markDirty();
-            BlockState state = this.getWorld().getBlockState(getPos());
-            this.getWorld().notifyBlockUpdate(getPos(), state, state, 3); //Notify client about started ritual
+            BlockState state = this.world.getBlockState(getPos());
+            this.world.notifyBlockUpdate(getPos(), state, state, 3); //Notify client about started ritual
 
         }
         if (runningTick == DURATION_TICK && !world.isRemote) {
@@ -335,7 +338,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
 
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
-        return new AltarInfusionContainer(id, player, this, IWorldPosCallable.of(world, pos));
+        return new AltarInfusionContainer(id, player, this, world == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(world, pos));
     }
 
     private boolean loadRitual(UUID playerID) {
@@ -402,6 +405,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
      * @return
      */
     private boolean checkStructureLevel(int required) {
+        if (world == null) return false;
         BlockPos[] tips = findTips();
         ValuedObject<BlockPos>[] valuedTips = new ValuedObject[tips.length];
         for (int i = 0; i < tips.length; i++) {
@@ -409,7 +413,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             int j = 0;
             AltarPillarBlock.EnumPillarType type = null;
             BlockState temp;
-            while ((temp = getWorld().getBlockState(pPos.add(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
+            while ((temp = world.getBlockState(pPos.add(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
                 AltarPillarBlock.EnumPillarType t = temp.get(AltarPillarBlock.TYPE_PROPERTY);
                 if (type == null) {
                     type = t;
@@ -452,21 +456,21 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     /**
      * Finds all {@link AltarTipBlock}'s in the area
      *
-     * @return
      */
     private BlockPos[] findTips() {
+        if (world == null) return new BlockPos[0];
         List<BlockPos> list = new ArrayList<>();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         for (int x = getPos().getX() - 4; x < getPos().getX() + 5; x++) {
             for (int y = getPos().getY() + 1; y < getPos().getY() + 4; y++) {
                 for (int z = getPos().getZ() - 4; z < getPos().getZ() + 5; z++) {
-                    if (getWorld().getBlockState(pos.setPos(x, y, z)).getBlock().equals(ModBlocks.altar_tip)) {
+                    if (world.getBlockState(pos.setPos(x, y, z)).getBlock().equals(ModBlocks.altar_tip)) {
                         list.add(new BlockPos(x, y, z));
                     }
                 }
             }
         }
-        return list.toArray(new BlockPos[list.size()]);
+        return list.toArray(new BlockPos[0]);
     }
 
     public enum PHASE {

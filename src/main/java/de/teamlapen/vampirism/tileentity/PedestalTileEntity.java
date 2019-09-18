@@ -70,7 +70,7 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing != Direction.DOWN)) {
             return opt.cast();
         }
@@ -140,37 +140,9 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
         return stack;
     }
 
-    public void markDirtyAndUpdateClient() {
-        super.markDirty();
-        BlockState block = this.world.getBlockState(this.pos);
-        world.notifyBlockUpdate(pos, block, block, 3);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        handleUpdateTag(pkt.getNbtCompound());
-    }
-
-    @Override
-    public void read(CompoundNBT compound) {
-        if (compound.contains("item")) {
-            this.internalStack = ItemStack.read(compound.getCompound("item"));
-        } else {
-            this.internalStack = ItemStack.EMPTY;
-        }
-        this.bloodStored = compound.getInt("blood_stored");
-        this.chargingTicks = compound.getInt("charging_ticks");
-    }
-
-    @Nonnull
-    public ItemStack removeStack() {
-        ItemStack stack = this.internalStack;
-        this.internalStack = ItemStack.EMPTY;
-        return stack;
-    }
-
     @Override
     public void tick() {
+        if (world == null) return;
         if (!this.world.isRemote) {
             if (chargingTicks > 0) {
                 chargingTicks--;
@@ -210,6 +182,40 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
         }
     }
 
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        handleUpdateTag(pkt.getNbtCompound());
+    }
+
+    @Override
+    public void read(CompoundNBT compound) {
+        if (compound.contains("item")) {
+            this.internalStack = ItemStack.read(compound.getCompound("item"));
+        } else {
+            this.internalStack = ItemStack.EMPTY;
+        }
+        this.bloodStored = compound.getInt("blood_stored");
+        this.chargingTicks = compound.getInt("charging_ticks");
+    }
+
+    @Nonnull
+    public ItemStack removeStack() {
+        ItemStack stack = this.internalStack;
+        this.internalStack = ItemStack.EMPTY;
+        return stack;
+    }
+
+    private void drainBlood() {
+        if (world == null) return;
+        FluidUtil.getFluidHandler(this.world, this.pos.down(), Direction.UP).ifPresent(handler -> {
+            FluidStack drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
+            if (!drained.isEmpty() && drained.getAmount() == VReference.FOOD_TO_FLUID_BLOOD) {
+                drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.EXECUTE);
+                bloodStored += drained.getAmount();
+            }
+        });
+    }
+
     @Nonnull
     @Override
     public CompoundNBT write(CompoundNBT compound) {
@@ -221,14 +227,12 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
         return super.write(compound);
     }
 
-    private void drainBlood() {
-        FluidUtil.getFluidHandler(this.world, this.pos.down(), Direction.UP).ifPresent(handler -> {
-            FluidStack drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
-            if (!drained.isEmpty() && drained.getAmount() == VReference.FOOD_TO_FLUID_BLOOD) {
-                drained = handler.drain(new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.EXECUTE);
-                bloodStored += drained.getAmount();
-            }
-        });
+    private void markDirtyAndUpdateClient() {
+        if (world != null) {
+            super.markDirty();
+            BlockState block = this.world.getBlockState(this.pos);
+            world.notifyBlockUpdate(pos, block, block, 3);
+        }
     }
 
     /**
@@ -244,15 +248,12 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     /**
      * Set the held stack.
      *
-     * @return If successful
      */
-    private boolean setStack(@Nonnull ItemStack stack) {
+    private void setStack(@Nonnull ItemStack stack) {
         this.chargingTicks = 0;
         if (this.internalStack.isEmpty()) {
             this.internalStack = stack;
-            return true;
         }
-        return false;
     }
 
     @OnlyIn(Dist.CLIENT)

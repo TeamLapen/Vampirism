@@ -111,6 +111,7 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void tick() {
+        if (world == null) return;
         if (spawnerLogic.getSpawnedToday() >= Balance.general.HUNTER_CAMP_MAX_SPAWN) {
             spawnerLogic.setSpawn(false);
         }

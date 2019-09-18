@@ -55,17 +55,22 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
-    @Override
-    protected Container createMenu(int id, PlayerInventory player) {
-        return new AlchemicalCauldronContainer(id, player, this, this.furnaceData, IWorldPosCallable.of(world, pos));
-    }
-
+    @Nonnull
     @Override
     public int[] getSlotsForFace(Direction side) {
         if (side == Direction.DOWN)
             return SLOTS_DOWN;
         else
             return side == Direction.UP ? SLOTS_UP : side == Direction.WEST ? SLOTS_WEST : SLOTS_FUEL;
+    }
+
+    @Nonnull
+    @Override
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT compound = super.getUpdateTag();
+        compound.putUniqueId("owner", ownerID);
+        compound.putString("owner_name", ownerName.toString());
+        return compound;
     }
 
     @Override
@@ -92,6 +97,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
      */
     @Override
     public void tick() {
+        if (world == null) return;
         boolean flag = this.isBurning();
         boolean flag1 = false;
         if (flag) {
@@ -136,7 +142,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
 
             if (flag != this.isBurning()) {
                 flag1 = true;
-                this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(AbstractFurnaceBlock.LIT, Boolean.valueOf(this.isBurning())).with(AlchemicalCauldronBlock.LIQUID, this.items.get(3).isEmpty() ? 0 : this.isBurning() ? 2 : 1), 3);
+                this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(AbstractFurnaceBlock.LIT, this.isBurning()).with(AlchemicalCauldronBlock.LIQUID, this.items.get(3).isEmpty() ? 0 : this.isBurning() ? 2 : 1), 3);
             }
         } else {
             if (isCooking() && boilingSound && this.world.rand.nextInt(25) == 0) {
@@ -151,10 +157,18 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
 
     }
 
-    protected boolean canPlayerCook(AlchemicalCauldronRecipe recipe) {
+    @Nonnull
+    @Override
+    protected Container createMenu(int id, PlayerInventory player) {
+        return new AlchemicalCauldronContainer(id, player, this, this.furnaceData, world == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(world, pos));
+    }
+
+    private boolean canPlayerCook(AlchemicalCauldronRecipe recipe) {
+        if (world == null) return false;
         if (recipeChecked == recipe) return true;
-        if (this.world.getPlayerByUuid(ownerID) == null) return false;
-        HunterPlayer hunter = HunterPlayer.get(this.world.getPlayerByUuid(ownerID));
+        PlayerEntity playerEntity = this.world.getPlayerByUuid(ownerID);
+        if (playerEntity == null) return false;
+        HunterPlayer hunter = HunterPlayer.get(playerEntity);
         boolean canCook = recipe.canBeCooked(hunter.getLevel(), hunter.getSkillHandler());
         if (canCook) {
             recipeChecked = recipe;
@@ -162,32 +176,6 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         } else {
             recipeChecked = null;
             return false;
-        }
-    }
-
-    /**
-     * copy of AbstractFurnaceTileEntity#finishCooking(IRecipe) with modification
-     *
-     * @param recipe
-     */
-    protected void finishCooking(AlchemicalCauldronRecipe recipe) {
-        if (recipe != null && this.canSmelt(recipe) && canPlayerCook(recipe)) {
-            ItemStack itemstackingredient = this.items.get(0);
-            ItemStack itemstackfluid = this.items.get(3);
-            ItemStack itemstack1result = recipe.getRecipeOutput();
-            ItemStack itemstackoutput = this.items.get(2);
-            if (itemstackoutput.isEmpty()) {
-                this.items.set(2, itemstack1result.copy());
-            } else if (itemstackoutput.getItem() == itemstack1result.getItem()) {
-                itemstackoutput.grow(itemstack1result.getCount());
-            }
-
-            if (!this.world.isRemote) {
-                this.setRecipeUsed(recipe);
-            }
-            itemstackingredient.shrink(1);
-            itemstackfluid.shrink(1);
-            recipeChecked = null;
         }
     }
 
@@ -217,13 +205,30 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         super.read(compound);
     }
 
+    /**
+     * copy of AbstractFurnaceTileEntity#finishCooking(IRecipe) with modification
+     *
+     * @param recipe
+     */
+    private void finishCooking(AlchemicalCauldronRecipe recipe) {
+        if (recipe != null && this.canSmelt(recipe) && canPlayerCook(recipe)) {
+            ItemStack itemstackingredient = this.items.get(0);
+            ItemStack itemstackfluid = this.items.get(3);
+            ItemStack itemstack1result = recipe.getRecipeOutput();
+            ItemStack itemstackoutput = this.items.get(2);
+            if (itemstackoutput.isEmpty()) {
+                this.items.set(2, itemstack1result.copy());
+            } else if (itemstackoutput.getItem() == itemstack1result.getItem()) {
+                itemstackoutput.grow(itemstack1result.getCount());
+            }
 
-    @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT compound = super.getUpdateTag();
-        compound.putUniqueId("owner", ownerID);
-        compound.putString("owner_name", ownerName.toString());
-        return compound;
+            if (this.world != null && !this.world.isRemote) {
+                this.setRecipeUsed(recipe);
+            }
+            itemstackingredient.shrink(1);
+            itemstackfluid.shrink(1);
+            recipeChecked = null;
+        }
     }
 
     @Nullable

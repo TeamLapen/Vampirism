@@ -41,9 +41,8 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
         cap = LazyOptional.of(() -> tank);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    @Nullable
+    @Nonnull
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
         if ((facing != Direction.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return cap.cast();
@@ -67,20 +66,43 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
         return active;
     }
 
-    private void setActive(boolean active) {
-        if (this.active != active) {
-            this.active = active;
-            this.world.setBlockState(getPos(), world.getBlockState(pos).with(SieveBlock.PROPERTY_ACTIVE, active));
-        }
-    }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         boolean old = active;
         active = pkt.getNbtCompound().getBoolean("active");
-        if (active != old)
+        if (active != old && world != null)
             this.world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
+
+    }
+
+    @Override
+    public void tick() {
+        if (world == null) return;
+        //Process content
+        if (--cooldownProcess < 0) {
+            cooldownProcess = 15;
+            if (tank.getFluidAmount() > 0) {
+                FluidUtil.getFluidHandler(this.world, this.pos.down(), Direction.UP).ifPresent(handler -> {
+                    tank.setDrainable(true);
+                    FluidStack transferred = FluidUtil.tryFluidTransfer(handler, tank, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
+                    tank.setDrainable(false);
+                    if (!transferred.isEmpty()) {
+                        cooldownProcess = 30;
+                        setActive(true);
+                    }
+                });
+            } else if (active) {
+                setActive(false);
+            }
+        }
+        //Pull new content. Cooldown is increased when liquid is filled into the tank (regardless of way)
+        if (--cooldownPull < 0) {
+            cooldownPull = 10;
+            FluidUtil.getFluidHandler(this.world, this.pos.up(), Direction.DOWN).ifPresent(handler -> {
+                FluidStack transferred = FluidUtil.tryFluidTransfer(tank, handler, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
+            });
+        }
 
     }
 
@@ -97,33 +119,12 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
         cooldownPull = tag.getInt("cooldown_pull");
     }
 
-    @Override
-    public void tick() {
-        //Process content
-        if (--cooldownProcess < 0) {
-            cooldownProcess = 15;
-            if (tank.getFluidAmount() > 0) {
-                FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), Direction.UP).ifPresent(handler -> {
-                    tank.setDrainable(true);
-                    FluidStack transferred = FluidUtil.tryFluidTransfer(handler, tank, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
-                    tank.setDrainable(false);
-                    if (!transferred.isEmpty()) {
-                        cooldownProcess = 30;
-                        setActive(true);
-                    }
-                });
-            } else if (active) {
-                setActive(false);
-            }
+    private void setActive(boolean active) {
+        if (this.active != active) {
+            this.active = active;
+            if (this.world != null)
+                this.world.setBlockState(getPos(), world.getBlockState(pos).with(SieveBlock.PROPERTY_ACTIVE, active));
         }
-        //Pull new content. Cooldown is increased when liquid is filled into the tank (regardless of way)
-        if (--cooldownPull < 0) {
-            cooldownPull = 10;
-            FluidUtil.getFluidHandler(this.getWorld(), this.pos.up(), Direction.DOWN).ifPresent(handler -> {
-                FluidStack transferred = FluidUtil.tryFluidTransfer(tank, handler, 2 * VReference.FOOD_TO_FLUID_BLOOD, true);
-            });
-        }
-
     }
 
     @Override

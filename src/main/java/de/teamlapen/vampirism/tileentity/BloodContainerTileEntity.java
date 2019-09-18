@@ -65,6 +65,7 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
         return new SUpdateTileEntityPacket(getPos(), 1, getUpdateTag());
     }
 
+    @Nonnull
     @Override
     public CompoundNBT getUpdateTag() {
         return write(new CompoundNBT());
@@ -93,10 +94,13 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
 
     @Override
     public void markDirty() {
-        if (world.isRemote)
-            updateModelData(true);
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-        super.markDirty();
+        if (world != null) {
+            if (world.isRemote)
+                updateModelData(true);
+            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+            super.markDirty();
+        }
+
     }
 
     public void setFluidStack(FluidStack stack) {

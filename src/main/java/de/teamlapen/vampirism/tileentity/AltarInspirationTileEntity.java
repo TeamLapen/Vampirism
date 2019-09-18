@@ -77,10 +77,12 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
 
     @Override
     public void markDirty() {
-        if (world.isRemote)
-            updateModelData(true);
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-        super.markDirty();
+        if (world != null) {
+            if (world.isRemote)
+                updateModelData(true);
+            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+            super.markDirty();
+        }
     }
 
     private void updateModelData(boolean refresh) {
@@ -122,7 +124,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
 
     @Override
     public void tick() {
-        if (ritualTicksLeft == 0) return;
+        if (ritualTicksLeft == 0 || world == null) return;
 
         if (!world.isRemote) {
             switch (ritualTicksLeft) {
@@ -162,11 +164,10 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
             setDrainable(false);
         }
 
-        public FluidStack doDrain(int maxDrain, FluidAction action) {
+        void doDrain(int maxDrain, FluidAction action) {
             this.setDrainable(true);
-            FluidStack s = super.drain(maxDrain, action);
+            super.drain(maxDrain, action);
             this.setDrainable(false);
-            return s;
         }
     }
 }

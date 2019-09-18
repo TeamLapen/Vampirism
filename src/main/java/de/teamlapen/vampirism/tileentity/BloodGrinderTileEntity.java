@@ -12,7 +12,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.IWorldPosCallable;
@@ -30,7 +29,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,12 +37,7 @@ import java.util.List;
 public class BloodGrinderTileEntity extends InventoryTileEntity implements ITickableTileEntity {
 
 
-    private static boolean canProcess(ItemStack stack) {
-        return BloodConversionRegistry.existsImpureBloodValue(stack.getItem());
-    }
-
-
-    protected static List<ItemEntity> getCaptureItems(World worldIn, BlockPos pos) {
+    private static List<ItemEntity> getCaptureItems(World worldIn, BlockPos pos) {
         int posX = pos.getX();
         int posY = pos.getY();
         int posZ = pos.getZ();
@@ -117,53 +110,59 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     }
 
     private boolean pullItems() {
-        Pair<IItemHandler, TileEntity> pair = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(this.world, this.pos.up(), Direction.DOWN).orElse(null);
-        if (pair != null) {
+        if (world == null) return false;
+
+
+        boolean flag = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(this.world, this.pos.up(), Direction.DOWN).map(pair -> {
             IItemHandler handler = pair.getLeft();
             for (int i = 0; i < handler.getSlots(); i++) {
                 ItemStack extracted = handler.extractItem(i, 1, true);
                 if (!extracted.isEmpty()) {
                     ItemStack simulated = ItemHandlerHelper.insertItemStacked(itemHandler, extracted, true);
 
-                        if (simulated.isEmpty()) {
-                            extracted = handler.extractItem(i, 1, false);
-                            ItemHandlerHelper.insertItemStacked(itemHandler, extracted, false);
-                            return true;
-                        }
-
-                }
-            }
-
-        }
-        for (ItemEntity entityItem : getCaptureItems(this.world, this.pos)) {
-            ItemStack stack = entityItem.getItem();
-            for (int i = 0; i < itemHandler.getSlots(); i++) {
-                ItemStack stack2 = itemHandler.insertItem(i, stack, true);
-                if (stack2.isEmpty()) {
-                    stack2 = itemHandler.insertItem(i, stack, false);
-                    if (stack2.getCount() < stack.getCount()) {
-                        entityItem.remove();
-                    } else {
-                        entityItem.setItem(stack2);
+                    if (simulated.isEmpty()) {
+                        extracted = handler.extractItem(i, 1, false);
+                        ItemHandlerHelper.insertItemStacked(itemHandler, extracted, false);
+                        return true;
                     }
-                    return true;
+
                 }
             }
+            return false;
+        }).orElse(false);
+
+        if (flag) {
+            return true;
+        } else {
+            for (ItemEntity entityItem : getCaptureItems(this.world, this.pos)) {
+                ItemStack stack = entityItem.getItem();
+                for (int i = 0; i < itemHandler.getSlots(); i++) {
+                    ItemStack stack2 = itemHandler.insertItem(i, stack, true);
+                    if (stack2.isEmpty()) {
+                        stack2 = itemHandler.insertItem(i, stack, false);
+                        if (stack2.getCount() < stack.getCount()) {
+                            entityItem.remove();
+                        } else {
+                            entityItem.setItem(stack2);
+                        }
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
-        return false;
 
     }
 
     private void updateProcess() {
-        if (!isEmpty()) {
+        if (world != null && !isEmpty()) {
             for (int i = 0; i < itemHandler.getSlots(); i++) {
                 final int slot = i;
                 ItemStack stack = itemHandler.extractItem(i, 1, true);
                 int blood = BloodConversionRegistry.getImpureBloodValue(stack);
-                //LogUtil.LOGGER.info(blood);
                 if (blood > 0) {
                     FluidStack fluid = new FluidStack(ModFluids.impure_blood, blood);
-                    FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), Direction.UP).ifPresent(handler -> {
+                    FluidUtil.getFluidHandler(this.world, this.pos.down(), Direction.UP).ifPresent(handler -> {
                         int filled = handler.fill(fluid, IFluidHandler.FluidAction.SIMULATE);
                         if (filled >= 0.9f * blood) {
                             ItemStack extractedStack = itemHandler.extractItem(slot, 1, false);
