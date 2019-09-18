@@ -44,7 +44,7 @@ dependencies {
 
 minecraft {
     mappings channel: "${project.mcp_channel}".toString(), version: "${project.mcp_mappings}".toString()
-    accessTransformer = file('src/main/resources/META-INF/vampirism_at.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
@@ -56,12 +56,12 @@ minecraft {
             jvmArg '-ea:de.teamlapen...'
             
             mods {
-                teamlapenlib {
-                    source sourceSets.lib
-                }
+
                 vampirism {
                     source sourceSets.main
                     source sourceSets.api
+                    source sourceSets.lib
+
                 }
 
 
@@ -75,12 +75,10 @@ minecraft {
             jvmArg '-ea:de.teamlapen...'
 
             mods {
-                teamlapenlib {
-                    source sourceSets.lib
-                }
                 vampirism {
                     source sourceSets.main
                     source sourceSets.api
+                    source sourceSets.lib
                 }
 
 
@@ -88,6 +86,50 @@ minecraft {
         }
     }
 
+}
+
+task downloadCrowdin() {
+    ext {
+        output = file('build/crowdin_raw.zip')
+        update = file('build/crowdin.json')
+        id = 'vampirism'
+    }
+    outputs.upToDateWhen { false }
+    onlyIf {
+        project.hasProperty('CROWDIN_KEY') && !project.gradle.startParameter.isOffline()
+    }
+    doLast {
+        download {
+            src "https://api.crowdin.com/api/project/${id}/export?key=${project.CROWDIN_KEY}&export_translated_only&json"
+            dest update
+            overwrite true
+        }
+        if (!update.text.contains('success')) {
+            throw new RuntimeException("Crowdin export failed, see ${update} for more info")
+        }
+        download {
+            src "https://api.crowdin.com/api/project/${id}/download/all.zip?key=${project.CROWDIN_KEY}"
+            dest output
+            overwrite true
+        }
+    }
+}
+
+task crowdin(type: Copy){
+    dependsOn downloadCrowdin
+    onlyIf {
+        !downloadCrowdin.state.skipped
+    }
+    destinationDir = file('build/translations')
+    from(zipTree(downloadCrowdin.output)){
+        filter { String line ->
+            line.indexOf("\"\"") != -1 ? null : line //Filter empty translations
+        }
+        filteringCharset = 'UTF-8'
+        exclude { it.isDirectory() }
+        rename { it.toLowerCase() }//Minecraft needs it lowercase.
+        exclude '**/*.lang' //Pre-1.13 format
+    }
 }
 
 processResources {
@@ -103,7 +145,11 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'META-INF/mods.toml'
     }
-
+    from{
+        fileTree('build/translations').matching{
+            exclude "**/en_us.json" //Don't override local file
+        }
+    }
 
 
     exclude '**/Thumbs.db'
@@ -144,11 +190,12 @@ jar {
         }
     }
 
+    dependsOn 'crowdin'
 
 
     manifest {
         attributes([
-                "FMLAT": "vampirism_at.cfg",
+                "FMLAT": "accesstransformer.cfg",
                 "Specification-Title": "vampirism",
                 "Specification-Vendor": "maxanier",
                 "Specification-Version": "1", // We are version 1 of ourselves
