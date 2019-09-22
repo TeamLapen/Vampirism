@@ -34,6 +34,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -196,8 +197,10 @@ public class InputEventPacket implements IMessage {
 
                     FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
                     LOGGER.debug("Player {} left faction", player);
-                    player.attackEntityFrom(DamageSource.MAGIC, 1000);
+                    if (!ServerLifecycleHooks.getCurrentServer().isHardcore()) {
+                        player.attackEntityFrom(DamageSource.MAGIC, 1000);
 
+                    }
                     break;
                 case WAKEUP:
                     VampirePlayer.get(player).wakeUpPlayer(false, true, true);
