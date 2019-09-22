@@ -462,6 +462,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         //Also check the priority of tasks that are dynamically added. See top of class
     }
 
+    @Override
+    public ActionHandlerEntity getActionHandler() {
+        return entityActionHandler;
+    }
+
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);

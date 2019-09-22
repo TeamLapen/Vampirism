@@ -282,6 +282,11 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
+    @Override
+    public ActionHandlerEntity getActionHandler() {
+        return entityActionHandler;
+    }
+
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH + Balance.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
