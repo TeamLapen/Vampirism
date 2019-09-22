@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
@@ -14,6 +15,7 @@ import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
 import de.teamlapen.vampirism.entity.VampirismEntity;
+import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -68,6 +70,17 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             int amt = VampirePlayer.get((PlayerEntity) entity).onBite(this);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
             return true;
+        }
+        for (ItemStack e : entity.getArmorInventoryList()) {
+            if (e != null && e.getItem() instanceof HunterCoatItem) {
+                int j = 1;
+                if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ENHANCED))
+                    j = 2;
+                else if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.TIER.ULTIMATE))
+                    j = 3;
+                if (getRNG().nextInt((4 - j) * 2) == 0)
+                    addPotionEffect(new EffectInstance(ModEffects.poison, (int) (20 * Math.sqrt(j)), j));
+            }
         }
         return super.attackEntityAsMob(entity);
     }
