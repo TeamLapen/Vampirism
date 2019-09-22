@@ -773,6 +773,7 @@ public class TotemTile extends TileEntity implements ITickableTileEntity {//TODO
     }
 
     private void completeCapture(boolean notifyPlayer) {
+        informEntitiesAboutCaptureStop();
         if (!this.world.isRemote)
             this.updateCreaturesOnCapture();
         if (capturingFaction == null) {
@@ -784,7 +785,6 @@ public class TotemTile extends TileEntity implements ITickableTileEntity {//TODO
         force_village_update = true;
         this.markDirty();
         //VampirismMod.log.t("Completed capture");
-        informEntitiesAboutCaptureStop();
         if (notifyPlayer)
             notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_captured_by", controllingFaction.getNamePlural()));
         updateBossinfoPlayers(null);
