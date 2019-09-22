@@ -48,13 +48,13 @@ public class ModEntities {
     public static final EntityType<AdvancedHunterEntity.IMob> advanced_hunter_imob = getNull();
     public static final EntityType<AdvancedVampireEntity> advanced_vampire;
     public static final EntityType<AdvancedVampireEntity.IMob> advanced_vampire_imob = getNull();
-    public static final EntityType<BlindingBatEntity> blinding_bat = getNull();
+    public static final EntityType<BlindingBatEntity> blinding_bat;
     public static final EntityType<ConvertedCreatureEntity> converted_creature;
     public static final EntityType<ConvertedCreatureEntity.IMob> converted_creature_imob = getNull();
     public static final EntityType<ConvertedSheepEntity> converted_sheep = getNull();
     public static final EntityType<CrossbowArrowEntity> crossbow_arrow = getNull();
     public static final EntityType<DarkBloodProjectileEntity> dark_blood_projectile = getNull();
-    public static final EntityType<DummyBittenAnimalEntity> dummy_creature = getNull();
+    public static final EntityType<DummyBittenAnimalEntity> dummy_creature;
     public static final EntityType<GhostEntity> ghost;
     public static final EntityType<HunterTrainerEntity> hunter_trainer;
     public static final EntityType<DummyHunterTrainerEntity> hunter_trainer_dummy = getNull();
@@ -79,6 +79,7 @@ public class ModEntities {
     private static final Logger LOGGER = LogManager.getLogger(ModEntities.class);
 
     static {
+        //IMPORTANT - Must include all entity types that are used in vampire forest spawns
         ghost = prepareEntityType("ghost", EntityType.Builder.create(GhostEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.8F, 1.95F), true);
         vampire_hunter = prepareEntityType("vampire_hunter", EntityType.Builder.create(BasicHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
         hunter_trainer = prepareEntityType("hunter_trainer", EntityType.Builder.create(HunterTrainerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
@@ -87,6 +88,8 @@ public class ModEntities {
         vampire = prepareEntityType("vampire", EntityType.Builder.create(BasicVampireEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
         advanced_vampire = prepareEntityType("advanced_vampire", EntityType.Builder.create(AdvancedVampireEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
         converted_creature = prepareEntityType("converted_creature", EntityType.Builder.create(ConvertedCreatureEntity::new, EntityClassification.CREATURE), false);
+        dummy_creature = prepareEntityType("dummy_creature", EntityType.Builder.create(DummyBittenAnimalEntity::new, EntityClassification.CREATURE), false);
+        blinding_bat = prepareEntityType("blinding_bat", EntityType.Builder.create(BlindingBatEntity::new, EntityClassification.MISC).size(0.5F, 0.9F), true);
     }
 
     /**
@@ -121,13 +124,13 @@ public class ModEntities {
         registry.register(prepareEntityType("advanced_hunter_imob", EntityType.Builder.create(AdvancedHunterEntity.IMob::new, VReference.HUNTER_CREATURE_TYPE).size(0.6f, 1.95f), false));
         registry.register(advanced_vampire);
         registry.register(prepareEntityType("advanced_vampire_imob", EntityType.Builder.create(AdvancedVampireEntity.IMob::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6f, 1.95f), false));
-        registry.register(prepareEntityType("blinding_bat", EntityType.Builder.create(BlindingBatEntity::new, EntityClassification.MISC).size(0.5F, 0.9F), true));
+        registry.register(blinding_bat);
         registry.register(converted_creature);
         registry.register(prepareEntityType("converted_creature_imob", EntityType.Builder.create(ConvertedCreatureEntity.IMob::new, EntityClassification.CREATURE), false));
         registry.register(prepareEntityType("converted_sheep", EntityType.Builder.create(ConvertedSheepEntity::new, EntityClassification.CREATURE).size(0.9F, 1.3F), false));
         registry.register(prepareEntityType("crossbow_arrow", EntityType.Builder.<CrossbowArrowEntity>create(CrossbowArrowEntity::new, EntityClassification.MISC).size(0.5F, 0.5F), false));
         registry.register(prepareEntityType("dark_blood_projectile", EntityType.Builder.<DarkBloodProjectileEntity>create(DarkBloodProjectileEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), false));
-        registry.register(prepareEntityType("dummy_creature", EntityType.Builder.create(DummyBittenAnimalEntity::new, EntityClassification.CREATURE), false));
+        registry.register(dummy_creature);
         registry.register(ghost);
         registry.register(hunter_trainer);
         registry.register(prepareEntityType("hunter_trainer_dummy", EntityType.Builder.create(DummyHunterTrainerEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), true));

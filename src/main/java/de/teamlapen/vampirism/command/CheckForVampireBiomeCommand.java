@@ -50,7 +50,7 @@ public class CheckForVampireBiomeCommand extends BasicCommand {
             if (pos == null) {
                 context.getSource().sendFeedback((new TranslationTextComponent("command.vampirism.base.vampire_biome.not_found")), true);
             } else {
-                context.getSource().sendFeedback((new TranslationTextComponent("command.vampirism.base.vampire_biome.found", pos)), true);
+                context.getSource().sendFeedback((new TranslationTextComponent("command.vampirism.base.vampire_biome.found", pos.asBlockPos())), true);
             }
         }
         return 0;
