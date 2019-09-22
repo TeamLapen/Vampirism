@@ -27,14 +27,6 @@ public class LayerPlayerFaceOverlay<T extends MobEntity & IPlayerFace, M extends
 
     private static final Map<UUID, NetworkPlayerInfo> playerInfoMap = new HashMap<>();
 
-    private static NetworkPlayerInfo getPlayerInfo(GameProfile p) {
-        NetworkPlayerInfo i = playerInfoMap.get(p.getId());
-        if (i == null) {
-            i = new NetworkPlayerInfo(p);
-            playerInfoMap.put(p.getId(), i);
-        }
-        return i;
-    }
 
     private final BipedRenderer<T, M> renderBiped;
 
