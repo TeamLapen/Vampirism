@@ -1,8 +1,8 @@
 repositories {
-    maven {
-        name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
-    }
+//    maven {
+//        name "Mobius Repo"
+//        url "http://mobiusstrip.eu/maven"
+//    }
     maven { url 'http://tehnut.info/maven/' }
     maven { url 'http://chickenbones.net/maven' }
     maven {
@@ -14,10 +14,10 @@ repositories {
         name = "LocalForge"
         url = "../../MinecraftForge/repo/"
     }
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
-    }
+//    maven {
+//        name = "CurseForge"
+//        url = "https://minecraft.curseforge.com/api/maven/"
+//    }
     maven {
         name 'shinoow'
         url 'https://dl.bintray.com/shinoow/maven/'

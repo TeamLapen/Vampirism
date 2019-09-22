@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.CloakModel;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -20,6 +19,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -47,7 +47,7 @@ public class VampireCloakItem extends ArmorItem {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (Minecraft.getInstance().player != null && Helper.isHunter(Minecraft.getInstance().player)) {
-            tooltip.add(UtilLib.translated("text.vampirism.poisonous_to_hunter").applyTextStyle(TextFormatting.RED));
+            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_hunter").applyTextStyle(TextFormatting.RED));
         }
     }
 

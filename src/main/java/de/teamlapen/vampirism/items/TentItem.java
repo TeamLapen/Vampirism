@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -16,6 +15,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -80,7 +80,7 @@ public class TentItem extends VampirismItem {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         if (spawner) {
-            tooltip.add(UtilLib.translated("tile.vampirism.tent.spawner"));
+            tooltip.add(new TranslationTextComponent("tile.vampirism.tent.spawner"));
         }
     }
 

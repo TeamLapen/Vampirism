@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.items.*;
@@ -13,6 +12,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -260,7 +260,7 @@ public class ModItems {
             @OnlyIn(Dist.CLIENT)
             @Override
             public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-                tooltip.add(UtilLib.translated("item.vampirism." + regName + ".tooltip", UtilLib.translated(basic_tech_crossbow.getTranslationKey())));
+                tooltip.add(new TranslationTextComponent("item.vampirism." + regName + ".tooltip", new TranslationTextComponent(basic_tech_crossbow.getTranslationKey())));
             }
 
         });

@@ -29,7 +29,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -614,17 +613,6 @@ public class UtilLib {
         return rotatedShapes.stream().reduce((v1, v2) -> {
             return VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR);
         }).get();
-    }
-
-    /**
-     * TODO 1.14 inline this method with IntelliJ
-     *
-     * @param key
-     * @param format
-     * @return
-     */
-    public static ITextComponent translated(String key, Object... format) {
-        return new TranslationTextComponent(key, format);
     }
 
     public static String aiTaskListToStringDebug(GoalSelector tasks) {

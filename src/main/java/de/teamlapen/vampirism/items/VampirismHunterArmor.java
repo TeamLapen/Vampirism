@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -21,6 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -59,7 +59,7 @@ public abstract class VampirismHunterArmor extends ArmorItem {
         super.addInformation(p_77624_1_, p_77624_2_, tooltip, p_77624_4_);
         PlayerEntity player = Minecraft.getInstance().player;
         if (player != null && Helper.isVampire(player)) {
-            tooltip.add(UtilLib.translated("text.vampirism.poisonous_to_hunter").applyTextStyle(TextFormatting.RED));
+            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_hunter").applyTextStyle(TextFormatting.RED));
         }
     }
 

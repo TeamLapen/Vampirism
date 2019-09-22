@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
@@ -56,12 +55,12 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         if (type == Type.WEAK || type == Type.IMPROVED) {
-            tooltip.add(UtilLib.translated(getTranslationKey() + "." + type.getName()).applyTextStyle(TextFormatting.AQUA));
+            tooltip.add(new TranslationTextComponent(getTranslationKey() + "." + type.getName()).applyTextStyle(TextFormatting.AQUA));
         }
 
-        tooltip.add(UtilLib.translated("block.vampirism.garlic_beacon.tooltip1"));
+        tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip1"));
         int c = 1 + 2 * (type == Type.IMPROVED ? Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE : (type == Type.WEAK ? Balance.hps.GARLIC_DIFFUSOR_WEAK_DISTANCE : Balance.hps.GARLIC_DIFFUSOR_NORMAL_DISTANCE));
-        tooltip.add(UtilLib.translated("block.vampirism.garlic_beacon.tooltip2", c, c));
+        tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip2", c, c));
     }
 
     @Nullable
