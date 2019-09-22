@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.action;
 
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.actions.*;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
@@ -18,6 +19,7 @@ import java.util.List;
  * Usage for every {@link IFactionEntity} like Hunter/Vampire entities,
  * is used with {@link ActionHandlerEntity#handle()} in UpdateLiving in an VampirismEntity
  * Entity Actions are server side only
+ * TODO maybe abstract API interface as well
  */
 public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
 
@@ -65,22 +67,6 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
         if (nbt.contains("activeAction")) {
             deactivateAction(VampirismAPI.entityActionManager().getRegistry().getValue(new ResourceLocation(nbt.getString("activeAction"))));
             isPlayerTarget = true;
-        }
-    }
-
-    public void removeAction(IEntityAction actionIn) {
-        availableActions.remove(actionIn);
-    }
-
-    /**
-     * Sets the given list of actions to the actions the ActionHandlerEntity should use
-     *
-     * @param actionsIn
-     */
-    public void setAvailableActions(List<IEntityAction> actionsIn) {
-        this.availableActions = actionsIn;
-        if (availableActions.contains(EntityActions.entity_heal)) {
-            availableActions.remove(EntityActions.entity_regeneration);
         }
     }
 
@@ -137,7 +123,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
         return null;
     }
 
-    private void deactivateAction() {
+    public void deactivateAction() {
         deactivateAction(null);
     }
 
@@ -213,5 +199,9 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
         } else if (action instanceof IInstantAction) {
             ((IInstantAction<T>) action).updatePreAction(entity, preActivation);
         }
+    }
+
+    public boolean isActionActive(IEntityAction action) {
+        return this.action.equals(action) && duration > 0;
     }
 }
