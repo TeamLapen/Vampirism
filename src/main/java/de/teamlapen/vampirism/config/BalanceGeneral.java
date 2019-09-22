@@ -35,6 +35,12 @@ public class BalanceGeneral extends BalanceValues {
     @DefaultDouble(value = 2, minValue = 1, comment = "Holy water damage is multiplied with this value for each tier above normal")
     public double HOLY_WATER_TIER_DAMAGE_INC;
 
+    @DefaultInt(value = 200, minValue = 0, maxValue = 1000, comment = "Duration of the nausea effect caused by enhanced or special holy water")
+    public int HOLY_WATER_NAUSEA_DURATION;
+
+    @DefaultInt(value = 160, minValue = 0, maxValue = 10000, comment = "Duration of the blindness effect caused by special holy water")
+    public int HOLY_WATER_BLINDNESS_DURATION;
+
     @DefaultDouble(value = 0.05 / (double) VReference.FOOD_TO_FLUID_BLOOD, minValue = 0, maxValue = 1, comment = "The blood mB to charge percentage of the normal heart seeker vampire sword")
     public double HEART_SEEKER_CHARGING_FACTOR;
 

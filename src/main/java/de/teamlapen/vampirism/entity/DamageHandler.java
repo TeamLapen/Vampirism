@@ -150,6 +150,14 @@ public class DamageHandler {
                 h.deactivateAction();
             }
         }
+        if (vampire) {
+            if (strength.isStrongerThan(EnumStrength.WEAK)) {
+                entity.addPotionEffect(new EffectInstance(Effects.NAUSEA, Balance.general.HOLY_WATER_NAUSEA_DURATION, 2));
+            }
+            if (strength.isStrongerThan(EnumStrength.MEDIUM)) {
+                entity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, Balance.general.HOLY_WATER_BLINDNESS_DURATION, 1));
+            }
+        }
     }
 
     /**
