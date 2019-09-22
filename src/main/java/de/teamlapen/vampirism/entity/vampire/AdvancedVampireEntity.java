@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import com.mojang.authlib.GameProfile;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -11,10 +12,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
-import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
-import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
-import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
+import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
@@ -275,7 +273,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.goalSelector.addGoal(3, new FleeGarlicVampireGoal(this, 0.9, false));
         this.goalSelector.addGoal(4, new AttackMeleeNoSunGoal(this, 1.0, false));
         this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.9, 25));
-        this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 13F));
+        this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 13F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
         this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
 
