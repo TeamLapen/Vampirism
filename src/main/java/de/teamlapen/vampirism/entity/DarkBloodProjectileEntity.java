@@ -33,7 +33,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 
     protected float directDamage = 4;
     protected float indirecDamage = 2;
     private boolean initialNoClip = false;
-    private float motionFactor = 0.9f;
+    private float motionFactor = 0.97f;
     private boolean excludeShooter = false;
 
     public DarkBloodProjectileEntity(EntityType<? extends DarkBloodProjectileEntity> type, World worldIn) {

@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.world.loot.LootHandler;
@@ -88,7 +90,7 @@ public class GhostEntity extends VampirismEntity implements IMob {
         this.goalSelector.addGoal(7, new RandomWalkingGoal(this, 0.9F));
         this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 16));
 
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 0, true, false, null));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 0, true, false, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true, false, true, false, null)));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
     }
 }

@@ -22,9 +22,9 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultInt(value = 6, minValue = 1, maxValue = 30, name = "Freeze duration", comment = "In seconds")
     public int FREEZE_DURATION;
 
-    @DefaultInt(value = 10, name = "Invisibility (Vampire Lord) Duration", comment = "In seconds")
+    @DefaultInt(value = 25, name = "Invisibility (Vampire Lord) Duration", comment = "In seconds")
     public int INVISIBILITY_DURATION;
-    @DefaultInt(value = 45, name = "Invisibility Cooldown", comment = "In seconds")
+    @DefaultInt(value = 70, name = "Invisibility Cooldown", comment = "In seconds")
     public int INVISIBILITY_COOLDOWN;
     @DefaultBoolean(value = true, name = "invisibility_enabled")
     public boolean INVISIBILITY_ENABLED;
@@ -87,7 +87,7 @@ public class BalanceVampireActions extends BalanceValues {
     public int SUMMON_BAT_COUNT;
 
 
-    @DefaultInt(value = 30, comment = "In seconds")
+    @DefaultInt(value = 60, comment = "In seconds")
     public int DISGUISE_DURATION;
     @DefaultBoolean(value = true, name = "disguise_enabled")
     public boolean DISGUISE_ENABLED;
