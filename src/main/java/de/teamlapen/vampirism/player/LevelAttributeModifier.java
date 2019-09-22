@@ -92,4 +92,12 @@ public class LevelAttributeModifier {
             att.removeModifier(m);
         }
     }
+
+    /**
+     * @param attribute the attribute whose UUID you need
+     * @return the UUID of the given attribute
+     */
+    public static UUID getUUID(IAttribute attribute) {
+        return modifiers.get(attribute);
+    }
 }

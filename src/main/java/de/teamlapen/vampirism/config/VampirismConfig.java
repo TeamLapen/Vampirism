@@ -212,6 +212,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue renderVampireForestFog;
         public final ForgeConfigSpec.BooleanValue renderScreenOverlay;
         public final ForgeConfigSpec.ConfigValue<String> actionOrder;
+        public final ForgeConfigSpec.BooleanValue disableFovChange;
 
         Client(ForgeConfigSpec.Builder builder) {
             builder.comment("Client configuration settings")
@@ -233,6 +234,7 @@ public class VampirismConfig {
             guiSkillButton = builder.comment("Render skill menu button in inventory").define("skillButtonEnable", true);
 
             actionOrder = builder.comment("Action Order in Select Action Screen (reset with \"\"), unnamed actions will appended").define("actionOrder", "");
+            disableFovChange = builder.comment("Disable the FOV change caused by the speed buf for vampire players").define("disableFovChange", false);
 
             builder.pop();
 
