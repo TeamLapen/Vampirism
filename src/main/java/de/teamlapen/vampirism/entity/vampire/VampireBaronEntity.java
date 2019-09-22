@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.AttackRangedDarkBloodGoal;
 import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
+import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -332,7 +333,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         this.goalSelector.addGoal(6, new BaronAIAttackRanged(this, 60, 64, 6, 4));
         this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, PlayerEntity.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel(input)));//TODO Works only partially. Pathfinding somehow does not find escape routes
         this.goalSelector.addGoal(7, new RandomWalkingGoal(this, 0.2));
-        this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 10.0F));
+        this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
