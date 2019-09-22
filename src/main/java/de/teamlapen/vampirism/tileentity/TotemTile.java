@@ -422,7 +422,11 @@ public class TotemTile extends TileEntity implements ITickableTileEntity {//TODO
 //        if (v != null) {
 //            v.removeTotemAndReset(this.pos);
 //        }
-//        updateBossinfoPlayers(null);
+//        if (capturingFaction != null) {
+//            abortCapture(false);
+//        } else{
+//            updateBossinfoPlayers(null);
+//        }
 //        unregisterVampireArea();
 
         super.remove();
