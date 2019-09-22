@@ -26,13 +26,6 @@ public interface IEntityWithHome {
      */
     BlockPos getHomePosition();
 
-    /**
-     * Checks if the given position i within the entity's home area
-     */
-    default boolean isWithinHomeDistance(int posX, int posY, int posZ) {
-
-        return this.isWithinHomeDistance(posX, posY, posZ);
-    }
 
     /**
      * Checks if the given position i within the entity's home area
