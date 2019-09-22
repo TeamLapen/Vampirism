@@ -26,6 +26,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -129,7 +130,7 @@ public class Helper {
 
     public static boolean canTurnPlayer(IVampire biter, @Nullable PlayerEntity target) {
         if (biter instanceof IVampirePlayer) {
-            return Permissions.canPlayerTurnPlayer(((IVampirePlayer) biter).getRepresentingPlayer());
+            return PermissionAPI.hasPermission(((IVampirePlayer) biter).getRepresentingPlayer(), Permissions.INFECT_PLAYER);
         } else {
             return !VampirismConfig.SERVER.disableMobBiteInfection.get();
         }

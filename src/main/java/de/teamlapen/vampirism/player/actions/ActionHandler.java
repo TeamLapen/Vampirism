@@ -1,18 +1,21 @@
 package de.teamlapen.vampirism.player.actions;
 
 import com.google.common.collect.ImmutableList;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.core.ModRegistries;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
+import de.teamlapen.vampirism.util.Permissions;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -254,6 +257,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             return IAction.PERM.COOLDOWN;
         } else {
             if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
+            if (!isActionAllowedPermission(action)) return IAction.PERM.DISALLOWED;
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
                 if (action.onActivated(player)) {
@@ -281,6 +285,11 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             }
         }
         unlockedActions.addAll(actions);
+    }
+
+    private boolean isActionAllowedPermission(IAction action) {
+        ResourceLocation id = action.getRegistryName();
+        return player.getRepresentingEntity().world.isRemote || PermissionAPI.hasPermission(player.getRepresentingPlayer(), Permissions.ACTION_PREFIX + id.getNamespace() + "." + id.getPath());
     }
 
     /**

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import com.mojang.datafixers.util.Either;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -62,6 +63,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -281,7 +283,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 return BITE_TYPE.SUCK_BLOOD_CREATURE;
             }
         } else if (entity instanceof PlayerEntity) {
-            if (((PlayerEntity) entity).abilities.isCreativeMode || !Permissions.getPermission("pvp", player)) {
+            if (((PlayerEntity) entity).abilities.isCreativeMode || !Permissions.isPvpEnabled(player)) {
                 return BITE_TYPE.NONE;
             }
             boolean hunter = Helper.isHunter(player);
@@ -1087,6 +1089,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * @param hunter Is the entity a hunter?
      */
     private void biteAttack(LivingEntity entity, boolean hunter) {
+        if (!PermissionAPI.hasPermission(player, Permissions.BITE_PLAYER)) return;
         float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getAttribute(VReference.biteDamage).getValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
         if ((entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) || entity instanceof CreatureEntity && ExtendedCreature.get((CreatureEntity) entity).hasPoisonousBlood()) {

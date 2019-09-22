@@ -275,6 +275,7 @@ public class VampirismMod {
         VampireBookManager.getInstance().init();
         BloodPotions.register();
         StructureManager.init();
+        Permissions.init();
         VampirismEntitySelectors.registerSelectors();
         ModCommands.registerArgumentTypes();
 
