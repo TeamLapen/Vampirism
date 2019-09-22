@@ -31,6 +31,7 @@ import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -193,6 +194,37 @@ public class VampirismHUDOverlay extends ExtendedGui {
             mc.fontRenderer.drawString(text, x, y - 1, 0);
             mc.fontRenderer.drawString(text, x, y, color);
         }
+    }
+
+    private boolean addTempPoison;
+    private EffectInstance addedTempPoison;
+
+    @SubscribeEvent
+    public void onRenderHealthBarPost(RenderGameOverlayEvent.Post event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH) {
+            return;
+        }
+        if (addTempPoison) {
+            mc.player.activePotionsMap.remove(Effects.POISON);
+        }
+
+
+    }
+
+    @SubscribeEvent
+    public void onRenderHealthBarPre(RenderGameOverlayEvent.Pre event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH) {
+            return;
+        }
+        addTempPoison = mc.player.isPotionActive(ModEffects.poison) && !mc.player.activePotionsMap.containsKey(Effects.POISON);
+
+        if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
+            if (addedTempPoison == null) {
+                addedTempPoison = new EffectInstance(Effects.POISON, 100);
+            }
+            mc.player.activePotionsMap.put(Effects.POISON, addedTempPoison);
+        }
+
     }
 
     @SubscribeEvent

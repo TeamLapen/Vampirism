@@ -2,8 +2,12 @@ package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,12 +17,14 @@ import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -49,10 +55,19 @@ public abstract class VampirismHunterArmor extends ArmorItem {
     }
 
     @Override
+    public void addInformation(ItemStack p_77624_1_, @Nullable World p_77624_2_, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
+        super.addInformation(p_77624_1_, p_77624_2_, tooltip, p_77624_4_);
+        PlayerEntity player = Minecraft.getInstance().player;
+        if (player != null && Helper.isVampire(player)) {
+            tooltip.add(UtilLib.translated("text.vampirism.poisonous_to_hunter").applyTextStyle(TextFormatting.RED));
+        }
+    }
+
+    @Override
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
         if (player.ticksExisted % 16 == 8) {
             if (Helper.isVampire(player)) {
-                player.addPotionEffect(new EffectInstance(Effects.POISON, 20, 1));
+                player.addPotionEffect(new EffectInstance(ModEffects.poison, 20, 1));
             }
         }
     }

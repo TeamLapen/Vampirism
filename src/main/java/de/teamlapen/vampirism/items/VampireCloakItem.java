@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.CloakModel;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -16,7 +17,6 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -46,7 +46,7 @@ public class VampireCloakItem extends ArmorItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (Helper.isHunter(Minecraft.getInstance().player)) {
+        if (Minecraft.getInstance().player != null && Helper.isHunter(Minecraft.getInstance().player)) {
             tooltip.add(UtilLib.translated("text.vampirism.poisonous_to_hunter").applyTextStyle(TextFormatting.RED));
         }
     }
@@ -68,7 +68,7 @@ public class VampireCloakItem extends ArmorItem {
         super.onArmorTick(stack, world, player);
         if (player.ticksExisted % 16 == 8) {
             if (Helper.isHunter(player)) {
-                player.addPotionEffect(new EffectInstance(Effects.POISON, 20, 1));
+                player.addPotionEffect(new EffectInstance(ModEffects.poison, 20, 1));
             }
         }
     }

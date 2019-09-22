@@ -5,12 +5,12 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -48,7 +48,7 @@ public class InjectionItem extends VampirismItem {
                         playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
                     } else {
                         PotionSanguinare.addRandom(playerIn, true);
-                        playerIn.addPotionEffect(new EffectInstance(Effects.POISON, 60));
+                        playerIn.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
                     }
                 } else if (Helper.isVampire(playerIn)) {
                     playerIn.sendMessage(new TranslationTextComponent("text.vampirism.already_vampire"));

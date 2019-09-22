@@ -1,10 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.potion.PotionSanguinare;
-import de.teamlapen.vampirism.potion.PotionThirst;
-import de.teamlapen.vampirism.potion.VampirismNightVisionPotion;
-import de.teamlapen.vampirism.potion.VampirismPotion;
+import de.teamlapen.vampirism.potion.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -31,6 +28,7 @@ public class ModEffects {
     public static final Effect disguise_as_vampire = getNull();
     public static final Effect fire_protection = getNull();
     public static final Effect garlic = getNull();
+    public static final Effect poison = getNull();
     private static final Logger LOGGER = LogManager.getLogger(ModEffects.class);
     private static Effect modded_night_vision;  //Substituted version
     private static Effect vanilla_night_vision; //Vanilla night vision instance
@@ -46,6 +44,7 @@ public class ModEffects {
         registry.register(new VampirismPotion("fire_protection", EffectType.BENEFICIAL, 14981690));
         registry.register(new VampirismPotion("disguise_as_vampire", EffectType.NEUTRAL, 0x999900));
         registry.register(new VampirismPotion("garlic", EffectType.HARMFUL, 0xFFFFFF));
+        registry.register(new PotionPoison("poison", 0x4E9331));
     }
 
     static void fixNightVisionEffecTypes() {

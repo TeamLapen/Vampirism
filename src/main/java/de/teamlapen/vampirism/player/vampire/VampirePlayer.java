@@ -1090,7 +1090,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getAttribute(VReference.biteDamage).getValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
         if ((entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) || entity instanceof CreatureEntity && ExtendedCreature.get((CreatureEntity) entity).hasPoisonousBlood()) {
-            player.addPotionEffect(new EffectInstance(Effects.POISON, 60));
+            player.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
             if (player instanceof ServerPlayerEntity) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.POISONOUS_BITE);
             }
@@ -1160,7 +1160,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             blood = VampirePlayer.get((PlayerEntity) entity).onBite(this);
             saturationMod = VampirePlayer.get((PlayerEntity) entity).getBloodSaturation();
             if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
-                player.addPotionEffect(new EffectInstance(Effects.POISON, 15, 2));
+                player.addPotionEffect(new EffectInstance(ModEffects.poison, 15, 2));
             }
         } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD) {
             blood = ((IBiteableEntity) entity).onBite(this);
