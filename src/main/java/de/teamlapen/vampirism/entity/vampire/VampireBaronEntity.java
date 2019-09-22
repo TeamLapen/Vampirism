@@ -53,7 +53,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return world.getBiome(blockPos) == ModBiomes.vampire_forest && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
     private final SaveableMinionHandler<IVampireMinion.Saveable> minionHandler;
-    private final int MAX_LEVEL = 4;
+    public static final int MAX_LEVEL = 4;
     /**
      * Used for ranged vs melee attack decision
      */

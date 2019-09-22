@@ -40,11 +40,11 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
 
             AxisAlignedBB axisalignedbb = entity.getBoundingBox().grow(4.0D, 2.0D, 4.0D);
             List<LivingEntity> list1 = entity.getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
-
+            LivingEntity thrower = entity.getThrower();
 
             if (!list1.isEmpty()) {
                 for (LivingEntity entitylivingbase : list1) {
-                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.getType() == RayTraceResult.Type.ENTITY);
+                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.getType() == RayTraceResult.Type.ENTITY, thrower);
                 }
             }
 
