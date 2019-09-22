@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.client.model.CloakModel;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -46,7 +45,8 @@ public class VampireCloakItem extends ArmorItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (Minecraft.getInstance().player != null && Helper.isHunter(Minecraft.getInstance().player)) {
+        PlayerEntity playerEntity = VampirismMod.proxy.getClientPlayer();
+        if (playerEntity != null && Helper.isHunter(playerEntity)) {
             tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_hunter").applyTextStyle(TextFormatting.RED));
         }
     }

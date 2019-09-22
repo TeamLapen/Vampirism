@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -22,6 +22,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -54,10 +56,11 @@ public abstract class VampirismHunterArmor extends ArmorItem {
         return map;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack p_77624_1_, @Nullable World p_77624_2_, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
         super.addInformation(p_77624_1_, p_77624_2_, tooltip, p_77624_4_);
-        PlayerEntity player = Minecraft.getInstance().player;
+        PlayerEntity player = VampirismMod.proxy.getClientPlayer();
         if (player != null && Helper.isVampire(player)) {
             tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_hunter").applyTextStyle(TextFormatting.RED));
         }
