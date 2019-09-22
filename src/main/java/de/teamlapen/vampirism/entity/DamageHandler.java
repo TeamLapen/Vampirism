@@ -2,11 +2,14 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
+import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
@@ -119,6 +122,11 @@ public class DamageHandler {
             }
             if (actionHandler.isActionActive(VampireActions.vampire_invisibility)) {
                 actionHandler.toggleAction(VampireActions.vampire_invisibility);
+            }
+        } else if (vampire && entity instanceof IEntityActionUser) {
+            ActionHandlerEntity h = ((IEntityActionUser) entity).getActionHandler();
+            if (h.isActionActive(EntityActions.entity_invisible)) {
+                h.deactivateAction();
             }
         }
     }
