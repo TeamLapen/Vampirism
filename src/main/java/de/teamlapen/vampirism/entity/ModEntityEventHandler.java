@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.entity.goals.GolemTargetVampireGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.BloodPotionTableContainer;
@@ -25,6 +26,7 @@ import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -126,6 +128,12 @@ public class ModEntityEventHandler {
                         warnAboutCreeper = false;
                     }
                 }
+            }
+        }
+
+        if (!event.getWorld().isRemote && Balance.general.GOLEM_ATTACK_VAMPIRE) {
+            if (event.getEntity() instanceof IronGolemEntity) {
+                ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(4, new GolemTargetVampireGoal((IronGolemEntity) event.getEntity()));
             }
         }
         //------------------
