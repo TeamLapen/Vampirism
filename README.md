@@ -108,7 +108,7 @@ That's it.
 
 #### Eclipse or other IDEs
 If you would like to setup Vampirism in another way or another IDE, you should pay regard to the following points.  
-1. Make sure `src/main/java`, `src/api/java´ and `src/lib/java` are marked as source folders and `src/main/resources` and `src/lib/resources` are marked as resource folders.  
+1. Make sure `src/main/java`, `src/api/java` and `src/lib/java` are marked as source folders and `src/main/resources` and `src/lib/resources` are marked as resource folders.  
 2. Vampirism might have a few dependencies (e.g. Waila), which are specified in the gradle files and should be automatically downloaded and added when you run `ideaModule` or `eclipse`.  
 3. Vampirism requires at least Java 8 
 
