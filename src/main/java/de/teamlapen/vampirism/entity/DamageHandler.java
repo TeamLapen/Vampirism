@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.action.EntityActions;
+import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
@@ -19,6 +20,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+
+import javax.annotation.Nullable;
 
 /**
  * Centralizes the calculation and appliance of different sorts of damages or similar.
@@ -94,6 +97,21 @@ public class DamageHandler {
      * @param directHit If the entity was hit directly
      */
     public static void affectEntityHolyWaterSplash(LivingEntity entity, EnumStrength strength, double distSq, boolean directHit) {
+        affectEntityHolyWaterSplash(entity, strength, distSq, directHit, null);
+    }
+
+    /**
+     * Applies all holy water effects to the given entity.
+     * Used if a holy water splash bottle affects an entity.
+     * Affects vampires and undead (less).
+     *
+     * @param entity    The affected entity
+     * @param strength  The used strength
+     * @param distSq    The squared distance from the center point
+     * @param directHit If the entity was hit directly
+     * @param source    The throwing entity
+     */
+    public static void affectEntityHolyWaterSplash(LivingEntity entity, EnumStrength strength, double distSq, boolean directHit, @Nullable LivingEntity source) {
         boolean vampire = Helper.isVampire(entity);
         if (entity.canBeHitWithPotion() && (vampire || CreatureAttribute.UNDEAD.equals(entity.getCreatureAttribute()))) {
             if (distSq < 16.0D) {
@@ -110,7 +128,10 @@ public class DamageHandler {
                 double amount = (affect * (Balance.general.HOLY_WATER_SPLASH_DAMAGE * (strength == EnumStrength.WEAK ? 1 : strength == EnumStrength.MEDIUM ? Balance.general.HOLY_WATER_TIER_DAMAGE_INC : (Balance.general.HOLY_WATER_TIER_DAMAGE_INC * Balance.general.HOLY_WATER_TIER_DAMAGE_INC))) + 0.5D);
                 if (entity instanceof PlayerEntity) {
                     int l = VampirePlayer.get((PlayerEntity) entity).getLevel();
-                    amount = scaleDamageWithLevel(l, amount * 0.8, amount * 1.1);
+                    amount = scaleDamageWithLevel(l, REFERENCE.HIGHEST_VAMPIRE_LEVEL, amount * 0.8, amount * 1.3);
+                } else if (entity instanceof VampireBaronEntity) {
+                    int l = ((VampireBaronEntity) entity).getLevel();
+                    amount = scaleDamageWithLevel(l, VampireBaronEntity.MAX_LEVEL, amount * 0.8, amount * 2);
                 }
                 entity.attackEntityFrom(VReference.HOLY_WATER, (float) amount);
             }
@@ -140,8 +161,8 @@ public class DamageHandler {
      * @param maxDamage
      * @return
      */
-    private static double scaleDamageWithLevel(int level, double minDamage, double maxDamage) {
-        return minDamage + level / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL * (maxDamage - minDamage);
+    private static double scaleDamageWithLevel(int level, int maxLevel, double minDamage, double maxDamage) {
+        return minDamage + level / (double) maxLevel * (maxDamage - minDamage);
     }
 
 }
