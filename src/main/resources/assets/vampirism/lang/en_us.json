@@ -179,6 +179,7 @@
   "text.vampirism.garlic_weapons": "This weapon is coated with garlic and poisons vampires./nBut the garlic wears off.",
   "text.vampirism.outdated": "You are running Vampirism %s, the latest version is %s.",
   "text.vampirism.action.cooldown_not_over": "Cooldown is not over yet",
+  "text.vampirism.action.disallowed": "You cannot use this action here and now",
   "text.vampirism.poisonous_to_vampires": "Poisonous to vampires",
   "text.vampirism.poisonous_to_hunter": "Poisonous to hunter",
   "text.vampirism.deals_more_damage_to": "Deals %s percent more damage against %s",
