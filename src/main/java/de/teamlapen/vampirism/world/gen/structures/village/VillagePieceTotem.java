@@ -80,7 +80,7 @@
 //            if (t instanceof TotemTile) {
 //                IPlayableFaction[] factions = VampirismAPI.factionRegistry().getPlayableFactions();
 //                IPlayableFaction f = factions[randomIn.nextInt(factions.length)];
-//                ((TotemTile) t).forceChangeFaction(forceHunter ? VReference.HUNTER_FACTION : f, true);
+//                ((TileTotem) t).setDefaultFaction(forceHunter ? VReference.HUNTER_FACTION : f, true);
 //            }
 //        }
 //
