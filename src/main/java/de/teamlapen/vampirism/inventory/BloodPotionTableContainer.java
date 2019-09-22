@@ -161,12 +161,12 @@ public class BloodPotionTableContainer extends Container {
 
     @Nonnull
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
+        ItemStack itemstackCopy = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
+            itemstackCopy = itemstack1.copy();
             if (index >= 0 && index < 4) {
                 if (!this.mergeItemStack(itemstack1, 4, 40, true)) {
                     return ItemStack.EMPTY;
@@ -190,14 +190,14 @@ public class BloodPotionTableContainer extends Container {
                 slot.onSlotChanged();
             }
 
-            if (itemstack.getCount() == itemstack1.getCount()) {
+            if (itemstackCopy.getCount() == itemstack1.getCount()) {
                 return ItemStack.EMPTY;
             }
 
             slot.onTake(playerIn, itemstack1);
         }
 
-        return itemstack;
+        return itemstackCopy;
     }
 
     @SideOnly(Side.CLIENT)

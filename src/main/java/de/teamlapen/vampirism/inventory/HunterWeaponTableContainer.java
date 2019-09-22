@@ -104,18 +104,18 @@ public class HunterWeaponTableContainer extends Container {
 
     @Nonnull
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
+        ItemStack itemStackCopy = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
+            itemStackCopy = itemstack1.copy();
             if (index == 0) {
                 if (!this.mergeItemStack(itemstack1, 17, 53, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onSlotChange(itemstack1, itemstack);
+                slot.onSlotChange(itemstack1, itemStackCopy);
             } else if (index >= 17 && index < 44) {
                 if (!this.mergeItemStack(itemstack1, 44, 53, false)) {
                     return ItemStack.EMPTY;
@@ -128,19 +128,19 @@ public class HunterWeaponTableContainer extends Container {
                 return ItemStack.EMPTY;
             }
 
-            if (itemstack.isEmpty()) {
+            if (itemstack1.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
 
-            if (itemstack.getCount() == itemstack1.getCount()) {
+            if (itemStackCopy.getCount() == itemstack1.getCount()) {
                 return ItemStack.EMPTY;
             }
 
             slot.onTake(playerIn, itemstack1);
         }
 
-        return itemstack;
+        return itemStackCopy;
     }
 }
