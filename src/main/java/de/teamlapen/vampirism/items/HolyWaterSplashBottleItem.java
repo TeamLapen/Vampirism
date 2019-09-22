@@ -33,11 +33,8 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
 
     @Override
     public void onImpact(ThrowableItemEntity entity, ItemStack stack, RayTraceResult result, boolean remote) {
-
         TIER tier = getVampirismTier();
         if (!remote) {
-
-
             AxisAlignedBB axisalignedbb = entity.getBoundingBox().grow(4.0D, 2.0D, 4.0D);
             List<LivingEntity> list1 = entity.getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
             LivingEntity thrower = entity.getThrower();
