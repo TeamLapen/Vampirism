@@ -56,11 +56,16 @@ public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
     public void setRotationAngles(T e, float f1, float f2, float f3, float f4, float f5, float f6) {
         super.setRotationAngles(e, f1, f2, f3, f4, f5, f6);
         hatRim.rotateAngleX = super.bipedHead.rotateAngleX;
-        hatRim.rotateAngleY = super.bipedHead.rotateAngleY;
         hatRim.rotateAngleZ = super.bipedHead.rotateAngleZ;
         hatTop.rotateAngleX = super.bipedHead.rotateAngleX;
-        hatTop.rotateAngleY = super.bipedHead.rotateAngleY;
         hatTop.rotateAngleZ = super.bipedHead.rotateAngleZ;
+        if (isSneak) {
+            hatRim.rotationPointY = super.bipedHead.rotationPointY + 3.2F;
+            hatTop.rotationPointY = super.bipedHead.rotationPointY + 3.2F;
+        } else {
+            hatRim.rotationPointY = super.bipedHead.rotationPointY;
+            hatTop.rotationPointY = super.bipedHead.rotationPointY;
+        }
     }
 
     @Override
