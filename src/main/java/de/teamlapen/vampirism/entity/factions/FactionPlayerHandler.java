@@ -7,10 +7,10 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.api.event.FactionEvent;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.util.ModEventFactory;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +22,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.Event;
@@ -92,12 +91,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Override
     public boolean canJoin(IPlayableFaction faction) {
-        FactionEvent.CanJoinFaction event = new FactionEvent.CanJoinFaction(this, currentFaction, faction);
-        MinecraftForge.EVENT_BUS.post(event);
-        if (event.getResult() == Event.Result.DEFAULT) {
+        Event.Result res = ModEventFactory.fireCanJoinFactionEvent(this, currentFaction, faction);
+        if (res == Event.Result.DEFAULT) {
             return currentFaction == null;
         }
-        return event.getResult() == Event.Result.ALLOW;
+        return res == Event.Result.ALLOW;
     }
 
     @Override
@@ -243,8 +241,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             LOGGER.warn("Level {} in faction {} cannot be reached", level, faction.getID());
             return false;
         }
-        FactionEvent.ChangeLevelOrFaction event = new FactionEvent.ChangeLevelOrFaction(this, old, oldLevel, faction, faction == null ? 0 : level);
-        if (MinecraftForge.EVENT_BUS.post(event)) {
+        if (ModEventFactory.fireChangeLevelOrFactionEvent(this, old, oldLevel, faction, faction == null ? 0 : level)) {
             LOGGER.debug("Faction or Level change event canceled");
             return false;
         }
