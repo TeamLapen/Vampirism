@@ -49,6 +49,7 @@ public class LayerPlayerFaceOverlay<T extends MobEntity & IPlayerFace, M extends
         GlStateManager.setProfile(GlStateManager.Profile.PLAYER_SKIN);
 
         (this.renderBiped.getEntityModel()).bipedHead.render(scale);
+        (this.renderBiped.getEntityModel()).bipedHeadwear.render(scale);
         GlStateManager.unsetProfile(GlStateManager.Profile.PLAYER_SKIN);
 
         GlStateManager.popMatrix();
