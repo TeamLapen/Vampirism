@@ -59,6 +59,7 @@ public class TotemTile extends TileEntity implements ITickableTileEntity {//TODO
     private final static Logger LOGGER = LogManager.getLogger(TotemTile.class);
     private final static int NOTIFY_DISTANCE_SQ = 40000;
     private final static int DURATION_PHASE_1 = 60;
+    private final Random rng = new Random();
     /**
      * Store a dimension -> blockpos -> BoundingBox map of villages controlled by vampires. Added/Updated on update package. Removed on invalidate.
      * <p>
@@ -653,6 +654,21 @@ public class TotemTile extends TileEntity implements ITickableTileEntity {//TODO
 //                        }
 //
 //                    }
+//                }
+//            //Replace blocks
+//            if (controllingFaction != null && Balance.village.REPLACE_BLOCKS && time % 20 == 0) {
+//                getAffectedArea();//Make sure the affected area is calculated
+//                int x = (int) (affectedArea.minX + rng.nextInt((int) (affectedArea.maxX - affectedArea.minX)));
+//                int z = (int) (affectedArea.minZ + rng.nextInt((int) (affectedArea.maxZ - affectedArea.minZ)));
+//                BlockPos pos = new BlockPos(x, world.getHeight(Heightmap.Type.WORLD_SURFACE, new BlockPos(x, 0, z)).getY() - 1, z);
+//                BlockState b = world.getBlockState(pos);
+//                if (b.getBlock() == world.getBiome(pos).getSurfaceBuilderConfig().getTop().getBlock() && b.getBlock() != Blocks.SAND && controllingFaction == VReference.VAMPIRE_FACTION) {
+//                    world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
+//                    if (world.getBlockState(pos.up()).getBlock() == Blocks.TALL_GRASS) {
+//                        world.removeBlock(pos.up(), false);
+//                    }
+//                } else if (b.getBlock() == ModBlocks.cursed_earth && controllingFaction == VReference.HUNTER_FACTION) {
+//                    world.setBlockState(pos, world.getBiome(pos).getSurfaceBuilderConfig().getTop());
 //                }
 //            }
         }
