@@ -1,6 +1,3 @@
 {
-  "parent": "vampirism:item/hunter_axe",
-  "textures": {
-    "texture": "vampirism:item/hunter_axe_enhanced"
-  }
+  "parent": "vampirism:item/hunter_axe"
 }

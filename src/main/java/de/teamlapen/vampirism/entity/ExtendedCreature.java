@@ -277,7 +277,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         }
         if (markForBloodCalculation) {
             if (VampirismEntityRegistry.biteableEntryManager.init()) {
-                BiteableEntry entry = VampirismEntityRegistry.biteableEntryManager.get(entity);
+                BiteableEntry entry = VampirismEntityRegistry.biteableEntryManager.calculate(entity);
                 if (entry != null) {
                     setMaxBlood(entry.blood);
                 }

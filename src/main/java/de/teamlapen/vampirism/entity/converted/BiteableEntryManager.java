@@ -51,19 +51,42 @@ public class BiteableEntryManager {
     }
 
     /**
-     * @param creature for which a {@link BiteableEntry} is requested
-     * @return {@code null} if resources aren't loaded or the creatures type is blacklisted. Otherwise the corresponding entry or a new {@link #calculate} entry
+     * Calculate the blood value for the given creature
+     * If the result is 0 blood this returns null and the entity is blacklisted
+     *
+     * @return The created entry or null
      */
-    @SuppressWarnings("ConstantConditions")
     public @Nullable
-    BiteableEntry get(CreatureEntity creature) {
-        if (!initialized) return null;
+    BiteableEntry calculate(@Nonnull CreatureEntity creature) {
         ResourceLocation id = new ResourceLocation(creature.getEntityString());
         if (blacklist.contains(id)) return null;
-        if (biteableEntries.containsKey(id) || calculated.containsKey(id)) {
-            return biteableEntries.containsKey(id) ? biteableEntries.get(id) : calculated.get(id);
+        if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get() || !(creature instanceof AnimalEntity)) {
+            blacklist.add(id);
+            return null;
         }
-        return calculate(creature, id);
+        AxisAlignedBB bb = creature.getBoundingBox();
+        double v = bb.maxX - bb.minX;
+        v *= bb.maxY - bb.minY;
+        v *= bb.maxZ - bb.minZ;
+        if (creature.isChild()) {
+            v *= 8; //Rough approximation. Should work for most vanilla animals. Avoids having to change the entities scale
+        }
+        int blood = 0;
+
+        if (v >= 0.3) {
+            blood = (int) (v * 10d);
+            blood = Math.min(15, blood);//Make sure there are no too crazy values
+        }
+        if (creature.getMaxHealth() > 50) {
+            blood = 0;//Make sure very strong creatures cannot be easily killed by sucking their blood
+        }
+        LOGGER.debug("Calculated size {} and blood value {} for entity {}", Math.round(v * 100) / 100F, blood, id);
+        if (blood == 0) {
+            blacklist.add(id);
+            return null;
+        } else {
+            return addCalculated(id, blood);
+        }
     }
 
     /**
@@ -97,40 +120,16 @@ public class BiteableEntryManager {
     }
 
     /**
-     * Calculate the blood value for the given creature
-     * If the result is 0 blood this returns null and the entity is blacklisted
-     *
-     * @return The created entry or null
+     * @param creature for which a {@link BiteableEntry} is requested
+     * @return {@code null} if resources aren't loaded or the creatures type is blacklisted.
      */
-    private @Nullable
-    BiteableEntry calculate(CreatureEntity creature, ResourceLocation id) {
-        if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get() || !(creature instanceof AnimalEntity)) {
-            blacklist.add(id);
-            return null;
-        }
-        AxisAlignedBB bb = creature.getBoundingBox();
-        double v = bb.maxX - bb.minX;
-        v *= bb.maxY - bb.minY;
-        v *= bb.maxZ - bb.minZ;
-        if (creature.isChild()) {
-            v *= 8; //Rough approximation. Should work for most vanilla animals. Avoids having to change the entities scale
-        }
-        int blood = 0;
-
-        if (v >= 0.3) {
-            blood = (int) (v * 10d);
-            blood = Math.min(15, blood);//Make sure there are no too crazy values
-        }
-        if (creature.getMaxHealth() > 50) {
-            blood = 0;//Make sure very strong creatures cannot be easily killed by sucking their blood
-        }
-        LOGGER.debug("Calculated size {} and blood value {} for entity {}", Math.round(v * 100) / 100F, blood, id);
-        if (blood == 0) {
-            blacklist.add(id);
-            return null;
-        } else {
-            return addCalculated(id, blood);
-        }
+    @SuppressWarnings("ConstantConditions")
+    public @Nullable
+    BiteableEntry get(CreatureEntity creature) {
+        if (!initialized) return null;
+        ResourceLocation id = new ResourceLocation(creature.getEntityString());
+        if (biteableEntries.containsKey(id)) return biteableEntries.get(id);
+        return calculated.getOrDefault(id, null);
     }
 
     void setNewBiteables(Map<ResourceLocation, BiteableEntry> biteableEntries, Set<ResourceLocation> blacklist) {
