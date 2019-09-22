@@ -44,6 +44,9 @@ public class BalanceGeneral extends BalanceValues {
     @DefaultInt(value = 25, minValue = 1, comment = "Drop orchid every n times breaking a leave in the vampire forest")
     public int DROP_ORCHID_FROM_LEAVES_CHANCE;
 
+    @DefaultBoolean(value = true, comment = "If iron golems should attack vampire NPCs if in a non vampire village")
+    public boolean GOLEM_ATTACK_VAMPIRE;
+
     /**
      * Creates a configuration for balance values
      *
