@@ -30,6 +30,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -135,6 +136,10 @@ public class WeaponTableBlock extends VampirismBlock {
                 opt.ifPresent(fluidHandler -> {
                     FluidStack missing = new FluidStack(Fluids.LAVA, (MAX_LAVA - fluid) * MB_PER_META);
                     FluidStack drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);//TODO 1.14 weapontable cannt be filled from not empty to full when using lava bucket
+                    if (drainable.isEmpty()) { //Buckets can only provide {@link Fluid.BUCKET_VOLUME} at a time, so try this too. Additional lava is wasted though
+                        missing.setAmount(FluidAttributes.BUCKET_VOLUME);
+                        drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);
+                    }
                     if (drainable.getAmount() >= MB_PER_META) {
                         FluidStack drained = fluidHandler.drain(missing, IFluidHandler.FluidAction.EXECUTE);
                         if (drained.getAmount() > 0) {
