@@ -44,7 +44,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.List;
@@ -58,7 +57,7 @@ public class RenderHandler {
     private final Minecraft mc;
     private final int BLOOD_VISION_FADE_TICKS = 80;
 
-    private final int VAMPIRE_BIOME_FADE_TICKS = 160;
+    private final int VAMPIRE_BIOME_FADE_TICKS = 60;
     private final Logger LOGGER = LogManager.getLogger();
     private final List<LivingEntity> renderedEntitiesWithBlood = Lists.newLinkedList();
     private final List<LivingEntity> renderedEntitiesWithoutBlood = Lists.newLinkedList();
@@ -172,16 +171,6 @@ public class RenderHandler {
 
     }
 
-    @SubscribeEvent
-    public void onFogDensity(EntityViewRenderEvent.FogDensity event) {
-        if (event.getInfo().getRenderViewEntity() instanceof PlayerEntity) {
-            if (vampireBiomeTicks > 10 || bloodVisionTicks > 0) {
-                event.setDensity(1.0F);
-                event.setCanceled(true);
-            }
-        }
-
-    }
 
     @SubscribeEvent
     public void onRenderHand(RenderHandEvent event) {
@@ -288,31 +277,14 @@ public class RenderHandler {
     }
 
     @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-        if (mc.world == null) return;
-
-        if (bloodVisionTicks > 0) {
-
-            renderBloodVisionOutlines((bloodVisionTicks + (bloodVisionTicks - lastBloodVisionTicks) * event.getPartialTicks()) / (float) BLOOD_VISION_FADE_TICKS, event.getPartialTicks());
-
-        }
-        if (vampireBiomeTicks > 0) {
-            renderVampireBiomeFog(vampireBiomeTicks);
-        }
-        if (displayHeight != mc.mainWindow.getHeight() || displayWidth != mc.mainWindow.getWidth()) {
-            this.displayHeight = mc.mainWindow.getHeight();
-            this.displayWidth = mc.mainWindow.getWidth();
-            if (GLX.isNextGen() && isRenderEntityOutlines()) {
-                blurShader.createBindFramebuffers(displayWidth, displayHeight);
-                bloodVisionShader1.createBindFramebuffers(displayWidth, displayHeight);
-                bloodVisionShader2.createBindFramebuffers(displayWidth, displayHeight);
-                bloodVisionShader3.createBindFramebuffers(displayWidth, displayHeight);
-
-
-            }
-        }
-
-
+    public void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
+        if (vampireBiomeTicks == 0) return;
+        float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) vampireBiomeTicks / 1.5f;
+        f *= vampireBiomeFogDistanceMultiplier;
+        float fogStart = Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
+        float fogEnd = Math.min(event.getFarPlaneDistance(), 50 * f);
+        GlStateManager.fogStart(event.getFogMode() == -1 ? 0 : fogStart);
+        GlStateManager.fogEnd(fogEnd);
     }
 
     private void adjustBloodVisionShaders(float progress) {
@@ -543,25 +515,32 @@ public class RenderHandler {
         return flag;
     }
 
-    private void renderVampireBiomeFog(int ticks) {
+    @SubscribeEvent
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+        if (mc.world == null) return;
 
-        float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) ticks / 1.5F;
-        f *= vampireBiomeFogDistanceMultiplier;
-        GlStateManager.pushMatrix();
-        boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
-        if (!fog)
-            GlStateManager.enableFog();
-        GlStateManager.fogMode(GlStateManager.FogMode.LINEAR);
-        GlStateManager.fogStart(6.0F * f);
-        GlStateManager.fogEnd(75F * f);
-        GlStateManager.normal3f(0F, -1F, 0F);
-        GlStateManager.color4f(1F, 1F, 1F, 1F);
-        GlStateManager.fogDensity(1);
-        if (!fog)
-            GlStateManager.disableFog();
-        GlStateManager.popMatrix();
+        if (bloodVisionTicks > 0) {
+
+            renderBloodVisionOutlines((bloodVisionTicks + (bloodVisionTicks - lastBloodVisionTicks) * event.getPartialTicks()) / (float) BLOOD_VISION_FADE_TICKS, event.getPartialTicks());
+
+        }
+
+        if (displayHeight != mc.mainWindow.getHeight() || displayWidth != mc.mainWindow.getWidth()) {
+            this.displayHeight = mc.mainWindow.getHeight();
+            this.displayWidth = mc.mainWindow.getWidth();
+            if (GLX.isNextGen() && isRenderEntityOutlines()) {
+                blurShader.createBindFramebuffers(displayWidth, displayHeight);
+                bloodVisionShader1.createBindFramebuffers(displayWidth, displayHeight);
+                bloodVisionShader2.createBindFramebuffers(displayWidth, displayHeight);
+                bloodVisionShader3.createBindFramebuffers(displayWidth, displayHeight);
+
+
+            }
+        }
+
 
     }
+
 
     private enum Profile {
         HUNTER_DISGUISE {
