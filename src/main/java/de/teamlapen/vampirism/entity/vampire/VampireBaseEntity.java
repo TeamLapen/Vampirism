@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
 @SuppressWarnings("EntityConstructor")
 public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob {
 
-    private final boolean countAsMonsterForSpawn;
+    private final boolean countAsMonsterForSpawn; //TODO 1.14 check if this is still needed. How are mob count limits determined. If so probably have to adjust converted creatures too
     /**
      * Rules to consider for {@link #canSpawn(IWorld, SpawnReason)}
      */

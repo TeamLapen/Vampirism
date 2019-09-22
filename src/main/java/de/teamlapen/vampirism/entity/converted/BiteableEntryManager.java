@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.converted;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.BloodValueLoaderEntites;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.entity.CreatureEntity;
@@ -60,7 +61,7 @@ public class BiteableEntryManager {
     BiteableEntry calculate(@Nonnull CreatureEntity creature) {
         ResourceLocation id = new ResourceLocation(creature.getEntityString());
         if (blacklist.contains(id)) return null;
-        if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get() || !(creature instanceof AnimalEntity)) {
+        if (!VampirismConfig.SERVER.autoCalculateEntityBlood.get() || !(creature instanceof AnimalEntity) || creature instanceof IVampire) {
             blacklist.add(id);
             return null;
         }

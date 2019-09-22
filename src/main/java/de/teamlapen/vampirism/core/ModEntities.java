@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
+import de.teamlapen.vampirism.entity.converted.ConvertedHorseEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedSheepEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.hunter.*;
@@ -52,6 +53,7 @@ public class ModEntities {
     public static final EntityType<ConvertedCreatureEntity> converted_creature;
     public static final EntityType<ConvertedCreatureEntity.IMob> converted_creature_imob = getNull();
     public static final EntityType<ConvertedSheepEntity> converted_sheep = getNull();
+    public static final EntityType<ConvertedHorseEntity> converted_horse = getNull();
     public static final EntityType<CrossbowArrowEntity> crossbow_arrow = getNull();
     public static final EntityType<DarkBloodProjectileEntity> dark_blood_projectile = getNull();
     public static final EntityType<DummyBittenAnimalEntity> dummy_creature;
@@ -116,6 +118,7 @@ public class ModEntities {
         registry.addConvertible(EntityType.RABBIT, RabbitEntity.class, overlay.apply("rabbit"));
         registry.addConvertible(EntityType.SHEEP, SheepEntity.class, overlay.apply("sheep"), new ConvertedSheepEntity.ConvertingHandler());
         registry.addConvertible(EntityType.VILLAGER, VillagerEntity.class, null, new ConvertedVillagerEntity.ConvertingHandler());
+        registry.addConvertible(EntityType.HORSE, HorseEntity.class, overlay.apply("horse"), new ConvertedHorseEntity.ConvertingHandler());
     }
 
     static void registerEntities(IForgeRegistry<EntityType<?>> registry) {
@@ -148,6 +151,7 @@ public class ModEntities {
         registry.register(prepareEntityType("villager_converted", EntityType.Builder.create(ConvertedVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), false));
         registry.register(prepareEntityType("villager_hunter_faction", EntityType.Builder.create(HunterFactionVillagerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true));
         registry.register(prepareEntityType("villager_vampire_faction", EntityType.Builder.create(VampireFactionVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true));
+        registry.register(prepareEntityType("converted_horse", EntityType.Builder.create(ConvertedHorseEntity::new, EntityClassification.CREATURE).size(1.3964844F, 1.6F), false));
 
         //add to biomes
         for (Biome e : getZombieBiomes()) {

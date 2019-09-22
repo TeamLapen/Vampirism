@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.client.render.RenderAreaParticleCloud;
 import de.teamlapen.vampirism.client.render.entities.*;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
+import de.teamlapen.vampirism.entity.converted.ConvertedHorseEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.minions.vampire.VampireMinionBaseEntity;
@@ -27,6 +28,7 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(BlindingBatEntity.class, BatRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(GhostEntity.class, GhostRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ConvertedCreatureEntity.class, ConvertedCreatureRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ConvertedHorseEntity.class, ConvertedHorseRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(BasicHunterEntity.class, BasicHunterRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(BasicVampireEntity.class, BasicVampireRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(HunterTrainerEntity.class, HunterTrainerRenderer::new);
