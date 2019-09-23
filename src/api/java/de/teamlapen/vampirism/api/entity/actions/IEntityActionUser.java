@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 
@@ -33,5 +32,5 @@ public interface IEntityActionUser extends IAdjustableLevel, IFactionEntity {
         return EntityActionTier.Default;
     }
 
-    ActionHandlerEntity getActionHandler();
+    IActionHandlerEntity getActionHandler();
 }
