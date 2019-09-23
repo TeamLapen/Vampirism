@@ -371,6 +371,8 @@ public class ModItems {
 
         registry.register(new BucketItem(ModFluids.blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "blood_bucket"));
         registry.register(new BucketItem(ModFluids.impure_blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "impure_blood_bucket"));
+
+        registry.register(new GarlicBreadItem());
     }
 
     private static Item.Properties creativeTabProps() {

@@ -1,0 +1,15 @@
+{
+  "result": {
+    "item": "vampirism:garlic_bread",
+    "count": 1
+  },
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "vampirism:item_garlic"
+    },
+    {
+      "item": "minecraft:bread"
+    }
+  ]
+}
