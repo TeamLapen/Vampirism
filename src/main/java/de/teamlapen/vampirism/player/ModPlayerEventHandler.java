@@ -1,12 +1,16 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
+
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
@@ -16,8 +20,10 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
+import de.teamlapen.vampirism.items.GarlicBreadItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -118,6 +124,17 @@ public class ModPlayerEventHandler {
         }
         if (event.getEntity() instanceof PlayerEntity && !checkItemUsePerm(event.getItem(), (PlayerEntity) event.getEntityLiving())) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onItemUse(LivingEntityUseItemEvent.Finish event) {
+        if (event.getEntityLiving() instanceof IVampire || (event.getEntityLiving() instanceof PlayerEntity && FactionPlayerHandler.get((PlayerEntity) event.getEntity()).isInFaction(VReference.VAMPIRE_FACTION))) {
+            if (event.getItem().getItem() instanceof GarlicBreadItem) {
+                if (!event.getEntity().getEntityWorld().isRemote) {
+                    DamageHandler.affectVampireGarlicDirect(event.getEntity() instanceof IVampire ? (IVampire) event.getEntity() : VampirePlayer.get((PlayerEntity) event.getEntity()), EnumStrength.MEDIUM);
+                }
+            }
         }
     }
 
