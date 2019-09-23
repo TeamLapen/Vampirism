@@ -21,7 +21,7 @@ import java.util.List;
  * Entity Actions are server side only
  * TODO maybe abstract API interface as well
  */
-public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> {
+public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> implements IActionHandlerEntity {
 
     private T entity;
     private List<IEntityAction> availableActions;
