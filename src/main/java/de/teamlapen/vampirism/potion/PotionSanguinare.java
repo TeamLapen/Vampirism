@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.potion;
 
+import com.google.common.base.Preconditions;
+
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -27,6 +29,7 @@ public class PotionSanguinare extends VampirismPotion {
         int avgDuration = 20 * (player ? Balance.vp.SANGUINARE_AVG_DURATION : Balance.mobProps.SANGUINARE_AVG_DURATION);
         int duration = (int) ((entity.getRNG().nextFloat() + 0.5F) * avgDuration);
         EffectInstance effect = new PotionSanguinareEffect(ModEffects.sanguinare, duration);
+        Preconditions.checkNotNull(effect);
         if (!Balance.general.CAN_CANCEL_SANGUINARE) {
             effect.setCurativeItems(new ArrayList<>());
         }
