@@ -44,10 +44,11 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
     private int bloodStored = 0;
     private int chargeRate = 30;
     @Nonnull
-    private ItemStack internalStack = ItemStack.EMPTY;
+    private ItemStack internalStack;
 
     public PedestalTileEntity() {
         super(ModTiles.blood_pedestal);
+        this.internalStack = ItemStack.EMPTY;
     }
 
     @Nonnull
@@ -143,6 +144,7 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
 
     @Override
     public void read(CompoundNBT compound) {
+        super.read(compound);
         if (compound.contains("item")) {
             this.internalStack = ItemStack.read(compound.getCompound("item"));
         } else {
