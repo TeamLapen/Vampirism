@@ -146,6 +146,7 @@ public class GuideBook implements IGuideBook {
         List<IPage> gettingStarted = new ArrayList<>();
         gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "getting_started.become")));
         gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "getting_started.as_vampire")));
+        gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "getting_started.zombie")));
         gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "getting_started.blood", ModKeys.getKeyBinding(ModKeys.KEY.SUCK).getDisplayName())));
         gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "getting_started.level") + "\n" + UtilLib.translate(base + "getting_started.level2")));
 

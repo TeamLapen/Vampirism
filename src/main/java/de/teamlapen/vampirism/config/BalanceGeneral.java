@@ -17,7 +17,6 @@ public class BalanceGeneral extends BalanceValues {
     @DefaultInt(value = 10, name = "vampire_forest_weight", minValue = 1)
     public int VAMPIRE_FOREST_WEIGHT;
 
-
     @DefaultInt(value = 8, minValue = 3, maxValue = 10000, name = "hunter_camp_density", comment = "Minecraft will try to generate 1 camp per NxN chunk area.")
     public int HUNTER_CAMP_DENSITY;
 
@@ -52,6 +51,10 @@ public class BalanceGeneral extends BalanceValues {
 
     @DefaultBoolean(value = true, comment = "If iron golems should attack vampire NPCs if in a non vampire village")
     public boolean GOLEM_ATTACK_VAMPIRE;
+
+    @DefaultBoolean(value = true, comment = "If zombies should ignore vampires")
+    public boolean ZOMBIE_IGNORE_VAMPIRE;
+
 
     /**
      * Creates a configuration for balance values

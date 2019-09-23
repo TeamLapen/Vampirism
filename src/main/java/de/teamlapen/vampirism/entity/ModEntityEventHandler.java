@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.inventory.container.BloodPotionTableContainer;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.CreatureEntity;
@@ -26,6 +27,7 @@ import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -51,6 +53,7 @@ public class ModEntityEventHandler {
     private final static Logger LOGGER = LogManager.getLogger(ModEntityEventHandler.class);
     private boolean skipAttackDamageOnce = false;
     private boolean warnAboutCreeper = true;
+    private boolean warnAboutZombie = true;
 
     @SubscribeEvent
     public void onAttachCapabilityEntity(AttachCapabilitiesEvent<Entity> event) {
@@ -125,6 +128,27 @@ public class ModEntityEventHandler {
                 } else {
                     if (warnAboutCreeper) {
                         LOGGER.warn("Could not replace creeper target task");
+                        warnAboutCreeper = false;
+                    }
+                }
+            }
+        }
+
+        //Zombie AI changes
+        if (!event.getWorld().isRemote && Balance.general.ZOMBIE_IGNORE_VAMPIRE) {
+            if (event.getEntity() instanceof ZombieEntity) {
+                Goal target = null;
+                for (PrioritizedGoal t : ((ZombieEntity) event.getEntity()).targetSelector.goals) {
+                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 2) {
+                        target = t.getGoal();
+                    }
+                }
+                if (target != null) {
+                    ((ZombieEntity) event.getEntity()).targetSelector.removeGoal(target);
+                    ((ZombieEntity) event.getEntity()).targetSelector.addGoal(2, new NearestAttackableTargetGoal<>((ZombieEntity) event.getEntity(), PlayerEntity.class, 10, true, false, entity -> !Helper.isVampire(entity)));
+                } else {
+                    if (warnAboutZombie) {
+                        LOGGER.warn("Could not replace zombie target task");
                         warnAboutCreeper = false;
                     }
                 }
