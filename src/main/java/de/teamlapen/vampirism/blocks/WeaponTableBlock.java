@@ -85,9 +85,7 @@ public class WeaponTableBlock extends VampirismBlock {
     @Nullable
     @Override
     public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
-            return new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos));
-        }, name);
+        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos)), name);
     }
 
     @Override
@@ -129,8 +127,7 @@ public class WeaponTableBlock extends VampirismBlock {
     @Override
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isRemote) {
-            int fluid = state.getFluidState().isEmpty() ? 0 : world.getFluidState(pos).get(LAVA);
-            //int fluid = world.getBlockState(pos).get(LAVA);
+            int fluid = world.getBlockState(pos).get(LAVA);
             boolean flag = false;
             ItemStack heldItem = player.getHeldItem(hand);
             if (fluid < MAX_LAVA) {
