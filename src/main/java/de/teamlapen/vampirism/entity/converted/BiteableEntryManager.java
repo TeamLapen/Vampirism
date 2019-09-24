@@ -2,9 +2,10 @@ package de.teamlapen.vampirism.entity.converted;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.config.BloodValueLoaderEntites;
+import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -22,9 +23,9 @@ import java.util.Set;
 /**
  * Manages biteable entries.
  * Get's values from various sources
- * Static values present in datapacks from {@link BloodValueLoaderEntites}
+ * Static values present in datapacks from {@link BloodValues#ENTITIES}
  * Dynamically calculated values from itself
- * Dynamically saved values on world load from {@link BloodValueLoaderEntites}
+ * Dynamically saved values on world load from {@link BloodValues#ENTITIES}}
  * <p>
  * <p>
  * Dynamic values are calculated during gameplay and saved on stopping (server).
