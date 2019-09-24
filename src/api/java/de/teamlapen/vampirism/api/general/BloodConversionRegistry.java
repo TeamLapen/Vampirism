@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -107,7 +108,7 @@ public class BloodConversionRegistry {
             return false;
         } else {
             if (item.isFood() && item.getFood().isMeat()) {
-                int value = item.getRegistryName().getPath().contains("cooked") ? item.getFood().getHealing() / 8 : item.getFood().getHealing() / 2;
+                int value = MathHelper.clamp(item.getRegistryName().getPath().contains("cooked") ? 0 : item.getFood().getHealing() / 2, 0, 5);
                 if (value > 0) {
                     items_calculated.put(item.getRegistryName(), value);
                     return true;
