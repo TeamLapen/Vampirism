@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.HelperRegistry;
+import de.teamlapen.lib.lib.config.BloodValueLoaderDynamic;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.ModCompatLoader;
@@ -10,7 +11,10 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
-import de.teamlapen.vampirism.config.*;
+import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BloodValues;
+import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
@@ -155,16 +159,17 @@ public class VampirismMod {
     @SubscribeEvent
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
         event.getServer().getResourceManager().addReloadListener(SkillTreeManager.getInstance());
-        event.getServer().getResourceManager().addReloadListener(BloodValueLoaderEntites.getInstance());
-        event.getServer().getResourceManager().addReloadListener(BloodValueLoaderItems.getInstance());
-        event.getServer().getResourceManager().addReloadListener(BloodValueLoaderFluids.getInstance());
+        event.getServer().getResourceManager().addReloadListener(BloodValues.ENTITIES);
+        event.getServer().getResourceManager().addReloadListener(BloodValues.ITEMS);
+        event.getServer().getResourceManager().addReloadListener(BloodValues.FLUIDS);
     }
 
     @SubscribeEvent
     public void onServerStart(FMLServerStartingEvent event) {
         ModCommands.registerCommands(event.getCommandDispatcher());
-        BloodValueLoaderEntites.onServerStarting(event.getServer());
-
+        for (BloodValueLoaderDynamic loader : BloodValues.getDynamicLoader()) {
+            loader.onServerStarting(event.getServer());
+        }
     }
 
     @SubscribeEvent
@@ -178,7 +183,9 @@ public class VampirismMod {
 
     @SubscribeEvent
     public void onServerStopping(FMLServerStoppingEvent event) {
-        BloodValueLoaderEntites.onServerStopping();
+        for (BloodValueLoaderDynamic loader : BloodValues.getDynamicLoader()) {
+            loader.onServerStopping();
+        }
     }
 
     private void addModCompats() {

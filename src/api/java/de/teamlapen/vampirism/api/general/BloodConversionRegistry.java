@@ -1,15 +1,17 @@
 package de.teamlapen.vampirism.api.general;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
 import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -29,6 +31,17 @@ public class BloodConversionRegistry {
     @Nonnull
     private static final Map<ResourceLocation, Integer> fluids = Maps.newHashMap();
 
+    /**
+     * stores conversion rate from not listed items to impure blood
+     */
+    @Nonnull
+    private static final Map<ResourceLocation, Integer> items_calculated = Maps.newHashMap();
+    /**
+     * stores items with no conversion rate
+     */
+    @Nonnull
+    private static final Set<ResourceLocation> items_blacklist = Sets.newHashSet();
+
     private static int fluidDivider = 100;
     private static int itemMultiplier = 100;
 
@@ -41,7 +54,17 @@ public class BloodConversionRegistry {
     public static void applyNewItemResources(Map<ResourceLocation, Integer> values, int multiplier) {
         items.clear();
         itemMultiplier = multiplier;
-        items.putAll(values);
+        for (Map.Entry<ResourceLocation, Integer> value : values.entrySet()) {
+            if (value.getValue() != 0) {
+                items.put(value.getKey(), value.getValue());
+            } else {
+                items_blacklist.add(value.getKey());
+            }
+        }
+    }
+
+    public static void applyNewItemCalculated(Map<ResourceLocation, Integer> values) {
+        items_calculated.putAll(values);
     }
 
     public static Map<ResourceLocation, Integer> getItemValues() {
@@ -50,6 +73,10 @@ public class BloodConversionRegistry {
 
     public static Map<ResourceLocation, Integer> getFluidValues() {
         return new ConcurrentHashMap<>(fluids);
+    }
+
+    public static Map<ResourceLocation, Integer> getItemValuesCalculated() {
+        return new ConcurrentHashMap<>(items_calculated);
     }
 
     public static int getFluidDivider() {
@@ -66,15 +93,31 @@ public class BloodConversionRegistry {
      * @param item ItemStack
      * @return Impure blood amount in mB or 0
      */
-    public static int getImpureBloodValue(@Nonnull ItemStack item) {
-        if (items.containsKey(item.getItem().getRegistryName())) {
-            return items.get(item.getItem().getRegistryName()) * itemMultiplier;
+    public static int getImpureBloodValue(@Nonnull Item item) {
+        if (items.containsKey(item.getRegistryName()) || items_calculated.containsKey(item.getRegistryName())) {
+            return items.containsKey(item.getRegistryName()) ? items.get(item.getRegistryName()) * itemMultiplier : items_calculated.get(item.getRegistryName()) * itemMultiplier;
         }
         return 0;
     }
 
-    public static boolean existsImpureBloodValue(@Nonnull Item item) {
-        return items.containsKey(item.getRegistryName());
+    public static boolean canBeConverted(@Nonnull Item item) {
+        if (items.containsKey(item.getRegistryName()) || items_calculated.containsKey(item.getRegistryName())) {
+            return true;
+        } else if (items_blacklist.contains(item.getRegistryName())) {
+            return false;
+        } else {
+            if (item.isFood() && item.getFood().isMeat()) {
+                int value = item.getRegistryName().getPath().contains("cooked") ? item.getFood().getHealing() / 8 : item.getFood().getHealing() / 2;
+                if (value > 0) {
+                    items_calculated.put(item.getRegistryName(), value);
+                    return true;
+                } else {
+
+                }
+            }
+            items_blacklist.add(item.getRegistryName());
+            return false;
+        }
     }
 
     /**

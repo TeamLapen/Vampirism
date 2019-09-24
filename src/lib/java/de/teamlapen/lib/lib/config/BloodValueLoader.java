@@ -1,6 +1,7 @@
 package de.teamlapen.lib.lib.config;
 
 import com.google.common.collect.Maps;
+
 import de.teamlapen.lib.lib.util.LogUtil;
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
@@ -21,8 +22,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public abstract class BloodValueLoader extends ReloadListener {
+public class BloodValueLoader extends ReloadListener {
     private static final Logger LOGGER = LogManager.getLogger();
+    private static final String BLOODVALUEDIRECTORY = "vampirism_blood_values/";
 
     private final String folderLocation;
     private final BiConsumer<Map<ResourceLocation, Integer>, Integer> consumer;
@@ -31,12 +33,12 @@ public abstract class BloodValueLoader extends ReloadListener {
     private int multiplier;
 
     /**
-     * @param locationIn       data path folder with blood value files
+     * @param nameIn           name for data path folder inside 'vampirism_blood_value' with blood value files
      * @param consumerIn       the consumer which gets the ResourceLocation to Integer Map from the files
      * @param multiplierNameIn the ResourceLocation which declares a multiplier in data pack
      */
-    public BloodValueLoader(String locationIn, BiConsumer<Map<ResourceLocation, Integer>, Integer> consumerIn, @Nullable ResourceLocation multiplierNameIn) {
-        this.folderLocation = locationIn;
+    public BloodValueLoader(@Nonnull String nameIn, @Nonnull BiConsumer<Map<ResourceLocation, Integer>, Integer> consumerIn, @Nullable ResourceLocation multiplierNameIn) {
+        this.folderLocation = BLOODVALUEDIRECTORY + nameIn;
         this.consumer = consumerIn;
         this.multiplierName = multiplierNameIn;
     }
