@@ -11,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
@@ -35,6 +36,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
@@ -133,9 +135,9 @@ public class WeaponTableBlock extends VampirismBlock {
             ItemStack heldItem = player.getHeldItem(hand);
             if (fluid < MAX_LAVA) {
                 LazyOptional<IFluidHandlerItem> opt = FluidUtil.getFluidHandler(heldItem);
-                opt.ifPresent(fluidHandler -> {
+                flag = opt.map(fluidHandler -> {
                     FluidStack missing = new FluidStack(Fluids.LAVA, (MAX_LAVA - fluid) * MB_PER_META);
-                    FluidStack drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);//TODO 1.14 weapontable cannt be filled from not empty to full when using lava bucket
+                    FluidStack drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);
                     if (drainable.isEmpty()) { //Buckets can only provide {@link Fluid.BUCKET_VOLUME} at a time, so try this too. Additional lava is wasted though
                         missing.setAmount(FluidAttributes.BUCKET_VOLUME);
                         drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);
@@ -143,21 +145,18 @@ public class WeaponTableBlock extends VampirismBlock {
                     if (drainable.getAmount() >= MB_PER_META) {
                         FluidStack drained = fluidHandler.drain(missing, IFluidHandler.FluidAction.EXECUTE);
                         if (drained.getAmount() > 0) {
-                            BlockState changed = state.with(LAVA, Math.min(MAX_LAVA, fluid + drained.getAmount() / MB_PER_META));
-                            state.getFluidState().with(LAVA, Math.min(MAX_LAVA, fluid + drained.getAmount() / MB_PER_META));
-                            world.setBlockState(pos, changed);
+                            world.setBlockState(pos, state.with(LAVA, Math.min(MAX_LAVA, fluid + drained.getAmount() / MB_PER_META)));
                             player.setHeldItem(hand, fluidHandler.getContainer());
+                            return true;
                         }
                     }
-                });
-                if (opt.isPresent()) {
-                    flag = true;
-                }
+                    return false;
+                }).orElse(false);
             }
             if (!flag) {
 
-                if (canUse(player)) {
-                    player.openContainer(state.getContainer(world, pos));
+                if (canUse(player) && player instanceof ServerPlayerEntity) {
+                    NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), new TranslationTextComponent("container.crafting")), pos);
                 } else {
                     player.sendMessage(new TranslationTextComponent("text.vampirism.weapon_table.cannot_use"));
                 }

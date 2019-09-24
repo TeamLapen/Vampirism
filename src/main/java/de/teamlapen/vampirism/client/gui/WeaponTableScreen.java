@@ -42,11 +42,11 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> {
         int j = (this.height - this.ySize) / 2;
         this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES);
         this.blit(i, j, 0, 0, this.xSize, this.ySize);
-        if (container.hasLava()) { //TODO 1.14 fluid fix missing lava rendering (client-server)(create tileentity?)
+        if (container.hasLava()) {
             this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_LAVA);
             this.blit(i, j, 0, 0, this.xSize, this.ySize);
         }
-        if (container.isMissingLava()) { //TODO 1.14 fluid fix missing lava rendering (client-server)(create tileentity?)
+        if (container.isMissingLava()) {
             this.minecraft.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_MISSING_LAVA);
             this.blit(i, j, 0, 0, this.xSize, this.ySize);
         }
@@ -54,7 +54,7 @@ public class WeaponTableScreen extends ContainerScreen<WeaponTableContainer> {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        this.font.drawString(title.getFormattedText(), this.xSize / 2 - this.font.getStringWidth(title.getString()) / 2, 6.0F, 0x404040);
+        this.font.drawString(title.getFormattedText(), this.xSize / 2f - this.font.getStringWidth(title.getString()) / 2f, 6.0F, 0x404040);
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);
     }
 }

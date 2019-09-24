@@ -14,14 +14,20 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeItemHelper;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.IContainerFactory;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -36,6 +42,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     private CraftingInventory craftMatrix = new CraftingInventory(this, 4, 4);
     private CraftResultInventory craftResult = new CraftResultInventory();
     private boolean missingLava = false;
+    private boolean prevMissingLava = false;
 
     @Deprecated
     public WeaponTableContainer(int id, PlayerInventory playerInventory) {
@@ -194,6 +201,26 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
         return itemStackCopy;
     }
 
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+        for (IContainerListener icontainerlistener : this.listeners) {
+            if (this.prevMissingLava != this.missingLava) {
+                icontainerlistener.sendWindowProperty(this, 0, missingLava ? 1 : 0);
+            }
+
+        }
+        this.prevMissingLava = missingLava;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void updateProgressBar(int id, int data) {
+        if (id == 0) {
+            missingLava = data != 0;
+        }
+    }
+
     private void slotChangedCraftingGrid(World worldIn, PlayerEntity playerIn, HunterPlayer hunter, CraftingInventory craftMatrixIn, CraftResultInventory craftResultIn) {
         if (!worldIn.isRemote) {
             ServerPlayerEntity entityplayermp = (ServerPlayerEntity) playerIn;
@@ -213,6 +240,15 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
                 }
             }
             entityplayermp.connection.sendPacket(new SSetSlotPacket(this.windowId, 0, craftResultIn.getStackInSlot(0)));
+        }
+    }
+
+    public static class Factory implements IContainerFactory<WeaponTableContainer> {
+
+        @Override
+        public WeaponTableContainer create(int windowId, PlayerInventory inv, PacketBuffer data) {
+            BlockPos pos = data.readBlockPos();
+            return new WeaponTableContainer(windowId, inv, IWorldPosCallable.of(inv.player.world, pos));
         }
     }
 }
