@@ -13,7 +13,7 @@
       "tag": "minecraft:planks"
     },
     "Y": {
-      "item": "minecraft:obsidian"
+      "tag": "forge:obsidian"
     },
     "Z": {
       "tag": "forge:ingots/iron"

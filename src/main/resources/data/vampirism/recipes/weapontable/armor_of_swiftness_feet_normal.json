@@ -4,10 +4,9 @@
   },
   "lava": 1,
   "pattern": [
-    "    ",
-    "XXXX",
+    "XZZX",
     "XYYX",
-    "XZZX"
+    "XXXX"
   ],
   "type": "vampirism:shaped_crafting_weapontable",
   "key": {

@@ -4,8 +4,6 @@
   },
   "lava": 1,
   "pattern": [
-    "    ",
-    " YY ",
     " YY ",
     "XXXX"
   ],
@@ -15,7 +13,7 @@
       "tag": "forge:ingots/iron"
     },
     "Y": {
-      "item": "minecraft:white_wool"
+      "item": "minecraft:black_wool"
     }
   }
 }

@@ -9,7 +9,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -42,7 +41,7 @@ public class BloodBottleIItem extends VampirismItem {
      * Set's the registry name and the unlocalized name
      */
     public BloodBottleIItem() {
-        super(name, new Properties().containerItem(Items.GLASS_BOTTLE).defaultMaxDamage(AMOUNT).group(VampirismMod.creativeTab));
+        super(name, new Properties().defaultMaxDamage(AMOUNT).group(VampirismMod.creativeTab));
     }
 
     @Override

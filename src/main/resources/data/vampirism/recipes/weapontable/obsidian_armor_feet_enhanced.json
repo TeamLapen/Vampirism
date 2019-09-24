@@ -8,9 +8,9 @@
   ],
   "pattern": [
     "    ",
-    "XDDX",
     "XYYX",
-    "XYYX"
+    "XYYX",
+    "XDDX"
   ],
   "type": "vampirism:shaped_crafting_weapontable",
   "key": {

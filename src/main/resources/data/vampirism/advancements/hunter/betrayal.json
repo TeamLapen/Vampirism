@@ -24,7 +24,7 @@
     "faction": {
       "trigger": "vampirism:faction",
       "conditions": {
-        "faction": "hunter",
+        "faction": "vampirism:hunter",
         "level": 1
       }
     }

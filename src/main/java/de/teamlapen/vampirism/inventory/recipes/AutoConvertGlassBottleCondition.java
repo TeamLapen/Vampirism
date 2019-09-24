@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
+
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
@@ -35,7 +36,7 @@ public class AutoConvertGlassBottleCondition implements ICondition {
 
         @Override
         public void write(JsonObject json, AutoConvertGlassBottleCondition value) {
-            json.addProperty("autoConvertGlassBottle", true);
+            json.addProperty("autoConvertGlassBottle", value.test());
         }
     }
 }

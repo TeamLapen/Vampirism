@@ -1,11 +1,7 @@
 {
   "conditions": [
     {
-      "type": "forge:not",
-      "value": {
-        "type": "vampirism:auto_convert_glass_bottle",
-        "key": "auto_convert_blood_bottles"
-      }
+      "type": "vampirism:auto_convert_glass_bottle"
     }
   ],
   "result": {
@@ -22,7 +18,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "minecraft:glass"
+      "tag": "forge:glass"
     },
     "Y": {
       "item": "minecraft:rotten_flesh"

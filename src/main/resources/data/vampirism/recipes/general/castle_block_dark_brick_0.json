@@ -27,8 +27,10 @@
       "item": "vampirism:castle_block_normal_brick"
     },
     {
-      "item": "minecraft:ink_sac",
-      "__comment": "minecraft:black_dye in 1.14"
+      "item": "vampirism:castle_block_normal_brick"
+    },
+    {
+      "item": "minecraft:black_dye"
     }
   ]
 }

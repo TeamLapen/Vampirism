@@ -6,25 +6,25 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:stone"
+      "item": "minecraft:stone_bricks"
     },
     {
-      "item": "minecraft:stone"
+      "item": "minecraft:stone_bricks"
     },
     {
-      "item": "minecraft:stone"
+      "item": "minecraft:stone_bricks"
     },
     {
-      "item": "minecraft:stone"
+      "item": "minecraft:stone_bricks"
     },
     {
-      "item": "minecraft:stone"
+      "item": "minecraft:stone_bricks"
     },
     {
-      "item": "minecraft:stone"
+      "item": "minecraft:stone_bricks"
     },
     {
-      "item": "minecraft:stone"
+      "item": "minecraft:stone_bricks"
     },
     {
       "item": "minecraft:black_dye"

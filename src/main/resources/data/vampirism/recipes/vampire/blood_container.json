@@ -13,7 +13,7 @@
       "tag": "minecraft:planks"
     },
     "Y": {
-      "item": "minecraft:glass"
+      "tag": "forge:glass"
     },
     "Z": {
       "tag": "forge:ingots/iron"

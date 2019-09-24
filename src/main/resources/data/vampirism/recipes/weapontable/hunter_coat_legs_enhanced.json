@@ -7,7 +7,7 @@
     "vampirism:enhanced_armor"
   ],
   "pattern": [
-    "XXXX",
+    "XYYX",
     "XZZX",
     "XZZX",
     "X  X"
@@ -19,6 +19,9 @@
     },
     "Z": {
       "item": "vampirism:item_garlic"
+    },
+    "Y": {
+      "tag": "forge:gems/diamond"
     }
   }
 }

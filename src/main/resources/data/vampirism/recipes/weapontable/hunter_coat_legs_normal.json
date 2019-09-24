@@ -4,7 +4,7 @@
   },
   "lava": 2,
   "pattern": [
-    "XXXX",
+    "XYYX",
     "XZZX",
     "XZZX",
     "X  X"
@@ -16,6 +16,9 @@
     },
     "Z": {
       "item": "vampirism:item_garlic"
+    },
+    "Y": {
+      "item": "minecraft:leather"
     }
   }
 }

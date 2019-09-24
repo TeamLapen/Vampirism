@@ -7,10 +7,9 @@
     "vampirism:enhanced_armor"
   ],
   "pattern": [
-    "    ",
-    "XXXX",
+    "XZZX",
     "XYYX",
-    "XZZX"
+    "XXXX"
   ],
   "type": "vampirism:shaped_crafting_weapontable",
   "key": {

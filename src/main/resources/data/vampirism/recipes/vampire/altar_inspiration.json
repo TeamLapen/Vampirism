@@ -10,7 +10,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "minecraft:glass"
+      "tag": "forge:glass"
     },
     "Y": {
       "item": "minecraft:glass_bottle"

@@ -9,8 +9,7 @@
   "pattern": [
     "XXXX",
     "XYYX",
-    "XZZX",
-    "    "
+    "XZZX"
   ],
   "type": "vampirism:shaped_crafting_weapontable",
   "key": {
