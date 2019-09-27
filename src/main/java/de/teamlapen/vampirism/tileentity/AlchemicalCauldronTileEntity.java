@@ -35,16 +35,18 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
- * slots:  0: ingredient, 1: fuel, 2: result, 3: liquid
+ * slots:  0: liquid, 1: ingredient, 2: result, 3: fuel
  */
 public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
-    private static final int[] SLOTS_DOWN = new int[]{0, 2, 3};
+    private static final int[] SLOTS_DOWN = new int[]{0, 1, 2};
     private static final int[] SLOTS_UP = new int[]{0};
-    private static final int[] SLOTS_WEST = new int[]{3};
-    private static final int[] SLOTS_FUEL = new int[]{1};
+    private static final int[] SLOTS_WEST = new int[]{1};
+    private static final int[] SLOTS_FUEL = new int[]{3};
 
+    @Nullable
     private UUID ownerID;
-    private ITextComponent ownerName;
+    @Nullable
+    private String ownerName;
     private AlchemicalCauldronRecipe recipeChecked;
 
     @OnlyIn(Dist.CLIENT)
@@ -61,14 +63,14 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
             if (HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.basic_alchemy)) {
                 if (ownerID == null) {
                     setOwnerID(player);
-                }
-                if (ownerID == player.getUniqueID()) {
+                    return true;
+                } else if (ownerID.equals(player.getUniqueID())) {
                     return true;
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.other", ownerName));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.other", getOwnerName()));
                 }
             } else {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.cannot_use", ownerName));
+                player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.cannot_use", getOwnerName()));
             }
         }
         return false;
@@ -92,7 +94,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     }
 
     public ITextComponent getOwnerName() {
-        return ownerName != null ? ownerName : new StringTextComponent("Unknown");
+        return new StringTextComponent(ownerName == null ? "Unknown" : ownerName);
     }
 
     @Nonnull
@@ -114,22 +116,24 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT compound = super.getUpdateTag();
-        compound.putUniqueId("owner", ownerID);
-        compound.putString("owner_name", ownerName.toString());
+        if (ownerID != null) compound.putUniqueId("owner", ownerID);
+        if (ownerName != null) compound.putString("owner_name", ownerName);
         return compound;
     }
 
     @Override
     public void handleUpdateTag(CompoundNBT compound) {
         super.handleUpdateTag(compound);
-        ownerID = compound.getUniqueId("owner");
-        ownerName = new StringTextComponent(compound.getString("owner_name"));
+        ownerID = compound.hasUniqueId("owner") ? compound.getUniqueId("owner") : null;
+        ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
     }
 
     @Override
     public void markDirty() {
-        super.markDirty();
-        this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+        if (world != null) {
+            super.markDirty();
+            this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+        }
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -141,14 +145,14 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
 
     @Override
     public void read(CompoundNBT compound) {
-        ownerID = compound.getUniqueId("owner");
-        ownerName = new StringTextComponent(compound.getString("owner_name"));
+        ownerID = compound.hasUniqueId("owner") ? compound.getUniqueId("owner") : null;
+        ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
         super.read(compound);
     }
 
     public void setOwnerID(PlayerEntity player) {
         ownerID = player.getUniqueID();
-        ownerName = player.getDisplayName();
+        ownerName = player.getDisplayName().getFormattedText();
         this.markDirty();
     }
 
@@ -165,21 +169,21 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         }
 
         if (!this.world.isRemote) {
-            ItemStack itemstack = this.items.get(1);
-            if (this.isBurning() || !itemstack.isEmpty() && !this.items.get(3).isEmpty() && !this.items.get(0).isEmpty()) {
+            ItemStack itemstackFuel = this.items.get(3);
+            if (this.isBurning() || !itemstackFuel.isEmpty() && !this.items.get(0).isEmpty() && !this.items.get(1).isEmpty()) {
                 AlchemicalCauldronRecipe irecipe = this.world.getRecipeManager().getRecipe((IRecipeType<AlchemicalCauldronRecipe>) this.recipeType, this, this.world).orElse(null);
                 if (!this.isBurning() && this.canSmelt(irecipe) && this.canPlayerCook(irecipe)) {
-                    furnaceData.set(0, this.getBurnTime(itemstack));
+                    furnaceData.set(0, this.getBurnTime(itemstackFuel));
                     furnaceData.set(1, furnaceData.get(0));
                     if (this.isBurning()) {
                         flag1 = true;
-                        if (itemstack.hasContainerItem())
-                            this.items.set(1, itemstack.getContainerItem());
-                        else if (!itemstack.isEmpty()) {
-                            Item item = itemstack.getItem();
-                            itemstack.shrink(1);
-                            if (itemstack.isEmpty()) {
-                                this.items.set(1, itemstack.getContainerItem());
+                        if (itemstackFuel.hasContainerItem())
+                            this.items.set(3, itemstackFuel.getContainerItem());
+                        else if (!itemstackFuel.isEmpty()) {
+                            Item item = itemstackFuel.getItem();
+                            itemstackFuel.shrink(1);
+                            if (itemstackFuel.isEmpty()) {
+                                this.items.set(3, itemstackFuel.getContainerItem());
                             }
                         }
                     }
@@ -202,7 +206,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
 
             if (flag != this.isBurning()) {
                 flag1 = true;
-                this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(AbstractFurnaceBlock.LIT, this.isBurning()).with(AlchemicalCauldronBlock.LIQUID, this.items.get(3).isEmpty() ? 0 : this.isBurning() ? 2 : 1), 3);
+                this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(AbstractFurnaceBlock.LIT, this.isBurning()).with(AlchemicalCauldronBlock.LIQUID, this.items.get(0).isEmpty() ? 0 : this.isBurning() ? 2 : 1), 3);
             }
         } else {
             if (isCooking() && boilingSound && this.world.rand.nextInt(25) == 0) {
@@ -219,8 +223,13 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
-        compound.putUniqueId("owner", ownerID);
-        compound.putString("owner_name", ownerName.toString());
+        if (ownerID != null) {
+            compound.putUniqueId("owner", ownerID);
+        }
+        if (ownerName != null) {
+            compound.putString("owner_name", ownerName);
+
+        }
         return super.write(compound);
     }
 
@@ -259,7 +268,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     private void finishCooking(AlchemicalCauldronRecipe recipe) {
         if (recipe != null && this.canSmelt(recipe) && canPlayerCook(recipe)) {
             ItemStack itemstackingredient = this.items.get(0);
-            ItemStack itemstackfluid = this.items.get(3);
+            ItemStack itemstackfluid = this.items.get(1);
             ItemStack itemstack1result = recipe.getRecipeOutput();
             ItemStack itemstackoutput = this.items.get(2);
             if (itemstackoutput.isEmpty()) {

@@ -354,7 +354,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.posX, this.posY, this.posZ, 20, 1, 1, 1, 0);//TODO particle textureindex: 134
+        ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.posX, this.posY, this.posZ, 20, 1, 1, 1, 0);
         this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
         this.remove();

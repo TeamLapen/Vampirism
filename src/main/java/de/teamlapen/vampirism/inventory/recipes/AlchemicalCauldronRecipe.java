@@ -67,12 +67,12 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
 
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        boolean match = this.ingredient.test(inv.getStackInSlot(0));
+        boolean match = this.ingredient.test(inv.getStackInSlot(1));
         AtomicBoolean fluidMatch = new AtomicBoolean(true);
-        fluid.ifLeft((ingredient1 -> fluidMatch.set(ingredient1.test(inv.getStackInSlot(3)))));
+        fluid.ifLeft((ingredient1 -> fluidMatch.set(ingredient1.test(inv.getStackInSlot(0)))));
         fluid.ifRight((ingredient1 -> {
             fluidMatch.set(false);
-            LazyOptional<FluidStack> stack = FluidUtil.getFluidContained(inv.getStackInSlot(3));
+            LazyOptional<FluidStack> stack = FluidUtil.getFluidContained(inv.getStackInSlot(0));
             stack.ifPresent((handlerItem) -> fluidMatch.set(ingredient1.isFluidEqual(handlerItem) && ingredient1.getAmount() <= handlerItem.getAmount()));
         }));
         return match && fluidMatch.get();

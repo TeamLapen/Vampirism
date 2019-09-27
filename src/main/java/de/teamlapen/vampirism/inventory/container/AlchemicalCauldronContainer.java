@@ -17,7 +17,7 @@ import net.minecraft.util.IntArray;
 
 
 public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {//TODO 1.14 items should be shift-clicked into furnace
-    IWorldPosCallable worldPosCallable;
+    private IWorldPosCallable worldPosCallable;
 
     @Deprecated
     public AlchemicalCauldronContainer(int id, PlayerInventory playerInventory) {
@@ -32,25 +32,25 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {//TOD
 
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
-        ItemStack result = ItemStack.EMPTY;
+        ItemStack stackCopy = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack slotStack = slot.getStack();
-            result = slotStack.copy();
+            stackCopy = slotStack.copy();
             if (index == 2) {
                 if (!this.mergeItemStack(slotStack, 4, 40, true)) {
                     return ItemStack.EMPTY;
                 }
-                slot.onSlotChange(slotStack, result);
+                slot.onSlotChange(slotStack, stackCopy);
             } else if (index != 1 && index != 0 && index != 3) {
-                if (this.func_217057_a(slotStack)) {
-                    if (!this.mergeItemStack(slotStack, 0, 1, false)) {
+                if (this.isFuel(slotStack)) {
+                    if (!this.mergeItemStack(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (this.isFuel(slotStack)) {
-                    if (!this.mergeItemStack(slotStack, 1, 2, false)) {
-                        return ItemStack.EMPTY;
-                    }
+
+                } else if (!this.mergeItemStack(slotStack, 0, 2, false)) {
+                    return ItemStack.EMPTY;
+
                 } else if (index >= 4 && index < 31) {
                     if (!this.mergeItemStack(slotStack, 31, 40, false)) {
                         return ItemStack.EMPTY;
@@ -68,23 +68,24 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {//TOD
                 slot.onSlotChanged();
             }
 
-            if (slotStack.getCount() == result.getCount()) {
+            if (slotStack.getCount() == stackCopy.getCount()) {
                 return ItemStack.EMPTY;
             }
 
             slot.onTake(playerEntity, slotStack);
         }
 
-        return result;
+        return stackCopy;
     }
 
     private void setSlots(PlayerInventory playerInv) {
         this.inventorySlots.clear();
         this.inventoryItemStacks.clear();
-        this.addSlot(new Slot(furnaceInventory, 0, 68, 17));
-        this.addSlot(new FurnaceFuelSlot(this, furnaceInventory, 1, 56, 53));
+        //Keep order
+        this.addSlot(new Slot(furnaceInventory, 0, 44, 17));
+        this.addSlot(new Slot(furnaceInventory, 1, 68, 17));
         this.addSlot(new FurnaceResultSlot(playerInv.player, furnaceInventory, 2, 116, 35));
-        this.addSlot(new Slot(furnaceInventory, 3, 44, 17));
+        this.addSlot(new FurnaceFuelSlot(this, furnaceInventory, 3, 56, 53));
 
         int i;
         for (i = 0; i < 3; ++i) {

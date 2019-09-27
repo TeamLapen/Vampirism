@@ -29,7 +29,7 @@ import java.util.List;
  * <p>
  * Damages directly hit entities but also has a small area of effect damage
  */
-public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 1.14 particle
+public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
 
     protected float directDamage = 4;
     protected float indirecDamage = 2;
@@ -174,8 +174,8 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 
                 }
             }
             Vec3d center = result.getHitVec();
-            ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), center.x, center.y, center.z, 40, 2, 2, 2, 0);//TODO particle textureindex:145
-            ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), center.x, center.y, center.z, 15, 2, 2, 2, 0);//TODO particle textureindex:150
+            ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), center.x, center.y, center.z, 40, 1, 1, 1, 0);
+            ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), center.x, center.y, center.z, 15, 1, 1, 1, 0);
 
 
             this.remove();
