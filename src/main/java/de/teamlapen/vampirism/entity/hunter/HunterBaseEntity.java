@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.entity.VampirismEntity;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.SwimGoal;
@@ -14,7 +15,7 @@ import net.minecraft.world.World;
 public abstract class HunterBaseEntity extends VampirismEntity implements IHunterMob {
     private final boolean countAsMonster;
 
-    public HunterBaseEntity(EntityType type, World world, boolean countAsMonster) {
+    public HunterBaseEntity(EntityType<? extends HunterBaseEntity> type, World world, boolean countAsMonster) {
         super(type, world);
         this.countAsMonster = countAsMonster;
     }
@@ -28,5 +29,13 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
+    }
+
+    @Override
+    public EntityClassification getClassification(boolean forSpawnCount) {
+        if (forSpawnCount && countAsMonster) {
+            return EntityClassification.MONSTER;
+        }
+        return super.getClassification(forSpawnCount);
     }
 }

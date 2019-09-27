@@ -40,11 +40,11 @@ import javax.annotation.Nonnull;
 @SuppressWarnings("EntityConstructor")
 public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob {
 
-    private final boolean countAsMonsterForSpawn; //TODO 1.14 check if this is still needed. How are mob count limits determined. If so probably have to adjust converted creatures too
+    private final boolean countAsMonsterForSpawn;
     /**
      * Rules to consider for {@link #canSpawn(IWorld, SpawnReason)}
      */
-    protected SpawnRestriction spawnRestriction = SpawnRestriction.NORMAL;
+    private SpawnRestriction spawnRestriction = SpawnRestriction.NORMAL;
     protected EnumStrength garlicResist = EnumStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
     protected boolean vulnerableToFire = true;
@@ -58,7 +58,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     /**
      * @param countAsMonsterForSpawn If this entity should be counted as vampire and as monster during spawning
      */
-    public VampireBaseEntity(EntityType type, World world, boolean countAsMonsterForSpawn) {
+    public VampireBaseEntity(EntityType<? extends VampireBaseEntity> type, World world, boolean countAsMonsterForSpawn) {
         super(type, world);
         this.countAsMonsterForSpawn = countAsMonsterForSpawn;
 
@@ -95,6 +95,14 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             }
         }
         return super.attackEntityFrom(damageSource, amount);
+    }
+
+    @Override
+    public EntityClassification getClassification(boolean forSpawnCount) {
+        if (forSpawnCount && countAsMonsterForSpawn) {
+            return EntityClassification.MONSTER;
+        }
+        return super.getClassification(forSpawnCount);
     }
 
     @Override

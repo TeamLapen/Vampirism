@@ -13,7 +13,7 @@ public class HurtByTargetMinionGoal extends HurtByTargetGoal {
     }
 
     @Override
-    public boolean shouldExecute() { //TODO 1.14 check
+    public boolean shouldExecute() {
         if (MinionHelper.isLordSafe(minion, target)) return false;
         return super.shouldExecute();
     }

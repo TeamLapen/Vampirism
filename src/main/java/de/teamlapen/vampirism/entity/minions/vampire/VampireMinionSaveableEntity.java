@@ -93,16 +93,8 @@ public class VampireMinionSaveableEntity extends VampireMinionBaseEntity impleme
     }
 
     @Override
-    public void setLord(IMinionLord lord) {
-        if (lord instanceof IMinionLordWithSaveable) {
-            if (!lord.equals(this.lord)) {
-                ((IMinionLordWithSaveable) lord).getSaveableMinionHandler().registerMinion(this, true);
-                this.lord = (IMinionLordWithSaveable) lord;
-            }
-        } else {
-            LOGGER.warn("Cannot set lord %s since it is not a IMinionLordWithSaveable", lord);
-        }
-
+    public boolean preventDespawn() {
+        return lord != null;
     }
 
     @Override
@@ -140,5 +132,18 @@ public class VampireMinionSaveableEntity extends VampireMinionBaseEntity impleme
         this.goalSelector.addGoal(7, new FollowLordMinionGoal(this, 1.0D));
         this.goalSelector.addGoal(14, new FleeSunGoal(this, 0.9F));
         this.goalSelector.addGoal(14, new FleeGarlicVampireGoal(this, 0.9F, false));
+    }
+
+    @Override
+    public void setLord(IMinionLord lord) {
+        if (lord instanceof IMinionLordWithSaveable) {
+            if (!lord.equals(this.lord)) {
+                ((IMinionLordWithSaveable) lord).getSaveableMinionHandler().registerMinion(this, true);
+                this.lord = (IMinionLordWithSaveable) lord;
+            }
+        } else {
+            LOGGER.warn("Cannot set lord {} since it is not a IMinionLordWithSaveable", lord);
+        }
+
     }
 }

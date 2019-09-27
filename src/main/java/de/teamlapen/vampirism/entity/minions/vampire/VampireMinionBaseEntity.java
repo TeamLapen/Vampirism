@@ -53,7 +53,6 @@ public abstract class VampireMinionBaseEntity extends VampireBaseEntity implemen
 
     public VampireMinionBaseEntity(EntityType<? extends VampireMinionBaseEntity> type, World world) {
         super(type, world, false);
-        //this.func_110163_bv(); TODO check if this was relevant
 
         activeCommand = this.createDefaultCommand();
         activeCommand.onActivated();

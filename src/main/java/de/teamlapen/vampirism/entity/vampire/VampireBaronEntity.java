@@ -37,7 +37,6 @@ import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Random;
 import java.util.UUID;
@@ -307,7 +306,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return 20 + 5 * getLevel();
     }
 
-    @Nullable
     @Override
     protected ResourceLocation getLootTable() {
         return LootHandler.VAMPIRE_BARON;

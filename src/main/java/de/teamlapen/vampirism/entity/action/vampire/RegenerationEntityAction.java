@@ -49,7 +49,7 @@ public class RegenerationEntityAction<T extends CreatureEntity & IEntityActionUs
     public void onUpdate(T entity, int duration) {
         entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * Balance.ea.REGENERATION_AMOUNT / (getDuration(entity.getLevel()) * 20)); // seconds in ticks
         if (duration % 15 == 0) {
-            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.HEART, entity.posX, entity.posY + 1, entity.posZ, 3, 0.2, 0.2, 0.2, 0);//TODO Test which side this is called oin
+            ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.HEART, entity.posX, entity.posY + 1, entity.posZ, 3, 0.2, 0.2, 0.2, 0);
         }
 
     }
