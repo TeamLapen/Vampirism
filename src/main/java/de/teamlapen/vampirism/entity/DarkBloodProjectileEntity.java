@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.entity.minions.vampire.VampireMinionBaseEntity;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -151,9 +150,6 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 
         if (!this.world.isRemote) {
             if (initialNoClip && this.ticksExisted > 20) {
                 if (result.getType() == RayTraceResult.Type.BLOCK) {
-                    return;
-                }
-                if (result.getType() == RayTraceResult.Type.ENTITY && ((EntityRayTraceResult) result).getEntity() instanceof VampireMinionBaseEntity && (this.shootingEntity != null && this.shootingEntity.equals(((VampireMinionBaseEntity) ((EntityRayTraceResult) result).getEntity()).getLord()))) {
                     return;
                 }
             }

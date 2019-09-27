@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedHorseEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.hunter.*;
-import de.teamlapen.vampirism.entity.minions.vampire.VampireMinionBaseEntity;
 import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
@@ -33,7 +32,6 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(BasicVampireEntity.class, BasicVampireRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(HunterTrainerEntity.class, HunterTrainerRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(VampireBaronEntity.class, VampireBaronRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(VampireMinionBaseEntity.class, VampireMinionRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(AdvancedHunterEntity.class, AdvancedHunterRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(AdvancedVampireEntity.class, AdvancedVampireRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ConvertedVillagerEntity.class, ConvertedVillagerRenderer::new);

@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -162,9 +161,6 @@ public class ModEntityEventHandler {
         }
         //------------------
 
-        if (event.getEntity() instanceof IMinionLordWithSaveable) {
-            ((IMinionLordWithSaveable) event.getEntity()).getSaveableMinionHandler().addLoadedMinions();
-        }
 
 
         if (event.getEntity() instanceof VillagerEntity && !event.getWorld().isRemote) {//TODO 1.14 village

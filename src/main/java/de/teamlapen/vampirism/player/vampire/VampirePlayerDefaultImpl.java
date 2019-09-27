@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Unit;
@@ -19,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 
@@ -101,10 +99,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return null;
     }
 
-    @Override
-    public long getLastComebackCall() {
-        return 0;
-    }
 
     @Override
     public int getLevel() {
@@ -116,15 +110,7 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return 0;
     }
 
-    @Override
-    public int getMaxMinionCount() {
-        return 0;
-    }
 
-    @Override
-    public LivingEntity getMinionTarget() {
-        return null;
-    }
 
     @Override
     public Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
@@ -146,15 +132,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return null;
     }
 
-    @Override
-    public double getTheDistanceSquared(Entity e) {
-        return 0;
-    }
-
-    @Override
-    public UUID getThePersistentID() {
-        return null;
-    }
 
     @Override
     public int getTicksInSun() {
@@ -198,10 +175,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return false;
     }
 
-    @Override
-    public boolean isTheEntityAlive() {
-        return false;
-    }
 
     @Override
     public boolean isVampireLord() {

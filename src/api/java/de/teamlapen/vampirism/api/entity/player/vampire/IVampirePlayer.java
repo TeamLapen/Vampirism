@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -20,7 +19,7 @@ import javax.annotation.Nullable;
  * Interface for the player vampire data.
  * Attached to all players as capability
  */
-public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IMinionLord, IBiteableEntity {
+public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity {
 
     /**
      * Force enables the vision

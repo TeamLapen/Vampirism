@@ -4,13 +4,11 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.UUID;
 import java.util.function.Predicate;
 
 /**
@@ -41,10 +39,6 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
         return null;
     }
 
-    @Override
-    public long getLastComebackCall() {
-        return 0;
-    }
 
     @Override
     public int getLevel() {
@@ -56,15 +50,6 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
         return 0;
     }
 
-    @Override
-    public int getMaxMinionCount() {
-        return 0;
-    }
-
-    @Override
-    public LivingEntity getMinionTarget() {
-        return null;
-    }
 
     @Override
     public Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
@@ -87,16 +72,6 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
     }
 
     @Override
-    public double getTheDistanceSquared(Entity e) {
-        return 0;
-    }
-
-    @Override
-    public UUID getThePersistentID() {
-        return null;
-    }
-
-    @Override
     public boolean isDisguised() {
         return false;
     }
@@ -106,10 +81,6 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
         return false;
     }
 
-    @Override
-    public boolean isTheEntityAlive() {
-        return false;
-    }
 
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {

@@ -1,20 +1,15 @@
 package de.teamlapen.vampirism.entity.vampire;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.minions.ISaveableMinionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireBaron;
-import de.teamlapen.vampirism.api.entity.vampire.IVampireMinion;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.AttackRangedDarkBloodGoal;
 import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
 import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
-import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.world.loot.LootHandler;
@@ -37,9 +32,7 @@ import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collections;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * Vampire that spawns in the vampire forest, has minions and drops pure blood
@@ -51,7 +44,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         return world.getBiome(blockPos) == ModBiomes.vampire_forest && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
-    private final SaveableMinionHandler<IVampireMinion.Saveable> minionHandler;
     public static final int MAX_LEVEL = 4;
     /**
      * Used for ranged vs melee attack decision
@@ -65,7 +57,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     public VampireBaronEntity(EntityType<? extends VampireBaronEntity> type, World world) {
         super(type, world, true);
-        minionHandler = new SaveableMinionHandler<>(this);
 
 
         this.garlicResist = EnumStrength.MEDIUM;
@@ -120,10 +111,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return true;
     }
 
-    @Override
-    public long getLastComebackCall() {
-        return 0;
-    }
 
     @Override
     public int getLevel() {
@@ -154,40 +141,12 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return MAX_LEVEL;
     }
 
-    @Override
-    public int getMaxMinionCount() {
-        return 15;
-    }
-
-    @Override
-    public LivingEntity getMinionTarget() {
-        return this.getAttackTarget();
-    }
 
     @Override
     public LivingEntity getRepresentingEntity() {
         return this;
     }
 
-    @Override
-    public ISaveableMinionHandler<IVampireMinion.Saveable> getSaveableMinionHandler() {
-        return minionHandler;
-    }
-
-    @Override
-    public double getTheDistanceSquared(Entity e) {
-        return this.getDistanceSq(e);
-    }
-
-    @Override
-    public UUID getThePersistentID() {
-        return this.entityUniqueID;
-    }
-
-    @Override
-    public boolean isTheEntityAlive() {
-        return this.isAlive();
-    }
 
     @Override
     public void livingTick() {
@@ -201,34 +160,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             this.attackDecisionCounter = 0;
             updateEntityAttributes(false);
         }
-        this.getSaveableMinionHandler().checkMinions();
-        if (!world.isRemote && shouldSpawnMinion()) {
-            int i = 0;
-            if (this.recentlyHit > 0) {
-                i = this.rand.nextInt(3);
-            }
-            IVampireMinion.Saveable m = null;
 
-            if (i == 1) {
-                MobEntity e = ModEntities.vampire_minion_s.create(world);
-                if (e == null) {
-                    LOGGER.warn("Failed to create saveable minion");
-                } else {
-                    e.copyLocationAndAnglesFrom(this);
-                    world.addEntity(e);
-                    m = (IVampireMinion.Saveable) e;
-                }
-
-            } else if (i == 2 && this.getAttackTarget() != null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), ModEntities.vampire_minion_s, SpawnReason.NATURAL);
-            }
-            if (m == null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getBoundingBox().grow(19, 4, 19), ModEntities.vampire_minion_s, 3, Collections.emptyList(), SpawnReason.MOB_SUMMONED); //Do not avoid player here. Already using spawnBehind sometimes
-            }
-            if (m != null) {
-                m.setLord(this);
-            }
-        }
         if (!this.world.isRemote && this.isGettingSundamage()) {
             this.teleportAway();
 
@@ -263,7 +195,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     public void readAdditional(CompoundNBT nbt) {
         super.readAdditional(nbt);
         setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
-        minionHandler.loadMinions(nbt.getList("minions", 10));
     }
 
     @Override
@@ -293,7 +224,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
         nbt.putInt("level", getLevel());
-        nbt.put("minions", minionHandler.getMinionsToSave());
     }
 
     @Override
@@ -339,19 +269,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, VampireBaronEntity.class, true, false));
     }
 
-    /**
-     * Decides if a new minion should be spawned. Therefore randomly checks the existing minion count
-     */
-    protected boolean shouldSpawnMinion() {
-        if (this.ticksExisted % 30 == 7) {
-            int count = getSaveableMinionHandler().getMinionCount();
-            if (count < getLevel() + 1) {
-                return true;
-            }
-            return recentlyHit > 0 && count < 2 + getLevel();
-        }
-        return false;
-    }
 
     protected void updateEntityAttributes(boolean aggressive) {
         if (aggressive) {
