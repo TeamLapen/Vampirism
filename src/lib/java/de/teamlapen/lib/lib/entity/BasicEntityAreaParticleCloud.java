@@ -9,11 +9,11 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 /**
  * Only spawns particles, similar to {@link AreaEffectCloudEntity}
@@ -22,7 +22,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
 
     private static final DataParameter<Float> RADIUS = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
     private static final DataParameter<Float> HEIGHT = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
-    private static final DataParameter<IParticleData> PARTICLE = EntityDataManager.createKey(AreaEffectCloudEntity.class, DataSerializers.PARTICLE_DATA);
+    private static final DataParameter<IParticleData> PARTICLE = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.PARTICLE_DATA);
     private static final DataParameter<Float> SPAWN_RATE = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.FLOAT);
 
     private static final DataParameter<Integer> COLOR = EntityDataManager.createKey(BasicEntityAreaParticleCloud.class, DataSerializers.VARINT);
@@ -41,7 +41,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
 
     @Override
     public IPacket<?> createSpawnPacket() {
-        return new SSpawnObjectPacket(this);
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     public int getColor() {

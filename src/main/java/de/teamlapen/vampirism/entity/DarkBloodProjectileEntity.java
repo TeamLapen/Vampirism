@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
@@ -19,6 +20,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.List;
 
@@ -91,25 +93,8 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if (this.world.isRemote) {
-            Vec3d center = this.getPositionVector();
-            ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010), center.x, center.y, center.z, 60, 1, this.rand);
-
-            //Vec3d border=center.addVector(this.getRadius() * (this.rand.nextDouble()-0.5)*2,this.getRadius() * (this.rand.nextDouble()-0.5)*2,this.getRadius() * (this.rand.nextDouble()-0.5)*2);
-
-            if (this.ticksExisted % 3 == 0) {
-                Vec3d border = this.getPositionVector();
-                border = border.add(this.getMotion().scale(-0.1));
-                ModParticles.spawnParticleClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
-            }
-
-        } else {
-            if (this.ticksExisted > 300) {
-                this.remove();
-            }
-        }
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
@@ -136,8 +121,9 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 
         return ParticleTypes.UNDERWATER;
     }
 
-    protected double getRadius() {
-        return 0.5;
+    @Override
+    public float getCollisionBorderSize() {
+        return 0.5f;
     }
 
     @Override
@@ -193,6 +179,24 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {//TODO 
 
 
             this.remove();
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.world.isRemote) {
+            Vec3d center = this.getPositionVector();
+            ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getCollisionBorderSize(), this.rand);
+
+            if (this.ticksExisted % 3 == 0) {
+                ModParticles.spawnParticleClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
+            }
+
+        } else {
+            if (this.ticksExisted > 300) {
+                this.remove();
+            }
         }
     }
 }

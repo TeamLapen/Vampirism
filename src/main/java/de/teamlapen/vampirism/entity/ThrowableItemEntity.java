@@ -8,6 +8,7 @@ import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -15,16 +16,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 
-/**
- * 1.10
- *
- * @author maxanier
- */
 @OnlyIn(
         value = Dist.CLIENT,
         _interface = IRendersAsItem.class
@@ -88,17 +85,8 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
     }
 
     @Override
-    protected void onImpact(RayTraceResult result) {
-        ItemStack stack = getItem();
-        if (!stack.isEmpty()) {
-            Item item = stack.getItem();
-            if (item instanceof IVampirismThrowableItem) {
-                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.world.isRemote);
-            } else {
-                LOGGER.warn("Saved item (%s) is not an instance of IVampirismThrowableItem. This should not be able to happen", stack);
-            }
-        }
-        if (!this.world.isRemote) this.remove();
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
@@ -120,5 +108,19 @@ public class ThrowableItemEntity extends ThrowableEntity implements IRendersAsIt
          * @param remote If this is a remote world
          */
         void onImpact(ThrowableItemEntity entity, ItemStack stack, RayTraceResult impact, boolean remote);
+    }
+
+    @Override
+    protected void onImpact(RayTraceResult result) {
+        ItemStack stack = getItem();
+        if (!stack.isEmpty()) {
+            Item item = stack.getItem();
+            if (item instanceof IVampirismThrowableItem) {
+                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.world.isRemote);
+            } else {
+                LOGGER.warn("Saved item ({}) is not an instance of IVampirismThrowableItem. This should not be able to happen", stack);
+            }
+        }
+        if (!this.world.isRemote) this.remove();
     }
 }
