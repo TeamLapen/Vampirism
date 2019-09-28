@@ -104,7 +104,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     @Override
     public int getLeftSkillPoints() {
         int level = player.getLevel();
-        if (Configs.unlock_all_skills && level == player.getMaxLevel()) {
+        if (Configs.unlock_all_skills && level >= 14) { //player.getMaxLevel() - Only changed here for level 15
             return 1;
         }
         return player.getLevel() - enabledSkills.size();
