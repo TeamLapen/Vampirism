@@ -550,7 +550,6 @@
   "command.vampirism.test.place.notloaded": "Structure %s was not loaded",
   "command.vampirism.test.place.notfound": "Structure %s not found.",
   "command.vampirism.test.infoentity.printed": "Printed info to log",
-  "command.vampirism.test.infoentities.count": "Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)",
   "command.vampirism.test.garlicprofiler.tick": "Tick",
   "command.vampirism.test.garlicprofiler.garlic": "Garlic",
   "command.vampirism.test.garlicprofiler.print": "%s: %s|%s",

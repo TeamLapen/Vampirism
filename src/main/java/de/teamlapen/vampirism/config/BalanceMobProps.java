@@ -32,7 +32,7 @@ public class BalanceMobProps extends BalanceValues {
     public double GHOST_SPEED;
     @DefaultInt(value = 30, name = "ghost_health", minValue = 0)
     public int GHOST_HEALTH;
-    @DefaultInt(value = 50, minValue = 0, maxValue = 1000000, name = "ghost_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
+    @DefaultInt(value = 10, minValue = 0, maxValue = 1000000, name = "ghost_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
     public int GHOST_SPAWN_CHANCE;
 
     @DefaultInt(value = 1, minValue = 0, name = "converted_mob_default_dmg")

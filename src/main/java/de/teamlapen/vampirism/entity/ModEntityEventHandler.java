@@ -6,8 +6,10 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
+import de.teamlapen.vampirism.blocks.CastleBricksBlock;
+import de.teamlapen.vampirism.blocks.CastleSlabBlock;
+import de.teamlapen.vampirism.blocks.CastleStairsBlock;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.goals.GolemTargetVampireGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
@@ -17,6 +19,7 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
@@ -97,9 +100,21 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityCheckSpawn(LivingSpawnEvent.CheckSpawn event) {
         BlockState blockState = event.getWorld().getBlockState(new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down());
-        if (blockState.getBlock().equals(ModBlocks.castle_block_dark_stone) || !(event.getEntity().getClassification(false) == VReference.VAMPIRE_CREATURE_TYPE)) {
-            event.setResult(Event.Result.DENY);
-        } else if (blockState.getBlock().equals(ModBlocks.castle_stairs_dark_stone) || !(event.getEntity().getClassification(false) == VReference.VAMPIRE_CREATURE_TYPE)) {
+        Block b = blockState.getBlock();
+        boolean deny = false;
+        CastleBricksBlock.EnumVariant v = null;
+
+        if (b instanceof CastleBricksBlock) {
+            deny = true;
+            v = ((CastleBricksBlock) b).getVariant();
+        } else if (b instanceof CastleSlabBlock) {
+            deny = true;
+            v = ((CastleSlabBlock) b).getVariant();
+        } else if (b instanceof CastleStairsBlock) {
+            deny = true;
+            v = ((CastleStairsBlock) b).getVariant();
+        }
+        if (deny && (v == CastleBricksBlock.EnumVariant.DARK_STONE || !(event.getEntity().getClassification(false) == VReference.VAMPIRE_CREATURE_TYPE))) {
             event.setResult(Event.Result.DENY);
         }
     }
