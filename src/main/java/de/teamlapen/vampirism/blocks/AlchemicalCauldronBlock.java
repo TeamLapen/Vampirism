@@ -25,6 +25,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+
+//TODO 1.14 model does not render properly. Maybe related to https://github.com/MinecraftForge/MinecraftForge/pull/6154
 public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public static final String regName = "alchemical_cauldron";
     /**

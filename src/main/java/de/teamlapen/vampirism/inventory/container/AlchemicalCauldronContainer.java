@@ -16,8 +16,7 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntArray;
 
 
-public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {//TODO 1.14 items should be shift-clicked into furnace
-    private IWorldPosCallable worldPosCallable;
+public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {
 
     @Deprecated
     public AlchemicalCauldronContainer(int id, PlayerInventory playerInventory) {
@@ -26,7 +25,6 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {//TOD
 
     public AlchemicalCauldronContainer(int id, PlayerInventory playerInventory, IInventory inv, IIntArray data, IWorldPosCallable worldPos) {
         super(ModContainer.alchemical_cauldron, ModRecipes.ALCHEMICAL_CAULDRON_TYPE, id, playerInventory, inv, data);
-        worldPosCallable = worldPos;
         setSlots(playerInventory);
     }
 

@@ -10,11 +10,9 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -85,12 +83,5 @@ public class VampireSkills {
         registry.register(new VampirismSkill.SimpleVampireSkill("vampire_speed", false).setTranslationKey("effect.minecraft.speed").registerAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, "96dc968d-818f-4271-8dbf-6b799d603ad8", Balance.vps.SPEED_BOOST, AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new VampirismSkill.SimpleVampireSkill("water_resistance", true).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().waterResistance = true, player -> ((VampirePlayer) player).getSpecialAttributes().waterResistance = false));
 
-    }
-
-
-    public static void fixMapping(RegistryEvent.MissingMappings.Mapping<ISkill> m) {//TODO 1.14 still needed?
-        if (new ResourceLocation("vampirism:bite1").equals(m.key) || new ResourceLocation("vampirism:bite2").equals(m.key)) {
-            m.ignore();
-        }
     }
 }

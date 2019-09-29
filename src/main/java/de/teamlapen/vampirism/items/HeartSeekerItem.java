@@ -21,12 +21,13 @@ import java.util.List;
 public class HeartSeekerItem extends VampirismVampireSword implements IItemWithTier {
 
     public static final String regName = "heart_seeker";
-    private final static float[] DAMAGE_TIER = {5.0F, 6.0F, 8.0F};
-    private final static float[] SPEED_TIER = {0.4f, 0.5f, 0.6f};
+    private final static int[] DAMAGE_TIER = {7, 8, 10};
+    private final static float[] UNTRAINED_SPEED_TIER = {-4f, -3.7f, -3.4f};
+    private final static float[] TRAINED_SPEED_TIER = {-1.5f, -1.4f, -1.3f};
     private final TIER tier;
 
     public HeartSeekerItem(TIER tier) {
-        super(regName + "_" + tier.getName(), ItemTier.IRON, 0, 0.0f, new Properties().group(VampirismMod.creativeTab));
+        super(regName + "_" + tier.getName(), ItemTier.IRON, DAMAGE_TIER[tier.ordinal()], UNTRAINED_SPEED_TIER[tier.ordinal()], TRAINED_SPEED_TIER[tier.ordinal()], new Properties().group(VampirismMod.creativeTab).maxDamage(2500));
         this.tier = tier;
         this.setTranslation_key(regName);
     }
@@ -61,18 +62,14 @@ public class HeartSeekerItem extends VampirismVampireSword implements IItemWithT
     }
 
     @Override
-    protected float getBaseAttackDamage(ItemStack stack) {
-        return DAMAGE_TIER[getVampirismTier().ordinal()];
-    }
-
-    @Override
-    protected float getBaseAttackSpeed(ItemStack stack) {
-        return SPEED_TIER[getVampirismTier().ordinal()];
-    }
-
-    @Override
     protected float getChargingFactor(ItemStack stack) {
         return (float) Balance.general.HEART_SEEKER_CHARGING_FACTOR * 2f / (getVampirismTier().ordinal() + 2);
+    }
+
+
+    @Override
+    public boolean getIsRepairable(ItemStack p_82789_1_, ItemStack p_82789_2_) {
+        return this.tier == TIER.ULTIMATE && super.getIsRepairable(p_82789_1_, p_82789_2_);
     }
 
 }

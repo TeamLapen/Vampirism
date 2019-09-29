@@ -7,8 +7,10 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -28,7 +30,7 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
 
 
     public HunterAxeItem(TIER tier) {
-        super(regName + "_" + tier.getName(), ItemTier.IRON, 0.37F, new Properties().group(VampirismMod.creativeTab));
+        super(regName + "_" + tier.getName(), ItemTier.IRON, 8, -3.4f, new Properties().group(VampirismMod.creativeTab));
         this.tier = tier;
         this.setTranslation_key(regName);
     }
@@ -41,6 +43,12 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
         tooltip.add(new TranslationTextComponent("text.vampirism.deals_more_damage_to", Math.round((getVampireMult() - 1) * 100), VReference.VAMPIRE_FACTION.getNamePlural()));
     }
 
+    @Override
+    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+        if (this.isInGroup(group)) {
+            items.add(getEnchantedStack());
+        }
+    }
 
     @Override
     public float getDamageMultiplierForFaction(@Nonnull ItemStack stack) {
@@ -98,11 +106,11 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
     private float getVampireMult() {
         switch (tier) {
             case ULTIMATE:
-                return 1.4F;
+                return 1.5F;
             case ENHANCED:
                 return 1.3F;
             default:
-                return 1.1F;
+                return 1.2F;
         }
     }
 

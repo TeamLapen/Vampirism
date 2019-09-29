@@ -132,7 +132,7 @@ public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTable
             } else if (ingredients.size() > ShapelessWeaponTableRecipe.MAX_WIDTH * ShapelessWeaponTableRecipe.MAX_HEIGHT) {
                 throw new JsonParseException("Too many ingredients for shapeless recipe the max is " + (ShapelessWeaponTableRecipe.MAX_WIDTH * ShapelessWeaponTableRecipe.MAX_HEIGHT));
             } else {
-                ItemStack result = VampirismRecipeHelper.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+                ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
                 return new ShapelessWeaponTableRecipe(recipeId, group, ingredients, result, level, lava, skills);
             }
         }

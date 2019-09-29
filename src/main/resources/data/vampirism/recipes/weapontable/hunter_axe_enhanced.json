@@ -1,13 +1,21 @@
 {
   "result": {
-    "item": "vampirism:hunter_axe_enhanced"
+    "item": "vampirism:hunter_axe_enhanced",
+    "nbt": {
+      "Enchantments": [
+        {
+          "lvl": 3,
+          "id": "minecraft:knockback"
+        }
+      ]
+    }
   },
   "lava": 5,
   "pattern": [
-    "YZY ",
-    "YZY ",
-    "YXY ",
-    " X  "
+    "XWZY",
+    "XWZY",
+    "  ZY",
+    "  Z "
   ],
   "type": "vampirism:shaped_crafting_weapontable",
   "key": {
@@ -15,9 +23,12 @@
       "tag": "forge:ingots/iron"
     },
     "Y": {
-      "item": "minecraft:leather"
+      "item": "vampirism:item_garlic"
     },
     "Z": {
+      "tag": "forge:rods/wooden"
+    },
+    "W": {
       "tag": "forge:gems/diamond"
     }
   }

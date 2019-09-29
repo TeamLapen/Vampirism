@@ -98,7 +98,7 @@ public class AlchemicalCauldronRecipe extends AbstractCookingRecipe {
             Ingredient ingredients = Ingredient.deserialize(JSONUtils.isJsonArray(json, "ingredient") ? JSONUtils.getJsonArray(json, "ingredient") : JSONUtils.getJsonObject(json, "ingredient"));
             int level = JSONUtils.getInt(json, "level", 1);
             ISkill[] skills = VampirismRecipeHelper.deserializeSkills(JSONUtils.getJsonArray(json, "skill", null));
-            ItemStack result = VampirismRecipeHelper.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+            ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
             Either<Ingredient, FluidStack> fluid = VampirismRecipeHelper.getFluidOrItem(json);
             int cookTime = JSONUtils.getInt(json, "cookTime", 200);
             float exp = JSONUtils.getFloat(json, "experience", 0.2F);

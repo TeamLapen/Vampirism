@@ -30,14 +30,6 @@ public class VampirismItemWeapon extends SwordItem {
     private final float attackSpeed;
     private String translation_key;
 
-    public VampirismItemWeapon(String regName, IItemTier material, Properties props) {
-        this(regName, material, 0.4f, props);
-    }
-
-
-    public VampirismItemWeapon(String regName, IItemTier material, float attackSpeedModifier, Properties props) {
-        this(regName, material, 3, attackSpeedModifier, props);
-    }
 
 
     public VampirismItemWeapon(String regName, IItemTier material, int attackDamageIn, float attackSpeedIn, Properties builder) {
@@ -73,6 +65,9 @@ public class VampirismItemWeapon extends SwordItem {
         return attackDamage;
     }
 
+    /**
+     * This is effectively a attack slowness. The more negative the value, the lower the attack speed
+     */
     protected float getAttackSpeed(ItemStack stack) {
         return attackSpeed;
     }

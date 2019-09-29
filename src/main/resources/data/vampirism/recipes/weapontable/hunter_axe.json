@@ -1,13 +1,21 @@
 {
   "result": {
-    "item": "vampirism:hunter_axe_normal"
+    "item": "vampirism:hunter_axe_normal",
+    "nbt": {
+      "Enchantments": [
+        {
+          "lvl": 2,
+          "id": "minecraft:knockback"
+        }
+      ]
+    }
   },
   "lava": 5,
   "pattern": [
-    "YXY ",
-    "YXY ",
-    "YXY ",
-    " X  "
+    "XXZY",
+    "XXZY",
+    "  ZY",
+    "  Z "
   ],
   "type": "vampirism:shaped_crafting_weapontable",
   "key": {
@@ -15,7 +23,10 @@
       "tag": "forge:ingots/iron"
     },
     "Y": {
-      "item": "minecraft:leather"
+      "item": "vampirism:item_garlic"
+    },
+    "Z": {
+      "tag": "forge:rods/wooden"
     }
   }
 }

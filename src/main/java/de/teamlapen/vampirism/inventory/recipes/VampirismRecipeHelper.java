@@ -7,8 +7,6 @@ import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
@@ -107,21 +105,6 @@ class VampirismRecipeHelper {
         }
 
         return nonnulllist;
-    }
-
-    /**
-     * copy of {@link net.minecraft.item.crafting.ShapedRecipe#deserializeItem(JsonObject)}
-     */
-    static ItemStack deserializeItem(JsonObject p_199798_0_) {
-        String s = JSONUtils.getString(p_199798_0_, "item");
-        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(s));
-        if (item == null) throw new JsonSyntaxException("Unknown item '" + s + "'");
-        if (p_199798_0_.has("data")) {
-            throw new JsonParseException("Disallowed data tag found");
-        } else {
-            int i = JSONUtils.getInt(p_199798_0_, "count", 1);
-            return net.minecraftforge.common.crafting.CraftingHelper.getItemStack(p_199798_0_, true);
-        }
     }
 
     static FluidStack deserializeFluid(JsonObject p_199798_0_) {
