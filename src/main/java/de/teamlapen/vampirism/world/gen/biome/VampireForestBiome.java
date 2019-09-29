@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.gen.biome;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -12,6 +11,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
+
+import java.util.List;
 
 public class VampireForestBiome extends Biome {
     public final static String regName = "vampire_forest";
@@ -30,9 +31,9 @@ public class VampireForestBiome extends Biome {
         DefaultBiomeFeatures.addDeadBushes(this);
 
         //All EntityTypes used here have to be registered in the static part of ModEntities
-        this.addSpawn(VReference.VAMPIRE_CREATURE_TYPE, new SpawnListEntry(ModEntities.ghost, Balance.mobProps.GHOST_SPAWN_CHANCE, 1, 1));
-        this.addSpawn(VReference.VAMPIRE_CREATURE_TYPE, new SpawnListEntry(ModEntities.vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 3));
-        this.addSpawn(VReference.VAMPIRE_CREATURE_TYPE, new SpawnListEntry(ModEntities.vampire_baron, Balance.mobProps.VAMPIRE_BARON_SPAWN_CHANCE, 1, 1));
+        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.ghost, Balance.mobProps.GHOST_SPAWN_CHANCE, 1, 1));
+        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 3));
+        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.vampire_baron, Balance.mobProps.VAMPIRE_BARON_SPAWN_CHANCE, 1, 1));
         this.addSpawn(EntityClassification.AMBIENT, new SpawnListEntry(ModEntities.blinding_bat, Balance.mobProps.BLINDING_BAT_SPAWN_CHANCE, 2, 4));
         this.addSpawn(EntityClassification.CREATURE, new SpawnListEntry(ModEntities.dummy_creature, Balance.mobProps.DUMMY_CREATURE_SPAWN_CHANCE, 3, 6));
     }
@@ -52,5 +53,10 @@ public class VampireForestBiome extends Biome {
     @Override
     public int getSkyColorByTemp(float p_76731_1_) {
         return 0xA33641;
+    }
+
+    @Override
+    public List<SpawnListEntry> getSpawns(EntityClassification p_76747_1_) {
+        return super.getSpawns(p_76747_1_);
     }
 }

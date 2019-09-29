@@ -19,6 +19,11 @@ import java.util.List;
 
 public class CastleStairsBlock extends StairsBlock {
     private final static String REGNAME_BASE = "castle_stairs";
+
+    public CastleBricksBlock.EnumVariant getVariant() {
+        return variant;
+    }
+
     private final CastleBricksBlock.EnumVariant variant;
 
     public CastleStairsBlock(BlockState state, CastleBricksBlock.EnumVariant variant) {
