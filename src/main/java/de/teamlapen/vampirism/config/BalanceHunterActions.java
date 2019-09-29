@@ -13,12 +13,12 @@ import java.io.File;
  */
 public class BalanceHunterActions extends BalanceValues {
 
-    @DefaultDouble(value = 0.3D, minValue = 0, comment = "If disguised the detection radius of mobs will be multiplied by this")
+    @DefaultDouble(value = 0.1D, minValue = 0, comment = "If disguised the detection radius of mobs will be multiplied by this")
     public double DISGUISE_VISIBILITY_MOD;
     @DefaultBoolean(value = true)
     public boolean DISGUISE_ENABLED;
 
-    @DefaultInt(value = 1024, minValue = 1, comment = "Squared distance as of which a disguised hunter is invisible")
+    @DefaultInt(value = 512, minValue = 1, comment = "Squared distance as of which a disguised hunter is invisible")
     public int DISGUISE_DISTANCE_INVISIBLE_SQ;
 
     @DefaultInt(value = 2400, minValue = 1, comment = "Duration of Awareness Action")

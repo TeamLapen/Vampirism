@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player.vampire;
 
 import com.mojang.datafixers.util.Either;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -1092,12 +1091,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (!PermissionAPI.hasPermission(player, Permissions.BITE_PLAYER)) return;
         float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getAttribute(VReference.biteDamage).getValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
-        if ((entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) || entity instanceof CreatureEntity && ExtendedCreature.get((CreatureEntity) entity).hasPoisonousBlood()) {
+        if (((entity.isEntityUndead() || hunter) && player.getRNG().nextInt(4) == 0) || entity instanceof CreatureEntity && ExtendedCreature.get((CreatureEntity) entity).hasPoisonousBlood()) {
             player.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
             if (player instanceof ServerPlayerEntity) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.POISONOUS_BITE);
             }
-        } else if (hunter) {
+        }
+        if (hunter) {
             if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) {
                 player.attackEntityFrom(DamageSource.causeThornsDamage(entity), damage);
             }

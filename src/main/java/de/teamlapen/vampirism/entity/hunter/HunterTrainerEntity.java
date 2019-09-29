@@ -76,6 +76,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
 
     @Override
     protected boolean processInteract(PlayerEntity player, Hand hand) {
+        if (tryCureSanguinare(player)) return true;
         ItemStack stack = player.getHeldItem(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 

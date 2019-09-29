@@ -390,6 +390,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Override
     protected boolean processInteract(PlayerEntity player, Hand hand) {
+        if (tryCureSanguinare(player)) return true;
         int hunterLevel = HunterPlayer.get(player).getLevel();
         if (this.isAlive() && !player.isSneaking()) {
             if (!world.isRemote) {
