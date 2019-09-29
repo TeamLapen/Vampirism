@@ -240,7 +240,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         //client ---------------------------------
         if (this.world.isRemote) {
             if (time % 10 == 7 && controllingFaction != null) {
-                ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, controllingFaction.getColor().getRGB(), 0.2F), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 15, 30, this.world.rand);
+                ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_4"), 20, controllingFaction.getColor().getRGB(), 0.2F), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 3, 30, this.world.rand);
             }
         }
         //server ---------------------------------
