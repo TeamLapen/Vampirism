@@ -2,6 +2,7 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -662,9 +663,18 @@ public class UtilLib {
     }
 
     @Nonnull
+    public static int[] mbToInt(@Nonnull MutableBoundingBox bb) {
+        return new int[]{bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ};
+    }
+
+    @Nonnull
     public static AxisAlignedBB intToBB(int[] array) {
         return new AxisAlignedBB(array[0], array[1], array[2], array[3], array[4], array[5]);
+    }
 
+    @Nonnull
+    public static MutableBoundingBox intToMB(int[] array) {
+        return new MutableBoundingBox(array[0], array[1], array[2], array[3], array[4], array[5]);
     }
 
     public enum RotationAmount {

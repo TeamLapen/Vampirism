@@ -6,8 +6,9 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.event.FactionEvent;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
@@ -27,7 +28,7 @@ public class ModEventFactory {
         return event.getResult().equals(Event.Result.DENY);
     }
 
-    public static ResourceLocation fireSpawnCaptureEntityEvent(@Nonnull IFaction<?> faction) {
+    public static EntityType<? extends MobEntity> fireSpawnCaptureEntityEvent(@Nonnull IFaction<?> faction) {
         VampirismVillageEvent.SpawnCaptureEntity event = new VampirismVillageEvent.SpawnCaptureEntity(faction);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getEntity();

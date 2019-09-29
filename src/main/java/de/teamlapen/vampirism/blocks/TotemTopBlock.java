@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import com.google.common.collect.Maps;
+
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.tileentity.TotemTile;
+import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -15,6 +16,7 @@ import net.minecraft.fluid.IFluidState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -26,6 +28,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * Top of a two block multiblock structure.
@@ -36,9 +39,16 @@ import javax.annotation.Nullable;
  */
 public class TotemTopBlock extends VampirismBlockContainer {
     private static final VoxelShape shape = makeShape();
-
-
     private final static String regName = "totem_top";
+    private static final Map<ResourceLocation, TotemTopBlock> factionTotems = Maps.newHashMap();
+
+    public static TotemTopBlock getTotem(ResourceLocation faction) {
+        return factionTotems.get(faction);
+    }
+
+    public static Block[] getTotems() {
+        return factionTotems.values().toArray(new Block[0]);
+    }
 
     private static VoxelShape makeShape() {
         VoxelShape a = Block.makeCuboidShape(3, 0, 3, 13, 10, 13);
@@ -46,9 +56,18 @@ public class TotemTopBlock extends VampirismBlockContainer {
         return VoxelShapes.or(a, b);
     }
 
+    @Deprecated
     public TotemTopBlock() {
         super(regName, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
+        factionTotems.put(new ResourceLocation("none"), this);
+    }
 
+    /**
+     * @param faction faction must be faction registryname;
+     */
+    public TotemTopBlock(String regNameAddition, ResourceLocation faction) {
+        super(regName + "_" + regNameAddition, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
+        factionTotems.put(faction, this);
     }
 
     @Override
@@ -56,15 +75,15 @@ public class TotemTopBlock extends VampirismBlockContainer {
         return false;
     }
 
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TotemTile();
-    }
-
     @Override
     public float getExplosionResistance() {
         return Float.MAX_VALUE;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+        return ModTiles.totem.create();
     }
 
     @Override
@@ -90,9 +109,10 @@ public class TotemTopBlock extends VampirismBlockContainer {
 
     @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        if (worldIn.isRemote) return;
         TileEntity tile = worldIn.getTileEntity(pos);
-        if (tile instanceof TotemTile) {
-            ((TotemTile) tile).updateTotem();
+        if (tile instanceof TotemTileEntity) {
+            ((TotemTileEntity) tile).updateTileStatus();
             worldIn.addBlockEvent(pos, this, 1, 0); //Notify client about render update
         }
     }
@@ -100,23 +120,17 @@ public class TotemTopBlock extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (world.isRemote) return true;
-        IPlayableFaction f = FactionPlayerHandler.get(player).getCurrentFaction();
-        TotemTile t = getTile(world, pos);
-        if (f != null && t != null && world.getBlockState(pos.down()).getBlock().equals(ModBlocks.totem_base)) {
-            t.initiateCapture(f, player);
+        TotemTileEntity t = getTile(world, pos);
+        if (t != null && world.getBlockState(pos.down()).getBlock().equals(ModBlocks.totem_base)) {
+            t.initiateCapture(player);
             return true;
         }
         return super.onBlockActivated(state, world, pos, player, hand, hit);
     }
 
     @Override
-    public void onReplaced(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_, boolean p_196243_5_) {
-        super.onReplaced(p_196243_1_, p_196243_2_, p_196243_3_, p_196243_4_, p_196243_5_);
-    }
-
-    @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
-        TotemTile tile = getTile(world, pos);
+        TotemTileEntity tile = getTile(world, pos);
         if (tile != null) {
             if (!tile.canPlayerRemoveBlock(player)) {
                 return false;
@@ -126,9 +140,16 @@ public class TotemTopBlock extends VampirismBlockContainer {
     }
 
     @Nullable
-    private TotemTile getTile(World world, BlockPos pos) {
+    private TotemTileEntity getTile(World world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TotemTile) return (TotemTile) tile;
+        if (tile instanceof TotemTileEntity) return (TotemTileEntity) tile;
         return null;
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!(newState.getBlock() instanceof TotemTopBlock)) {
+            worldIn.removeTileEntity(pos);
+        }
     }
 }

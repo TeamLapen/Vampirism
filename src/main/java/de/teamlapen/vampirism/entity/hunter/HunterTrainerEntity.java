@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.LookAtTrainerHunterGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
@@ -27,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * Hunter Trainer which allows Hunter players to level up
  */
-public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrainerHunterGoal.ITrainer {
+public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrainerHunterGoal.ITrainer, ICaptureIgnore {
     private static final ITextComponent name = new TranslationTextComponent("container.huntertrainer");
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private PlayerEntity trainee;

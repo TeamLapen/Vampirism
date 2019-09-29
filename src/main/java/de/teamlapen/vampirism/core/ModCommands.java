@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.core;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.command.*;
 import de.teamlapen.vampirism.command.arguments.ActionArgument;
@@ -66,7 +67,8 @@ public class ModCommands {
                             .then(SetSwordChargedCommand.register())
                             .then(SetSwordTrainedCommand.register())
                             .then(SpawnTestAnimalCommand.register())
-                            .then(HealCommand.register()));
+                            .then(HealCommand.register())
+                            .then(CaptureVillageCommand.register()));
         }
     }
 

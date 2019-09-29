@@ -1,22 +1,18 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.villager.IVillagerType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MerchantOffer;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IItemProvider;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.StructureStart;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 /**
  * Villager extended with the ability to attack and some other things
@@ -24,9 +20,8 @@ import java.util.Random;
 public class VampirismVillagerEntity extends VillagerEntity {
 
     protected boolean peaceful = false;
-//    protected
-//    @Nullable
-//    IVampirismVillage cachedVillage;
+    protected @Nullable
+    StructureStart cachedVillage;
     /**
      * A timer which reaches 0 every 70 to 120 ticks
      */
@@ -80,9 +75,6 @@ public class VampirismVillagerEntity extends VillagerEntity {
             if (entity instanceof LivingEntity) {
                 this.setAttackTarget((LivingEntity) entity);
             }
-//            if (cachedVillage != null) {
-//                cachedVillage.addOrRenewAggressor(entity);
-//            }
             return true;
         }
         return false;
@@ -93,10 +85,12 @@ public class VampirismVillagerEntity extends VillagerEntity {
         return (peaceful || this.world.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
     }
 
-//    @Nullable
-//    public IVampirismVillage getVampirismVillage() {
-//        return cachedVillage;
-//    }
+    @Nullable
+    public StructureStart getVillage() {
+        if (cachedVillage == StructureStart.DUMMY)
+            return null;
+        return cachedVillage;
+    }
 
     @Override
     public void livingTick() {
@@ -123,92 +117,12 @@ public class VampirismVillagerEntity extends VillagerEntity {
     protected void updateAITasks() {
         super.updateAITasks();
         if (--this.randomTickDivider <= 0) {
-            this.randomTickDivider = 70 + rand.nextInt(50);
-//            this.cachedVillage = VampirismVillageHelper.getNearestVillage(world, getPosition(), 32);
-        }
-
-    }
-
-    protected static class ItemsForHeart implements VillagerTrades.ITrade {
-        private final int xp;
-        private final Price price;
-        private final ItemStack[] sellingItem;
-        private final Price selling;
-        private final int maxUses;
-
-        public ItemsForHeart(Price priceIn, IItemProvider sellingItemIn, Price sellingIn) {
-            this(priceIn, new ItemStack[]{new ItemStack(sellingItemIn.asItem())}, sellingIn, 2, 8);
-        }
-
-        public ItemsForHeart(Price priceIn, ItemStack[] sellingItemIn, Price sellingIn) {
-            this(priceIn, sellingItemIn, sellingIn, 2, 8);
-        }
-
-        public ItemsForHeart(Price priceIn, IItemProvider sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
-            this.price = priceIn;
-            this.sellingItem = new ItemStack[]{new ItemStack(sellingItemIn.asItem())};
-            this.selling = sellingIn;
-            this.xp = xpIn;
-            this.maxUses = maxUsesIn;
-        }
-
-        public ItemsForHeart(Price priceIn, ItemStack[] sellingItemIn, Price sellingIn, int xpIn, int maxUsesIn) {
-            this.price = priceIn;
-            this.sellingItem = sellingItemIn;
-            this.selling = sellingIn;
-            this.xp = xpIn;
-            this.maxUses = maxUsesIn;
-        }
-
-        @Nullable
-        @Override
-        public MerchantOffer getOffer(Entity entity, Random random) {
-            return new MerchantOffer(new ItemStack(ModItems.human_heart, price.getPrice(random)), new ItemStack(sellingItem[random.nextInt(sellingItem.length)].getItem(), selling.getPrice(random)), maxUses, xp, 0.2F);
+            this.randomTickDivider = 200;
+            if (Structure.VILLAGE.isPositionInStructure(this.world, this.getPosition())) {
+                this.cachedVillage = Structure.VILLAGE.getStart(this.world, this.getPosition(), false);
+            } else {
+                this.cachedVillage = null;
+            }
         }
     }
-
-    protected static class BloodBottleForHeart implements VillagerTrades.ITrade {
-        private final int xp;
-        private final Price price;
-        private final Price selling;
-        private final int damage;
-        private final int maxUses;
-
-        public BloodBottleForHeart(Price priceIn, Price sellingIn, int damageIn) {
-            this(priceIn, sellingIn, damageIn, 2, 8);
-        }
-
-        public BloodBottleForHeart(Price priceIn, Price sellingIn, int damageIn, int xpIn, int maxUsesIn) {
-            this.price = priceIn;
-            this.selling = sellingIn;
-            this.damage = damageIn;
-            this.xp = xpIn;
-            this.maxUses = maxUsesIn;
-        }
-
-        @Nullable
-        @Override
-        public MerchantOffer getOffer(Entity entity, Random random) {
-            ItemStack bottle = new ItemStack(ModItems.blood_bottle, selling.getPrice(random));
-            bottle.setDamage(damage);
-            return new MerchantOffer(new ItemStack(ModItems.human_heart, price.getPrice(random)), bottle, maxUses, xp, 0.2F);
-        }
-    }
-
-    protected static class Price {
-        private final int min;
-        private final int max;
-
-        public Price(int minIn, int maxIn) {
-            this.max = maxIn;
-            this.min = minIn;
-        }
-
-        public int getPrice(Random rand) {
-            if (min >= max) return min;
-            else return min + rand.nextInt(max - min);
-        }
-    }
-
-
 }
