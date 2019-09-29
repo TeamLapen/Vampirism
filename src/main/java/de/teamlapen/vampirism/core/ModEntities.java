@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -13,10 +12,7 @@ import de.teamlapen.vampirism.entity.converted.ConvertedSheepEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
-import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
-import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
-import de.teamlapen.vampirism.entity.vampire.DummyBittenAnimalEntity;
-import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
+import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;

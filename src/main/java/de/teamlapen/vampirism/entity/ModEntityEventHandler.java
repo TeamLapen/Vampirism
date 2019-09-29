@@ -24,6 +24,7 @@ import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.ZombieEntity;
@@ -152,6 +153,7 @@ public class ModEntityEventHandler {
                 for (PrioritizedGoal t : ((ZombieEntity) event.getEntity()).targetSelector.goals) {
                     if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 2) {
                         target = t.getGoal();
+                        break;
                     }
                 }
                 if (target != null) {
@@ -160,7 +162,24 @@ public class ModEntityEventHandler {
                 } else {
                     if (warnAboutZombie) {
                         LOGGER.warn("Could not replace zombie target task");
-                        warnAboutCreeper = false;
+                        warnAboutZombie = false;
+                    }
+                }
+                Goal villagerTarget = null;
+
+                for (PrioritizedGoal t : ((ZombieEntity) event.getEntity()).targetSelector.goals) {
+                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && AbstractVillagerEntity.class.equals(((NearestAttackableTargetGoal) t.getGoal()).targetClass)) {
+                        villagerTarget = t.getGoal();
+                        break;
+                    }
+                }
+                if (villagerTarget != null) {
+                    ((ZombieEntity) event.getEntity()).targetSelector.removeGoal(villagerTarget);
+                    ((ZombieEntity) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((ZombieEntity) event.getEntity(), AbstractVillagerEntity.class, 10, false, false, entity -> !Helper.isVampire(entity)));
+                } else {
+                    if (warnAboutZombie) {
+                        LOGGER.warn("Could not replace villager zombie target task");
+                        warnAboutZombie = false;
                     }
                 }
             }

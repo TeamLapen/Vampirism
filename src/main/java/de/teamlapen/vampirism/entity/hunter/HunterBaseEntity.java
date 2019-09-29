@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 /**
@@ -37,5 +40,19 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
             return EntityClassification.MONSTER;
         }
         return super.getClassification(forSpawnCount);
+    }
+
+    /**
+     * Tries to cure sanguinare and if successful sends a message.
+     *
+     * @return If player was cured
+     */
+    protected boolean tryCureSanguinare(PlayerEntity entity) {
+        if (!this.world.isRemote && entity.isPotionActive(ModEffects.sanguinare)) {
+            entity.removePotionEffect(ModEffects.sanguinare);
+            entity.sendMessage(new TranslationTextComponent("text.vampirism.hunter.cured_sanguinare"));
+            return true;
+        }
+        return false;
     }
 }

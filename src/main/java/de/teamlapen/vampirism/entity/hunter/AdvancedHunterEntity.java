@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import com.mojang.authlib.GameProfile;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -282,6 +281,12 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH + Balance.mobProps.ADVANCED_HUNTER_MAX_HEALTH_PL * l);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_HUNTER_ATTACK_DAMAGE_PL * l);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_HUNTER_SPEED);
+    }
+
+    @Override
+    protected boolean processInteract(PlayerEntity player, Hand p_184645_2_) {
+        if (tryCureSanguinare(player)) return true;
+        return super.processInteract(player, p_184645_2_);
     }
 
     public static class IMob extends AdvancedHunterEntity implements net.minecraft.entity.monster.IMob {
