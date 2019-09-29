@@ -41,6 +41,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -50,7 +51,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class ModEntityEventHandler {
 
-    private boolean skipAttackDamageOnce = false;
+    private boolean skipAttackDamageOnceClient = false;
+    private boolean skipAttackDamageOnceServer = false;
     private boolean warnAboutCreeper = true;
     private boolean warnAboutZombie = true;
 
@@ -63,8 +65,9 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityAttacked(LivingAttackEvent event) {
+        boolean client = FMLCommonHandler.instance().getEffectiveSide().isClient();
         //Probably not a very "clean" solution, but the only one I found
-        if (!skipAttackDamageOnce && "player".equals(event.getSource().getDamageType()) && event.getSource().getTrueSource() instanceof EntityPlayer) {
+        if (!(client ? skipAttackDamageOnceClient : skipAttackDamageOnceServer) && "player".equals(event.getSource().getDamageType()) && event.getSource().getTrueSource() instanceof EntityPlayer) {
             ItemStack stack = ((EntityPlayer) event.getSource().getTrueSource()).getHeldItemMainhand();
             if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem) {
                 IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
@@ -72,9 +75,17 @@ public class ModEntityEventHandler {
 
                 if (faction != null && faction.equals(item.getSlayedFaction())) {
                     float amt = event.getAmount() * item.getDamageMultiplierForFaction(stack);
-                    skipAttackDamageOnce = true;
-                    boolean result = net.minecraftforge.common.ForgeHooks.onLivingAttack(event.getEntityLiving(), event.getSource(), amt);
-                    skipAttackDamageOnce = false;
+                    if (client) {
+                        skipAttackDamageOnceClient = true;
+                    } else {
+                        skipAttackDamageOnceServer = true;
+                    }
+                    boolean result = event.getEntityLiving().attackEntityFrom(event.getSource(), amt);
+                    if (client) {
+                        skipAttackDamageOnceClient = false;
+                    } else {
+                        skipAttackDamageOnceServer = false;
+                    }
                     event.setCanceled(!result);
                 }
             }
@@ -159,7 +170,7 @@ public class ModEntityEventHandler {
                 } else {
                     if (warnAboutZombie) {
                         VampirismMod.log.w("EntityEventHandler", "Could not replace zombie target task");
-                        warnAboutCreeper = false;
+                        warnAboutZombie = false;
                     }
                 }
             }
