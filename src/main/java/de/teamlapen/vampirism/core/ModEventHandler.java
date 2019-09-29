@@ -140,6 +140,7 @@ public class ModEventHandler {
             event.getPlayer().sendMessage(new StringTextComponent("- Bat mode"));
             event.getPlayer().sendMessage(new StringTextComponent("- Sleep in coffin"));
             event.getPlayer().sendMessage(new StringTextComponent("- JEI integration and guide book"));
+            event.getPlayer().sendMessage(new StringTextComponent("- Balance is not configurable"));
 
 
         }
