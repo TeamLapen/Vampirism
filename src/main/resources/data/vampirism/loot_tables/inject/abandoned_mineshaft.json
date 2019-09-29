@@ -145,6 +145,10 @@
                 "min": 0.3,
                 "max": 0.9
               }
+            },
+            {
+              "function": "set_nbt",
+              "tag": "\"Enchantments\": [{ \"lvl\": 3, \"id\": \"minecraft:knockback\" } ]"
             }
           ]
         },

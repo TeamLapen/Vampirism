@@ -41,6 +41,7 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,7 +51,9 @@ import org.apache.logging.log4j.Logger;
 public class ModEntityEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger(ModEntityEventHandler.class);
-    private boolean skipAttackDamageOnce = false;
+    private boolean skipAttackDamageOnceServer = false;
+    private boolean skipAttackDamageOnceClient = false;
+
     private boolean warnAboutCreeper = true;
     private boolean warnAboutZombie = true;
 
@@ -64,7 +67,8 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityAttacked(LivingAttackEvent event) {
         //Probably not a very "clean" solution, but the only one I found
-        if (!skipAttackDamageOnce && "player".equals(event.getSource().getDamageType()) && event.getSource().getTrueSource() instanceof PlayerEntity) {
+        boolean client = EffectiveSide.get().isClient();
+        if (!(client ? skipAttackDamageOnceClient : skipAttackDamageOnceServer) && "player".equals(event.getSource().getDamageType()) && event.getSource().getTrueSource() instanceof PlayerEntity) {
             ItemStack stack = ((PlayerEntity) event.getSource().getTrueSource()).getHeldItemMainhand();
             if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem) {
                 IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
@@ -72,10 +76,18 @@ public class ModEntityEventHandler {
 
                 if (faction != null && faction.equals(item.getSlayedFaction())) {
                     float amt = event.getAmount() * item.getDamageMultiplierForFaction(stack);
-                    skipAttackDamageOnce = true;
-                    boolean result = net.minecraftforge.common.ForgeHooks.onLivingAttack(event.getEntityLiving(), event.getSource(), amt);
-                    skipAttackDamageOnce = false;
-                    event.setCanceled(!result);
+                    if (client) {
+                        skipAttackDamageOnceClient = true;
+                    } else {
+                        skipAttackDamageOnceServer = true;
+                    }
+                    boolean result = event.getEntityLiving().attackEntityFrom(event.getSource(), amt);
+                    if (client) {
+                        skipAttackDamageOnceClient = false;
+                    } else {
+                        skipAttackDamageOnceServer = false;
+                    }
+                    event.setCanceled(true);
                 }
             }
         }

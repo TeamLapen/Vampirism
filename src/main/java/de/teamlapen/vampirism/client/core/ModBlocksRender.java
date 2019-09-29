@@ -34,7 +34,7 @@ public class ModBlocksRender {
         Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
-                if (tile != null && tile instanceof AlchemicalCauldronTileEntity) {
+                if (tile instanceof AlchemicalCauldronTileEntity) {
                     return ((AlchemicalCauldronTileEntity) tile).getLiquidColorClient();
                 }
             }

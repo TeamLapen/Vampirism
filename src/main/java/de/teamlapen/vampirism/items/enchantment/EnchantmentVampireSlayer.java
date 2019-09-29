@@ -32,7 +32,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem() instanceof PitchforkItem || super.canApplyAtEnchantingTable(stack);
+        return stack.getItem() instanceof PitchforkItem || super.canApplyAtEnchantingTable(stack);
     }
 
     @Override

@@ -10,10 +10,6 @@ import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemTier;
@@ -34,16 +30,9 @@ import java.util.List;
  */
 public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem, IFactionSlayerItem, IVampireFinisher {
 
-    public VampirismHunterWeapon(String regName, IItemTier material, Properties props) {
-        super(regName, material, props);
-    }
 
-    public VampirismHunterWeapon(String regName, IItemTier material, float attackSpeedMod, Properties props) {
-        super(regName, material, attackSpeedMod, props);
-    }
-
-    public VampirismHunterWeapon(String regName, IItemTier material, int attackDamage, float attackSpeedMod, Properties props) {
-        super(regName, material, attackDamage, attackSpeedMod, props);
+    public VampirismHunterWeapon(String regName, IItemTier material, int attackDamage, float attackSpeed, Properties props) {
+        super(regName, material, attackDamage, attackSpeed, props);
     }
 
 
@@ -77,38 +66,5 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     @Override
     public IPlayableFaction getUsingFaction(@Nonnull ItemStack stack) {
         return VReference.HUNTER_FACTION;
-    }
-
-    public static class SimpleHunterSword extends VampirismHunterWeapon {
-        private final int minLevel;
-        private final float damageMult;
-
-        public SimpleHunterSword(String regName, IItemTier material, int minLevel, float damageMult, Properties prop) {
-            super(regName, material, prop);
-            this.minLevel = minLevel;
-            this.damageMult = damageMult;
-        }
-
-        @Override
-        public float getDamageMultiplierForFaction(@Nonnull ItemStack stack) {
-            return damageMult;
-        }
-
-        @Override
-        public float getDestroySpeed(ItemStack stack, BlockState state) {
-            Block block = state.getBlock();
-
-            if (block == Blocks.COBWEB) {
-                return 15.0F;
-            } else {
-                Material material = state.getMaterial();
-                return material != Material.PLANTS && material != Material.TALL_PLANTS && material != Material.CORAL && material != Material.LEAVES && material != Material.GOURD ? 1.0F : 1.5F;
-            }
-        }
-
-        @Override
-        public int getMinLevel(@Nonnull ItemStack stack) {
-            return minLevel;
-        }
     }
 }

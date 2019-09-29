@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.items;
 import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.util.VampirismArmorMaterials;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -40,7 +40,7 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     private final float[] SPEED_REDUCTION = new float[]{-0.025F, -0.1F, -0.05F, -0.025F};
 
     public ObsidianArmorItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), ArmorMaterial.IRON, equipmentSlotIn, new Properties().group(VampirismMod.creativeTab));
+        super(baseRegName, tier.getName(), VampirismArmorMaterials.OBSIDIAN, equipmentSlotIn, new Properties().group(VampirismMod.creativeTab));
         this.tier = tier;
     }
 

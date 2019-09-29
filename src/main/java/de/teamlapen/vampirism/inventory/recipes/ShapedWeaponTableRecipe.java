@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.inventory.recipes;
 
 import com.google.gson.JsonObject;
-
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
@@ -170,7 +169,7 @@ public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRec
             int height = astring[0].length();
             int length = astring.length;
             NonNullList<Ingredient> ingredients = VampirismRecipeHelper.deserializeIngredients(astring, map, height, length);
-            ItemStack result = VampirismRecipeHelper.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+            ItemStack result = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
             int level = JSONUtils.getInt(json, "level", 1);
             ISkill[] skill = VampirismRecipeHelper.deserializeSkills(JSONUtils.getJsonArray(json, "skill", null));
             int lava = JSONUtils.getInt(json, "lava", 0);

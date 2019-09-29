@@ -15,6 +15,8 @@ import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,18 +51,14 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     /**
      * Minimal speed modifier
      */
-    private final float minSpeed = 0.15f;
+    private final float trainedAttackSpeed;
+    private final float untrainedAttackSpeed;
 
-    public VampirismVampireSword(String regName, ItemTier material, float attackSpeedModifier, Properties prop) {
-        super(regName, material, attackSpeedModifier, prop);
-    }
 
-    public VampirismVampireSword(String regName, ItemTier material, Properties prop) {
-        super(regName, material, prop);
-    }
-
-    public VampirismVampireSword(String regName, ItemTier material, int attackDamage, float attackSpeedModifier, Properties prop) {
-        super(regName, material, attackDamage, attackSpeedModifier, prop);
+    public VampirismVampireSword(String regName, ItemTier material, int attackDamage, float untrainedAttackSpeed, float trainedAttackSpeed, Properties prop) {
+        super(regName, material, attackDamage, untrainedAttackSpeed, prop);
+        this.trainedAttackSpeed = trainedAttackSpeed;
+        this.untrainedAttackSpeed = untrainedAttackSpeed;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -97,13 +95,12 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         stack.setTagInfo("dont_name", new ByteNBT(Byte.MAX_VALUE));
     }
 
-    public float getAttackDamageModifier(ItemStack stack) {
-        return getCharged(stack) > 0 ? 1f : minStrength;
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        if (!super.canApplyAtEnchantingTable(stack, enchantment)) return false;
+        return Enchantments.FIRE_ASPECT.equals(enchantment) || Enchantments.LOOTING.equals(enchantment) || Enchantments.KNOCKBACK.equals(enchantment) || Enchantments.UNBREAKING.equals(enchantment);
     }
 
-    public float getAttackSpeedModifier(ItemStack stack) {
-        return minSpeed + (1f - minSpeed) * getTrained(stack);
-    }
 
     @Override
     public int getUseDuration(ItemStack stack) {
@@ -227,21 +224,13 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @Override
     protected final float getAttackDamage(ItemStack stack) {
-        return getBaseAttackDamage(stack) * getAttackDamageModifier(stack);
+        return super.getAttackDamage(stack) * getAttackDamageModifier(stack);
     }
 
-    @Override
-    protected final float getAttackSpeed(ItemStack stack) {
-        return getBaseAttackSpeed(stack) * getAttackSpeedModifier(stack);
+    protected float getAttackDamageModifier(ItemStack stack) {
+        return getCharged(stack) > 0 ? 1f : minStrength;
     }
 
-    protected float getBaseAttackDamage(ItemStack stack) {
-        return super.getAttackDamage(stack);
-    }
-
-    protected float getBaseAttackSpeed(ItemStack stack) {
-        return super.getAttackSpeed(stack);
-    }
 
     /**
      * Gets the charged value from the tag compound
@@ -313,4 +302,10 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         Vec3d playerPos = new Vec3d((player).posX, (player).posY + player.getEyeHeight() - 0.2f, (player).posZ);
         ModParticles.spawnParticleClient(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.6F + 0.1F)), true, pos.x, pos.y, pos.z), playerPos.x, playerPos.y, playerPos.z);
     }
+
+    @Override
+    protected final float getAttackSpeed(ItemStack stack) {
+        return untrainedAttackSpeed + (trainedAttackSpeed - untrainedAttackSpeed) * getTrained(stack);
+    }
+
 }

@@ -1,5 +1,6 @@
 {
   "__comment": "Designed by Maxanier with Cubik Studio",
+  "ambientocclusion": false,
   "textures": {
     "fire": "block/fire_0",
     "fire1": "block/fire_1"
@@ -17,6 +18,7 @@
         5.4,
         5.3437
       ],
+      "shade": false,
       "faces": {
         "north": {
           "uv": [

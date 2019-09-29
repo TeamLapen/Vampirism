@@ -162,10 +162,10 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     @Override
     public void tick() {
         if (world == null) return;
-        boolean flag = this.isBurning();
-        boolean flag1 = false;
-        if (flag) {
-            this.furnaceData.set(0, this.furnaceData.get(0) - 1);
+        boolean wasBurning = this.isBurning();
+        boolean dirty = false;
+        if (wasBurning) {
+            this.furnaceData.set(0, this.furnaceData.get(0) - 1); // reduce burntime
         }
 
         if (!this.world.isRemote) {
@@ -173,10 +173,10 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
             if (this.isBurning() || !itemstackFuel.isEmpty() && !this.items.get(0).isEmpty() && !this.items.get(1).isEmpty()) {
                 AlchemicalCauldronRecipe irecipe = this.world.getRecipeManager().getRecipe((IRecipeType<AlchemicalCauldronRecipe>) this.recipeType, this, this.world).orElse(null);
                 if (!this.isBurning() && this.canSmelt(irecipe) && this.canPlayerCook(irecipe)) {
-                    furnaceData.set(0, this.getBurnTime(itemstackFuel));
+                    furnaceData.set(0, this.getBurnTime(itemstackFuel)); //Set burn time
                     furnaceData.set(1, furnaceData.get(0));
                     if (this.isBurning()) {
-                        flag1 = true;
+                        dirty = true;
                         if (itemstackFuel.hasContainerItem())
                             this.items.set(3, itemstackFuel.getContainerItem());
                         else if (!itemstackFuel.isEmpty()) {
@@ -190,32 +190,32 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
                 }
 
                 if (this.isBurning() && this.canSmelt(irecipe) && this.canPlayerCook(irecipe)) {
-                    furnaceData.set(2, furnaceData.get(2) + 1);
-                    if (furnaceData.get(2) == furnaceData.get(3)) {
+                    furnaceData.set(2, furnaceData.get(2) + 1); //Increase cook time
+                    if (furnaceData.get(2) == furnaceData.get(3)) { //If finished
                         furnaceData.set(2, 0);
                         furnaceData.set(3, this.func_214005_h());
                         this.finishCooking(irecipe);
-                        flag1 = true;
+                        dirty = true;
                     }
                 } else {
-                    furnaceData.set(2, 0);
+                    furnaceData.set(2, 0); //Reset cook time
                 }
             } else if (!this.isBurning() && furnaceData.get(2) > 0) {
                 furnaceData.set(2, MathHelper.clamp(furnaceData.get(2) - 2, 0, furnaceData.get(3)));
             }
 
-            if (flag != this.isBurning()) {
-                flag1 = true;
+            if (wasBurning != this.isBurning()) {
+                dirty = true;
                 this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(AbstractFurnaceBlock.LIT, this.isBurning()).with(AlchemicalCauldronBlock.LIQUID, this.items.get(0).isEmpty() ? 0 : this.isBurning() ? 2 : 1), 3);
             }
         } else {
-            if (isCooking() && boilingSound && this.world.rand.nextInt(25) == 0) {
+            if (isCooking() && !boilingSound) {
                 world.playSound(this.pos.getX(), this.pos.getY(), this.pos.getZ(), ModSounds.boiling, SoundCategory.BLOCKS, 0.015F, 7, true);//TODO 1.14 stop sound
                 boilingSound = true;
             }
         }
 
-        if (flag1) {
+        if (dirty) {
             this.markDirty();
         }
 
@@ -287,7 +287,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     }
 
     private boolean isBurning() {
-        return this.furnaceData.get(1) > 0;
+        return this.furnaceData.get(0) > 0;
     }
 
     private boolean isCooking() {

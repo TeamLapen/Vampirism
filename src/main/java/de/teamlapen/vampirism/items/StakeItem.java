@@ -27,7 +27,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher {
     private final static String regName = "stake";
 
     public StakeItem() {
-        super(regName, ItemTier.WOOD, 1, 0.12F, new Properties().group(VampirismMod.creativeTab));
+        super(regName, ItemTier.WOOD, 1, -1, new Properties().group(VampirismMod.creativeTab));
     }
 
 
