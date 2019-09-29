@@ -177,8 +177,6 @@ public class ModItems {
     public static final SpawnEggItem ghost_spawn_egg = getNull();
     public static final SpawnEggItem vampire_baron_spawn_egg = getNull();
     public static final SpawnEggItem hunter_trainer_spawn_egg = getNull();
-    public static final SpawnEggItem villager_hunter_faction_spawn_egg = getNull();
-    public static final SpawnEggItem villager_vampire_faction_spawn_egg = getNull();
 
 
     static void registerCraftingRecipes() {
@@ -370,8 +368,6 @@ public class ModItems {
         registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.ghost, 0x626262, 0xbcbcbc, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "ghost_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "hunter_trainer_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.villager_hunter_faction, 0x2d05f2, 0x1aa060, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "villager_hunter_faction_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.villager_vampire_faction, 0x8B15A1, 0x1aa060, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "villager_vampire_faction_spawn_egg"));
 
         registry.register(new BucketItem(ModFluids.blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "blood_bucket"));
         registry.register(new BucketItem(ModFluids.impure_blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "impure_blood_bucket"));
