@@ -80,8 +80,8 @@ public class ModEntities {
         vampire = prepareEntityType("vampire", EntityType.Builder.create(BasicVampireEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
         advanced_vampire = prepareEntityType("advanced_vampire", EntityType.Builder.create(AdvancedVampireEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
         converted_creature = prepareEntityType("converted_creature", EntityType.Builder.create(ConvertedCreatureEntity::new, EntityClassification.CREATURE), false);
-        dummy_creature = prepareEntityType("dummy_creature", EntityType.Builder.create(DummyBittenAnimalEntity::new, EntityClassification.CREATURE), false);
-        blinding_bat = prepareEntityType("blinding_bat", EntityType.Builder.create(BlindingBatEntity::new, EntityClassification.MISC).size(0.5F, 0.9F), true);
+        dummy_creature = prepareEntityType("dummy_creature", EntityType.Builder.create(DummyBittenAnimalEntity::new, EntityClassification.CREATURE), true);
+        blinding_bat = prepareEntityType("blinding_bat", EntityType.Builder.create(BlindingBatEntity::new, EntityClassification.AMBIENT).size(0.5F, 0.9F), true);
     }
 
     /**
