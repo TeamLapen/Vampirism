@@ -182,7 +182,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderLivingPost(RenderLivingEvent.Post event) {
-        if (bloodVisionTicks > 0 && !renderingBloodVision) {//TODO 1.14 entity outlines are rendered above the entity and not synced with player sneaking
+        if (bloodVisionTicks > 0 && !renderingBloodVision) {
             Entity entity = event.getEntity();
 
             boolean flag = true;
@@ -466,18 +466,11 @@ public class RenderHandler {
         boolean flag = !entities.isEmpty();
         if (flag) {
             renderingBloodVision = true;
-            Entity entity = this.mc.getRenderViewEntity();
-            double d3 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double) partialTicks;
-            double d4 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) partialTicks;
-            double d5 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) partialTicks;
 
-            renderManager.setRenderPosition(d3, d4, d5);
             this.mc.gameRenderer.enableLightmap();
 
             GlStateManager.depthFunc(519);
-            GlStateManager.disableLighting();
-            GlStateManager.disableColorMaterial();
-            GlStateManager.disableDepthTest();
+            GlStateManager.disableFog();
 
             framebuffer.bindFramebuffer(false);
 
@@ -485,10 +478,7 @@ public class RenderHandler {
 
             renderManager.setRenderOutlines(true);
             for (Entity entity1 : entities) {
-
-
                 renderManager.renderEntityStatic(entity1, partialTicks, false);
-
             }
 
             renderManager.setRenderOutlines(false);
@@ -497,14 +487,13 @@ public class RenderHandler {
 
             GlStateManager.depthMask(false);
             shader.render(partialTicks);
+            GlStateManager.enableLighting();
             GlStateManager.depthMask(true);
+            GlStateManager.enableBlend();
 
-            //GlStateManager.enableLighting();
-            //GlStateManager.enableBlend();
             GlStateManager.enableColorMaterial();
             GlStateManager.depthFunc(515);
             GlStateManager.enableDepthTest();
-            //GlStateManager.enableAlpha();
             this.mc.gameRenderer.disableLightmap();
             renderingBloodVision = false;
         }

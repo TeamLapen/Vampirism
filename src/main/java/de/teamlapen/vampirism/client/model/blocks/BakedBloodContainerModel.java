@@ -30,7 +30,6 @@ import java.util.Random;
 
 /**
  * Extends the basic (JSON) baked blood container model, by the textured model that fits to the specified fluid and fluid level
- * TODO 1.14 check
  */
 @OnlyIn(Dist.CLIENT)
 public class BakedBloodContainerModel implements IDynamicBakedModel {
