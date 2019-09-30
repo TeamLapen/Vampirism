@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.entity.model.VillagerModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Villager Model with usable arms
  */
 @OnlyIn(Dist.CLIENT)
-public class VillagerWithArmsModel<T extends Entity> extends VillagerModel<T> {
+public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerModel<T> {
     private RendererModel leftArm;
     private RendererModel rightArm;
 

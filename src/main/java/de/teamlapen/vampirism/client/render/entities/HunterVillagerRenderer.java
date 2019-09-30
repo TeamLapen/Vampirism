@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.client.model.VillagerWithArmsModel;
+import de.teamlapen.vampirism.client.render.LayerHeldItemVillager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
@@ -14,5 +15,6 @@ public class HunterVillagerRenderer extends VillagerRenderer {
         super(renderManagerIn, (IReloadableResourceManager) Minecraft.getInstance().getResourceManager());
         this.layerRenderers.clear();
         this.entityModel = new VillagerWithArmsModel(0.0F);
+        this.addLayer(new LayerHeldItemVillager(this));
     }
 }

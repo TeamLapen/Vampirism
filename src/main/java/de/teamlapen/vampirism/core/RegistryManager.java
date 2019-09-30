@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.brain.schedule.Schedule;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
@@ -22,6 +23,7 @@ import net.minecraft.potion.Effect;
 import net.minecraft.stats.StatType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.event.RegistryEvent;
@@ -139,7 +141,17 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterProfessions(RegistryEvent.Register<VillagerProfession> event) {
-        ModEntities.registerProfessions(event.getRegistry());
+        ModVillage.registerProfessions(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterPointOfInterest(RegistryEvent.Register<PointOfInterestType> event) {
+        ModVillage.registerVillagePointOfInterestType(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterSchedule(RegistryEvent.Register<Schedule> event) {
+        ModVillage.registerSchedule(event.getRegistry());
     }
 
     @SubscribeEvent

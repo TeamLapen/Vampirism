@@ -23,8 +23,8 @@ public class GenericParticle extends SpriteTexturedParticle {
         this.motionY *= speedModifier;
         this.motionZ *= speedModifier;
         this.particleRed = (color >> 16 & 255) / 255.0F;
-        this.particleBlue = (color >> 8 & 255) / 255.0F;
-        this.particleGreen = (color & 255) / 255.0F;
+        this.particleBlue = (color & 255) / 255.0F;
+        this.particleGreen = (color >> 8 & 255) / 255.0F;
         if ((color >> 24 & 255) != 0) { //Only use alpha value if !=0.
             this.particleAlpha = (color >> 24 & 255) / 255.0F;
         }

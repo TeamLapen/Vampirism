@@ -1,13 +1,14 @@
 package de.teamlapen.vampirism.api.entity.vampire;
 
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
+import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 
 import javax.annotation.Nullable;
 
 /**
  * Advanced vampire
  */
-public interface IAdvancedVampire extends IVampireMob, IAdjustableLevel {
+public interface IAdvancedVampire extends IVampireMob, IAdjustableLevel, IVillageCaptureEntity {
     /**
      * Call this if an entity stops following this one
      */

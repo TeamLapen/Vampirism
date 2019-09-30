@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -17,12 +16,10 @@ import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.Heightmap;
@@ -70,11 +67,6 @@ public class ModEntities {
     public static final EntityType<BasicHunterEntity.IMob> vampire_hunter_imob = getNull();
     public static final EntityType<AggressiveVillagerEntity> villager_angry = getNull();
     public static final EntityType<ConvertedVillagerEntity> villager_converted = getNull();
-    public static final EntityType<HunterFactionVillagerEntity> villager_hunter_faction;
-    public static final EntityType<VampireFactionVillagerEntity> villager_vampire_faction;
-
-    public static final VillagerProfession hunter_expert = getNull();
-    public static final VillagerProfession vampire_expert = getNull();
 
     private static final Logger LOGGER = LogManager.getLogger(ModEntities.class);
 
@@ -90,8 +82,6 @@ public class ModEntities {
         converted_creature = prepareEntityType("converted_creature", EntityType.Builder.create(ConvertedCreatureEntity::new, EntityClassification.CREATURE), false);
         dummy_creature = prepareEntityType("dummy_creature", EntityType.Builder.create(DummyBittenAnimalEntity::new, EntityClassification.CREATURE), true);
         blinding_bat = prepareEntityType("blinding_bat", EntityType.Builder.create(BlindingBatEntity::new, EntityClassification.AMBIENT).size(0.5F, 0.9F), true);
-        villager_hunter_faction = prepareEntityType("villager_hunter_faction", EntityType.Builder.create(HunterFactionVillagerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
-        villager_vampire_faction = prepareEntityType("villager_vampire_faction", EntityType.Builder.create(VampireFactionVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
     }
 
     /**
@@ -148,8 +138,6 @@ public class ModEntities {
         registry.register(prepareEntityType("vampire_hunter_imob", EntityType.Builder.create(BasicHunterEntity.IMob::new, VReference.HUNTER_CREATURE_TYPE).size(0.6f, 1.95f), false));
         registry.register(prepareEntityType("villager_angry", EntityType.Builder.create(AggressiveVillagerEntity::new, EntityClassification.CREATURE).size(0.6F, 1.95F), false));
         registry.register(prepareEntityType("villager_converted", EntityType.Builder.create(ConvertedVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), false));
-        registry.register(villager_vampire_faction);
-        registry.register(villager_hunter_faction);
         registry.register(prepareEntityType("converted_horse", EntityType.Builder.create(ConvertedHorseEntity::new, EntityClassification.CREATURE).size(1.3964844F, 1.6F), false));
 
         //add to biomes
@@ -175,11 +163,6 @@ public class ModEntities {
         EntitySpawnPlacementRegistry.register(vampire_hunter, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampirismEntity::spawnPredicateHunter);
         EntitySpawnPlacementRegistry.register(villager_angry, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::func_223315_a);
         EntitySpawnPlacementRegistry.register(villager_converted, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::func_223315_a);
-    }
-
-    static void registerProfessions(IForgeRegistry<VillagerProfession> registry) {
-        registry.register(new VillagerProfession("hunter_expert", PointOfInterestType.UNEMPLOYED, ImmutableSet.of(), ImmutableSet.of()).setRegistryName(REFERENCE.MODID, "hunter_expert"));
-        registry.register(new VillagerProfession("vampire_expert", PointOfInterestType.UNEMPLOYED, ImmutableSet.of(), ImmutableSet.of()).setRegistryName(REFERENCE.MODID, "vampire_expert"));
     }
 
     private static Biome[] getZombieBiomes() {

@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -197,7 +199,7 @@ public abstract class VampirismVillageEvent extends Event {
 
         private @Nonnull
         final IFaction<?> faction;
-        private ResourceLocation entity;
+        private EntityType<? extends MobEntity> entity;
 
         public SpawnCaptureEntity(@Nonnull IFaction<?> f) {
             faction = f;
@@ -217,7 +219,7 @@ public abstract class VampirismVillageEvent extends Event {
          * @param {@link ResourceLocation}
          *               of the entity
          */
-        public void setEntity(ResourceLocation entity) {
+        public void setEntity(EntityType<? extends MobEntity> entity) {
             this.entity = entity;
         }
 
@@ -225,7 +227,7 @@ public abstract class VampirismVillageEvent extends Event {
          * @returns {@link ResourceLocation} of the capture entity which should be spawned
          */
         @Nullable
-        public ResourceLocation getEntity() {
+        public EntityType<? extends MobEntity> getEntity() {
             return entity;
         }
     }

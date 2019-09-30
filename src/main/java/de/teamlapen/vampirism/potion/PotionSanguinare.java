@@ -49,7 +49,7 @@ public class PotionSanguinare extends VampirismPotion {
 
     @Override
     public void performEffect(LivingEntity entity, int p_76394_2_) {
-
+        if (entity.world.isRemote) return;
         if (entity instanceof CreatureEntity) {
             IExtendedCreatureVampirism creature = ExtendedCreature.get((CreatureEntity) entity);
             creature.makeVampire();

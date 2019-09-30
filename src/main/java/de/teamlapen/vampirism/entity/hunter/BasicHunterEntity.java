@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
+import de.teamlapen.vampirism.api.world.IVillageAttributes;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
@@ -20,9 +20,11 @@ import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -39,12 +41,14 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.structure.Structures;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,16 +62,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> WATCHED_ID = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
     private static final ITextComponent name = new TranslationTextComponent("container.hunter");
+
     private final int MAX_LEVEL = 3;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private final MeleeAttackGoal attackMelee;
     private final AttackRangedCrossbowGoal attackRange;
-    /**
-     * available actions for AI task & task
-     */
-    private final ActionHandlerEntity<?> entityActionHandler;
-    private final EntityClassType entityclass;
-    private final EntityActionTier entitytier;
 
     /**
      * Player currently being trained otherwise null
@@ -75,33 +74,10 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     private @Nullable
     PlayerEntity trainee;
 
-//    private @Nullable
-//    IVampirismVillage cachedVillage;
-
-//    @Override
-//    public boolean attackEntityFrom(DamageSource source, float amount) {
-//        IVampirismVillage v = getCurrentFriendlyVillage();
-//        if (v != null) {
-//            v.addOrRenewAggressor(source.getTrueSource());
-//        }
-//        return super.attackEntityFrom(source, amount);
-//    }
-
     /**
      * Stores the x axis angle between when targeting an enemy with the crossbow
      */
     private float targetAngle = 0;
-
-    /**
-     * If this is non-null we are currently attacking a village center
-     */
-    @Nullable
-    private AxisAlignedBB village_attack_area;
-    /**
-     * If this is non-null we are currently defending a village center
-     */
-    @Nullable
-    private AxisAlignedBB village_defense_area;
 
     public BasicHunterEntity(EntityType<? extends BasicHunterEntity> type, World world) {
         super(type, world, true);
@@ -130,40 +106,14 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void attackVillage(AxisAlignedBB area) {
-        this.village_attack_area = area;
-    }
-
-    @Override
     public boolean canDespawn(double distanceToClosestPlayer) {
         return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
-    }
-
-//    @Nullable
-//    @Override
-//    public IVampirismVillage getCurrentFriendlyVillage() {
-//        return cachedVillage != null ? cachedVillage.getControllingFaction() == VReference.HUNTER_FACTION ? cachedVillage : null : null;
-//    }
-
-    @Override
-    public void defendVillage(AxisAlignedBB area) {
-        this.village_defense_area = area;
     }
 
     @Override
     public @Nonnull
     ItemStack getArrowStackForAttack(LivingEntity target) {
         return new ItemStack(ModItems.crossbow_arrow_normal);
-    }
-
-    @Override
-    public EntityClassType getEntityClass() {
-        return entityclass;
-    }
-
-    @Override
-    public EntityActionTier getEntityTier() {
-        return entitytier;
     }
 
     @Override
@@ -193,20 +143,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Nullable
     @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return village_attack_area == null ? village_defense_area : village_attack_area;
-    }
-
-    @Nullable
-    @Override
     public PlayerEntity getTrainee() {
         return trainee;
     }
 
-    @Override
-    public boolean isAttackingVillage() {
-        return village_attack_area != null;
-    }
+
 
     @Override
     public boolean isCrossbowInMainhand() {
@@ -311,10 +252,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             this.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
         }
         this.updateCombatTask();
-        if (tagCompund.contains("village_attack_area")) {
-            this.attackVillage(UtilLib.intToBB(tagCompund.getIntArray("village_attack_area")));
-        } else if (tagCompund.contains("village_defense_area")) {
-            this.defendVillage(UtilLib.intToBB(tagCompund.getIntArray("village_defense_area")));
+        if (tagCompund.contains("attack")) {
+            this.attack = tagCompund.getBoolean("attack");
+        }
+        if (tagCompund.contains("x")) {
+            this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))));
         }
 
         if (entityActionHandler != null) {
@@ -330,16 +272,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public void stopTargeting() {
         this.setSwingingArms(false);
-    }
-
-    @Override
-    public void stopVillageAttackDefense() {
-        this.setCustomName(null);
-        if (village_defense_area != null) {
-            village_defense_area = null;
-        } else if (village_attack_area != null) {
-            village_attack_area = null;
-        }
     }
 
     @Override
@@ -362,10 +294,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         super.writeAdditional(nbt);
         nbt.putInt("level", getLevel());
         nbt.putBoolean("crossbow", isCrossbowInMainhand());
-        if (village_attack_area != null) {
-            nbt.putIntArray("village_attack_area", UtilLib.bbToInt(village_attack_area));
-        } else if (village_defense_area != null) {
-            nbt.putIntArray("village_defense_area", UtilLib.bbToInt(village_defense_area));
+        nbt.putBoolean("attack", attack);
+        if (villageAttributes != null) {
+            nbt.putInt("x", villageAttributes.getPosition().getX());
+            nbt.putInt("y", villageAttributes.getPosition().getY());
+            nbt.putInt("z", villageAttributes.getPosition().getZ());
         }
         nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
         if (entityActionHandler != null) {
@@ -376,11 +309,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     protected int getExperiencePoints(PlayerEntity player) {
         return 6 + getLevel();
-    }
-
-    @Override
-    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.vampire_hunter_imob : ModEntities.vampire_hunter;
     }
 
     @Override
@@ -408,8 +336,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             }
             return true;
         }
-
-
         return super.processInteract(player, hand);
     }
 
@@ -428,12 +354,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.getDataManager().register(WATCHED_ID, 0);
     }
 
-//    @Override
-//    protected void onRandomTick() {
-//        super.onRandomTick();
-//        this.cachedVillage = VampirismVillageHelper.getNearestVillage(this);
-//    }
-
     @Override
     protected void registerGoals() {
         super.registerGoals();
@@ -441,9 +361,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
         //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
         this.goalSelector.addGoal(3, new LookAtTrainerHunterGoal<>(this));
-        this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> {
-            return false;
-        }));//TODO was MoveThroughVillageCustomGoal(test)
+        this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> false));
         this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7, 50));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
         this.goalSelector.addGoal(8, new LookAtGoal(this, VampireBaseEntity.class, 17F));
@@ -460,12 +378,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             }
         });
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, true, true));
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> Structures.VILLAGE.isPositionInStructure(living.world, living.getPosition())));
         //Also check the priority of tasks that are dynamically added. See top of class
-    }
-
-    @Override
-    public ActionHandlerEntity getActionHandler() {
-        return entityActionHandler;
     }
 
     protected void updateEntityAttributes() {
@@ -496,6 +410,35 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         getDataManager().set(WATCHED_ID, id);
     }
 
+    //Entityactions ----------------------------------------------------------------------------------------------------
+    /**
+     * available actions for AI task & task
+     */
+    private final ActionHandlerEntity<?> entityActionHandler;
+    private final EntityClassType entityclass;
+    private final EntityActionTier entitytier;
+
+    @Override
+    public EntityClassType getEntityClass() {
+        return entityclass;
+    }
+
+    @Override
+    public EntityActionTier getEntityTier() {
+        return entitytier;
+    }
+
+    @Override
+    public ActionHandlerEntity getActionHandler() {
+        return entityActionHandler;
+    }
+
+    //IMob -------------------------------------------------------------------------------------------------------------
+    @Override
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
+        return iMob ? ModEntities.vampire_hunter_imob : ModEntities.vampire_hunter;
+    }
+
     public static class IMob extends BasicHunterEntity implements net.minecraft.entity.monster.IMob {
 
         public IMob(EntityType<? extends BasicHunterEntity> type, World world) {
@@ -503,4 +446,47 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         }
     }
 
+    //Village capture --------------------------------------------------------------------------------------------------
+    private boolean attack;
+    private IVillageAttributes villageAttributes;
+
+    @Override
+    public void stopVillageAttackDefense() {
+        this.setCustomName(null);
+        this.villageAttributes = null;
+    }
+
+    @Override
+    public boolean isAttackingVillage() {
+        return villageAttributes != null && attack;
+    }
+
+    @Override
+    public boolean isDefendingVillage() {
+        return villageAttributes != null && !attack;
+    }
+
+    @Override
+    public void defendVillage(IVillageAttributes attributes) {
+        this.villageAttributes = attributes;
+        this.attack = false;
+    }
+
+    @Nullable
+    @Override
+    public IVillageAttributes getVillageAttributes() {
+        return this.villageAttributes;
+    }
+
+    @Override
+    public void attackVillage(IVillageAttributes attributes) {
+        this.villageAttributes = attributes;
+        this.attack = true;
+    }
+
+    @Nullable
+    @Override
+    public AxisAlignedBB getTargetVillageArea() {
+        return this.villageAttributes.getVillageArea();
+    }
 }

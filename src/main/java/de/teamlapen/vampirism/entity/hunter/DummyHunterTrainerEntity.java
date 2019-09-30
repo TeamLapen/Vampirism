@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.Helper;
@@ -18,7 +19,7 @@ import net.minecraft.world.World;
 /**
  * Hunter Trainer which allows Hunter players to level up
  */
-public class DummyHunterTrainerEntity extends VampirismEntity {
+public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptureIgnore {
     private final int MOVE_TO_RESTRICT_PRIO = 3;
 
     public DummyHunterTrainerEntity(EntityType<? extends DummyHunterTrainerEntity> type, World world) {

@@ -60,6 +60,8 @@ public class ModBlocks {
     public static final TentMainBlock tent_main = getNull();
     public static final TotemBaseBlock totem_base = getNull();
     public static final TotemTopBlock totem_top = getNull();
+    public static final TotemTopBlock totem_top_vampire = getNull();
+    public static final TotemTopBlock totem_top_hunter = getNull();
     public static final VampirismFlowerBlock vampire_orchid;
     public static final WeaponTableBlock weapon_table = getNull();
 
@@ -100,6 +102,8 @@ public class ModBlocks {
         registry.register(itemBlock(sunscreen_beacon));
         registry.register(itemBlock(totem_base));
         registry.register(itemBlock(totem_top));
+        registry.register(itemBlock(totem_top_hunter, new Item.Properties()));
+        registry.register(itemBlock(totem_top_vampire, new Item.Properties()));
         registry.register(itemBlock(vampire_orchid));
         registry.register(itemBlock(weapon_table));
     }
@@ -147,6 +151,8 @@ public class ModBlocks {
         registry.register(new TentMainBlock());
         registry.register(new TotemBaseBlock());
         registry.register(new TotemTopBlock());
+        registry.register(new TotemTopBlock("hunter", REFERENCE.HUNTER_PLAYER_KEY));
+        registry.register(new TotemTopBlock("vampire", REFERENCE.VAMPIRE_PLAYER_KEY));
         registry.register(vampire_orchid);
         registry.register(new WeaponTableBlock());
     }

@@ -46,7 +46,7 @@ public class AttackMeleeNoSunGoal extends MeleeAttackGoal {
                     PathPoint pathpoint2 = path.getPathPointFromIndex(j);
 
                     if (this.attacker.getEntityWorld().canBlockSeeSky(new BlockPos(pathpoint2.x, pathpoint2.y, pathpoint2.z))) {
-                        path.setCurrentPathLength(j - 1);
+                        path.setCurrentPathLength(Math.max(j - 1, 0));
                         return path.getCurrentPathLength() > 1;
                     }
 

@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.entity.converted;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.mojang.datafixers.Dynamic;
+import com.mojang.datafixers.util.Pair;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
@@ -10,16 +12,25 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
+import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
+import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
+import net.minecraft.entity.ai.brain.schedule.Activity;
+import net.minecraft.entity.ai.brain.schedule.Schedule;
+import net.minecraft.entity.ai.brain.task.VillagerTasks;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -28,7 +39,10 @@ import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -39,7 +53,6 @@ import java.util.Random;
  * Vampire Villager
  */
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements IConvertedCreature<VillagerEntity> {
-
     private EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
     private int bloodTimer = 0;
@@ -56,6 +69,24 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             return true;
         }
         return super.attackEntityAsMob(entity);
+    }
+
+    @Override
+    public ITextComponent getDisplayName() {
+        Team team = this.getTeam();
+        if (this.getCustomName() != null) {
+            return super.getDisplayName();
+        } else {
+            VillagerProfession villagerprofession = this.getVillagerData().getProfession();
+            ITextComponent itextcomponent1 = (new TranslationTextComponent(EntityType.VILLAGER.getTranslationKey() + '.' + (!"minecraft".equals(villagerprofession.getRegistryName().getNamespace()) ? villagerprofession.getRegistryName().getNamespace() + '.' : "") + villagerprofession.getRegistryName().getPath())).applyTextStyle((p_213773_1_) -> {
+                p_213773_1_.setHoverEvent(this.getHoverEvent()).setInsertion(this.getCachedUniqueIdString());
+            });
+            if (team != null) {
+                itextcomponent1.applyTextStyle(team.getColor());
+            }
+
+            return itextcomponent1;
+        }
     }
 
     @Override
@@ -127,26 +158,29 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    protected Brain<?> createBrain(Dynamic<?> p_213364_1_) {
-        Brain<?> brain = super.createBrain(p_213364_1_);
-        return brain;
-    }
+    public void initBrain(Brain<VillagerEntity> brain) {
+        VillagerProfession villagerprofession = this.getVillagerData().getProfession();
+        float f = (float) this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue();
+        if (this.isChild()) {
+            brain.setSchedule(Schedule.VILLAGER_BABY);
+            brain.registerActivity(Activity.PLAY, VillagerTasks.play(f));
+        } else {
+            brain.setSchedule(ModVillage.converted_default);
+            brain.registerActivity(Activity.WORK, VillagerTasks.work(villagerprofession, f), ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryModuleStatus.VALUE_PRESENT)));
+        }
 
-
-    @Override
-    protected void registerGoals() {//TODO 1.14 villager brain
-//        super.registerGoals();
-//
-//        this.goalSelector.addGoal(0, new RestrictSunGoal(this));
-//        this.goalSelector.addGoal(1, new AvoidEntityGoal<CreatureEntity>(this, CreatureEntity.class, 10, 0.45F, 0.55F, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, false, VReference.HUNTER_FACTION)));
-//        this.goalSelector.addGoal(5, new FleeSunVampireGoal<>(this, 0.6F, true));
-//        this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 0.6F, false));
-//        this.goalSelector.addGoal(7, new BiteNearbyEntityVampireGoal<>(this));
-//        this.goalSelector.addGoal(9, new MoveToBiteableVampireGoal<>(this, 0.55F));
-//
-//
-//        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-
+        brain.registerActivity(Activity.CORE, VillagerTasks.core(villagerprofession, f));
+        brain.registerActivity(Activity.MEET, VillagerTasks.meet(villagerprofession, f), ImmutableSet.of(Pair.of(MemoryModuleType.MEETING_POINT, MemoryModuleStatus.VALUE_PRESENT)));
+        brain.registerActivity(Activity.REST, VillagerTasks.rest(villagerprofession, f));
+        brain.registerActivity(Activity.IDLE, VillagerTasks.idle(villagerprofession, f));
+        brain.registerActivity(Activity.PANIC, VillagerTasks.panic(villagerprofession, f));
+        brain.registerActivity(Activity.PRE_RAID, VillagerTasks.preRaid(villagerprofession, f));
+        brain.registerActivity(Activity.RAID, VillagerTasks.raid(villagerprofession, f));
+        brain.registerActivity(Activity.HIDE, VillagerTasks.hide(villagerprofession, f));
+        brain.setDefaultActivities(ImmutableSet.of(Activity.CORE));
+        brain.setFallbackActivity(Activity.IDLE);
+        brain.switchTo(Activity.IDLE);
+        brain.updateActivity(this.world.getDayTime(), this.world.getGameTime());
     }
 
     private void addAdditionalRecipes(MerchantOffers offers) {
@@ -161,6 +195,14 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         addRecipe(trades, 1, bottle, rand, 0.9F);
 
         offers.addAll(trades);
+    }
+
+    @Override
+    protected void populateTradeData() {
+        super.populateTradeData();
+        if (!this.getOffers().isEmpty() && this.getRNG().nextInt(3) == 0) {
+            this.addTrades(this.getOffers(), Trades.converted_trades, 1);
+        }
     }
 
     /**
@@ -190,7 +232,6 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             ConvertedVillagerEntity converted = ModEntities.villager_converted.create(entity.world);
             converted.read(nbt);
             converted.setUniqueId(MathHelper.getRandomUUID(converted.rand));
-            converted.addAdditionalRecipes(converted.getOffers());
             return converted;
         }
     }

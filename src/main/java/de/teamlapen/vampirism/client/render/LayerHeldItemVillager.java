@@ -1,14 +1,15 @@
 package de.teamlapen.vampirism.client.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import de.teamlapen.vampirism.client.model.VillagerWithArmsModel;
-import de.teamlapen.vampirism.entity.hunter.AggressiveVillagerEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
+import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.VillagerModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,14 +19,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Same as {@link HeldItemLayer} but for {@link VillagerWithArmsModel} model
  */
 @OnlyIn(Dist.CLIENT)
-public class LayerHeldItemVillager extends LayerRenderer<AggressiveVillagerEntity, VillagerModel<AggressiveVillagerEntity>> {
+public class LayerHeldItemVillager extends LayerRenderer<VillagerEntity, VillagerModel<VillagerEntity>> {
 
-    public LayerHeldItemVillager(IEntityRenderer<AggressiveVillagerEntity, VillagerModel<AggressiveVillagerEntity>> entityRendererIn) {
+    public LayerHeldItemVillager(VillagerRenderer entityRendererIn) {
         super(entityRendererIn);
     }
 
     @Override
-    public void render(AggressiveVillagerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(VillagerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         boolean flag = entitylivingbaseIn.getPrimaryHand() == HandSide.RIGHT;
         ItemStack itemstack = flag ? entitylivingbaseIn.getHeldItemOffhand() : entitylivingbaseIn.getHeldItemMainhand();
         ItemStack itemstack1 = flag ? entitylivingbaseIn.getHeldItemMainhand() : entitylivingbaseIn.getHeldItemOffhand();
@@ -50,20 +51,20 @@ public class LayerHeldItemVillager extends LayerRenderer<AggressiveVillagerEntit
         return false;
     }
 
-    private void renderHeldItem(AggressiveVillagerEntity p_188358_1_, ItemStack stack, ItemCameraTransforms.TransformType p_188358_3_, HandSide p_188358_4_) {
+    private void renderHeldItem(VillagerEntity entity, ItemStack stack, ItemCameraTransforms.TransformType transformType, HandSide handSide) {
         if (!stack.isEmpty()) {
             GlStateManager.pushMatrix();
-            ((VillagerWithArmsModel) getEntityModel()).postRenderArm(0.0625F, p_188358_4_);
+            ((VillagerWithArmsModel) getEntityModel()).postRenderArm(0.0625F, handSide);
 
-            if (p_188358_1_.isSneaking()) {
+            if (entity.isSneaking()) {
                 GlStateManager.translatef(0.0F, 0.2F, 0.0F);
             }
 
             GlStateManager.rotatef(-90.0F, 1.0F, 0.0F, 0.0F);
             GlStateManager.rotatef(180.0F, 0.0F, 1.0F, 0.0F);
-            boolean flag = p_188358_4_ == HandSide.LEFT;
+            boolean flag = handSide == HandSide.LEFT;
             GlStateManager.translatef(flag ? -0.0925F : 0.0925F, 0.125F, -0.525F);
-            Minecraft.getInstance().getFirstPersonRenderer().renderItemSide(p_188358_1_, stack, p_188358_3_, flag);
+            Minecraft.getInstance().getFirstPersonRenderer().renderItemSide(entity, stack, transformType, flag);
             GlStateManager.popMatrix();
         }
     }

@@ -37,6 +37,11 @@ public class BloodBottleIItem extends VampirismItem {
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
     private static final int capacity = AMOUNT * MULTIPLIER;
 
+    public static ItemStack getStackWithDamage(int damage) {
+        ItemStack stack = new ItemStack(ModItems.blood_bottle);
+        stack.setDamage(damage);
+        return stack;
+    }
     /**
      * Set's the registry name and the unlocalized name
      */

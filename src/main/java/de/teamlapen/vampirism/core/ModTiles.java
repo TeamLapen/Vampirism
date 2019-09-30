@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.tileentity.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
@@ -27,7 +28,7 @@ public class ModTiles {
     public static final TileEntityType<PedestalTileEntity> blood_pedestal = getNull();
     public static final TileEntityType<BloodGrinderTileEntity> grinder = getNull();
     public static final TileEntityType<SieveTileEntity> sieve = getNull();
-    public static final TileEntityType<TotemTile> totem = getNull();
+    public static final TileEntityType<TotemTileEntity> totem = getNull();
 
     static void registerTiles(IForgeRegistry<TileEntityType<?>> registry) {
         registry.register(create("tent", TentTileEntity::new, ModBlocks.tent_main));
@@ -41,7 +42,7 @@ public class ModTiles {
         registry.register(create("blood_pedestal", PedestalTileEntity::new, ModBlocks.blood_pedestal));
         registry.register(create("grinder", BloodGrinderTileEntity::new, ModBlocks.blood_grinder));
         registry.register(create("sieve", SieveTileEntity::new, ModBlocks.blood_sieve));
-        registry.register(create("totem", TotemTile::new, ModBlocks.totem_top));
+        registry.register(create("totem", TotemTileEntity::new, TotemTopBlock.getTotems()));
     }
 
     private static <T extends TileEntity> TileEntityType<?> create(String id, Supplier<? extends T> factoryIn, Block... blocks) {

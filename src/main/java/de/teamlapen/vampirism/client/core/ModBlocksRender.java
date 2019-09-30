@@ -43,8 +43,8 @@ public class ModBlocksRender {
         Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
-                if (tile instanceof TotemTile) {
-                    IPlayableFaction f = ((TotemTile) tile).getControllingFaction();
+                if (tile instanceof TotemTileEntity) {
+                    IPlayableFaction f = ((TotemTileEntity) tile).getControllingFaction();
                     if (f != null) return f.getColor().getRGB();
                 }
             }
@@ -56,7 +56,7 @@ public class ModBlocksRender {
         ClientRegistry.bindTileEntitySpecialRenderer(CoffinTileEntity.class, new CoffinTESR());
         ClientRegistry.bindTileEntitySpecialRenderer(AltarInfusionTileEntity.class, new AltarInfusionTESR());
         ClientRegistry.bindTileEntitySpecialRenderer(PedestalTileEntity.class, new PedestalTESR());
-        ClientRegistry.bindTileEntitySpecialRenderer(TotemTile.class, new TotemTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(TotemTileEntity.class, new TotemTESR());
     }
 
 
