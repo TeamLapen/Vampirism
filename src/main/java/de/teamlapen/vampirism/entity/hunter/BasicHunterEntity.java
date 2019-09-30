@@ -24,6 +24,7 @@ import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -47,6 +48,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.structure.Structures;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -376,6 +378,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             }
         });
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, true, true));
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> Structures.VILLAGE.isPositionInStructure(living.world, living.getPosition())));
         //Also check the priority of tasks that are dynamically added. See top of class
     }
 
@@ -466,6 +469,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public void defendVillage(IVillageAttributes attributes) {
         this.villageAttributes = attributes;
+        this.attack = false;
     }
 
     @Nullable
@@ -477,6 +481,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public void attackVillage(IVillageAttributes attributes) {
         this.villageAttributes = attributes;
+        this.attack = true;
     }
 
     @Nullable

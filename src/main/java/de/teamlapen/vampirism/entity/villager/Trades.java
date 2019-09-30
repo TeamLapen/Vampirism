@@ -15,6 +15,7 @@ import java.util.Random;
 
 public class Trades {
     public static final VillagerTrades.ITrade[] converted_trades = new VillagerTrades.ITrade[]{new net.minecraft.entity.merchant.villager.VillagerTrades.EmeraldForItemsTrade(ModItems.human_heart, 9, 2, 2), new VillagerTrades.ItemsForEmeraldsTrade(ModItems.human_heart, 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleIItem.getStackWithDamage(9), 1, 3, 12, 2)};
+
     /**
      * copy of {@link VillagerTrades.ItemsForEmeraldsTrade} with damage of itemstack
      */

@@ -200,7 +200,9 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     protected void populateTradeData() {
         super.populateTradeData();
-        this.addTrades(this.getOffers(), Trades.converted_trades, 1);
+        if (!this.getOffers().isEmpty() && this.getRNG().nextInt(3) == 0) {
+            this.addTrades(this.getOffers(), Trades.converted_trades, 1);
+        }
     }
 
     /**

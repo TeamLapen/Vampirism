@@ -30,6 +30,7 @@ import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.ModEventFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.BushBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
@@ -73,6 +74,7 @@ import java.util.*;
 public class TotemTileEntity extends TileEntity implements ITickableTileEntity {//TODO 1.14 add village events
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Random RNG = new Random();
+    private static final ResourceLocation nonFactionTotem = new ResourceLocation("none");
     /**
      * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from totem positions
      */
@@ -252,6 +254,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             if (!this.checkTileStatus()) return;
             if (this.forcedFaction != null) {
                 if (this.forcedFactionTimer > 0) {
+                    if (this.forcedFactionTimer == 1) {
+                        this.abortCapture(false);
+                    }
                     this.forcedFactionTimer--;
                 } else {
                     this.setCapturingFaction(forcedFaction);
@@ -294,6 +299,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                             if (entity instanceof IVillageCaptureEntity) {
                                 ((IVillageCaptureEntity) entity).defendVillage(getVillageAttributes(this));
                             }
+                            LogUtil.LOGGER.info(entity.getPosition());
                         } else {
                             neutral++;
                         }
@@ -355,7 +361,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             else {
                 if (this.controllingFaction != null && time % 512 == 0) {
                     if (((ServerWorld) world).func_217443_B().func_219146_b(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().anyMatch(villagerProfession -> villagerProfession.getPointOfInterest() == pointOfInterestType), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.HAS_SPACE).findFirst().isPresent()) {
-                        LogUtil.LOGGER.info(true);
                         boolean isConverted = this.controllingFaction != VReference.HUNTER_FACTION && RNG.nextBoolean();
                         if (isConverted) {
                             this.spawnVillagerVampire();
@@ -375,6 +380,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                         this.spawnEntity(entityType.create(this.world));
                     }
                 }
+
+                //replace blocks
                 if (this.controllingFaction != null && Balance.village.REPLACE_BLOCKS && time % 20 == 0) {
                     int x = (int) (this.getVillageArea().minX + RNG.nextInt((int) (this.getVillageArea().maxX - this.getVillageArea().minX)));
                     int z = (int) (this.getVillageArea().minZ + RNG.nextInt((int) (this.getVillageArea().maxZ - this.getVillageArea().minZ)));
@@ -382,7 +389,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                     BlockState b = world.getBlockState(pos);
                     boolean flag = false;
                     if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
-                        if (world.getBlockState(pos.up()).getBlock() == Blocks.TALL_GRASS) {
+                        if (!(world.getBlockState(pos.up()).getBlock() instanceof BushBlock)) {
                             if (b.getBlock() == world.getBiome(pos).getSurfaceBuilderConfig().getTop().getBlock() && b.getBlock() != Blocks.SAND) {
                                 world.removeBlock(pos.up(), false);
                                 world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState());
@@ -392,9 +399,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                                 }
                             }
                         }
-                    } else if (b.getBlock() == ModBlocks.cursed_earth && controllingFaction == VReference.HUNTER_FACTION) {
                     } else if (controllingFaction == VReference.HUNTER_FACTION) {
-                        world.setBlockState(pos, world.getBiome(pos).getSurfaceBuilderConfig().getTop());
                         if (b.getBlock() == ModBlocks.cursed_earth) {
                             world.setBlockState(pos, world.getBiome(pos).getSurfaceBuilderConfig().getTop());
                             flag = true;
@@ -548,8 +553,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                 this.spawnVillagerDefault(true);
             }
             for (VillagerEntity villager : villagerEntities) {
+                if (villager.isPotionActive(ModEffects.sanguinare)) villager.removePotionEffect(ModEffects.sanguinare);
                 ExtendedCreature.get(villager).setPoisonousBlood(true);
-                if (villager.getVillagerData().getProfession().equals(ModVillage.hunter_expert)) {
+                if (villager.getVillagerData().getProfession() == ModVillage.hunter_expert) {
                     villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
                 }
             }
@@ -559,7 +565,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                 ExtendedCreature.get(villager).setPoisonousBlood(false);
                 if (RNG.nextInt(2) == 1) continue;
                 PotionSanguinare.addRandom(villager, false);
-                if (villager.getVillagerData().getProfession().equals(ModVillage.vampire_expert)) {
+                if (villager.getVillagerData().getProfession() == ModVillage.vampire_expert) {
                     villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
                 }
             }
@@ -573,6 +579,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {
                 for (VillagerEntity villager : villagerEntities) {
                     if(villager instanceof IFactionEntity)continue;
+                    if (villager.getGrowingAge() < 0) continue;
                     if (RNG.nextInt(3) == 0) {
                         makeAgressive(villager);
                     }
@@ -628,15 +635,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         this.controllingFaction = faction;
         this.baseColors = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getColorComponentValues();
         if (this.world != null) {
-            this.world.setBlockState(this.pos, TotemTopBlock.getTotem(this.controllingFaction.getID()).getDefaultState(), 55);
-            this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), TotemTopBlock.getTotem(this.controllingFaction.getID()).getDefaultState(), 55);
+            this.world.setBlockState(this.pos, TotemTopBlock.getTotem(faction != null ? this.controllingFaction.getID() : nonFactionTotem).getDefaultState(), 55);
         }
     }
 
     private void setCapturingFaction(@Nullable IPlayableFaction faction) {
         this.capturingFaction = faction;
         this.progressColor = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getColorComponentValues();
-        LogUtil.LOGGER.info(faction);
     }
 
     public @Nonnull
@@ -925,6 +930,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     @Override
     public double getMaxRenderDistanceSquared() {
         return 65536.0D;
+    }
+
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return INFINITE_EXTENT_AABB;
     }
 
     /**
