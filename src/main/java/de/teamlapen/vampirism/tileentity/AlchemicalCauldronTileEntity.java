@@ -29,6 +29,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -90,7 +91,8 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
 
     @OnlyIn(Dist.CLIENT)
     public int getLiquidColorClient() {
-        return ModRecipes.getLiquidColor(this.items.get(3));
+        ItemStack liquidItem = this.items.get(1);
+        return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> fluidStack.getFluid().getAttributes().getColor()).orElse(ModRecipes.getLiquidColor(liquidItem.getItem()));
     }
 
     public ITextComponent getOwnerName() {

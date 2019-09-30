@@ -51,24 +51,6 @@ public class ModEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger(ModEventHandler.class);
 
-//  TODO 1.14 do we need this for the new system? events have been renamed
-
-//    @OnlyIn(Dist.CLIENT)
-//    @SubscribeEvent
-//    public void onClientConnected(NetworkEvent.ClientConnectedToServerEvent event) {
-//        if (!UtilLib.isSameInstanceAsServer()) {
-//            VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
-//        }
-//    }
-//
-//    @OnlyIn(Dist.CLIENT)
-//    @SubscribeEvent
-//    public void onClientDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-//        if (!UtilLib.isSameInstanceAsServer()) {
-//            Configs.onDisconnectedFromServer();
-//            VampirismEntityRegistry.getBiteableEntryManager().resetDynamic();
-//        }
-//    }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void on(WorldEvent.Load event) {

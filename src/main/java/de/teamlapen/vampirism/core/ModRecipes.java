@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.inventory.recipes.*;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
@@ -12,7 +11,6 @@ import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -38,7 +36,7 @@ public class ModRecipes {
 
     public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(AutoConvertGlassBottleCondition.Serializer.INSTANCE);
 
-    private static final Map<Object, Integer> liquidColors = Maps.newHashMap();
+    private static final Map<Item, Integer> liquidColors = Maps.newHashMap();
 
     public static void init() {
         registerLiquidColor(ModItems.holy_water_bottle_normal, 0x6666FF);
@@ -47,9 +45,6 @@ public class ModRecipes {
 
         registerLiquidColor(ModItems.item_garlic, 0xBBBBBB);
 
-        for (Fluid fluid : ForgeRegistries.FLUIDS.getValues()) {//TODO 1.14 remove and check somewhere else if the item is a fluid (fluid.getAttributes().getColor())
-            registerLiquidColor(fluid, fluid.getAttributes().getColor());
-        }
     }
 
     static void registerSerializer(IForgeRegistry<IRecipeSerializer<?>> registry) {
@@ -59,21 +54,15 @@ public class ModRecipes {
         registry.register(new AlchemicalCauldronRecipe.Serializer().setRegistryName(REFERENCE.MODID, "alchemical_cauldron"));
     }
 
-    public static void registerLiquidColor(Item stack, int color) {
-        liquidColors.put(stack, color);
+    public static void registerLiquidColor(Item item, int color) {
+        liquidColors.put(item, color);
     }
 
-    public static void registerLiquidColor(Fluid fluid, int color) {
-        liquidColors.put(fluid, color);
-    }
 
     /**
-     * gets liquid color for item or fluid
-     *
-     * @param stack should be item or fluid
-     * @return
+     * gets liquid color for item
      */
-    public static int getLiquidColor(Object stack) {
+    public static int getLiquidColor(Item stack) {
         return liquidColors.get(stack);
     }
 
