@@ -148,7 +148,7 @@
             },
             {
               "function": "set_nbt",
-              "tag": "\"Enchantments\": [{ \"lvl\": 3, \"id\": \"minecraft:knockback\" } ]"
+              "tag": "{\"Enchantments\": [{ \"lvl\": 3, \"id\": \"minecraft:knockback\" } ]}"
             }
           ]
         },

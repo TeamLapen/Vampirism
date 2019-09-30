@@ -4,11 +4,9 @@ import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import de.teamlapen.lib.VampLib;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.versions.mcp.MCPVersion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,11 +67,7 @@ public class VersionChecker implements Runnable {
         UPDATE_FILE_URL = update_file_url;
         this.currentVersion = currentVersion;
         versionInfo = new VersionInfo(currentVersion);
-        if (stats) {
-            this.stats = EffectiveSide.get() == LogicalSide.CLIENT ? Minecraft.getInstance().getSnooper().isSnooperRunning() : ServerLifecycleHooks.getCurrentServer().getSnooper().isSnooperRunning();
-        } else {
-            this.stats = false;
-        }
+        this.stats = stats;
     }
 
     @Override

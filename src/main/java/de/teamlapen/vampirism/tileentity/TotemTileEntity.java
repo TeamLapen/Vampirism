@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.tileentity;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
@@ -554,7 +553,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             }
             for (VillagerEntity villager : villagerEntities) {
                 if (villager.isPotionActive(ModEffects.sanguinare)) villager.removePotionEffect(ModEffects.sanguinare);
-                ExtendedCreature.get(villager).setPoisonousBlood(true);
+                if (villager.isAlive()) ExtendedCreature.get(villager).setPoisonousBlood(true);
                 if (villager.getVillagerData().getProfession() == ModVillage.hunter_expert) {
                     villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
                 }
@@ -562,7 +561,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             this.updateTrainer(false);
         } else if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {
             for (VillagerEntity villager : villagerEntities) {
-                ExtendedCreature.get(villager).setPoisonousBlood(false);
+                if (villager.isAlive()) ExtendedCreature.get(villager).setPoisonousBlood(false);
                 if (RNG.nextInt(2) == 1) continue;
                 PotionSanguinare.addRandom(villager, false);
                 if (villager.getVillagerData().getProfession() == ModVillage.vampire_expert) {
