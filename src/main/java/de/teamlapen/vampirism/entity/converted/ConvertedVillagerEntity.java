@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
+import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -52,7 +53,6 @@ import java.util.Random;
  * Vampire Villager
  */
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements IConvertedCreature<VillagerEntity> {
-
     private EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
     private int bloodTimer = 0;
@@ -200,7 +200,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     protected void populateTradeData() {
         super.populateTradeData();
-        this.addTrades(this.getOffers(), ModVillage.converted_trades, 1);
+        this.addTrades(this.getOffers(), Trades.converted_trades, 1);
     }
 
     /**

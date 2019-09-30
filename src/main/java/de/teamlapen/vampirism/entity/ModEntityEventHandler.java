@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.BloodPotionTableContainer;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -34,7 +35,10 @@ import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.gen.feature.structure.StructureStart;
+import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -207,13 +211,21 @@ public class ModEntityEventHandler {
         }
         //------------------
 
-
-
-        if (event.getEntity() instanceof VillagerEntity && !event.getWorld().isRemote) {//TODO 1.14 village
-//            VampirismVillage village = VampirismVillageHelper.getNearestVillage(event.getWorld(), event.getEntity().getPosition(), 5);
-//            if (village != null && village.getControllingFaction() != null && village.getControllingFaction().equals(VReference.HUNTER_FACTION)) {
-//                ExtendedCreature.get((CreatureEntity) event.getEntity()).setPoisonousBlood(true);
-//            }
+        if (event.getEntity() instanceof VillagerEntity && !event.getWorld().isRemote) {
+            if(Structures.VILLAGE.isPositionInStructure(event.getWorld(),event.getEntity().getPosition())){
+                StructureStart structure = Structures.VILLAGE.getStart(event.getWorld(),event.getEntity().getPosition(),false);
+                if(!(structure == StructureStart.DUMMY)) {
+                    BlockPos pos = TotemTileEntity.getTotemPosition(structure);
+                    if(pos != null) {
+                        TileEntity tileEntity = event.getWorld().getTileEntity(pos);
+                        if(tileEntity instanceof TotemTileEntity) {
+                            if (VReference.HUNTER_FACTION.equals(((TotemTileEntity) tileEntity).getControllingFaction())) {
+                                ExtendedCreature.get((CreatureEntity) event.getEntity()).setPoisonousBlood(true);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

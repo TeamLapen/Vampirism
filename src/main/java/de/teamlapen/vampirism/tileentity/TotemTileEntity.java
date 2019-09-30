@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.world.IVillageAttributes;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
@@ -362,7 +363,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                             this.spawnVillagerDefault(this.controllingFaction == VReference.HUNTER_FACTION);
                         }
                     }
-                    int defenderNumMax = Math.min(6, this.village.getComponents().size() / 5);//TODO 1.14 village check
+                    int defenderNumMax = Math.min(6, this.village.getComponents().size() / 5);
                     List<? extends MobEntity> guards = Lists.newArrayList();
                     if (VReference.HUNTER_FACTION.equals(this.controllingFaction)) {
                         guards = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, this.getVillageArea());
@@ -571,8 +572,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             List<VillagerEntity> villagerEntities = this.world.getEntitiesWithinAABB(VillagerEntity.class, this.getVillageArea());
             if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {
                 for (VillagerEntity villager : villagerEntities) {
+                    if(villager instanceof IFactionEntity)continue;
                     if (RNG.nextInt(3) == 0) {
-                        this.makeAgressive(villager);
+                        makeAgressive(villager);
                     }
                 }
             }
