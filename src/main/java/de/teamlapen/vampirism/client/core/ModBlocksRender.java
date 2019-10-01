@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.client.render.tiles.AltarInfusionTESR;
 import de.teamlapen.vampirism.client.render.tiles.CoffinTESR;
 import de.teamlapen.vampirism.client.render.tiles.PedestalTESR;
@@ -44,12 +45,12 @@ public class ModBlocksRender {
             if (tintIndex == 255) {
                 TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
                 if (tile instanceof TotemTileEntity) {
-                    IPlayableFaction f = ((TotemTileEntity) tile).getControllingFaction();
+                    IFaction f = ((TotemTileEntity) tile).getControllingFaction();
                     if (f != null) return f.getColor().getRGB();
                 }
             }
             return 0xFFFFFF;
-        }, ModBlocks.totem_top);
+        }, TotemTopBlock.getTotems());
     }
 
     private static void registerTileRenderer() {

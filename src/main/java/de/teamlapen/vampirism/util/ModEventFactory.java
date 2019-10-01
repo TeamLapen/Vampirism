@@ -40,7 +40,7 @@ public class ModEventFactory {
         return event;
     }
 
-    public static void fireReplaceVillageBlockEvent(@Nonnull World world, @Nonnull BlockState b, @Nonnull BlockPos pos, @Nonnull IPlayableFaction<?> controllingFaction) {
+    public static void fireReplaceVillageBlockEvent(@Nonnull World world, @Nonnull BlockState b, @Nonnull BlockPos pos, @Nonnull IFaction<?> controllingFaction) {
         VampirismVillageEvent.ReplaceBlock event = new VampirismVillageEvent.ReplaceBlock(world, b, pos, controllingFaction);
         MinecraftForge.EVENT_BUS.post(event);
     }
