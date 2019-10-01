@@ -314,7 +314,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (feed_victim != -1)
             feed_victim = -1;
         feed_victim_bite_type = null;
-        player.removePotionEffect(Effects.SLOWNESS);
+        if (player.isPotionActive(Effects.SLOWNESS)) player.removePotionEffect(Effects.SLOWNESS);
         if (sync) {
             CompoundNBT nbt = new CompoundNBT();
             nbt.putInt(KEY_VICTIM_ID, feed_victim);
