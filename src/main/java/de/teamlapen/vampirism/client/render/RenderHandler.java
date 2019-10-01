@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -22,7 +21,6 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.client.shader.Shader;
@@ -230,7 +228,6 @@ public class RenderHandler {
             }
 
             float parTick = event.getPartialRenderTick();
-            EntityRenderer renderer = mc.getRenderManager().getRenderer(entityBat);
 
             // Copy values
             entityBat.prevRenderYawOffset = player.prevRenderYawOffset;
@@ -246,14 +243,9 @@ public class RenderHandler {
 
             // Calculate render parameter
             float f1 = entityBat.prevRotationYaw + (entityBat.rotationYaw - entityBat.prevRotationYaw) * parTick;
-            double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * parTick;
-            double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * parTick;
-            double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * parTick;
-            Entity entity = mc.getRenderViewEntity();
-            double d3 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double) parTick;
-            double d4 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) parTick;
-            double d5 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) parTick;
-            mc.getRenderManager().renderEntity(entityBat, d0 - d3, d1 - d4, d2 - d5, f1, event.getPartialRenderTick(), false);
+
+
+            mc.getRenderManager().renderEntity(entityBat, event.getX(), event.getY(), event.getZ(), f1, event.getPartialRenderTick(), false);
 
         } else if (hunterAttributes.isDisguised()) {
             if (!player.equals(this.mc.player)) {

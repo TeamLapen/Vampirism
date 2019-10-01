@@ -61,7 +61,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -813,16 +812,17 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     public boolean setEntitySize(float width, float height) {
         //TODO 1.14 this is not going to work wait for https://github.com/MinecraftForge/MinecraftForge/pull/6059
-        try {
-            if (reflectionMethodSetSize == null) {
-                reflectionMethodSetSize = ObfuscationReflectionHelper.findMethod(Entity.class, SRGNAMES.Entity_setSize, float.class, float.class);
-            }
-            reflectionMethodSetSize.invoke(player, width, height);
-            return true;
-        } catch (Exception e) {
-            LOGGER.error("Could not change players size! ", e);
-            return false;
-        }
+//        try {
+//            if (reflectionMethodSetSize == null) {
+//                reflectionMethodSetSize = ObfuscationReflectionHelper.findMethod(Entity.class, SRGNAMES.Entity_setSize, float.class, float.class);
+//            }
+//            reflectionMethodSetSize.invoke(player, width, height);
+//            return true;
+//        } catch (Exception e) {
+//            LOGGER.error("Could not change players size! ", e);
+//            return false;
+//        }
+        return true;
     }
 
     /**

@@ -296,6 +296,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             player = null;
             tips = null;
             this.markDirty();
+            this.runningTick = 0;
         }
         if (phase.equals(PHASE.LEVELUP)) {
             if (!world.isRemote) {

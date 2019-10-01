@@ -151,7 +151,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
      * Set's flightspeed capability
      */
     private void setFlightSpeed(PlayerEntity player, float speed) {
-        player.abilities.setFlySpeed(speed);
+        player.abilities.flySpeed = speed;
     }
 
     private void setModifier(PlayerEntity player, boolean enabled) {

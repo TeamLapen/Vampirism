@@ -24,4 +24,9 @@ public class VampirismNightVisionPotion extends Effect {
     public boolean shouldRender(EffectInstance effect) {
         return !(effect instanceof VampireNightVisionEffect) && super.shouldRender(effect);
     }
+
+    @Override
+    public boolean shouldRenderHUD(EffectInstance effect) {
+        return !(effect instanceof VampireNightVisionEffect) && super.shouldRender(effect);
+    }
 }

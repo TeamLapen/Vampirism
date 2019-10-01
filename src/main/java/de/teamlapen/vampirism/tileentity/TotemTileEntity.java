@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.tileentity;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import de.teamlapen.lib.lib.util.LogUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
@@ -28,6 +27,7 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionSanguinareEffect;
 import de.teamlapen.vampirism.util.ModEventFactory;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BushBlock;
@@ -241,7 +241,58 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
+    public void markDirty() {
+        if (this.world != null) {
+            super.markDirty();
+            this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
+            if (this.village != null) {
+                if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
+                    addVampireVillage(this.world.dimension, this.village.getPos(), this.village.getBoundingBox());
+                } else {
+                    removeVampireVillage(this.world.dimension, this.village.getPos());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void remove() {
+        removeVampireVillage(this.world.dimension, this.pos);
+        removeTotem(this.village);
+        if (this.capturingFaction != null) {
+            this.abortCapture(false);
+        } else {
+            this.updateBossinfoPlayers(null);
+        }
+        super.remove();
+    }
+
+    private void abortCapture(boolean notifyPlayer) {
+        this.setCapturingFaction(null);
+        this.forceVillageUpdate = true;
+        this.informEntitiesAboutCaptureStop();
+        if (notifyPlayer)
+            notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_capture_aborted"));
+        this.updateBossinfoPlayers(null);
+        this.defenderMax = 0;
+        this.markDirty();
+    }
+
+    private void completeCapture(boolean notifyPlayer, boolean fullConvert) {
+        this.informEntitiesAboutCaptureStop();
+        if (!this.world.isRemote)
+            this.updateCreaturesOnCapture(fullConvert);
+        this.setControllingFaction(this.capturingFaction);
+        this.setCapturingFaction(null);
+        if (notifyPlayer)
+            this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_captured_by", controllingFaction.getNamePlural()));
+        this.updateBossinfoPlayers(null);
+        this.markDirty();
+    }
+
+    @Override
     public void tick() {
+        if (this.world == null) return;
         long time = this.world.getGameTime();
         //client ---------------------------------
         if (this.world.isRemote) {
@@ -416,66 +467,20 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         }
     }
 
-    @Override
-    public void remove() {
-        removeVampireVillage(this.world.dimension, this.pos);
-        removeTotem(this.village);
-        if (this.capturingFaction != null) {
-            this.abortCapture(false);
-        } else {
-            this.updateBossinfoPlayers(null);
-        }
-        super.remove();
-    }
-
-    private void abortCapture(boolean notifyPlayer) {
-        this.setCapturingFaction(null);
-        this.forceVillageUpdate = true;
-        this.informEntitiesAboutCaptureStop();
-        if (notifyPlayer)
-            notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_capture_aborted"));
-        this.updateBossinfoPlayers(null);
-        this.defenderMax = 0;
-        this.markDirty();
-    }
-
-    private void completeCapture(boolean notifyPlayer, boolean fullConvert) {
-        this.informEntitiesAboutCaptureStop();
-        if (!this.world.isRemote)
-            this.updateCreaturesOnCapture(fullConvert);
-        this.setControllingFaction(this.capturingFaction);
-        this.setCapturingFaction(null);
-        if (notifyPlayer)
-            this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.village_captured_by", controllingFaction.getNamePlural()));
-        this.updateBossinfoPlayers(null);
-        this.markDirty();
-    }
-
     public void updateTileStatus() {
-        if (!(((TotemTopBlock) this.world.getBlockState(this.pos).getBlock()).faction.equals(this.controllingFaction == null ? nonFactionTotem : this.controllingFaction.getID()))) {
-            this.forcedFaction = VampirismAPI.factionRegistry().getFactionByID(((TotemTopBlock) this.world.getBlockState(this.pos).getBlock()).faction);
-        }
-        if (!(this.isComplete = this.world.getBlockState(this.pos).getBlock() instanceof TotemTopBlock && this.world.getBlockState(this.pos.down()).getBlock().equals(ModBlocks.totem_base)))
+        Block b = this.world.getBlockState(this.pos).getBlock();
+        if (!(this.isComplete = b instanceof TotemTopBlock && this.world.getBlockState(this.pos.down()).getBlock().equals(ModBlocks.totem_base)))
             return;
+        ResourceLocation blockFaction = ((TotemTopBlock) b).faction;
+        if (!(blockFaction.equals(this.controllingFaction == null ? nonFactionTotem : this.controllingFaction.getID()))) { //If block faction does not match tile faction, force the tile to update to the block faction
+            this.forcedFaction = VampirismAPI.factionRegistry().getFactionByID(blockFaction);
+        }
         if (!(this.isInsideVillage = Structures.VILLAGE.isPositionInStructure(this.world, this.pos))) return;
         StructureStart structure = Structures.VILLAGE.getStart(this.world, this.pos, false);
         if (structure == StructureStart.DUMMY) return;
         this.village = structure;
         this.isDisabled = !addTotem(this.village, this.pos);
         this.markDirty();
-    }
-
-    @Override
-    public void markDirty() {
-        super.markDirty();
-        this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
-        if (this.village != null) {
-            if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
-                addVampireVillage(this.world.dimension, this.village.getPos(), this.village.getBoundingBox());
-            } else {
-                removeVampireVillage(this.world.dimension, this.village.getPos());
-            }
-        }
     }
 
     @Nullable

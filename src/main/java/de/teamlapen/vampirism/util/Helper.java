@@ -86,17 +86,17 @@ public class Helper {
 
     public static boolean canBlockSeeSun(World world, BlockPos pos) {
         if (pos.getY() >= world.getSeaLevel()) {
-            return world.canBlockSeeSky(pos);
+            return world.isSkyLightMax(pos);
         } else {
             BlockPos blockpos = new BlockPos(pos.getX(), world.getSeaLevel(), pos.getZ());
 
-            if (!world.canBlockSeeSky(blockpos)) {
+            if (!world.isSkyLightMax(blockpos)) {
                 return false;
             } else {
                 int liquidBlocks = 0;
                 for (blockpos = blockpos.down(); blockpos.getY() > pos.getY(); blockpos = blockpos.down()) {
                     BlockState iblockstate = world.getBlockState(blockpos);
-                    if (iblockstate.getBlock().getOpacity(iblockstate, world, blockpos) > 0) {
+                    if (iblockstate.getOpacity(world, blockpos) > 0) {
                         if (iblockstate.getMaterial().isLiquid()) {
                             liquidBlocks++;
                             if (liquidBlocks >= Balance.vp.SUNDAMAGE_WATER_BLOCKS) {
