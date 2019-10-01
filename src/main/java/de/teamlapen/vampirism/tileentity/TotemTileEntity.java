@@ -563,9 +563,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                 if (villager.getVillagerData().getProfession() == ModVillage.vampire_expert) {
                     villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
                 }
+                if (villager.isPotionActive(ModEffects.sanguinare))
+                    villager.removePotionEffect(ModEffects.sanguinare);
                 if (!fullConvert) {
-                    if (villager.isPotionActive(ModEffects.sanguinare))
-                        villager.removePotionEffect(ModEffects.sanguinare);
                     if (villager.isAlive()) ExtendedCreature.get(villager).setPoisonousBlood(true);
                 } else {
                     if (villager instanceof ConvertedVillagerEntity) {
@@ -582,15 +582,15 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             }
         } else if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {
             for (VillagerEntity villager : villagerEntities) {
+                if (villager.getVillagerData().getProfession() == ModVillage.hunter_expert) {
+                    villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
+                }
                 if (villager.isAlive()) ExtendedCreature.get(villager).setPoisonousBlood(false);
                 if (!fullConvert) {
                     if (RNG.nextInt(2) == 1) continue;
                     PotionSanguinare.addRandom(villager, false);
                 } else {
                     villager.addPotionEffect(new PotionSanguinareEffect(11));
-                }
-                if (villager.getVillagerData().getProfession() == ModVillage.hunter_expert) {
-                    villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
                 }
             }
             if (fullConvert) {
