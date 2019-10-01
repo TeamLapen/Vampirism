@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.world;
 
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
@@ -9,10 +9,10 @@ import javax.annotation.Nullable;
 public interface IVillageAttributes {
 
     @Nullable
-    IPlayableFaction getDefendingFaction();
+    IFaction getDefendingFaction();
 
     @Nullable
-    IPlayableFaction getAttackingFaction();
+    IFaction getAttackingFaction();
 
     AxisAlignedBB getVillageArea();
 

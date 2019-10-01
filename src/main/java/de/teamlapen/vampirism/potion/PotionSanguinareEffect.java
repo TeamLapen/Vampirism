@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.potion;
 
+import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 
 public class PotionSanguinareEffect extends EffectInstance {
-    public PotionSanguinareEffect(Effect potion, int effectDuration) {
-        super(potion, effectDuration, 0, false, true);
+    public PotionSanguinareEffect(int effectDuration) {
+        super(ModEffects.sanguinare, effectDuration, 0, false, true);
     }
 
     @Override

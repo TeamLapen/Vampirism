@@ -309,11 +309,11 @@ public abstract class VampirismVillageEvent extends Event {
         private final @Nonnull
         BlockState state;
         private final @Nonnull
-        IPlayableFaction<?> faction;
+        IFaction<?> faction;
         private final @Nonnull
         BlockPos pos;
 
-        public ReplaceBlock(@Nonnull World world, @Nonnull BlockState b, @Nonnull BlockPos pos, @Nonnull IPlayableFaction<?> controllingFaction) {
+        public ReplaceBlock(@Nonnull World world, @Nonnull BlockState b, @Nonnull BlockPos pos, @Nonnull IFaction<?> controllingFaction) {
             this.world = world;
             this.state = b;
             this.faction = controllingFaction;
@@ -340,7 +340,7 @@ public abstract class VampirismVillageEvent extends Event {
          * @returns faction of the village
          */
         @Nonnull
-        public IPlayableFaction<?> getFaction() {
+        public IFaction<?> getFaction() {
             return faction;
         }
 

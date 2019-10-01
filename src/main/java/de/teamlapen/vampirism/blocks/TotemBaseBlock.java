@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -58,7 +57,7 @@ public class TotemBaseBlock extends VampirismBlock {
     @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
         BlockState up = world.getBlockState(pos.up());
-        if (up.getBlock().equals(ModBlocks.totem_top)) {
+        if (up.getBlock() instanceof TotemTopBlock) {
             if (!up.getBlock().removedByPlayer(up, world, pos.up(), player, willHarvest, fluid)) {
                 return false;
             }

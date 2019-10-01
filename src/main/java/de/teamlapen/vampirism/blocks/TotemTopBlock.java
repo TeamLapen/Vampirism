@@ -56,18 +56,22 @@ public class TotemTopBlock extends VampirismBlockContainer {
         return VoxelShapes.or(a, b);
     }
 
+    public final ResourceLocation faction;
+
     @Deprecated
     public TotemTopBlock() {
         super(regName, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
-        factionTotems.put(new ResourceLocation("none"), this);
+        this.faction = new ResourceLocation("none");
+        factionTotems.put(this.faction, this);
     }
 
     /**
      * @param faction faction must be faction registryname;
      */
-    public TotemTopBlock(String regNameAddition, ResourceLocation faction) {
-        super(regName + "_" + regNameAddition, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
-        factionTotems.put(faction, this);
+    public TotemTopBlock(ResourceLocation faction) {
+        super(regName + "_" + faction.getNamespace() + "_" + faction.getPath(), Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
+        this.faction = faction;
+        factionTotems.put(this.faction, this);
     }
 
     @Override
