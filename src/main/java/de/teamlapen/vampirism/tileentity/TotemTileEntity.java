@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.tileentity;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import de.teamlapen.lib.lib.util.LogUtil;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -353,7 +353,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                             if (entity instanceof IVillageCaptureEntity) {
                                 ((IVillageCaptureEntity) entity).defendVillage(getVillageAttributes(this));
                             }
-                            LogUtil.LOGGER.info(entity.getPosition());
                         } else {
                             neutral++;
                         }
@@ -752,11 +751,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         return WeightedRandom.getRandomItem(RNG, captureEntities.get(faction)).getEntity();
     }
 
-    private boolean spawnVillagerNew(VillagerEntity newVillager, boolean poisonousBlood) {
-        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
-        return spawnEntity(newVillager);
-    }
-
     private boolean spawnVillagerReplace(MobEntity oldEntity, boolean poisonousBlood, boolean replaceOld) {
         VillagerEntity newVillager = EntityType.VILLAGER.create(this.world);
         ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
@@ -765,15 +759,21 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         return spawnEntity(newVillager, oldEntity, replaceOld);
     }
 
-    private boolean spawnVillagerReplace(VillagerEntity newVillager, MobEntity oldEntity, boolean poisonousBlood, boolean replaceOld) {
+    private boolean spawnVillagerReplaceForced(MobEntity oldEntity, boolean poisonousBlood, boolean replaceOld) {
+        VillagerEntity newVillager = EntityType.VILLAGER.create(this.world);
         ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
-        if (oldEntity instanceof VillagerEntity)
+        newVillager.copyLocationAndAnglesFrom(oldEntity);
+        if (oldEntity instanceof VillagerEntity) {
             newVillager.setHomePosAndDistance(oldEntity.getHomePosition(), (int) oldEntity.getMaximumHomeDistance());
-        return spawnEntity(newVillager, oldEntity, replaceOld);
+        }
+        if (replaceOld) {
+            oldEntity.remove();
+        }
+        return this.world.addEntity(newVillager);
     }
 
     private boolean spawnVillagerVampire() {
-        return ExtendedCreature.getUnsafe(EntityType.VILLAGER.create(this.world)).makeVampire() != null;
+        return this.spawnEntity(ModEntities.villager_converted.create(this.world));
     }
 
     private void updateCreaturesOnCapture(boolean fullConvert) {
@@ -795,11 +795,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                 }
                 if (villager.isPotionActive(ModEffects.sanguinare))
                     villager.removePotionEffect(ModEffects.sanguinare);
-                if (!fullConvert) {
-                    ExtendedCreature.getSafe(villager).ifPresent(e -> e.setPoisonousBlood(true));
-                } else {
+                ExtendedCreature.getSafe(villager).ifPresent(e -> e.setPoisonousBlood(true));
+                if (fullConvert) {
                     if (villager instanceof ConvertedVillagerEntity) {
-                        this.spawnVillagerReplace(villager, true, true);
+                        this.spawnVillagerReplaceForced(villager, true, true);
                     }
                 }
             }
