@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blocks.CastleBricksBlock;
@@ -220,7 +221,7 @@ public class ModEntityEventHandler {
                         TileEntity tileEntity = event.getWorld().getTileEntity(pos);
                         if(tileEntity instanceof TotemTileEntity) {
                             if (VReference.HUNTER_FACTION.equals(((TotemTileEntity) tileEntity).getControllingFaction())) {
-                                ExtendedCreature.get((CreatureEntity) event.getEntity()).setPoisonousBlood(true);
+                                ExtendedCreature.getSafe(event.getEntity()).ifPresent(e -> e.setPoisonousBlood(true));
                             }
                         }
                     }
@@ -246,7 +247,7 @@ public class ModEntityEventHandler {
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() instanceof CreatureEntity) {
             event.getEntity().getEntityWorld().getProfiler().startSection("vampirism_extended_creature");
-            ExtendedCreature.get((CreatureEntity) event.getEntity()).tick();
+            ExtendedCreature.getSafe(event.getEntity()).ifPresent(IExtendedCreatureVampirism::tick);
             event.getEntity().getEntityWorld().getProfiler().endSection();
 
         } else if (!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof PlayerEntity) {

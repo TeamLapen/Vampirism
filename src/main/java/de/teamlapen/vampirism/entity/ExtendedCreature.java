@@ -43,8 +43,15 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @CapabilityInject(IExtendedCreatureVampirism.class)
     public static Capability<IExtendedCreatureVampirism> CAP = getNull();
 
-    public static IExtendedCreatureVampirism get(CreatureEntity mob) {
+    /**
+     * Must check if {@link Entity#isAlive()} before calling this
+     */
+    public static IExtendedCreatureVampirism getUnsafe(CreatureEntity mob) {
         return mob.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get ExtendedCreature from EntityCreature " + mob));
+    }
+
+    public static LazyOptional<IExtendedCreatureVampirism> getSafe(Entity mob) {
+        return mob.getCapability(CAP);
     }
 
 

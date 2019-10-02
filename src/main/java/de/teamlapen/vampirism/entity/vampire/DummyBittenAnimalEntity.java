@@ -45,12 +45,15 @@ public class DummyBittenAnimalEntity extends MobEntity {
                     break;
             }
             entity.copyLocationAndAnglesFrom(this);
-            if (ExtendedCreature.get(entity).canBecomeVampire()) {
-                IConvertedCreature c = ExtendedCreature.get(entity).makeVampire();
-                if (c instanceof ConvertedCreatureEntity) {
-                    ((ConvertedCreatureEntity) c).setCanDespawn();
+            ExtendedCreature.getSafe(entity).ifPresent(e -> {
+                if (e.canBecomeVampire()) {
+                    IConvertedCreature c = e.makeVampire();
+                    if (c instanceof ConvertedCreatureEntity) {
+                        ((ConvertedCreatureEntity) c).setCanDespawn();
+                    }
                 }
-            }
+            });
+
 
 
             this.remove();

@@ -49,7 +49,7 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
                     continue;
                 }
 
-                creature = ExtendedCreature.get(o);
+                creature = ExtendedCreature.getUnsafe(o);
                 if (creature.canBeBitten(vampire) && !creature.hasPoisonousBlood()) {
                     return true;
                 }

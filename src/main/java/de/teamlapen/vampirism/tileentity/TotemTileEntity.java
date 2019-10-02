@@ -551,61 +551,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         this.forceVillageUpdate = true;
     }
 
-    private void updateCreaturesOnCapture(boolean fullConvert) {
-        List<VillagerEntity> villagerEntities = this.world.getEntitiesWithinAABB(VillagerEntity.class, getVillageArea());
-        if (VReference.HUNTER_FACTION.equals(this.capturingFaction)) {
-            List<HunterBaseEntity> hunterEntities = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, getVillageArea());
-            int i = Math.max(2, hunterEntities.size() / 2);
-            for (HunterBaseEntity hunter : hunterEntities) {
-                if (i-- > 0) {
-                    this.spawnVillagerReplace(hunter, true, true);
-                }
-            }
-            for (int o = i; o > 0; o--) {
-                this.spawnVillagerDefault(true);
-            }
-            for (VillagerEntity villager : villagerEntities) {
-                if (villager.getVillagerData().getProfession() == ModVillage.vampire_expert) {
-                    villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
-                }
-                if (villager.isPotionActive(ModEffects.sanguinare))
-                    villager.removePotionEffect(ModEffects.sanguinare);
-                if (!fullConvert) {
-                    if (villager.isAlive()) ExtendedCreature.get(villager).setPoisonousBlood(true);
-                } else {
-                    if (villager instanceof ConvertedVillagerEntity) {
-                        this.spawnVillagerReplace(villager, true, true);
-                    }
-                }
-            }
-            this.updateTrainer(false);
-            if (fullConvert) {
-                List<VampireBaseEntity> vampireEntities = this.world.getEntitiesWithinAABB(VampireBaseEntity.class, getVillageArea());
-                for (VampireBaseEntity vampire : vampireEntities) {
-                    this.spawnEntity(this.getCaptureEntityForFaction(this.capturingFaction).create(this.world), vampire, true);
-                }
-            }
-        } else if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {
-            for (VillagerEntity villager : villagerEntities) {
-                if (villager.getVillagerData().getProfession() == ModVillage.hunter_expert) {
-                    villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
-                }
-                if (villager.isAlive()) ExtendedCreature.get(villager).setPoisonousBlood(false);
-                if (!fullConvert) {
-                    if (RNG.nextInt(2) == 1) continue;
-                    PotionSanguinare.addRandom(villager, false);
-                } else {
-                    villager.addPotionEffect(new PotionSanguinareEffect(11));
-                }
-            }
-            if (fullConvert) {
-                List<HunterBaseEntity> vampireEntities = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, getVillageArea());
-                for (HunterBaseEntity vampire : vampireEntities) {
-                    this.spawnEntity(this.getCaptureEntityForFaction(this.capturingFaction).create(this.world), vampire, true);
-                }
-            }
-            updateTrainer(true);
-        }
+    private boolean spawnVillagerDefault(boolean poisonousBlood) {
+        VillagerEntity newVillager = EntityType.VILLAGER.create(this.world);
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
+        return spawnEntity(newVillager);
     }
 
     private void makeAgressive() {
@@ -803,34 +752,85 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         return WeightedRandom.getRandomItem(RNG, captureEntities.get(faction)).getEntity();
     }
 
-    private boolean spawnVillagerVampire() {
-        return ExtendedCreature.get(EntityType.VILLAGER.create(this.world)).makeVampire() != null;
-    }
-
-    private boolean spawnVillagerDefault(boolean poisonousBlood) {
-        VillagerEntity newVillager = EntityType.VILLAGER.create(this.world);
-        ExtendedCreature.get(newVillager).setPoisonousBlood(poisonousBlood);
+    private boolean spawnVillagerNew(VillagerEntity newVillager, boolean poisonousBlood) {
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
         return spawnEntity(newVillager);
     }
 
     private boolean spawnVillagerReplace(MobEntity oldEntity, boolean poisonousBlood, boolean replaceOld) {
         VillagerEntity newVillager = EntityType.VILLAGER.create(this.world);
-        ExtendedCreature.get(newVillager).setPoisonousBlood(poisonousBlood);
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
         if (oldEntity instanceof VillagerEntity)
             newVillager.setHomePosAndDistance(oldEntity.getHomePosition(), (int) oldEntity.getMaximumHomeDistance());
         return spawnEntity(newVillager, oldEntity, replaceOld);
-    }
-
-    private boolean spawnVillagerNew(VillagerEntity newVillager, boolean poisonousBlood) {
-        ExtendedCreature.get(newVillager).setPoisonousBlood(poisonousBlood);
-        return spawnEntity(newVillager);
     }
 
     private boolean spawnVillagerReplace(VillagerEntity newVillager, MobEntity oldEntity, boolean poisonousBlood, boolean replaceOld) {
-        ExtendedCreature.get(newVillager).setPoisonousBlood(poisonousBlood);
+        ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
         if (oldEntity instanceof VillagerEntity)
             newVillager.setHomePosAndDistance(oldEntity.getHomePosition(), (int) oldEntity.getMaximumHomeDistance());
         return spawnEntity(newVillager, oldEntity, replaceOld);
+    }
+
+    private boolean spawnVillagerVampire() {
+        return ExtendedCreature.getUnsafe(EntityType.VILLAGER.create(this.world)).makeVampire() != null;
+    }
+
+    private void updateCreaturesOnCapture(boolean fullConvert) {
+        List<VillagerEntity> villagerEntities = this.world.getEntitiesWithinAABB(VillagerEntity.class, getVillageArea());
+        if (VReference.HUNTER_FACTION.equals(this.capturingFaction)) {
+            List<HunterBaseEntity> hunterEntities = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, getVillageArea());
+            int i = Math.max(2, hunterEntities.size() / 2);
+            for (HunterBaseEntity hunter : hunterEntities) {
+                if (i-- > 0) {
+                    this.spawnVillagerReplace(hunter, true, true);
+                }
+            }
+            for (int o = i; o > 0; o--) {
+                this.spawnVillagerDefault(true);
+            }
+            for (VillagerEntity villager : villagerEntities) {
+                if (villager.getVillagerData().getProfession() == ModVillage.vampire_expert) {
+                    villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
+                }
+                if (villager.isPotionActive(ModEffects.sanguinare))
+                    villager.removePotionEffect(ModEffects.sanguinare);
+                if (!fullConvert) {
+                    ExtendedCreature.getSafe(villager).ifPresent(e -> e.setPoisonousBlood(true));
+                } else {
+                    if (villager instanceof ConvertedVillagerEntity) {
+                        this.spawnVillagerReplace(villager, true, true);
+                    }
+                }
+            }
+            this.updateTrainer(false);
+            if (fullConvert) {
+                List<VampireBaseEntity> vampireEntities = this.world.getEntitiesWithinAABB(VampireBaseEntity.class, getVillageArea());
+                for (VampireBaseEntity vampire : vampireEntities) {
+                    this.spawnEntity(this.getCaptureEntityForFaction(this.capturingFaction).create(this.world), vampire, true);
+                }
+            }
+        } else if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {
+            for (VillagerEntity villager : villagerEntities) {
+                if (villager.getVillagerData().getProfession() == ModVillage.hunter_expert) {
+                    villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
+                }
+                ExtendedCreature.getSafe(villager).ifPresent(e -> e.setPoisonousBlood(false));
+                if (!fullConvert) {
+                    if (RNG.nextInt(2) == 1) continue;
+                    PotionSanguinare.addRandom(villager, false);
+                } else {
+                    villager.addPotionEffect(new PotionSanguinareEffect(11));
+                }
+            }
+            if (fullConvert) {
+                List<HunterBaseEntity> vampireEntities = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, getVillageArea());
+                for (HunterBaseEntity vampire : vampireEntities) {
+                    this.spawnEntity(this.getCaptureEntityForFaction(this.capturingFaction).create(this.world), vampire, true);
+                }
+            }
+            updateTrainer(true);
+        }
     }
 
     private boolean spawnEntity(MobEntity newEntity) {

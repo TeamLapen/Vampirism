@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
@@ -138,14 +139,14 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 IBiteableEntity biteable = null;
                 if (entity instanceof IBiteableEntity) {
                     biteable = (IBiteableEntity) entity;
-                } else if (entity instanceof CreatureEntity) {
-                    biteable = ExtendedCreature.get((CreatureEntity) entity);
+                } else if (entity instanceof CreatureEntity && entity.isAlive()) {
+                    biteable = ExtendedCreature.getUnsafe((CreatureEntity) entity);
                 } else if (entity instanceof PlayerEntity) {
                     biteable = VampirePlayer.get((PlayerEntity) entity);
                 }
                 if (biteable != null && biteable.canBeBitten(player)) {
                     int color = 0xFF0000;
-                    if (entity instanceof HunterBaseEntity || (entity instanceof CreatureEntity && ExtendedCreature.get((CreatureEntity) entity).hasPoisonousBlood()))
+                    if (entity instanceof HunterBaseEntity || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
                         color = 0x099022;
                     renderBloodFangs(this.mc.mainWindow.getScaledWidth(), this.mc.mainWindow.getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                     event.setCanceled(true);

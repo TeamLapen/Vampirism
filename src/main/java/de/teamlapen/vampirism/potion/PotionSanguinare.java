@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.potion;
 
 import com.google.common.base.Preconditions;
-
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -50,8 +49,7 @@ public class PotionSanguinare extends VampirismPotion {
     public void performEffect(LivingEntity entity, int p_76394_2_) {
         if (entity.world.isRemote) return;
         if (entity instanceof CreatureEntity) {
-            IExtendedCreatureVampirism creature = ExtendedCreature.get((CreatureEntity) entity);
-            creature.makeVampire();
+            ExtendedCreature.getSafe(entity).ifPresent(IExtendedCreatureVampirism::makeVampire);
         }
         if (entity instanceof PlayerEntity) {
             VampirePlayer.get((PlayerEntity) entity).onSanguinareFinished();

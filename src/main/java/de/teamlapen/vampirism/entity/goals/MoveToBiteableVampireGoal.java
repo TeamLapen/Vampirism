@@ -50,7 +50,7 @@ public class MoveToBiteableVampireGoal<T extends MobEntity & IVampireMob> extend
         if (!vampire.wantsBlood()) return false;
         List<CreatureEntity> list = vampire.getEntityWorld().getEntitiesWithinAABB(CreatureEntity.class, vampire.getBoundingBox().grow(10, 3, 10), EntityPredicates.NOT_SPECTATING.and((entity) -> entity != vampire && entity.isAlive()));
         for (CreatureEntity o : list) {
-            IExtendedCreatureVampirism creature = ExtendedCreature.get(o);
+            IExtendedCreatureVampirism creature = ExtendedCreature.getUnsafe(o);
             if (creature.canBeBitten(vampire) && !o.hasCustomName() && !creature.hasPoisonousBlood()) {
                 target = o;
                 return true;

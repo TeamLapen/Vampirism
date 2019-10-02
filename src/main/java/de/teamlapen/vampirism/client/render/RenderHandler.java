@@ -190,7 +190,7 @@ public class RenderHandler {
                 flag = false;
             }
             if (flag) {
-                IExtendedCreatureVampirism creature = entity instanceof CreatureEntity ? ExtendedCreature.get((CreatureEntity) entity) : null;
+                IExtendedCreatureVampirism creature = entity instanceof CreatureEntity && entity.isAlive() ? ExtendedCreature.getUnsafe((CreatureEntity) entity) : null;
                 if (creature != null && creature.getBlood() > 0 && !creature.hasPoisonousBlood()) {
                     renderedEntitiesWithBlood.add(event.getEntity());
 

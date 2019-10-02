@@ -273,9 +273,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (entity instanceof IBiteableEntity) {
             if (((IBiteableEntity) entity).canBeBitten(this)) return BITE_TYPE.SUCK_BLOOD;
         }
-        if (entity instanceof CreatureEntity) {
-            if (ExtendedCreature.get((CreatureEntity) entity).canBeBitten(this)) {
-                if (ExtendedCreature.get((CreatureEntity) entity).hasPoisonousBlood()) {
+        if (entity instanceof CreatureEntity && entity.isAlive()) {
+            if (ExtendedCreature.getUnsafe((CreatureEntity) entity).canBeBitten(this)) {
+                if (ExtendedCreature.getUnsafe((CreatureEntity) entity).hasPoisonousBlood()) {
                     return BITE_TYPE.HUNTER_CREATURE;
                 }
                 return BITE_TYPE.SUCK_BLOOD_CREATURE;
@@ -1091,7 +1091,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (!PermissionAPI.hasPermission(player, Permissions.BITE_PLAYER)) return;
         float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getAttribute(VReference.biteDamage).getValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
-        if (((entity.isEntityUndead() || hunter) && player.getRNG().nextInt(4) == 0) || entity instanceof CreatureEntity && ExtendedCreature.get((CreatureEntity) entity).hasPoisonousBlood()) {
+        if (((entity.isEntityUndead() || hunter) && player.getRNG().nextInt(4) == 0) || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
             player.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
             if (player instanceof ServerPlayerEntity) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.POISONOUS_BITE);
@@ -1152,8 +1152,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         int blood = 0;
         float saturationMod = IBloodStats.HIGH_SATURATION;
         boolean continue_feeding = true;
-        if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_CREATURE) {
-            IExtendedCreatureVampirism extendedCreature = ExtendedCreature.get((CreatureEntity) entity);
+        if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_CREATURE && entity.isAlive()) {
+            IExtendedCreatureVampirism extendedCreature = ExtendedCreature.getUnsafe((CreatureEntity) entity);
             blood = extendedCreature.onBite(this);
             saturationMod = extendedCreature.getBloodSaturation();
             if (isAdvancedBiter() && extendedCreature.getBlood() == 1) {
