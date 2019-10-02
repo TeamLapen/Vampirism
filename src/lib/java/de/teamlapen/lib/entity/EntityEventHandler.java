@@ -32,7 +32,7 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         for (Capability listener : listeners) {
-            ((IPlayerEventListener) event.getPlayer().getCapability(listener, null)).onChangedDimension(event.getFrom(), event.getTo());
+            event.getPlayer().getCapability(listener, null).ifPresent(cap -> ((IPlayerEventListener) cap).onChangedDimension(event.getFrom(), event.getTo()));
         }
     }
 
