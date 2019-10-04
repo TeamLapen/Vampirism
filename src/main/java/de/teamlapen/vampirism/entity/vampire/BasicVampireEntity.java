@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
-import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -33,7 +32,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -249,12 +247,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     protected int getExperiencePoints(PlayerEntity player) {
         return 6 + getLevel();
-    }
-
-    @Nullable
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootHandler.BASIC_VAMPIRE;
     }
 
     @Override

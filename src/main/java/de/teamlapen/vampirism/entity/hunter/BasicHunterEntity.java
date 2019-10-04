@@ -21,7 +21,6 @@ import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
-import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.PatrollerEntity;
@@ -39,7 +38,6 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -309,11 +307,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     protected int getExperiencePoints(PlayerEntity player) {
         return 6 + getLevel();
-    }
-
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootHandler.BASIC_HUNTER;
     }
 
     @Override

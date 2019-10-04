@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.util.SupporterManager;
-import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -33,7 +32,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -254,12 +252,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Override
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
         return iMob ? ModEntities.advanced_vampire_imob : ModEntities.advanced_vampire;
-    }
-
-    @Nonnull
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootHandler.ADVANCED_VAMPIRE;
     }
 
     @Override
