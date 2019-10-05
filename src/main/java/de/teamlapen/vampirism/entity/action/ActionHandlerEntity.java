@@ -27,6 +27,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
     private int cooldown = 0;
     private int duration = 0;
     private float healthThresholdForDisruption;
+    @Nullable
     private IEntityAction action;
     private boolean isPlayerTarget;
 
@@ -35,6 +36,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
         this.availableActions = entityIn.getAvailableActions();
     }
 
+    @Nullable
     public IEntityAction getAction() {
         return action;
     }
@@ -75,10 +77,8 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
         preActivation = -1;
     }
 
-    public void write(CompoundNBT nbt) {
-        if (isPlayerTarget() && getAction() != null) {
-            nbt.putString("activeAction", action.getRegistryName().toString());
-        }
+    public boolean isActionActive(IEntityAction action) {
+        return this.action != null && this.action.equals(action) && duration > 0;
     }
 
     /**
@@ -199,7 +199,9 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
         }
     }
 
-    public boolean isActionActive(IEntityAction action) {
-        return this.action.equals(action) && duration > 0;
+    public void write(CompoundNBT nbt) {
+        if (isPlayerTarget() && action != null) {
+            nbt.putString("activeAction", action.getRegistryName().toString());
+        }
     }
 }
