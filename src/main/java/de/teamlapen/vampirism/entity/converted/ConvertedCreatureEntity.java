@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.converted;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -220,8 +221,15 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     /**
      * @return The {@link de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler.IDefaultHelper} for this creature
      */
+    @Nullable
     protected IConvertingHandler.IDefaultHelper getConvertedHelper() {
-        IConvertingHandler handler = VampirismAPI.entityRegistry().getEntry(entityCreature).convertingHandler;
+        if (nil()) return null;
+        BiteableEntry biteableEntry = VampirismAPI.entityRegistry().getEntry(entityCreature);
+        if (biteableEntry == null) {
+            LOGGER.warn("Cannot find biteable entry for {}", entityCreature);
+            return null;
+        }
+        IConvertingHandler handler = biteableEntry.convertingHandler;
         if (handler instanceof DefaultConvertingHandler) {
             return ((DefaultConvertingHandler) handler).getHelper();
         }
@@ -271,14 +279,14 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     protected void updateEntityAttributes() {
-        if (!nil()) {
-            IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
+        IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
+        if (helper != null) {
             this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG(entityCreature));
             this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth(entityCreature));
             this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance(entityCreature));
             this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed(entityCreature));
         } else {
-            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000);
+            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
             this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(0);
             this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0);
         }
