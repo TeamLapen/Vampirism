@@ -8,6 +8,9 @@ import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
+import javax.annotation.Nonnull;
+import java.util.Objects;
+
 /**
  * Handles packet registration and provides utility methods.
  * Subclass has to register packets.
@@ -49,7 +52,8 @@ public abstract class AbstractPacketDispatcher {
     /**
      * Send this message to the specified player.
      */
-    public final void sendTo(IMessage message, ServerPlayerEntity player) {
+    public final void sendTo(@Nonnull IMessage message, ServerPlayerEntity player) {
+        Objects.requireNonNull(message);
         dispatcher.send(PacketDistributor.PLAYER.with(() -> player), message);
         dispatcher.sendTo(message, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
     }
