@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.world.gen.biome.VampireForestBiome;
 import de.teamlapen.vampirism.world.gen.biome.VampirismBiomeFeatures;
@@ -31,7 +30,7 @@ public class ModBiomes {
     static void addBiome() {
         BiomeDictionary.addTypes(vampire_forest, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
         if (!VampirismConfig.COMMON.disableVampireForest.get()) {
-            BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest, Balance.general.VAMPIRE_FOREST_WEIGHT));
+            BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampire_forest, VampirismConfig.BALANCE.vampireForestWeight.get()));
         }
     }
 

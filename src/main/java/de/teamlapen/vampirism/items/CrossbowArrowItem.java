@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import net.minecraft.block.Block;
@@ -118,7 +118,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
         if (type == EnumArrowType.VAMPIRE_KILLER) {
             if (entity instanceof IVampireMob) {
                 float max = entity.getMaxHealth();
-                if (max < Balance.general.ARROW_VAMPIRE_KILLER_MAX_HEALTH) {
+                if (max < VampirismConfig.BALANCE.arrowVampireKillerMaxHealth.get()) {
                     entity.attackEntityFrom(DamageSource.causeArrowDamage((AbstractArrowEntity) arrowEntity, shootingEntity), max);
                 }
             }

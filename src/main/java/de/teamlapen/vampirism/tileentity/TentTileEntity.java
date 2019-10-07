@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.util.SimpleSpawnerLogic;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
@@ -112,7 +112,7 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
     @Override
     public void tick() {
         if (world == null) return;
-        if (spawnerLogic.getSpawnedToday() >= Balance.general.HUNTER_CAMP_MAX_SPAWN) {
+        if (spawnerLogic.getSpawnedToday() >= VampirismConfig.BALANCE.hunterTentMaxSpawn.get()) {
             spawnerLogic.setSpawn(false);
         }
         if (spawn) {

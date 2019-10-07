@@ -36,9 +36,13 @@ public class VampirismConfig {
      * Loaded after registry events but before setup
      */
     public static final Common COMMON;
+
+    public static final BalanceConfig BALANCE;
+
     private static final ForgeConfigSpec clientSpec;
     private static final ForgeConfigSpec serverSpec;
     private static final ForgeConfigSpec commonSpec;
+    private static final ForgeConfigSpec balanceSpec;
 
     static {
         final Pair<Client, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Client::new);
@@ -58,10 +62,17 @@ public class VampirismConfig {
         COMMON = specPair.getLeft();
     }
 
+    static {
+        final Pair<BalanceConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(BalanceConfig::new);
+        balanceSpec = specPair.getRight();
+        BALANCE = specPair.getLeft();
+    }
+
     public static void registerConfigs() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, serverSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, balanceSpec, "vampirism-balance.toml");
         FMLJavaModLoadingContext.get().getModEventBus().register(VampirismConfig.class);
     }
 

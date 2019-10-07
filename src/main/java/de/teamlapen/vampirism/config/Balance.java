@@ -23,7 +23,6 @@ public class Balance {
     public static BalanceHunterPlayer hp;
     public static BalanceVampireActions vpa;
     public static BalanceVampireSkills vps;
-    public static BalanceGeneral general;
     public static BalanceVillage village;
     public static BalanceHunterSkills hps;
     public static BalanceHunterActions hpa;
@@ -36,7 +35,6 @@ public class Balance {
         vp = addBalance(new BalanceVampirePlayer(balanceDir));
         hp = addBalance(new BalanceHunterPlayer(balanceDir));
         vpa = addBalance(new BalanceVampireActions(balanceDir));
-        general = addBalance(new BalanceGeneral(balanceDir));
         vps = addBalance(new BalanceVampireSkills(balanceDir));
         village = addBalance(new BalanceVillage(balanceDir));
         hps = addBalance(new BalanceHunterSkills(balanceDir));

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.potion;
 import com.google.common.base.Preconditions;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.CreatureEntity;
@@ -28,7 +29,7 @@ public class PotionSanguinare extends VampirismPotion {
         int duration = (int) ((entity.getRNG().nextFloat() + 0.5F) * avgDuration);
         EffectInstance effect = new PotionSanguinareEffect(duration);
         Preconditions.checkNotNull(effect);
-        if (!Balance.general.CAN_CANCEL_SANGUINARE) {
+        if (!VampirismConfig.BALANCE.canCancelSanguinare.get()) {
             effect.setCurativeItems(new ArrayList<>());
         }
         entity.addPotionEffect(effect);

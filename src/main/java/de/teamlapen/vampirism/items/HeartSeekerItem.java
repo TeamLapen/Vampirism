@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -55,7 +55,7 @@ public class HeartSeekerItem extends VampirismVampireSword implements IItemWithT
             setTrained(stack, attacker, trained);
         }
         float charged = getCharged(stack);
-        charged -= Balance.general.HEART_SEEKER_USAGE_FACTOR * (getVampirismTier().ordinal() + 2) / 2f;
+        charged -= (VampirismConfig.BALANCE.heartSeekerUsageFactor.get() / 100f) * (getVampirismTier().ordinal() + 2) / 2f;
         setCharged(stack, charged);
         attacker.setHeldItem(Hand.MAIN_HAND, stack);
         return super.hitEntity(stack, target, attacker);
@@ -63,7 +63,7 @@ public class HeartSeekerItem extends VampirismVampireSword implements IItemWithT
 
     @Override
     protected float getChargingFactor(ItemStack stack) {
-        return (float) Balance.general.HEART_SEEKER_CHARGING_FACTOR * 2f / (getVampirismTier().ordinal() + 2);
+        return (float) (VampirismConfig.BALANCE.heartSeekerChargingFactor.get() * 2f / (getVampirismTier().ordinal() + 2f));
     }
 
 

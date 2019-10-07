@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.blocks.CastleBricksBlock;
 import de.teamlapen.vampirism.blocks.CastleSlabBlock;
 import de.teamlapen.vampirism.blocks.CastleStairsBlock;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.goals.GolemTargetVampireGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
@@ -167,7 +168,7 @@ public class ModEntityEventHandler {
         }
 
         //Zombie AI changes
-        if (!event.getWorld().isRemote && Balance.general.ZOMBIE_IGNORE_VAMPIRE) {
+        if (!event.getWorld().isRemote && VampirismConfig.BALANCE.zombieIgnoreVampire.get()) {
             if (event.getEntity() instanceof ZombieEntity) {
                 Goal target = null;
                 for (PrioritizedGoal t : ((ZombieEntity) event.getEntity()).targetSelector.goals) {
@@ -205,7 +206,7 @@ public class ModEntityEventHandler {
             }
         }
 
-        if (!event.getWorld().isRemote && Balance.general.GOLEM_ATTACK_VAMPIRE) {
+        if (!event.getWorld().isRemote && VampirismConfig.BALANCE.golemAttackVampire.get()) {
             if (event.getEntity() instanceof IronGolemEntity) {
                 ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(4, new GolemTargetVampireGoal((IronGolemEntity) event.getEntity()));
             }

@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
@@ -125,7 +125,7 @@ public class DamageHandler {
                 }
 
 
-                double amount = (affect * (Balance.general.HOLY_WATER_SPLASH_DAMAGE * (strength == EnumStrength.WEAK ? 1 : strength == EnumStrength.MEDIUM ? Balance.general.HOLY_WATER_TIER_DAMAGE_INC : (Balance.general.HOLY_WATER_TIER_DAMAGE_INC * Balance.general.HOLY_WATER_TIER_DAMAGE_INC))) + 0.5D);
+                double amount = (affect * (VampirismConfig.BALANCE.holyWaterSplashDamage.get() * (strength == EnumStrength.WEAK ? 1 : strength == EnumStrength.MEDIUM ? VampirismConfig.BALANCE.holyWaterTierDamageInc.get() : (VampirismConfig.BALANCE.holyWaterTierDamageInc.get() * VampirismConfig.BALANCE.holyWaterTierDamageInc.get()))) + 0.5D);
                 if (entity instanceof PlayerEntity) {
                     int l = VampirePlayer.get((PlayerEntity) entity).getLevel();
                     amount = scaleDamageWithLevel(l, REFERENCE.HIGHEST_VAMPIRE_LEVEL, amount * 0.8, amount * 1.3);
@@ -152,10 +152,10 @@ public class DamageHandler {
         }
         if (vampire) {
             if (strength.isStrongerThan(EnumStrength.WEAK)) {
-                entity.addPotionEffect(new EffectInstance(Effects.NAUSEA, Balance.general.HOLY_WATER_NAUSEA_DURATION, 2));
+                entity.addPotionEffect(new EffectInstance(Effects.NAUSEA, VampirismConfig.BALANCE.holyWaterNauseaDuration.get(), 2));
             }
             if (strength.isStrongerThan(EnumStrength.MEDIUM)) {
-                entity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, Balance.general.HOLY_WATER_BLINDNESS_DURATION, 1));
+                entity.addPotionEffect(new EffectInstance(Effects.BLINDNESS, VampirismConfig.BALANCE.holyWaterBlindnessDuration.get(), 1));
             }
         }
     }
