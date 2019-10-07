@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.potion.EffectInstance;
@@ -28,12 +28,12 @@ public class SunscreenEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.SUNSCREEN_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.eaSunscreenCooldown.get() * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.ea.SUNSCREEN_DURATION * 20;
+        return VampirismConfig.BALANCE.eaSunscreenDuration.get() * 20;
     }
 
     @Override

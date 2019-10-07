@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,12 +31,12 @@ public class GarlicAOFEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.GARLIC_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.eaGarlicCooldown.get() * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.ea.GARLIC_DURATION * 20;
+        return VampirismConfig.BALANCE.eaGarlicDuration.get() * 20;
     }
 
     @Override

@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.potion.EffectInstance;
@@ -31,12 +31,12 @@ public class IgnoreSunDamageEntityAction<T extends CreatureEntity & IEntityActio
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.IGNORE_SUNDAMAGE_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.eaIgnoreSundamageCooldown.get() * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.ea.IGNORE_SUNDAMAGE_DURATION * 20;
+        return VampirismConfig.BALANCE.eaIgnoreSundamageDuration.get() * 20;
     }
 
     @Override

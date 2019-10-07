@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.particles.ParticleTypes;
@@ -30,12 +30,12 @@ public class InvisibleEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.INVISIBLE_COOLDOWN * 20; // seconds into ticks
+        return VampirismConfig.BALANCE.eaInvisibilityCooldown.get() * 20; // seconds into ticks
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.ea.INVISIBLE_DURATION * 20;
+        return VampirismConfig.BALANCE.eaInvisibilityDuration.get() * 20;
     }
 
     @Override

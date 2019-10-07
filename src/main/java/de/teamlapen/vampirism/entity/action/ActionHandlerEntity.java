@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.actions.*;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -26,7 +26,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
     private int preActivation = 0;
     private int cooldown = 0;
     private int duration = 0;
-    private float healthThresholdForDisruption;
+    private float minimumHealthThreshold;
     @Nullable
     private IEntityAction action;
     private boolean isPlayerTarget;
@@ -158,7 +158,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
             /* calls updatePreAction() for {@link ILastingAction} & {@link IInstantAction} as long as the action need to be activated */
             updatePreAction();
             preActivation--;
-            if (entity.getHealth() < healthThresholdForDisruption) {
+            if (entity.getHealth() < minimumHealthThreshold) {
                 cancelActivation();
             }
         } else if (duration == 0) { /* deactivate action */
@@ -181,7 +181,7 @@ public class ActionHandlerEntity<T extends CreatureEntity & IEntityActionUser> i
             }
             cooldown = action.getCooldown(entity.getLevel());
             preActivation = action.getPreActivationTime();
-            healthThresholdForDisruption = entity.getHealth() - (entity.getMaxHealth() * (float) Balance.ea.DISRUPTION_HEALTH_AMOUNT);
+            minimumHealthThreshold = (float) (entity.getHealth() - (entity.getMaxHealth() * VampirismConfig.BALANCE.eaHealthThreshold.get()));
             if (action instanceof ILastingAction) {
                 duration = ((ILastingAction<T>) action).getDuration(entity.getLevel());
             }

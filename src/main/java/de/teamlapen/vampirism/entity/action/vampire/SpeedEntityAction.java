@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -32,12 +32,12 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.SPEED_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.eaSpeedCooldown.get() * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.ea.SPEED_DURATION * 20;
+        return VampirismConfig.BALANCE.eaSpeedDuration.get() * 20;
     }
 
     @Override
@@ -54,8 +54,8 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
 
     @Override
     public void onUpdate(T entity, int duration) {
-        if (!entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(new AttributeModifier(UUIDS, "speedaction", Balance.ea.SPEED_AMOUNT, AttributeModifier.Operation.MULTIPLY_TOTAL))) {
-            entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(UUIDS, "speedaction", Balance.ea.SPEED_AMOUNT, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        if (entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(UUIDS) == null) {
+            entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(UUIDS, "speedaction", VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         if (duration % 5 == 0) {
             double maxDist = 0.5D;

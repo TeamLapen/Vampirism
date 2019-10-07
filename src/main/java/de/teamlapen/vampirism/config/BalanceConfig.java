@@ -21,6 +21,30 @@ public class BalanceConfig {
     public final ForgeConfigSpec.BooleanValue zombieIgnoreVampire;
     public final ForgeConfigSpec.IntValue hunterTentMaxSpawn;
 
+    public final ForgeConfigSpec.DoubleValue eaHealthThreshold;
+    public final ForgeConfigSpec.IntValue eaInvisibilityCooldown;
+    public final ForgeConfigSpec.IntValue eaInvisibilityDuration;
+    public final ForgeConfigSpec.IntValue eaHealCooldown;
+    public final ForgeConfigSpec.IntValue eaHealAmount;
+    public final ForgeConfigSpec.IntValue eaRegenerationDuration;
+    public final ForgeConfigSpec.IntValue eaRegenerationCooldown;
+    public final ForgeConfigSpec.IntValue eaRegenerationAmount;
+    public final ForgeConfigSpec.IntValue eaSpeedDuration;
+    public final ForgeConfigSpec.IntValue eaSpeedCooldown;
+    public final ForgeConfigSpec.DoubleValue eaSpeedAmount;
+    public final ForgeConfigSpec.IntValue eaBatspawnCooldown;
+    public final ForgeConfigSpec.IntValue eaBatspawnAmount;
+    public final ForgeConfigSpec.IntValue eaDarkProjectileCooldown;
+    public final ForgeConfigSpec.DoubleValue eaDarkProjectileDamage;
+    public final ForgeConfigSpec.DoubleValue eaDarkProjectileIndirectDamage;
+    public final ForgeConfigSpec.IntValue eaSunscreenDuration;
+    public final ForgeConfigSpec.IntValue eaSunscreenCooldown;
+    public final ForgeConfigSpec.IntValue eaIgnoreSundamageDuration;
+    public final ForgeConfigSpec.IntValue eaIgnoreSundamageCooldown;
+    public final ForgeConfigSpec.IntValue eaGarlicDuration;
+    public final ForgeConfigSpec.IntValue eaGarlicCooldown;
+
+
     BalanceConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("A ton of options which allow you to balance the mod to your desire");
         builder.push("balance");
@@ -44,6 +68,32 @@ public class BalanceConfig {
         zombieIgnoreVampire = builder.comment("If zombies should ignore vampires").define("zombieIgnoreVampire", true);
         hunterTentMaxSpawn = builder.comment("Maximum number of hunters that can spawn at one tent per day").defineInRange("hunterTentMaxSpawn", 4, 0, 20);
 
+        builder.pop();
+
+        //Entity actions
+        builder.push("entityActions");
+        eaHealthThreshold = builder.comment("Relative health a entity must have to use actions").defineInRange("healthThreshold", 0.3, 0, 1);
+        eaInvisibilityCooldown = builder.comment("In seconds").defineInRange("invisibilityCooldown", 7, 1, Integer.MAX_VALUE);
+        eaInvisibilityDuration = builder.comment("In seconds").defineInRange("invisibilityDuration", 4, 1, Integer.MAX_VALUE);
+        eaHealAmount = builder.comment("In percent").defineInRange("healAmount", 30, 0, 100);
+        eaHealCooldown = builder.comment("In seconds").defineInRange("healCooldown", 7, 1, Integer.MAX_VALUE);
+        eaRegenerationDuration = builder.comment("In seconds").defineInRange("regenerationDuration", 5, 0, Integer.MAX_VALUE);
+        eaRegenerationAmount = builder.comment("In percent").defineInRange("regenerationAmount", 40, 0, 100);
+        eaRegenerationCooldown = builder.comment("In seconds").defineInRange("regenerationCooldown", 8, 0, Integer.MAX_VALUE);
+        eaSpeedDuration = builder.comment("In seconds").defineInRange("speedDuration", 4, 0, Integer.MAX_VALUE);
+        eaSpeedCooldown = builder.comment("In seconds").defineInRange("speedCooldonw", 6, 1, Integer.MAX_VALUE);
+        eaSpeedAmount = builder.comment("Speed = basevalue * (1+ speedAmount)").defineInRange("speedAmount", 0.14, 0, 2);
+        eaBatspawnAmount = builder.defineInRange("batspawnAmount", 4, 1, 10);
+        eaBatspawnCooldown = builder.comment("In seconds").defineInRange("batspawnCooldown", 15, 1, Integer.MAX_VALUE);
+        eaDarkProjectileCooldown = builder.comment("In seconds").defineInRange("darkProjectileCooldown", 10, 1, Integer.MAX_VALUE);
+        eaDarkProjectileDamage = builder.defineInRange("darkProjectileDamage", 5d, 0, 100);
+        eaDarkProjectileIndirectDamage = builder.defineInRange("darkProjectileIndirectDamage", 2d, 0, 100);
+        eaSunscreenDuration = builder.comment("In seconds").defineInRange("sunscreenDuration", 9, 0, Integer.MAX_VALUE);
+        eaSunscreenCooldown = builder.comment("In seconds").defineInRange("sunscreenCooldown", 10, 1, Integer.MAX_VALUE);
+        eaIgnoreSundamageCooldown = builder.comment("In seconds").defineInRange("ignoreSundamageCooldown", 6, 1, Integer.MAX_VALUE);
+        eaIgnoreSundamageDuration = builder.comment("In seconds").defineInRange("ignoreSundamageDuration", 5, 0, Integer.MAX_VALUE);
+        eaGarlicCooldown = builder.comment("In seconds").defineInRange("garlicCooldown", 5, 1, Integer.MAX_VALUE);
+        eaGarlicDuration = builder.comment("In seconds").defineInRange("garlicDuration", 5, 0, Integer.MAX_VALUE);
         builder.pop();
 
         //

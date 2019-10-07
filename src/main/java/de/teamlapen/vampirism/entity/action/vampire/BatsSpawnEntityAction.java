@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.BlindingBatEntity;
@@ -19,7 +19,8 @@ public class BatsSpawnEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public boolean activate(T entity) {
-        for (int i = 0; i < Balance.ea.BATSPAWN_AMOUNT; i++) {
+        int amount = VampirismConfig.BALANCE.eaBatspawnAmount.get();
+        for (int i = 0; i < amount; i++) {
             BlindingBatEntity e = ModEntities.blinding_bat.create(entity.getEntityWorld());
             e.restrictLiveSpan();
             e.setIsBatHanging(false);
@@ -32,6 +33,6 @@ public class BatsSpawnEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.BATSPAWN_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.eaBatspawnCooldown.get() * 20;
     }
 }

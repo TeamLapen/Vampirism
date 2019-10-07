@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.particles.ParticleTypes;
@@ -17,14 +17,14 @@ public class HealEntityAction<T extends CreatureEntity & IEntityActionUser> exte
 
     @Override
     public boolean activate(T entity) {
-        entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * Balance.ea.HEAL_AMOUNT);
+        entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * VampirismConfig.BALANCE.eaHealAmount.get());
         ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.HEART, entity.posX, entity.posY + 1, entity.posZ, 10, 0.3, 0.3, 0.3, 0);
         return true;
     }
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.HEAL_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.eaHealCooldown.get() * 20;
     }
 
     @Override
