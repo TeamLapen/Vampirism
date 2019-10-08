@@ -4,7 +4,6 @@ import de.teamlapen.lib.network.IMessage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
@@ -55,7 +54,7 @@ public abstract class AbstractPacketDispatcher {
     public final void sendTo(@Nonnull IMessage message, ServerPlayerEntity player) {
         Objects.requireNonNull(message);
         dispatcher.send(PacketDistributor.PLAYER.with(() -> player), message);
-        dispatcher.sendTo(message, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+        //dispatcher.sendTo(message, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
     }
 
     public final void sendToAll(IMessage message) {

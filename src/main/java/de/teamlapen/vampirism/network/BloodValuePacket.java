@@ -41,11 +41,11 @@ public class BloodValuePacket implements IMessage {
 
     public static void handle(final BloodValuePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-
         ctx.enqueueWork(() -> VampirismMod.proxy.handleBloodValuePacket(msg));
+        ctx.setPacketHandled(true);
     }
 
-    private Pair<Map<ResourceLocation, Integer>, Integer>[] values;
+    private final Pair<Map<ResourceLocation, Integer>, Integer>[] values;
 
     public BloodValuePacket(Pair<Map<ResourceLocation, Integer>, Integer>[] values) {
         this.values = values;

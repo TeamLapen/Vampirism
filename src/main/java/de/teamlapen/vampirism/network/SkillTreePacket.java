@@ -39,8 +39,8 @@ public class SkillTreePacket implements IMessage {
 
     public static void handle(final SkillTreePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-
         ctx.enqueueWork(() -> VampirismMod.proxy.handleSkillTreePacket(msg));
+        ctx.setPacketHandled(true);
     }
 
     private Map<ResourceLocation, SkillNode.Builder> nodes;

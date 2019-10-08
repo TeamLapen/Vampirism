@@ -248,6 +248,7 @@ public class InputEventPacket implements IMessage {
                     }
                     break;
             }
+            ctx.setPacketHandled(true);
         });
     }
     private String param;

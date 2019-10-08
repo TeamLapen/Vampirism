@@ -14,10 +14,8 @@ import java.util.function.Supplier;
 public class OpenVampireBookPacket implements IMessage {
     public static void handle(final OpenVampireBookPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-
-        ctx.enqueueWork(() -> {
-            VampirismMod.proxy.handleVampireBookPacket(msg);
-        });
+        ctx.enqueueWork(() -> VampirismMod.proxy.handleVampireBookPacket(msg));
+        ctx.setPacketHandled(true);
     }
 
     static void encode(OpenVampireBookPacket msg, PacketBuffer buf) {
