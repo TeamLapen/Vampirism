@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.player.hunter.actions;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 
 /**
@@ -39,7 +39,7 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
 
     @Override
     public boolean isEnabled() {
-        return Balance.hpa.DISGUISE_ENABLED;
+        return VampirismConfig.BALANCE.haDisguiseEnabled.get();
     }
 
     @Override

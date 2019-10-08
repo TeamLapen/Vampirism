@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
@@ -14,7 +13,6 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
-import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -261,7 +259,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onPlayerVisibilityCheck(PlayerEvent.Visibility event) {
         if (HunterPlayer.get(event.getEntityPlayer()).getSpecialAttributes().isDisguised()) {
-            event.modifyVisibility(Balance.hpa.DISGUISE_VISIBILITY_MOD);
+            event.modifyVisibility(VampirismConfig.BALANCE.haDisguiseVisibilityMod.get());
         }
     }
 

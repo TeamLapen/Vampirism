@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.player.hunter.actions;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.LivingEntity;
@@ -24,17 +24,17 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     @Override
     public int getCooldown() {
-        return Balance.hpa.AWARENESS_COOLDOWN;
+        return VampirismConfig.BALANCE.haAwarenessCooldown.get();
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.hpa.AWARENESS_DURATION;
+        return VampirismConfig.BALANCE.haAwarenessDuration.get();
     }
 
     @Override
     public boolean isEnabled() {
-        return Balance.hpa.AWARENESS_ENABLED;
+        return VampirismConfig.BALANCE.haAwarenessEnabled.get();
     }
 
     @Override
@@ -72,9 +72,10 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     private boolean nearbyVampire(IHunterPlayer player) {
-        List<LivingEntity> entities = player.getRepresentingEntity().getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(player.getRepresentingEntity().posX - Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posY
-                - Balance.hpa.AWARENESS_RADIUS + 1, player.getRepresentingEntity().posZ
-                - Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posX + Balance.hpa.AWARENESS_RADIUS, player.getRepresentingEntity().posY + Balance.hpa.AWARENESS_RADIUS + 1, player.getRepresentingEntity().posZ + Balance.hpa.AWARENESS_RADIUS));
+        int r = VampirismConfig.BALANCE.haAwarenessRadius.get();
+        List<LivingEntity> entities = player.getRepresentingEntity().getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(player.getRepresentingEntity().posX - r, player.getRepresentingEntity().posY
+                - r + 1, player.getRepresentingEntity().posZ
+                - r, player.getRepresentingEntity().posX + r, player.getRepresentingEntity().posY + r + 1, player.getRepresentingEntity().posZ + r));
         for (LivingEntity e : entities) {
             if (Helper.isVampire(e))
                 return true;

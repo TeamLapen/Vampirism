@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
@@ -109,7 +109,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (attacker instanceof PlayerEntity && target.getHealth() <= target.getMaxHealth() * Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC && !Helper.isVampire(target)) {
+        if (attacker instanceof PlayerEntity && target.getHealth() <= target.getMaxHealth() * VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() && !Helper.isVampire(target)) {
             if (VampirePlayer.get((PlayerEntity) attacker).getSkillHandler().isSkillEnabled(VampireSkills.sword_finisher)) {
                 DamageSource dmg = DamageSource.causePlayerDamage((PlayerEntity) attacker);
                 target.attackEntityFrom(dmg, 10000F);

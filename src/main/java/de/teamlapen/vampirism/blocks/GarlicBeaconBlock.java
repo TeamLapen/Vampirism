@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.tileentity.GarlicBeaconTileEntity;
 import net.minecraft.block.*;
@@ -59,7 +59,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         }
 
         tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip1"));
-        int c = 1 + 2 * (type == Type.IMPROVED ? Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE : (type == Type.WEAK ? Balance.hps.GARLIC_DIFFUSOR_WEAK_DISTANCE : Balance.hps.GARLIC_DIFFUSOR_NORMAL_DISTANCE));
+        int c = 1 + 2 * (type == Type.IMPROVED ? VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist.get() : (type == Type.WEAK ? VampirismConfig.BALANCE.hsGarlicDiffusorWeakDist.get() : VampirismConfig.BALANCE.hsGarlicDiffusorNormalDist.get()));
         tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip2", c, c));
     }
 

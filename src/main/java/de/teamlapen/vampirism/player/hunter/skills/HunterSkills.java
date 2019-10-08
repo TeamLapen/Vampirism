@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.player.hunter.skills;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.VampirismSkill;
@@ -72,15 +72,15 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed", false).registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", Balance.hps.SMALL_ATTACK_SPEED_MODIFIER, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed_advanced", false).registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", Balance.hps.MAJOR_ATTACK_SPEED_MODIFIER, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed", false).registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed_advanced", false).registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", VampirismConfig.BALANCE.hsMajorAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new ActionSkill<IHunterPlayer>("hunter_awareness", HunterActions.awareness_hunter));
         registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter, true));
         registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("stake1", false)
                 .setDescription(() -> {
-                    ITextComponent desc = new TranslationTextComponent("skill.vampirism.stake1.desc", (int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100));
-                    if (Balance.hps.INSTANT_KILL_SKILL_1_FROM_BEHIND) {
+                    ITextComponent desc = new TranslationTextComponent("skill.vampirism.stake1.desc", (int) (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * 100));
+                    if (VampirismConfig.BALANCE.hsInstantKill1FromBehind.get()) {
                         desc.appendText(" " + new TranslationTextComponent("text.vampirism.from_behind"));
                     }
                     return desc;
@@ -88,10 +88,10 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("stake2", false)
                 .setDescription(() -> {
                     StringTextComponent desc = null;
-                    if (Balance.hps.INSTANT_KILL_SKILL_2_ONLY_NPC) {
-                        new TranslationTextComponent("skill.vampirism.stake2.desc_npc", Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                    if (VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get()) {
+                        new TranslationTextComponent("skill.vampirism.stake2.desc_npc", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
                     } else {
-                        new TranslationTextComponent("skill.vampirism.stake2.desc_all", Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                        new TranslationTextComponent("skill.vampirism.stake2.desc_all", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
 
                     }
                     return desc;

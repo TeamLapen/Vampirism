@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blocks.CastleBricksBlock;
 import de.teamlapen.vampirism.blocks.CastleSlabBlock;
 import de.teamlapen.vampirism.blocks.CastleStairsBlock;
-import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.goals.GolemTargetVampireGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
@@ -145,7 +144,7 @@ public class ModEntityEventHandler {
         }
 
         //Creeper AI changes for AvoidedByCreepers Skill
-        if (!event.getWorld().isRemote && !Balance.vps.DISABLE_AVOIDED_BY_CREEPERS) {
+        if (!event.getWorld().isRemote && !VampirismConfig.BALANCE.vsDisableAvoidedByCreepers.get()) {
             if (event.getEntity() instanceof CreeperEntity) {
                 ((CreeperEntity) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 20, 1.1, 1.3, input -> input != null && VampirePlayer.get((PlayerEntity) input).getSpecialAttributes().avoided_by_creepers));
 

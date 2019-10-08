@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
@@ -53,11 +53,11 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher {
                 }
                 boolean instaKill = false;
                 if (instaKillFromBehind && !UtilLib.canReallySee(target, attacker, true)) {
-                    if (!(Balance.hps.INSTANT_KILL_SKILL_2_ONLY_NPC && target instanceof PlayerEntity) && target.getMaxHealth() < Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH) {
+                    if (!(VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get() && target instanceof PlayerEntity) && target.getMaxHealth() < VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get()) {
                         instaKill = true;
                     }
-                } else if (instaKillLowHealth && target.getHealth() <= (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * target.getMaxHealth())) {
-                    if (!Balance.hps.INSTANT_KILL_SKILL_1_FROM_BEHIND || !UtilLib.canReallySee(target, attacker, true)) {
+                } else if (instaKillLowHealth && target.getHealth() <= (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * target.getMaxHealth())) {
+                    if (!VampirismConfig.BALANCE.hsInstantKill1FromBehind.get() || !UtilLib.canReallySee(target, attacker, true)) {
                         instaKill = true;
                     }
 

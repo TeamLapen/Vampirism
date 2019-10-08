@@ -5,7 +5,6 @@ import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -186,7 +185,7 @@ public class RenderHandler {
             boolean flag = true;
             if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) flag = false;
 
-            if (mc.player.getDistanceSq(entity) > Balance.vps.BLOOD_VISION_DISTANCE_SQUARED) {
+            if (mc.player.getDistanceSq(entity) > VampirismConfig.BALANCE.vsBloodVisionDistSQ.get()) {
                 flag = false;
             }
             if (flag) {
@@ -250,11 +249,11 @@ public class RenderHandler {
         } else if (hunterAttributes.isDisguised()) {
             if (!player.equals(this.mc.player)) {
                 double distSq = player.getDistanceSq(this.mc.player);
-                if (distSq > Balance.hpa.DISGUISE_DISTANCE_INVISIBLE_SQ) {
+                if (distSq > VampirismConfig.BALANCE.haDisguiseInvisibleSQ.get()) {
                     event.setCanceled(true);
                 } else {
                     hunterDisguiseEnabled = true;
-                    enableProfile(Profile.HUNTER_DISGUISE, MathHelper.clamp((float) (distSq / Balance.hpa.DISGUISE_DISTANCE_INVISIBLE_SQ * 25), 0, 1) * hunterAttributes.getDisguiseProgress());
+                    enableProfile(Profile.HUNTER_DISGUISE, MathHelper.clamp((float) (distSq / VampirismConfig.BALANCE.haDisguiseInvisibleSQ.get() * 25), 0, 1) * hunterAttributes.getDisguiseProgress());
                 }
             }
 

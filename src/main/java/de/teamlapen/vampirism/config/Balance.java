@@ -17,27 +17,15 @@ public class Balance {
     private final static Logger LOGGER = LogManager.getLogger();
 
     private final static Map<String, BalanceValues> categories = new HashMap<>();
-    public static BalanceLeveling leveling;
     public static BalanceMobProps mobProps;
     public static BalanceVampirePlayer vp;
-    public static BalanceHunterPlayer hp;
     public static BalanceVampireActions vpa;
-    public static BalanceVampireSkills vps;
-    public static BalanceVillage village;
-    public static BalanceHunterSkills hps;
-    public static BalanceHunterActions hpa;
 
     public static void init(File configDir, boolean inDev) {
         File balanceDir = new File(configDir, "balance");
-        leveling = addBalance(new BalanceLeveling(balanceDir));
         mobProps = addBalance(new BalanceMobProps(balanceDir));
         vp = addBalance(new BalanceVampirePlayer(balanceDir));
-        hp = addBalance(new BalanceHunterPlayer(balanceDir));
         vpa = addBalance(new BalanceVampireActions(balanceDir));
-        vps = addBalance(new BalanceVampireSkills(balanceDir));
-        village = addBalance(new BalanceVillage(balanceDir));
-        hps = addBalance(new BalanceHunterSkills(balanceDir));
-        hpa = addBalance(new BalanceHunterActions(balanceDir));
         if (inDev) {
             resetAndReload(null);
         } else {

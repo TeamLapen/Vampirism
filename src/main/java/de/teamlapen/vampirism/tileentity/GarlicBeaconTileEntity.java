@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.blocks.GarlicBeaconBlock;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -93,16 +93,16 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     public void setType(GarlicBeaconBlock.Type type) {
         switch (type) {
             case WEAK:
-                r = Balance.hps.GARLIC_DIFFUSOR_WEAK_DISTANCE;
+                r = VampirismConfig.BALANCE.hsGarlicDiffusorWeakDist.get();
                 defaultStrength = EnumStrength.WEAK;
                 break;
             case NORMAL:
-                r = Balance.hps.GARLIC_DIFFUSOR_NORMAL_DISTANCE;
+                r = VampirismConfig.BALANCE.hsGarlicDiffusorNormalDist.get();
                 defaultStrength = EnumStrength.MEDIUM;
                 break;
             case IMPROVED:
                 defaultStrength = EnumStrength.MEDIUM;
-                r = Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE;
+                r = VampirismConfig.BALANCE.hsGarlicDiffusorEnhancedDist.get();
                 break;
         }
         strength = defaultStrength;
