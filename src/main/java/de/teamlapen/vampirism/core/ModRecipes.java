@@ -63,7 +63,7 @@ public class ModRecipes {
      * gets liquid color for item
      */
     public static int getLiquidColor(Item stack) {
-        return liquidColors.get(stack);
+        return liquidColors.getOrDefault(stack, 0x505050);
     }
 
 }

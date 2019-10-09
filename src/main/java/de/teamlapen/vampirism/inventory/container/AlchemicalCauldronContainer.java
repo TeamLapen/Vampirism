@@ -28,6 +28,7 @@ public class AlchemicalCauldronContainer extends AbstractFurnaceContainer {
         setSlots(playerInventory);
     }
 
+
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
         ItemStack stackCopy = ItemStack.EMPTY;

@@ -2,15 +2,16 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.vampirism.blocks.AlchemicalCauldronBlock;
 import de.teamlapen.vampirism.core.ModRecipes;
-import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
 import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.AbstractFurnaceBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,6 @@ import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -58,6 +58,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
+
     @Override
     public boolean canOpen(PlayerEntity player) {
         if (super.canOpen(player)) {
@@ -77,6 +78,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         return false;
     }
 
+
     @Nonnull
     @Override
     public ITextComponent getCustomName() {
@@ -91,7 +93,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
 
     @OnlyIn(Dist.CLIENT)
     public int getLiquidColorClient() {
-        ItemStack liquidItem = this.items.get(1);
+        ItemStack liquidItem = this.items.get(0);
         return FluidUtil.getFluidContained(liquidItem).map(fluidStack -> fluidStack.getFluid().getAttributes().getColor()).orElse(ModRecipes.getLiquidColor(liquidItem.getItem()));
     }
 
@@ -120,6 +122,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         CompoundNBT compound = super.getUpdateTag();
         if (ownerID != null) compound.putUniqueId("owner", ownerID);
         if (ownerName != null) compound.putString("owner_name", ownerName);
+        ItemStackHelper.saveAllItems(compound, this.items);
         return compound;
     }
 
@@ -128,13 +131,20 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         super.handleUpdateTag(compound);
         ownerID = compound.hasUniqueId("owner") ? compound.getUniqueId("owner") : null;
         ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
+        ItemStackHelper.loadAllItems(compound, this.items);
     }
 
     @Override
     public void markDirty() {
         if (world != null) {
             super.markDirty();
-            this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+            BlockState old = world.getBlockState(this.pos);
+            BlockState state = old.with(AbstractFurnaceBlock.LIT, this.isBurning()).with(AlchemicalCauldronBlock.LIQUID, this.items.get(0).isEmpty() ? 0 : this.isBurning() ? 2 : 1);
+            if (old.equals(state)) {
+                this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 2);
+            } else {
+                this.world.setBlockState(this.pos, state, 3);
+            }
         }
     }
 
@@ -208,12 +218,6 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
 
             if (wasBurning != this.isBurning()) {
                 dirty = true;
-                this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).with(AbstractFurnaceBlock.LIT, this.isBurning()).with(AlchemicalCauldronBlock.LIQUID, this.items.get(0).isEmpty() ? 0 : this.isBurning() ? 2 : 1), 3);
-            }
-        } else {
-            if (isCooking() && !boilingSound) {
-                world.playSound(this.pos.getX(), this.pos.getY(), this.pos.getZ(), ModSounds.boiling, SoundCategory.BLOCKS, 0.015F, 7, true);//TODO 1.14 stop sound
-                boilingSound = true;
             }
         }
 
@@ -221,6 +225,16 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
             this.markDirty();
         }
 
+    }
+
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        super.setInventorySlotContents(index, stack);
+        ItemStack itemstack = this.items.get(index);
+        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
+        if (flag) {
+            this.markDirty();
+        }
     }
 
     @Override
@@ -269,8 +283,8 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
      */
     private void finishCooking(AlchemicalCauldronRecipe recipe) {
         if (recipe != null && this.canSmelt(recipe) && canPlayerCook(recipe)) {
-            ItemStack itemstackingredient = this.items.get(0);
-            ItemStack itemstackfluid = this.items.get(1);
+            ItemStack itemstackfluid = this.items.get(0);
+            ItemStack itemstackingredient = this.items.get(1);
             ItemStack itemstack1result = recipe.getRecipeOutput();
             ItemStack itemstackoutput = this.items.get(2);
             if (itemstackoutput.isEmpty()) {

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.tileentity.AlchemicalCauldronTileEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -16,14 +17,18 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 
 //TODO 1.14 model does not render properly. Maybe related to https://github.com/MinecraftForge/MinecraftForge/pull/6154
@@ -96,6 +101,15 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
         if (tile instanceof AlchemicalCauldronTileEntity) {
             playerEntity.openContainer((INamedContainerProvider) tile);
             playerEntity.addStat(ModStats.interact_alchemical_cauldron);
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void animateTick(BlockState state, World world, BlockPos pos, Random rng) {
+        super.animateTick(state, world, pos, rng);
+        if (state.get(LIQUID) == 2) {
+            world.playSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, ModSounds.boiling, SoundCategory.BLOCKS, 0.05F, 1, false);
         }
     }
 }

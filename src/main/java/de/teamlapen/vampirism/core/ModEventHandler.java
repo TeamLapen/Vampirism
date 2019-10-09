@@ -118,11 +118,9 @@ public class ModEventHandler {
             event.getPlayer().sendMessage(new StringTextComponent("You are running an alpha version of Vampirism for MC 1.14").applyTextStyle(TextFormatting.DARK_RED));
             event.getPlayer().sendMessage(new StringTextComponent("Some important parts are not working yet:"));
             event.getPlayer().sendMessage(new StringTextComponent("- Hunter Tents"));
-            event.getPlayer().sendMessage(new StringTextComponent("- Village related functionality"));
             event.getPlayer().sendMessage(new StringTextComponent("- Bat mode"));
             event.getPlayer().sendMessage(new StringTextComponent("- Sleep in coffin"));
             event.getPlayer().sendMessage(new StringTextComponent("- JEI integration and guide book"));
-            event.getPlayer().sendMessage(new StringTextComponent("- Balance is not configurable"));
 
 
         }
@@ -141,14 +139,6 @@ public class ModEventHandler {
         VampirismMod.dispatcher.sendTo(new BloodValuePacket(bloodValues), (ServerPlayerEntity) event.getPlayer());
 
 
-//        if (Configs.updated_vampirism) { TODO 1.14 Balance
-//            if (!ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(event.getPlayer())) {
-//
-//
-//                event.getPlayer().sendMessage(new StringTextComponent("It looks like you have updated Vampirism"));
-//                event.getPlayer().sendMessage(new StringTextComponent("Please consider resetting the balance values to the updated ones, using " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance all'" + TextFormatting.RESET));
-//                event.getPlayer().sendMessage(new StringTextComponent("For more information use " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance help'" + TextFormatting.RESET));
-//            }
         if (!PermissionAPI.hasPermission(event.getPlayer(), Permissions.VAMPIRISM)) {
             event.getPlayer().sendMessage(new StringTextComponent("[" + TextFormatting.DARK_PURPLE + "Vampirism" + TextFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.VAMPIRISM + "' to suppress this warning)."));
         }
