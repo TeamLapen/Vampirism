@@ -109,21 +109,26 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
         if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
             if (isGettingSundamage(true) || isGettingGarlicDamage(true) != EnumStrength.NONE) return false;
-
             if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
-                if ((world.isDaytime() && rand.nextInt(5) != 0)) {
-                    return false;
-                }
-                if (world.findNearestStructure("Village", getPosition(), 1, false) != null) {
-                    if (getRNG().nextInt(60) != 0) {
-                        return false;
-                    }
-                }
+                if (spawnReasonIn != SpawnReason.CHUNK_GENERATION) {
 
-                if (spawnRestriction.level >= SpawnRestriction.SPECIAL.level) {
-                    if (!getCanSpawnHereRestricted()) {
+                    if (this.world.isDaytime() && rand.nextInt(5) != 0) {
                         return false;
                     }
+                    if (this.world.findNearestStructure("Village", getPosition(), 1, false) != null) {
+                        if (getRNG().nextInt(60) != 0) {
+                            return false;
+                        }
+                    }
+
+                    if (spawnRestriction.level >= SpawnRestriction.SPECIAL.level) {
+                        if (!getCanSpawnHereRestricted()) {
+                            return false;
+                        }
+                    }
+                } else {
+                    //Must not do anything that affect this.world chunks during chunk gen
+                    return false; //Just don't spawn during world gen
                 }
             }
         }
@@ -269,6 +274,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
      */
     private boolean getCanSpawnHereRestricted() {
+        if (!this.world.isBlockPresent(this.getPosition())) return false;
         boolean vampireBiome = ModBiomes.vampire_forest.equals(this.world.getBiome(this.getPosition()));
         if (!vampireBiome) return isLowLightLevel();
         BlockState iblockstate = this.world.getBlockState((new BlockPos(this)).down());

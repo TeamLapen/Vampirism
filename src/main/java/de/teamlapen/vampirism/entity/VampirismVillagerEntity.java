@@ -82,7 +82,7 @@ public class VampirismVillagerEntity extends VillagerEntity {
 
     @Override
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
-        return (peaceful || this.world.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
+        return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
     }
 
     @Nullable

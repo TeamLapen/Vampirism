@@ -125,7 +125,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
 
     @Override
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
-        return (peaceful || this.world.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
+        return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
     }
 
     @Override

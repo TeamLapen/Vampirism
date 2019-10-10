@@ -103,7 +103,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 //        }
         BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
 
-        return ModBlocks.cursed_earth.equals(world.getBlockState(blockpos.down()).getBlock()) && super.canSpawn(worldIn, spawnReasonIn);
+        return ModBlocks.cursed_earth.equals(worldIn.getBlockState(blockpos.down()).getBlock()) && super.canSpawn(worldIn, spawnReasonIn);
     }
 
     @Override

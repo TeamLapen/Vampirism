@@ -5,9 +5,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
-import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.api.world.IVillageAttributes;
 import de.teamlapen.vampirism.config.Balance;
@@ -44,7 +42,6 @@ import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Basic vampire mob.
@@ -324,11 +321,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     private final ActionHandlerEntity<?> entityActionHandler;
     private final EntityClassType entityclass;
     private final EntityActionTier entitytier;
-
-    @Override
-    public List<IEntityAction> getAvailableActions() {
-        return VampirismAPI.entityActionManager().getAllEntityActionsByTierAndClassType(((IFactionEntity) this).getFaction(), entitytier, entityclass);
-    }
 
     @Override
     public EntityClassType getEntityClass() {

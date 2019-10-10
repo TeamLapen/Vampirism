@@ -394,7 +394,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     private void updateCombatTask() {
-        if (this.world != null && !this.world.isRemote) {
             this.goalSelector.removeGoal(attackMelee);
             this.goalSelector.removeGoal(attackRange);
             ItemStack stack = this.getHeldItemMainhand();
@@ -403,7 +402,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             } else {
                 this.goalSelector.addGoal(2, this.attackMelee);
             }
-        }
     }
 
     private void updateWatchedId(int id) {
