@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.world.gen.biome;
+package de.teamlapen.vampirism.world.gen.features;
 
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModWorldFeatures;
