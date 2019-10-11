@@ -1,31 +1,23 @@
 package de.teamlapen.vampirism.world.gen.biome;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.world.VampireBiome;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.gen.features.VampirismBiomeFeatures;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
-import java.util.List;
-
-public class VampireForestBiome extends Biome implements VampireBiome {
+public class VampireForestBiome extends VampireBiome {
     public final static String regName = "vampire_forest";
 
     private static final SurfaceBuilderConfig vampire_surface = new SurfaceBuilderConfig(ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState());
 
     public VampireForestBiome() {//TODO 1.14 entity weight
-        super(new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).waterColor(0xEE2505).waterFogColor(0xEE2505).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f));
-        this.setRegistryName(REFERENCE.MODID, regName);
-
-        VampirismAPI.sundamageRegistry().addNoSundamageBiome(this.getRegistryName());
+        super(regName, new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).waterColor(0xEE2505).waterFogColor(0xEE2505).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f));
 
         VampirismBiomeFeatures.addVampireTrees(this);
         VampirismBiomeFeatures.addVampirismFlowers(this);
@@ -55,10 +47,5 @@ public class VampireForestBiome extends Biome implements VampireBiome {
     @Override
     public int getSkyColorByTemp(float p_76731_1_) {
         return 0xA33641;
-    }
-
-    @Override
-    public List<SpawnListEntry> getSpawns(EntityClassification p_76747_1_) {
-        return super.getSpawns(p_76747_1_);
     }
 }
