@@ -62,6 +62,9 @@ public class RegistryManager implements IInitListener {
                     ModEffects.fixNightVisionEffecTypes();
                 }
                 break;
+            case PROCESS_IMC:
+                ModBiomes.addFeatures();
+                break;
             default:
                 break;
         }
@@ -80,7 +83,6 @@ public class RegistryManager implements IInitListener {
     public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
 
         ModBiomes.registerBiomes(event.getRegistry());
-        ModBiomes.registerFeatures();
     }
 
     @SubscribeEvent
@@ -113,6 +115,7 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterFeatures(RegistryEvent.Register<Feature<?>> event) {
+
         ModWorldFeatures.registerFeatures(event.getRegistry());
     }
 

@@ -116,6 +116,8 @@ public class ClientProxy extends CommonProxy {
                 skillTreeManager.init();
                 registerVampireEntityOverlays();
                 break;
+            default:
+                break;
         }
     }
 

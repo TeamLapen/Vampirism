@@ -264,6 +264,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue collectStats;
 
         public final ForgeConfigSpec.BooleanValue disableVampireForest;
+        public final ForgeConfigSpec.BooleanValue disableHunterTentGen;
 
 
         Common(ForgeConfigSpec.Builder builder) {
@@ -272,6 +273,7 @@ public class VampirismConfig {
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
             disableVampireForest = builder.comment("Disable vampire forest generation").define("disableVampireForest", false);
+            disableHunterTentGen = builder.comment("Disable hunter camp generation").define("disableHunterTentGen", false);
             builder.pop();
         }
 

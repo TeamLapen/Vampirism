@@ -51,7 +51,7 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
             }
         }
     };
-    private boolean spawn = false;
+    private boolean spawn = true;
 
     public TentTileEntity() {
         super(ModTiles.tent);

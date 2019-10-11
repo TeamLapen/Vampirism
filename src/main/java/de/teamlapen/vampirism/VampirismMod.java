@@ -241,6 +241,7 @@ public class VampirismMod {
     }
 
     private void processIMC(final InterModProcessEvent event) {
+        registryManager.onInitStep(IInitListener.Step.PROCESS_IMC, event);
         finishAPI2();
 
         if (inDev) {
