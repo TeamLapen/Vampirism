@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.world.gen.biome;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.world.VampireBiome;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.gen.features.VampirismBiomeFeatures;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
@@ -14,7 +16,7 @@ import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
 import java.util.List;
 
-public class VampireForestBiome extends Biome {
+public class VampireForestBiome extends Biome implements VampireBiome {
     public final static String regName = "vampire_forest";
 
     private static final SurfaceBuilderConfig vampire_surface = new SurfaceBuilderConfig(ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState());

@@ -10,6 +10,6 @@ public interface IInitListener {
     void onInitStep(Step step, ModLifecycleEvent event);
 
     enum Step {
-        CLIENT_SETUP, COMMON_SETUP, LOAD_COMPLETE
+        CLIENT_SETUP, COMMON_SETUP, LOAD_COMPLETE, PROCESS_IMC
     }
 }
