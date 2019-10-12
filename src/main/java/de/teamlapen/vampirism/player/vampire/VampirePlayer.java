@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -256,7 +257,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             protectionMod = 1F / (2F + protection.getAmplifier());
         }
 
-        return amount * protectionMod * (float) LevelAttributeModifier.calculateModifierValue(getLevel(), Balance.vp.FIRE_VULNERABILITY_LCAP, Balance.vp.FIRE_VULNERABILITY_MAX_MOD, Balance.vp.FIRE_VULNERABILITY_TYPE);
+        return amount * protectionMod * (float) LevelAttributeModifier.calculateModifierValue(getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpFireVulnerabilityMaxMod.get(), 0.5);
     }
 
     @Override
@@ -347,7 +348,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public float getBloodSaturation() {
-        return (float) Balance.vp.PLAYER_BLOOD_SATURATION;
+        return VampirismConfig.BALANCE.vpPlayerBloodSaturation.get().floatValue();
     }
 
     @Override
@@ -574,11 +575,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void onLevelChanged(int newLevel, int oldLevel) {
         if (!isRemote()) {
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE, AttributeModifier.Operation.ADDITION, true);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpStrengthMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
             if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
-            LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXHAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
             if (newLevel > 13) {
                 bloodStats.setMaxBlood(40);
             } else if (newLevel > 9) {
@@ -1070,13 +1071,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private void applyEntityAttributes() {
         //Checking if already registered, since this method has to be called multiple times due to SpongeForge not recreating the player, but resetting the attribute map
         if (player.getAttributes().getAttributeInstance(VReference.sunDamage) == null) {
-            player.getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(Balance.vp.SUNDAMAGE_DAMAGE);
+            player.getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
         }
         if (player.getAttributes().getAttributeInstance(VReference.bloodExhaustion) == null) {
-            player.getAttributes().registerAttribute(VReference.bloodExhaustion).setBaseValue(Balance.vp.BLOOD_EXHAUSTION_BASIC_MOD);
+            player.getAttributes().registerAttribute(VReference.bloodExhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
         }
         if (player.getAttributes().getAttributeInstance(VReference.biteDamage) == null) {
-            player.getAttributes().registerAttribute(VReference.biteDamage).setBaseValue(Balance.vp.BITE_DMG);
+            player.getAttributes().registerAttribute(VReference.biteDamage).setBaseValue(VampirismConfig.BALANCE.vpBiteDamage.get());
 
         }
     }
@@ -1204,13 +1205,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             ticksInSun = 50;
         }
         if (isRemote || player.abilities.isCreativeMode || player.abilities.disableDamage) return;
-        if (Balance.vp.SUNDAMAGE_NAUSEA && getLevel() >= Balance.vp.SUNDAMAGE_NAUSEA_MINLEVEL && player.ticksExisted % 300 == 1 && ticksInSun > 50 && sunscreen == -1) {
+        if (VampirismConfig.BALANCE.vpSundamageNausea.get() && getLevel() >= VampirismConfig.BALANCE.vpSundamageNauseaMinLevel.get() && player.ticksExisted % 300 == 1 && ticksInSun > 50 && sunscreen == -1) {
             player.addPotionEffect(new EffectInstance(Effects.NAUSEA, 180));
         }
-        if (getLevel() >= Balance.vp.SUNDAMAGE_WEAKNESS_MINLEVEL && player.ticksExisted % 150 == 3 && sunscreen < 5) {
+        if (getLevel() >= VampirismConfig.BALANCE.vpSundamageWeaknessMinLevel.get() && player.ticksExisted % 150 == 3 && sunscreen < 5) {
             player.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 152, 0));
         }
-        if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
+        if (getLevel() >= VampirismConfig.BALANCE.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
             float damage = (float) (player.getAttribute(VReference.sunDamage).getValue());
             if (damage > 0) player.attackEntityFrom(VReference.SUNDAMAGE, damage);
         }

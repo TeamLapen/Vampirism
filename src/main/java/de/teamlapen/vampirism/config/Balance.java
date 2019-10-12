@@ -17,14 +17,10 @@ public class Balance {
     private final static Logger LOGGER = LogManager.getLogger();
 
     private final static Map<String, BalanceValues> categories = new HashMap<>();
-    public static BalanceMobProps mobProps;
-    public static BalanceVampirePlayer vp;
     public static BalanceVampireActions vpa;
 
     public static void init(File configDir, boolean inDev) {
         File balanceDir = new File(configDir, "balance");
-        mobProps = addBalance(new BalanceMobProps(balanceDir));
-        vp = addBalance(new BalanceVampirePlayer(balanceDir));
         vpa = addBalance(new BalanceVampireActions(balanceDir));
         if (inDev) {
             resetAndReload(null);

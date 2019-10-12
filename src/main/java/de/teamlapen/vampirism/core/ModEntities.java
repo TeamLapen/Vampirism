@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedHorseEntity;
@@ -12,7 +12,10 @@ import de.teamlapen.vampirism.entity.converted.ConvertedSheepEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
-import de.teamlapen.vampirism.entity.vampire.*;
+import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
+import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
+import de.teamlapen.vampirism.entity.vampire.DummyBittenAnimalEntity;
+import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -142,8 +145,8 @@ public class ModEntities {
 
         //add to biomes
         for (Biome e : getZombieBiomes()) {
-            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
-            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(advanced_vampire, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
+            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(vampire, BalanceMobProps.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2));
+            e.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(advanced_vampire, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1));
         }
     }
 

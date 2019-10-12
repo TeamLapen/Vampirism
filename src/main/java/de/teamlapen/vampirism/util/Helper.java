@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
-import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -99,7 +98,7 @@ public class Helper {
                     if (iblockstate.getOpacity(world, blockpos) > 0) {
                         if (iblockstate.getMaterial().isLiquid()) {
                             liquidBlocks++;
-                            if (liquidBlocks >= Balance.vp.SUNDAMAGE_WATER_BLOCKS) {
+                            if (liquidBlocks >= VampirismConfig.BALANCE.vpSundamageWaterBlocks.get()) {
                                 return false;
                             }
                         } else {

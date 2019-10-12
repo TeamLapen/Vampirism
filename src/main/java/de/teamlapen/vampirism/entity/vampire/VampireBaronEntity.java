@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.vampire;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireBaron;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -228,7 +228,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     @Override
     protected float calculateFireDamage(float amount) {
-        return (float) (amount * Balance.mobProps.VAMPIRE_BARON_FIRE_VULNERABILITY);
+        return (float) (amount * BalanceMobProps.mobProps.VAMPIRE_BARON_FIRE_VULNERABILITY);
     }
 
     @Override
@@ -274,15 +274,15 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         if (aggressive) {
             this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20D);
             this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
-                    Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getLevel())));
+                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getLevel())));
         } else {
             this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5D);
             this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
-                    Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()) / 3);
+                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()) / 3);
         }
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-                .setBaseValue(Balance.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+                .setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
     }
 
     private boolean isLowerLevel(LivingEntity player) {

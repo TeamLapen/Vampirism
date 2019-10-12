@@ -53,7 +53,6 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue haAwarenessRadius;
 
     public final ForgeConfigSpec.DoubleValue hpStrengthMaxMod;
-    public final ForgeConfigSpec.IntValue hpStrengthLevelCap;
     public final ForgeConfigSpec.DoubleValue hpStrengthType;
 
     public final ForgeConfigSpec.DoubleValue hsSmallAttackSpeedModifier;
@@ -79,6 +78,23 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vsSpeedBoost;
     public final ForgeConfigSpec.IntValue vsBloodVisionDistSQ;
     public final ForgeConfigSpec.BooleanValue vsDisableAvoidedByCreepers;
+
+    public final ForgeConfigSpec.DoubleValue vpHealthMaxMod;
+    public final ForgeConfigSpec.DoubleValue vpStrengthMaxMod;
+    public final ForgeConfigSpec.DoubleValue vpSpeedMaxMod;
+    public final ForgeConfigSpec.DoubleValue vpExhaustionMaxMod;
+    public final ForgeConfigSpec.DoubleValue vpBasicBloodExhaustionMod;
+    public final ForgeConfigSpec.BooleanValue vpBloodUsagePeaceful;
+    public final ForgeConfigSpec.IntValue vpBiteDamage;
+    public final ForgeConfigSpec.DoubleValue vpPlayerBloodSaturation;
+    public final ForgeConfigSpec.IntValue vpSanguinareAverageDuration;
+    public final ForgeConfigSpec.IntValue vpSundamageMinLevel;
+    public final ForgeConfigSpec.BooleanValue vpSundamageNausea;
+    public final ForgeConfigSpec.IntValue vpSundamageNauseaMinLevel;
+    public final ForgeConfigSpec.IntValue vpSundamageWeaknessMinLevel;
+    public final ForgeConfigSpec.DoubleValue vpSundamage;
+    public final ForgeConfigSpec.IntValue vpSundamageWaterBlocks;
+    public final ForgeConfigSpec.DoubleValue vpFireVulnerabilityMaxMod;
 
     BalanceConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("A ton of options which allow you to balance the mod to your desire");
@@ -144,7 +160,6 @@ public class BalanceConfig {
 
         //Hunter player
         builder.push("hunterPlayer");
-        hpStrengthLevelCap = builder.defineInRange("strengthLevelCap", 20, 10, 40);
         hpStrengthMaxMod = builder.comment("Stringth = Old * (modifier+1").defineInRange("strengthMaxMod", 2d, 0.5d, 4d);
         hpStrengthType = builder.comment("0.5 for square root, 1 for linear").defineInRange("strengthType", 0.5d, 0.5d, 1);
         builder.pop();
@@ -183,6 +198,26 @@ public class BalanceConfig {
         vsDisableAvoidedByCreepers = builder.comment("Disables the effect of 'Avoided by creepers'. Can still be unlocked though.").define("disableAvoidedByCreepers", false);
         builder.pop();
 
+
+        //Vampire Player
+        builder.push("vampirePlayer");
+        vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
+        vpStrengthMaxMod = builder.defineInRange("strengthMaxMod", 1, 0.5, 2);
+        vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
+        vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
+        vpBasicBloodExhaustionMod = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("basicBloodExhaustionMod", 0.7, 0, 5);
+        vpBloodUsagePeaceful = builder.comment("Whether blood is consumed in peaceful gamemode").define("bloodUsagePeaceful", false);
+        vpBiteDamage = builder.defineInRange("biteDamage", 4, 0, Integer.MAX_VALUE);
+        vpPlayerBloodSaturation = builder.defineInRange("playerBloodSaturation", 1.5, 0.3, 10);
+        vpSanguinareAverageDuration = builder.defineInRange("sanguinareAverageDuration", 900, 1, 10000);
+        vpSundamage = builder.defineInRange("sundamage", 7d, 1, Double.MAX_VALUE);
+        vpSundamageMinLevel = builder.defineInRange("sundamageMinLevel", 4, 1, Integer.MAX_VALUE);
+        vpSundamageNausea = builder.define("sundamageNausea", true);
+        vpSundamageNauseaMinLevel = builder.defineInRange("sundamageNauseaMinLevel", 3, 1, Integer.MAX_VALUE);
+        vpSundamageWeaknessMinLevel = builder.defineInRange("sundamageWeaknessMinLevel", 2, 1, Integer.MAX_VALUE);
+        vpSundamageWaterBlocks = builder.defineInRange("sundamageWaterblocks", 4, 1, 10);
+        vpFireVulnerabilityMaxMod = builder.defineInRange("fireVulnerabilityMod", 4d, 0.1, Double.MAX_VALUE);
+        builder.pop();
 
         //
 

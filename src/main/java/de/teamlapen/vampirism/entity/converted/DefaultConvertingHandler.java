@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -31,7 +31,7 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
             if (dmg != null) {
                 return dmg.getBaseValue() * 1.3;
             } else {
-                return Balance.mobProps.CONVERTED_MOB_DEFAULT_DMG;
+                return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG;
             }
         }
 

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.player.vampire;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -91,7 +91,7 @@ public class BloodStats implements IBloodStats {
             this.bloodExhaustionLevel -= 4.0F;
             if (bloodSaturationLevel > 0) {
                 bloodSaturationLevel = Math.max(bloodSaturationLevel - 1F, 0F);
-            } else if (enumDifficulty != Difficulty.PEACEFUL || Balance.vp.BLOOD_USAGE_PEACEFUL) {
+            } else if (enumDifficulty != Difficulty.PEACEFUL || VampirismConfig.BALANCE.vpBloodUsagePeaceful.get()) {
                 this.bloodLevel = Math.max(bloodLevel - 1, 0);
             }
         }
@@ -104,7 +104,7 @@ public class BloodStats implements IBloodStats {
                 this.addExhaustion(f, true);
                 this.bloodTimer = 0;
             }
-        } else if (regen && this.bloodLevel >= (Balance.vp.BLOOD_HEALING_LEVEL) && player.shouldHeal()) {
+        } else if (regen && this.bloodLevel >= (18) && player.shouldHeal()) {
             ++this.bloodTimer;
 
             if (this.bloodTimer >= 80) {

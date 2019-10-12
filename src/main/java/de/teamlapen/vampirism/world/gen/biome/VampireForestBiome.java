@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.world.gen.biome;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -31,11 +31,11 @@ public class VampireForestBiome extends Biome {
         DefaultBiomeFeatures.addDeadBushes(this);
 
         //All EntityTypes used here have to be registered in the static part of ModEntities
-        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.ghost, Balance.mobProps.GHOST_SPAWN_CHANCE, 1, 1));
-        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.vampire, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 3));
-        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.vampire_baron, Balance.mobProps.VAMPIRE_BARON_SPAWN_CHANCE, 1, 1));
-        this.addSpawn(EntityClassification.AMBIENT, new SpawnListEntry(ModEntities.blinding_bat, Balance.mobProps.BLINDING_BAT_SPAWN_CHANCE, 2, 4));
-        this.addSpawn(EntityClassification.CREATURE, new SpawnListEntry(ModEntities.dummy_creature, Balance.mobProps.DUMMY_CREATURE_SPAWN_CHANCE, 3, 6));
+        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.ghost, BalanceMobProps.mobProps.GHOST_SPAWN_CHANCE, 1, 1));
+        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.vampire, BalanceMobProps.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 3));
+        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.vampire_baron, BalanceMobProps.mobProps.VAMPIRE_BARON_SPAWN_CHANCE, 1, 1));
+        this.addSpawn(EntityClassification.AMBIENT, new SpawnListEntry(ModEntities.blinding_bat, BalanceMobProps.mobProps.BLINDING_BAT_SPAWN_CHANCE, 2, 4));
+        this.addSpawn(EntityClassification.CREATURE, new SpawnListEntry(ModEntities.dummy_creature, BalanceMobProps.mobProps.DUMMY_CREATURE_SPAWN_CHANCE, 3, 6));
     }
 
     @Override

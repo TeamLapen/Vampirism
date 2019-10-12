@@ -77,7 +77,7 @@ public class LevelAttributeModifier {
      * @return value between 0 and maxMod
      */
     public static double calculateModifierValue(int level, int lcap, double maxMod, double type) {
-        return Math.pow((level > lcap ? lcap : level), type) / Math.pow(lcap, type) * maxMod;
+        return Math.pow((Math.min(level, lcap)), type) / Math.pow(lcap, type) * maxMod;
     }
 
     /**

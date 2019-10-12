@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -66,7 +66,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public boolean attackEntityAsMob(Entity entity) {
-        if (canSuckBloodFromPlayer && !world.isRemote && entity instanceof PlayerEntity && !UtilLib.canReallySee((LivingEntity) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
+        if (canSuckBloodFromPlayer && !world.isRemote && entity instanceof PlayerEntity && !UtilLib.canReallySee((LivingEntity) entity, this, true) && rand.nextInt(BalanceMobProps.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
             int amt = VampirePlayer.get((PlayerEntity) entity).onBite(this);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
             return true;
@@ -260,7 +260,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+        getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     @Override

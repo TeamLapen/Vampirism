@@ -3,13 +3,12 @@ package de.teamlapen.vampirism.entity.converted;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModVillage;
@@ -63,7 +62,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Override
     public boolean attackEntityAsMob(Entity entity) {
-        if (!world.isRemote && entity instanceof PlayerEntity && !UtilLib.canReallySee((LivingEntity) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
+        if (!world.isRemote && entity instanceof PlayerEntity && !UtilLib.canReallySee((LivingEntity) entity, this, true) && rand.nextInt(BalanceMobProps.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
             int amt = VampirePlayer.get((PlayerEntity) entity).onBite(this);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
             return true;

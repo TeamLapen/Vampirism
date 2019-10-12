@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -277,7 +277,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             if (blood > 0 && blood < getMaxBlood() && entity.ticksExisted % 40 == 8) {
                 entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 41));
                 entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 41, 2));
-                if (entity.getRNG().nextInt(Balance.mobProps.BLOOD_REGEN_CHANCE) == 0) {
+                if (entity.getRNG().nextInt(BalanceMobProps.mobProps.BLOOD_REGEN_CHANCE) == 0) {
                     setBlood(getBlood() + 1);
                 }
             }

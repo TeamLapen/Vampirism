@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.potion;
 
 import com.google.common.base.Preconditions;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -25,7 +25,7 @@ public class PotionSanguinare extends VampirismPotion {
      * @param player Whether to use the player effect duration or the mob duration
      */
     public static void addRandom(LivingEntity entity, boolean player) {
-        int avgDuration = 20 * (player ? Balance.vp.SANGUINARE_AVG_DURATION : Balance.mobProps.SANGUINARE_AVG_DURATION);
+        int avgDuration = 20 * (player ? VampirismConfig.BALANCE.vpSanguinareAverageDuration.get() : BalanceMobProps.mobProps.SANGUINARE_AVG_DURATION);
         int duration = (int) ((entity.getRNG().nextFloat() + 0.5F) * avgDuration);
         EffectInstance effect = new PotionSanguinareEffect(duration);
         Preconditions.checkNotNull(effect);

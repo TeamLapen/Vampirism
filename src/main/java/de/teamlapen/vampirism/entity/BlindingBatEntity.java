@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.EntityType;
@@ -53,14 +53,14 @@ public class BlindingBatEntity extends BatEntity {
     @Override
     public void tick() {
         super.tick();
-        if (restrictLiveSpan && this.ticksExisted > Balance.mobProps.BLINDING_BAT_LIVE_SPAWN) {
+        if (restrictLiveSpan && this.ticksExisted > BalanceMobProps.mobProps.BLINDING_BAT_LIVE_SPAWN) {
             this.attackEntityFrom(DamageSource.MAGIC, 10F);
         }
         if (!this.world.isRemote) {
             List l = world.getEntitiesWithinAABB(PlayerEntity.class, this.getBoundingBox());
             for (Object e : l) {
                 if (VampirePlayer.get((PlayerEntity) e).getLevel() == 0) {
-                    ((PlayerEntity) e).addPotionEffect(new EffectInstance(Effects.BLINDNESS, Balance.mobProps.BLINDING_BAT_EFFECT_DURATION));
+                    ((PlayerEntity) e).addPotionEffect(new EffectInstance(Effects.BLINDNESS, BalanceMobProps.mobProps.BLINDING_BAT_EFFECT_DURATION));
                 }
             }
         }
