@@ -27,8 +27,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
@@ -126,16 +124,6 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     @Override
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
         return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
-    }
-
-    @Override
-    public boolean getAlwaysRenderNameTagForRender() {
-        return true;
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return this instanceof IMob ? new StringTextComponent("IMob") : new StringTextComponent("NonImob"); //TODO remove
     }
 
     @Nullable
