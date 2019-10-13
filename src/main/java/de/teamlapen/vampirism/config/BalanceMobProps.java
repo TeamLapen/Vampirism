@@ -96,9 +96,6 @@ public class BalanceMobProps {
     //    @DefaultDouble(value = 2, minValue = 0, comment = "Any fire damage that is received by a basic vampire is multiplied by this")
     public final double VAMPIRE_FIRE_VULNERABILITY = 2;
 
-    //    @DefaultInt(value = 2, minValue = 1, maxValue = 1000000, name = "vampire_bite_attack_chance", comment = "Chance that a vampire bites a player when attacking him (1/n)")
-    public final int VAMPIRE_BITE_ATTACK_CHANCE = 2;
-
     //    @DefaultDouble(value = 7.0, minValue = 0.0, maxValue = 1000, name = "vampire_mob_sun_damage")
     public final double VAMPIRE_MOB_SUN_DAMAGE = 7;
 

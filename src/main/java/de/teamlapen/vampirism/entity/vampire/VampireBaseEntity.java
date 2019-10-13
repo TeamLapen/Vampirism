@@ -72,7 +72,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public boolean attackEntityAsMob(Entity entity) {
-        if (canSuckBloodFromPlayer && !world.isRemote && entity instanceof PlayerEntity && !UtilLib.canReallySee((LivingEntity) entity, this, true) && rand.nextInt(BalanceMobProps.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
+        if (canSuckBloodFromPlayer && !world.isRemote && wantsBlood() && entity instanceof PlayerEntity && !Helper.isHunter(entity) && !UtilLib.canReallySee((LivingEntity) entity, this, true)) {
             int amt = VampirePlayer.get((PlayerEntity) entity).onBite(this);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
             return true;
@@ -117,7 +117,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
                 return false;
             if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
-                if (spawnReasonIn != SpawnReason.CHUNK_GENERATION) {
 
                     if (worldIn.getDimension().isDaytime() && rand.nextInt(5) != 0) {
                         return false;
@@ -133,10 +132,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                             return false;
                         }
                     }
-                } else {
-                    //Must not do anything that affect this.world chunks during chunk gen
-                    return false; //Just don't spawn during world gen
-                }
             }
         }
 
