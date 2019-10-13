@@ -29,7 +29,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 
 public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreature<HorseEntity> {
@@ -87,19 +90,20 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
         return this;
     }
 
+    @Nonnull
     @Override
-    public EnumStrength isGettingGarlicDamage(boolean forceRefresh) {
+    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forceRefresh) {
         if (forceRefresh) {
-            garlicCache = Helper.getGarlicStrength(this);
+            garlicCache = Helper.getGarlicStrength(this, iWorld);
         }
         return garlicCache;
     }
 
     @Override
-    public boolean isGettingSundamage(boolean forceRefresh) {
+    public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
         if (!forceRefresh)
             return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this));
+        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.world.getProfiler()));
     }
 
     @Override
@@ -110,18 +114,18 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
     @Override
     public void livingTick() {
         if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
-            isGettingGarlicDamage(true);
+            isGettingGarlicDamage(this.world, true);
         }
         if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(true);
+            isGettingSundamage(this.world, true);
         }
         if (!world.isRemote) {
-            if (isGettingSundamage() && ticksExisted % 40 == 11) {
+            if (isGettingSundamage(world) && ticksExisted % 40 == 11) {
                 double dmg = getAttribute(VReference.sunDamage).getValue();
                 if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
             }
-            if (isGettingGarlicDamage() != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(), this.ticksExisted);
+            if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), this.ticksExisted);
             }
             if (isAlive() && isInWater()) {
                 setAir(300);

@@ -24,6 +24,6 @@ public class FleeGarlicVampireGoal extends FleeGoal {
 
     @Override
     protected boolean shouldFlee() {
-        return theCreature.isGettingGarlicDamage() != EnumStrength.NONE;
+        return theCreature.isGettingGarlicDamage(theCreature.world) != EnumStrength.NONE;
     }
 }

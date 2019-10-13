@@ -55,6 +55,8 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
@@ -452,17 +454,17 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Nonnull
     @Override
-    public EnumStrength isGettingGarlicDamage(boolean forcerefresh) {
+    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            garlic_cache = Helper.getGarlicStrength(player);
+            garlic_cache = Helper.getGarlicStrength(player, iWorld);
         }
         return garlic_cache;
     }
 
     @Override
-    public boolean isGettingSundamage(boolean forcerefresh) {
+    public boolean isGettingSundamage(IWorld iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            sundamage_cache = Helper.gettingSundamge(player);
+            sundamage_cache = Helper.gettingSundamge(player, iWorld, player.world.getProfiler());
         }
         return sundamage_cache;
     }
@@ -650,14 +652,15 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onUpdate() {
-        player.getEntityWorld().getProfiler().startSection("vampirism_vampirePlayer");
+        World world = player.getEntityWorld();
+        world.getProfiler().startSection("vampirism_vampirePlayer");
         int level = getLevel();
         if (level > 0) {
             if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 0) {
-                isGettingSundamage(true);
+                isGettingSundamage(world, true);
             }
             if (player.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 0) {
-                isGettingGarlicDamage(true);
+                isGettingGarlicDamage(world, true);
             }
         } else {
             sundamage_cache = false;
@@ -673,12 +676,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 this.sleepTimer = 100;
             }
 
-            if (!player.getEntityWorld().isRemote) {
-                BlockState state = player.getEntityWorld().getBlockState(player.getBedLocation());
-                boolean bed = state.getBlock().isBed(state, player.getEntityWorld(), player.getBedLocation(), player);
+            if (!world.isRemote) {
+                BlockState state = world.getBlockState(player.getBedLocation());
+                boolean bed = state.getBlock().isBed(state, world, player.getBedLocation(), player);
                 if (!bed) {
                     wakeUpPlayer(true, true, false);
-                } else if (!player.getEntityWorld().isDaytime()) {
+                } else if (!world.isDaytime()) {
                     wakeUpPlayer(false, true, true);
                 }
             }
@@ -700,13 +703,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 boolean syncToAll = false;
                 CompoundNBT syncPacket = new CompoundNBT();
 
-                if (isGettingSundamage()) {
+                if (isGettingSundamage(world)) {
                     handleSunDamage(false);
                 } else if (ticksInSun > 0) {
                     ticksInSun--;
                 }
-                if (isGettingGarlicDamage() != EnumStrength.NONE) {
-                    DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(), player.ticksExisted);
+                if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
+                    DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), player.ticksExisted);
                 }
                 if (player.isAlive() && player.isInWater()) {
                     player.setAir(300);
@@ -752,7 +755,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         } else {
             if (level > 0) {
                 actionHandler.updateActions();
-                if (isGettingSundamage()) {
+                if (isGettingSundamage(world)) {
                     handleSunDamage(true);
                 } else if (ticksInSun > 0) {
                     ticksInSun--;
@@ -770,7 +773,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 feedBiteTickCounter = 0;
             }
         }
-        player.world.getProfiler().endSection();
+        world.getProfiler().endSection();
     }
 
     @Override

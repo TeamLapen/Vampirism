@@ -13,6 +13,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -150,18 +151,18 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
 
     @Nonnull
     @Override
-    public EnumStrength isGettingGarlicDamage() {
+    public EnumStrength isGettingGarlicDamage(IWorld iWorld) {
         return EnumStrength.NONE;
     }
 
     @Nonnull
     @Override
-    public EnumStrength isGettingGarlicDamage(boolean forcerefresh) {
+    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forcerefresh) {
         return EnumStrength.NONE;
     }
 
     @Override
-    public boolean isGettingSundamage(boolean forcerefresh) {
+    public boolean isGettingSundamage(IWorld world, boolean forcerefresh) {
         return false;
     }
 

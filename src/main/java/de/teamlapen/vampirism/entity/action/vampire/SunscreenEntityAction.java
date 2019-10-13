@@ -41,7 +41,7 @@ public class SunscreenEntityAction<T extends CreatureEntity & IEntityActionUser>
         if (!entity.getEntityWorld().isDaytime() || entity.getEntityWorld().isRaining()) {//Not perfectly accurate (the actual sundamage checks for celestial angle and also might exclude certain dimensions and biomes
             return 0;
         }
-        return ((IVampire) entity).isGettingSundamage() ? 3 : 1;
+        return ((IVampire) entity).isGettingSundamage(entity.getEntityWorld()) ? 3 : 1;
     }
 
     @Override

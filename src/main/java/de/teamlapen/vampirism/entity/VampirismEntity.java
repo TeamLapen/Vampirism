@@ -34,6 +34,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -264,19 +265,19 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         return SoundEvents.ENTITY_HOSTILE_SWIM;
     }
 
-    protected boolean isLowLightLevel() {
+    protected boolean isLowLightLevel(IWorld iWorld) {
         BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
 
-        if (this.world.getLightFor(LightType.SKY, blockpos) > this.rand.nextInt(32)) {
+        if (iWorld.getLightFor(LightType.SKY, blockpos) > this.rand.nextInt(32)) {
             return false;
         } else {
-            int i = this.world.getLight(blockpos);
+            int i = iWorld.getLight(blockpos);
 
-            if (this.world.isThundering()) {
-                int j = this.world.getSkylightSubtracted();
-                this.world.setLastLightningBolt(10);
-                i = this.world.getLight(blockpos);
-                this.world.setLastLightningBolt(j);
+            if (iWorld instanceof World && ((World) iWorld).isThundering()) {
+                int j = iWorld.getSkylightSubtracted();
+                ((World) iWorld).setLastLightningBolt(10);
+                i = iWorld.getLight(blockpos);
+                ((World) iWorld).setLastLightningBolt(j);
             }
 
             return i <= this.rand.nextInt(8);
@@ -297,13 +298,8 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     protected void setDontDropEquipment() {
-        for (int i = 0; i < this.inventoryArmorDropChances.length; ++i) {
-            this.inventoryArmorDropChances[i] = 0;
-        }
-
-        for (int j = 0; j < this.inventoryHandsDropChances.length; ++j) {
-            this.inventoryHandsDropChances[j] = 0;
-        }
+        Arrays.fill(this.inventoryArmorDropChances, 0);
+        Arrays.fill(this.inventoryHandsDropChances, 0);
     }
 
     /**

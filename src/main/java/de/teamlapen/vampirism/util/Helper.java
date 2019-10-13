@@ -19,9 +19,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.profiler.IProfiler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -48,29 +50,26 @@ public class Helper {
      * @param entity
      * @return
      */
-    public static boolean gettingSundamge(LivingEntity entity) {
-        entity.getEntityWorld().getProfiler().startSection("vampirism_checkSundamage");
+    public static boolean gettingSundamge(LivingEntity entity, IWorld world, @Nullable IProfiler profiler) {
+        if (profiler != null) profiler.startSection("vampirism_checkSundamage");
         if (entity instanceof PlayerEntity && entity.isSpectator()) return false;
-        if (VampirismAPI.sundamageRegistry().getSundamageInDim(entity.getEntityWorld().getDimension().getType())) {
-            if (!entity.getEntityWorld().isRaining()) {
-                float angle = entity.getEntityWorld().getCelestialAngle(1.0F);
+        if (VampirismAPI.sundamageRegistry().getSundamageInDim(world.getDimension().getType())) {
+            if (!(world instanceof World) || !((World) world).isRaining()) {
+                float angle = world.getCelestialAngle(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                 if (angle > 0.78 || angle < 0.24) {
                     BlockPos pos = new BlockPos(entity.posX, entity.posY + MathHelper.clamp(entity.getHeight() / 2.0F, 0F, 2F), entity.posZ);
-
-                    if (canBlockSeeSun(entity.getEntityWorld(), pos)) {
+                    if (canBlockSeeSun(world, pos)) {
                         try {
-                            Biome biome = entity.getEntityWorld().getBiome(pos);
+                            Biome biome = world.getBiome(pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (!TotemTileEntity.isInsideVampireAreaCached(entity.getEntityWorld().getDimension(), new BlockPos(entity.posX, entity.posY + 1, entity.posZ))) { //For some reason client returns different value for #getPosition than server
-                                    entity.getEntityWorld().getProfiler().endSection();
+                                if (!TotemTileEntity.isInsideVampireAreaCached(world.getDimension(), new BlockPos(entity.posX, entity.posY + 1, entity.posZ))) { //For some reason client returns different value for #getPosition than server
+                                    if (profiler != null) profiler.endSection();
                                     return true;
                                 }
-
-
                             }
                         } catch (NullPointerException e) {
-                            //Strange thing which happen in 1.7.10, not sure about 1.8
+                            //Strange thing which happen in 1.7.10, not sure about 1.14
                         }
 
                     }
@@ -78,17 +77,16 @@ public class Helper {
 
             }
         }
-        entity.getEntityWorld().getProfiler().endSection();
+        if (profiler != null) profiler.endSection();
 
         return false;
     }
 
-    public static boolean canBlockSeeSun(World world, BlockPos pos) {
+    public static boolean canBlockSeeSun(IWorld world, BlockPos pos) {
         if (pos.getY() >= world.getSeaLevel()) {
             return world.isSkyLightMax(pos);
         } else {
             BlockPos blockpos = new BlockPos(pos.getX(), world.getSeaLevel(), pos.getZ());
-
             if (!world.isSkyLightMax(blockpos)) {
                 return false;
             } else {
@@ -105,21 +103,19 @@ public class Helper {
                             return false;
                         }
                     }
-
                 }
-
                 return true;
             }
         }
     }
 
     @Nonnull
-    public static EnumStrength getGarlicStrength(Entity e) {
-        return getGarlicStrengthAt(e.getEntityWorld(), e.getPosition());
+    public static EnumStrength getGarlicStrength(Entity e, IWorld world) {
+        return getGarlicStrengthAt(world, e.getPosition());
     }
 
     @Nonnull
-    public static EnumStrength getGarlicStrengthAt(World world, BlockPos pos) {
+    public static EnumStrength getGarlicStrengthAt(IWorld world, BlockPos pos) {
         return VampirismAPI.getGarlicChunkHandler(world).getStrengthAtChunk(new ChunkPos(pos));
     }
 

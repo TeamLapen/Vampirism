@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
 import org.apache.logging.log4j.LogManager;
@@ -81,8 +82,8 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     @Override
-    public boolean isGettingSundamage(LivingEntity entity) {
-        return Helper.gettingSundamge(entity);
+    public boolean isGettingSundamage(LivingEntity entity, IWorld world) {
+        return Helper.gettingSundamge(entity, world, null);
     }
 
 

@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.dimension.DimensionType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,8 +95,8 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
 
         @Nonnull
         @Override
-        public IGarlicChunkHandler getHandler(World world) {
-            return handlers.computeIfAbsent(world.dimension.getType(), k -> new GarlicChunkHandler());
+        public IGarlicChunkHandler getHandler(IWorld world) {
+            return handlers.computeIfAbsent(world.getDimension().getType(), k -> new GarlicChunkHandler());
         }
     }
 

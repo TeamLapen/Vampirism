@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -163,7 +163,7 @@ public class VampirismAPI {
      * @return The {@link IGarlicChunkHandler} for the given world
      */
     @Nonnull
-    public static IGarlicChunkHandler getGarlicChunkHandler(World world) {
+    public static IGarlicChunkHandler getGarlicChunkHandler(IWorld world) {
         return garlicHandlerProvider.getHandler(world);
     }
 

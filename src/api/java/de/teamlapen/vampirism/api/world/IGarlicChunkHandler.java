@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.api.world;
 
 import de.teamlapen.vampirism.api.EnumStrength;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorld;
 
 import javax.annotation.Nonnull;
 
@@ -49,6 +49,6 @@ public interface IGarlicChunkHandler {
         void clear();
 
         @Nonnull
-        IGarlicChunkHandler getHandler(World world);
+        IGarlicChunkHandler getHandler(IWorld world);
     }
 }

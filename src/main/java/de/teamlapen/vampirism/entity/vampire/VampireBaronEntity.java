@@ -57,8 +57,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     public VampireBaronEntity(EntityType<? extends VampireBaronEntity> type, World world) {
         super(type, world, true);
-
-
         this.garlicResist = EnumStrength.MEDIUM;
     }
 
@@ -102,7 +100,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 //            return false;
 //        }
         BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
-
         return ModBlocks.cursed_earth.equals(worldIn.getBlockState(blockpos.down()).getBlock()) && super.canSpawn(worldIn, spawnReasonIn);
     }
 
@@ -161,7 +158,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             updateEntityAttributes(false);
         }
 
-        if (!this.world.isRemote && this.isGettingSundamage()) {
+        if (!this.world.isRemote && this.isGettingSundamage(world)) {
             this.teleportAway();
 
         }

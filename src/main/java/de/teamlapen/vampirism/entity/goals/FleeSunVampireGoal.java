@@ -23,6 +23,6 @@ public class FleeSunVampireGoal<T extends CreatureEntity & IVampire> extends Fle
 
     @Override
     protected boolean shouldFlee() {
-        return vampire.isGettingSundamage() && !vampire.isIgnoringSundamage();
+        return vampire.isGettingSundamage(vampire.world) && !vampire.isIgnoringSundamage();
     }
 }

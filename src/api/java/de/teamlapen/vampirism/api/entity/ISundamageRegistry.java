@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
 
@@ -55,9 +56,10 @@ public interface ISundamageRegistry {
     boolean getSundamageInDim(DimensionType dim);
 
     /**
-     * Checks if the given entity could receive sun damage at its current position
+     * Checks if the given entity could receive sun damage at its current position.
+     * Do not use entity.getEntityWorld during world gen
      */
-    boolean isGettingSundamage(LivingEntity entity);
+    boolean isGettingSundamage(LivingEntity entity, IWorld world);
 
     /**
      * Specifies if vampires should get sundamage in this dimension

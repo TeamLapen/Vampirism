@@ -43,6 +43,7 @@ import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -255,7 +256,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         return iMob ? ModEntities.advanced_vampire_imob : ModEntities.advanced_vampire;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     protected ResourceLocation getLootTable() {
         return LootHandler.ADVANCED_VAMPIRE;
@@ -282,9 +283,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> {
-            return difficulty == net.minecraft.world.Difficulty.HARD;
-        }));//Only break doors on hard difficulty
+        this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> difficulty == net.minecraft.world.Difficulty.HARD));//Only break doors on hard difficulty
         this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
         this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
         this.goalSelector.addGoal(3, new FleeGarlicVampireGoal(this, 0.9, false));

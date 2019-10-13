@@ -114,21 +114,22 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
         if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
-            if (isGettingSundamage(true) || isGettingGarlicDamage(true) != EnumStrength.NONE) return false;
+            if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
+                return false;
             if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
                 if (spawnReasonIn != SpawnReason.CHUNK_GENERATION) {
 
-                    if (this.world.isDaytime() && rand.nextInt(5) != 0) {
+                    if (worldIn.getDimension().isDaytime() && rand.nextInt(5) != 0) {
                         return false;
                     }
-                    if (this.world.findNearestStructure("Village", getPosition(), 1, false) != null) {
+                    if (this.world.isBlockPresent(getPosition()) && worldIn instanceof World && ((World) worldIn).findNearestStructure("Village", getPosition(), 1, false) != null) {
                         if (getRNG().nextInt(60) != 0) {
                             return false;
                         }
                     }
 
                     if (spawnRestriction.level >= SpawnRestriction.SPECIAL.level) {
-                        if (!getCanSpawnHereRestricted()) {
+                        if (!getCanSpawnHereRestricted(worldIn)) {
                             return false;
                         }
                     }
@@ -164,17 +165,17 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Nonnull
     @Override
-    public EnumStrength isGettingGarlicDamage(boolean forcerefresh) {
+    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            garlicCache = Helper.getGarlicStrength(this);
+            garlicCache = Helper.getGarlicStrength(this, iWorld);
         }
         return garlicCache;
     }
 
     @Override
-    public boolean isGettingSundamage(boolean forceRefresh) {
+    public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this));
+        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.world.getProfiler()));
     }
 
     @Override
@@ -185,18 +186,18 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public void livingTick() {
         if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
-            isGettingGarlicDamage(true);
+            isGettingGarlicDamage(world, true);
         }
         if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(true);
+            isGettingSundamage(world, true);
         }
         if (!world.isRemote) {
-            if (isGettingSundamage() && ticksExisted % 40 == 11) {
+            if (isGettingSundamage(world) && ticksExisted % 40 == 11) {
                 double dmg = getAttribute(VReference.sunDamage).getValue();
                 if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
             }
-            if (isGettingGarlicDamage() != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(), this.ticksExisted);
+            if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), this.ticksExisted);
             }
         }
         if (!this.world.isRemote) {
@@ -279,11 +280,10 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Checks if light level is low enough
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
      */
-    private boolean getCanSpawnHereRestricted() {
-        if (!this.world.isBlockPresent(this.getPosition())) return false;
-        boolean vampireBiome = ModBiomes.vampire_forest.equals(this.world.getBiome(this.getPosition()));
-        if (!vampireBiome) return isLowLightLevel();
-        BlockState iblockstate = this.world.getBlockState((new BlockPos(this)).down());
+    private boolean getCanSpawnHereRestricted(IWorld iWorld) {
+        boolean vampireBiome = ModBiomes.vampire_forest.equals(iWorld.getBiome(this.getPosition()));
+        if (!vampireBiome) return isLowLightLevel(iWorld);
+        BlockState iblockstate = iWorld.getBlockState((new BlockPos(this)).down());
         return ModBlocks.cursed_earth.equals(iblockstate.getBlock());
     }
 
