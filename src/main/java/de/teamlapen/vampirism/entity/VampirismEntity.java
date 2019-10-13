@@ -41,14 +41,6 @@ import java.util.Random;
  */
 public abstract class VampirismEntity extends CreatureEntity implements IEntityWithHome, IVampirismEntity {
 
-    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && (spawnPredicateLight(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
-    }
-
-    public static boolean spawnPredicateHunter(EntityType<? extends VampirismEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
-    }
-
     public static boolean spawnPredicateLight(IWorld world, BlockPos blockPos, Random random) {
         if (world.getLightFor(LightType.SKY, blockPos) > random.nextInt(32)) {
             return false;
