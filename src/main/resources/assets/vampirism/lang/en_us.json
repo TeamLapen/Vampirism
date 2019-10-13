@@ -530,7 +530,7 @@
   "command.vampirism.base.vampire_biome.time_warning": "This will take a long time. Please use '/%s %s !yes', if you are sure",
   "command.vampirism.base.vampire_biome.searching": "Looking for a Vampire Forest Biome. Please wait",
   "command.vampirism.base.vampire_biome.not_found": "No Vampire Forest Biome was found.",
-  "command.vampirism.base.vampire_biome.found": "Found a Vampire Forest Biome %s",
+  "command.vampirism.base.vampire_biome.found": "The nearest Vampire Forest Biome is at %s %s",
   "command.vampirism.base.vampire_biome.disabled": "The Vampire Biome is disabled in the config file",
   "command.vampirism.base.changelog.newversion": "There is no new version available",
   "command.vampirism.base.bind_action.success": "Successfully bound action %s to action key %s",

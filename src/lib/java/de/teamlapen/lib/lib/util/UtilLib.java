@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.command.CommandSource;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
@@ -29,7 +28,6 @@ import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -523,10 +521,9 @@ public class UtilLib {
      * @param world
      * @param center   Pos to start with
      * @param maxDist  Max radius
-     * @param listener Will be notified about status updates. Can be null
      * @return
      */
-    public static ChunkPos findNearBiome(World world, BlockPos center, int maxDist, List<Biome> biomes, CommandSource listener) {
+    public static ChunkPos findNearBiome(World world, BlockPos center, int maxDist, List<Biome> biomes) {
         long start = System.currentTimeMillis();
         maxDist = (maxDist / 20) * 20;//Round it
         long maxop = (((long) maxDist) * maxDist + maxDist) / 2;
@@ -558,11 +555,10 @@ public class UtilLib {
                     cx = i - 1;
                 }
             }
-            if (listener != null && (i * 10) % maxDist == 0) {
+            if ((i * 10) % maxDist == 0) {
                 long op = (((long) i) * i + i) / 2;
                 double perc = ((double) op / maxop) * 100;
                 LOGGER.trace("Search {} percent finished", (int) perc);
-                listener.sendFeedback(new StringTextComponent(((int) perc) + "% finished"), false);
             }
 
         }
