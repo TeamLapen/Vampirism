@@ -41,7 +41,14 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
         if (vampire.wantsBlood()) {
             List<CreatureEntity> list = vampire.getEntityWorld().getEntitiesWithinAABB(CreatureEntity.class, getBiteBoundingBox(), EntityPredicates.NOT_SPECTATING.and((entity) -> entity != vampire && entity.isAlive()));
             if (list.size() > 1) {
-                list.sort((o1, o2) -> (int) (vampire.getDistanceSq(o1) - vampire.getDistanceSq(o2)));
+                try {
+                    list.sort((o1, o2) -> (int) (vampire.getDistanceSq(o1) - vampire.getDistanceSq(o2)));
+                } catch (IllegalArgumentException e) {
+                    //Might be caused by two entities with the same id (Entity#equals -> true) being included in the list for some reason, which habe different positions (compare -> !=0). This violates the comparator contract.
+                    //Alternatively, some mod has a strange equals implementation
+                    //However, as this is not a regular scenario, let's just ignore it and skip sorting the list.
+                    //java.lang.IllegalArgumentException: Comparison method violates its general contract
+                }
             }
 
             for (CreatureEntity o : list) {
