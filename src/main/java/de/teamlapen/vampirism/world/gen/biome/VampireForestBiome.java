@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.world.gen.biome;
 
-import de.teamlapen.vampirism.api.world.VampireBiome;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
