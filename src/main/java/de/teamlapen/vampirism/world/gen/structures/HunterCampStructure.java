@@ -72,9 +72,7 @@ public class HunterCampStructure extends ScatteredStructure<NoFeatureConfig> {
 
         @Override
         public void init(@Nonnull ChunkGenerator<?> generator, @Nonnull TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn) {
-            HunterCampPieces.Fireplace hunterCamp = new HunterCampPieces.Fireplace(this.rand, chunkX, 63, chunkZ, biomeIn.getSurfaceBuilderConfig().getTop().getBlock());
-            hunterCamp.buildComponent(hunterCamp, components, rand);
-            this.components.add(hunterCamp);
+            HunterCampPieces.init(chunkX, chunkZ, biomeIn, this.rand, this.components);
             this.recalculateStructureSize();
         }
     }
