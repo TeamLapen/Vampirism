@@ -67,7 +67,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     @Override
     public boolean attackEntityAsMob(Entity entity) {
         boolean flag = super.attackEntityAsMob(entity);
-        if (flag && this.getHeldItemMainhand() == null) {
+        if (flag && this.getHeldItemMainhand().isEmpty()) {
             this.swingArm(EnumHand.MAIN_HAND);  //Swing stake if nothing else is held
         }
         return flag;
