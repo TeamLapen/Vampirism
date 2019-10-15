@@ -14,7 +14,10 @@ import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.ModCommands;
+import de.teamlapen.vampirism.core.ModEventHandler;
+import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.RegistryManager;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -237,7 +240,6 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         proxy.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
         modCompatLoader.onInitStep(IInitListener.Step.LOAD_COMPLETE, event);
-        ModRecipes.init();
     }
 
     private void processIMC(final InterModProcessEvent event) {
@@ -283,7 +285,6 @@ public class VampirismMod {
         StructureManager.init();
         Permissions.init();
         VampirismEntitySelectors.registerSelectors();
-        ModCommands.registerArgumentTypes();
 
         MinecraftForge.EVENT_BUS.register(new HalloweenSpecial());
 

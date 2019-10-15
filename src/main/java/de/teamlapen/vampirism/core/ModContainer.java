@@ -20,7 +20,7 @@ public class ModContainer {
     public static final ContainerType<AltarInfusionContainer> altar_infusion = getNull();
     public static final ContainerType<BloodGrinderContainer> blood_grinder = getNull();
 
-    public static void registerContainer(IForgeRegistry<ContainerType<?>> registry) {
+    static void registerContainer(IForgeRegistry<ContainerType<?>> registry) {
         registry.register(new ContainerType<>(HunterTrainerContainer::new).setRegistryName(REFERENCE.MODID, "hunter_trainer"));
         registry.register(new ContainerType<>(AlchemicalCauldronContainer::new).setRegistryName(REFERENCE.MODID, "alchemical_cauldron"));
         registry.register(new ContainerType<>(new BloodPotionTableContainer.Factory()).setRegistryName(REFERENCE.MODID, "blood_potion_table"));

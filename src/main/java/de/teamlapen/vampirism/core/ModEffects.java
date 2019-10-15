@@ -78,7 +78,7 @@ public class ModEffects {
     }
 
 
-    static void fixMapping(RegistryEvent.MissingMappings.Mapping<Effect> m) {
+    static void fixMapping(RegistryEvent.MissingMappings.Mapping<Effect> m) {//TODO still needed
         if ("night_vision".equals(m.key.getPath())) {
             m.ignore();
         }

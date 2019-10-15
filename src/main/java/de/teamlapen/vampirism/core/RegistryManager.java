@@ -56,11 +56,13 @@ public class RegistryManager implements IInitListener {
                 ModEntities.registerCustomExtendedCreatures();
                 ModItems.registerCraftingRecipes();
                 ModAdvancements.registerAdvancements();
+                ModCommands.registerArgumentTypes();
                 break;
             case LOAD_COMPLETE:
                 if (ModEffects.checkNightVision()) {
                     ModEffects.fixNightVisionEffecTypes();
                 }
+                ModRecipes.registerLiquidColors();
                 break;
             case PROCESS_IMC:
                 ModBiomes.addFeatures();
