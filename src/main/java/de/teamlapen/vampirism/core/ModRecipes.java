@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Maps;
+
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.inventory.recipes.*;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -38,7 +39,7 @@ public class ModRecipes {
 
     private static final Map<Item, Integer> liquidColors = Maps.newHashMap();
 
-    public static void init() {
+    static void registerLiquidColors() {
         registerLiquidColor(ModItems.holy_water_bottle_normal, 0x6666FF);
         registerLiquidColor(ModItems.holy_water_bottle_enhanced, 0x6666FF);
         registerLiquidColor(ModItems.holy_water_bottle_ultimate, 0x6666FF);

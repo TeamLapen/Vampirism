@@ -70,10 +70,9 @@ public class ModCommands {
         }
     }
 
-    public static void registerArgumentTypes() {
+    static void registerArgumentTypes() {
         ArgumentTypes.register("vampirism_faction", FactionArgument.class, new ArgumentSerializer<>(FactionArgument::new));
         ArgumentTypes.register("vampirism_skill", SkillArgument.class, new ArgumentSerializer<>(SkillArgument::new));
         ArgumentTypes.register("vampirism_action", ActionArgument.class, new ArgumentSerializer<>(ActionArgument::new));
-
     }
 }
