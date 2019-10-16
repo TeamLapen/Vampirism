@@ -44,6 +44,7 @@ import de.teamlapen.vampirism.proxy.ServerProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
+import de.teamlapen.vampirism.world.WorldGenManager;
 import de.teamlapen.vampirism.world.gen.structures.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.data.DataGenerator;
@@ -243,8 +244,8 @@ public class VampirismMod {
     }
 
     private void processIMC(final InterModProcessEvent event) {
-        registryManager.onInitStep(IInitListener.Step.PROCESS_IMC, event);
         finishAPI2();
+        registryManager.onInitStep(IInitListener.Step.PROCESS_IMC, event);
 
         if (inDev) {
             Tests.runBackgroundTests();
@@ -302,10 +303,11 @@ public class VampirismMod {
         SkillManager skillManager = new SkillManager();
         GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
         ActionManagerEntity entityActionManager = new ActionManagerEntity();
+        WorldGenManager worldGenRegistry = new WorldGenManager();
 
         biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
         BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
-        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, bloodPotionRegistry, entityActionManager);
+        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, bloodPotionRegistry, entityActionManager, worldGenRegistry);
         VampirismAPI.setUpAccessors(new GarlicChunkHandler.Provider());
     }
 

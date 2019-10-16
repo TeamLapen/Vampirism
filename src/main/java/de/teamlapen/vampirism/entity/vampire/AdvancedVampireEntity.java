@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import com.mojang.authlib.GameProfile;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -11,6 +12,7 @@ import de.teamlapen.vampirism.api.world.IVillageAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
@@ -32,6 +34,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -41,7 +44,6 @@ import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -308,6 +310,11 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
         public IMob(EntityType<? extends AdvancedVampireEntity> type, World world) {
             super(type, world);
+        }
+
+        @Override
+        protected ResourceLocation getLootTable() {
+            return ModLootTables.advanced_vampire;
         }
     }
 

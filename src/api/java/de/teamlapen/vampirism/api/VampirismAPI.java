@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api;
 
-import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -12,15 +11,14 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
+import de.teamlapen.vampirism.api.world.IWorldGenManager;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.dimension.Dimension;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
 import javax.annotation.Nonnull;
-import java.util.Set;
 
 /**
  * Class for core api methods
@@ -39,10 +37,10 @@ public class VampirismAPI {
     private static IVampireVisionRegistry vampireVisionRegistry;
     private static IBloodPotionRegistry bloodPotionRegistry;
     private static IGarlicChunkHandler.Provider garlicHandlerProvider;
-    private static Set<Dimension> worldGenDimensions = Sets.newHashSet();
     private static ISkillManager skillManager;
     private static IActionManager actionManager;
     private static IEntityActionManager entityActionManager;
+    private static IWorldGenManager worldGenRegistry;
 
     public static ISkillManager skillManager() {
         return skillManager;
@@ -90,40 +88,27 @@ public class VampirismAPI {
     }
 
     /**
-     * Makes Vampirism execute it's worldgen in this dimension
+     * @return The world gen registry
      */
-    public static void addDimensionForWorldgen(Dimension id) {
-        worldGenDimensions.add(id);
-    }
-
-    /**
-     * Removes a dimensions from Vampirism's worldgen if it has been added before
-     */
-    public static void removeDimensionFromWorldgen(Dimension id) {
-        worldGenDimensions.remove(id);
-    }
-
-    /**
-     * If Vampirism's world gen is enabled in this dimension
-     */
-    public static boolean isWorldGenEnabledFor(Dimension dim) {
-        return worldGenDimensions.contains(dim);
+    public static IWorldGenManager worldGenRegistry() {
+        return worldGenRegistry;
     }
 
     /**
      * Setup the API registries
      * FOR INTERNAL USAGE ONLY
      */
-    public static void setUpRegistries(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IVampirismEntityRegistry biteableReg, IActionManager actionMan, ISkillManager skillMan,
-                                       IVampireVisionRegistry vampireVisionReg, IBloodPotionRegistry bloodPotionReg, IEntityActionManager entityActionMan) {
-        factionRegistry = factionReg;
-        sundamageRegistry = sundamageReg;
-        entityRegistry = biteableReg;
-        actionManager = actionMan;
-        skillManager = skillMan;
-        vampireVisionRegistry = vampireVisionReg;
-        bloodPotionRegistry = bloodPotionReg;
-        entityActionManager = entityActionMan;
+    public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn, ISkillManager skillManagerIn,
+                                       IVampireVisionRegistry vampireVisionRegistryIn, IBloodPotionRegistry bloodPotionRegistryIn, IEntityActionManager entityActionManagerIn, IWorldGenManager worldGenRegistryIn) {
+        factionRegistry = factionRegistryIn;
+        sundamageRegistry = sundamageRegistryIn;
+        entityRegistry = entityRegistryIn;
+        actionManager = actionManagerIn;
+        skillManager = skillManagerIn;
+        vampireVisionRegistry = vampireVisionRegistryIn;
+        bloodPotionRegistry = bloodPotionRegistryIn;
+        entityActionManager = entityActionManagerIn;
+        worldGenRegistry = worldGenRegistryIn;
 
     }
 
@@ -151,13 +136,6 @@ public class VampirismAPI {
     public static IExtendedCreatureVampirism getExtendedCreatureVampirism(CreatureEntity creature) {
         return creature.getCapability(CAP_CREATURE, null).orElseThrow(() -> new IllegalStateException("Cannot get extended creature from creature"));
     }
-
-//    /**
-//     * Get the {@link IVampirismVillage} instance for the given village
-//     */
-//    public static IVampirismVillage getVampirismVillage(Village village) {
-//        return village.getCapability(CAP_VILLAGE, null).orElseThrow(() -> new IllegalStateException("Cannot get vampirism village from village"));
-//    }
 
     /**
      * @return The {@link IGarlicChunkHandler} for the given world

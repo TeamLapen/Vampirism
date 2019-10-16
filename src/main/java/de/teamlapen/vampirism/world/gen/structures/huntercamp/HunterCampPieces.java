@@ -1,10 +1,10 @@
-package de.teamlapen.vampirism.world.gen.structures;
+package de.teamlapen.vampirism.world.gen.structures.huntercamp;
 
 import com.google.common.collect.Lists;
 
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModWorldFeatures;
+import de.teamlapen.vampirism.core.ModFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -42,12 +42,12 @@ public abstract class HunterCampPieces extends StructurePiece {
         boolean craftingTableAdded = false;
 
         public Fireplace(Random random, int x, int y, int z, Block baseBlock) {
-            super(ModWorldFeatures.StructurePieceTypes.HUNTERCAMPFIRE, 0, x, y, z, baseBlock);
+            super(ModFeatures.hunter_camp_fireplace, 0, x, y, z, baseBlock);
             this.setCoordBaseMode(Direction.Plane.HORIZONTAL.random(random));
         }
 
         public Fireplace(TemplateManager templateManager, CompoundNBT nbt) {
-            super(ModWorldFeatures.StructurePieceTypes.HUNTERCAMPFIRE, nbt);
+            super(ModFeatures.hunter_camp_fireplace, nbt);
         }
 
         @Override
@@ -98,13 +98,13 @@ public abstract class HunterCampPieces extends StructurePiece {
         private int mirror;
 
         public Tent(int x, int y, int z, Direction direction, Block baseBlock) {
-            super(ModWorldFeatures.StructurePieceTypes.HUNTERCAMPTENT, 1, x, y, z, baseBlock);
+            super(ModFeatures.hunter_camp_tent, 1, x, y, z, baseBlock);
             this.setCoordBaseMode(direction);
             this.direction = direction;
         }
 
         public Tent(TemplateManager templateManager, CompoundNBT nbt) {
-            super(ModWorldFeatures.StructurePieceTypes.HUNTERCAMPTENT, nbt);
+            super(ModFeatures.hunter_camp_tent, nbt);
             direction = Direction.byHorizontalIndex(nbt.getInt("direction"));
             mirror = nbt.getInt("mirror");
         }
@@ -221,13 +221,13 @@ public abstract class HunterCampPieces extends StructurePiece {
         private Direction direction;
 
         public CraftingTable(int x, int y, int z, Direction direction, Block baseBlocks) {
-            super(ModWorldFeatures.StructurePieceTypes.HUNTERCAMPTABLE, 2, x, y, z, baseBlocks);
+            super(ModFeatures.hunter_camp_craftingtable, 2, x, y, z, baseBlocks);
             this.setCoordBaseMode(direction);
             this.direction = direction;
         }
 
         public CraftingTable(TemplateManager templateManager, CompoundNBT compoundNBT) {
-            super(ModWorldFeatures.StructurePieceTypes.HUNTERCAMPTABLE, compoundNBT);
+            super(ModFeatures.hunter_camp_craftingtable, compoundNBT);
             direction = Direction.byHorizontalIndex(compoundNBT.getInt("dir"));
         }
 

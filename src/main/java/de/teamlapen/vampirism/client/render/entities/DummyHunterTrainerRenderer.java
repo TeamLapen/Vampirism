@@ -11,9 +11,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class DummyHunterTrainerRenderer extends BipedRenderer<DummyHunterTrainerEntity, BasicHunterModel<DummyHunterTrainerEntity>> {
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base1.png");
+    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
 
-    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_extra.png");
+    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
 
     public DummyHunterTrainerRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel(), 0.5F);

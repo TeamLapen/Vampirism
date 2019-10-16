@@ -22,6 +22,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 /**
  * Handles all recipe registrations and reference.
  */
+@SuppressWarnings("unused")
 public class ModRecipes {
     public static final IRecipeType<IWeaponTableRecipe> WEAPONTABLE_CRAFTING_TYPE = IRecipeType.register(new ResourceLocation(REFERENCE.MODID, "weapontable_crafting").toString());
     public static final IRecipeType<AlchemicalCauldronRecipe> ALCHEMICAL_CAULDRON_TYPE = IRecipeType.register(new ResourceLocation(REFERENCE.MODID, "alchemical_cauldron").toString());
@@ -39,7 +40,7 @@ public class ModRecipes {
 
     private static final Map<Item, Integer> liquidColors = Maps.newHashMap();
 
-    static void registerLiquidColors() {
+    static void registerDefaultLiquidColors() {
         registerLiquidColor(ModItems.holy_water_bottle_normal, 0x6666FF);
         registerLiquidColor(ModItems.holy_water_bottle_enhanced, 0x6666FF);
         registerLiquidColor(ModItems.holy_water_bottle_ultimate, 0x6666FF);

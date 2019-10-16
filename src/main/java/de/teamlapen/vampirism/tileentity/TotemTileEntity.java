@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.tileentity;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -675,7 +676,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
 
     static {
         captureEntities = Maps.newHashMap();
-        captureEntities.put(VReference.HUNTER_FACTION, Lists.newArrayList(new CaptureEntityEntry(ModEntities.vampire_hunter, 10), new CaptureEntityEntry(ModEntities.advanced_hunter, 2)));
+        captureEntities.put(VReference.HUNTER_FACTION, Lists.newArrayList(new CaptureEntityEntry(ModEntities.hunter, 10), new CaptureEntityEntry(ModEntities.advanced_hunter, 2)));
         captureEntities.put(VReference.VAMPIRE_FACTION, Lists.newArrayList(new CaptureEntityEntry(ModEntities.vampire, 10), new CaptureEntityEntry(ModEntities.advanced_vampire, 2)));
     }
 

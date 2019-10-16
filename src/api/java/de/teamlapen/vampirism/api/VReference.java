@@ -74,7 +74,6 @@ public class VReference {
      * Filled during pre-init.
      */
     public static IPlayableFaction<IHunterPlayer> HUNTER_FACTION;
-    public static int castleDimId = 1000;
     public static IVampireVision vision_nightVision;
     public static IVampireVision vision_bloodVision;
 }

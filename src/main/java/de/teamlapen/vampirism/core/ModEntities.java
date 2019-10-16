@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Lists;
+
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -63,8 +64,8 @@ public class ModEntities {
     public static final EntityType<BasicVampireEntity> vampire;
     public static final EntityType<BasicVampireEntity.IMob> vampire_imob = getNull();
     public static final EntityType<VampireBaronEntity> vampire_baron;
-    public static final EntityType<BasicHunterEntity> vampire_hunter;
-    public static final EntityType<BasicHunterEntity.IMob> vampire_hunter_imob = getNull();
+    public static final EntityType<BasicHunterEntity> hunter;
+    public static final EntityType<BasicHunterEntity.IMob> hunter_imob = getNull();
     public static final EntityType<AggressiveVillagerEntity> villager_angry = getNull();
     public static final EntityType<ConvertedVillagerEntity> villager_converted = getNull();
 
@@ -73,7 +74,7 @@ public class ModEntities {
     static {
         //IMPORTANT - Must include all entity types that are used in vampire forest spawns
         ghost = prepareEntityType("ghost", EntityType.Builder.create(GhostEntity::new, EntityClassification.MONSTER).size(0.8F, 1.95F), true);
-        vampire_hunter = prepareEntityType("vampire_hunter", EntityType.Builder.create(BasicHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
+        hunter = prepareEntityType("hunter", EntityType.Builder.create(BasicHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
         hunter_trainer = prepareEntityType("hunter_trainer", EntityType.Builder.create(HunterTrainerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
         advanced_hunter = prepareEntityType("advanced_hunter", EntityType.Builder.create(AdvancedHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
         vampire_baron = prepareEntityType("vampire_baron", EntityType.Builder.create(VampireBaronEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), true);
@@ -134,8 +135,8 @@ public class ModEntities {
         registry.register(vampire);
         registry.register(prepareEntityType("vampire_imob", EntityType.Builder.create(BasicVampireEntity.IMob::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6f, 1.95f), false));
         registry.register(vampire_baron);
-        registry.register(vampire_hunter);
-        registry.register(prepareEntityType("vampire_hunter_imob", EntityType.Builder.create(BasicHunterEntity.IMob::new, VReference.HUNTER_CREATURE_TYPE).size(0.6f, 1.95f), false));
+        registry.register(hunter);
+        registry.register(prepareEntityType("hunter_imob", EntityType.Builder.create(BasicHunterEntity.IMob::new, VReference.HUNTER_CREATURE_TYPE).size(0.6f, 1.95f), false));
         registry.register(prepareEntityType("villager_angry", EntityType.Builder.create(AggressiveVillagerEntity::new, EntityClassification.CREATURE).size(0.6F, 1.95F), false));
         registry.register(prepareEntityType("villager_converted", EntityType.Builder.create(ConvertedVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), false));
         registry.register(prepareEntityType("converted_horse", EntityType.Builder.create(ConvertedHorseEntity::new, EntityClassification.CREATURE).size(1.3964844F, 1.6F), false));
@@ -160,7 +161,7 @@ public class ModEntities {
         EntitySpawnPlacementRegistry.register(special_dracula_halloween, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire);
         EntitySpawnPlacementRegistry.register(vampire, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire);
         EntitySpawnPlacementRegistry.register(vampire_baron, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampireBaronEntity::spawnPredicateBaron);
-        EntitySpawnPlacementRegistry.register(vampire_hunter, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HunterBaseEntity::spawnPredicateHunter);
+        EntitySpawnPlacementRegistry.register(hunter, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HunterBaseEntity::spawnPredicateHunter);
         EntitySpawnPlacementRegistry.register(villager_angry, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::func_223315_a);
         EntitySpawnPlacementRegistry.register(villager_converted, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::func_223315_a);
     }
