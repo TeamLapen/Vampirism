@@ -55,7 +55,7 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
 
     public TentTileEntity() {
         super(ModTiles.tent);
-        spawnerLogic.setEntityType(ModEntities.vampire_hunter);
+        spawnerLogic.setEntityType(ModEntities.hunter);
         spawnerLogic.setActivateRange(64);
         spawnerLogic.setSpawnRange(6);
         spawnerLogic.setMinSpawnDelay(600);

@@ -362,7 +362,7 @@ public class ModItems {
         registry.register(new VampireCloakItem(VampireCloakItem.EnumCloakColor.WHITEBLACK));
 
         registry.register(new SpawnEggItem(ModEntities.vampire, 0x8B15A3, 0xa735e3, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.vampire_hunter, 0x2d05f2, 0x2600e0, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_hunter_spawn_egg"));
+        registry.register(new SpawnEggItem(ModEntities.hunter, 0x2d05f2, 0x2600e0, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_hunter_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.advanced_vampire, 0x8B15A3, 0x560a7e, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.advanced_hunter, 0x2d05f2, 0x1a028c, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_hunter_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));

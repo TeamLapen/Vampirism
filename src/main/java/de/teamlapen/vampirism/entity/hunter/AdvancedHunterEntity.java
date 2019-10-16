@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.api.world.IVillageAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
@@ -33,6 +34,7 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -304,6 +306,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
         public IMob(EntityType<? extends AdvancedHunterEntity> type, World world) {
             super(type, world);
+        }
+
+        @Override
+        protected ResourceLocation getLootTable() {
+            return ModLootTables.advanced_hunter;
         }
     }
 

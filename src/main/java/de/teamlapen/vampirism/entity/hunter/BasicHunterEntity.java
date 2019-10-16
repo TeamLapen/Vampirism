@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.world.IVillageAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
@@ -38,6 +39,7 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -427,13 +429,18 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     //IMob -------------------------------------------------------------------------------------------------------------
     @Override
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
-        return iMob ? ModEntities.vampire_hunter_imob : ModEntities.vampire_hunter;
+        return iMob ? ModEntities.hunter_imob : ModEntities.hunter;
     }
 
     public static class IMob extends BasicHunterEntity implements net.minecraft.entity.monster.IMob {
 
         public IMob(EntityType<? extends BasicHunterEntity> type, World world) {
             super(type, world);
+        }
+
+        @Override
+        protected ResourceLocation getLootTable() {
+            return ModLootTables.hunter;
         }
     }
 

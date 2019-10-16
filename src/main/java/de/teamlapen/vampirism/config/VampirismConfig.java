@@ -125,9 +125,12 @@ public class VampirismConfig {
         public final ForgeConfigSpec.IntValue villageSeparation;
         public final ForgeConfigSpec.BooleanValue villageModify;
 
+
         public final ForgeConfigSpec.BooleanValue disableFangInfection;
         public final ForgeConfigSpec.BooleanValue disableMobBiteInfection;
         public final ForgeConfigSpec.BooleanValue disableHalloweenSpecial;
+        public final ForgeConfigSpec.BooleanValue disableVampireForest;
+        public final ForgeConfigSpec.BooleanValue disableHunterTentGen;
 
 
         Server(ForgeConfigSpec.Builder builder) {
@@ -183,7 +186,6 @@ public class VampirismConfig {
             });
             builder.pop();
 
-
             builder.push("village");
             villageModify = builder.comment("Whether to modify the village world gen (size and frequency)").define("villageModify", true);
             villageDistance = builder.comment("Village distance").defineInRange("villageDistance", 32, 1, 100); //TODO 1.14 improve comment
@@ -199,6 +201,8 @@ public class VampirismConfig {
             disableFangInfection = builder.comment("Disable vampire fangs being usable to infect yourself").define("disableFangInfection", false);
             disableHalloweenSpecial = builder.comment("Disable Halloween special event").define("disableHalloweenSpecialEvent", false);
             disableMobBiteInfection = builder.comment("Prevent vampire mobs from infecting players when attacking").define("disableMobBiteInfection", false);
+            disableVampireForest = builder.comment("Disable vampire forest generation").define("disableVampireForest", false);
+            disableHunterTentGen = builder.comment("Disable hunter camp generation").define("disableHunterTentGen", false);
 
             builder.pop();
 
@@ -263,17 +267,12 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue versionCheck;
         public final ForgeConfigSpec.BooleanValue collectStats;
 
-        public final ForgeConfigSpec.BooleanValue disableVampireForest;
-        public final ForgeConfigSpec.BooleanValue disableHunterTentGen;
-
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.comment("Common configuration settings")
                     .push("common");
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
-            disableVampireForest = builder.comment("Disable vampire forest generation").define("disableVampireForest", false);
-            disableHunterTentGen = builder.comment("Disable hunter camp generation").define("disableHunterTentGen", false);
             builder.pop();
         }
 

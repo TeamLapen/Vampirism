@@ -40,7 +40,7 @@ public class CheckForVampireBiomeCommand extends BasicCommand {
     }
 
     private static int checkForVampireBiome(CommandContext<CommandSource> context, ServerPlayerEntity entityPlayerMP, int radius, boolean force) {
-        if (VampirismConfig.COMMON.disableVampireForest.get()) {
+        if (VampirismConfig.SERVER.disableVampireForest.get()) {
             context.getSource().sendFeedback(new TranslationTextComponent("The Vampire Biome is disabled in the config file"), false);
             return 0;
         }

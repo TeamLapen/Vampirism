@@ -51,6 +51,7 @@ public class RegistryManager implements IInitListener {
         switch (step) {
             case COMMON_SETUP:
                 ModBiomes.addBiome();
+                ModFeatures.registerIgnoredBiomesForStructures();
                 ModEntities.registerConvertibles();
                 ModEntities.registerSpawns();
                 ModEntities.registerCustomExtendedCreatures();
@@ -62,7 +63,7 @@ public class RegistryManager implements IInitListener {
                 if (ModEffects.checkNightVision()) {
                     ModEffects.fixNightVisionEffecTypes();
                 }
-                ModRecipes.registerLiquidColors();
+                ModRecipes.registerDefaultLiquidColors();
                 break;
             case PROCESS_IMC:
                 ModBiomes.addFeatures();
@@ -118,7 +119,7 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterFeatures(RegistryEvent.Register<Feature<?>> event) {
 
-        ModWorldFeatures.registerFeatures(event.getRegistry());
+        ModFeatures.registerFeatures(event.getRegistry());
     }
 
     @SubscribeEvent
