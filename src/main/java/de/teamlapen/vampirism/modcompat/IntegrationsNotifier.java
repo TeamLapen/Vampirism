@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.modcompat;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.lib.lib.config.forge.Configuration;
 import de.teamlapen.lib.lib.config.forge.Property;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import java.util.List;
 
 public class IntegrationsNotifier {
 
-    private final static String[] available_compats = new String[]{"abyssalcraft", "biomesoplenty", "mca", "toroquest", "waila", "evilcraft", "tconstruct", "bloodmagic", "toughasnails"};
+    private final static String[] available_compats = new String[]{};
 
     /**
      * Check if there should be a notification about the integrations mods.
@@ -26,10 +25,10 @@ public class IntegrationsNotifier {
      * @return Empty list if no notification. Otherwise list of installed mod ids with potential compat
      */
     public static List<String> shouldNotifyAboutIntegrations() {
-        if (!Loader.isModLoaded(REFERENCE.INTEGRATIONS_MODID)) {
+        if (!ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID)) {
             List<String> installedMods = Lists.newArrayList();
             for (String s : available_compats) {
-                if (Loader.isModLoaded(s)) {
+                if (ModList.get().isLoaded(s)) {
                     installedMods.add(s);
                 }
             }

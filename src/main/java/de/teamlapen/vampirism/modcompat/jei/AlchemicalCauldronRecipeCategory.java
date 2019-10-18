@@ -1,20 +1,28 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.util.REFERENCE;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.*;
+import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeCategory;
-import net.minecraft.client.Minecraft;
+import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 
-public class AlchemicalCauldronRecipeCategory extends BlankRecipeCategory<AlchemicalCauldronRecipeWrapper> {
+public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<AlchemicalCauldronRecipe> {
 
 
     private final String localizedName;
     private final IDrawable background;
+    private final IDrawable icon;
+
     private final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
 
     private final IDrawableAnimated flame;
@@ -23,8 +31,9 @@ public class AlchemicalCauldronRecipeCategory extends BlankRecipeCategory<Alchem
 
 
     public AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
-        this.localizedName = ModBlocks.alchemical_cauldron.getLocalizedName();
-        background = guiHelper.createDrawable(location, 38, 10, 120, 70, 0, 30, 10, 0);
+        this.localizedName = UtilLib.translate(ModBlocks.alchemical_cauldron.getTranslationKey());
+        this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.alchemical_cauldron));
+        background = guiHelper.createDrawable(location, 38, 10, 120, 70);
 
         IDrawableStatic flameDrawable = guiHelper.createDrawable(location, 176, 0, 14, 14);
         flame = guiHelper.createAnimatedDrawable(flameDrawable, 300, IDrawableAnimated.StartDirection.TOP, true);
@@ -37,13 +46,13 @@ public class AlchemicalCauldronRecipeCategory extends BlankRecipeCategory<Alchem
 
     }
 
-
     @Override
-    public void drawExtras(Minecraft minecraft) {
-        flame.draw(minecraft, 29, 27);
-        arrow.draw(minecraft, 51, 25);
-        bubbles.draw(minecraft, 114, 19);
+    public void draw(AlchemicalCauldronRecipe recipe, double mouseX, double mouseY) {
+        flame.draw(29, 27);
+        arrow.draw(51, 25);
+        bubbles.draw(114, 19);
     }
+
 
     @Override
     public IDrawable getBackground() {
@@ -51,9 +60,15 @@ public class AlchemicalCauldronRecipeCategory extends BlankRecipeCategory<Alchem
     }
 
     @Override
-    public String getModName() {
-        return REFERENCE.NAME;
+    public IDrawable getIcon() {
+        return icon;
     }
+
+    @Override
+    public Class<? extends AlchemicalCauldronRecipe> getRecipeClass() {
+        return AlchemicalCauldronRecipe.class;
+    }
+
 
     @Override
     public String getTitle() {
@@ -61,12 +76,17 @@ public class AlchemicalCauldronRecipeCategory extends BlankRecipeCategory<Alchem
     }
 
     @Override
-    public String getUid() {
+    public ResourceLocation getUid() {
         return VampirismJEIPlugin.ALCHEMICAL_CAULDRON_RECIPE_UID;
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, AlchemicalCauldronRecipeWrapper recipeWrapper, IIngredients ingredients) {
+    public void setIngredients(AlchemicalCauldronRecipe alchemicalCauldronRecipeWrapper, IIngredients iIngredients) {
+
+    }
+
+    @Override
+    public void setRecipe(IRecipeLayout recipeLayout, AlchemicalCauldronRecipe recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup guiItemStackGroup = recipeLayout.getItemStacks();
         guiItemStackGroup.init(0, false, 87, 23);
         guiItemStackGroup.init(1, true, 15, 6);

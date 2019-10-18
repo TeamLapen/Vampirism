@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.command.CommandSource;
@@ -13,6 +12,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.event.ClickEvent;
 
 import java.util.List;
 
@@ -41,11 +41,12 @@ public class ChangelogCommand extends BasicCommand {
             context.getSource().sendFeedback(new StringTextComponent("-" + c), false);
         }
         context.getSource().sendFeedback(new StringTextComponent(""), false);
-        String template = UtilLib.translate("text.vampirism.update_message");
         String homepage = VampirismMod.instance.getVersionInfo().getHomePage();
-        template = template.replaceAll("@download@", newVersion.getUrl() == null ? homepage : newVersion.getUrl()).replaceAll("@forum@", homepage);
-        ITextComponent component = ITextComponent.Serializer.fromJson(template);
-        context.getSource().sendFeedback(component, false);
+
+        ITextComponent download = new TranslationTextComponent("text.vampirism.update_message.download").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? homepage : newVersion.getUrl())).setUnderlined(true).setColor(TextFormatting.BLUE));
+        ITextComponent changelog = new TranslationTextComponent("text.vampirism.update_message.changelog").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).setUnderlined(true));
+        ITextComponent modpage = new TranslationTextComponent("text.vampirism.update_message.modpage").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, homepage)).setUnderlined(true).setColor(TextFormatting.BLUE));
+        context.getSource().sendFeedback(download.appendText(" ").appendSibling(changelog).appendText(" ").appendSibling(modpage), false);
         return 1;
     }
 

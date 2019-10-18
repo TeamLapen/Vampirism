@@ -104,7 +104,6 @@ public class ModCompatLoader implements IInitListener {
                 ConfigCategory compatCat = config.getCategory(modCompat.getModID());
                 compatCat.setComment("Configure mod compatibility between Vampirism and " + modCompat.getModID());
                 if (config.getBoolean("enable_compat_" + modCompat.getModID(), compatCat.getName(), true, "If the compatibility for this mod should be loaded")) {
-                    modCompat.loadConfigs(config, compatCat);
                     loaded.add(modCompat);
                     LOGGER.trace(LogUtil.COMPAT, "Prepared {} compatibility", modCompat.getModID());
                 }

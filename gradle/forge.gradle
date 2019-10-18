@@ -9,6 +9,11 @@ repositories {
         url "http://dvs1.progwml6.com/files/maven"
     }
     maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    maven {
         //Local repo for custom forge builds.
         //Is not required to exist
         name = "LocalForge"
@@ -32,8 +37,8 @@ dependencies {
             name: "forge",
             version: "${project.minecraft_version}-${project.forge_version}"
     ])
-    //ompileOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}:api") //API for compile //TODO waiting for jei 1.14.4
-    //runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}") //Full for runtime
+    compileOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}:api") //API for compile
+    runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}") //Full for runtime
     
     //deobfCompile 'mcp.mobius.waila:Waila:' + config.waila_version
     //deobfCompile 'Waila:Waila:1.7.1_1.11.2' //Backup Waila on curseforge

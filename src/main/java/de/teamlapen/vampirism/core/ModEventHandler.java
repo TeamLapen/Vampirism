@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import de.teamlapen.vampirism.modcompat.IntegrationsNotifier;
 import de.teamlapen.vampirism.network.BloodValuePacket;
 import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
@@ -23,6 +24,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.OverworldChunkGenerator;
@@ -38,7 +40,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Array;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -90,24 +91,21 @@ public class ModEventHandler {
             if (isAdminLikePlayer || event.getPlayer().getRNG().nextInt(5) == 0) {
                 if (event.getPlayer().getRNG().nextInt(4) == 0) {
                     VersionChecker.Version newVersion = versionInfo.getNewVersion();
-                    //Inspired by @Vazikii's useful message
                     event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name));
-                    String template = UtilLib.translate("text.vampirism.update_message");
-                    template = template.replaceAll("@download@", newVersion.getUrl() == null ? versionInfo.getHomePage() : newVersion.getUrl()).replaceAll("@forum@", versionInfo.getHomePage());
-                    ITextComponent component = ITextComponent.Serializer.fromJson(template);
-                    event.getPlayer().sendMessage(component);
+                    ITextComponent download = new TranslationTextComponent("text.vampirism.update_message.download").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? versionInfo.getHomePage() : newVersion.getUrl())).setUnderlined(true).setColor(TextFormatting.BLUE));
+                    ITextComponent changelog = new TranslationTextComponent("text.vampirism.update_message.changelog").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).setUnderlined(true));
+                    ITextComponent modpage = new TranslationTextComponent("text.vampirism.update_message.modpage").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, versionInfo.getHomePage())).setUnderlined(true).setColor(TextFormatting.BLUE));
+                    event.getPlayer().sendMessage(download.appendText(" ").appendSibling(changelog).appendText(" ").appendSibling(modpage));
                 }
             }
 
         }
         if (isAdminLikePlayer) {
-            List<String> mods = Collections.emptyList();// TODO 1.14 IntegrationsNotifier.shouldNotifyAboutIntegrations();
+            List<String> mods = IntegrationsNotifier.shouldNotifyAboutIntegrations();
             if (!mods.isEmpty()) {
                 event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.integrations_available.first"));
                 event.getPlayer().sendMessage(new StringTextComponent(TextFormatting.BLUE + TextFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + TextFormatting.RESET));
-                String template = UtilLib.translate("text.vampirism.integrations_available.second");
-                template = template.replaceAll("@download@", REFERENCE.INTEGRATIONS_LINK);
-                event.getPlayer().sendMessage(ITextComponent.Serializer.fromJson(template));
+                event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.integrations_available.download").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.INTEGRATIONS_LINK)).setUnderlined(true)));
             }
 
         }

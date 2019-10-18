@@ -44,7 +44,7 @@ sourceSets {
     }
     main {
          java{
-             exclude '**/modcompat/*'
+             exclude '**/guide/*'
          }
         compileClasspath += sourceSets.lib.output
         compileClasspath += sourceSets.api.output

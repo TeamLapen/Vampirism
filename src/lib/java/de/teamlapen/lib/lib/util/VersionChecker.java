@@ -101,7 +101,7 @@ public class VersionChecker implements Runnable {
         @SuppressWarnings("unchecked")
         Map<String, Object> json = new Gson().fromJson(data, Map.class);
         Map<String, String> promos = (Map<String, String>) json.get("promos");
-        versionInfo.homePage = (String) json.get("homepage");
+        versionInfo.homePage = (String) json.getOrDefault("homepage", "");
         String rec = promos.get(MCPVersion.getMCVersion() + "-recommended");
         String lat = promos.get(MCPVersion.getMCVersion() + "-latest");
 
@@ -195,7 +195,7 @@ public class VersionChecker implements Runnable {
         private Version newVersion;
         private Version currentVersion;
         private boolean checked = false;
-        private String homePage;
+        private String homePage = "";
 
         public VersionInfo(ArtifactVersion current) {
             currentVersion = Version.from(current);
@@ -208,7 +208,7 @@ public class VersionChecker implements Runnable {
         }
 
         public
-        @Nullable
+        @Nonnull
         String getHomePage() {
             return homePage;
         }
