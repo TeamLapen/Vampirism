@@ -24,6 +24,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -211,5 +212,15 @@ public class ModEntities {
         EntityType<T> entry = type.build(REFERENCE.MODID + ":" + id);
         entry.setRegistryName(REFERENCE.MODID, id);
         return entry;
+    }
+
+    static void fixMapping(RegistryEvent.MissingMappings<EntityType<?>> missingMappings) {
+        missingMappings.getAllMappings().forEach((mapping) -> {
+            if (mapping.key.equals(new ResourceLocation("vampirism:vampire_hunter"))) {
+                mapping.remap(ModEntities.hunter);
+            } else if (mapping.key.equals(new ResourceLocation("vampirism:vampire_hunter_imob"))) {
+                mapping.remap(ModEntities.hunter_imob);
+            }
+        });
     }
 }

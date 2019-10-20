@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.world.gen.structures.huntercamp;
 
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -20,7 +21,8 @@ public class HunterCampStructure extends ScatteredStructure<NoFeatureConfig> {
 
     @Override
     public int getSize() {
-        return 1;//TODO 1.14 Structure
+        //just for legacy
+        return 1;
     }
 
     @Nonnull
@@ -31,23 +33,25 @@ public class HunterCampStructure extends ScatteredStructure<NoFeatureConfig> {
 
     @Nonnull
     @Override
+    @SuppressWarnings("ConstantConditions")
     public String getStructureName() {
+        //just for legacy
         return this.getRegistryName().toString();
     }
 
     @Override
     protected int getSeedModifier() {
-        return 14357617;//TODO 1.14 Structure
+        return 14357719;
     }
 
     @Override
-    protected int getBiomeFeatureDistance(ChunkGenerator<?> p_204030_1_) {
-        return 2;//Balance.general.HUNTER_CAMP_DENSITY;//TODO 1.14 Structure
+    protected int getBiomeFeatureDistance(ChunkGenerator<?> chunkGeneratorIn) {
+        return VampirismConfig.BALANCE.hunterTentDistance.get();
     }
 
     @Override
-    protected int getBiomeFeatureSeparation(ChunkGenerator<?> p_211745_1_) {
-        return 1;//super.getBiomeFeatureSeparation(p_211745_1_) >= Balance.general.HUNTER_CAMP_DENSITY?Balance.general.HUNTER_CAMP_DENSITY-1:super.getBiomeFeatureSeparation(p_211745_1_);//TODO 1.14 Structure
+    protected int getBiomeFeatureSeparation(ChunkGenerator<?> chunkGeneratorIn) {
+        return VampirismConfig.BALANCE.hunterTentSeperation.get();
     }
 
     public static class Start extends StructureStart {
