@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.tileentity;
 
+import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.blocks.AlchemicalCauldronBlock;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModTiles;
@@ -16,6 +17,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -29,7 +31,10 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -296,8 +301,19 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
             if (this.world != null && !this.world.isRemote) {
                 this.setRecipeUsed(recipe);
             }
+
+            Either<Ingredient, FluidStack> fluid = recipe.getFluid();
+            fluid.ifLeft(ingredient -> itemstackfluid.shrink(1));
+            fluid.ifRight(fluidStack -> {
+               this.items.set(0,FluidUtil.getFluidHandler(itemstackfluid).map(handler -> {
+                   FluidStack drained = handler.drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);
+                   if(drained.getAmount()<fluidStack.getAmount()){
+                       handler.drain(new FluidStack(fluidStack.getFluid(), FluidAttributes.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE); //For bucket containers we need to draw at least one bucket size
+                   }
+                   return handler.getContainer();
+               }).orElse(ItemStack.EMPTY));
+            });
             itemstackingredient.shrink(1);
-            itemstackfluid.shrink(1);
             recipeChecked = null;
         }
     }

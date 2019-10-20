@@ -4,7 +4,7 @@
     "item": "vampirism:garlic_beacon_core"
   },
   "ingredient": {
-    "item": "minecraft:black_wool"
+    "tag": "minecraft:wool"
   },
   "fluidItem": {
     "item": "vampirism:item_garlic"

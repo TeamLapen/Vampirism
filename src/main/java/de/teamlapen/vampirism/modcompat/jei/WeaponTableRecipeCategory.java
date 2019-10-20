@@ -64,7 +64,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     @Nonnull
     @Override
     public ResourceLocation getUid() {
-        return VampirismJEIPlugin.HUNTER_WEAPON_RECIPE_UID;
+        return VampirismJEIPlugin.WEAPON_TABLE_RECIPE_ID;
     }
 
     @Override

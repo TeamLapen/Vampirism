@@ -24,6 +24,7 @@ public class AlchemicalCauldronScreen extends ContainerScreen<AlchemicalCauldron
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
     }
