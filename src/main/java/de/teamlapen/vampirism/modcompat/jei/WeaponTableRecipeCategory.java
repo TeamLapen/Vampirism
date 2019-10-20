@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.recipes.ShapedWeaponTableRecipe;
@@ -9,15 +10,17 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -28,15 +31,43 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     private final String localizedName;
     private final IDrawable background;
     private final IDrawable icon;
-    private final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_clean.png");
-    @Nonnull
-    private final ICraftingGridHelper craftingGridHelper;
+    private final static ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_clean.png");
+    private static final ItemStack lavaStack = new ItemStack(Items.LAVA_BUCKET);
 
-    public WeaponTableRecipeCategory(IGuiHelper guiHelper) {
+
+    WeaponTableRecipeCategory(IGuiHelper guiHelper) {
         localizedName = UtilLib.translate(ModBlocks.weapon_table.getTranslationKey());
-        background = guiHelper.createDrawable(location, 32, 14, 134, 77);
-        craftingGridHelper = guiHelper.createCraftingGridHelper(1);
+        background = guiHelper.drawableBuilder(location, 32, 14, 134, 77).addPadding(0, 33, 0, 0).build();
         icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.weapon_table));
+    }
+
+    @Override
+    public void draw(IWeaponTableRecipe recipe, double mouseX, double mouseY) {
+
+        int x = 2;
+        int y = 80;
+        Minecraft minecraft = Minecraft.getInstance();
+        if (recipe.getRequiredLavaUnits() > 0) {
+            minecraft.getItemRenderer().renderItemIntoGUI(lavaStack, 83, 13);
+        }
+        if (recipe.getRequiredLevel() > 1) {
+            String level = UtilLib.translate("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+
+            minecraft.fontRenderer.drawString(level, x, y, Color.gray.getRGB());
+            y += minecraft.fontRenderer.FONT_HEIGHT + 2;
+        }
+        ISkill[] requiredSkills = recipe.getRequiredSkills();
+        if (requiredSkills != null && requiredSkills.length > 0) {
+            StringBuilder skills = new StringBuilder();
+            for (ISkill skill : recipe.getRequiredSkills()) {
+                skills.append(UtilLib.translate(skill.getTranslationKey())).append(" ");
+
+            }
+            String skillText = UtilLib.translate("gui.vampirism.hunter_weapon_table.skill", skills.toString());
+            minecraft.fontRenderer.drawSplitString(skillText, x, y, 132, Color.gray.getRGB());
+
+
+        }
     }
 
     @Nonnull
@@ -68,12 +99,13 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     }
 
     @Override
-    public void setIngredients(IWeaponTableRecipe iWeaponTableRecipe, IIngredients iIngredients) {
-
+    public void setIngredients(IWeaponTableRecipe recipe, IIngredients ingredients) {
+        ingredients.setInputIngredients(recipe.getIngredients());
+        ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
     }
 
     @Override
-    public void setRecipe(IRecipeLayout iRecipeLayout, IWeaponTableRecipe iWeaponTableRecipe, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout iRecipeLayout, IWeaponTableRecipe recipe, IIngredients ingredients) {
         int craftOutputSlot = 0;
         IGuiItemStackGroup guiItemStackGroup = iRecipeLayout.getItemStacks();
         guiItemStackGroup.init(craftOutputSlot, false, 111, 31);
@@ -86,13 +118,84 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
         List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
         List<List<ItemStack>> outputs = ingredients.getOutputs(VanillaTypes.ITEM);
 
-        if (iWeaponTableRecipe instanceof ShapedWeaponTableRecipe) {
-            ShapedWeaponTableRecipe wrapper = (ShapedWeaponTableRecipe) iWeaponTableRecipe;
-            craftingGridHelper.setInputs(guiItemStackGroup, inputs, wrapper.getWidth(), wrapper.getHeight());
+        if (recipe instanceof ShapedWeaponTableRecipe) {
+            ShapedWeaponTableRecipe wrapper = (ShapedWeaponTableRecipe) recipe;
+            setInputs(guiItemStackGroup, inputs, wrapper.getWidth(), wrapper.getHeight());
 
-        } else if (iWeaponTableRecipe instanceof ShapelessWeaponTableRecipe) {
+        } else if (recipe instanceof ShapelessWeaponTableRecipe) {
+            setInputs(guiItemStackGroup, inputs);
             iRecipeLayout.setShapeless();
         }
+
+
         guiItemStackGroup.set(craftOutputSlot, outputs.get(0));
     }
+
+    private int getCraftingIndex(int i, int width, int height) {
+        int index;
+        if (width == 1) {
+            if (height == 4) {
+                index = i * 4 + 1;
+            } else if (height == 3) {
+                index = i * 4 + 1;
+            } else if (height == 2) {
+                index = i * 4 + 1;
+            } else {
+                index = 0;
+            }
+        } else if (height == 1) {
+            index = i + 4;
+        } else if (width == 2) {
+            index = i;
+            if (i > 1) {
+                index += 2;
+                if (i > 3) {
+                    index += 2;
+                }
+            }
+        } else if (width == 3) {
+            index = i;
+            if (i > 2) {
+                index++;
+                if (i > 5) {
+                    index++;
+                    if (i > 8) {
+                        index++;
+                    }
+                }
+            }
+        } else if (height == 2) {
+            index = i + 4;
+        } else {
+            index = i;
+        }
+
+        return index;
+    }
+
+    private void setInputs(IGuiItemStackGroup ingredientGroup, List<List<ItemStack>> inputs) {
+        byte width;
+        byte height;
+        if (inputs.size() > 4) {
+            height = 4;
+            width = 4;
+        } else if (inputs.size() > 1) {
+            height = 2;
+            width = 2;
+        } else {
+            height = 1;
+            width = 1;
+        }
+        this.setInputs(ingredientGroup, inputs, width, height);
+    }
+
+    private void setInputs(IGuiItemStackGroup ingredientGroup, List<List<ItemStack>> inputs, int width, int height) {
+        for (int i = 0; i < inputs.size(); i++) {
+            List<ItemStack> recipeItem = inputs.get(i);
+            int index = this.getCraftingIndex(i, width, height);
+            ingredientGroup.set(1 + index, recipeItem);
+        }
+    }
+
+
 }

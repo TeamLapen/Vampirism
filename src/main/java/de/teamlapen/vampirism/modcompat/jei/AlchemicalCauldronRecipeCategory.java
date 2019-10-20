@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -11,7 +10,6 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
@@ -20,12 +18,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -36,14 +31,14 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     private final IDrawable background;
     private final IDrawable icon;
 
-    private final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
+    private static final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
 
     private final IDrawableAnimated flame;
     private final IDrawableAnimated arrow;
     private final IDrawableAnimated bubbles;
 
 
-    public AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
+    AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
         this.localizedName = UtilLib.translate(ModBlocks.alchemical_cauldron.getTranslationKey());
         this.icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.alchemical_cauldron));
         background = guiHelper.drawableBuilder(location, 38, 10, 120, 70).addPadding(0,33,0,0).build();
