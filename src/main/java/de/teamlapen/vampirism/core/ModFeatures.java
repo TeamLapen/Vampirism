@@ -27,7 +27,7 @@ public class ModFeatures {
     //structurepieces
     public static final IStructurePieceType hunter_camp_fireplace = IStructurePieceType.register(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":hunter_camp_fireplace");
     public static final IStructurePieceType hunter_camp_tent = IStructurePieceType.register(HunterCampPieces.Tent::new, REFERENCE.MODID + ":hunter_camp_tent");
-    public static final IStructurePieceType hunter_camp_craftingtable = IStructurePieceType.register(HunterCampPieces.CraftingTable::new, REFERENCE.MODID + ":hunter_camp_craftingtable");
+    public static final IStructurePieceType hunter_camp_special = IStructurePieceType.register(HunterCampPieces.SpecialBlock::new, REFERENCE.MODID + ":hunter_camp_craftingtable");
 
 
     static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
@@ -38,6 +38,6 @@ public class ModFeatures {
     }
 
     static void registerIgnoredBiomesForStructures() {
-        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(Biome.Category.OCEAN, Biome.Category.THEEND, Biome.Category.NETHER, Biome.Category.ICY, Biome.Category.BEACH, Biome.Category.RIVER));
+        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(Biome.Category.OCEAN, Biome.Category.THEEND, Biome.Category.NETHER, Biome.Category.ICY, Biome.Category.BEACH, Biome.Category.RIVER, Biome.Category.SWAMP, Biome.Category.JUNGLE));
     }
 }

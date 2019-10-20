@@ -187,4 +187,9 @@ public class RegistryManager implements IInitListener {
     public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> event) {
         ModTiles.registerTiles(event.getRegistry());
     }
+
+    @SubscribeEvent
+    public void onMissingMappingEntityTypes(RegistryEvent.MissingMappings<EntityType<?>> event) {
+        ModEntities.fixMapping(event);
+    }
 }
