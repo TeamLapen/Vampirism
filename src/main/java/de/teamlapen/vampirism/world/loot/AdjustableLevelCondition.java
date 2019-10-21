@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootContext;
@@ -21,8 +22,9 @@ public class AdjustableLevelCondition implements ILootCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
-        if (lootContext.get(target.getParameter()) instanceof IAdjustableLevel) {
-            int l = ((IAdjustableLevel) target.getParameter()).getLevel();
+        Entity e = lootContext.get(target.getParameter());
+        if (e instanceof IAdjustableLevel) {
+            int l = ((IAdjustableLevel) e).getLevel();
             if (levelTest != -1) {
                 return levelTest == l;
             }
