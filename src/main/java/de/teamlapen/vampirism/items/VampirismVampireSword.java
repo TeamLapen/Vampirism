@@ -308,4 +308,13 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         return untrainedAttackSpeed + (trainedAttackSpeed - untrainedAttackSpeed) * getTrained(stack);
     }
 
+    @Override
+    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+        return !Helper.isVampire(entity);
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
+        return !Helper.isVampire(player);
+    }
 }
