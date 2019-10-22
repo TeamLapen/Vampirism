@@ -46,6 +46,10 @@ public class HunterCampStructure extends ScatteredStructure<NoFeatureConfig> {
 
     @Override
     protected int getBiomeFeatureDistance(ChunkGenerator<?> chunkGeneratorIn) {
+        if (VampirismConfig.BALANCE.hunterTentDistance.get() <= VampirismConfig.BALANCE.hunterTentSeparation.get()) {
+            LogManager.getLogger(BalanceConfig.class).warn("config value 'hunterTentDistance' is not set greater than 'hunterTentSeparation'. 'hunterTentDistance' increased");
+            VampirismConfig.BALANCE.hunterTentDistance.set(VampirismConfig.BALANCE.hunterTentSeparation.get() + 1);
+        }
         return VampirismConfig.BALANCE.hunterTentDistance.get();
     }
 
