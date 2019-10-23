@@ -115,7 +115,7 @@
   "text.vampirism.already_vampire": "You are already a vampire",
   "text.vampirism.can_only_be_used_with_skill": "This can only be used with skill: %s",
   "text.vampirism.need_item_to_use": "You need \"%s\" to use this",
-  "text.vampirism.immune_to": "You are immune to",
+  "text.vampirism.immune_to": "You are immune to ",
   "text.vampirism.required_skill": "Required Skill: %s",
   "text.vampirism.from_behind": "From behind.",
   "text.vampirism.unknown": "Unknown",

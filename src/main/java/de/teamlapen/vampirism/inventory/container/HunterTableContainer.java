@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
@@ -27,7 +28,7 @@ import net.minecraft.util.IWorldPosCallable;
  * Container for the hunter table.
  * Handles inventory setup  and "crafting"
  */
-public class HunterTableContainer extends InventoryContainer {
+public class HunterTableContainer extends InventoryContainer implements IInventoryChangedListener {
     private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(Items.BOOK), 15, 28), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_fang), 42, 28), new SelectorInfo(Ingredient.fromTag(ModTags.Items.PURE_BLOOD), 69, 28), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_book), 96, 28)};
     private final SlotResult slotResult;
     private final int hunterLevel;
@@ -41,6 +42,7 @@ public class HunterTableContainer extends InventoryContainer {
 
     public HunterTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
         super(ModContainer.hunter_table, id, playerInventory, worldPosCallable, new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        ((Inventory) inventory).addListener(this);
         slotResult = new SlotResult(this, new CraftResultInventory() {
             @Override
             public int getInventoryStackLimit() {
@@ -87,6 +89,11 @@ public class HunterTableContainer extends InventoryContainer {
     }
 
     @Override
+    public void onInventoryChanged(IInventory invBasic) {
+        onCraftMatrixChanged(invBasic);
+    }
+
+    @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
         ItemStack result = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
@@ -125,7 +132,6 @@ public class HunterTableContainer extends InventoryContainer {
 
             slot.onTake(playerEntity, slotStack);
         }
-        onCraftMatrixChanged(null);
         return result;
     }
 
