@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.player.vampire.actions;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +26,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
-        RayTraceResult target = UtilLib.getPlayerLookingSpot(player, Balance.vpa.TELEPORT_MAX_DISTANCE);
+        RayTraceResult target = UtilLib.getPlayerLookingSpot(player, VampirismConfig.BALANCE.vaTeleportMaxDistance.get());
         double ox = player.posX;
         double oy = player.posY;
         double oz = player.posZ;
@@ -82,11 +82,11 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown() {
-        return Balance.vpa.TELEPORT_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.vaTeleportCooldown.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return Balance.vpa.TELEPORT_ENABLED;
+        return VampirismConfig.BALANCE.vaTeleportEnabled.get();
     }
 }

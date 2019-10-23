@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.player.vampire.actions;
 
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.BlindingBatEntity;
@@ -21,7 +21,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(IVampirePlayer player) {
         PlayerEntity entityPlayer = player.getRepresentingPlayer();
-        for (int i = 0; i < Balance.vpa.SUMMON_BAT_COUNT; i++) {
+        for (int i = 0; i < VampirismConfig.BALANCE.vaSummonBatCount.get(); i++) {
             BlindingBatEntity e = ModEntities.blinding_bat.create(entityPlayer.getEntityWorld());
             e.restrictLiveSpan();
             e.setIsBatHanging(false);
@@ -39,11 +39,11 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown() {
-        return Balance.vpa.SUMMON_BAT_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.vaSummonBatCooldown.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return Balance.vpa.SUMMON_BAT_ENABLED;
+        return VampirismConfig.BALANCE.vaSunscreenEnabled.get();
     }
 }

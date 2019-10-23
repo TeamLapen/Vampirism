@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.player.vampire.actions;
 
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -18,7 +18,7 @@ public class RegenVampireAction extends DefaultVampireAction {
     @Override
     public boolean activate(IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
-        int dur = Balance.vpa.REGEN_DURATION * 20;
+        int dur = VampirismConfig.BALANCE.vaRegenerationDuration.get() * 20;
         player.addPotionEffect(new EffectInstance(Effects.REGENERATION, dur, 0));
         player.addPotionEffect(new EffectInstance(ModEffects.thirst, dur, 2));
         return true;
@@ -26,11 +26,11 @@ public class RegenVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown() {
-        return Balance.vpa.REGEN_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.vaRegenerationCooldown.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return Balance.vpa.REGEN_ENABLED;
+        return VampirismConfig.BALANCE.vaRegenerationEnabled.get();
     }
 }

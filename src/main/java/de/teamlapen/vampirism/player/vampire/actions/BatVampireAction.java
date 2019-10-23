@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -89,17 +88,17 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public int getCooldown() {
-        return Balance.vpa.BAT_COOLDOWN * 20 + 1;
+        return VampirismConfig.BALANCE.vaBatCooldown.get() * 20 + 1;
     }
 
     @Override
     public int getDuration(int level) {
-        return MathHelper.clamp(Balance.vpa.BAT_DURATION, 10, Integer.MAX_VALUE / 20 - 1) * 20;
+        return MathHelper.clamp(VampirismConfig.BALANCE.vaBatDuration.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return Balance.vpa.BAT_ENABLED;
+        return VampirismConfig.BALANCE.vaBatEnabled.get();
     }
 
     @Override
@@ -159,12 +158,12 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
             IAttributeInstance health = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
             if (health.getModifier(healthModifierUUID) == null) {
-                health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -Balance.vpa.BAT_HEALTH_REDUCTION, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(false));
+                health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -VampirismConfig.BALANCE.vaBatHealthReduction.get(), AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(false));
             }
 
             player.abilities.allowFlying = true;
             player.abilities.isFlying = true;
-            setFlightSpeed(player, (float) Balance.vpa.BAT_FLIGHT_SPEED);
+            setFlightSpeed(player, (float) 0.03);
             player.sendPlayerAbilities();
         } else {
 

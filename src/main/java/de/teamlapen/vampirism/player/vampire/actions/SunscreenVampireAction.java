@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.player.vampire.actions;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import net.minecraft.potion.EffectInstance;
 
@@ -24,17 +24,17 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public int getCooldown() {
-        return Balance.vpa.SUNSCREEN_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.vaSunscreenCooldown.get() * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return 20 * (Balance.vpa.SUNSCREEN_DURATION);
+        return 20 * (VampirismConfig.BALANCE.vaSunscreenDuration.get());
     }
 
     @Override
     public boolean isEnabled() {
-        return Balance.vpa.SUNSCREEN_ENABLED;
+        return VampirismConfig.BALANCE.vaSunscreenEnabled.get();
     }
 
     @Override

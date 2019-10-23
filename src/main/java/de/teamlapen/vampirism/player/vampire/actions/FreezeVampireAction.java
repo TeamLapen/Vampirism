@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.player.vampire.actions;
 
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.BlindingBatEntity;
 import de.teamlapen.vampirism.items.HunterCoatItem;
@@ -32,9 +32,10 @@ public class FreezeVampireAction extends DefaultVampireAction {
             if (player.equals(e)) continue;
             if (e instanceof BlindingBatEntity) continue;
             if (e instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) e)) continue;
-            e.addPotionEffect(new EffectInstance(Effects.SLOWNESS, Balance.vpa.FREEZE_DURATION * 20, 10));
-            e.addPotionEffect(new EffectInstance(Effects.RESISTANCE, Balance.vpa.FREEZE_DURATION * 20, 10));
-            e.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, Balance.vpa.FREEZE_DURATION * 20, 128));
+            int dur = VampirismConfig.BALANCE.vaFreezeDuration.get();
+            e.addPotionEffect(new EffectInstance(Effects.SLOWNESS, dur * 20, 10));
+            e.addPotionEffect(new EffectInstance(Effects.RESISTANCE, dur * 20, 10));
+            e.addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, dur * 20, 128));
             ModParticles.spawnParticlesServer(player.getEntityWorld(), new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "generic_2"), 20, 0xF0F0F0, 0.4F), e.posX, e.posY, e.posZ, 20, 1, 1, 1, 0);
         }
         return l.size() > 0;
@@ -42,12 +43,12 @@ public class FreezeVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown() {
-        return Balance.vpa.FREEZE_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.vaFreezeCooldown.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return Balance.vpa.FREEZE_ENABLED;
+        return VampirismConfig.BALANCE.vaFreezeEnabled.get();
     }
 
 }

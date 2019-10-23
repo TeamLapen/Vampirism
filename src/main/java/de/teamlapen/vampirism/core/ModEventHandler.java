@@ -6,7 +6,6 @@ import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
-import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.network.BloodValuePacket;
@@ -65,7 +64,6 @@ public class ModEventHandler {
     public void onConfigurationChanged(ConfigChangedEvent.OnConfigChangedEvent e) {
         if (e.getModID().equalsIgnoreCase(REFERENCE.MODID)) {
             LOGGER.info("Configuration ({}) changed", e.getConfigID());
-            Balance.onConfigurationChanged(); //TODO 1.14 see if this still exist after Forge readds config GUI. And if this is necessary or if the events inside VampirismConfig are sufficient
         }
     }
 

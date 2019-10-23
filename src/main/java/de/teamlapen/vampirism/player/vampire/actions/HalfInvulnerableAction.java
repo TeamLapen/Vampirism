@@ -1,12 +1,9 @@
-/**
- *
- */
 package de.teamlapen.vampirism.player.vampire.actions;
 
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -23,17 +20,17 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
 
     @Override
     public int getCooldown() {
-        return 20 * (Balance.vpa.HALFINVULNERABLE_COOLDOWN);
+        return 20 * (VampirismConfig.BALANCE.vaHalfInvulnerableCooldown.get());
     }
 
     @Override
     public int getDuration(int level) {
-        return 20 * (Balance.vpa.HALFINVULNERABLE_DURATION);
+        return 20 * (VampirismConfig.BALANCE.vaHalfInvulnerableDuration.get());
     }
 
     @Override
     public boolean isEnabled() {
-        return Balance.vpa.HALFINVULNERABLE_ENABLE;
+        return VampirismConfig.BALANCE.vaHalfInvulnerableEnabled.get();
     }
 
     @Override

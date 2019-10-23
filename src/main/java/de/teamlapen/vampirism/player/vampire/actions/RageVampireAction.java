@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.player.vampire.actions;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
@@ -27,17 +27,17 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
 
     @Override
     public int getCooldown() {
-        return Balance.vpa.RAGE_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.vaRageCooldown.get() * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return 20 * (Balance.vpa.RAGE_MIN_DURATION + Balance.vpa.RAGE_DUR_PL);
+        return 20 * (VampirismConfig.BALANCE.vaRageMinDuration.get() + VampirismConfig.BALANCE.vaRageDurationIncrease.get() * level);
     }
 
     @Override
     public boolean isEnabled() {
-        return Balance.vpa.RAGE_ENABLED;
+        return VampirismConfig.BALANCE.vaRageEnabled.get();
     }
 
     @Override

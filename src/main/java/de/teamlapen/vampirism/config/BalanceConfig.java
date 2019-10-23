@@ -96,6 +96,45 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue vpSundamageWaterBlocks;
     public final ForgeConfigSpec.DoubleValue vpFireVulnerabilityMaxMod;
 
+    public final ForgeConfigSpec.IntValue vaFreezeCooldown;
+    public final ForgeConfigSpec.BooleanValue vaFreezeEnabled;
+    public final ForgeConfigSpec.IntValue vaFreezeDuration;
+    public final ForgeConfigSpec.IntValue vaInvisibilityDuration;
+    public final ForgeConfigSpec.IntValue vaInvisibilityCooldown;
+    public final ForgeConfigSpec.BooleanValue vaInvisibilityEnabled;
+    public final ForgeConfigSpec.IntValue vaRegenerationCooldown;
+    public final ForgeConfigSpec.IntValue vaRegenerationDuration;
+    public final ForgeConfigSpec.BooleanValue vaRegenerationEnabled;
+    public final ForgeConfigSpec.IntValue vaTeleportMaxDistance;
+    public final ForgeConfigSpec.IntValue vaTeleportCooldown;
+    public final ForgeConfigSpec.BooleanValue vaTeleportEnabled;
+    public final ForgeConfigSpec.IntValue vaRageCooldown;
+    public final ForgeConfigSpec.IntValue vaRageMinDuration;
+    public final ForgeConfigSpec.IntValue vaRageDurationIncrease;
+    public final ForgeConfigSpec.BooleanValue vaRageEnabled;
+    public final ForgeConfigSpec.IntValue vaSunscreenCooldown;
+    public final ForgeConfigSpec.IntValue vaSunscreenDuration;
+    public final ForgeConfigSpec.BooleanValue vaSunscreenEnabled;
+    public final ForgeConfigSpec.IntValue vaBatCooldown;
+    public final ForgeConfigSpec.IntValue vaBatDuration;
+    public final ForgeConfigSpec.BooleanValue vaBatEnabled;
+    public final ForgeConfigSpec.DoubleValue vaBatHealthReduction;
+    public final ForgeConfigSpec.BooleanValue vaSummonBatEnabled;
+    public final ForgeConfigSpec.IntValue vaSummonBatCooldown;
+    public final ForgeConfigSpec.IntValue vaSummonBatCount;
+    public final ForgeConfigSpec.IntValue vaDisguiseDuration;
+    public final ForgeConfigSpec.IntValue vaDisguiseCooldown;
+    public final ForgeConfigSpec.BooleanValue vaDisguiseEnabled;
+    public final ForgeConfigSpec.IntValue vaDarkBloodCooldown;
+    public final ForgeConfigSpec.BooleanValue vaDarkBloodEnabled;
+    public final ForgeConfigSpec.DoubleValue vaDarkBloodDamage;
+    public final ForgeConfigSpec.IntValue vaHalfInvulnerableCooldown;
+    public final ForgeConfigSpec.IntValue vaHalfInvulnerableDuration;
+    public final ForgeConfigSpec.IntValue vaHalfInvulnerableBloodCost;
+    public final ForgeConfigSpec.DoubleValue vaHalfInvulnerableThreshold;
+    public final ForgeConfigSpec.BooleanValue vaHalfInvulnerableEnabled;
+
+
     BalanceConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("A ton of options which allow you to balance the mod to your desire");
         builder.push("balance");
@@ -219,7 +258,46 @@ public class BalanceConfig {
         vpFireVulnerabilityMaxMod = builder.defineInRange("fireVulnerabilityMod", 4d, 0.1, Double.MAX_VALUE);
         builder.pop();
 
-        //
+        //Vampire actions
+        builder.push("vampireActions");
+        vaFreezeCooldown = builder.comment("In seconds").defineInRange("freezeCooldown", 60, 1, Integer.MAX_VALUE);
+        vaFreezeDuration = builder.comment("In seconds").defineInRange("freezeDuration", 6, 1, 30);
+        vaFreezeEnabled = builder.define("freezeEnabled", true);
+        vaInvisibilityCooldown = builder.comment("In seconds").defineInRange("invisibilityCooldown", 25, 1, Integer.MAX_VALUE);
+        vaInvisibilityDuration = builder.comment("In seconds").defineInRange("invisibilityDuration", 25, 1, Integer.MAX_VALUE);
+        vaInvisibilityEnabled = builder.define("invisibilityEnabled", true);
+        vaRegenerationCooldown = builder.comment("In seconds").defineInRange("regenerationCooldown", 60, 0, Integer.MAX_VALUE);
+        vaRegenerationDuration = builder.comment("In seconds").defineInRange("regenerationDuration", 20, 0, Integer.MAX_VALUE);
+        vaRegenerationEnabled = builder.define("regenerationEnabled", true);
+        vaTeleportCooldown = builder.comment("In seconds").defineInRange("teleportCooldown", 10, 1, Integer.MAX_VALUE);
+        vaTeleportMaxDistance = builder.defineInRange("teleportMaxDistance", 50, 1, 1000);
+        vaTeleportEnabled = builder.define("teleportEnabled", true);
+        vaRageCooldown = builder.comment("In seconds").defineInRange("rageCooldown", 20, 0, Integer.MAX_VALUE);
+        vaRageMinDuration = builder.comment("In seconds").defineInRange("rageMinDuration", 13, 1, 10000);
+        vaRageDurationIncrease = builder.comment("In seconds. Increase per vampire level").defineInRange("rageDurationIncrease", 5, 0, 1000);
+        vaRageEnabled = builder.define("rageEnabled", true);
+        vaSunscreenCooldown = builder.comment("In seconds").defineInRange("sunscreenCooldown", 500, 0, 1000);
+        vaSunscreenDuration = builder.comment("In seconds").defineInRange("sunscreenDuration", 40, 1, Integer.MAX_VALUE);
+        vaSunscreenEnabled = builder.define("sunscreenEnabled", true);
+        vaBatEnabled = builder.define("batEnabled", true);
+        vaBatCooldown = builder.comment("In seconds").defineInRange("batCooldown", 0, 0, 10000);
+        vaBatDuration = builder.comment("In seconds").defineInRange("batDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
+        vaBatHealthReduction = builder.comment("The player health will be reduced by this factor").defineInRange("batHealthReduction", 0.9, 0, 0.95);
+        vaSummonBatCooldown = builder.comment("In seconds").defineInRange("summonBatsCooldown", 300, 1, 10000);
+        vaSummonBatCount = builder.defineInRange("summonBatsCount", 16, 1, 100);
+        vaSummonBatEnabled = builder.define("summonBatEnabled", true);
+        vaDisguiseCooldown = builder.comment("In seconds").defineInRange("disguiseCooldown", 60, 1, 10000);
+        vaDisguiseDuration = builder.comment("In seconds").defineInRange("disguiseDuration", 60, 1, 10000);
+        vaDisguiseEnabled = builder.define("disguiseEnabled", true);
+        vaDarkBloodCooldown = builder.comment("In seconds").defineInRange("darkBloodProjectileCooldown", 4, 1, 1000);
+        vaDarkBloodDamage = builder.defineInRange("darkBloodProjectileDamage", 6d, 0, 10000);
+        vaDarkBloodEnabled = builder.define("darkBloodProjectileEnabled", true);
+        vaHalfInvulnerableCooldown = builder.defineInRange("halfInvulnerableCooldown", 60, 1, 10000);
+        vaHalfInvulnerableDuration = builder.defineInRange("halfInvulnerableDuration", 30, 1, 10000);
+        vaHalfInvulnerableThreshold = builder.comment("Damage threshold relative to players max health. Damage above this value will be ignored").defineInRange("halfInvulnerableThreshold", 0.4d, 0.0d, 1d);
+        vaHalfInvulnerableBloodCost = builder.defineInRange("halfInvulnerableBloodCost", 4, 0, 1000);
+        vaHalfInvulnerableEnabled = builder.define("halfInvulnerableEnabled", true);
+        builder.pop();
 
 
         builder.pop();

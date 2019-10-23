@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.DamageHandler;
@@ -548,8 +547,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         }
         if (getSpecialAttributes().half_invulnerable) {
-            if (amt >= getRepresentingEntity().getMaxHealth() * Balance.vpa.HALFINVULNERABLE_THRESHOLD && amt < 10000) { //Make sure "instant kills" are not blocked by this
-                if (useBlood(Balance.vpa.HALFINVULNERABLE_BLOOD_COSTS, false)) {
+            if (amt >= getRepresentingEntity().getMaxHealth() * VampirismConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
+                if (useBlood(VampirismConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {
                     this.actionHandler.toggleAction(VampireActions.half_invulnerable);

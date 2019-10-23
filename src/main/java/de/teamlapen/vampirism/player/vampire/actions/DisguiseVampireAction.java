@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.player.vampire.actions;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 
 /**
@@ -24,17 +24,17 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
 
     @Override
     public int getCooldown() {
-        return Balance.vpa.DISGUISE_COOLDOWN * 20;
+        return VampirismConfig.BALANCE.vaDisguiseCooldown.get() * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.vpa.DISGUISE_DURATION * 20;
+        return VampirismConfig.BALANCE.vaDisguiseDuration.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return Balance.vpa.DISGUISE_ENABLED;
+        return VampirismConfig.BALANCE.vaDisguiseEnabled.get();
     }
 
     @Override

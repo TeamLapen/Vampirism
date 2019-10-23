@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
-import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -147,7 +146,6 @@ public class VampirismMod {
 
 
         File vampConfigDir = new File(FMLPaths.CONFIGDIR.get().toFile(), REFERENCE.MODID);
-        Balance.init(vampConfigDir, inDev);
 
     }
 
