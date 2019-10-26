@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.world.gen.structures.huntercamp;
 
+import de.teamlapen.vampirism.config.BalanceConfig;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.biome.Biome;
@@ -9,12 +10,14 @@ import net.minecraft.world.gen.feature.structure.ScatteredStructure;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class HunterCampStructure extends ScatteredStructure<NoFeatureConfig> {
+
     public HunterCampStructure() {
         super(NoFeatureConfig::deserialize);
     }
@@ -55,7 +58,7 @@ public class HunterCampStructure extends ScatteredStructure<NoFeatureConfig> {
 
     @Override
     protected int getBiomeFeatureSeparation(ChunkGenerator<?> chunkGeneratorIn) {
-        return VampirismConfig.BALANCE.hunterTentSeperation.get();
+        return VampirismConfig.BALANCE.hunterTentSeparation.get();
     }
 
     public static class Start extends StructureStart {

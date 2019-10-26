@@ -5,6 +5,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockReader;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -13,15 +14,13 @@ import javax.annotation.Nullable;
 public class TentMainBlock extends TentBlock implements ITileEntityProvider {
     private static final String name = "tent_main";
 
-
     public TentMainBlock() {
         super(name);
     }
 
-
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public TileEntity createNewTileEntity(@Nonnull IBlockReader worldIn) {
         return new TentTileEntity();
     }
 
