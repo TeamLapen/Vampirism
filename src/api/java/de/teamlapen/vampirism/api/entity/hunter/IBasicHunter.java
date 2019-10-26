@@ -10,8 +10,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 public interface IBasicHunter extends IHunterMob, IAdjustableLevel, IVillageCaptureEntity {
     boolean isLookingForHome();
 
-    void makeCampHunter(AxisAlignedBB box);
-
     void makeNormalHunter();
 
     void makeVillageHunter(AxisAlignedBB box);

@@ -8,18 +8,26 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.AbstractSpawner;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.function.Consumer;
 
 /**
  * Simple mob spawning logic. More configurable than {@link AbstractSpawner} but less functional.
  */
-public abstract class SimpleSpawnerLogic {
+public class SimpleSpawnerLogic<T extends Entity> {
 
     private static final int MOB_COUNT_DIV = (int) Math.pow(17.0D, 2.0D);
 
-    @Nullable
-    private EntityType entityType = null;
+    private @Nonnull
+    final EntityType<T> entityType;
+    private @Nullable
+    BlockPos pos;
+    private @Nullable
+    World world;
+    private @Nullable
+    Consumer<T> onSpawned;
     private int minSpawnDelay = 200;
     private int maxSpawnDelay = 800;
     private int activateRange = 16;
@@ -32,52 +40,40 @@ public abstract class SimpleSpawnerLogic {
     private boolean flag = true;
     private EntityClassification limitType;
 
-    @Nullable
-    public EntityType getEntityType() {
-        return entityType;
+    public SimpleSpawnerLogic(@Nonnull EntityType<T> entityTypeIn) {
+        this.entityType = entityTypeIn;
     }
 
-    public void setEntityType(@Nullable EntityType entityType) {
-        this.entityType = entityType;
+    @Nonnull
+    public EntityType<T> getEntityType() {
+        return entityType;
     }
 
     public int getSpawnedToday() {
         return spawnedToday;
     }
 
-    public abstract BlockPos getSpawnerPosition();
-
-    public abstract World getSpawnerWorld();
-
     public boolean isActivated() {
-        if (entityType == null) return false;
-        BlockPos blockpos = this.getSpawnerPosition();
-        return this.getSpawnerWorld().isPlayerWithin((double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D, this.activateRange);
+        if (this.world == null) return false;
+        if (this.pos == null) return false;
+        return this.world.isPlayerWithin(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D, this.activateRange);
     }
 
     public void readFromNbt(CompoundNBT nbt) {
-
-        String s = nbt.getString("id");
-        entityType = EntityType.byKey(s).orElse(null);
-
-        minSpawnDelay = nbt.getInt("min_delay");
-        maxSpawnDelay = nbt.getInt("max_delay");
-        maxNearbyEntities = nbt.getInt("max_nearby");
-        spawnDelay = nbt.getInt("delay");
-        activateRange = nbt.getInt("activate_range");
-        spawnRange = nbt.getInt("spawn_range");
-        spawnCount = nbt.getInt("spawn_count");
-        spawnedToday = nbt.getInt("spawned_today");
-        spawnedLast = nbt.getLong("spawned_last");
-        flag = nbt.getBoolean("spawner_flag");
+        this.minSpawnDelay = nbt.getInt("min_delay");
+        this.maxSpawnDelay = nbt.getInt("max_delay");
+        this.maxNearbyEntities = nbt.getInt("max_nearby");
+        this.spawnDelay = nbt.getInt("delay");
+        this.activateRange = nbt.getInt("activate_range");
+        this.spawnRange = nbt.getInt("spawn_range");
+        this.spawnCount = nbt.getInt("spawn_count");
+        this.spawnedToday = nbt.getInt("spawned_today");
+        this.spawnedLast = nbt.getLong("spawned_last");
+        this.flag = nbt.getBoolean("spawner_flag");
     }
 
-    public void setActivateRange(int activateRange) {
-        this.activateRange = activateRange;
-    }
-
-    public boolean setDelayToMin(int p_98268_1_) {
-        if (p_98268_1_ == 1 && this.getSpawnerWorld().isRemote) {
+    public boolean setDelayToMin(int id) {
+        if (id == 1 && this.world.isRemote) {
             this.spawnDelay = this.minSpawnDelay;
             return true;
         } else {
@@ -85,41 +81,65 @@ public abstract class SimpleSpawnerLogic {
         }
     }
 
+    public void setWorld(World worldIn) {
+        this.world = worldIn;
+    }
+
+    public void setBlockPos(BlockPos blockPosIn) {
+        this.pos = blockPosIn;
+    }
+
     /**
      * Checks if any more creatures of the given type are allowed in the world before spawning
      */
-    public void setLimitTotalEntities(EntityClassification creatureType) {
+    public SimpleSpawnerLogic<T> setLimitTotalEntities(EntityClassification creatureType) {
         limitType = creatureType;
+        return this;
     }
 
-    public void setMaxNearbyEntities(int maxNearbyEntities) {
+    public SimpleSpawnerLogic<T> setMaxNearbyEntities(int maxNearbyEntities) {
         this.maxNearbyEntities = maxNearbyEntities;
+        return this;
     }
 
-    public void setMaxSpawnDelay(int maxSpawnDelay) {
+    public SimpleSpawnerLogic<T> setMaxSpawnDelay(int maxSpawnDelay) {
         this.maxSpawnDelay = maxSpawnDelay;
+        return this;
     }
 
-    public void setMinSpawnDelay(int minSpawnDelay) {
+    public SimpleSpawnerLogic<T> setMinSpawnDelay(int minSpawnDelay) {
         this.minSpawnDelay = minSpawnDelay;
+        return this;
     }
 
-    public void setSpawn(boolean spawn) {
+    public SimpleSpawnerLogic<T> setSpawn(boolean spawn) {
         this.flag = spawn;
+        return this;
     }
 
-    public void setSpawnCount(int spawnCount) {
+    public SimpleSpawnerLogic<T> setSpawnCount(int spawnCount) {
         this.spawnCount = spawnCount;
+        return this;
     }
 
-    public void setSpawnRange(int spawnRange) {
+    public SimpleSpawnerLogic<T> setSpawnRange(int spawnRange) {
         this.spawnRange = spawnRange;
+        return this;
+    }
+
+    public SimpleSpawnerLogic<T> setActivateRange(int activateRange) {
+        this.activateRange = activateRange;
+        return this;
+    }
+
+    public SimpleSpawnerLogic<T> setOnSpawned(Consumer<T> onSpawned) {
+        this.onSpawned = onSpawned;
+        return this;
     }
 
     public void updateSpawner() {
         if (isActivated()) {
-            BlockPos blockpos = this.getSpawnerPosition();
-            if (!getSpawnerWorld().isRemote) {
+            if (!this.world.isRemote) {
                 if (this.spawnDelay == -1) {
                     this.resetTimer();
                 }
@@ -129,7 +149,7 @@ public abstract class SimpleSpawnerLogic {
                     return;
                 }
 
-                if ((getSpawnerWorld().getGameTime()) % 24000 < this.spawnedLast) {
+                if ((this.world.getGameTime()) % 24000 < this.spawnedLast) {
                     this.spawnedToday = 0;
                     this.flag = true;
                 }
@@ -139,13 +159,13 @@ public abstract class SimpleSpawnerLogic {
                 boolean flag1 = false;
 
                 for (int i = 0; i < this.spawnCount; ++i) {
-                    Entity entity = this.getEntityType().create(this.getSpawnerWorld());
+                    T entity = (T) this.getEntityType().create(this.world);
 
                     if (entity == null) {
                         break;
                     }
 
-                    int j = this.getSpawnerWorld().getEntitiesWithinAABB(entity.getClass(), getSpawningBox()).size();
+                    int j = this.world.getEntitiesWithinAABB(entity.getClass(), getSpawningBox()).size();
 
                     if (j >= this.maxNearbyEntities) {
                         this.resetTimer();
@@ -153,15 +173,15 @@ public abstract class SimpleSpawnerLogic {
                     }
 
                     if (limitType != null) {
-                        int total = ((ServerWorld) getSpawnerWorld()).countEntities().getInt(limitType);
-                        total = total * UtilLib.countPlayerLoadedChunks(this.getSpawnerWorld()) / MOB_COUNT_DIV;
+                        int total = ((ServerWorld) this.world).countEntities().getInt(limitType);
+                        total = total * UtilLib.countPlayerLoadedChunks(this.world) / MOB_COUNT_DIV;
                         if (total > limitType.getMaxNumberOfCreature()) {
                             this.resetTimer();
                             break;
                         }
                     }
 
-                    if (UtilLib.spawnEntityInWorld(getSpawnerWorld(), getSpawningBox(), entity, 1, Collections.emptyList(), SpawnReason.SPAWNER)) {
+                    if (UtilLib.spawnEntityInWorld(this.world, getSpawningBox(), entity, 1, Collections.emptyList(), SpawnReason.SPAWNER)) {
                         onSpawned(entity);
                         flag1 = true;
                     }
@@ -169,14 +189,14 @@ public abstract class SimpleSpawnerLogic {
                 if (flag1) {
                     this.resetTimer();
                     this.spawnedToday++;
-                    this.spawnedLast = getSpawnerWorld().getGameTime() % 24000;
+                    this.spawnedLast = this.world.getGameTime() % 24000;
                 }
             }
         }
     }
 
     public void writeToNbt(CompoundNBT nbt) {
-        if (entityType != null) nbt.putString("id", EntityType.getKey(entityType).toString());
+        nbt.putString("id", EntityType.getKey(entityType).toString());
         nbt.putInt("min_delay", minSpawnDelay);
         nbt.putInt("max_delay", maxSpawnDelay);
         nbt.putInt("max_nearby", maxNearbyEntities);
@@ -190,16 +210,16 @@ public abstract class SimpleSpawnerLogic {
     }
 
     protected AxisAlignedBB getSpawningBox() {
-        BlockPos blockpos = getSpawnerPosition();
-        return (new AxisAlignedBB(blockpos.getX(), blockpos.getY(), blockpos.getZ(), blockpos.getX() + 1, blockpos.getY() + 1, blockpos.getZ() + 1)).grow(this.spawnRange, this.spawnRange, this.spawnRange);
+        return (new AxisAlignedBB(this.pos.getX(), this.pos.getY(), this.pos.getZ(), this.pos.getX() + 1, this.pos.getY() + 1, this.pos.getZ() + 1)).grow(this.spawnRange, this.spawnRange, this.spawnRange);
 
     }
 
-    protected abstract void onReset();
-
-    protected void onSpawned(Entity e) {
+    protected void onSpawned(T e) {
         if (e instanceof MobEntity) {
             ((MobEntity) e).spawnExplosionParticle();
+        }
+        if (this.onSpawned != null) {
+            this.onSpawned.accept(e);
         }
     }
 
@@ -208,8 +228,7 @@ public abstract class SimpleSpawnerLogic {
             this.spawnDelay = this.minSpawnDelay;
         } else {
             int i = this.maxSpawnDelay - this.minSpawnDelay;
-            this.spawnDelay = this.minSpawnDelay + this.getSpawnerWorld().rand.nextInt(i);
+            this.spawnDelay = this.minSpawnDelay + this.world.rand.nextInt(i);
         }
-        onReset();
     }
 }

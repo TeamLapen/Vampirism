@@ -5,10 +5,9 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -19,7 +18,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Tile entity which spawns hunters for tents
@@ -27,41 +25,95 @@ import javax.annotation.Nullable;
 public class TentTileEntity extends TileEntity implements ITickableTileEntity {
 
 
-    private SimpleSpawnerLogic spawnerLogic = new SimpleSpawnerLogic() {
-        @Override
-        public BlockPos getSpawnerPosition() {
-            return TentTileEntity.this.getPos();
-        }
-
-        @Override
-        public World getSpawnerWorld() {
-            return TentTileEntity.this.world;
-        }
-
-        @Override
-        protected void onReset() {
-            //TentTileEntity.this.worldObj.addBlockEvent(getSpawnerPosition(), ModBlocks.tentMain, 1, 0);
-        }
-
-        @Override
-        protected void onSpawned(Entity e) {
-            super.onSpawned(e);
-            if (e instanceof BasicHunterEntity) {
-                ((BasicHunterEntity) e).makeCampHunter(getSpawningBox());
-            }
-        }
-    };
+    private final SimpleSpawnerLogic<BasicHunterEntity> spawnerLogicHunter;
+    private final SimpleSpawnerLogic<AdvancedHunterEntity> spawnerLogicAdvancedHunter;
     private boolean spawn = true;
+    private boolean advanced = false;
 
     public TentTileEntity() {
         super(ModTiles.tent);
-        spawnerLogic.setEntityType(ModEntities.hunter);
-        spawnerLogic.setActivateRange(64);
-        spawnerLogic.setSpawnRange(6);
-        spawnerLogic.setMinSpawnDelay(600);
-        spawnerLogic.setMaxSpawnDelay(1000);
-        spawnerLogic.setMaxNearbyEntities(2);
-        spawnerLogic.setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE);
+        this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.pos));
+        this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.advanced_hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.pos));
+    }
+
+    public boolean isSpawner() {
+        return spawn;
+    }
+
+    public boolean receiveClientEvent(int id, int type) {
+        return (this.spawnerLogicHunter.setDelayToMin(id) || this.spawnerLogicAdvancedHunter.setDelayToMin(id)) || super.receiveClientEvent(id, type);
+    }
+
+    @Override
+    public void tick() {
+        if (world == null) return;
+        if (this.spawnerLogicHunter.getSpawnedToday() >= VampirismConfig.BALANCE.hunterTentMaxSpawn.get()) {
+            this.spawnerLogicHunter.setSpawn(false);
+        }
+        if (advanced) {
+            if (this.spawnerLogicAdvancedHunter.getSpawnedToday() >= VampirismConfig.BALANCE.hunterTentMaxSpawn.get()) {
+                this.spawnerLogicAdvancedHunter.setSpawn(false);
+            }
+        }
+        if (spawn) {
+            if (!this.world.isRemote && this.world.getGameTime() % 64 == 0) {
+                if (Feature.VILLAGE.isPositionInsideStructure(world, pos)) {
+                    this.spawn = false; //Disable spawning inside villages
+                }
+            }
+            this.spawnerLogicHunter.updateSpawner();
+            if (advanced) {
+                this.spawnerLogicAdvancedHunter.updateSpawner();
+            }
+        }
+    }
+
+    @Nonnull
+    @Override
+    public CompoundNBT write(CompoundNBT compound) {
+        CompoundNBT nbt = super.write(compound);
+        CompoundNBT logic1 = new CompoundNBT();
+        CompoundNBT logic2 = new CompoundNBT();
+        this.spawnerLogicHunter.writeToNbt(logic1);
+        this.spawnerLogicAdvancedHunter.writeToNbt(logic2);
+        nbt.put("spawner_logic_1", logic1);
+        nbt.put("spawner_logic_2", logic2);
+        nbt.putBoolean("spawn", this.spawn);
+        return nbt;
+    }
+
+    @Override
+    public void read(CompoundNBT nbt) {
+        super.read(nbt);
+        if (nbt.contains("spawner_logic_1")) {
+            spawnerLogicHunter.readFromNbt(nbt.getCompound("spawner_logic_1"));
+        }
+        if (nbt.contains("spawner_logic_2")) {
+            spawnerLogicAdvancedHunter.readFromNbt(nbt.getCompound("spawner_logic_2"));
+        }
+        spawn = nbt.getBoolean("spawn");
+    }
+
+    @Override
+    public void setWorld(World worldIn) {
+        super.setWorld(worldIn);
+        this.spawnerLogicHunter.setWorld(worldIn);
+        this.spawnerLogicAdvancedHunter.setWorld(world);
+    }
+
+    @Override
+    public void setPos(BlockPos posIn) {
+        super.setPos(posIn);
+        this.spawnerLogicHunter.setBlockPos(posIn);
+        this.spawnerLogicAdvancedHunter.setBlockPos(posIn);
+    }
+
+    public void setSpawn(boolean spawn) {
+        this.spawn = spawn;
+    }
+
+    public void setAdvanced(boolean advanced) {
+        this.advanced = advanced;
     }
 
     @Nonnull
@@ -69,71 +121,5 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         return super.getRenderBoundingBox().grow(1, 0, 1);
-    }
-
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return null;//new SPacketUpdateTileEntity(this.getPos(), 1, getUpdateTag());
-    }
-
-    @Nonnull
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
-    }
-
-    @Override
-    public boolean hasFastRenderer() {
-        return super.hasFastRenderer();
-    }
-
-    public boolean isSpawner() {
-        return spawn;
-    }
-
-    @Override
-    public void read(CompoundNBT nbt) {
-        super.read(nbt);
-        if (nbt.contains("spawner_logic")) {
-            spawnerLogic.readFromNbt(nbt.getCompound("spawner_logic"));
-        }
-        spawn = nbt.getBoolean("spawn");
-    }
-
-    public boolean receiveClientEvent(int id, int type) {
-        return this.spawnerLogic.setDelayToMin(id) || super.receiveClientEvent(id, type);
-    }
-
-    public void setSpawn(boolean spawn) {
-        this.spawn = spawn;
-    }
-
-    @Override
-    public void tick() {
-        if (world == null) return;
-        if (spawnerLogic.getSpawnedToday() >= VampirismConfig.BALANCE.hunterTentMaxSpawn.get()) {
-            spawnerLogic.setSpawn(false);
-        }
-        if (spawn) {
-            spawnerLogic.updateSpawner();
-            if (!this.world.isRemote && this.world.getGameTime() % 64 == 0) {
-                if (Feature.VILLAGE.isPositionInsideStructure(world, pos)) {
-                    this.spawn = false; //Disable spawning inside villages
-                }
-            }
-        }
-    }
-
-
-    @Nonnull
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        CompoundNBT nbt = super.write(compound);
-        CompoundNBT logic = new CompoundNBT();
-        spawnerLogic.writeToNbt(logic);
-        nbt.put("spawner_logic", logic);
-        nbt.putBoolean("spawn", spawn);
-        return nbt;
     }
 }

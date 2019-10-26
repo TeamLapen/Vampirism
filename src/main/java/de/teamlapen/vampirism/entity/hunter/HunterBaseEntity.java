@@ -9,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Difficulty;
@@ -27,6 +28,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
         return world.getDifficulty() != Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
     private final boolean countAsMonster;
+    protected final int MOVE_TO_RESTRICT_PRIO = 3;
 
     public HunterBaseEntity(EntityType<? extends HunterBaseEntity> type, World world, boolean countAsMonster) {
         super(type, world);
@@ -64,5 +66,10 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
             return true;
         }
         return false;
+    }
+
+    public void makeCampHunter(BlockPos pos) {
+        super.setHome(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1).grow(10));
+        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
     }
 }

@@ -5,10 +5,12 @@ import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
+import de.teamlapen.vampirism.tileentity.TentTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -43,7 +45,6 @@ public abstract class HunterCampPieces extends StructurePiece {
     public static class Fireplace extends HunterCampPieces {
         boolean specialComponentAdd = false;
         private boolean advanced;
-        private boolean spawnedAdvancedHunter;
 
         public Fireplace(Random random, int x, int y, int z, Block baseBlock) {
             super(ModFeatures.hunter_camp_fireplace, 0, x, y, z, baseBlock);
@@ -53,7 +54,6 @@ public abstract class HunterCampPieces extends StructurePiece {
         public Fireplace(TemplateManager templateManager, CompoundNBT nbt) {
             super(ModFeatures.hunter_camp_fireplace, nbt);
             advanced = nbt.getBoolean("advanced");
-            spawnedAdvancedHunter = nbt.getBoolean("spawnedAdvancedHunter");
             specialComponentAdd = nbt.getBoolean("specialComponentAdd");
         }
 
@@ -66,20 +66,6 @@ public abstract class HunterCampPieces extends StructurePiece {
             this.setBlockState(worldIn, ModBlocks.fire_place.getDefaultState(), 1, 0, 1, structureBoundingBoxIn);
             this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), 1, 1, 1, structureBoundingBoxIn);
 
-            //TODO wont work see SwampHutPiece#addComponentParts
-//            if(this.advanced && !this.spawnedAdvancedHunter){
-//                int l = x;//this.getXWithOffset(1,1);
-//                int i1 = y;//this.getYWithOffset(1);
-//                int k = z;//this.getZWithOffset(1,1);
-//                if(structureBoundingBoxIn.isVecInside(new BlockPos(l,i1,k))) {
-//                    this.spawnedAdvancedHunter = true;
-//                    AdvancedHunterEntity hunter = ModEntities.advanced_hunter.create(worldIn.getWorld());
-//                    hunter.enablePersistence();
-//                    hunter.setLocationAndAngles(l + 0.5d, i1, k+0.5d, 0f, 0f);
-//                    hunter.onInitialSpawn(worldIn, worldIn.getDifficultyForLocation(new BlockPos(l, i1, k)), SpawnReason.STRUCTURE, null, null);
-//                    worldIn.addEntity(hunter);
-//                }
-//            }
             return true;
         }
 
@@ -89,8 +75,8 @@ public abstract class HunterCampPieces extends StructurePiece {
             @Nonnull List<Direction> directions = Lists.newArrayList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
             if (rand.nextInt(4) == 0) {
                 //advanced
-                listIn.add(getTentComponent(rand, directions));
-                listIn.add(getTentComponent(rand, directions));
+                listIn.add(getTentComponent(rand, directions, advanced));
+                listIn.add(getTentComponent(rand, directions, advanced));
                 int i = rand.nextInt(4);
                 if (i < 2)
                     listIn.add(getComponent(rand, directions, true));
@@ -99,7 +85,7 @@ public abstract class HunterCampPieces extends StructurePiece {
                 this.advanced = true;
             } else {
                 //normal
-                listIn.add(getTentComponent(rand, directions));
+                listIn.add(getTentComponent(rand, directions, false));
                 if (rand.nextInt(2) == 0)
                     listIn.add(getComponent(rand, directions, false));
             }
@@ -115,29 +101,28 @@ public abstract class HunterCampPieces extends StructurePiece {
             int z = this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 3 : -3 : 0);
 
             //make sure a crafting table is only generated once
-            if (!specialComponentAdd && rand.nextInt(1) == 0) {
+            if (!specialComponentAdd && rand.nextInt(2) == 0) {
                 specialComponentAdd = true;
                 return new SpecialBlock(x, y, z, direction, baseBlock, advanced);
             }
-            return new Tent(x, y, z, direction, baseBlock);
+            return new Tent(x, y, z, direction, baseBlock, advanced);
         }
 
         /**
          * @throws IllegalArgumentException if direction size == 0
          */
-        private StructurePiece getTentComponent(Random rand, List<Direction> directions) {
+        private StructurePiece getTentComponent(Random rand, List<Direction> directions, boolean advanced) {
             @Nonnull Direction direction = directions.remove(rand.nextInt(directions.size()));
             //blockpos at center of the 3x3 component
             int x = this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 3 : -3 : 0);
             int z = this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? 3 : -3 : 0);
-            return new Tent(x, y, z, direction, baseBlock);
+            return new Tent(x, y, z, direction, baseBlock, advanced);
         }
 
         @Override
         protected void readAdditional(CompoundNBT tagCompound) {
             super.readAdditional(tagCompound);
             tagCompound.putBoolean("advanced", this.advanced);
-            tagCompound.putBoolean("spawnedAdvancedHunter", this.spawnedAdvancedHunter);
             tagCompound.putBoolean("specialComponentAdd", this.specialComponentAdd);
         }
     }
@@ -147,17 +132,20 @@ public abstract class HunterCampPieces extends StructurePiece {
         private int mirror;
         int xDiff;
         int xCenter;
+        private final boolean advanced;
 
-        public Tent(int x, int y, int z, Direction direction, Block baseBlock) {
+        public Tent(int x, int y, int z, Direction direction, Block baseBlock, boolean advanced) {
             super(ModFeatures.hunter_camp_tent, 1, x, y, z, baseBlock);
             this.setCoordBaseMode(direction);
             this.direction = direction;
+            this.advanced = advanced;
         }
 
         public Tent(TemplateManager templateManager, CompoundNBT nbt) {
             super(ModFeatures.hunter_camp_tent, nbt);
             direction = Direction.byHorizontalIndex(nbt.getInt("direction"));
             mirror = nbt.getInt("mirror");
+            advanced = nbt.getBoolean("advanced");
         }
 
         @Override
@@ -202,6 +190,12 @@ public abstract class HunterCampPieces extends StructurePiece {
                 this.setBlockState(worldIn, ModBlocks.tent.getDefaultState().with(TentBlock.FACING, dir).with(TentBlock.POSITION, c), xDiff, 0, 1, structureBoundingBoxIn);
             }
 
+            if (this.advanced) {
+                TileEntity tile = worldIn.getTileEntity(new BlockPos(x, y, z));
+                if (tile instanceof TentTileEntity) {
+                    ((TentTileEntity) tile).setAdvanced(true);
+                }
+            }
             //generate floor
             BlockPos pos1 = new BlockPos(xCenter, y - 1, z - 1);
             if (worldIn.getBlockState(pos1).getMaterial().isReplaceable())
@@ -242,8 +236,9 @@ public abstract class HunterCampPieces extends StructurePiece {
 
         @Override
         protected void readAdditional(CompoundNBT tagCompound) {
-            tagCompound.putInt("direction", direction.getHorizontalIndex());
-            tagCompound.putInt("mirror", mirror);
+            tagCompound.putInt("direction", this.direction.getHorizontalIndex());
+            tagCompound.putInt("mirror", this.mirror);
+            tagCompound.putBoolean("advanced", this.advanced);
             super.readAdditional(tagCompound);
         }
 
@@ -254,7 +249,7 @@ public abstract class HunterCampPieces extends StructurePiece {
                     && !worldIn.getBlockState(new BlockPos(x, y - 1, z - 1)).getMaterial().isLiquid()
                     && !worldIn.getBlockState(new BlockPos(xCenter, y - 1, z)).getMaterial().isLiquid()
                     //distance to campfire block
-                    && !(Math.abs(this.y - worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) > 1);
+                    && (Math.abs(this.y - worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 2);
         }
     }
 
@@ -302,7 +297,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         @Override
         protected boolean testPreconditions(IWorld worldIn) {
             return super.testPreconditions(worldIn)
-                    && (Math.abs(this.y - worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) > 1);
+                    && (Math.abs(this.y - worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 3);
         }
     }
 

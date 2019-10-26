@@ -64,7 +64,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     private static final ITextComponent name = new TranslationTextComponent("container.hunter");
 
     private final int MAX_LEVEL = 3;
-    private final int MOVE_TO_RESTRICT_PRIO = 3;
     private final MeleeAttackGoal attackMelee;
     private final AttackRangedCrossbowGoal attackRange;
 
@@ -201,12 +200,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void makeCampHunter(AxisAlignedBB box) {
-        super.setHome(box);
-        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
-    }
-
-    @Override
     public void makeNormalHunter() {
         super.setHome(null);
         this.disableMoveTowardsRestriction();
@@ -216,7 +209,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     public void makeVillageHunter(AxisAlignedBB box) {
         super.setHome(box);
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
-
     }
 
     @Nullable
