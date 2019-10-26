@@ -4,6 +4,7 @@ import mcp.MethodsReturnNonnullByDefault;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 
 import java.util.List;
 import java.util.Set;
@@ -34,7 +35,7 @@ public interface IWorldGenManager {
      * @param structure  resourcelocation of the structure
      * @param categories categories
      */
-    void removeStructureFromBiomeCategories(ResourceLocation structure, List<Biome.Category> categories);
+    void removeStructureFromBiomeCategories(ResourceLocation structure, List<BiomeDictionary.Type> categories);
 
     /**
      * returns biome categories in which the named structure shouldn't be generated
@@ -42,7 +43,7 @@ public interface IWorldGenManager {
      * @param structure resourcelocation of the structure
      * @return set of biome categories to ignore
      */
-    Set<Biome.Category> getIgnoredBiomeCategories(ResourceLocation structure);
+    Set<BiomeDictionary.Type> getIgnoredBiomeCategories(ResourceLocation structure);
 
     /**
      * @return if the given structure can be generated in the given biome
