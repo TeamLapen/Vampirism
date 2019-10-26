@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.world.gen.features.VampireForestFlowerFeature;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
 import net.minecraft.block.Blocks;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FlowersFeature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -38,6 +37,6 @@ public class ModFeatures {
     }
 
     static void registerIgnoredBiomesForStructures() {
-        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(Biome.Category.OCEAN, Biome.Category.THEEND, Biome.Category.NETHER, Biome.Category.ICY, Biome.Category.BEACH, Biome.Category.RIVER, Biome.Category.SWAMP, Biome.Category.JUNGLE));
+        VampirismAPI.worldGenRegistry().removeStructureFromBiomeCategories(hunter_camp.getRegistryName(), Lists.newArrayList(BiomeDictionary.Type.OCEAN, BiomeDictionary.Type.END, BiomeDictionary.Type.NETHER, BiomeDictionary.Type.COLD, BiomeDictionary.Type.BEACH, BiomeDictionary.Type.RIVER, BiomeDictionary.Type.SWAMP, BiomeDictionary.Type.JUNGLE));
     }
 }

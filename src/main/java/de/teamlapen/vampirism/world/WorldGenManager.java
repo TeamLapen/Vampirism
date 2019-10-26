@@ -8,6 +8,7 @@ import mcp.MethodsReturnNonnullByDefault;
 import de.teamlapen.vampirism.api.world.IWorldGenManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -25,7 +26,7 @@ public class WorldGenManager implements IWorldGenManager {
      * stores structures {@link ResourceLocation} -> set of {@link Biome.Category}s in which the structure shouldn't be generated
      */
     private @Nonnull
-    final Map<ResourceLocation, Set<Biome.Category>> ignoreStructureBiomeCategory = Maps.newHashMap();
+    final Map<ResourceLocation, Set<BiomeDictionary.Type>> ignoreStructureBiomeCategory = Maps.newHashMap();
 
     @Override
     public void removeStructureFromBiomes(ResourceLocation structure, List<Biome> biomes) {
@@ -33,12 +34,12 @@ public class WorldGenManager implements IWorldGenManager {
     }
 
     @Override
-    public void removeStructureFromBiomeCategories(ResourceLocation structure, List<Biome.Category> categories) {
+    public void removeStructureFromBiomeCategories(ResourceLocation structure, List<BiomeDictionary.Type> categories) {
         this.ignoreStructureBiomeCategory.computeIfAbsent(structure, name -> Sets.newHashSet()).addAll(categories);
     }
 
     @Override
-    public Set<Biome.Category> getIgnoredBiomeCategories(ResourceLocation structure) {
+    public Set<BiomeDictionary.Type> getIgnoredBiomeCategories(ResourceLocation structure) {
         if (!ignoreStructureBiomeCategory.containsKey(structure)) return Sets.newHashSet();
         return ImmutableSet.copyOf(ignoreStructureBiomeCategory.get(structure));
     }
@@ -55,7 +56,7 @@ public class WorldGenManager implements IWorldGenManager {
             if (ignoreStructureBiome.get(structure).contains(biome)) return false;
         }
         if (ignoreStructureBiomeCategory.containsKey(structure)) {
-            if (ignoreStructureBiomeCategory.get(structure).contains(biome.getCategory())) return false;
+            if (ignoreStructureBiomeCategory.get(structure).containsAll(BiomeDictionary.getTypes(biome))) return false;
         }
         return true;
     }
