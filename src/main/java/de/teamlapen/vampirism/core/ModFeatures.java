@@ -15,6 +15,7 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.TreeFeature;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModFeatures {
