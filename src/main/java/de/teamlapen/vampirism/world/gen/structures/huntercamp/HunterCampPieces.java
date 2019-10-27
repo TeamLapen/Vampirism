@@ -190,12 +190,14 @@ public abstract class HunterCampPieces extends StructurePiece {
                 this.setBlockState(worldIn, ModBlocks.tent.getDefaultState().with(TentBlock.FACING, dir).with(TentBlock.POSITION, c), xDiff, 0, 1, structureBoundingBoxIn);
             }
 
-            if (this.advanced) {
-                TileEntity tile = worldIn.getTileEntity(new BlockPos(x, y, z));
-                if (tile instanceof TentTileEntity) {
+            TileEntity tile = worldIn.getTileEntity(new BlockPos(x, y, z));
+            if (tile instanceof TentTileEntity) {
+                ((TentTileEntity) tile).setSpawn(true);
+                if (this.advanced) {
                     ((TentTileEntity) tile).setAdvanced(true);
                 }
             }
+
             //generate floor
             BlockPos pos1 = new BlockPos(xCenter, y - 1, z - 1);
             if (worldIn.getBlockState(pos1).getMaterial().isReplaceable())
