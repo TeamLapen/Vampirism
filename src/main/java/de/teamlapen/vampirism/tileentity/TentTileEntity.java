@@ -27,7 +27,7 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
 
     private final SimpleSpawnerLogic<BasicHunterEntity> spawnerLogicHunter;
     private final SimpleSpawnerLogic<AdvancedHunterEntity> spawnerLogicAdvancedHunter;
-    private boolean spawn = true;
+    private boolean spawn = false;
     private boolean advanced = false;
 
     public TentTileEntity() {
