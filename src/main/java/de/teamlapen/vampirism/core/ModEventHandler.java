@@ -50,6 +50,7 @@ import java.util.List;
  */
 public class ModEventHandler {
     private final static String TAG = "EventHandler";
+    private boolean warnedVillageGen = false;
 
     @SubscribeEvent
     public void onAttachCapabilitiesVillage(AttachCapabilitiesEvent<Village> event) {
@@ -87,7 +88,10 @@ public class ModEventHandler {
     public void onInitMapGen(InitMapGenEvent event) {
         if (event.getType().equals(InitMapGenEvent.EventType.VILLAGE) && Configs.village_modify) {
             if (event.getNewGen() != event.getOriginalGen()) {
-                VampirismMod.log.w("VillageGen", "The village map generator was overwritten by another mod. There might be a problem! \n The new generator class is " + event.getNewGen().getClass().getCanonicalName());
+                if (!warnedVillageGen) {
+                    warnedVillageGen = true;
+                    VampirismMod.log.w(TAG, "The village map generator was overwritten by another mod. There might be a problem! \n The new generator class is " + event.getNewGen().getClass().getCanonicalName());
+                }
             }
             ModVillages.modifyVillageSize(event.getNewGen());
         }

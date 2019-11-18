@@ -52,9 +52,8 @@ public class ModVillages {
         }
     }
 
-    public static void modifyVillageSize(MapGenBase mapGenVillage) {
+    static void modifyVillageSize(MapGenBase mapGenVillage) {
         if (mapGenVillage instanceof MapGenVillage) {
-
 
             try {
                 ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_size, "size", SRGNAMES.MapGenVillage_size);
