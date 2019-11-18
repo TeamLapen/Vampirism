@@ -30,8 +30,8 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
         return true;
     }
 
-    private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 6, 8, 3};
-    private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{2, 6, 7, 2};
+    private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 7, 9, 3};
+    private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{3, 6, 8, 3};
     private final int[] DAMAGE_REDUCTION_NORMAL = new int[]{2, 5, 6, 2};
 
     private final TIER tier;

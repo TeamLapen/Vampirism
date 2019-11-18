@@ -33,9 +33,9 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
         return true;
     }
     private final TIER tier;
-    private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{4, 7, 9, 4};
-    private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{3, 7, 8, 3};
-    private final int[] DAMAGE_REDUCTION_NORMAL = new int[]{3, 6, 7, 3};
+    private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{5, 10, 11, 5};
+    private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{4, 8, 10, 4};
+    private final int[] DAMAGE_REDUCTION_NORMAL = new int[]{3, 7, 9, 3};
 
     private final float[] SPEED_REDUCTION = new float[]{-0.025F, -0.1F, -0.05F, -0.025F};
 
