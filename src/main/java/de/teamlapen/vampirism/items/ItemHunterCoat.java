@@ -10,6 +10,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
         return true;
     }
 
-    private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 6, 8, 3};
-    private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{2, 6, 7, 2};
+    private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{3, 7, 9, 3};
+    private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{3, 6, 8, 3};
     private final int[] DAMAGE_REDUCTION_NORMAL = new int[]{2, 5, 6, 2};
 
     public ItemHunterCoat(EntityEquipmentSlot equipmentSlotIn) {
