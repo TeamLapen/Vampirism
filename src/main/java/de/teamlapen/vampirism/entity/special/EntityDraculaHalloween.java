@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.util.HalloweenSpecial;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +30,7 @@ import java.util.UUID;
  */
 public class EntityDraculaHalloween extends EntityVampirism {
 
-    protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityTameable.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityDraculaHalloween.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private int seen = 0;
     private int hiding = 0;
     private boolean particle = false;
