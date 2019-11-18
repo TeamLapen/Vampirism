@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.util.HalloweenSpecial;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -36,7 +35,7 @@ import java.util.UUID;
  */
 public class DraculaHalloweenEntity extends VampirismEntity {
 
-    protected static final DataParameter<java.util.Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(TameableEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    protected static final DataParameter<java.util.Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(DraculaHalloweenEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private final static Logger LOGGER = LogManager.getLogger(DraculaHalloweenEntity.class);
     private int seen = 0;
     private int hiding = 0;
