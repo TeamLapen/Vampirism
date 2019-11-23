@@ -710,11 +710,18 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
                     DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), player.ticksExisted);
                 }
-                if (player.isAlive() && player.isInWater()) {
+                if (player.isAlive()) {
                     player.setAir(300);
-                    if (player.ticksExisted % 16 == 4 && !getSpecialAttributes().waterResistance) {
-                        player.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, (int) (getLevel() / (float) getMaxLevel() * 3)));
+                    if (player.ticksExisted % 16 == 4 && !getSpecialAttributes().waterResistance && !player.abilities.isCreativeMode) {
+                        if (player.isInWater()) {
+                            player.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, (int) (getLevel() / (float) getMaxLevel() * 3)));
+
+                        } else if (player.isWet()) {
+                            player.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
+                        }
                     }
+
+
                 }
 
                 if (player.ticksExisted % 9 == 3 && player.isPotionActive(Effects.FIRE_RESISTANCE)) {
