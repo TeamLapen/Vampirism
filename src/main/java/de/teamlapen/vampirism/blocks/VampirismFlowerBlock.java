@@ -10,7 +10,6 @@ import net.minecraft.util.IStringSerializable;
  * Vampirism's flowers. To add one add it to {@link TYPE}
  */
 public class VampirismFlowerBlock extends BushBlock {
-    private final static String regName = "vampirism_flower";
     private final TYPE type;
 
     public VampirismFlowerBlock(TYPE type) {

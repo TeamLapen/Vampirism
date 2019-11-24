@@ -178,6 +178,8 @@ public class ModItems {
     public static final SpawnEggItem vampire_baron_spawn_egg = getNull();
     public static final SpawnEggItem hunter_trainer_spawn_egg = getNull();
 
+    public static final UmbrellaItem umbrella = getNull();
+
 
     static void registerCraftingRecipes() {
         // Brewing
@@ -373,6 +375,7 @@ public class ModItems {
         registry.register(new BucketItem(ModFluids.impure_blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "impure_blood_bucket"));
 
         registry.register(new GarlicBreadItem());
+        registry.register(new UmbrellaItem());
     }
 
     private static Item.Properties creativeTabProps() {
