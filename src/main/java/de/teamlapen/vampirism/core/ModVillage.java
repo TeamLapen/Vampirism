@@ -2,10 +2,9 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-
 import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.util.REFERENCE;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.ai.brain.schedule.Activity;
 import net.minecraft.entity.ai.brain.schedule.Schedule;
 import net.minecraft.entity.ai.brain.schedule.ScheduleBuilder;
@@ -87,9 +86,9 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.hunter_coat_legs_enhanced, new Trades.Price(1, 1)),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.hunter_coat_feet_enhanced, new Trades.Price(1, 1)),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.hunter_coat_head_enhanced, new Trades.Price(1, 1)),
-                        new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.armor_of_swiftness_chest_ultimate, new Trades.Price(1, 1)),
-                        new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.armor_of_swiftness_legs_ultimate, new Trades.Price(1, 1)),
-                        new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.armor_of_swiftness_feet_ultimate, new Trades.Price(1, 1)),
+                        new Trades.ItemsForSouls(new Trades.Price(30, 45), ModItems.armor_of_swiftness_chest_ultimate, new Trades.Price(1, 1)),
+                        new Trades.ItemsForSouls(new Trades.Price(25, 45), ModItems.armor_of_swiftness_legs_ultimate, new Trades.Price(1, 1)),
+                        new Trades.ItemsForSouls(new Trades.Price(10, 30), ModItems.armor_of_swiftness_feet_ultimate, new Trades.Price(1, 1)),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.armor_of_swiftness_head_ultimate, new Trades.Price(1, 1))
                 },
                 4, new VillagerTrades.ITrade[]{
@@ -99,16 +98,16 @@ public class ModVillage {
                         new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.obsidian_armor_legs_enhanced, new Trades.Price(1, 1)),
                         new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.obsidian_armor_feet_enhanced, new Trades.Price(1, 1)),
                         new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.obsidian_armor_head_enhanced, new Trades.Price(1, 1)),
-                        new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.hunter_coat_chest_ultimate, new Trades.Price(1, 1)),
-                        new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.hunter_coat_legs_ultimate, new Trades.Price(1, 1)),
-                        new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.hunter_coat_feet_ultimate, new Trades.Price(1, 1)),
-                        new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.hunter_coat_head_ultimate, new Trades.Price(1, 1))
+                        new Trades.ItemsForSouls(new Trades.Price(30, 55), ModItems.hunter_coat_chest_ultimate, new Trades.Price(1, 1)),
+                        new Trades.ItemsForSouls(new Trades.Price(25, 55), ModItems.hunter_coat_legs_ultimate, new Trades.Price(1, 1)),
+                        new Trades.ItemsForSouls(new Trades.Price(20, 35), ModItems.hunter_coat_feet_ultimate, new Trades.Price(1, 1)),
+                        new Trades.ItemsForSouls(new Trades.Price(20, 35), ModItems.hunter_coat_head_ultimate, new Trades.Price(1, 1))
                 },
                 5, new VillagerTrades.ITrade[]{
-                        new Trades.ItemsForSouls(new Trades.Price(30, 40), ModItems.obsidian_armor_chest_ultimate, new Trades.Price(1, 1)),
-                        new Trades.ItemsForSouls(new Trades.Price(25, 35), ModItems.obsidian_armor_legs_ultimate, new Trades.Price(1, 1)),
-                        new Trades.ItemsForSouls(new Trades.Price(10, 15), ModItems.obsidian_armor_feet_ultimate, new Trades.Price(1, 1)),
-                        new Trades.ItemsForSouls(new Trades.Price(20, 30), ModItems.obsidian_armor_head_ultimate, new Trades.Price(1, 1))
+                        new Trades.ItemsForSouls(new Trades.Price(30, 64), ModItems.obsidian_armor_chest_ultimate, new Trades.Price(1, 1)),
+                        new Trades.ItemsForSouls(new Trades.Price(25, 64), ModItems.obsidian_armor_legs_ultimate, new Trades.Price(1, 1)),
+                        new Trades.ItemsForSouls(new Trades.Price(20, 40), ModItems.obsidian_armor_feet_ultimate, new Trades.Price(1, 1)),
+                        new Trades.ItemsForSouls(new Trades.Price(20, 40), ModItems.obsidian_armor_head_ultimate, new Trades.Price(1, 1))
                 });
     }
 
