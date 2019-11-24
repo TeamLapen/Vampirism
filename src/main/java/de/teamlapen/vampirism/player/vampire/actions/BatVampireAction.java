@@ -119,8 +119,10 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public void onActivatedClient(IVampirePlayer vampire) {
-        setPlayerBat(vampire.getRepresentingPlayer(), true);
-        ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
+        if (!((VampirePlayer) vampire).getSpecialAttributes().bat) {
+            setPlayerBat(vampire.getRepresentingPlayer(), true);
+            ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
+        }
     }
 
     @Override
@@ -144,8 +146,10 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public void onReActivated(IVampirePlayer vampire) {
         setModifier(vampire.getRepresentingPlayer(), true);
-        setPlayerBat(vampire.getRepresentingPlayer(), true);
-        ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
+        if (!((VampirePlayer) vampire).getSpecialAttributes().bat) {
+            setPlayerBat(vampire.getRepresentingPlayer(), true);
+            ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
+        }
     }
 
     @Override
