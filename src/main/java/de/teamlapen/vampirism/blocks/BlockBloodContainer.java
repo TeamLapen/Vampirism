@@ -87,9 +87,11 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     @Override
     public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack heldStack) {
         ItemStack stack = new ItemStack(ModBlocks.blood_container, 1);
-        FluidStack fluid = ((TileBloodContainer) te).getTankInfo().fluid;
-        if (fluid != null && fluid.amount > 0) {
-            stack.setTagInfo("fluid", fluid.writeToNBT(new NBTTagCompound()));
+        if (te != null) {
+            FluidStack fluid = ((TileBloodContainer) te).getTankInfo().fluid;
+            if (fluid != null && fluid.amount > 0) {
+                stack.setTagInfo("fluid", fluid.writeToNBT(new NBTTagCompound()));
+            }
         }
         spawnAsEntity(worldIn, pos, stack);
     }
