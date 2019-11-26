@@ -30,6 +30,8 @@ import net.minecraftforge.fluids.FluidUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
+
 /**
  * Tileentity container that can store liquids.
  */
@@ -73,11 +75,13 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, TileEntity te, ItemStack heldStack) {
+    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack heldStack) {
         ItemStack stack = new ItemStack(ModBlocks.blood_container, 1);
-        FluidStack fluid = ((BloodContainerTileEntity) te).getFluid();
-        if (!fluid.isEmpty() && fluid.getAmount() > 0) {
-            stack.setTagInfo("fluid", fluid.writeToNBT(new CompoundNBT()));
+        if (te != null) {
+            FluidStack fluid = ((BloodContainerTileEntity) te).getFluid();
+            if (!fluid.isEmpty() && fluid.getAmount() > 0) {
+                stack.setTagInfo("fluid", fluid.writeToNBT(new CompoundNBT()));
+            }
         }
         spawnAsEntity(worldIn, pos, stack);
     }
