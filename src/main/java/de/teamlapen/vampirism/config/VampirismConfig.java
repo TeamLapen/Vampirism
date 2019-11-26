@@ -113,6 +113,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue playerCanTurnPlayer;
         public final ForgeConfigSpec.BooleanValue factionColorInChat;
         public final ForgeConfigSpec.EnumValue<IMobOptions> entityIMob;
+        public final ForgeConfigSpec.BooleanValue umbrella;
 
 
         public final ForgeConfigSpec.BooleanValue sundamageUnknownDimension;
@@ -148,7 +149,7 @@ public class VampirismConfig {
             playerCanTurnPlayer = builder.comment("Whether players can infect other players").define("playersCanTurnPlayers", true);
             factionColorInChat = builder.comment("Whether to color player names in chat based on their current faction").define("factionColorInChat", true);
             entityIMob = builder.comment("Changes if entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers ").defineEnum("entitiesIMob", IMobOptions.SMART);
-
+            umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
 
             builder.push("sundamage");
             sundamageUnknownDimension = builder.comment("Whether vampires should receive sundamage in unknown dimensions").define("sundamageUnknownDimension", false);

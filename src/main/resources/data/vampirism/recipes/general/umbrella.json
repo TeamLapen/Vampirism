@@ -16,6 +16,12 @@
       "item": "vampirism:vampire_orchid"
     }
   },
+  "conditions": [
+    {
+      "type": "vampirism:config",
+      "option": "umbrella"
+    }
+  ],
   "result": {
     "item": "vampirism:umbrella",
     "count": 1

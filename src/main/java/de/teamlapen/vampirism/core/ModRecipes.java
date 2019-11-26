@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.Maps;
-
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.inventory.recipes.*;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -36,7 +35,7 @@ public class ModRecipes {
     @ObjectHolder(REFERENCE.MODID + ":alchemical_cauldron")
     public static final IRecipeSerializer<AlchemicalCauldronRecipe> alchemical_cauldron = getNull();
 
-    public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(AutoConvertGlassBottleCondition.Serializer.INSTANCE);
+    public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(new ConfigCondition.Serializer());
 
     private static final Map<Item, Integer> liquidColors = Maps.newHashMap();
 

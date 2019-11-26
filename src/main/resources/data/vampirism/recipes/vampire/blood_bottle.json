@@ -1,8 +1,13 @@
 {
   "conditions": [
     {
-      "type": "vampirism:auto_convert_glass_bottle"
+      "type": "forge:not",
+      "value": {
+        "type": "vampirism:config",
+        "option": "auto_convert"
+      }
     }
+
   ],
   "result": {
     "item": "vampirism:blood_bottle",
