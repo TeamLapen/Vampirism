@@ -45,6 +45,7 @@ import java.util.function.Supplier;
  * Sends any input related event to the server
  */
 public class InputEventPacket implements IMessage {
+
     public static final String SUCKBLOOD = "sb";
     public static final String ENDSUCKBLOOD = "esb";
     public static final String TOGGLEACTION = "ta";
@@ -52,16 +53,15 @@ public class InputEventPacket implements IMessage {
     public static final String RESETSKILL = "rs";
     public static final String TRAINERLEVELUP = "tl";
     public static final String REVERTBACK = "rb";
-    public static final String WAKEUP = "wu";
     public static final String VAMPIRE_VISION_TOGGLE = "vvt";
     public static final String CRAFT_BLOOD_POTION = "cb";
     public static final String OPEN_BLOOD_POTION = "ob";
     public static final String BASICHUNTERLEVELUP = "bl";
     public static final String DRINK_BLOOD_BLOCK = "db";
     public static final String NAME_ITEM = "ni";
-    private final static Logger LOGGER = LogManager.getLogger();
-    private final static String SPLIT = "&";
-    private final static String TAG = "InputEventPacket";
+
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final String SPLIT = "&";
 
     static void encode(InputEventPacket msg, PacketBuffer buf) {
         buf.writeString(msg.action + SPLIT + msg.param);
@@ -203,9 +203,6 @@ public class InputEventPacket implements IMessage {
                         player.attackEntityFrom(DamageSource.MAGIC, 1000);
 
                     }
-                    break;
-                case WAKEUP:
-                    VampirePlayer.get(player).wakeUpPlayer(false, true, true);
                     break;
                 case VAMPIRE_VISION_TOGGLE:
                     VampirePlayer.get(player).switchVision();

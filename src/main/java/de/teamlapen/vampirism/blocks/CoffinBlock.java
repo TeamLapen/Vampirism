@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.blocks;
 
-import com.mojang.datafixers.util.Either;
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import com.google.common.collect.ImmutableMap;
+
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
@@ -16,7 +18,6 @@ import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.stats.Stats;
@@ -26,11 +27,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraftforge.common.extensions.IForgeDimension;
 
@@ -38,6 +37,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -49,8 +49,8 @@ public class CoffinBlock extends VampirismBlockContainer {
     public static final String name = "coffin";
     public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
     public static final BooleanProperty OCCUPIED = BooleanProperty.create("occupied");
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     private static final VoxelShape shape = makeShape();
+    private static final Map<PlayerEntity.SleepResult, ITextComponent> sleepResults = ImmutableMap.of(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW, new TranslationTextComponent("text.vampirism.coffin.no_sleep"), PlayerEntity.SleepResult.TOO_FAR_AWAY, new TranslationTextComponent("text.vampirism.coffin.too_far_away"), PlayerEntity.SleepResult.OBSTRUCTED, new TranslationTextComponent("text.vampirism.coffin.obstructed"));
 
     public static boolean isOccupied(IBlockReader world, BlockPos pos) {
         return world.getBlockState(pos).get(OCCUPIED);
@@ -75,35 +75,38 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     public CoffinBlock() {
         super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.2f));
-        this.setDefaultState(this.getStateContainer().getBaseState().with(OCCUPIED, Boolean.FALSE).with(PART, CoffinPart.FOOT).with(FACING, Direction.NORTH));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(OCCUPIED, Boolean.FALSE).with(PART, CoffinPart.FOOT).with(HORIZONTAL_FACING, Direction.NORTH));
 
     }
 
     @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean allowsMovement(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public TileEntity createNewTileEntity(@Nonnull IBlockReader worldIn) {
         return new CoffinTileEntity();
     }
 
     @Override
     public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos) {
-        return state.get(FACING);
+        return state.get(HORIZONTAL_FACING);
     }
 
+    @Nonnull
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, @Nonnull LootContext.Builder builder) {
         return state.get(PART) == CoffinPart.FOOT ? Collections.emptyList() : super.getDrops(state, builder);
     }
 
+    @Nonnull
     @Override
     public PushReaction getPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }
 
+    @Nonnull
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
@@ -115,6 +118,7 @@ public class CoffinBlock extends VampirismBlockContainer {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
+    @Nonnull
     @Override
     public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
         return shape;
@@ -126,7 +130,7 @@ public class CoffinBlock extends VampirismBlockContainer {
         Direction enumfacing = context.getPlacementHorizontalFacing();
         BlockPos blockpos = context.getPos();
         BlockPos blockpos1 = blockpos.offset(enumfacing);
-        return context.getWorld().getBlockState(blockpos1).isReplaceable(context) ? this.getDefaultState().with(FACING, enumfacing) : null;
+        return context.getWorld().getBlockState(blockpos1).isReplaceable(context) ? this.getDefaultState().with(HORIZONTAL_FACING, enumfacing) : null;
     }
 
     @Override
@@ -140,13 +144,13 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public boolean isNormalCube(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return false;
     }
 
     @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        Direction enumfacing = state.get(FACING);
+        Direction enumfacing = state.get(HORIZONTAL_FACING);
 
         if (state.get(PART) == CoffinPart.HEAD) {
             if (worldIn.getBlockState(pos.offset(enumfacing.getOpposite())).getBlock() != this) {
@@ -162,15 +166,15 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 
-        if (world.isRemote) {
+        if (worldIn.isRemote) {
             return true;
         } else {
             ItemStack heldItem = player.getHeldItem(hand);
             if (!heldItem.isEmpty() && heldItem.getItem() instanceof DyeItem) {
-                CoffinTileEntity tile = (CoffinTileEntity) world.getTileEntity(pos);
-                TileEntity other = state.get(PART) == CoffinPart.HEAD ? world.getTileEntity(pos.offset(state.get(FACING).getOpposite())) : world.getTileEntity(pos.offset(state.get(FACING)));
+                CoffinTileEntity tile = (CoffinTileEntity) worldIn.getTileEntity(pos);
+                TileEntity other = state.get(PART) == CoffinPart.HEAD ? worldIn.getTileEntity(pos.offset(state.get(HORIZONTAL_FACING).getOpposite())) : worldIn.getTileEntity(pos.offset(state.get(HORIZONTAL_FACING)));
                 if (!(other instanceof CoffinTileEntity)) {
                     return true;
                 }
@@ -182,62 +186,48 @@ public class CoffinBlock extends VampirismBlockContainer {
                 return true;
             }
             if (state.get(PART) != CoffinPart.HEAD) {
-                pos = pos.offset(state.get(FACING));
-                state = world.getBlockState(pos);
+                pos = pos.offset(state.get(HORIZONTAL_FACING));
+                state = worldIn.getBlockState(pos);
                 if (state.getBlock() != this) {
                     return true;
                 }
             }
 
             if (VampirePlayer.get(player).getLevel() == 0) {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.coffin.cant_use"));
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.coffin.cant_use"), true);
                 return true;
             }
 
-            IForgeDimension.SleepResult sleepResult = world.dimension.canSleepAt(player, pos);
+            IForgeDimension.SleepResult sleepResult = worldIn.dimension.canSleepAt(player, pos);
             if (sleepResult != IForgeDimension.SleepResult.BED_EXPLODES) {
                 if (sleepResult == IForgeDimension.SleepResult.DENY) return true;
                 if (state.get(OCCUPIED)) {
-                    PlayerEntity entityplayer = this.getPlayerInCoffin(world, pos);
-
-                    if (entityplayer != null) {
-                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
-                        return true;
-                    }
-
-                    state = state.with(OCCUPIED, Boolean.FALSE);
-                    world.setBlockState(pos, state, 4);
-                }
-
-                IVampirePlayer vampire = VReference.VAMPIRE_FACTION.getPlayerCapability(player);
-
-                Either<PlayerEntity.SleepResult, Unit> entityplayer$enumstatus = vampire.trySleep(pos);
-
-                if (entityplayer$enumstatus.right().isPresent()) {
-                    state = state.with(OCCUPIED, Boolean.TRUE);
-                    world.setBlockState(pos, state, 4);
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
                     return true;
                 } else {
-                    entityplayer$enumstatus.left().ifPresent((result) -> {
-                        if (result == PlayerEntity.SleepResult.NOT_POSSIBLE_NOW) {
-                            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.coffin.no_sleep"), true);
-                        } else if (result == PlayerEntity.SleepResult.NOT_SAFE) {
-                            player.sendStatusMessage(new TranslationTextComponent("block.minecraft.bed.not_safe"), true);
+                    player.trySleep(pos).ifLeft(sleepResult1 -> {
+                        if (sleepResult1 != null) {
+                            player.sendStatusMessage(sleepResults.getOrDefault(sleepResult1, null), true);
                         }
                     });
                     return true;
                 }
             } else {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.coffin.wrong_dimension"));
+                worldIn.removeBlock(pos, false);
+                BlockPos blockPos = pos.offset(state.get(HORIZONTAL_FACING).getOpposite());
+                if (worldIn.getBlockState(blockPos).getBlock() == this) {
+                    worldIn.removeBlock(blockPos, false);
+                }
+                worldIn.createExplosion((Entity) null, DamageSource.netherBedExplosion(), (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
                 return true;
             }
         }
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, @Nonnull PlayerEntity player) {
         CoffinPart part = state.get(PART);
-        BlockPos blockpos = pos.offset(getDirectionToOther(part, state.get(FACING)));
+        BlockPos blockpos = pos.offset(getDirectionToOther(part, state.get(HORIZONTAL_FACING)));
         BlockState blockstate = worldIn.getBlockState(blockpos);
         if (blockstate.getBlock() == this && blockstate.get(PART) != part) {
             worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 35);
@@ -264,9 +254,10 @@ public class CoffinBlock extends VampirismBlockContainer {
         }
     }
 
+    @Nonnull
     @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (facing == getDirectionToOther(stateIn.get(PART), stateIn.get(FACING))) {
+        if (facing == getDirectionToOther(stateIn.get(PART), stateIn.get(HORIZONTAL_FACING))) {
             return facingState.getBlock() == this && facingState.get(PART) != stateIn.get(PART) ? stateIn.with(OCCUPIED, facingState.get(OCCUPIED)) : Blocks.AIR.getDefaultState();
         } else {
             return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -275,7 +266,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, OCCUPIED, PART);
+        builder.add(HORIZONTAL_FACING, OCCUPIED, PART);
     }
 
     /**
@@ -285,10 +276,10 @@ public class CoffinBlock extends VampirismBlockContainer {
      * @param pos
      * @return
      */
-    private @Nullable
-    PlayerEntity getPlayerInCoffin(World worldIn, BlockPos pos) {
+    @Nullable
+    private PlayerEntity getPlayerInCoffin(World worldIn, BlockPos pos) {
         for (PlayerEntity entityplayer : worldIn.getPlayers()) {
-            if (VampirePlayer.get(entityplayer).isPlayerSleeping() && entityplayer.getBedLocation().equals(pos)) {
+            if (entityplayer.isSleeping() && entityplayer.getBedLocation(worldIn.getDimension().getType()).equals(pos)) {
                 return entityplayer;
             }
         }
@@ -306,6 +297,7 @@ public class CoffinBlock extends VampirismBlockContainer {
             this.name = name;
         }
 
+        @Nonnull
         public String getName() {
             return this.name;
         }

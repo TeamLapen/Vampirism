@@ -145,6 +145,8 @@
   "text.vampirism.cant_fly_end": "You are not able to transfrom into a bat in the End",
   "text.vampirism.no_more_minions": "You are not able to control any more minions",
   "text.vampirism.coffin.no_sleep": "You can only sleep at day",
+  "text.vampirism.coffin.too_far_away": "You may not rest now; the coffin is too far away",
+  "text.vampirism.coffin.obstructed": "This coffin is obstructed",
   "text.vampirism.coffin.occupied": "This coffin is occupied",
   "text.vampirism.coffin.stopsleeping": "Leave coffin",
   "text.vampirism.coffin.cant_use": "You can't sleep in a coffin",
