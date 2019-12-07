@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
-import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -8,9 +7,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Unit;
-import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,14 +75,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     boolean isVampireLord();
 
     /**
-     * Try to sleep at the given location during daytime
-     *
-     * @param pos
-     * @return
-     */
-    Either<PlayerEntity.SleepResult, Unit> trySleep(BlockPos pos);
-
-    /**
      * Locks the vision again, preventing the player from using it
      *
      * @param vision
@@ -100,15 +88,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @param vision
      */
     void unlockVision(@Nonnull IVampireVision vision);
-
-    /**
-     * Wake up the player if he is sleeping in a coffin
-     *
-     * @param immediately
-     * @param updateWorldFlag
-     * @param setSpawn
-     */
-    void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn);
 
     enum BITE_TYPE {
         ATTACK, ATTACK_HUNTER, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD_HUNTER_PLAYER, SUCK_BLOOD, NONE, HUNTER_CREATURE

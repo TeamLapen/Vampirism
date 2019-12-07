@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
@@ -13,6 +14,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -44,7 +46,9 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -53,6 +57,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
 
 /**
  * Event handler for player related events
@@ -298,5 +304,22 @@ public class ModPlayerEventHandler {
         return true;
     }
 
+    @SubscribeEvent
+    public void sleepTimeCheck(SleepingTimeCheckEvent event) {
+        if (FactionPlayerHandler.get(event.getPlayer()).isInFaction(VReference.VAMPIRE_FACTION)) {
+            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getPlayer().world.getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getPlayer().world.isDaytime() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
+        }
+    }
 
+    @SubscribeEvent
+    public void sleepTimeFinish(SleepFinishedTimeEvent event) {
+        if (event.getWorld().getWorld().isDaytime()) {
+            boolean sleepingInCoffin = event.getWorld().getPlayers().stream().anyMatch(player -> {
+                Optional<BlockPos> pos = player.getBedPosition();
+                return pos.isPresent() && event.getWorld().getBlockState(pos.get()).getBlock() instanceof CoffinBlock;
+            });
+            if (sleepingInCoffin)
+                event.setTimeAddition(event.getNewTime() - 11000L);
+        }
+    }
 }

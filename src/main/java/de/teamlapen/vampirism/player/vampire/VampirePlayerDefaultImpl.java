@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.vampire;
 
-import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -11,8 +10,6 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Unit;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -193,11 +190,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public Either<PlayerEntity.SleepResult, Unit> trySleep(BlockPos pos) {
-        return null;
-    }
-
-    @Override
     public void unUnlockVision(@Nonnull IVampireVision vision) {
 
     }
@@ -210,11 +202,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     @Override
     public boolean useBlood(int amt, boolean allowPartial) {
         return false;
-    }
-
-    @Override
-    public void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn) {
-
     }
 
     @Override

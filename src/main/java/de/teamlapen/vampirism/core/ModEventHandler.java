@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import com.mojang.datafixers.util.Pair;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
@@ -11,7 +12,6 @@ import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.network.BloodValuePacket;
 import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
-import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Blocks;
@@ -26,7 +26,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.OverworldChunkGenerator;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -139,16 +138,6 @@ public class ModEventHandler {
 
         if (!PermissionAPI.hasPermission(event.getPlayer(), Permissions.VAMPIRISM)) {
             event.getPlayer().sendMessage(new StringTextComponent("[" + TextFormatting.DARK_PURPLE + "Vampirism" + TextFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.VAMPIRISM + "' to suppress this warning)."));
-        }
-    }
-
-    @SubscribeEvent
-    public void onWorldTick(TickEvent.WorldTickEvent event) {
-        if (event.phase.equals(TickEvent.Phase.END)) {
-            //VampirismVillageHelper.tick(event.world);
-            if (event.world.getGameTime() % 16 == 0) {
-                DaySleepHelper.checkSleepWorld(event.world);
-            }
         }
     }
 

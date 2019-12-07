@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player.vampire;
 
-import com.mojang.datafixers.util.Either;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -37,21 +36,21 @@ import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
-import net.minecraft.network.play.server.SAnimateHandPacket;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
@@ -138,8 +137,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private int fangType = 0;
     private boolean glowingEyes = true;
     private int ticksInSun = 0;
-    private boolean sleepingInCoffin = false;
-    private int sleepTimer = 0;
     private boolean wasDead = false;
     private List<IVampireVision> unlockedVisions = new ArrayList<>();
     private IVampireVision activatedVision = null;
@@ -473,14 +470,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return false;
     }
 
-    public boolean isPlayerFullyAsleep() {
-        return sleepingInCoffin && sleepTimer >= 100;
-    }
-
-    public boolean isPlayerSleeping() {
-        return sleepingInCoffin;
-    }
-
     @Override
     public boolean isVampireLord() {
         return false;
@@ -533,9 +522,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
-        if (isPlayerSleeping()) {
-            wakeUpPlayer(true, true, false);
-        }
         if (getLevel() > 0) {
             if (DamageSource.ON_FIRE.equals(src)) {
 
@@ -665,32 +651,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             sundamage_cache = false;
             garlic_cache = EnumStrength.NONE;
         }
-
-        if (this.isPlayerSleeping()) {
-            player.noClip = true;
-            player.setMotion(0.0D, 0.0D, 0.0D);
-            ++this.sleepTimer;
-
-            if (this.sleepTimer > 100) {
-                this.sleepTimer = 100;
-            }
-
-            if (!world.isRemote) {
-                BlockState state = world.getBlockState(player.getBedLocation());
-                boolean bed = state.getBlock().isBed(state, world, player.getBedLocation(), player);
-                if (!bed) {
-                    wakeUpPlayer(true, true, false);
-                } else if (!world.isDaytime()) {
-                    wakeUpPlayer(false, true, true);
-                }
-            }
-        } else if (this.sleepTimer > 0) {
-            ++this.sleepTimer;
-
-            if (this.sleepTimer >= 110) {
-                this.sleepTimer = 0;
-            }
-        }
         if (activatedVision != null) {
             activatedVision.tick(this);
         }
@@ -796,9 +756,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (getSpecialAttributes().bat) {
                 BatVampireAction.updatePlayerBatSize(player);
             }
-            if (sleepingInCoffin) {
-                setEntitySize(0.2F, 0.2F);
-            }
         }
     }
 
@@ -893,91 +850,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    public Either<PlayerEntity.SleepResult, Unit> trySleep(BlockPos bedLocation) {
-
-        if (!player.world.isRemote) {
-            if (player.isSleeping() || !player.isAlive()) {
-                return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
-            }
-
-            if (!player.world.dimension.isSurfaceWorld()) {
-                return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_HERE);
-            }
-
-            if (Math.abs(player.posX - (double) bedLocation.getX()) > 3.0D || Math.abs(player.posY - (double) bedLocation.getY()) > 2.0D || Math.abs(player.posZ - (double) bedLocation.getZ()) > 3.0D) {
-                return Either.left(PlayerEntity.SleepResult.TOO_FAR_AWAY);
-            }
-
-            if (!player.isCreative()) {
-                double d0 = 8.0D;
-                double d1 = 5.0D;
-                List<MonsterEntity> list = player.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB((double) bedLocation.getX() - d0, (double) bedLocation.getY() - d1, (double) bedLocation.getZ() - d0, (double) bedLocation.getX() + d0, (double) bedLocation.getY() + d1, (double) bedLocation.getZ() + d0), (p_213820_1_) -> p_213820_1_.isPreventingPlayerRest(player));
-                if (!list.isEmpty()) {
-                    return Either.left(PlayerEntity.SleepResult.NOT_SAFE);
-                }
-            }
-            if (!player.world.isDaytime()) {
-                player.setBedPosition(bedLocation); //Set sleep location even if night time
-                return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
-            }
-        }
-
-        player.startSleeping(bedLocation); //TODO 1.14 check if this actually replaces most of the commented code below //TODO wait for PR (https://github.com/MinecraftForge/MinecraftForge/pull/6043)
-        //if (!setEntitySize(0.2F, 0.2F)) return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
-
-
-//        BlockState state = null;
-//        if (player.world.isBlockLoaded(bedLocation)) state = player.world.getBlockState(bedLocation);
-//        if (state != null && state.getBlock().isBed(state, player.world, bedLocation, player)) {
-//            Direction enumfacing = state.getBlock().getBedDirection(state, player.world, bedLocation);
-//            float f = 0.5F;
-//            float f1 = 0.5F;
-//
-//            switch (enumfacing) {
-//                case SOUTH:
-//                    f1 = 0.9F;
-//                    break;
-//                case NORTH:
-//                    f1 = 0.1F;
-//                    break;
-//                case WEST:
-//                    f = 0.1F;
-//                    break;
-//                case EAST:
-//                    f = 0.9F;
-//                    break;
-//                default://Should not happen
-//            }
-//            //player.setRenderOffsetForSleep(enumfacing);
-//
-//            player.setPosition((double) ((float) bedLocation.getX() + f), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + f1));
-//        } else {
-//            player.setPosition((double) ((float) bedLocation.getX() + 0.5F), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + 0.5F));
-//        }
-
-        player.abilities.isFlying = false;
-        player.sendPlayerAbilities();
-        sleepTimer = 0;
-        sleepingInCoffin = true;
-        //player.noClip = true;
-        //player.setBedPosition(bedLocation);//Is also set if sleep fails due to night time. See above
-        //player.setMotion(0.0D, 0.0D, 0.0D);
-
-//        if (!player.world.isRemote) {
-//            DaySleepHelper.updateAllPlayersSleeping(player.world);
-//        }
-//        if (player instanceof ServerPlayerEntity) {
-//            ServerPlayerEntity playerMP = (ServerPlayerEntity) player;
-//            IPacket<?> packet = new SPacketUseBed(player, bedLocation);
-//            playerMP.getServerWorld().getChunkProvider().sendToAllTracking(playerMP, packet);
-//            playerMP.connection.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
-//            playerMP.connection.sendPacket(packet);
-//        }
-
-        return Either.right(Unit.INSTANCE);
-    }
-
-    @Override
     public void unUnlockVision(@Nonnull IVampireVision vision) {
         if (vision.equals(activatedVision)) {
             activateVision(null);
@@ -996,20 +868,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public boolean useBlood(int amt, boolean allowPartial) {
         return bloodStats.removeBlood(amt, allowPartial);
-    }
-
-    @Override
-    public void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn) {
-        LOGGER.debug("Waking up player");
-        if (this.isPlayerSleeping() && player instanceof ServerPlayerEntity) {
-            ((ServerPlayerEntity) player).getServerWorld().getChunkProvider().sendToTrackingAndSelf(player, new SAnimateHandPacket(player, 2));
-        }
-        player.wakeUpPlayer(immediately, false, setSpawn);
-        this.sleepingInCoffin = false;
-        player.noClip = true;
-        if (player instanceof ServerPlayerEntity && ((ServerPlayerEntity) player).connection != null) {
-            ((ServerPlayerEntity) player).connection.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
-        }
     }
 
     @Override
