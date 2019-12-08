@@ -207,7 +207,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                 } else {
                     player.trySleep(pos).ifLeft(sleepResult1 -> {
                         if (sleepResult1 != null) {
-                            player.sendStatusMessage(sleepResults.getOrDefault(sleepResult1, null), true);
+                            player.sendStatusMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
                         }
                     });
                     return true;
