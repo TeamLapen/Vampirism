@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.ImmutableMap;
-
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
 import net.minecraft.block.Block;
@@ -53,7 +52,8 @@ public class CoffinBlock extends VampirismBlockContainer {
     private static final Map<PlayerEntity.SleepResult, ITextComponent> sleepResults = ImmutableMap.of(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW, new TranslationTextComponent("text.vampirism.coffin.no_sleep"), PlayerEntity.SleepResult.TOO_FAR_AWAY, new TranslationTextComponent("text.vampirism.coffin.too_far_away"), PlayerEntity.SleepResult.OBSTRUCTED, new TranslationTextComponent("text.vampirism.coffin.obstructed"));
 
     public static boolean isOccupied(IBlockReader world, BlockPos pos) {
-        return world.getBlockState(pos).get(OCCUPIED);
+        BlockState state = world.getBlockState(pos);
+        return state.getBlock() instanceof CoffinBlock && state.get(OCCUPIED);
     }
 
     public static void setCoffinOccupied(World world, BlockPos pos, boolean value) {
@@ -62,7 +62,8 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     public static boolean isHead(IBlockReader world, BlockPos pos) {
-        return world.getBlockState(pos).get(PART) == CoffinPart.HEAD;
+        BlockState state = world.getBlockState(pos);
+        return state.getBlock() instanceof CoffinBlock && state.get(PART) == CoffinPart.HEAD;
     }
 
     private static Direction getDirectionToOther(CoffinPart type, Direction facing) {
@@ -218,7 +219,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                 if (worldIn.getBlockState(blockPos).getBlock() == this) {
                     worldIn.removeBlock(blockPos, false);
                 }
-                worldIn.createExplosion((Entity) null, DamageSource.netherBedExplosion(), (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+                worldIn.createExplosion(null, DamageSource.netherBedExplosion(), (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
                 return true;
             }
         }
