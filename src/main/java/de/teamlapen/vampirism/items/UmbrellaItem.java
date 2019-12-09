@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.items;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -16,7 +17,7 @@ public class UmbrellaItem extends VampirismItem {
     private static final UUID SPEED_MODIFIER = UUID.fromString("CB3F55D5-6A5C-4F18-A497-9C11A33DB5CF");
 
     public UmbrellaItem() {
-        super(regName, new Properties().maxStackSize(1).group(VampirismMod.creativeTab));
+        super(regName, new Properties().maxStackSize(1).group(VampirismConfig.SERVER.umbrella.get() ? VampirismMod.creativeTab : null));
     }
 
     @Override
