@@ -43,7 +43,8 @@ public class BlockCoffin extends VampirismBlockContainer {
     private final static String TAG = "BlockCoffin";
 
     public static boolean isOccupied(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getValue(OCCUPIED);
+        IBlockState iBlockState = world.getBlockState(pos);
+        return iBlockState.getBlock() instanceof BlockCoffin && iBlockState.getValue(OCCUPIED);
     }
 
     public static void setCoffinOccupied(World world, BlockPos pos, boolean value) {
@@ -52,7 +53,8 @@ public class BlockCoffin extends VampirismBlockContainer {
     }
 
     public static boolean isHead(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getValue(PART) == EnumPartType.HEAD;
+        IBlockState iBlockState = world.getBlockState(pos);
+        return iBlockState.getBlock() instanceof BlockCoffin && iBlockState.getValue(PART) == EnumPartType.HEAD;
     }
 
     public BlockCoffin() {
