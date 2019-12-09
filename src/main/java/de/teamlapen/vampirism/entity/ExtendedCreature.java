@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -20,7 +21,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
@@ -239,7 +239,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                     converted = true;
 
                 } else {
-                    entity.attackEntityFrom(DamageSource.MAGIC, 1000);
+                    entity.attackEntityFrom(VReference.NO_BLOOD, 1000);
                     killed = true;
                 }
             }
@@ -247,6 +247,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         }
 
         this.sync();
+        entity.setRevengeTarget(biter.getRepresentingEntity());
 
         // If entity is a child only give 1/3 blood
         if (entity instanceof AgeableEntity) {
