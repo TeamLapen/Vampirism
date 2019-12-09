@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
+import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -60,7 +61,7 @@ public class CoffinItem extends VampirismItem {
 
         if (player == null || player.canPlayerEdit(pos, side, stack) && player.canPlayerEdit(other, side, stack)) {
             if (flag1 && flag2 && UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()) && UtilLib.doesBlockHaveSolidTopSurface(world, other.down())) {
-                BlockState state1 = ModBlocks.coffin.getDefaultState().with(CoffinBlock.OCCUPIED, Boolean.FALSE).with(CoffinBlock.PART, CoffinBlock.CoffinPart.FOOT).with(HORIZONTAL_FACING, facing);
+                BlockState state1 = ModBlocks.coffin.getDefaultState().with(BedBlock.OCCUPIED, Boolean.FALSE).with(CoffinBlock.PART, CoffinBlock.CoffinPart.FOOT).with(HORIZONTAL_FACING, facing);
                 if (world.setBlockState(pos, state1, 3)) {
                     BlockState state2 = state1.with(CoffinBlock.PART, CoffinBlock.CoffinPart.HEAD).with(HORIZONTAL_FACING, facing);
                     world.setBlockState(other, state2, 3);

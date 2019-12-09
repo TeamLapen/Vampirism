@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
