@@ -99,7 +99,7 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
                 case 5:
                     world.addWeatherEffect(new EntityLightningBolt(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), true));
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
-                    VampirePlayer.get(ritualPlayer).drinkBlood(100, 0);
+                    VampirePlayer.get(ritualPlayer).drinkBlood(100, 0, false);
 
                     break;
                 case 1:
