@@ -115,7 +115,7 @@ public class EntityHunterFactionVillager extends EntityFactionVillager implement
         }
 
         ItemsForSouls(PriceInfo price, ItemStack[] sellingStacks, PriceInfo amount) {
-            assert price.getSecond() > 128 : "Cannot sell items for more than 128 souls, as we have only two slots to accept them";
+            assert price.getSecond() <= 128 : "Cannot sell items for more than 128 souls, as we have only two slots to accept them";
             this.sellingStacks = sellingStacks;
             this.buying = price;
             this.selling = amount;
