@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import com.mojang.datafixers.util.Pair;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
@@ -112,9 +111,7 @@ public class ModEventHandler {
         if (event.getPlayer().getRNG().nextInt(4) == 0) {
             event.getPlayer().sendMessage(new StringTextComponent("You are running an alpha version of Vampirism for MC 1.14").applyTextStyle(TextFormatting.DARK_RED));
             event.getPlayer().sendMessage(new StringTextComponent("Some important parts are not working yet:"));
-            event.getPlayer().sendMessage(new StringTextComponent("- Hunter Tents"));
             event.getPlayer().sendMessage(new StringTextComponent("- Bat mode"));
-            event.getPlayer().sendMessage(new StringTextComponent("- Sleep in coffin"));
             event.getPlayer().sendMessage(new StringTextComponent("- JEI integration and guide book"));
 
 
