@@ -23,7 +23,7 @@ public class REFERENCE {
     public static final String INTEGRATIONS_MODID = "vampirism_integrations";
     public static final String INTEGRATIONS_LINK = "https://minecraft.curseforge.com/projects/vampirism-integrations";
     public static final int EYE_TYPE_COUNT = 16;
-    public static final int FANG_TYPE_COUNT = 6;
+    public static final int FANG_TYPE_COUNT = 7;
     /**
      * Check for vampire garlic damage every n ticks
      * Must be higher than 1, due to implementation
