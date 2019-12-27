@@ -22,6 +22,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.BooleanValue golemAttackVampire;
     public final ForgeConfigSpec.BooleanValue zombieIgnoreVampire;
     public final ForgeConfigSpec.IntValue hunterTentMaxSpawn;
+    public final ForgeConfigSpec.DoubleValue crossbowDamageMult;
 
     public final ForgeConfigSpec.DoubleValue eaHealthThreshold;
     public final ForgeConfigSpec.IntValue eaInvisibilityCooldown;
@@ -161,6 +162,7 @@ public class BalanceConfig {
         golemAttackVampire = builder.comment("If iron golems should attack vampire NPCs if in a non-vampire village").define("golemAttackVampire", true);
         zombieIgnoreVampire = builder.comment("If zombies should ignore vampires").define("zombieIgnoreVampire", true);
         hunterTentMaxSpawn = builder.comment("Maximum number of hunters that can spawn at one tent per day").defineInRange("hunterTentMaxSpawn", 4, 0, 20);
+        crossbowDamageMult = builder.comment("The base damage dealt by crossbow arrows is multiplied by this").defineInRange("crossbowDamageMult", 1, 0.2, 5);
 
         builder.pop();
 

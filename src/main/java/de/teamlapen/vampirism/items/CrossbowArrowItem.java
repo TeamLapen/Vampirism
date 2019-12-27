@@ -59,7 +59,7 @@ public class CrossbowArrowItem extends VampirismItem implements IVampirismCrossb
     @Override
     public CrossbowArrowEntity createEntity(ItemStack stack, World world, PlayerEntity player, double heightOffset, double centerOffset, boolean rightHand) {
         CrossbowArrowEntity entity = CrossbowArrowEntity.createWithShooter(world, player, heightOffset, centerOffset, rightHand, stack);
-        entity.setDamage(type.baseDamage);
+        entity.setDamage(type.baseDamage * VampirismConfig.BALANCE.crossbowDamageMult.get());
         if (this.type == EnumArrowType.SPITFIRE) {
             entity.setFire(100);
         }
