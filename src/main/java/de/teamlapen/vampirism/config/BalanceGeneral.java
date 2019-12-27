@@ -56,6 +56,9 @@ public class BalanceGeneral extends BalanceValues {
     @DefaultBoolean(value = true, comment = "If zombies should ignore vampires")
     public boolean ZOMBIE_IGNORE_VAMPIRE;
 
+    @DefaultDouble(value = 1.0, comment = "Any normal damage dealt by crossbow arrows will be multiplied by this factor.", minValue = 0.2, maxValue = 5)
+    public double CROSSBOW_ARROW_DAMAGE_MULT;
+
     /**
      * Creates a configuration for balance values
      *

@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -27,7 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
@@ -94,7 +92,7 @@ public class ItemCrossbowArrow extends VampirismItem implements IVampirismCrossb
     public EntityCrossbowArrow createEntity(ItemStack stack, World world, EntityPlayer player, double heightOffset, double centerOffset, boolean rightHand) {
         EntityCrossbowArrow entity = EntityCrossbowArrow.createWithShooter(world, player, heightOffset, centerOffset, rightHand, stack);
         EnumArrowType type = getType(stack);
-        entity.setDamage(type.baseDamage);
+        entity.setDamage(type.baseDamage * Balance.general.CROSSBOW_ARROW_DAMAGE_MULT);
         if (type == EnumArrowType.SPITFIRE) {
             entity.setFire(100);
         }
