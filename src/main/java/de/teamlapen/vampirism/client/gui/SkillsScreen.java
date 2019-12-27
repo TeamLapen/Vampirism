@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -178,11 +179,11 @@ public class SkillsScreen extends Screen {
 
         this.renderBackground();
         this.drawSkills(mouseX, mouseY, partialTicks);
-        GlStateManager.disableLighting();
-        GlStateManager.disableDepthTest();
+        RenderSystem.disableLighting();
+        RenderSystem.disableDepthTest();
         this.drawTitle();
-        GlStateManager.enableLighting();
-        GlStateManager.enableDepthTest();
+        RenderSystem.enableLighting();
+        RenderSystem.enableDepthTest();
     }
 
     @Override
@@ -244,14 +245,14 @@ public class SkillsScreen extends Screen {
         int i1 = k + 16;
         int j1 = l + 17;
         this.blitOffset = 0;
-        GlStateManager.depthFunc(518);
-        GlStateManager.pushMatrix();
-        GlStateManager.translatef((float) i1, (float) j1, -200.0F);
-        GlStateManager.scalef(1.0F / this.zoomOut, 1.0F / this.zoomOut, 1.0F);
-        GlStateManager.enableTexture();
-        GlStateManager.disableLighting();
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.enableColorMaterial();
+        RenderSystem.depthFunc(518);
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef((float) i1, (float) j1, -200.0F);
+        RenderSystem.scalef(1.0F / this.zoomOut, 1.0F / this.zoomOut, 1.0F);
+        RenderSystem.enableTexture();
+        RenderSystem.disableLighting();
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.enableColorMaterial();
         int k1 = offsetX + 288 >> 4;
         int l1 = offsetY + 288 >> 4;
         int i2 = (offsetX + display_width * 2) % 16;
@@ -263,7 +264,7 @@ public class SkillsScreen extends Screen {
         //Render background block textures
         for (int y = 0; (float) y * f - (float) j2 < 155.0F; ++y) {
             float f2 = 0.6F - (float) (l1 + y) / 25.0F * 0.3F;
-            GlStateManager.color4f(f2, f2, f2, 1.0F);
+            RenderSystem.color4f(f2, f2, f2, 1.0F);
 
             for (int x = 0; (float) x * f1 - (float) i2 < 224.0F; ++x) {
                 random.setSeed(this.minecraft.getSession().getPlayerID().hashCode() + k1 + x + (l1 + y) * 16);
@@ -298,8 +299,8 @@ public class SkillsScreen extends Screen {
         }
 
         //Draw lines/arrows
-        GlStateManager.enableDepthTest();
-        GlStateManager.depthFunc(515);
+        RenderSystem.enableDepthTest();
+        RenderSystem.depthFunc(515);
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
         for (SkillNode node : skillNodes) {
@@ -337,9 +338,9 @@ public class SkillsScreen extends Screen {
         float mMouseX = (float) (mouseX - i1) * this.zoomOut;
         float mMouseY = (float) (mouseY - j1) * this.zoomOut;
         RenderHelper.enableGUIStandardItemLighting();
-        GlStateManager.disableLighting();
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.enableColorMaterial();
+        RenderSystem.disableLighting();
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.enableColorMaterial();
 
         //Draw skills
         ISkill newselected = null;//Not sure if mouse clicks can occur while this is running, so don't set #selected to null here but use a extra variable to be sure
@@ -350,9 +351,9 @@ public class SkillsScreen extends Screen {
                 int maxX = elements[elements.length - 1].getRenderColumn() * skill_width - offsetX;
                 int y = elements[0].getRenderRow() * skill_width - offsetY;
                 if (maxX >= -24 && y >= -24 && (float) minX <= 224.0F * this.zoomOut && (float) y <= 155.0F * this.zoomOut) {
-                    GlStateManager.enableBlend();
+                    RenderSystem.enableBlend();
                     this.fillGradient(minX - 1, y - 1, maxX + 23, y + 23, 0xFF9B9DA1, 0xFF9B9DA1);
-                    GlStateManager.disableBlend();
+                    RenderSystem.disableBlend();
                 }
 
             }
@@ -366,35 +367,35 @@ public class SkillsScreen extends Screen {
 
                     if (unlockstate == 0) {
                         float f5 = 1F;
-                        GlStateManager.color4f(f5, f5, f5, 1.0F);
+                        RenderSystem.color4f(f5, f5, f5, 1.0F);
                     } else if (unlockstate == 1) {
                         float f6 = 0.6F;
-                        GlStateManager.color4f(f6, f6, f6, 1.0F);
+                        RenderSystem.color4f(f6, f6, f6, 1.0F);
                     } else if (unlockstate == 2) {
                         float f7 = 0.3F;
-                        GlStateManager.color4f(f7, f7, f7, 1.0F);
+                        RenderSystem.color4f(f7, f7, f7, 1.0F);
                     } else if (unlockstate == -1) {
                         float f8 = 0.2F;
-                        GlStateManager.color4f(f8, f8, f8, 1.0F);
+                        RenderSystem.color4f(f8, f8, f8, 1.0F);
                     }
 
                     this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
-                    GlStateManager.enableBlend();
+                    RenderSystem.enableBlend();
                     this.blit(x - 2, y - 2, 0, 202, 26, 26);
-                    GlStateManager.disableBlend();
+                    RenderSystem.disableBlend();
 
                     this.minecraft.getTextureManager().bindTexture(getIconLoc(skill));
 
-                    GlStateManager.disableLighting();
+                    RenderSystem.disableLighting();
                     //GlStateManager.enableCull();
-                    GlStateManager.enableBlend();
+                    RenderSystem.enableBlend();
                     UtilLib.drawTexturedModalRect(this.blitOffset, x + 3, y + 3, 0, 0, 16, 16, 16, 16);
                     //GlStateManager.blendFunc(770, 771);
-                    GlStateManager.disableLighting();
+                    RenderSystem.disableLighting();
 
 
-                    GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+                    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
                     if (mMouseX >= (float) x && mMouseX <= (float) (x + 22) && mMouseY >= (float) y && mMouseY <= (float) (y + 22)) {
                         newselected = skill;
@@ -408,19 +409,19 @@ public class SkillsScreen extends Screen {
         }
 
 
-        GlStateManager.disableDepthTest();
-        GlStateManager.enableBlend();
-        GlStateManager.popMatrix();
+        RenderSystem.disableDepthTest();
+        RenderSystem.enableBlend();
+        RenderSystem.popMatrix();
 
         //Draw "window" and buttons
         Color color = skillHandler.getPlayer().getFaction().getColor();
-        GlStateManager.color4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1.0F);
+        RenderSystem.color4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
         this.blit(k, l, 0, 0, this.display_width, this.display_height);
         this.blitOffset = 0;
-        GlStateManager.depthFunc(515);
-        GlStateManager.disableDepthTest();
-        GlStateManager.enableTexture();
+        RenderSystem.depthFunc(515);
+        RenderSystem.disableDepthTest();
+        RenderSystem.enableTexture();
         super.render(mouseX, mouseY, partialTicks);
 
         //Draw information for selected skill
@@ -452,8 +453,8 @@ public class SkillsScreen extends Screen {
         }
 
 
-        GlStateManager.enableDepthTest();
-        GlStateManager.enableLighting();
+        RenderSystem.enableDepthTest();
+        RenderSystem.enableLighting();
         RenderHelper.disableStandardItemLighting();
     }
 

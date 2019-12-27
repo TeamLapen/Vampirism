@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -275,8 +276,8 @@ public class RenderHandler {
         f *= vampireBiomeFogDistanceMultiplier;
         float fogStart = Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
         float fogEnd = Math.min(event.getFarPlaneDistance(), 50 * f);
-        GlStateManager.fogStart(event.getFogMode() == -1 ? 0 : fogStart);
-        GlStateManager.fogEnd(fogEnd);
+        RenderSystem.fogStart(event.getFogMode() == -1 ? 0 : fogStart);
+        RenderSystem.fogEnd(fogEnd);
     }
 
     private void adjustBloodVisionShaders(float progress) {
@@ -433,8 +434,8 @@ public class RenderHandler {
 
         renderedEntitiesWithGarlicInfused.clear();
 
-        GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
 
 
         this.bloodVisionFrameBuffer1.framebufferRenderExt(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight(), false);
@@ -445,7 +446,7 @@ public class RenderHandler {
         this.mc.getFramebuffer().bindFramebuffer(false);
 
 
-        GlStateManager.disableBlend();
+        RenderSystem.disableBlend();
 
 
     }
@@ -460,8 +461,8 @@ public class RenderHandler {
 
             this.mc.gameRenderer.enableLightmap();
 
-            GlStateManager.depthFunc(519);
-            GlStateManager.disableFog();
+            RenderSystem.depthFunc(519);
+            RenderSystem.disableFog();
 
             framebuffer.bindFramebuffer(false);
 
@@ -476,15 +477,15 @@ public class RenderHandler {
 
             RenderHelper.enableStandardItemLighting();
 
-            GlStateManager.depthMask(false);
+            RenderSystem.depthMask(false);
             shader.render(partialTicks);
-            GlStateManager.enableLighting();
-            GlStateManager.depthMask(true);
-            GlStateManager.enableBlend();
+            RenderSystem.enableLighting();
+            RenderSystem.depthMask(true);
+            RenderSystem.enableBlend();
 
-            GlStateManager.enableColorMaterial();
-            GlStateManager.depthFunc(515);
-            GlStateManager.enableDepthTest();
+            RenderSystem.enableColorMaterial();
+            RenderSystem.depthFunc(515);
+            RenderSystem.enableDepthTest();
             this.mc.gameRenderer.disableLightmap();
             renderingBloodVision = false;
         }
@@ -527,21 +528,21 @@ public class RenderHandler {
         HUNTER_DISGUISE {
             @Override
             public void apply(float progress) {
-                GlStateManager.color4f(1F, 1F, 1F, 1 - progress * 0.8F);
+                RenderSystem.color4f(1F, 1F, 1F, 1 - progress * 0.8F);
                 if (progress >= 1F) {
-                    GlStateManager.depthMask(false);
+                    RenderSystem.depthMask(false);
                 }
-                GlStateManager.enableBlend();
-                GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-                GlStateManager.alphaFunc(516, 0.003921569F);
+                RenderSystem.enableBlend();
+                RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+                RenderSystem.alphaFunc(516, 0.003921569F);
             }
 
             @Override
             public void clean() {
-                GlStateManager.disableBlend();
-                GlStateManager.alphaFunc(516, 0.1F);
-                GlStateManager.depthMask(true);
-                GlStateManager.color4f(1F, 1F, 1F, 1F);
+                RenderSystem.disableBlend();
+                RenderSystem.alphaFunc(516, 0.1F);
+                RenderSystem.depthMask(true);
+                RenderSystem.color4f(1F, 1F, 1F, 1F);
             }
         };
 

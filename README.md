@@ -1,4 +1,4 @@
-Vampirism for Minecraft 1.14 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.12)](https://travis-ci.org/TeamLapen/Vampirism) 
+Vampirism for Minecraft 1.15 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.12)](https://travis-ci.org/TeamLapen/Vampirism) 
 ============================================
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de)  
 
@@ -61,7 +61,7 @@ vampirism_version=1.0.3
 
 #### Rerun Gradle setup commands
 Please run the commands that you used to setup your development environment again.
-E.g. `gradlew setupDecompWorkspace eclipse --refresh-dependencies` or `gradlew setupDecompWorkspace ideaModule --refresh-dependencies`
+E.g. `gradlew` or `gradlew build --refresh-dependencies`
 Refresh/Restart your IDE afterwards.
 
 #### Examples

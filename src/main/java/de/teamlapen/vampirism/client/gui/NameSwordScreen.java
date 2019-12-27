@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
@@ -88,8 +89,8 @@ public class NameSwordScreen extends Screen {
 
 
         super.render(mouseX, mouseY, partialTicks);
-        GlStateManager.disableLighting();
-        GlStateManager.disableBlend();
+        RenderSystem.disableLighting();
+        RenderSystem.disableBlend();
     }
 
     @Override

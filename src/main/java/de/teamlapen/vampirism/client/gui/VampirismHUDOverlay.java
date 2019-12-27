@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
@@ -180,7 +181,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE || mc.player == null || !mc.player.isAlive()) {
             return;
         }
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_LIGHTING);
         IPlayableFaction faction = FactionPlayerHandler.get(mc.player).getCurrentFaction();
         if (mc.playerController.gameIsSurvivalOrAdventure() && faction != null && faction.renderLevel()) {

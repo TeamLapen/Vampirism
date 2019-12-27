@@ -53,7 +53,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.PointOfInterestManager;
 import net.minecraft.world.BossInfo;
-import net.minecraft.world.ServerBossInfo;
+import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.StructureStart;

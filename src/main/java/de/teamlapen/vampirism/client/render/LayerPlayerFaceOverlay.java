@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.render;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.BipedRenderer;
@@ -42,9 +43,9 @@ public class LayerPlayerFaceOverlay<T extends MobEntity & IPlayerFace, M extends
         }
 
         renderBiped.bindTexture(loc);
-        GlStateManager.pushMatrix();
+        RenderSystem.pushMatrix();
         if (entityIn.isSneaking()) {
-            GlStateManager.translatef(0.0F, 0.2F, 0.0F);
+            RenderSystem.translatef(0.0F, 0.2F, 0.0F);
         }
         GlStateManager.setProfile(GlStateManager.Profile.PLAYER_SKIN);
 
@@ -52,7 +53,7 @@ public class LayerPlayerFaceOverlay<T extends MobEntity & IPlayerFace, M extends
         (this.renderBiped.getEntityModel()).bipedHeadwear.render(scale);
         GlStateManager.unsetProfile(GlStateManager.Profile.PLAYER_SKIN);
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
     }
 
     @Override
