@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
+import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -38,7 +39,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
     private final float[] SPEED_REDUCTION = new float[]{-0.025F, -0.1F, -0.05F, -0.025F};
 
     public ItemObsidianArmor(EntityEquipmentSlot equipmentSlotIn) {
-        super(ArmorMaterial.IRON, equipmentSlotIn, baseRegName);
+        super(VReference.OBSIDIAN_ARMOR_MATERIAL, equipmentSlotIn, baseRegName);
     }
 
     @SideOnly(Side.CLIENT)

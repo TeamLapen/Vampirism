@@ -10,6 +10,7 @@ import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.util.EnumHelper;
@@ -81,6 +82,8 @@ public class VReference {
      * Filled during pre-init.
      */
     public static IPlayableFaction<IHunterPlayer> HUNTER_FACTION;
+
+    public static ItemArmor.ArmorMaterial OBSIDIAN_ARMOR_MATERIAL;
     public static int castleDimId = 1000;
     public static IVampireVision vision_nightVision;
     public static IVampireVision vision_bloodVision;
