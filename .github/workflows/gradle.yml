@@ -53,9 +53,9 @@ jobs:
           channel: vampirism
           nickname: vampirism-builds
           message: |
-            ${{ github.repository }} - (${{ github.ref }} - ${{ github.sha }})':' ${{ github.actor }}':' ${{ job.status }}
-            Change view ':' https://github.com/${{ github.repository }}/commit/${{ github.sha }}
-            Build details ':' https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks
+            ${{ github.repository }} - (${{ github.ref }} - ${{ github.sha }}): ${{ github.actor }}: ${{ job.status }}
+            Change view : https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+            Build details : https://github.com/${{ github.repository }}/commit/${{ github.sha }}/checks
         if: always()
     
 
