@@ -1,4 +1,4 @@
-Vampirism for Minecraft 1.15 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.12)](https://travis-ci.org/TeamLapen/Vampirism) 
+Vampirism for Minecraft 1.15 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.15)](https://travis-ci.org/TeamLapen/Vampirism) 
 ============================================
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de)  
 
@@ -53,7 +53,7 @@ dependencies {
 `${mc_version}` gets replaced by the current Minecraft version. (i.e. `1.10.2`)
 `${vampirism_version}` gets replaced by the version of Vampirism you want to use (i.e `1.0.3`)
 
-For a list of available Vampirism version, see [CurseForge](https://minecraft.curseforge.com/projects/vampirism/files) or the [maven listing](https://maxanier.de/maven2/de/teamlapen/vampirism/Vampirism/) .
+For a list of available Vampirism version, see [CurseForge](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire) or the [maven listing](https://maxanier.de/maven2/de/teamlapen/vampirism/Vampirism/) .
 
 These properties can be set in a file named `gradle.properties`, placed in the same directory as your `build.gradle` file.
 Example `gradle.properties`:
@@ -100,11 +100,10 @@ The following example instructions will setup IntelliJ (Free community edition o
 5. In IntelliJ use `New...` -> `New from Version Control` -> Fill out repo, directory and name
 6. After cloning is done IntelliJ offers you to import a unlinked Gradle Project. Click this.
 7. Select `Create directories for empty content roots` and __deselect__ `Create seperate module per source set` [Image](https://picload.org/image/ripradpa/importprojectfromgradle_001.png)  
-8. Select the gradle task `setupDecompWorkspace` in the IntelliJ Gradle window and add the following arguments `-Xmx4g -Xms4g`. Run it.  
-9. Refresh the gradle project  
-10. Run `genIntellijRuns`
-11. Make sure `Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled` (Unfortunately required, requires rebuild if the project has been built before)
-12. You might have to modify the projets compiler output path  
+8. Refresh the gradle project  
+9. Run `genIntellijRuns`
+10. Make sure `Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled` (Unfortunately required, requires rebuild if the project has been built before)
+11. You might have to modify the projets compiler output path  
 
 
 That's it.
