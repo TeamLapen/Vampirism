@@ -9,15 +9,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
-    public static final HunterHatModel hat0 = new HunterHatModel(0);
-    public static final HunterHatModel hat1 = new HunterHatModel(1);
+    public static final HunterHatModel hat0 = new HunterHatModel<>(0);
+    public static final HunterHatModel hat1 = new HunterHatModel<>(1);
     private RendererModel hatTop;
     private RendererModel hatRim;
 
 
     public HunterHatModel(int type) {
         super(0.0F, 0.0F, 64, 64);
-        if (type == 0) {
+        if (type == 1) {
             hatTop = new RendererModel(this, 0, 31);
             hatTop.addBox(-4F, -14F, -4F, 8, 5, 8);
             hatTop.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
@@ -29,7 +29,7 @@ public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
             hatRim.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
             hatRim.setTextureSize(128, 64);
             hatRim.mirror = true;
-        } else if (type == 1) {
+        } else if (type == 0) {
             hatTop = new RendererModel(this, 0, 31);
             hatTop.addBox(-4F, -12F, -4F, 8, 3, 8);
             hatTop.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
@@ -55,17 +55,8 @@ public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
     @Override
     public void setRotationAngles(T e, float f1, float f2, float f3, float f4, float f5, float f6) {
         super.setRotationAngles(e, f1, f2, f3, f4, f5, f6);
-        hatRim.rotateAngleX = super.bipedHead.rotateAngleX;
-        hatRim.rotateAngleZ = super.bipedHead.rotateAngleZ;
-        hatTop.rotateAngleX = super.bipedHead.rotateAngleX;
-        hatTop.rotateAngleZ = super.bipedHead.rotateAngleZ;
-        if (isSneak) {
-            hatRim.rotationPointY = super.bipedHead.rotationPointY + 3.2F;
-            hatTop.rotationPointY = super.bipedHead.rotationPointY + 3.2F;
-        } else {
-            hatRim.rotationPointY = super.bipedHead.rotationPointY;
-            hatTop.rotationPointY = super.bipedHead.rotationPointY;
-        }
+        this.hatRim.copyModelAngles(this.bipedHead);
+        this.hatTop.copyModelAngles(this.bipedHead);
     }
 
     @Override
