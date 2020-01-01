@@ -19,7 +19,7 @@ public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
 
     public HunterHatModel(int type) {
         super(0.0F, 0.0F, 64, 64);
-        if (type == 0) {
+        if (type == 1) {
             hatTop = new ModelRenderer(this, 0, 31);
             hatTop.addBox(-4F, -14F, -4F, 8, 5, 8);
             hatTop.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
@@ -31,7 +31,7 @@ public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
             hatRim.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
             hatRim.setTextureSize(128, 64);
             hatRim.mirror = true;
-        } else if (type == 1) {
+        } else if (type == 0) {
             hatTop = new ModelRenderer(this, 0, 31);
             hatTop.addBox(-4F, -12F, -4F, 8, 3, 8);
             hatTop.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
@@ -50,17 +50,8 @@ public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
     @Override
     public void render(T p_225597_1_, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) { //setRotationAngles
         super.render(p_225597_1_, p_225597_2_, p_225597_3_, p_225597_4_, p_225597_5_, p_225597_6_);
-        hatRim.rotateAngleX = super.bipedHead.rotateAngleX;
-        hatRim.rotateAngleZ = super.bipedHead.rotateAngleZ;
-        hatTop.rotateAngleX = super.bipedHead.rotateAngleX;
-        hatTop.rotateAngleZ = super.bipedHead.rotateAngleZ;
-        if (isSneak) {
-            hatRim.rotationPointY = super.bipedHead.rotationPointY + 3.2F;
-            hatTop.rotationPointY = super.bipedHead.rotationPointY + 3.2F;
-        } else {
-            hatRim.rotationPointY = super.bipedHead.rotationPointY;
-            hatTop.rotationPointY = super.bipedHead.rotationPointY;
-        }
+        hatRim.copyModelAngles(super.bipedHead);
+        hatTop.copyModelAngles(super.bipedHead);
     }
 
     @Override
