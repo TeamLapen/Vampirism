@@ -16,11 +16,14 @@ For a more detailed description head over to the Minecraft forums or the Cursefo
 [Downloads](https://minecraft.curseforge.com/projects/vampirism/files)  
 [Help to translate](https://crowdin.com/project/vampirism)
 
-## Team
+## People
 - [maxanier](http://maxanier.de) _Everything_  
-- [Cheaterpaul]() _Coding_
+- [Cheaterpaul](https://github.com/Cheaterpaul) _Coding_
+- [1LiterZinalco](https://chimute.org/) _Triage/Support/Community_
 
-#### Inactive
+## Special Thanks to
+- TinkerHatWill _Textures_
+- dimensionpainter _Textures_
 - Mistadon _Code/Models_  
 - wildbill22 _Code_  
 - LRA_10 _Models/Textures_
