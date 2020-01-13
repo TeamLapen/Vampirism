@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -165,16 +164,12 @@ public class ModEntities {
          */
         List<Biome> zombieBiomes = Lists.newArrayList();
         zombieBiomes.addAll(allBiomes);
-        zombieBiomes.remove(Biomes.MUSHROOM_FIELDS);
-        zombieBiomes.remove(Biomes.MUSHROOM_FIELD_SHORE);
-        zombieBiomes.remove(Biomes.NETHER);
-        zombieBiomes.remove(Biomes.THE_END);
         zombieBiomes.remove(ModBiomes.vampire_forest);
         Iterator<Biome> iterator = zombieBiomes.iterator();
         while (iterator.hasNext()) {
             Biome b = iterator.next();
             if (b != null) {
-                if (!b.getClass().getName().startsWith("net.minecraft.") && !b.getClass().getName().startsWith("de.teamlapen.")) {
+                if (!b.getClass().getName().startsWith("de.teamlapen.")) {
                     Iterator<Biome.SpawnListEntry> iterator2 = b.getSpawns(EntityClassification.MONSTER).iterator();
                     boolean zombie = false;
                     while (iterator2.hasNext()) {
