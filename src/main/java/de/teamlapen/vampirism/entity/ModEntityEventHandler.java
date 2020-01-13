@@ -171,8 +171,9 @@ public class ModEntityEventHandler {
             if (event.getEntity() instanceof ZombieEntity) {
                 Goal target = null;
                 for (PrioritizedGoal t : ((ZombieEntity) event.getEntity()).targetSelector.goals) {
-                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 2) {
-                        target = t.getGoal();
+                    Goal g = t.getGoal();
+                    if (g instanceof NearestAttackableTargetGoal && NearestAttackableTargetGoal.class.equals(g.getClass()) && t.getPriority() == 2 && PlayerEntity.class.equals(((NearestAttackableTargetGoal) g).targetClass)) { //Make sure to not replace pigmen task
+                        target = g;
                         break;
                     }
                 }
