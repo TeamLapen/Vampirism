@@ -160,7 +160,7 @@ public class ModEntityEventHandler {
             if (event.getEntity() instanceof EntityZombie) {
                 EntityAIBase target = null;
                 for (EntityAITasks.EntityAITaskEntry t : ((EntityZombie) event.getEntity()).targetTasks.taskEntries) {
-                    if (t.action instanceof EntityAINearestAttackableTarget && t.priority == 2) {
+                    if (t.action instanceof EntityAINearestAttackableTarget && t.priority == 2 && EntityAINearestAttackableTarget.class.equals(t.action.getClass()) && EntityPlayer.class.equals(((EntityAINearestAttackableTarget) t.action).targetClass)) { //Make sure to not replace pigmen tasks
                         target = t.action;
                     }
                 }
