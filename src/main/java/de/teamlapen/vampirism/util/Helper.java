@@ -125,6 +125,7 @@ public class Helper {
 
     public static boolean canTurnPlayer(IVampire biter, @Nullable PlayerEntity target) {
         if (biter instanceof IVampirePlayer) {
+            if (!VampirismConfig.SERVER.playerCanTurnPlayer.get()) return false;
             return PermissionAPI.hasPermission(((IVampirePlayer) biter).getRepresentingPlayer(), Permissions.INFECT_PLAYER);
         } else {
             return !VampirismConfig.SERVER.disableMobBiteInfection.get();
