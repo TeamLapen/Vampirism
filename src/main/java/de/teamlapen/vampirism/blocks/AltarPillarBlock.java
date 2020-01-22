@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
@@ -79,10 +79,6 @@ public class AltarPillarBlock extends VampirismBlock {
         return ToolType.PICKAXE;
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
@@ -95,7 +91,7 @@ public class AltarPillarBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
         EnumPillarType type = state.get(TYPE_PROPERTY);
         ItemStack heldItem = playerIn.getHeldItem(hand);
         if (type != EnumPillarType.NONE && heldItem.isEmpty()) {
@@ -104,7 +100,7 @@ public class AltarPillarBlock extends VampirismBlock {
             }
 
             worldIn.setBlockState(pos, state.with(TYPE_PROPERTY, EnumPillarType.NONE));
-            return true;
+            return ActionResultType.SUCCESS;
         }
         if (type == EnumPillarType.NONE && !heldItem.isEmpty()) {
             for (EnumPillarType t : EnumPillarType.values()) {
@@ -114,11 +110,11 @@ public class AltarPillarBlock extends VampirismBlock {
                     }
 
                     worldIn.setBlockState(pos, state.with(TYPE_PROPERTY, t));
-                    return true;
+                    return ActionResultType.SUCCESS;
                 }
             }
         }
-        return false;
+        return ActionResultType.PASS;
     }
 
     @Override

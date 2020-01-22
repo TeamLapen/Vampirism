@@ -73,9 +73,9 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     private boolean nearbyVampire(IHunterPlayer player) {
         int r = VampirismConfig.BALANCE.haAwarenessRadius.get();
-        List<LivingEntity> entities = player.getRepresentingEntity().getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(player.getRepresentingEntity().posX - r, player.getRepresentingEntity().posY
-                - r + 1, player.getRepresentingEntity().posZ
-                - r, player.getRepresentingEntity().posX + r, player.getRepresentingEntity().posY + r + 1, player.getRepresentingEntity().posZ + r));
+        List<LivingEntity> entities = player.getRepresentingEntity().getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(player.getRepresentingEntity().getPosX() - r, player.getRepresentingEntity().getPosY()
+                - r + 1, player.getRepresentingEntity().getPosZ()
+                - r, player.getRepresentingEntity().getPosX() + r, player.getRepresentingEntity().getPosY() + r + 1, player.getRepresentingEntity().getPosZ() + r));
         for (LivingEntity e : entities) {
             if (Helper.isVampire(e))
                 return true;

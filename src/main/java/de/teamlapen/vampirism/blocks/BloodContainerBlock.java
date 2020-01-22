@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -59,10 +59,6 @@ public class BloodContainerBlock extends VampirismBlockContainer {
         items.add(stack);
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
@@ -92,7 +88,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
         if (!FluidUtil.interactWithFluidHandler(playerIn, hand, worldIn, pos, hit.getFace()) && playerIn.getHeldItem(hand).getItem().equals(Items.GLASS_BOTTLE) && VampirismConfig.SERVER.autoConvertGlassBottles.get()) {
             FluidUtil.getFluidHandler(worldIn, pos, hit.getFace()).ifPresent((fluidHandler -> {
                 if (fluidHandler.getFluidInTank(0).getFluid().equals(ModFluids.blood)) {
@@ -110,7 +106,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
                 }
             }));
         }
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override

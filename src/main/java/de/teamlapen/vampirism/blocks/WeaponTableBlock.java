@@ -88,10 +88,6 @@ public class WeaponTableBlock extends VampirismBlock {
         return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos)), name);
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
@@ -125,7 +121,7 @@ public class WeaponTableBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isRemote) {
             int fluid = world.getBlockState(pos).get(LAVA);
             boolean flag = false;
@@ -159,7 +155,7 @@ public class WeaponTableBlock extends VampirismBlock {
                 }
             }
         }
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override

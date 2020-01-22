@@ -184,9 +184,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                     Entity target = world.getEntityByID(id);
                     if (target instanceof LivingEntity) {
 
-                        double dx = target.posX - (this).posX;
-                        double dy = target.posY - this.posY;
-                        double dz = target.posZ - this.posZ;
+                        double dx = target.getPosX() - (this).getPosX();
+                        double dy = target.getPosY() - this.getPosY();
+                        double dz = target.getPosZ() - this.getPosZ();
                         float dist = MathHelper.sqrt(dx * dx + dz * dz);
                         targetAngle = (float) Math.atan(dy / dist);
                     }
@@ -307,7 +307,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     protected boolean processInteract(PlayerEntity player, Hand hand) {
         if (tryCureSanguinare(player)) return true;
         int hunterLevel = HunterPlayer.get(player).getLevel();
-        if (this.isAlive() && !player.isSneaking()) {
+        if (this.isAlive() && !player.func_225608_bj_()) {//isSneaking
             if (!world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
                     if (trainee == null) {

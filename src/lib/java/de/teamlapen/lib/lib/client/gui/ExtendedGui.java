@@ -36,10 +36,10 @@ public class ExtendedGui extends AbstractGui {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder worldrenderer = tessellator.getBuffer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos(right, top, this.blitOffset).color(f1, f2, f3, f).endVertex();
-        worldrenderer.pos(left, top, this.blitOffset).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos(left, bottom, this.blitOffset).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos(right, bottom, this.blitOffset).color(f1, f2, f3, f).endVertex();
+        worldrenderer.pos(right, top, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
+        worldrenderer.pos(left, top, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos(left, bottom, this.getBlitOffset()).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos(right, bottom, this.getBlitOffset()).color(f1, f2, f3, f).endVertex();
         tessellator.draw();
         GlStateManager.shadeModel(7424);
         GlStateManager.disableBlend();

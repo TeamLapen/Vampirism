@@ -9,7 +9,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -44,11 +43,6 @@ public class SieveBlock extends VampirismBlockContainer {
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
         return new SieveTileEntity();
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
     }
 
     @Override

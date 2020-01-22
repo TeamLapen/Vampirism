@@ -20,7 +20,6 @@ import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
-import de.teamlapen.vampirism.util.HalloweenSpecial;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockState;
@@ -42,9 +41,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -149,7 +148,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     int color = 0xFF0000;
                     if (entity instanceof HunterBaseEntity || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
                         color = 0x099022;
-                    renderBloodFangs(this.mc.mainWindow.getScaledWidth(), this.mc.mainWindow.getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
+                    renderBloodFangs(this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                     event.setCanceled(true);
                 }
             }
@@ -162,7 +161,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     if (tile != null) {
                         tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
                             if (FluidLib.getFluidAmount(handler, ModFluids.blood) > 0) {
-                                renderBloodFangs(this.mc.mainWindow.getScaledWidth(), this.mc.mainWindow.getScaledHeight(), 1, 0xFF0000);
+                                renderBloodFangs(this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight(), 1, 0xFF0000);
                                 event.setCanceled(true);
                             }
                         });
@@ -188,8 +187,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
             // boolean flag1 = false;
             int color = faction.getColor().getRGB();
             String text = "" + FactionPlayerHandler.get(mc.player).getCurrentLevel();
-            int x = (this.mc.mainWindow.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
-            int y = this.mc.mainWindow.getScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
+            int x = (this.mc.getMainWindow().getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
+            int y = this.mc.getMainWindow().getScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
             mc.fontRenderer.drawString(text, x + 1, y, 0);
             mc.fontRenderer.drawString(text, x - 1, y, 0);
             mc.fontRenderer.drawString(text, x, y + 1, 0);
@@ -245,8 +244,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 GlStateManager.enableBlend();
 
                 this.mc.getTextureManager().bindTexture(icons);
-                int left = this.mc.mainWindow.getScaledWidth() / 2 + 91;
-                int top = this.mc.mainWindow.getScaledHeight() - ForgeIngameGui.right_height;
+                int left = this.mc.getMainWindow().getScaledWidth() / 2 + 91;
+                int top = this.mc.getMainWindow().getScaledHeight() - ForgeIngameGui.right_height;
                 ForgeIngameGui.right_height += 10;
                 int blood = stats.getBloodLevel();
                 int maxBlood = stats.getMaxBlood();
@@ -284,13 +283,13 @@ public class VampirismHUDOverlay extends ExtendedGui {
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT, Minecraft.IS_RUNNING_ON_MAC);
             GlStateManager.matrixMode(GL11.GL_PROJECTION);
             GlStateManager.loadIdentity();
-            GlStateManager.ortho(0.0D, this.mc.mainWindow.getScaledWidth(), this.mc.mainWindow.getScaledHeight(), 0.0D, 1D, -1D);
+            GlStateManager.ortho(0.0D, this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight(), 0.0D, 1D, -1D);
             GlStateManager.matrixMode(GL11.GL_MODELVIEW);
             GlStateManager.loadIdentity();
             GlStateManager.pushMatrix();
             GL11.glDisable(GL11.GL_DEPTH_TEST);
-            int w = (this.mc.mainWindow.getScaledWidth());
-            int h = (this.mc.mainWindow.getScaledHeight());
+            int w = (this.mc.getMainWindow().getScaledWidth());
+            int h = (this.mc.getMainWindow().getScaledHeight());
             if (fullScreen) {
                 // Render a see through colored square over the whole screen
                 float r = (float) (screenColor >> 16 & 255) / 255.0F;
@@ -306,10 +305,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder worldrenderer = tessellator.getBuffer();
                 worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-                worldrenderer.pos(0, h, this.blitOffset).color(r, g, b, a).endVertex();
-                worldrenderer.pos(w, h, this.blitOffset).color(r, g, b, a).endVertex();
-                worldrenderer.pos(w, 0, this.blitOffset).color(r, g, b, a).endVertex();
-                worldrenderer.pos(0, 0, this.blitOffset).color(r, g, b, a).endVertex();
+                worldrenderer.pos(0, h, this.getBlitOffset()).color(r, g, b, a).endVertex();
+                worldrenderer.pos(w, h, this.getBlitOffset()).color(r, g, b, a).endVertex();
+                worldrenderer.pos(w, 0, this.getBlitOffset()).color(r, g, b, a).endVertex();
+                worldrenderer.pos(0, 0, this.getBlitOffset()).color(r, g, b, a).endVertex();
 
                 tessellator.draw();
                 GlStateManager.shadeModel(7424);
@@ -352,10 +351,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
             }
             GL11.glEnable(GL11.GL_DEPTH_TEST);
             GlStateManager.popMatrix();
-        }
-
-        if (HalloweenSpecial.shouldRenderOverlay()) {
-            renderHalloweenOverlay();
         }
     }
 
@@ -427,36 +422,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
         GlStateManager.color4f(1F, 1F, 1F, 1F);
         GL11.glDisable(GL11.GL_BLEND);
 
-    }
-
-    /**
-     * Halloween (temporary) overlay
-     */
-    private void renderHalloweenOverlay() {
-
-        GlStateManager.pushMatrix();
-        // Set the working matrix/layer to a layer directly on the screen/in front of
-        // the player
-        // int factor=scaledresolution.getScaleFactor();
-        int w = (this.mc.mainWindow.getScaledWidth());
-        int h = (this.mc.mainWindow.getScaledHeight());
-
-        this.mc.mainWindow.loadGUIRenderMatrix(Minecraft.IS_RUNNING_ON_MAC);
-
-        this.mc.textureManager.bindTexture(new ResourceLocation(REFERENCE.MODID, "textures/gui/special_halloween.png"));
-
-        int width = 507;
-        int height = 102;
-
-        int x = (w - width) / 2;
-        int y = (h - height) / 2;
-
-        GlStateManager.color4f(1, 1, 1, 1);
-        GlStateManager.enableBlend();
-        blit(x, y, 0, 0, width, height, width, height);//TODO 1.14 test
-        GlStateManager.disableBlend();
-
-        GlStateManager.popMatrix();
     }
 
 }

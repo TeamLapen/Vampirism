@@ -106,11 +106,11 @@ public class ClientProxy extends CommonProxy {
                 ModKeys.register();
                 registerSubscriptions();
                 SelectActionScreen.loadActionOrder();
+                ModBlocksRender.register();
                 break;
             case LOAD_COMPLETE:
                 ModBlocksRender.registerColors();
                 ModItemsRender.registerColors();
-                ModBlocksRender.register();
                 ModParticleFactories.registerFactories();
                 ModScreens.registerScreens();
                 skillTreeManager.init();

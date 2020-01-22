@@ -9,7 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -72,10 +72,6 @@ public class PedestalBlock extends VampirismBlockContainer {
         return ToolType.PICKAXE;
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
@@ -93,14 +89,16 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (world.isRemote) return true;
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (world.isRemote) return ActionResultType.SUCCESS;
         PedestalTileEntity tile = getTileEntity(world, pos);
-        if (tile == null) return false;
+        if (tile == null) return ActionResultType.SUCCESS;
         ItemStack stack = player.getHeldItem(hand);
         if (stack.isEmpty() && !tile.extractItem(0, 1, true).isEmpty()) {
             ItemStack stack2 = tile.extractItem(0, 1, false);
             takeItemPlayer(player, hand, stack2);
+            return ActionResultType.SUCCESS;
+
         } else if (!stack.isEmpty()) {
             ItemStack stack2 = ItemStack.EMPTY;
             if (!tile.extractItem(0, 1, true).isEmpty()) {
@@ -111,8 +109,9 @@ public class PedestalBlock extends VampirismBlockContainer {
             } else {
                 tile.insertItem(0, stack2, false);
             }
+            return ActionResultType.SUCCESS;
         }
-        return true;
+        return super.onBlockActivated(state, world, pos, player, hand, hit);
     }
 
     @Override

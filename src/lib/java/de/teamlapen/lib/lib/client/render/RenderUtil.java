@@ -2,6 +2,7 @@ package de.teamlapen.lib.lib.client.render;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -43,7 +44,7 @@ public class RenderUtil {
 
     private static void startGlowing(boolean entityInvisible, float brightness) {
         GlStateManager.enableBlend();
-        GlStateManager.enableAlphaTest();
+        RenderSystem.enableAlphaTest();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
 
         if (entityInvisible) {
@@ -52,7 +53,7 @@ public class RenderUtil {
             GlStateManager.depthMask(true);
         }
         GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, brightness, 0.0F);
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getInstance().gameRenderer.setupFogColor(true);
     }
 

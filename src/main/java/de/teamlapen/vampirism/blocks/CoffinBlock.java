@@ -98,11 +98,6 @@ public class CoffinBlock extends VampirismBlockContainer {
         return PushReaction.DESTROY;
     }
 
-    @Nonnull
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
 
     @Nonnull
     @Override
@@ -158,36 +153,36 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 
         if (worldIn.isRemote) {
-            return true;
+            return ActionResultType.SUCCESS;
         } else {
             ItemStack heldItem = player.getHeldItem(hand);
             if (!heldItem.isEmpty() && heldItem.getItem() instanceof DyeItem) {
                 CoffinTileEntity tile = (CoffinTileEntity) worldIn.getTileEntity(pos);
                 TileEntity other = state.get(PART) == CoffinPart.HEAD ? worldIn.getTileEntity(pos.offset(state.get(HORIZONTAL_FACING).getOpposite())) : worldIn.getTileEntity(pos.offset(state.get(HORIZONTAL_FACING)));
                 if (!(other instanceof CoffinTileEntity)) {
-                    return true;
+                    return ActionResultType.SUCCESS;
                 }
                 tile.changeColor(((DyeItem) heldItem.getItem()).getDyeColor());
                 ((CoffinTileEntity) other).changeColor(((DyeItem) heldItem.getItem()).getDyeColor());
                 if (!player.abilities.isCreativeMode) {
                     heldItem.shrink(1);
                 }
-                return true;
+                return ActionResultType.SUCCESS;
             }
             if (state.get(PART) != CoffinPart.HEAD) {
                 pos = pos.offset(state.get(HORIZONTAL_FACING));
                 state = worldIn.getBlockState(pos);
                 if (state.getBlock() != this) {
-                    return true;
+                    return ActionResultType.SUCCESS;
                 }
             }
 
             if (VampirePlayer.get(player).getLevel() == 0) {
                 player.sendStatusMessage(new TranslationTextComponent("text.vampirism.coffin.cant_use"), true);
-                return true;
+                return ActionResultType.SUCCESS;
             }
 
             IForgeDimension.SleepResult sleepResult = worldIn.dimension.canSleepAt(player, pos);
@@ -195,7 +190,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                 if (sleepResult == IForgeDimension.SleepResult.DENY) return true;
                 if (state.get(BedBlock.OCCUPIED)) {
                     player.sendStatusMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
-                    return true;
+                    return ActionResultType.SUCCESS;
                 } else {
                     final BlockPos finalPos = pos;
                     player.trySleep(pos).ifLeft(sleepResult1 -> {
@@ -208,7 +203,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                             worldIn.setBlockState(finalPos, blockstate.with(BedBlock.OCCUPIED, Boolean.TRUE), 3);
                         }
                     });
-                    return true;
+                    return ActionResultType.SUCCESS;
                 }
             } else {
                 worldIn.removeBlock(pos, false);
@@ -217,7 +212,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                     worldIn.removeBlock(blockPos, false);
                 }
                 worldIn.createExplosion(null, DamageSource.netherBedExplosion(), (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
-                return true;
+                return ActionResultType.SUCCESS;
             }
         }
     }

@@ -53,7 +53,7 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
     @Override
     public boolean canInteractWith(PlayerEntity player) {
         if (entity == null) return false;
-        return new Vec3d(player.posX, player.posY, player.posZ).distanceTo(new Vec3d(entity.posX, entity.posY, entity.posZ)) < 5;
+        return new Vec3d(player.getPosX(), player.getPosY(), player.getPosZ()).distanceTo(new Vec3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())) < 5;
     }
 
     /**

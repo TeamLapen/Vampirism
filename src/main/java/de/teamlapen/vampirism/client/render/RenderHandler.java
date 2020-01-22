@@ -100,8 +100,8 @@ public class RenderHandler {
 
     public RenderHandler(Minecraft mc) {
         this.mc = mc;
-        this.displayHeight = mc.mainWindow.getHeight();
-        this.displayWidth = mc.mainWindow.getWidth();
+        this.displayHeight = mc.getMainWindow().getHeight();
+        this.displayWidth = mc.getMainWindow().getWidth();
     }
 
     @SubscribeEvent
@@ -147,7 +147,7 @@ public class RenderHandler {
             }
         }
 
-        if (GLX.isNextGen() && doSaturationShader) {
+        if (doSaturationShader) {
             if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
                 EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
                 boolean active = pe != null && pe.getAmplifier() >= 2;
@@ -217,7 +217,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
-        PlayerEntity player = event.getEntityPlayer();
+        PlayerEntity player = event.getPlayer();
         VampirePlayerSpecialAttributes vampireAttributes = VampirePlayer.get(player).getSpecialAttributes();
         HunterPlayerSpecialAttribute hunterAttributes = HunterPlayer.get(player).getSpecialAttributes();
         if (vampireAttributes.bat) {
@@ -335,6 +335,32 @@ public class RenderHandler {
 //        GlStateManager.popMatrix();
 //    }
 
+    @SubscribeEvent
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+        if (mc.world == null) return;
+
+        if (bloodVisionTicks > 0) {
+
+            renderBloodVisionOutlines((bloodVisionTicks + (bloodVisionTicks - lastBloodVisionTicks) * event.getPartialTicks()) / (float) BLOOD_VISION_FADE_TICKS, event.getPartialTicks());
+
+        }
+
+        if (displayHeight != mc.getMainWindow().getHeight() || displayWidth != mc.getMainWindow().getWidth()) {
+            this.displayHeight = mc.getMainWindow().getHeight();
+            this.displayWidth = mc.getMainWindow().getWidth();
+            if (GLX.isNextGen() && isRenderEntityOutlines()) {
+                blurShader.createBindFramebuffers(displayWidth, displayHeight);
+                bloodVisionShader1.createBindFramebuffers(displayWidth, displayHeight);
+                bloodVisionShader2.createBindFramebuffers(displayWidth, displayHeight);
+                bloodVisionShader3.createBindFramebuffers(displayWidth, displayHeight);
+
+
+            }
+        }
+
+
+    }
+
     private void makeBloodVisionShader() {
         if (GLX.isNextGen()) {
             if (ShaderLinkHelper.getStaticShaderLinkHelper() == null) {
@@ -374,10 +400,10 @@ public class RenderHandler {
                 blit3 = bloodVisionShader3.addShader("blit", swap, bloodVisionFrameBuffer3);
 
 
-                this.blurShader.createBindFramebuffers(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight());
-                this.bloodVisionShader1.createBindFramebuffers(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight());
-                this.bloodVisionShader2.createBindFramebuffers(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight());
-                this.bloodVisionShader3.createBindFramebuffers(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight());
+                this.blurShader.createBindFramebuffers(this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight());
+                this.bloodVisionShader1.createBindFramebuffers(this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight());
+                this.bloodVisionShader2.createBindFramebuffers(this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight());
+                this.bloodVisionShader3.createBindFramebuffers(this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight());
 
             } catch (IOException | JsonSyntaxException ioexception) {
 
@@ -397,58 +423,6 @@ public class RenderHandler {
             this.bloodVisionShader3 = null;
             this.bloodVisionFrameBuffer3 = null;
         }
-    }
-
-    private void renderBloodVisionOutlines(float progress, float partialTicks) {
-        if (!bloodVisionShaderInit) {
-
-            makeBloodVisionShader();
-            bloodVisionShaderInit = true;
-        }
-        if (!isRenderEntityOutlines()) {
-            if (!showedShaderWarning) {
-                shaderWarning = true;
-            }
-            return;
-        }
-
-        adjustBloodVisionShaders(progress);
-
-        blurShader.render(partialTicks);
-
-
-        if (!renderedEntitiesWithBlood.isEmpty() || this.bloodVision1Rendered) {
-            bloodVision1Rendered = renderEntityOutlines(renderedEntitiesWithBlood, bloodVisionShader1, bloodVisionFrameBuffer1, partialTicks);
-        }
-        renderedEntitiesWithBlood.clear();
-
-        if (!renderedEntitiesWithoutBlood.isEmpty() || this.bloodVision2Rendered) {
-            bloodVision2Rendered = renderEntityOutlines(renderedEntitiesWithoutBlood, bloodVisionShader2, bloodVisionFrameBuffer2, partialTicks);
-        }
-
-        renderedEntitiesWithoutBlood.clear();
-
-        if (!renderedEntitiesWithGarlicInfused.isEmpty() || this.bloodVision3Rendered) {
-            bloodVision3Rendered = renderEntityOutlines(renderedEntitiesWithGarlicInfused, bloodVisionShader3, bloodVisionFrameBuffer3, partialTicks);
-        }
-
-        renderedEntitiesWithGarlicInfused.clear();
-
-        RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
-
-
-        this.bloodVisionFrameBuffer1.framebufferRenderExt(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight(), false);
-        //this.mc.getFramebuffer().bindFramebuffer(false);
-        this.bloodVisionFrameBuffer2.framebufferRenderExt(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight(), false);
-        this.bloodVisionFrameBuffer3.framebufferRenderExt(this.mc.mainWindow.getFramebufferWidth(), this.mc.mainWindow.getFramebufferHeight(), false);
-
-        this.mc.getFramebuffer().bindFramebuffer(false);
-
-
-        RenderSystem.disableBlend();
-
-
     }
 
     private boolean renderEntityOutlines(List<? extends Entity> entities, ShaderGroup shader, Framebuffer framebuffer, float partialTicks) {
@@ -497,28 +471,54 @@ public class RenderHandler {
         return flag;
     }
 
-    @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-        if (mc.world == null) return;
+    private void renderBloodVisionOutlines(float progress, float partialTicks) {
+        if (!bloodVisionShaderInit) {
 
-        if (bloodVisionTicks > 0) {
-
-            renderBloodVisionOutlines((bloodVisionTicks + (bloodVisionTicks - lastBloodVisionTicks) * event.getPartialTicks()) / (float) BLOOD_VISION_FADE_TICKS, event.getPartialTicks());
-
+            makeBloodVisionShader();
+            bloodVisionShaderInit = true;
         }
-
-        if (displayHeight != mc.mainWindow.getHeight() || displayWidth != mc.mainWindow.getWidth()) {
-            this.displayHeight = mc.mainWindow.getHeight();
-            this.displayWidth = mc.mainWindow.getWidth();
-            if (GLX.isNextGen() && isRenderEntityOutlines()) {
-                blurShader.createBindFramebuffers(displayWidth, displayHeight);
-                bloodVisionShader1.createBindFramebuffers(displayWidth, displayHeight);
-                bloodVisionShader2.createBindFramebuffers(displayWidth, displayHeight);
-                bloodVisionShader3.createBindFramebuffers(displayWidth, displayHeight);
-
-
+        if (!isRenderEntityOutlines()) {
+            if (!showedShaderWarning) {
+                shaderWarning = true;
             }
+            return;
         }
+
+        adjustBloodVisionShaders(progress);
+
+        blurShader.render(partialTicks);
+
+
+        if (!renderedEntitiesWithBlood.isEmpty() || this.bloodVision1Rendered) {
+            bloodVision1Rendered = renderEntityOutlines(renderedEntitiesWithBlood, bloodVisionShader1, bloodVisionFrameBuffer1, partialTicks);
+        }
+        renderedEntitiesWithBlood.clear();
+
+        if (!renderedEntitiesWithoutBlood.isEmpty() || this.bloodVision2Rendered) {
+            bloodVision2Rendered = renderEntityOutlines(renderedEntitiesWithoutBlood, bloodVisionShader2, bloodVisionFrameBuffer2, partialTicks);
+        }
+
+        renderedEntitiesWithoutBlood.clear();
+
+        if (!renderedEntitiesWithGarlicInfused.isEmpty() || this.bloodVision3Rendered) {
+            bloodVision3Rendered = renderEntityOutlines(renderedEntitiesWithGarlicInfused, bloodVisionShader3, bloodVisionFrameBuffer3, partialTicks);
+        }
+
+        renderedEntitiesWithGarlicInfused.clear();
+
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
+
+
+        this.bloodVisionFrameBuffer1.framebufferRenderExt(this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight(), false);
+        //this.mc.getFramebuffer().bindFramebuffer(false);
+        this.bloodVisionFrameBuffer2.framebufferRenderExt(this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight(), false);
+        this.bloodVisionFrameBuffer3.framebufferRenderExt(this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight(), false);
+
+        this.mc.getFramebuffer().bindFramebuffer(false);
+
+
+        RenderSystem.disableBlend();
 
 
     }

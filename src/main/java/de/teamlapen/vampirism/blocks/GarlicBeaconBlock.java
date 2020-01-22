@@ -72,11 +72,6 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
@@ -116,7 +111,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack heldItem = player.getHeldItem(hand);
         if (!heldItem.isEmpty() && ModItems.purified_garlic.equals(heldItem.getItem())) {
             if (!world.isRemote) {
@@ -132,9 +127,9 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
 
                 }
             }
-            return true;
+            return ActionResultType.SUCCESS;
         }
-        return false;
+        return ActionResultType.PASS;
     }
 
     @Override

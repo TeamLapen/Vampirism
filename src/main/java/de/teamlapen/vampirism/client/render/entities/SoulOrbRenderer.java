@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.render.entities;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.culling.ICamera;
+import net.minecraft.client.renderer.culling.ClippingHelperImpl;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,11 +18,11 @@ public class SoulOrbRenderer extends SpriteRenderer<SoulOrbEntity> {
     }
 
     @Override
-    public boolean shouldRender(SoulOrbEntity livingEntity, ICamera camera, double camX, double camY, double camZ) {
+    public boolean func_225626_a_(SoulOrbEntity livingEntity, ClippingHelperImpl camera, double camX, double camY, double camZ) { //shouldRender
         boolean flag = true;
         if (Minecraft.getInstance().player != null) {
             flag = !livingEntity.isInvisibleToPlayer(Minecraft.getInstance().player);
         }
-        return flag && super.shouldRender(livingEntity, camera, camX, camY, camZ);
+        return flag && super.func_225626_a_(livingEntity, camera, camX, camY, camZ);
     }
 }

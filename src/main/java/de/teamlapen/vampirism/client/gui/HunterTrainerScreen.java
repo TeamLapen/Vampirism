@@ -43,7 +43,7 @@ public class HunterTrainerScreen extends ContainerScreen<HunterTrainerContainer>
         this.addButton(this.buttonLevelup = new Button(i + 120, j + 24, font.getStringWidth(name) + 5, 20, name, (context) -> {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
             PlayerEntity player = Minecraft.getInstance().player;
-            UtilLib.spawnParticles(player.getEntityWorld(), ParticleTypes.ENCHANT, player.posX, player.posY, player.posZ, 1, 1, 1, 100, 1);
+            UtilLib.spawnParticles(player.getEntityWorld(), ParticleTypes.ENCHANT, player.getPosX(), player.getPosY(), player.getPosZ(), 1, 1, 1, 100, 1);
             player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
             this.onClose();
         }));

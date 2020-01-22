@@ -311,8 +311,8 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
                     ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.PERFORM_RITUAL_INFUSION);
                 }
             } else {
-                this.world.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
-                this.world.addParticle(ParticleTypes.EXPLOSION, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
+                this.world.playSound(player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
+                this.world.addParticle(ParticleTypes.EXPLOSION, player.getPosX(), player.getPosY(), player.getPosZ(), 1.0D, 0.0D, 0.0D);
             }
 
             player.addPotionEffect(new EffectInstance(ModEffects.saturation, 400, 2));
@@ -442,7 +442,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     private BlockPos[] findTips() {
         if (world == null) return new BlockPos[0];
         List<BlockPos> list = new ArrayList<>();
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        BlockPos.Mutable pos = new BlockPos.Mutable();
         for (int x = getPos().getX() - 4; x < getPos().getX() + 5; x++) {
             for (int y = getPos().getY() + 1; y < getPos().getY() + 4; y++) {
                 for (int z = getPos().getZ() - 4; z < getPos().getZ() + 5; z++) {

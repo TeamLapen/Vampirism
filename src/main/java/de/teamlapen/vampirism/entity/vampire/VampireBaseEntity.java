@@ -254,7 +254,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     protected void onDeathUpdate() {
         if (this.deathTime == 19) {
             if (!this.world.isRemote && (dropSoul && this.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT))) {
-                this.world.addEntity(new SoulOrbEntity(this.world, this.posX, this.posY, this.posZ, SoulOrbEntity.VARIANT.VAMPIRE));
+                this.world.addEntity(new SoulOrbEntity(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), SoulOrbEntity.VARIANT.VAMPIRE));
             }
         }
         super.onDeathUpdate();

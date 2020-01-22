@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.client.model.CoffinModel;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +26,8 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
     private final ResourceLocation[] textures = new ResourceLocation[DyeColor.values().length];
     private Logger LOGGER = LogManager.getLogger();
 
-    public CoffinTESR() {
+    public CoffinTESR(TileEntityRendererDispatcher dispatcher) {
+        super(dispatcher);
         this.model = new CoffinModel();
         for (DyeColor e : DyeColor.values()) {
             textures[e.getId()] = new ResourceLocation(REFERENCE.MODID, "textures/block/coffin/coffin_" + e.getName() + ".png");
@@ -47,17 +50,17 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         } else {
             tile.lidPos = maxLidPos;
         }
-        GlStateManager.pushMatrix();
-        GlStateManager.translatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
         int color = Math.min(tile.color.getId(), 15);
         bindTexture(textures[color]);
-        GlStateManager.pushMatrix();
+        RenderSystem.pushMatrix();
         adjustRotatePivotViaState(te);
         GlStateManager.rotatef(180F, 0.0F, 0.0F, 1.0F);
         model.rotateLid(calcLidAngle(tile.lidPos));
         model.render(0.0625F);
-        GlStateManager.popMatrix();
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
+        RenderSystem.popMatrix();
     }
 
     private float calcLidAngle(int pos) {

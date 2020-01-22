@@ -95,8 +95,8 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void setWorld(World worldIn) {
-        super.setWorld(worldIn);
+    public void setWorldAndPos(World worldIn, BlockPos pos) {
+        super.setWorldAndPos(worldIn, pos);
         this.spawnerLogicHunter.setWorld(worldIn);
         this.spawnerLogicAdvancedHunter.setWorld(world);
     }

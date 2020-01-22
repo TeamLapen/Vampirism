@@ -74,7 +74,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         this.onGuiInit();
         this.elementCount = elements.size();
         radDiff = 2D * Math.PI / elementCount;// gap in rad
-        GLFW.glfwSetInputMode(minecraft.mainWindow.getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
+        GLFW.glfwSetInputMode(minecraft.getMainWindow().getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
         ForgeIngameGui.renderCrosshairs = false;
     }
 
@@ -108,7 +108,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     @Override
     public void removed() {
         super.removed();
-        GLFW.glfwSetInputMode(Minecraft.getInstance().mainWindow.getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+        GLFW.glfwSetInputMode(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
         ForgeIngameGui.renderCrosshairs = true;
     }
 
@@ -155,7 +155,7 @@ public abstract class GuiPieMenu<T> extends Screen {
             // Draw Icon
             RenderSystem.color4f(1F, 1F, 1F, 1F);
             this.minecraft.getTextureManager().bindTexture(getIconLoc(element));
-            UtilLib.drawTexturedModalRect(blitOffset, x, y, 0, 0, 16, 16, 16, 16);
+            UtilLib.drawTexturedModalRect(getBlitOffset(), x, y, 0, 0, 16, 16, 16, 16);
 
             this.afterIconDraw(element, x, y);
 
@@ -174,7 +174,9 @@ public abstract class GuiPieMenu<T> extends Screen {
     @Override
     public void tick() {
         super.tick();
-        this.minecraft.player.movementInput.tick(this.minecraft.player.shouldRenderSneaking(), this.minecraft.player.isSpectator());
+        if (this.minecraft != null && this.minecraft.player != null)
+            this.minecraft.player.movementInput.func_225607_a_(this.minecraft.player.func_228354_I_()); //tick, shouldRenderSneaking
+
     }
 
     protected void afterIconDraw(T element, int x, int y) {
@@ -190,8 +192,8 @@ public abstract class GuiPieMenu<T> extends Screen {
         RenderSystem.color4f(0F, 0F, 0F, 1F);
         RenderSystem.lineWidth(2F);
         GlStateManager.begin(GL11.GL_LINES);
-        GlStateManager.vertex3f((float) x1, (float) y1, this.blitOffset);
-        GlStateManager.vertex3f((float) x2, (float) y2, (float) this.blitOffset);
+        GlStateManager.vertex3f((float) x1, (float) y1, this.getBlitOffset());
+        GlStateManager.vertex3f((float) x2, (float) y2, (float) this.getBlitOffset());
         GlStateManager.end();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         RenderSystem.color4f(0F, 0F, 0F, 1F);
@@ -244,7 +246,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         RenderSystem.pushMatrix();
         RenderSystem.enableBlend();
-        RenderSystem.translatef(cX, cY, this.blitOffset);
+        RenderSystem.translatef(cX, cY, this.getBlitOffset());
         RenderSystem.scalef(scale, scale, 1);
 
         // Draw the cicle image
@@ -260,13 +262,13 @@ public abstract class GuiPieMenu<T> extends Screen {
         builder.func_225586_a_(BGS / 2, BGS /2, this.getBlitOffset()).f.
         GlStateManager.begin(GL11.GL_QUADS);
         GlStateManager.texCoord2f(1F, 1F);
-        GlStateManager.vertex3f(BGS / 2, BGS / 2, this.blitOffset);
+        GlStateManager.vertex3f(BGS / 2, BGS / 2, this.getBlitOffset());
         GlStateManager.texCoord2f(1F, 0F);
-        GlStateManager.vertex3f(BGS / 2, -BGS / 2, this.blitOffset);
+        GlStateManager.vertex3f(BGS / 2, -BGS / 2, this.getBlitOffset());
         GlStateManager.texCoord2f(0F, 0F);
-        GlStateManager.vertex3f(-BGS / 2, -BGS / 2, this.blitOffset);
+        GlStateManager.vertex3f(-BGS / 2, -BGS / 2, this.getBlitOffset());
         GlStateManager.texCoord2f(0F, 1F);
-        GlStateManager.vertex3f(-BGS / 2, BGS / 2, this.blitOffset);
+        GlStateManager.vertex3f(-BGS / 2, BGS / 2, this.getBlitOffset());
         GlStateManager.end();
 
         // Draw the lines
@@ -299,22 +301,22 @@ public abstract class GuiPieMenu<T> extends Screen {
         RenderSystem.pushMatrix();
         RenderSystem.enableBlend();
         // Move origin to center, scale and rotate
-        RenderSystem.translated(cX, cY, this.blitOffset);
+        RenderSystem.translated(cX, cY, this.getBlitOffset());
         RenderSystem.scalef(scale, scale, 1);
-        RenderSystem.rotated(deg, 0, 0, 1);
+        RenderSystem.rotatef((float) deg, 0, 0, 1);
 
         // Draw
         this.minecraft.getTextureManager().bindTexture(centerTex);
         RenderSystem.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
         GlStateManager.begin(GL11.GL_QUADS);
         GlStateManager.texCoord2f(0.5F, 1F);
-        GlStateManager.vertex3f(CS / 2, CS / 2, this.blitOffset);
+        GlStateManager.vertex3f(CS / 2, CS / 2, this.getBlitOffset());
         GlStateManager.texCoord2f(0.5F, 0F);
-        GlStateManager.vertex3f(CS / 2, -CS / 2, this.blitOffset);
+        GlStateManager.vertex3f(CS / 2, -CS / 2, this.getBlitOffset());
         GlStateManager.texCoord2f(0F, 0F);
-        GlStateManager.vertex3f(-CS / 2, -CS / 2, this.blitOffset);
+        GlStateManager.vertex3f(-CS / 2, -CS / 2, this.getBlitOffset());
         GlStateManager.texCoord2f(0F, 1F);
-        GlStateManager.vertex3f(-CS / 2, CS / 2, this.blitOffset);
+        GlStateManager.vertex3f(-CS / 2, CS / 2, this.getBlitOffset());
         GlStateManager.end();
         RenderSystem.disableBlend();
         RenderSystem.popMatrix();
@@ -327,7 +329,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         RenderSystem.pushMatrix();
         RenderSystem.enableBlend();
         // Move origin to center, scale and rotate
-        RenderSystem.translated(cX, cY, this.blitOffset);
+        RenderSystem.translated(cX, cY, this.getBlitOffset());
         RenderSystem.scalef(scale, scale, 1);
 
         // Draw
@@ -335,13 +337,13 @@ public abstract class GuiPieMenu<T> extends Screen {
         RenderSystem.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
         GlStateManager.begin(GL11.GL_QUADS);
         GlStateManager.texCoord2f(1F, 1F);
-        GlStateManager.vertex3f(CS / 2, CS / 2, this.blitOffset);
+        GlStateManager.vertex3f(CS / 2, CS / 2, this.getBlitOffset());
         GlStateManager.texCoord2f(1F, 0F);
-        GlStateManager.vertex3f(CS / 2, -CS / 2, this.blitOffset);
+        GlStateManager.vertex3f(CS / 2, -CS / 2, this.getBlitOffset());
         GlStateManager.texCoord2f(0.5F, 0F);
-        GlStateManager.vertex3f(-CS / 2, -CS / 2, this.blitOffset);
+        GlStateManager.vertex3f(-CS / 2, -CS / 2, this.getBlitOffset());
         GlStateManager.texCoord2f(0.5F, 1F);
-        GlStateManager.vertex3f(-CS / 2, CS / 2, this.blitOffset);
+        GlStateManager.vertex3f(-CS / 2, CS / 2, this.getBlitOffset());
         GlStateManager.end();
         RenderSystem.disableBlend();
         RenderSystem.popMatrix();
@@ -354,9 +356,9 @@ public abstract class GuiPieMenu<T> extends Screen {
      * @param y
      */
     private void setAbsoluteMouse(double x, double y) {
-        x = x * this.minecraft.mainWindow.getFramebufferWidth() / this.width;
-        y = -(y + 1 - height) * this.minecraft.mainWindow.getFramebufferHeight() / height;
-        GLFW.glfwSetCursorPos(this.minecraft.mainWindow.getHandle(), x, y);
+        x = x * this.minecraft.getMainWindow().getFramebufferWidth() / this.width;
+        y = -(y + 1 - height) * this.minecraft.getMainWindow().getFramebufferHeight() / height;
+        GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), x, y);
     }
 
     /**

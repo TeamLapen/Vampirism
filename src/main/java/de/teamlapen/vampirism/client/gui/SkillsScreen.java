@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
@@ -244,7 +243,7 @@ public class SkillsScreen extends Screen {
         int l = (this.height - this.display_height) / 2;
         int i1 = k + 16;
         int j1 = l + 17;
-        this.blitOffset = 0;
+        this.setBlitOffset(0);
         RenderSystem.depthFunc(518);
         RenderSystem.pushMatrix();
         RenderSystem.translatef((float) i1, (float) j1, -200.0F);
@@ -294,7 +293,7 @@ public class SkillsScreen extends Screen {
                 }
 
                 this.minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-                blit(x * 16 - i2, y * 16 - j2, this.blitOffset, 16, 16, textureatlassprite);
+                blit(x * 16 - i2, y * 16 - j2, this.getBlitOffset(), 16, 16, textureatlassprite);
             }
         }
 
@@ -337,7 +336,7 @@ public class SkillsScreen extends Screen {
 
         float mMouseX = (float) (mouseX - i1) * this.zoomOut;
         float mMouseY = (float) (mouseY - j1) * this.zoomOut;
-        RenderHelper.enableGUIStandardItemLighting();
+        RenderHelper.func_227780_a_(); //enableStandardGUIItemLighting
         RenderSystem.disableLighting();
         RenderSystem.enableRescaleNormal();
         RenderSystem.enableColorMaterial();
@@ -390,7 +389,7 @@ public class SkillsScreen extends Screen {
                     RenderSystem.disableLighting();
                     //GlStateManager.enableCull();
                     RenderSystem.enableBlend();
-                    UtilLib.drawTexturedModalRect(this.blitOffset, x + 3, y + 3, 0, 0, 16, 16, 16, 16);
+                    UtilLib.drawTexturedModalRect(this.getBlitOffset(), x + 3, y + 3, 0, 0, 16, 16, 16, 16);
                     //GlStateManager.blendFunc(770, 771);
                     RenderSystem.disableLighting();
 
@@ -418,7 +417,7 @@ public class SkillsScreen extends Screen {
         RenderSystem.color4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
         this.blit(k, l, 0, 0, this.display_width, this.display_height);
-        this.blitOffset = 0;
+        this.setBlitOffset(0);
         RenderSystem.depthFunc(515);
         RenderSystem.disableDepthTest();
         RenderSystem.enableTexture();

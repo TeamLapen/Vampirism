@@ -4,7 +4,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyLoadBase;
+import net.minecraft.util.LazyValue;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,7 +26,7 @@ public enum VampirismArmorMaterials implements IArmorMaterial {
     private final int enchantability;
     private final SoundEvent soundEvent;
     private final float toughness;
-    private final LazyLoadBase<Ingredient> repairMaterial;
+    private final LazyValue<Ingredient> repairMaterial;
 
     VampirismArmorMaterials(String name, int maxDamageFactor, int[] damageReductionArray, int enchantability, SoundEvent sound, float toughness, Supplier<Ingredient> repairMaterial) {
         this.name = name;
@@ -35,7 +35,7 @@ public enum VampirismArmorMaterials implements IArmorMaterial {
         this.enchantability = enchantability;
         this.soundEvent = sound;
         this.toughness = toughness;
-        this.repairMaterial = new LazyLoadBase<>(repairMaterial);
+        this.repairMaterial = new LazyValue<>(repairMaterial);
     }
 
     public int getDamageReductionAmount(EquipmentSlotType p_200902_1_) {

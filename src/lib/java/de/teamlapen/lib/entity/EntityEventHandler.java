@@ -118,7 +118,7 @@ public class EntityEventHandler {
     public void onStartTracking(PlayerEvent.StartTracking event) {
         if ((event.getTarget() instanceof CreatureEntity && HelperRegistry.getSyncableEntityCaps().size() > 0) || event.getTarget() instanceof ISyncable || (event.getTarget() instanceof PlayerEntity && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
             UpdateEntityPacket packet = UpdateEntityPacket.createJoinWorldPacket(event.getTarget());
-            VampLib.dispatcher.sendTo(packet, (ServerPlayerEntity) event.getEntityPlayer());
+            VampLib.dispatcher.sendTo(packet, (ServerPlayerEntity) event.getPlayer());
         }
     }
 }

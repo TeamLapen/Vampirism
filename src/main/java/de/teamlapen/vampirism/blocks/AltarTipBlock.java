@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -42,11 +41,6 @@ public class AltarTipBlock extends VampirismBlock {
     @Override
     public ToolType getHarvestTool(BlockState p_getHarvestTool_1_) {
         return ToolType.PICKAXE;
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
     }
 
     @Override

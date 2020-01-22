@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.config;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
-import de.teamlapen.vampirism.util.HalloweenSpecial;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -81,7 +80,6 @@ public class VampirismConfig {
         LogManager.getLogger().debug(FORGEMOD, "Loaded forge config file {}", configEvent.getConfig().getFileName());
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
-            HalloweenSpecial.checkEnable();
 
         }
     }
@@ -91,7 +89,6 @@ public class VampirismConfig {
         LogManager.getLogger().fatal(CORE, "Forge config just got changed on the file system!");
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
-            HalloweenSpecial.checkEnable();
         }
     }
 

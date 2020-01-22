@@ -27,9 +27,9 @@ public class TeleportVampireAction extends DefaultVampireAction {
     public boolean activate(IVampirePlayer vampire) {
         PlayerEntity player = vampire.getRepresentingPlayer();
         RayTraceResult target = UtilLib.getPlayerLookingSpot(player, VampirismConfig.BALANCE.vaTeleportMaxDistance.get());
-        double ox = player.posX;
-        double oy = player.posY;
-        double oz = player.posZ;
+        double ox = player.getPosX();
+        double oy = player.getPosY();
+        double oz = player.getPosZ();
         if (target.getType() == RayTraceResult.Type.MISS) {
             player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_BASS, 1, 1);
             return false;
@@ -47,7 +47,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
         if (pos != null) {
             player.setPosition(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-            if (!(!player.getEntityWorld().containsAnyLiquid(player.getBoundingBox()) && player.getEntityWorld().isCollisionBoxesEmpty(player, player.getBoundingBox()))) {
+            if (!(!player.getEntityWorld().containsAnyLiquid(player.getBoundingBox()) && player.getEntityWorld().func_226668_i_(player))) { //isEntityColliding
                 pos = null;
             }
         }
@@ -71,7 +71,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
         particleCloud.setSpawnRate(15);
         player.getEntityWorld().addEntity(particleCloud);
         player.getEntityWorld().playSound(ox, oy, oz, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
-        player.getEntityWorld().playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1, false);
+        player.getEntityWorld().playSound(player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1, false);
         return true;
     }
 

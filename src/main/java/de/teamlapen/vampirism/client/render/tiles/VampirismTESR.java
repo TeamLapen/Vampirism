@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.vampirism.blocks.VampirismBlockContainer;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,6 +17,11 @@ import javax.annotation.Nullable;
  */
 @OnlyIn(Dist.CLIENT)
 abstract class VampirismTESR<T extends TileEntity> extends TileEntityRenderer<T> {
+
+
+    public VampirismTESR(TileEntityRendererDispatcher dispatcher) {
+        super(dispatcher);
+    }
 
     /**
      * Rotates the block to fit the enum facing.

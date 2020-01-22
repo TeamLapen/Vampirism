@@ -10,7 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -76,11 +76,6 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         return ToolType.PICKAXE;
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
-
     @Nonnull
     @Override
     public BlockRenderType getRenderType(BlockState state) {
@@ -98,7 +93,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack stack = player.getHeldItem(hand);
         if (!stack.isEmpty()) {
             LazyOptional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
@@ -107,14 +102,14 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
                 if (!player.isSneaking() && tileEntity != null) {
                     FluidUtil.interactWithFluidHandler(player, hand, worldIn, pos, hit.getFace());
                 }
-                return true;
+                return ActionResultType.SUCCESS;
             }
         } else {
             AltarInspirationTileEntity tileEntity = (AltarInspirationTileEntity) worldIn.getTileEntity(pos);
             tileEntity.startRitual(player);
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override

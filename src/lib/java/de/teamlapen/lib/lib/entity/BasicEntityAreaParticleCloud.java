@@ -73,15 +73,15 @@ public class BasicEntityAreaParticleCloud extends Entity {
         return this.getDataManager().get(RADIUS);
     }
 
-    public void setRadius(float radius) {
-        double d0 = this.posX;
-        double d1 = this.posY;
-        double d2 = this.posZ;
-        this.size = new EntitySize(radius * 2.0F, getHeight(), size.fixed);
+    public void setHeight(float height) {
+        double d0 = this.getPosX();
+        double d1 = this.getPosY();
+        double d2 = this.getPosZ();
+        this.size = new EntitySize(getRadius() * 2, height, size.fixed);
         this.setPosition(d0, d1, d2);
 
         if (!this.world.isRemote) {
-            this.getDataManager().set(RADIUS, radius);
+            this.getDataManager().set(HEIGHT, height);
         }
     }
 
@@ -101,15 +101,15 @@ public class BasicEntityAreaParticleCloud extends Entity {
         this.waitTime = waitTime;
     }
 
-    public void setHeight(float height) {
-        double d0 = this.posX;
-        double d1 = this.posY;
-        double d2 = this.posZ;
-        this.size = new EntitySize(getRadius() * 2, height, size.fixed);
+    public void setRadius(float radius) {
+        double d0 = this.getPosX();
+        double d1 = this.getPosY();
+        double d2 = this.getPosZ();
+        this.size = new EntitySize(radius * 2.0F, getHeight(), size.fixed);
         this.setPosition(d0, d1, d2);
 
         if (!this.world.isRemote) {
-            this.getDataManager().set(HEIGHT, height);
+            this.getDataManager().set(RADIUS, radius);
         }
     }
 
@@ -137,9 +137,9 @@ public class BasicEntityAreaParticleCloud extends Entity {
                     int cr = rgb >> 16 & 255;
                     int cg = rgb >> 8 & 255;
                     int cb = rgb & 255;
-                    this.world.addParticle(particle, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (float) cr / 255.0F, (float) cg / 255.0F, (float) cb / 255.0F);
+                    this.world.addParticle(particle, this.getPosX() + (double) dx, this.getPosY() + dy, this.getPosZ() + (double) dz, (float) cr / 255.0F, (float) cg / 255.0F, (float) cb / 255.0F);
                 } else {
-                    this.world.addParticle(particle, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (0.5D - this.rand.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.rand.nextDouble()) * 0.15D);
+                    this.world.addParticle(particle, this.getPosX() + (double) dx, this.getPosY() + dy, this.getPosZ() + (double) dz, (0.5D - this.rand.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.rand.nextDouble()) * 0.15D);
                 }
             }
         } else {

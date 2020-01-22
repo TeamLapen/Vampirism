@@ -40,7 +40,7 @@ public class SunscreenBeaconTileEntity extends TileEntity implements ITickableTi
                 final int distSq = VampirismConfig.SERVER.sunscreenBeaconDistance.get() * VampirismConfig.SERVER.sunscreenBeaconDistance.get();
                 selector = input -> {
                     if (input == null) return false;
-                    BlockPos player = new BlockPos(input.posX, 0, input.posZ);
+                    BlockPos player = new BlockPos(input.getPosX(), 0, input.getPosZ());
                     return player.distanceSq(center) < distSq;
                 };
             }

@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -12,8 +12,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class TotemTESR extends VampirismTESR<TotemTileEntity> {
 
+
     private static final ResourceLocation TEXTURE_BEACON_BEAM = new ResourceLocation(REFERENCE.MODID, "textures/entity/totem_beam.png");
     private final static int HEIGHT = 100;
+
+    public TotemTESR(TileEntityRendererDispatcher dispatcher) {
+        super(dispatcher);
+    }
 
     @Override
     public boolean isGlobalRenderer(TotemTileEntity te) {

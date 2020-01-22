@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.Maps;
-
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
@@ -14,7 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -24,8 +23,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -90,11 +87,7 @@ public class TotemTopBlock extends VampirismBlockContainer {
         return ModTiles.totem.create();
     }
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
+
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
@@ -122,12 +115,12 @@ public class TotemTopBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (world.isRemote) return true;
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (world.isRemote) return ActionResultType.SUCCESS;
         TotemTileEntity t = getTile(world, pos);
         if (t != null && world.getBlockState(pos.down()).getBlock().equals(ModBlocks.totem_base)) {
             t.initiateCapture(player);
-            return true;
+            return ActionResultType.SUCCESS;
         }
         return super.onBlockActivated(state, world, pos, player, hand, hit);
     }

@@ -9,7 +9,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -54,11 +53,6 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     @Override
     public float getExplosionResistance() {
         return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : 3600000;
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
     }
 
     @Override

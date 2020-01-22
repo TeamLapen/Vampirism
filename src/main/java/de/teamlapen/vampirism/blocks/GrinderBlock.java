@@ -81,11 +81,6 @@ public class GrinderBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
@@ -122,10 +117,10 @@ public class GrinderBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (world.isRemote) return true;
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (world.isRemote) return ActionResultType.SUCCESS;
         player.openContainer(world.getTileEntity(pos) instanceof BloodGrinderTileEntity ? (BloodGrinderTileEntity) world.getTileEntity(pos) : null);
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override

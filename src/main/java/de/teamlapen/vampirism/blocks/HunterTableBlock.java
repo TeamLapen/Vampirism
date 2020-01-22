@@ -67,10 +67,6 @@ public class HunterTableBlock extends VampirismBlock {
         return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTableContainer(id, playerInventory, IWorldPosCallable.of(worldIn, pos)), containerName);
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
@@ -104,9 +100,9 @@ public class HunterTableBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         player.openContainer(state.getContainer(world, pos));
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override

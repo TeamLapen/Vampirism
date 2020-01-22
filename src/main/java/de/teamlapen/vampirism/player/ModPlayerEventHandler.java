@@ -82,10 +82,10 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onAttackEntity(AttackEntityEvent event) {
-        if (VampirePlayer.get(event.getEntityPlayer()).getSpecialAttributes().bat || HunterPlayer.get(event.getEntityPlayer()).getSpecialAttributes().isDisguised()) {
+        if (VampirePlayer.get(event.getPlayer()).getSpecialAttributes().bat || HunterPlayer.get(event.getPlayer()).getSpecialAttributes().isDisguised()) {
             event.setCanceled(true);
         }
-        if (!checkItemUsePerm(event.getEntityPlayer().getHeldItemMainhand(), event.getEntityPlayer())) {
+        if (!checkItemUsePerm(event.getPlayer().getHeldItemMainhand(), event.getPlayer())) {
             event.setCanceled(true);
         }
     }
@@ -104,8 +104,8 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        VampirePlayer vampire = VampirePlayer.get(event.getEntityPlayer());
-        HunterPlayer hunter = HunterPlayer.get(event.getEntityPlayer());
+        VampirePlayer vampire = VampirePlayer.get(event.getPlayer());
+        HunterPlayer hunter = HunterPlayer.get(event.getPlayer());
         if (vampire.getSpecialAttributes().bat || hunter.getSpecialAttributes().isDisguised()) {
             event.setCanceled(true);
         } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && vampire.getLevel() > 0) {
@@ -115,7 +115,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
-        if (!checkItemUsePerm(event.getItemStack(), event.getEntityPlayer())) {
+        if (!checkItemUsePerm(event.getItemStack(), event.getPlayer())) {
             event.setCanceled(true);
         }
     }
@@ -175,8 +175,8 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerClone(PlayerEvent.Clone event) {
-        if (!event.getEntityPlayer().getEntityWorld().isRemote) {
-            FactionPlayerHandler.get(event.getEntityPlayer()).copyFrom(event.getOriginal());
+        if (!event.getPlayer().getEntityWorld().isRemote) {
+            FactionPlayerHandler.get(event.getPlayer()).copyFrom(event.getOriginal());
         }
     }
 
@@ -221,9 +221,9 @@ public class ModPlayerEventHandler {
                     if (convert) {
                         //Dangerous, but only solution I found so far
                         //Changes the held stack while {@link NetHandlerPlayServer#processRightClickBlock} is running which has a hard reference to the old stack
-                        Hand hand = heldStack.equals(event.getEntityPlayer().getHeldItemMainhand()) ? Hand.MAIN_HAND : (heldStack.equals(event.getEntityPlayer().getHeldItemOffhand()) ? Hand.OFF_HAND : Hand.MAIN_HAND);
+                        Hand hand = heldStack.equals(event.getPlayer().getHeldItemMainhand()) ? Hand.MAIN_HAND : (heldStack.equals(event.getPlayer().getHeldItemOffhand()) ? Hand.OFF_HAND : Hand.MAIN_HAND);
                         heldStack = new ItemStack(ModItems.blood_bottle);
-                        event.getEntityPlayer().setHeldItem(hand, heldStack);
+                        event.getPlayer().setHeldItem(hand, heldStack);
                     }
                 }
             }
@@ -241,15 +241,15 @@ public class ModPlayerEventHandler {
             world.playEvent(null, 1009, pos, 0);
             world.removeBlock(pos, false);
             event.setCanceled(true);
-        } else if ((ModBlocks.garlic_beacon_normal.equals(state.getBlock()) || ModBlocks.garlic_beacon_weak.equals(state.getBlock()) || ModBlocks.garlic_beacon_improved.equals(state.getBlock())) && Helper.isVampire(event.getEntityPlayer())) {
-            event.getEntityPlayer().addPotionEffect(new EffectInstance(ModEffects.garlic));
+        } else if ((ModBlocks.garlic_beacon_normal.equals(state.getBlock()) || ModBlocks.garlic_beacon_weak.equals(state.getBlock()) || ModBlocks.garlic_beacon_improved.equals(state.getBlock())) && Helper.isVampire(event.getPlayer())) {
+            event.getPlayer().addPotionEffect(new EffectInstance(ModEffects.garlic));
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.NameFormat event) {
-        if (event.getEntityPlayer() != null && VampirismConfig.SERVER.factionColorInChat.get()) {
-            IFactionPlayer fp = FactionPlayerHandler.get(event.getEntityPlayer()).getCurrentFactionPlayer();
+        if (event.getPlayer() != null && VampirismConfig.SERVER.factionColorInChat.get()) {
+            IFactionPlayer fp = FactionPlayerHandler.get(event.getPlayer()).getCurrentFactionPlayer();
             IFaction f = fp == null ? null : fp.getDisguisedAs();
             if (f != null) {
                 event.setDisplayname(f.getChatColor() + event.getDisplayname() + TextFormatting.RESET);
@@ -263,7 +263,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onPlayerVisibilityCheck(PlayerEvent.Visibility event) {
-        if (HunterPlayer.get(event.getEntityPlayer()).getSpecialAttributes().isDisguised()) {
+        if (HunterPlayer.get(event.getPlayer()).getSpecialAttributes().isDisguised()) {
             event.modifyVisibility(VampirismConfig.BALANCE.haDisguiseVisibilityMod.get());
         }
     }

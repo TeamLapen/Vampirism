@@ -11,7 +11,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
@@ -45,10 +45,6 @@ public class BloodPotionTableBlock extends VampirismBlock {
         super(regName, Properties.create(Material.IRON).hardnessAndResistance(1f));
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
@@ -61,7 +57,7 @@ public class BloodPotionTableBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
             if (canUse(player) && player instanceof ServerPlayerEntity) {
                 NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), new TranslationTextComponent("container.crafting")), pos);
@@ -71,7 +67,7 @@ public class BloodPotionTableBlock extends VampirismBlock {
             }
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     private boolean canUse(PlayerEntity player) {

@@ -149,7 +149,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
 
     @Override
     public boolean isWithinHomeDistanceCurrentPosition() {
-        return this.isWithinHomeDistance(posX, posY, posZ);
+        return this.isWithinHomeDistance(getPosX(), getPosY(), getPosZ());
     }
 
     @Override
@@ -266,7 +266,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     protected boolean isLowLightLevel(IWorld iWorld) {
-        BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
+        BlockPos blockpos = new BlockPos(this.getPosX(), this.getBoundingBox().minY, this.getPosZ());
 
         if (iWorld.getLightFor(LightType.SKY, blockpos) > this.rand.nextInt(32)) {
             return false;
@@ -274,10 +274,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
             int i = iWorld.getLight(blockpos);
 
             if (iWorld instanceof World && ((World) iWorld).isThundering()) {
-                int j = iWorld.getSkylightSubtracted();
-                ((World) iWorld).setLastLightningBolt(10);
                 i = iWorld.getLight(blockpos);
-                ((World) iWorld).setLastLightningBolt(j);
             }
 
             return i <= this.rand.nextInt(8);
@@ -330,7 +327,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.posX, this.posY, this.posZ, 20, 1, 1, 1, 0);
+        ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_6"), 10, 0x0A0A0A, 0.6F), this.getPosX(), this.getPosY(), this.getPosZ(), 20, 1, 1, 1, 0);
         this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
         this.remove();

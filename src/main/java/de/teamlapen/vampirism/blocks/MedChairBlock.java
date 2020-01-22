@@ -43,11 +43,6 @@ public class MedChairBlock extends VampirismBlock {
 
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
@@ -65,7 +60,7 @@ public class MedChairBlock extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 
         ItemStack stack = player.getHeldItem(hand);
         if (!stack.isEmpty() && stack.getItem().equals(ModItems.injection_garlic)) {
@@ -93,7 +88,7 @@ public class MedChairBlock extends VampirismBlock {
                 player.sendMessage(new TranslationTextComponent("text.vampirism.need_item_to_use", new TranslationTextComponent((new ItemStack(ModItems.injection_garlic).getTranslationKey()))));
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override

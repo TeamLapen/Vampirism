@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
@@ -25,10 +24,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.model.Attributes;
-import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.model.geometry.IModelGeometry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +44,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void onModelBakeEvent(ModelBakeEvent event) {
-        IModel[] containerFluidModels = new IModel[BakedBloodContainerModel.FLUID_LEVELS];
+        IModelGeometry[] containerFluidModels = new IModelGeometry[BakedBloodContainerModel.FLUID_LEVELS];
         try {
             // load the fluid models for the different levels from the .json files
 
@@ -60,7 +58,7 @@ public class ClientEventHandler {
                 if (f instanceof EmptyFluid)
                     continue;
                 for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
-                    IModel<?> retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder<String, String>().put("fluid", f.getAttributes().getStill(null).toString()).build());
+                    IModelGeometry<?> retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder<String, String>().put("fluid", f.getAttributes().getStill(null).toString()).build());
 
                     BakedBloodContainerModel.FLUID_MODELS[x].put(f, retexturedModel.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT));
 
@@ -94,7 +92,7 @@ public class ClientEventHandler {
 
         try {
             for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
-                IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID, "block/altar_inspiration/blood" + (x + 1)));
+                IModelGeometry<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID, "block/altar_inspiration/blood" + (x + 1)));
                 BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT);
             }
             Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
@@ -121,7 +119,7 @@ public class ClientEventHandler {
 
         try {
             for (int x = 0; x < BakedWeaponTableModel.FLUID_LEVELS; x++) {
-                IModel<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID, "block/weapon_table/weapon_table_lava" + (x + 1)));
+                IModelGeometry<?> model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID, "block/weapon_table/weapon_table_lava" + (x + 1)));
                 BakedWeaponTableModel.FLUID_MODELS[x][0] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y180, Attributes.DEFAULT_BAKED_FORMAT);
                 BakedWeaponTableModel.FLUID_MODELS[x][1] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y270, Attributes.DEFAULT_BAKED_FORMAT);
                 BakedWeaponTableModel.FLUID_MODELS[x][2] = model.bake(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, Attributes.DEFAULT_BAKED_FORMAT);

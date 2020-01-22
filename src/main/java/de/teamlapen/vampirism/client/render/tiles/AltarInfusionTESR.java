@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -24,6 +26,9 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
     private final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation("textures/entity/end_crystal/end_crystal_beam.png");
     private final ResourceLocation beaconBeamTexture = new ResourceLocation("textures/entity/beacon_beam.png");
 
+    public AltarInfusionTESR(TileEntityRendererDispatcher dispatcher) {
+        super(dispatcher);
+    }
 
     @Override
     public void render(AltarInfusionTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
@@ -45,7 +50,7 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
             if (phase == AltarInfusionTileEntity.PHASE.BEAM2) {
                 PlayerEntity p = te.getPlayer();
                 if (p != null) {
-                    this.renderBeam(x, y, z, cX, cY, cZ, p.posX, p.posY + 1.2d, p.posZ, -(te.getRunningTick() + partialTicks), true);
+                    this.renderBeam(x, y, z, cX, cY, cZ, p.getPosX(), p.getPosY() + 1.2d, p.getPosZ(), -(te.getRunningTick() + partialTicks), true);
 
                 }
             }
@@ -79,10 +84,10 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
         float wayZ = (float) (targetZ - centerZ);
         float distFlat = MathHelper.sqrt(wayX * wayX + wayZ * wayZ);
         float dist = MathHelper.sqrt(wayX * wayX + wayY * wayY + wayZ * wayZ);
-        GlStateManager.pushMatrix();
-        GlStateManager.translated(relX, relY, relZ);
-        GlStateManager.rotatef((float) (-Math.atan2(wayZ, wayX)) * 180.0F / (float) Math.PI - 90.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotatef((float) (-Math.atan2(distFlat, wayY)) * 180.0F / (float) Math.PI - 90.0F, 1.0F, 0.0F, 0.0F);
+        RenderSystem.pushMatrix();
+        RenderSystem.translated(relX, relY, relZ);
+        RenderSystem.rotatef((float) (-Math.atan2(wayZ, wayX)) * 180.0F / (float) Math.PI - 90.0F, 0.0F, 1.0F, 0.0F);
+        RenderSystem.rotatef((float) (-Math.atan2(distFlat, wayY)) * 180.0F / (float) Math.PI - 90.0F, 1.0F, 0.0F, 0.0F);
 
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableCull();
@@ -91,7 +96,7 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
         } else {
             this.bindTexture(enderDragonCrystalBeamTextures);
         }
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
         float f9 = -(tickStuff * 0.005F);
         float f10 = MathHelper.sqrt(wayX * wayX + wayY * wayY + wayZ * wayZ) / 32.0F + f9;
         Tessellator tessellator = Tessellator.getInstance();
@@ -113,9 +118,9 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
 
         tessellator.draw();
 
-        GlStateManager.shadeModel(GL11.GL_FLAT);
+        RenderSystem.shadeModel(GL11.GL_FLAT);
         GlStateManager.enableCull();
         RenderHelper.enableStandardItemLighting();
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
     }
 }

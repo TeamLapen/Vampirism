@@ -45,7 +45,7 @@ public class HunterBasicContainer extends InventoryContainer {
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         if (entity == null) return false;
-        return new Vec3d(playerIn.posX, playerIn.posY, playerIn.posZ).distanceTo(new Vec3d(entity.posX, entity.posY, entity.posZ)) < 5;
+        return new Vec3d(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()).distanceTo(new Vec3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())) < 5;
     }
 
     public boolean canLevelUp() {

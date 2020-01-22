@@ -1092,7 +1092,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private void spawnBiteParticle(int entityId) {
         Entity entity = player.world.getEntityByID(entityId);
         if (entity != null) {
-            UtilLib.spawnParticles(player.world, ParticleTypes.CRIT, entity.posX, entity.posY, entity.posZ, player.posX - entity.posX, player.posY - entity.posY, player.posZ - entity.posZ, 10, 1);
+            UtilLib.spawnParticles(player.world, ParticleTypes.CRIT, entity.getPosX(), entity.getPosY(), entity.getPosZ(), player.getPosX() - entity.getPosX(), player.getPosY() - entity.getPosY(), player.getPosZ() - entity.getPosZ(), 10, 1);
         }
         for (int j = 0; j < 16; ++j) {
             Vec3d vec3 = new Vec3d((player.getRNG().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
@@ -1102,12 +1102,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             Vec3d vec31 = new Vec3d(((double) player.getRNG().nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
             vec31 = vec31.rotatePitch(-player.rotationPitch * (float) Math.PI / 180.0F);
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
-            vec31 = vec31.add(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
+            vec31 = vec31.add(player.getPosX(), player.getPosY() + (double) player.getEyeHeight(), player.getPosZ());
 
             player.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Items.APPLE)), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
-        player.world.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
+        player.world.playSound(player.getPosX(), player.getPosY(), player.getPosZ(), ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
     }
 
     /**
@@ -1126,7 +1126,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 25, 4, false, false));
 
         //ModParticles.spawnParticleClient(player.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player.getEntityId(), true), e.posX , e.posY + e.getEyeHeight()/2, e.posZ, 10, 0.1F, player.getRNG());
-        ModParticles.spawnParticlesServer(player.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player.getEntityId(), true), e.posX, e.posY + e.getEyeHeight() / 2, e.posZ, 10, 0.1f, 0.1f, 0.1f, 0);
+        ModParticles.spawnParticlesServer(player.world, new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, player.getEntityId(), true), e.getPosX(), e.getPosY() + e.getEyeHeight() / 2, e.getPosZ(), 10, 0.1f, 0.1f, 0.1f, 0);
 
         if (!biteFeed(e)) {
             endFeeding(true);

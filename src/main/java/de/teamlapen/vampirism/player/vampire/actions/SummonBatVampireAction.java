@@ -28,7 +28,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
             e.copyLocationAndAnglesFrom(player.getRepresentingPlayer());
             player.getRepresentingPlayer().getEntityWorld().addEntity(e);
         }
-        entityPlayer.getEntityWorld().playSound(null, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entityPlayer.getEntityWorld().rand.nextFloat() * 0.2F + 1.3F);
+        entityPlayer.getEntityWorld().playSound(null, entityPlayer.getPosX(), entityPlayer.getPosY(), entityPlayer.getPosZ(), ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entityPlayer.getEntityWorld().rand.nextFloat() * 0.2F + 1.3F);
         return true;
     }
 

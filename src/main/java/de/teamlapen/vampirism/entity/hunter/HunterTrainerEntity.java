@@ -81,7 +81,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
         ItemStack stack = player.getHeldItem(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
-        if (!flag && this.isAlive() && !player.isSneaking()) {
+        if (!flag && this.isAlive() && !player.func_225608_bj_()) { //isSneaking
             if (!this.world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
                     if (trainee == null) {

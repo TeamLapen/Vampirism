@@ -69,7 +69,7 @@ public class AttackRangedCrossbowGoal extends Goal {
         LivingEntity entitylivingbase = this.entity.getAttackTarget();
 
         if (entitylivingbase != null) {
-            double d0 = this.entity.getDistanceSq(entitylivingbase.posX, entitylivingbase.getBoundingBox().minY, entitylivingbase.posZ);
+            double d0 = this.entity.getDistanceSq(entitylivingbase.getPosX(), entitylivingbase.getBoundingBox().minY, entitylivingbase.getPosZ());
             boolean canSee = this.entity.getEntitySenses().canSee(entitylivingbase);
             boolean couldSee = this.seeTime > 0;
 
@@ -127,9 +127,9 @@ public class AttackRangedCrossbowGoal extends Goal {
     protected void attackWithCrossbow(LivingEntity target) {
         ItemStack arrows = attacker.getArrowStackForAttack(target);
         CrossbowArrowEntity entityArrow = CrossbowArrowEntity.createWithShooter(entity.getEntityWorld(), entity, 0, 0.3F, !entity.isLeftHanded(), arrows);
-        double sx = target.posX - entityArrow.posX;
-        double sy = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - entityArrow.posY;
-        double sz = target.posZ - entityArrow.posZ;
+        double sx = target.getPosX() - entityArrow.getPosX();
+        double sy = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - entityArrow.getPosY();
+        double sz = target.getPosZ() - entityArrow.getPosZ();
         double dist = MathHelper.sqrt(sx * sx + sz * sz);
         entityArrow.shoot(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getEntityWorld().getDifficulty().getId() * 4));
         this.entity.playSound(ModSounds.crossbow, 0.5F, 1);

@@ -38,7 +38,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     public static void updatePlayerBatSize(PlayerEntity player) {
         float width = BAT_WIDTH;
         float height = BAT_HEIGHT;
-        if (player.isSneaking()) {
+        if (player.func_225608_bj_()) { //isSneaking
             height = BAT_HEIGHT - 0.15F;
         }
         if (player.isSleeping()) {
@@ -200,7 +200,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
      */
     private void setPlayerBat(PlayerEntity player, boolean bat) {
         if (bat) updatePlayerBatSize(player);
-        if (bat) player.setPosition(player.posX, player.posY + (PLAYER_HEIGHT - BAT_HEIGHT), player.posZ);
+        if (bat)
+            player.setPosition(player.getPosX(), player.getPosY() + (PLAYER_HEIGHT - BAT_HEIGHT), player.getPosZ());
         player.eyeHeight = (bat ? BAT_EYE_HEIGHT : player.getStandingEyeHeight(player.getPose(), player.size));
     }
 

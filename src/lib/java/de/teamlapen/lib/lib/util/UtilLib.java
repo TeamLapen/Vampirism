@@ -2,7 +2,6 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -33,6 +32,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -89,9 +89,9 @@ public class UtilLib {
         float scale = 1.0F;
         float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * scale;
         float yaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * scale;
-        double x = player.prevPosX + (player.posX - player.prevPosX) * scale;
-        double y = player.prevPosY + (player.posY - player.prevPosY) * scale + 1.62D;
-        double z = player.prevPosZ + (player.posZ - player.prevPosZ) * scale;
+        double x = player.prevPosX + (player.getPosX() - player.prevPosX) * scale;
+        double y = player.prevPosY + (player.getPosY() - player.prevPosY) * scale + 1.62D;
+        double z = player.prevPosZ + (player.getPosZ() - player.prevPosZ) * scale;
         Vec3d vector1 = new Vec3d(x, y, z);
         float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
@@ -114,7 +114,7 @@ public class UtilLib {
         int x = (int) box.minX + w.rand.nextInt((int) (box.maxX - box.minX) + 1);
         int z = (int) box.minZ + w.rand.nextInt((int) (box.maxZ - box.minZ) + 1);
         int y = w.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z) + 5;
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, y, z);
+        BlockPos.Mutable pos = new BlockPos.Mutable(x, y, z);
         while (y > box.minY && !w.getBlockState(pos).isNormalCube(w, pos)) {
             pos.setPos(x, --y, z);
         }
@@ -134,8 +134,8 @@ public class UtilLib {
 
         for (PlayerEntity entityplayer : world.getPlayers()) {
             if (!entityplayer.isSpectator()) {
-                int x = MathHelper.floor(entityplayer.posX / 16.0D);
-                int z = MathHelper.floor(entityplayer.posZ / 16.0D);
+                int x = MathHelper.floor(entityplayer.getPosX() / 16.0D);
+                int z = MathHelper.floor(entityplayer.getPosZ() / 16.0D);
 
                 for (int dx = -8; dx <= 8; ++dx) {
                     for (int dz = -8; dz <= 8; ++dz) {
@@ -168,7 +168,7 @@ public class UtilLib {
         boolean firstPerson = entity instanceof PlayerEntity && ((PlayerEntity) entity).isUser() && Minecraft.getInstance().gameSettings.thirdPersonView == 0;
         Vec3d dir = firstPerson ? entity.getForward() : Vec3d.fromPitchYaw(new Vec2f(entity.rotationPitch, entity.renderYawOffset));
         dir = dir.rotateYaw((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
-        return dir.add(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
+        return dir.add(entity.getPosX(), entity.getPosY() + entity.getEyeHeight(), entity.getPosZ());
 
     }
 
@@ -177,7 +177,7 @@ public class UtilLib {
         BlockPos behind = getPositionBehindEntity(entity, 2);
         MobEntity e = toSpawn.create(entity.getEntityWorld());
 
-        e.setPosition(behind.getX(), entity.posY, behind.getZ());
+        e.setPosition(behind.getX(), entity.getPosY(), behind.getZ());
 
         if (e.canSpawn(entity.getEntityWorld(), reason) && e.isNotColliding(entity.getEntityWorld())) {
             entity.getEntityWorld().addEntity(e);
@@ -208,9 +208,9 @@ public class UtilLib {
         float yaw = p.rotationYawHead;
         float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-        double x = p.posX + sinYaw * distance;
-        double z = p.posZ + cosYaw * distance;
-        return new BlockPos(x, p.posY, z);
+        double x = p.getPosX() + sinYaw * distance;
+        double z = p.getPosZ() + cosYaw * distance;
+        return new BlockPos(x, p.getPosY(), z);
     }
 
     /**
@@ -291,14 +291,13 @@ public class UtilLib {
      * @return Wether the teleport was successful or not
      */
     public static boolean teleportTo(MobEntity entity, double x, double y, double z, boolean sound) {
-        double d3 = entity.posX;
-        double d4 = entity.posY;
-        double d5 = entity.posZ;
-        entity.posX = x;
-        entity.posY = y;
-        entity.posZ = z;
+        double d3 = entity.getPosX();
+        double d4 = entity.getPosY();
+        double d5 = entity.getPosZ();
+        entity.setRawPosition(x, y, z);
         boolean flag = false;
         BlockPos blockPos = entity.getPosition();
+        double ty = y;
 
 
         if (entity.getEntityWorld().isBlockLoaded(blockPos)) {
@@ -309,13 +308,13 @@ public class UtilLib {
                 if (blockState.getMaterial().blocksMovement())
                     flag1 = true;
                 else {
-                    --entity.posY;
+                    entity.setRawPosition(x, --ty, z);
                     blockPos = blockPos.down();
                 }
             }
 
             if (flag1) {
-                entity.setPosition(entity.posX, entity.posY, entity.posZ);
+                entity.setPosition(entity.getPosX(), entity.getPosY(), entity.getPosZ());
 
                 if (entity.getEntityWorld().checkBlockCollision(entity.getBoundingBox()) && !entity.getEntityWorld().containsAnyLiquid(entity.getBoundingBox()))
                     flag = true;
@@ -333,9 +332,9 @@ public class UtilLib {
                 float f = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
                 float f1 = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
                 float f2 = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
-                double d7 = d3 + (entity.posX - d3) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.getWidth() * 2.0D;
-                double d8 = d4 + (entity.posY - d4) * d6 + entity.getRNG().nextDouble() * entity.getHeight();
-                double d9 = d5 + (entity.posZ - d5) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.getWidth() * 2.0D;
+                double d7 = d3 + (entity.getPosX() - d3) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.getWidth() * 2.0D;
+                double d8 = d4 + (entity.getPosY() - d4) * d6 + entity.getRNG().nextDouble() * entity.getHeight();
+                double d9 = d5 + (entity.getPosZ() - d5) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.getWidth() * 2.0D;
                 entity.getEntityWorld().addParticle(ParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
             }
 
@@ -373,9 +372,9 @@ public class UtilLib {
             float f = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
             float f1 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
             float f2 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
-            double d7 = e.posX + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.getWidth() * 2.0D;
-            double d8 = e.posY + (maxDistance / 2) * d6 + e.getRNG().nextDouble() * e.getHealth();
-            double d9 = e.posZ + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.getWidth() * 2.0D;
+            double d7 = e.getPosX() + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.getWidth() * 2.0D;
+            double d8 = e.getPosY() + (maxDistance / 2) * d6 + e.getRNG().nextDouble() * e.getHealth();
+            double d9 = e.getPosZ() + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.getWidth() * 2.0D;
             e.getEntityWorld().addParticle(particle, d7, d8, d9, f, f1, f2);
         }
     }
@@ -412,7 +411,7 @@ public class UtilLib {
             return false;
         }
         Vec3d look1 = new Vec3d(-Math.sin(entity.rotationYawHead / 180 * Math.PI), 0, Math.cos(entity.rotationYawHead / 180 * Math.PI));
-        Vec3d dist = new Vec3d(target.posX - entity.posX, 0, target.posZ - entity.posZ);
+        Vec3d dist = new Vec3d(target.getPosX() - entity.getPosX(), 0, target.getPosZ() - entity.getPosZ());
         //look1.yCoord = 0;
         look1 = look1.normalize();
         dist = dist.normalize();
@@ -507,8 +506,8 @@ public class UtilLib {
         return true;
     }
 
-    private static ChunkPos isBiomeAt(World world, int x, int z, List<Biome> biomes) {
-        BlockPos pos = world.getChunkProvider().getChunkGenerator().getBiomeProvider().findBiomePosition(x, z, 32, biomes, new Random());
+    private static ChunkPos isBiomeAt(ServerWorld world, int x, int z, List<Biome> biomes) {
+        BlockPos pos = (world.getChunkProvider()).getChunkGenerator().getBiomeProvider().func_225531_a_(x, world.getSeaLevel(), z, 32, biomes, new Random());//findBiomePosition
         if (pos != null) {
             return new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4);
         }
@@ -519,11 +518,11 @@ public class UtilLib {
      * Search for a vampire biome by checking every second chunk starting at the player and moving in cicles to the outside
      *
      * @param world
-     * @param center   Pos to start with
-     * @param maxDist  Max radius
+     * @param center  Pos to start with
+     * @param maxDist Max radius
      * @return
      */
-    public static ChunkPos findNearBiome(World world, BlockPos center, int maxDist, List<Biome> biomes) {
+    public static ChunkPos findNearBiome(ServerWorld world, BlockPos center, int maxDist, List<Biome> biomes) {
         long start = System.currentTimeMillis();
         maxDist = (maxDist / 20) * 20;//Round it
         long maxop = (((long) maxDist) * maxDist + maxDist) / 2;

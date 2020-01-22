@@ -5,9 +5,13 @@ import de.teamlapen.vampirism.tileentity.PedestalTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
 
 public class PedestalTESR extends VampirismTESR<PedestalTileEntity> {
+    public PedestalTESR(TileEntityRendererDispatcher dispatcher) {
+        super(dispatcher);
+    }
 
     @Override
     public void render(PedestalTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {

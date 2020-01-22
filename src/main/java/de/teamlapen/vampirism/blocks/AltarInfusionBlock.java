@@ -10,7 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -83,10 +83,6 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         return ToolType.PICKAXE;
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
@@ -104,16 +100,16 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack heldItem = player.getHeldItem(hand);
         AltarInfusionTileEntity te = (AltarInfusionTileEntity) worldIn.getTileEntity(pos);
         //If empty hand and can start -> StartAdvanced
-        if (worldIn.isRemote || te == null) return true;
+        if (worldIn.isRemote || te == null) return ActionResultType.SUCCESS;
         AltarInfusionTileEntity.Result result = te.canActivate(player, true);
         if (heldItem.isEmpty()) {
             if (result == AltarInfusionTileEntity.Result.OK) {
                 te.startRitual(player);
-                return true;
+                return ActionResultType.SUCCESS;
             }
 
         }
@@ -121,12 +117,12 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         if (!heldItem.isEmpty() || result == AltarInfusionTileEntity.Result.INVMISSING) {
             if (te.getCurrentPhase() != AltarInfusionTileEntity.PHASE.NOT_RUNNING) {
                 player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"));
-                return true;
+                return ActionResultType.SUCCESS;
             }
             player.openContainer(te);
-            return true;
+            return ActionResultType.SUCCESS;
         }
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override

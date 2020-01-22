@@ -64,16 +64,16 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
      * safes the action order to client config
      */
     private static void saveActionOrder() {
-        String s = "";
+        StringBuilder s = new StringBuilder();
         Iterator<IAction> iterator = ACTIONORDER.iterator();
         while (iterator.hasNext()) {
             IAction action = iterator.next();
             if (action == fakeAction) continue;
-            s += action.getRegistryName();
+            s.append(action.getRegistryName());
             if (iterator.hasNext())
-                s += ",";
+                s.append(",");
         }
-        VampirismConfig.CLIENT.actionOrder.set(s);
+        VampirismConfig.CLIENT.actionOrder.set(s.toString());
     }
 
     /**
@@ -117,14 +117,14 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
             if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).matchesKey(key, scancode)) {
                 FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction1(elements.get(getSelectedElement()), true);
                 if (!editActions) {
-                    GLFW.glfwSetCursorPos(this.minecraft.mainWindow.getHandle(), this.minecraft.mainWindow.getWidth() / 2, this.minecraft.mainWindow.getHeight() / 2);
+                    GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
                     onClose();
                 }
                 return true;
             } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).matchesKey(key, scancode)) {
                 FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction2(elements.get(getSelectedElement()), true);
                 if (!editActions) {
-                    GLFW.glfwSetCursorPos(this.minecraft.mainWindow.getHandle(), this.minecraft.mainWindow.getWidth() / 2, this.minecraft.mainWindow.getHeight() / 2);
+                    GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
                     onClose();
                 }
                 return true;
