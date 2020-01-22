@@ -245,7 +245,7 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     @Override
     protected ResourceLocation getLootTable() {
         if (entityCreature != null) {
-            return entityCreature.func_213346_cF();
+            return entityCreature.getLootTableResourceLocation();
         }
         return super.getLootTable();
     }

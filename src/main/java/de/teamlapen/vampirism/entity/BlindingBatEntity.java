@@ -32,7 +32,7 @@ public class BlindingBatEntity extends BatEntity {
             if (random.nextBoolean())
                 return false;
 
-            return i <= random.nextInt(j) && func_223315_a(entityType, iWorld, spawnReason, blockPos, random);
+            return i <= random.nextInt(j) && spawnPredicate(entityType, iWorld, spawnReason, blockPos, random);
         }
     }
     private boolean restrictLiveSpan;

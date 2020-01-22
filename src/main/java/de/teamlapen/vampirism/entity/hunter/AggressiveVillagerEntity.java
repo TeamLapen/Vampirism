@@ -101,7 +101,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public void resetBrain(ServerWorld p_213770_1_) {
+    public void func_213770_a(ServerWorld p_213770_1_) { //resetBrain
     }
 
     //Village capture---------------------------------------------------------------------------------------------------

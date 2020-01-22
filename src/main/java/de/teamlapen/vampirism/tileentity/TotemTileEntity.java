@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.tileentity;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -526,7 +525,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             //normal village life
             else {
                 if (this.controllingFaction != null && time % 512 == 0) {
-                    if (((ServerWorld) world).func_217443_B().func_219146_b(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().anyMatch(villagerProfession -> villagerProfession.getPointOfInterest() == pointOfInterestType), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.HAS_SPACE).findFirst().isPresent()) {
+                    if (((ServerWorld) world).getPointOfInterestManager().func_219146_b(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().anyMatch(villagerProfession -> villagerProfession.getPointOfInterest() == pointOfInterestType), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.HAS_SPACE).findFirst().isPresent()) {
                         boolean isConverted = this.controllingFaction != VReference.HUNTER_FACTION && RNG.nextBoolean();
                         if (isConverted) {
                             this.spawnVillagerVampire();

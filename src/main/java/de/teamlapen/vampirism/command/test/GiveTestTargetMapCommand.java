@@ -27,7 +27,7 @@ public class GiveTestTargetMapCommand extends BasicCommand {
     }
 
     private static int giveTestTargetMap(ServerPlayerEntity asPlayer) {
-        ServerWorld w = asPlayer.getServerWorld();
+        ServerWorld w = asPlayer.func_71121_q(); //getServerWorld
         VampirismWorldData worldData = VampirismWorldData.get(w);
         BlockPos dungeonPos = worldData.getRandomVampireDungeon(asPlayer.getRNG());
         ItemStack itemstack = FilledMapItem.setupNewMap(w, dungeonPos.getX(), dungeonPos.getZ(), (byte) 2, true, true);

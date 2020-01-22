@@ -2,7 +2,6 @@ package de.teamlapen.lib.lib.config;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
 import de.teamlapen.lib.lib.util.LogUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -43,7 +42,8 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     }
 
     public void onServerStarting(MinecraftServer server) {
-        bloodValueWorldFile = new File(new File(server.getWorld(DimensionType.OVERWORLD).getSaveHandler().getWorldDirectory(), modId), "calculated-" + name + "-blood-values.txt");
+        //getWorld
+        bloodValueWorldFile = new File(new File(server.func_71218_a(DimensionType.OVERWORLD).getSaveHandler().getWorldDirectory(), modId), "calculated-" + name + "-blood-values.txt");
         if (bloodValueWorldFile.exists()) {
             loadDynamicBloodValues(bloodValueWorldFile);
         }

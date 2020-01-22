@@ -36,8 +36,8 @@ public class ModVillage {
         VillagerProfession hunter_expert = new VillagerProfession("hunter_expert", hunter_faction, ImmutableSet.of(), ImmutableSet.of()).setRegistryName(REFERENCE.MODID, "hunter_expert");
         registry.register(vampire_expert);
         registry.register(hunter_expert);
-        VillagerTrades.field_221239_a.computeIfAbsent(hunter_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getHunterTrades());
-        VillagerTrades.field_221239_a.computeIfAbsent(vampire_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getVampireTrades());
+        VillagerTrades.VILLAGER_DEFAULT_TRADES.computeIfAbsent(hunter_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getHunterTrades());
+        VillagerTrades.VILLAGER_DEFAULT_TRADES.computeIfAbsent(vampire_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getVampireTrades());
     }
 
     static void registerVillagePointOfInterestType(IForgeRegistry<PointOfInterestType> registry) {
