@@ -37,11 +37,9 @@ dependencies {
             name: "forge",
             version: "${project.minecraft_version}-${project.forge_version}"
     ])
-    //compileOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}:api") //API for compile
-    //runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}") //Full for runtime
-    
-    //deobfCompile 'mcp.mobius.waila:Waila:' + config.waila_version
-    //deobfCompile 'Waila:Waila:1.7.1_1.11.2' //Backup Waila on curseforge
+    compileOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}:api") //API for compile
+    runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}") //Full for runtime
+
     //deobf 'info.amerifrance.guideapi:Guide-API:${guide_api_version}'
 
 

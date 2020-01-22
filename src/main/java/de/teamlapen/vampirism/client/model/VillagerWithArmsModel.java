@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.model;
 
-import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.entity.model.VillagerModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -15,8 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerModel<T> {
-    private RendererModel leftArm;
-    private RendererModel rightArm;
+    private ModelRenderer leftArm;
+    private ModelRenderer rightArm;
 
     public VillagerWithArmsModel(float scale) {
         this(scale, 0F, 64, 64);
@@ -26,12 +26,12 @@ public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerMod
     public VillagerWithArmsModel(float scale, float p_i1164_2_, int width, int height) {
         super(scale, width, height);
         this.villagerArms.isHidden = true;
-        this.rightArm = (new RendererModel(this).setTextureSize(width, height));
+        this.rightArm = (new ModelRenderer(this).setTextureSize(width, height));
         this.rightArm.setTextureOffset(44, 22).addBox(-4F, -2F, -2F, 4, 8, 4, scale);
         this.rightArm.setRotationPoint(0, 2 + p_i1164_2_, 0);
         this.rightArm.addBox(-4, 6, -2, 4, 3, 4);
 
-        this.leftArm = new RendererModel(this).setTextureSize(width, height);
+        this.leftArm = new ModelRenderer(this).setTextureSize(width, height);
         this.leftArm.setTextureOffset(44, 22).addBox(0, -2, -2, 4, 8, 4, scale);
         this.leftArm.addBox(0, 6, -2, 4, 3, 4, scale);
         this.leftArm.setRotationPoint(-5, 2 + p_i1164_2_, 0);
@@ -61,7 +61,7 @@ public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerMod
 
         if (this.swingProgress > 0.0F) {
             HandSide enumhandside = this.getMainHand(entityIn);
-            RendererModel modelrenderer = this.getArmForSide(enumhandside);
+            ModelRenderer modelrenderer = this.getArmForSide(enumhandside);
             this.getArmForSide(enumhandside.opposite());
             float f1;
             f1 = 1.0F - this.swingProgress;
@@ -74,7 +74,7 @@ public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerMod
         }
     }
 
-    protected RendererModel getArmForSide(HandSide side) {
+    protected ModelRenderer getArmForSide(HandSide side) {
         return side == HandSide.LEFT ? this.leftArm : this.rightArm;
     }
 

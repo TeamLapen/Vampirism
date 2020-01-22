@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.model;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.RendererModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -11,7 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class BipedCloakedModel<T extends LivingEntity> extends BipedModel<T> {
-    protected RendererModel bipedCloak;
+    protected ModelRenderer bipedCloak;
     private boolean skipCloakOnce = false;
 
     public BipedCloakedModel(float f1, float f2, int texWidth, int texHeight) {
@@ -20,7 +20,7 @@ public class BipedCloakedModel<T extends LivingEntity> extends BipedModel<T> {
 
     public BipedCloakedModel(float f1, float f2, int texWidth, int texHeight, int capeX, int capeY) {
         super(f1, f2, texWidth, texHeight);
-        bipedCloak = new RendererModel(this, capeX, capeY);
+        bipedCloak = new ModelRenderer(this, capeX, capeY);
         bipedCloak.addBox(-7.0F, 0.0F, 0.4F, 14, 20, 1);
         bipedCloak.setRotationPoint(0, 0, 2);
     }

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.entity.model.RendererModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,7 +21,7 @@ public class RenderUtil {
      *
      * @param brightness Between 0 and 255f
      */
-    public static <T extends LivingEntity> void renderGlowing(RendererModel modelPart, float brightness, T entity, float scale) {
+    public static <T extends LivingEntity> void renderGlowing(ModelRenderer modelPart, float brightness, T entity, float scale) {
         startGlowing(entity.isInvisible(), brightness);
         modelPart.render(scale);
         endGlowing(entity.getBrightnessForRender());

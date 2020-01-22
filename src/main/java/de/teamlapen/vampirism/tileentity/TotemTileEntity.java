@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.tileentity;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -53,11 +52,11 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.PointOfInterestManager;
 import net.minecraft.world.BossInfo;
-import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.structure.Structures;
+import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -403,6 +402,52 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         }
     }
 
+    public @Nonnull
+    AxisAlignedBB getVillageArea() {
+        return this.villageArea == null ? this.villageArea = AxisAlignedBB.toImmutable(this.village.getBoundingBox()) : this.villageArea;
+    }
+
+    private boolean checkTileStatus() {
+        return this.isComplete && this.isInsideVillage && !this.isDisabled && this.village != null;
+    }
+
+    private boolean capturePreconditions(@Nullable IFaction faction, PlayerEntity player) {
+        if (faction == null) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.no_faction"), true);
+            return false;
+        }
+        if (capturingFaction != null) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.capturing_in_progress"), true);
+            return false;
+        }
+        if (faction.equals(controllingFaction)) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.same_faction"), true);
+            return false;
+        }
+        if (!isInsideVillage) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.no_near_village"), true);
+            return false;
+        }
+        if (isDisabled) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.othertotem"), true);
+            return false;
+        }
+        return true;
+    }
+
+    private void setControllingFaction(@Nullable IFaction faction) {
+        this.controllingFaction = faction;
+        this.baseColors = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getColorComponentValues();
+        if (this.world != null) {
+            this.world.setBlockState(this.pos, TotemTopBlock.getTotem(faction != null ? this.controllingFaction.getID() : nonFactionTotem).getDefaultState(), 55);
+        }
+    }
+
+    private void setCapturingFaction(@Nullable IFaction faction) {
+        this.capturingFaction = faction;
+        this.progressColor = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getColorComponentValues();
+    }
+
     @Override
     public void tick() {
         if (this.world == null) return;
@@ -526,7 +571,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             //normal village life
             else {
                 if (this.controllingFaction != null && time % 512 == 0) {
-                    if (((ServerWorld) world).func_217443_B().func_219146_b(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().anyMatch(villagerProfession -> villagerProfession.getPointOfInterest() == pointOfInterestType), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.HAS_SPACE).findFirst().isPresent()) {
+                    if (((ServerWorld) world).getPointOfInterestManager().func_219146_b(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().anyMatch(villagerProfession -> villagerProfession.getPointOfInterest() == pointOfInterestType), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.HAS_SPACE).findFirst().isPresent()) {
                         boolean isConverted = this.controllingFaction != VReference.HUNTER_FACTION && RNG.nextBoolean();
                         if (isConverted) {
                             this.spawnVillagerVampire();
@@ -579,55 +624,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         }
     }
 
-    private boolean checkTileStatus() {
-        return this.isComplete && this.isInsideVillage && !this.isDisabled && this.village != null;
-    }
-
-    private boolean capturePreconditions(@Nullable IFaction faction, PlayerEntity player) {
-        if (faction == null) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.no_faction"), true);
-            return false;
-        }
-        if (capturingFaction != null) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.capturing_in_progress"), true);
-            return false;
-        }
-        if (faction.equals(controllingFaction)) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.same_faction"), true);
-            return false;
-        }
-        if (!isInsideVillage) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.no_near_village"), true);
-            return false;
-        }
-        if (isDisabled) {
-            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.othertotem"), true);
-            return false;
-        }
-        return true;
-    }
-
-    private void setControllingFaction(@Nullable IFaction faction) {
-        this.controllingFaction = faction;
-        this.baseColors = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getColorComponentValues();
-        if (this.world != null) {
-            this.world.setBlockState(this.pos, TotemTopBlock.getTotem(faction != null ? this.controllingFaction.getID() : nonFactionTotem).getDefaultState(), 55);
-        }
-    }
-
-    private void setCapturingFaction(@Nullable IFaction faction) {
-        this.capturingFaction = faction;
-        this.progressColor = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getColorComponentValues();
-    }
-
-    public @Nonnull
-    AxisAlignedBB getVillageArea() {
-        return this.villageArea == null ? this.villageArea = AxisAlignedBB.func_216363_a(this.village.getBoundingBox()) : this.villageArea;
-    }
-
     private @Nonnull
     AxisAlignedBB getVillageAreaReduced() {
-        return this.villageAreaReduced == null ? this.villageAreaReduced = AxisAlignedBB.func_216363_a(this.village.getBoundingBox()).grow(-30, -10, -30) : this.villageAreaReduced;
+        return this.villageAreaReduced == null ? this.villageAreaReduced = AxisAlignedBB.toImmutable(this.village.getBoundingBox()).grow(-30, -10, -30) : this.villageAreaReduced;
     }
 
     private float getStrength(LivingEntity entity) {

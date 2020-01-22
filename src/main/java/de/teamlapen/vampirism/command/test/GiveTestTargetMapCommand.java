@@ -31,7 +31,7 @@ public class GiveTestTargetMapCommand extends BasicCommand {
         VampirismWorldData worldData = VampirismWorldData.get(w);
         BlockPos dungeonPos = worldData.getRandomVampireDungeon(asPlayer.getRNG());
         ItemStack itemstack = FilledMapItem.setupNewMap(w, dungeonPos.getX(), dungeonPos.getZ(), (byte) 2, true, true);
-        FilledMapItem.renderBiomePreviewMap(w, itemstack);
+        FilledMapItem.func_226642_a_(w, itemstack); //renderBiomePreviewMap
         MapData.addTargetDecoration(itemstack, dungeonPos, "+", MapDecoration.Type.TARGET_X);
         asPlayer.dropItem(itemstack, false);
         return 0;

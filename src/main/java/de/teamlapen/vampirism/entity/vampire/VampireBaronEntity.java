@@ -97,7 +97,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 //        if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
 //            return false;
 //        }
-        BlockPos blockpos = new BlockPos(this.posX, this.getBoundingBox().minY, this.posZ);
+        BlockPos blockpos = new BlockPos(this.getPosX(), this.getBoundingBox().minY, this.getPosY());
         return ModBlocks.cursed_earth.equals(worldIn.getBlockState(blockpos.down()).getBlock()) && super.canSpawn(worldIn, spawnReasonIn);
     }
 
@@ -162,7 +162,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         }
         if (!this.world.isRemote && this.getAttackTarget() != null && this.ticksExisted % 128 == 0) {
             if (rangedAttack) {
-                if (this.rand.nextInt(2) == 0 && this.navigator.getPathToEntityLiving(this.getAttackTarget(), 0) != null) {
+                if (this.rand.nextInt(2) == 0 && this.navigator.getPathToEntity(this.getAttackTarget(), 0) != null) {
                     rangedAttack = false;
                 }
             } else {
