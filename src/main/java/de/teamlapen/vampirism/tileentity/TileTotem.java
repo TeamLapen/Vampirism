@@ -25,7 +25,6 @@ import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.ModEventFactory;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.*;
@@ -55,10 +54,9 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.*;
 
 
 /**
@@ -983,7 +981,7 @@ public class TileTotem extends TileEntity implements ITickable {
         box = new AxisAlignedBB(b.getX() - r, b.getY() - 10, b.getZ() - r, b.getX() + r, b.getY() + 30, b.getZ() + r);
 
         if (!box.contains(new Vec3d(this.pos))) {
-            VampirismMod.log.w(TAG, "Totem outside of calculated village bb %s %s", box, this.pos);
+            VampirismMod.log.d(TAG, "Totem outside of calculated village bb %s %s", box, this.pos);
         }
         double xLength = box.maxX - box.minX;
         double zLength = box.maxZ - box.minZ;
