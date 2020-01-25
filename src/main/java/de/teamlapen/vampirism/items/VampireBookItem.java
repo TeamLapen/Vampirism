@@ -96,7 +96,7 @@ public class VampireBookItem extends VampirismItem {
                             lvt_7_1_ = new StringTextComponent(s);
                         }
 
-                        nbttaglist.set(slot, new StringNBT(ITextComponent.Serializer.toJson((ITextComponent) lvt_7_1_)));
+                        nbttaglist.set(slot, StringNBT.valueOf(ITextComponent.Serializer.toJson((ITextComponent) lvt_7_1_)));
                     }
 
                     nbttagcompound.put("pages", nbttaglist);

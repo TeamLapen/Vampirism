@@ -32,6 +32,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
@@ -120,8 +121,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 if (worldIn.getDimension().isDaytime() && rand.nextInt(5) != 0) {
                     return false;
                 }
-                if (this.world.isBlockPresent(getPosition()) && worldIn instanceof World) {
-                    BlockPos nearestVillage = ((World) worldIn).findNearestStructure("Village", getPosition(), 1, false);
+                if (this.world.isBlockPresent(getPosition()) && worldIn instanceof ServerWorld) {
+                    BlockPos nearestVillage = ((ServerWorld) worldIn).findNearestStructure("Village", getPosition(), 1, false);
                     if (nearestVillage != null && nearestVillage.withinDistance(getPosition(), 50)) {
                         if (getRNG().nextInt(60) != 0) {
                             return false;

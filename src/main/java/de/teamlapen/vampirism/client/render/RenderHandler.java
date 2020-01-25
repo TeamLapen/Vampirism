@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.render;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
-import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -19,13 +18,12 @@ import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.client.shader.Shader;
 import net.minecraft.client.shader.ShaderGroup;
-import net.minecraft.client.shader.ShaderLinkHelper;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -152,9 +150,9 @@ public class RenderHandler {
                 EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
                 boolean active = pe != null && pe.getAmplifier() >= 2;
                 GameRenderer renderer = mc.gameRenderer;
-                if (active && !renderer.isShaderActive()) {
+                if (active && renderer.getShaderGroup() == null) {
                     renderer.loadShader(saturation1);
-                } else if (!active && renderer.isShaderActive() && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
+                } else if (!active && renderer.getShaderGroup() != null && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
                     renderer.stopUseShader();
                 }
             }
@@ -216,6 +214,24 @@ public class RenderHandler {
     }
 
     @SubscribeEvent
+    public void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
+        if (vampireBiomeTicks == 0) return;
+        float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) vampireBiomeTicks / 1.5f;
+        f *= vampireBiomeFogDistanceMultiplier;
+        float fogStart = Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
+        float fogEnd = Math.min(event.getFarPlaneDistance(), 50 * f);
+        RenderSystem.fogStart(event.getType() == FogRenderer.FogType.FOG_SKY ? 0 : fogStart); //TODO maybe invert
+        RenderSystem.fogEnd(fogEnd);
+    }
+
+    @SubscribeEvent
+    public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
+        if (hunterDisguiseEnabled) {
+            disableProfile(Profile.HUNTER_DISGUISE);
+        }
+    }
+
+    @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         PlayerEntity player = event.getPlayer();
         VampirePlayerSpecialAttributes vampireAttributes = VampirePlayer.get(player).getSpecialAttributes();
@@ -227,7 +243,7 @@ public class RenderHandler {
                 entityBat.setIsBatHanging(false);
             }
 
-            float parTick = event.getPartialRenderTick();
+            float partialTicks = event.getPartialRenderTick();
 
             // Copy values
             entityBat.prevRenderYawOffset = player.prevRenderYawOffset;
@@ -242,10 +258,11 @@ public class RenderHandler {
             entityBat.setInvisible(player.isInvisible());
 
             // Calculate render parameter
-            float f1 = entityBat.prevRotationYaw + (entityBat.rotationYaw - entityBat.prevRotationYaw) * parTick;
-
-
-            mc.getRenderManager().renderEntity(entityBat, event.getX(), event.getY(), event.getZ(), f1, event.getPartialRenderTick(), false);
+            double d0 = MathHelper.lerp(partialTicks, entityBat.lastTickPosX, entityBat.getPosX());
+            double d1 = MathHelper.lerp(partialTicks, entityBat.lastTickPosY, entityBat.getPosY());
+            double d2 = MathHelper.lerp(partialTicks, entityBat.lastTickPosZ, entityBat.getPosZ());
+            float f = MathHelper.lerp(partialTicks, entityBat.prevRotationYaw, entityBat.rotationYaw);
+            mc.getRenderManager().renderEntityStatic(entityBat, d0, d1, d2, f, partialTicks, event.getMatrixStack(), mc.getRenderTypeBuffers().getBufferSource(), mc.getRenderManager().getPackedLight(entityBat, partialTicks));
 
         } else if (hunterAttributes.isDisguised()) {
             if (!player.equals(this.mc.player)) {
@@ -260,24 +277,6 @@ public class RenderHandler {
 
 
         }
-    }
-
-    @SubscribeEvent
-    public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-        if (hunterDisguiseEnabled) {
-            disableProfile(Profile.HUNTER_DISGUISE);
-        }
-    }
-
-    @SubscribeEvent
-    public void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
-        if (vampireBiomeTicks == 0) return;
-        float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) vampireBiomeTicks / 1.5f;
-        f *= vampireBiomeFogDistanceMultiplier;
-        float fogStart = Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
-        float fogEnd = Math.min(event.getFarPlaneDistance(), 50 * f);
-        RenderSystem.fogStart(event.getFogMode() == -1 ? 0 : fogStart);
-        RenderSystem.fogEnd(fogEnd);
     }
 
     private void adjustBloodVisionShaders(float progress) {
@@ -348,7 +347,7 @@ public class RenderHandler {
         if (displayHeight != mc.getMainWindow().getHeight() || displayWidth != mc.getMainWindow().getWidth()) {
             this.displayHeight = mc.getMainWindow().getHeight();
             this.displayWidth = mc.getMainWindow().getWidth();
-            if (GLX.isNextGen() && isRenderEntityOutlines()) {
+            if (isRenderEntityOutlines()) {
                 blurShader.createBindFramebuffers(displayWidth, displayHeight);
                 bloodVisionShader1.createBindFramebuffers(displayWidth, displayHeight);
                 bloodVisionShader2.createBindFramebuffers(displayWidth, displayHeight);
@@ -362,10 +361,6 @@ public class RenderHandler {
     }
 
     private void makeBloodVisionShader() {
-        if (GLX.isNextGen()) {
-            if (ShaderLinkHelper.getStaticShaderLinkHelper() == null) {
-                ShaderLinkHelper.setNewStaticShaderLinkHelper();
-            }
 
             ResourceLocation resourcelocationOutline = new ResourceLocation(REFERENCE.MODID, "shaders/blood_vision_outline.json");
             ResourceLocation resourcelocationBlur = new ResourceLocation(REFERENCE.MODID, "shaders/blank.json");
@@ -415,14 +410,7 @@ public class RenderHandler {
                 this.bloodVisionShader3 = null;
                 this.bloodVisionFrameBuffer3 = null;
             }
-        } else {
-            this.bloodVisionShader1 = null;
-            this.bloodVisionFrameBuffer1 = null;
-            this.bloodVisionShader2 = null;
-            this.bloodVisionFrameBuffer2 = null;
-            this.bloodVisionShader3 = null;
-            this.bloodVisionFrameBuffer3 = null;
-        }
+
     }
 
     private boolean renderEntityOutlines(List<? extends Entity> entities, ShaderGroup shader, Framebuffer framebuffer, float partialTicks) {
@@ -431,37 +419,38 @@ public class RenderHandler {
         framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
         boolean flag = !entities.isEmpty();
         if (flag) {
-            renderingBloodVision = true;
-
-            this.mc.gameRenderer.enableLightmap();
-
-            RenderSystem.depthFunc(519);
-            RenderSystem.disableFog();
-
-            framebuffer.bindFramebuffer(false);
-
-            RenderHelper.disableStandardItemLighting();
-
-            renderManager.setRenderOutlines(true);
-            for (Entity entity1 : entities) {
-                renderManager.renderEntityStatic(entity1, partialTicks, false);
-            }
-
-            renderManager.setRenderOutlines(false);
-
-            RenderHelper.enableStandardItemLighting();
-
-            RenderSystem.depthMask(false);
-            shader.render(partialTicks);
-            RenderSystem.enableLighting();
-            RenderSystem.depthMask(true);
-            RenderSystem.enableBlend();
-
-            RenderSystem.enableColorMaterial();
-            RenderSystem.depthFunc(515);
-            RenderSystem.enableDepthTest();
-            this.mc.gameRenderer.disableLightmap();
-            renderingBloodVision = false;
+            //TODO 1.15
+//            renderingBloodVision = true;
+//
+//            this.mc.gameRenderer.enableLightmap();
+//
+//            RenderSystem.depthFunc(519);
+//            RenderSystem.disableFog();
+//
+//            framebuffer.bindFramebuffer(false);
+//
+//            RenderHelper.disableStandardItemLighting();
+//
+//            renderManager.setRenderOutlines(true);
+//            for (Entity entity1 : entities) {
+//                renderManager.renderEntityStatic(entity1, partialTicks, false);
+//            }
+//
+//            renderManager.setRenderOutlines(false);
+//
+//            RenderHelper.enableStandardItemLighting();
+//
+//            RenderSystem.depthMask(false);
+//            shader.render(partialTicks);
+//            RenderSystem.enableLighting();
+//            RenderSystem.depthMask(true);
+//            RenderSystem.enableBlend();
+//
+//            RenderSystem.enableColorMaterial();
+//            RenderSystem.depthFunc(515);
+//            RenderSystem.enableDepthTest();
+//            this.mc.gameRenderer.disableLightmap();
+//            renderingBloodVision = false;
         }
 
         this.mc.getFramebuffer().bindFramebuffer(false);
