@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.client.render;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.client.render.entities.ConvertedCreatureRenderer;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -29,15 +31,9 @@ public class LayerVampireEntity<T extends CreatureEntity, U extends EntityModel<
     }
 
     @Override
-    public void render(T entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale) {
-        if (!entitylivingbaseIn.isInvisible() && (!checkIfRender || ConvertedCreatureRenderer.renderOverlay)) {
-            bindTexture(overlay);
-            getEntityModel().render(entitylivingbaseIn, p_177141_2_, p_177141_3_, p_177141_5_, p_177141_6_, p_177141_7_, scale);
+    public void render(MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, T entity, float v, float v1, float v2, float v3, float v4, float v5) {
+        if (!entity.isInvisible() && (!checkIfRender || ConvertedCreatureRenderer.renderOverlay)) {
+            renderCutoutModel(this.getEntityModel(), overlay, matrixStack, iRenderTypeBuffer, i, entity, 1, 1, 1);
         }
-    }
-
-    @Override
-    public boolean shouldCombineTextures() {
-        return true;
     }
 }

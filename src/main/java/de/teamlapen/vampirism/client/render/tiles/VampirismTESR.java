@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.blocks.VampirismBlockContainer;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
@@ -29,11 +30,11 @@ abstract class VampirismTESR<T extends TileEntity> extends TileEntityRenderer<T>
      *
      * @param tile
      */
-    protected void adjustRotatePivotViaState(@Nullable TileEntity tile) {
+    protected void adjustRotatePivotViaState(@Nullable TileEntity tile, MatrixStack matrixStack) {
         if (tile == null) return;
         Direction dir = Direction.NORTH;
         if (tile.getWorld() != null)
             dir = tile.getWorld().getBlockState(tile.getPos()).get(HorizontalBlock.HORIZONTAL_FACING);
-        GlStateManager.rotatef((dir.getHorizontalIndex() - 2) * -90, 0.0F, 1.0F, 0.0F);
+        matrixStack.rotate(Vector3f.YP.rotationDegrees((dir.getHorizontalIndex() - 2) * -90));
     }
 }

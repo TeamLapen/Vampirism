@@ -58,7 +58,7 @@ public abstract class FleeGoal extends Goal {
 
     private Vec3d findPossibleShelter() {
         Random random = this.theCreature.getRNG();
-        BlockPos blockpos = new BlockPos(this.theCreature.posX, this.theCreature.getBoundingBox().minY, this.theCreature.posZ);
+        BlockPos blockpos = new BlockPos(this.theCreature.getPosX(), this.theCreature.getBoundingBox().minY, this.theCreature.getPosZ());
 
         for (int i = 0; i < 10; ++i) {
             BlockPos blockpos1 = blockpos.add(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);

@@ -49,7 +49,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
         } else {
             LivingEntity target = entity.getAttackTarget();
             if (target != null) {
-                double d0 = this.entity.getDistanceSq(target.posX, target.getBoundingBox().minY, target.posZ);
+                double d0 = this.entity.getDistanceSq(target.getPosX(), target.getBoundingBox().minY, target.getPosZ());
                 boolean canSee = this.entity.getEntitySenses().canSee(target);
                 boolean couldSee = this.seeTime > 0;
 
@@ -87,7 +87,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
     protected void attack(LivingEntity target) {
         Vec3d vec3d = target.getPositionVector().add(0, target.getHeight() * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
 
-        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.getEntityWorld(), entity.posX + vec3d.x * 0.3f, entity.posY + entity.getEyeHeight() * 0.9f, entity.posZ + vec3d.z * 0.3f, vec3d.x, vec3d.y, vec3d.z);
+        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.getEntityWorld(), entity.getPosX() + vec3d.x * 0.3f, entity.getPosY() + entity.getEyeHeight() * 0.9f, entity.getPosZ() + vec3d.z * 0.3f, vec3d.x, vec3d.y, vec3d.z);
         projectile.shootingEntity = entity;
         projectile.setDamage(directDamage, indirectDamage);
         if (entity.getDistanceSq(target) > 64) {

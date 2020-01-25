@@ -22,6 +22,7 @@ import java.util.Random;
  * Bat which blinds non vampires for a short time.
  */
 public class BlindingBatEntity extends BatEntity {
+
     public static boolean spawnPredicate(EntityType<? extends BlindingBatEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         if (ModBiomes.vampire_forest.equals(iWorld.getBiome(blockPos))) return true;
         if (blockPos.getY() >= iWorld.getSeaLevel()) {
@@ -32,7 +33,7 @@ public class BlindingBatEntity extends BatEntity {
             if (random.nextBoolean())
                 return false;
 
-            return i <= random.nextInt(j) && func_223315_a(entityType, iWorld, spawnReason, blockPos, random);
+            return i <= random.nextInt(j) && canSpawnOn(entityType, iWorld, spawnReason, blockPos, random);
         }
     }
     private boolean restrictLiveSpan;
@@ -43,7 +44,7 @@ public class BlindingBatEntity extends BatEntity {
 
     @Override
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
-        return worldIn.checkNoEntityCollision(this, VoxelShapes.create(this.getBoundingBox())) && worldIn.isCollisionBoxesEmpty(this, this.getBoundingBox()) && !worldIn.containsAnyLiquid(this.getBoundingBox());
+        return worldIn.checkNoEntityCollision(this, VoxelShapes.create(this.getBoundingBox())) && worldIn.func_226668_i_(this) && !worldIn.containsAnyLiquid(this.getBoundingBox()); //Check no entity collision
     }
 
     public void restrictLiveSpan() {

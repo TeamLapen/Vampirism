@@ -14,10 +14,6 @@ import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.passive.*;
-import net.minecraft.entity.passive.horse.HorseEntity;
-import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
@@ -97,17 +93,17 @@ public class ModEntities {
         Function<String, ResourceLocation> overlay = (String name) -> new ResourceLocation(REFERENCE.MODID, String.format("textures/entity/vanilla/%s_overlay.png", name));
         IVampirismEntityRegistry registry = VampirismAPI.entityRegistry();
 
-        registry.addConvertible(EntityType.COW, CowEntity.class, overlay.apply("cow"));
-        registry.addConvertible(EntityType.HORSE, HorseEntity.class, overlay.apply("horse"));
-        registry.addConvertible(EntityType.LLAMA, LlamaEntity.class, overlay.apply("llama"));
-        registry.addConvertible(EntityType.OCELOT, OcelotEntity.class, overlay.apply("cat"));
-        registry.addConvertible(EntityType.PANDA, PandaEntity.class, overlay.apply("panda"));
-        registry.addConvertible(EntityType.PIG, PigEntity.class, overlay.apply("pig"));
-        registry.addConvertible(EntityType.POLAR_BEAR, PolarBearEntity.class, overlay.apply("polarbear"));
-        registry.addConvertible(EntityType.RABBIT, RabbitEntity.class, overlay.apply("rabbit"));
-        registry.addConvertible(EntityType.SHEEP, SheepEntity.class, overlay.apply("sheep"), new ConvertedSheepEntity.ConvertingHandler());
-        registry.addConvertible(EntityType.VILLAGER, VillagerEntity.class, null, new ConvertedVillagerEntity.ConvertingHandler());
-        registry.addConvertible(EntityType.HORSE, HorseEntity.class, overlay.apply("horse"), new ConvertedHorseEntity.ConvertingHandler());
+        registry.addConvertible(EntityType.COW, overlay.apply("cow"));
+        registry.addConvertible(EntityType.HORSE, overlay.apply("horse"));
+        registry.addConvertible(EntityType.LLAMA, overlay.apply("llama"));
+        registry.addConvertible(EntityType.OCELOT, overlay.apply("cat"));
+        registry.addConvertible(EntityType.PANDA, overlay.apply("panda"));
+        registry.addConvertible(EntityType.PIG, overlay.apply("pig"));
+        registry.addConvertible(EntityType.POLAR_BEAR, overlay.apply("polarbear"));
+        registry.addConvertible(EntityType.RABBIT, overlay.apply("rabbit"));
+        registry.addConvertible(EntityType.SHEEP, overlay.apply("sheep"), new ConvertedSheepEntity.ConvertingHandler());
+        registry.addConvertible(EntityType.VILLAGER, null, new ConvertedVillagerEntity.ConvertingHandler());
+        registry.addConvertible(EntityType.HORSE, overlay.apply("horse"), new ConvertedHorseEntity.ConvertingHandler());
     }
 
     static void registerEntities(IForgeRegistry<EntityType<?>> registry) {

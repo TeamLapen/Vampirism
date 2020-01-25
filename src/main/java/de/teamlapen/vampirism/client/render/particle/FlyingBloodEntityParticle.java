@@ -64,9 +64,9 @@ public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        double wayX = entity.posX - this.posX;
-        double wayY = entity.posY + entity.getEyeHeight() - this.posY;
-        double wayZ = entity.posZ - this.posZ;
+        double wayX = entity.getPosX() - this.posX;
+        double wayY = entity.getPosY() + entity.getEyeHeight() - this.posY;
+        double wayZ = entity.getPosZ() - this.posZ;
 
         int tleft = this.maxAge - this.age;
         if (tleft < this.maxAge / 2) {

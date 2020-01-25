@@ -27,7 +27,7 @@ public interface IVampirismEntityRegistry {
      * @param overlay_loc Location of the overlay texture file
      */
     @ThreadSafeAPI
-    void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, ResourceLocation overlay_loc);
+    void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlay_loc);
 
     /**
      * Register a {@link EntityType} which can be converted using a default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
@@ -38,7 +38,7 @@ public interface IVampirismEntityRegistry {
      * @param overlay_loc Location of the overlay texture file
      */
     @ThreadSafeAPI
-    void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, ResourceLocation overlay_loc, IConvertingHandler.IDefaultHelper helper);
+    void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlay_loc, IConvertingHandler.IDefaultHelper helper);
 
     /**
      * Register a {@link EntityType} which can be converted
@@ -49,7 +49,7 @@ public interface IVampirismEntityRegistry {
      * @param handler     Handles the conversion
      */
     @ThreadSafeAPI
-    void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, ResourceLocation overlay_loc, IConvertingHandler handler);
+    void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlay_loc, IConvertingHandler handler);
 
     /**
      * Registers a custom {@link IExtendedCreatureVampirism} for a entity class
@@ -68,7 +68,7 @@ public interface IVampirismEntityRegistry {
      * @return A map mapping the overlay resource location string to e convertible entity's class
      */
     @OnlyIn(Dist.CLIENT)
-    Map<Class<? extends CreatureEntity>, ResourceLocation> getConvertibleOverlay();
+    Map<EntityType<? extends CreatureEntity>, ResourceLocation> getConvertibleOverlay();
 
     /**
      * @return The custom constructor registered for the given entity's class. Can be null if none is registered

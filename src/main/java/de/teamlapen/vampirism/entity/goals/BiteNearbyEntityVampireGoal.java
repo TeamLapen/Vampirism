@@ -75,7 +75,7 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
     @Override
     public void tick() {
         CreatureEntity e = creature.getEntity();
-        vampire.lookAt(EntityAnchorArgument.Type.EYES, new Vec3d(e.posX, e.posY + (double) e.getEyeHeight(), e.posZ));
+        vampire.lookAt(EntityAnchorArgument.Type.EYES, new Vec3d(e.getPosX(), e.getPosY() + (double) e.getEyeHeight(), e.getPosZ()));
 
 
         timer--;

@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.client.render.entities;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.client.render.LayerAdvancedVampireEye;
 import de.teamlapen.vampirism.client.render.LayerPlayerFaceOverlay;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -20,7 +23,7 @@ public class AdvancedVampireRenderer extends BipedRenderer<AdvancedVampireEntity
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png");
 
     public AdvancedVampireRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new BipedModel<>(0F, 0F, 64, 64), 0.5F);
+        super(renderManagerIn, new BipedModel<>(RenderType::entityCutoutNoCull, 0F, 0F, 64, 64), 0.5F);
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new LayerPlayerFaceOverlay<>(this));
             this.addLayer(new LayerAdvancedVampireEye(this));
@@ -29,14 +32,16 @@ public class AdvancedVampireRenderer extends BipedRenderer<AdvancedVampireEntity
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(AdvancedVampireEntity entity) {
+    public ResourceLocation getEntityTexture(AdvancedVampireEntity entity) {
         return texture;
     }
 
+
     @Override
-    protected void renderLivingLabel(AdvancedVampireEntity entityIn, String str, double x, double y, double z, int maxDistance) {
-        super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 4);
+    protected void renderName(AdvancedVampireEntity p_225629_1_, String p_225629_2_, MatrixStack p_225629_3_, IRenderTypeBuffer p_225629_4_, int p_225629_5_) {
+        double dist = this.renderManager.squareDistanceTo(p_225629_1_);
+        if (dist <= 256) {
+            super.renderName(p_225629_1_, p_225629_2_, p_225629_3_, p_225629_4_, p_225629_5_);
+        }
     }
-
-
 }

@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.client.model;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
@@ -46,15 +48,8 @@ public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
     }
 
     @Override
-    public void render(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-        hatTop.render(scale);
-        hatRim.render(scale);
-    }
-
-    @Override
-    public void setRotationAngles(T e, float f1, float f2, float f3, float f4, float f5, float f6) {
-        super.setRotationAngles(e, f1, f2, f3, f4, f5, f6);
+    public void render(T p_225597_1_, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) { //setRotationAngles
+        super.render(p_225597_1_, p_225597_2_, p_225597_3_, p_225597_4_, p_225597_5_, p_225597_6_);
         hatRim.rotateAngleX = super.bipedHead.rotateAngleX;
         hatRim.rotateAngleZ = super.bipedHead.rotateAngleZ;
         hatTop.rotateAngleX = super.bipedHead.rotateAngleX;
@@ -67,6 +62,12 @@ public class HunterHatModel<T extends LivingEntity> extends BipedModel<T> {
             hatTop.rotationPointY = super.bipedHead.rotationPointY;
         }
     }
+
+    @Override
+    protected Iterable<ModelRenderer> getHeadParts() {
+        return Iterables.concat(super.getHeadParts(), ImmutableList.of(hatTop, hatRim));
+    }
+
 
     @Override
     public void setVisible(boolean invisible) {

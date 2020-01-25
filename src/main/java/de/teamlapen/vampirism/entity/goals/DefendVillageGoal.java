@@ -8,6 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 
 public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity> extends TargetGoal {
@@ -22,7 +23,7 @@ public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity>
         this.entityPredicate = new EntityPredicate() {
             @Override
             public boolean canTarget(@Nullable LivingEntity p_221015_1_, LivingEntity p_221015_2_) {
-                if (creature.getVillageAttributes().shouldForceTargets() && getTargetDistance() > 0) {
+                if (Objects.requireNonNull(creature.getVillageAttributes()).shouldForceTargets() && getTargetDistance() > 0) {
                     setDistance(-1.0D);
                 } else if (getTargetDistance() < 0) {
                     setDistance(distance);
@@ -35,7 +36,7 @@ public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity>
     @Override
     public boolean shouldExecute() {
         if (!creature.isDefendingVillage()) return false;
-        this.target = this.creature.world.getClosestEntityWithinAABB(LivingEntity.class, entityPredicate, this.goalOwner, this.goalOwner.posX, this.goalOwner.posY + (double) this.goalOwner.getEyeHeight(), this.goalOwner.posZ, creature.getTargetVillageArea());
+        this.target = this.creature.world.getClosestEntityWithinAABB(LivingEntity.class, entityPredicate, this.goalOwner, this.goalOwner.getPosX(), this.goalOwner.getPosY() + (double) this.goalOwner.getEyeHeight(), this.goalOwner.getPosZ(), creature.getTargetVillageArea());
         return target != null;
     }
 

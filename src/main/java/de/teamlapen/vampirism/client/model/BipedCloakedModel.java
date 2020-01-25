@@ -12,7 +12,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class BipedCloakedModel<T extends LivingEntity> extends BipedModel<T> {
     protected ModelRenderer bipedCloak;
-    private boolean skipCloakOnce = false;
 
     public BipedCloakedModel(float f1, float f2, int texWidth, int texHeight) {
         this(f1, f2, texWidth, texHeight, 65, 0);
@@ -26,25 +25,10 @@ public class BipedCloakedModel<T extends LivingEntity> extends BipedModel<T> {
     }
 
     @Override
-    public void render(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(entity, f, f1, f2, f3, f4, f5);
-        if (skipCloakOnce) {
-            skipCloakOnce = false;
-        } else {
-            bipedCloak.render(f5);
-        }
+    public void render(T entity, float f, float f1, float f2, float f3, float f4) {
+        super.render(entity, f, f1, f2, f3, f4);
+        this.bipedCloak.copyModelAngles(this.bipedBody);
 
-    }
-
-    @Override
-    public void setRotationAngles(T e, float f1, float f2, float f3, float f4, float f5, float f6) {
-        super.setRotationAngles(e, f1, f2, f3, f4, f5, f6);
-        bipedCloak.rotateAngleX = f2;
-    }
-
-    public void setSkipCloakOnce() {
-        skipCloakOnce = true;
     }
 
     @Override

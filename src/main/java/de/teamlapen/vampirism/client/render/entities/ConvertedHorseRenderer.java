@@ -30,7 +30,7 @@ public final class ConvertedHorseRenderer extends AbstractHorseRenderer<HorseEnt
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(HorseEntity p_110775_1_) {
+    public ResourceLocation getEntityTexture(HorseEntity p_110775_1_) {
         String lvt_2_1_ = p_110775_1_.getHorseTexture();
         ResourceLocation lvt_3_1_ = LAYERED_LOCATION_CACHE.get(lvt_2_1_);
         if (lvt_3_1_ == null) {

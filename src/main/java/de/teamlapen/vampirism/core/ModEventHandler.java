@@ -24,9 +24,11 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.OverworldChunkGenerator;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -52,11 +54,15 @@ public class ModEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void on(WorldEvent.Load event) {
-        ChunkGenerator generator = event.getWorld().getChunkProvider().getChunkGenerator();
-        if (generator instanceof OverworldChunkGenerator) {
-            GenerationSettings settings = ((OverworldChunkGenerator) generator).getSettings();
-            ModWorld.modifyVillageSize(settings);
+        IWorld w = event.getWorld();
+        if (w instanceof ServerWorld) {
+            ChunkGenerator<?> generator = ((ServerWorld) w).getChunkProvider().generator;
+            if (generator instanceof OverworldChunkGenerator) {
+                GenerationSettings settings = ((OverworldChunkGenerator) generator).getSettings();
+                ModWorld.modifyVillageSize(settings);
+            }
         }
+
     }
 
     @SubscribeEvent

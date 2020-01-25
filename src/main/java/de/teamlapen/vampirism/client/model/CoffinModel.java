@@ -1,9 +1,15 @@
 package de.teamlapen.vampirism.client.model;
 
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class CoffinModel extends Model {
@@ -19,7 +25,10 @@ public class CoffinModel extends Model {
     private ModelRenderer leftHandle;
     private ModelRenderer rightHandle;
 
+    private final List<ModelRenderer> modelParts;
+
     public CoffinModel() {
+        super(RenderType::entitySolid);
         textureWidth = 256;
         textureHeight = 128;
 
@@ -77,19 +86,14 @@ public class CoffinModel extends Model {
         rightHandle.setTextureSize(256, 128);
         rightHandle.mirror = true;
         setRotation(rightHandle, 0F, 0F, 0F);
+        modelParts = ImmutableList.of(this.leftPlate, this.rightPlate, this.backPlate, this.topPlate, this.bottomPlate, this.leftLid, this.rightLid, this.leftHandle, this.rightHandle);
     }
 
-    public void render(float f5) {
-        leftPlate.render(f5);
-        rightPlate.render(f5);
-        backPlate.render(f5);
-        topPlate.render(f5);
-        bottomPlate.render(f5);
-        leftLid.render(f5);
-        rightLid.render(f5);
-        leftHandle.render(f5);
-        rightHandle.render(f5);
+    @Override
+    public void render(MatrixStack matrixStack, IVertexBuilder iVertexBuilder, int i, int i1, float v, float v1, float v2, float v3) {
+        modelParts.forEach(part -> part.render(matrixStack, iVertexBuilder, i, i1, v, v1, v2, v3));
     }
+
 
     public void rotateLid(float angle) {
         leftLid.rotateAngleZ = leftHandle.rotateAngleZ = -angle;

@@ -19,7 +19,7 @@ public class VampireBaronRenderer extends BipedRenderer<VampireBaronEntity, Vamp
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(VampireBaronEntity p_110775_1_) {
+    public ResourceLocation getEntityTexture(VampireBaronEntity p_110775_1_) {
         return texture;
     }
 

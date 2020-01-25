@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.client.model;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -14,15 +17,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Model for Basic Vampire Hunter
  */
 @OnlyIn(Dist.CLIENT)
-public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<T> {
+public class BasicHunterModel<T extends LivingEntity> extends BipedModel<T> {
     private ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, secondHead, hatTop2, hatRim2, hatRim3;
     private boolean targetingLeft = false;
     private boolean targetingRight = false;
     private float xAngle = 0;
 
     public BasicHunterModel() {
-        super(0.0F, 0.0F, 64, 64, 0, 32);
-        this.bipedHeadwear.isHidden = true;
+        super(0.0F, 0.0F, 64, 64);
+        this.bipedHeadwear.showModel = false;
 
         hatTop2 = new ModelRenderer(this, 0, 31);
         hatTop2.addBox(-4F, -12F, -4F, 8, 3, 8);
@@ -91,55 +94,9 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
 
     }
 
-    @Override
-    public void render(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(entity, f, f1, f2, f3, f4, f5);
-    }
 
-    /**
-     * Renders a hat. Make sure to bind the according texture before
-     *
-     * @param f5
-     */
-    public void renderHat(float f5, int type) {
-        if (type == -1 || type == 0) {
-            hatTop.render(f5);
-            hatRim.render(f5);
-        } else if (type == 1) {
-            hatTop2.render(f5);
-            hatRim2.render(f5);
-        } else if (type == 2 || type == 3 || type == 4) {
-            hatRim3.render(f5);
-        }
-    }
 
-    /**
-     * Renders a second head. Thereby another face can be rendered
-     *
-     * @param f5
-     */
-    public void renderSecondHead(float f5) {
-        secondHead.render(f5);
-    }
 
-    /**
-     * Renders axe and stake. Make sure to bind the according texture before
-     *
-     * @param f5
-     */
-    public void renderWeapons(float f5, boolean onlyStake) {
-        if (onlyStake) {
-
-            stakeRight.render(f5);
-        } else {
-            axeShaft.render(f5);
-            axeBlade1.render(f5);
-            axeBlade2.render(f5);
-            stake.render(f5);
-        }
-
-    }
 
     @Override
     public void setLivingAnimations(T entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
@@ -160,51 +117,29 @@ public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<
     }
 
     @Override
-    public void setRotationAngles(T e, float f1, float f2, float f3, float f4, float f5, float f6) {
-        super.setRotationAngles(e, f1, f2, f3, f4, f5, f6);
-        hatRim.rotateAngleX = super.bipedHead.rotateAngleX;
-        hatRim.rotateAngleY = super.bipedHead.rotateAngleY;
-        hatRim.rotateAngleZ = super.bipedHead.rotateAngleZ;
-        hatTop.rotateAngleX = super.bipedHead.rotateAngleX;
-        hatTop.rotateAngleY = super.bipedHead.rotateAngleY;
-        hatTop.rotateAngleZ = super.bipedHead.rotateAngleZ;
-        hatRim2.rotateAngleX = super.bipedHead.rotateAngleX;
-        hatRim2.rotateAngleY = super.bipedHead.rotateAngleY;
-        hatRim2.rotateAngleZ = super.bipedHead.rotateAngleZ;
-        hatTop2.rotateAngleX = super.bipedHead.rotateAngleX;
-        hatTop2.rotateAngleY = super.bipedHead.rotateAngleY;
-        hatTop2.rotateAngleZ = super.bipedHead.rotateAngleZ;
-        hatRim3.rotateAngleX = super.bipedHead.rotateAngleX;
-        hatRim3.rotateAngleY = super.bipedHead.rotateAngleY;
-        hatRim3.rotateAngleZ = super.bipedHead.rotateAngleZ;
-        axeShaft.rotateAngleX = super.bipedRightArm.rotateAngleX;
-        axeShaft.rotateAngleY = super.bipedRightArm.rotateAngleY;
-        axeShaft.rotateAngleZ = super.bipedRightArm.rotateAngleZ;
-        axeBlade1.rotateAngleX = super.bipedRightArm.rotateAngleX;
-        axeBlade1.rotateAngleY = super.bipedRightArm.rotateAngleY;
-        axeBlade1.rotateAngleZ = super.bipedRightArm.rotateAngleZ;
-        axeBlade2.rotateAngleX = super.bipedRightArm.rotateAngleX;
-        axeBlade2.rotateAngleY = super.bipedRightArm.rotateAngleY;
-        axeBlade2.rotateAngleZ = super.bipedRightArm.rotateAngleZ;
-        stake.rotateAngleX = super.bipedLeftArm.rotateAngleX;
-        stake.rotateAngleY = super.bipedLeftArm.rotateAngleY;
-        stake.rotateAngleZ = super.bipedLeftArm.rotateAngleZ;
-        stakeRight.rotateAngleX = super.bipedRightArm.rotateAngleX;
-        stakeRight.rotateAngleY = super.bipedRightArm.rotateAngleY;
-        stakeRight.rotateAngleZ = super.bipedRightArm.rotateAngleZ;
-        secondHead.rotateAngleX = super.bipedHead.rotateAngleX;
-        secondHead.rotateAngleY = super.bipedHead.rotateAngleY;
-        secondHead.rotateAngleZ = super.bipedHead.rotateAngleZ;
+    public void render(T p_225597_1_, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
+        super.render(p_225597_1_, p_225597_2_, p_225597_3_, p_225597_4_, p_225597_5_, p_225597_6_);
+        hatRim.copyModelAngles(this.bipedHead);
+        hatTop.copyModelAngles(this.bipedHead);
+        hatRim2.copyModelAngles(this.bipedHead);
+        hatTop2.copyModelAngles(this.bipedHead);
+        hatRim3.copyModelAngles(this.bipedHead);
 
-        if (targetingRight) {
-            this.bipedRightArm.rotateAngleY = -0.1F + this.bipedHead.rotateAngleY;
-            this.bipedRightArm.rotateAngleX = xAngle;
-            this.bipedLeftArm.rotateAngleX = xAngle / 2F;
-        } else if (targetingLeft) {
-            this.bipedLeftArm.rotateAngleY = 0.1F + this.bipedHead.rotateAngleY;
-            this.bipedRightArm.rotateAngleX = xAngle / 2F;
-            this.bipedLeftArm.rotateAngleX = xAngle;
-        }
+        axeShaft.copyModelAngles(this.bipedRightArm);
+        axeBlade1.copyModelAngles(this.bipedRightArm);
+        axeBlade2.copyModelAngles(this.bipedRightArm);
+        stake.copyModelAngles(this.bipedLeftArm);
+        stakeRight.copyModelAngles(this.bipedRightArm);
+        secondHead.copyModelAngles(this.bipedHead);
+    }
 
+    @Override
+    protected Iterable<ModelRenderer> getBodyParts() {
+        return Iterables.concat(super.getBodyParts(), ImmutableList.of(this.axeBlade1, this.axeBlade2, this.axeShaft, this.stake, this.stakeRight));
+    }
+
+    @Override
+    protected Iterable<ModelRenderer> getHeadParts() {
+        return Iterables.concat(super.getHeadParts(), ImmutableList.of(this.hatRim, this.hatRim2, this.hatRim3, this.hatTop, this.hatTop2, this.secondHead));
     }
 }

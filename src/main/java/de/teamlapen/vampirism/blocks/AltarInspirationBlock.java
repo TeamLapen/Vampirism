@@ -99,7 +99,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
             LazyOptional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
             if (opt.isPresent()) {
                 AltarInspirationTileEntity tileEntity = (AltarInspirationTileEntity) worldIn.getTileEntity(pos);
-                if (!player.isSneaking() && tileEntity != null) {
+                if (!player.isShiftKeyDown() && tileEntity != null) {
                     FluidUtil.interactWithFluidHandler(player, hand, worldIn, pos, hit.getFace());
                 }
                 return ActionResultType.SUCCESS;

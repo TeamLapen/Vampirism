@@ -20,6 +20,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -34,7 +35,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     private static final String name = "alchemical_fire";
 
     public AlchemicalFireBlock() {
-        super(name, Properties.create(Material.FIRE, MaterialColor.TNT).hardnessAndResistance(0.0f).lightValue(15).sound(SoundType.CLOTH).doesNotBlockMovement().tickRandomly());
+        super(name, Properties.create(Material.FIRE, MaterialColor.TNT).hardnessAndResistance(0.0f).lightValue(15).sound(SoundType.CLOTH).doesNotBlockMovement().tickRandomly().notSolid());
         this.setDefaultState(this.stateContainer.getBaseState().with(AGE, 0));
     }
 
@@ -71,10 +72,6 @@ public class AlchemicalFireBlock extends VampirismBlock {
         return false;
     }
 
-    @Override
-    public boolean isSolid(BlockState state) {
-        return false;
-    }
 
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
@@ -100,7 +97,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     }
 
     @Override
-    public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
+    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
         if (!this.isValidPosition(state, worldIn, pos)) {
             worldIn.removeBlock(pos, this.blocksMovement);
         }

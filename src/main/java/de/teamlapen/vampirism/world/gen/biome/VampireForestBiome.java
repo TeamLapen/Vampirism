@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.world.gen.features.VampirismBiomeFeatures;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
@@ -32,19 +31,19 @@ public class VampireForestBiome extends VampireBiome {
     }
 
     @Override
-    public int getFoliageColor(BlockPos pos) {
+    public int getFoliageColor() {
         return 0x1E1F1F;
     }
 
 
     @Override
-    public int getGrassColor(BlockPos pos) {
+    public int getGrassColor(double p_225528_1_, double p_225528_3_) {
         // 0x7A317A; dark purple
         return 0x1E1F1F;
     }
 
     @Override
-    public int getSkyColorByTemp(float p_76731_1_) {
+    public int getSkyColor() {
         return 0xA33641;
     }
 }

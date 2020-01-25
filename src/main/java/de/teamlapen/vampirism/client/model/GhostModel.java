@@ -1,17 +1,16 @@
 package de.teamlapen.vampirism.client.model;
 
-import net.minecraft.client.renderer.entity.model.EntityModel;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-/**
- * @author WILLIAM
- */
+
 @OnlyIn(Dist.CLIENT)
-public class GhostModel<T extends LivingEntity> extends EntityModel<T> {
+public class GhostModel<T extends LivingEntity> extends AgeableModel<T> {
     // fields
     private ModelRenderer head;
     private ModelRenderer body;
@@ -63,23 +62,9 @@ public class GhostModel<T extends LivingEntity> extends EntityModel<T> {
     }
 
     @Override
-    public void render(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(entity, f, f1, f2, f3, f4, f5);
-        head.render(f5);
-        body.render(f5);
-        rightarm.render(f5);
-        leftarm.render(f5);
-        rightleg.render(f5);
-        leftleg.render(f5);
-    }
-
-    @Override
-    public void setRotationAngles(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        super.setRotationAngles(entity, f, f1, f2, f3, f4, f5);
-
-        this.head.rotateAngleY = f3 / (180F / (float) Math.PI);
-        this.head.rotateAngleX = f4 / (180F / (float) Math.PI);
+    public void render(T t, float v, float v1, float v2, float v3, float v4) {
+        this.head.rotateAngleY = v3 / (180F / (float) Math.PI);
+        this.head.rotateAngleX = v4 / (180F / (float) Math.PI);
         float f6 = MathHelper.sin(this.swingProgress * (float) Math.PI);
         float f7 = MathHelper.sin((1.0F - (1.0F - this.swingProgress) * (1.0F - this.swingProgress)) * (float) Math.PI);
         this.rightarm.rotateAngleZ = 0.0F;
@@ -90,11 +75,22 @@ public class GhostModel<T extends LivingEntity> extends EntityModel<T> {
         this.leftarm.rotateAngleX = -((float) Math.PI / 2F);
         this.rightarm.rotateAngleX -= f6 * 1.2F - f7 * 0.4F;
         this.leftarm.rotateAngleX -= f6 * 1.2F - f7 * 0.4F;
-        this.rightarm.rotateAngleZ += MathHelper.cos(f2 * 0.09F) * 0.05F + 0.05F;
-        this.leftarm.rotateAngleZ -= MathHelper.cos(f2 * 0.09F) * 0.05F + 0.05F;
-        this.rightarm.rotateAngleX += MathHelper.sin(f2 * 0.067F) * 0.05F;
-        this.leftarm.rotateAngleX -= MathHelper.sin(f2 * 0.067F) * 0.05F;
+        this.rightarm.rotateAngleZ += MathHelper.cos(v2 * 0.09F) * 0.05F + 0.05F;
+        this.leftarm.rotateAngleZ -= MathHelper.cos(v2 * 0.09F) * 0.05F + 0.05F;
+        this.rightarm.rotateAngleX += MathHelper.sin(v2 * 0.067F) * 0.05F;
+        this.leftarm.rotateAngleX -= MathHelper.sin(v2 * 0.067F) * 0.05F;
     }
+
+    @Override
+    protected Iterable<ModelRenderer> getBodyParts() {
+        return ImmutableList.of(body, rightarm, rightleg, leftarm, leftleg);
+    }
+
+    @Override
+    protected Iterable<ModelRenderer> getHeadParts() {
+        return ImmutableList.of(head);
+    }
+
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;

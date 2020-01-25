@@ -25,7 +25,7 @@ public class AttackMeleeNoSunGoal extends MeleeAttackGoal {
         if (flag) {
             LivingEntity entitylivingbase = this.attacker.getAttackTarget();
             if (entitylivingbase != null) {
-                double distance = this.attacker.getDistanceSq(entitylivingbase.posX, entitylivingbase.getBoundingBox().minY, entitylivingbase.posZ);
+                double distance = this.attacker.getDistanceSq(entitylivingbase.getPosX(), entitylivingbase.getBoundingBox().minY, entitylivingbase.getPosZ());
                 if (distance <= this.getAttackReachSqr(entitylivingbase)) {
                     return true;
                 }
@@ -38,7 +38,7 @@ public class AttackMeleeNoSunGoal extends MeleeAttackGoal {
             if (avoidSun) {
 
                 Path path = this.path;
-                if (attacker.getEntityWorld().canBlockSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
+                if (attacker.getEntityWorld().canBlockSeeSky(new BlockPos(MathHelper.floor(this.attacker.getPosX()), (int) (this.attacker.getBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.getPosZ())))) {
                     return false;
                 }
 

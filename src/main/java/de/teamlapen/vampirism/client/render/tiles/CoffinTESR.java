@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.client.model.CoffinModel;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.ResourceLocation;
@@ -34,15 +37,13 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         }
     }
 
-
     @Override
-    public void render(CoffinTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
-        CoffinTileEntity tile = te;
+    public void render(CoffinTileEntity tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
         if (!tile.renderAsItem) {
-            if (!isHeadSafe(te.getWorld(), te.getPos())) return;
+            if (!isHeadSafe(tile.getWorld(), tile.getPos())) return;
 
             // Calculate lid position
-            boolean occupied = tile.renderAsItem || CoffinBlock.isOccupied(te.getWorld(), te.getPos());
+            boolean occupied = CoffinBlock.isOccupied(tile.getWorld(), tile.getPos());
             if (!occupied && tile.lidPos > 0)
                 tile.lidPos--;
             else if (occupied && tile.lidPos < maxLidPos)
@@ -50,18 +51,20 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         } else {
             tile.lidPos = maxLidPos;
         }
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-        int color = Math.min(tile.color.getId(), 15);
-        bindTexture(textures[color]);
-        RenderSystem.pushMatrix();
-        adjustRotatePivotViaState(te);
-        GlStateManager.rotatef(180F, 0.0F, 0.0F, 1.0F);
         model.rotateLid(calcLidAngle(tile.lidPos));
-        model.render(0.0625F);
-        RenderSystem.popMatrix();
-        RenderSystem.popMatrix();
+        int color = Math.min(tile.color.getId(), 15);
+        matrixStack.push();
+        matrixStack.translate(0.5F, +1.5F, 0.5F);
+        matrixStack.push();
+        adjustRotatePivotViaState(tile, matrixStack);
+        matrixStack.rotate(Vector3f.XP.rotationDegrees(180));
+        IVertexBuilder vertexBuilder = iRenderTypeBuffer.getBuffer(RenderType.entitySolid(textures[color]));
+        this.model.render(matrixStack, vertexBuilder, i, i1, 1, 1, 1, 1);
+        matrixStack.pop();
+        matrixStack.pop();
+
     }
+
 
     private float calcLidAngle(int pos) {
         if (pos == maxLidPos)

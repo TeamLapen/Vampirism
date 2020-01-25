@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -29,6 +30,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -102,7 +104,7 @@ public class ClientProxy extends CommonProxy {
         super.onInitStep(step, event);
         switch (step) {
             case CLIENT_SETUP:
-                ModEntitiesRender.registerEntityRenderer();
+                ModEntitiesRender.registerEntityRenderer(((FMLClientSetupEvent) event).getMinecraftSupplier());
                 ModKeys.register();
                 registerSubscriptions();
                 SelectActionScreen.loadActionOrder();
@@ -134,8 +136,8 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new ModifyInventoryScreen());
     }
 
-    private void registerVampireEntityOverlay(EntityRendererManager manager, Class<? extends CreatureEntity> type, ResourceLocation loc) {
-        EntityRenderer render = manager.getRenderer(type);
+    private void registerVampireEntityOverlay(EntityRendererManager manager, EntityType<? extends CreatureEntity> type, ResourceLocation loc) {
+        EntityRenderer<?> render = manager.renderers.get(type);
         if (render == null) {
             LOGGER.error("Did not find renderer for {}", type);
             return;
@@ -151,7 +153,7 @@ public class ClientProxy extends CommonProxy {
     private void registerVampireEntityOverlays() {
         EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
         registerVampirePlayerHead(manager);
-        for (Map.Entry<Class<? extends CreatureEntity>, ResourceLocation> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
+        for (Map.Entry<EntityType<? extends CreatureEntity>, ResourceLocation> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
             registerVampireEntityOverlay(manager, entry.getKey(), entry.getValue());
         }
     }

@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.client.model;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -48,19 +50,10 @@ public class VampireBaronModel<T extends LivingEntity> extends BipedCloakedModel
     }
 
     @Override
-    public void render(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(entity, f, f1, f2, f3, f4, f5);
-        rightwing1.render(f5);
-        rightwing2.render(f5);
-        leftwing1.render(f5);
-        leftwing2.render(f5);
+    protected Iterable<ModelRenderer> getBodyParts() {
+        return Iterables.concat(super.getBodyParts(), ImmutableList.of(rightwing1, rightwing2, leftwing1, leftwing2));
     }
 
-    @Override
-    public void setRotationAngles(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        super.setRotationAngles(entity, f, f1, f2, f3, f4, f5);
-    }
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;

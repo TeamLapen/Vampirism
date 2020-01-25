@@ -92,7 +92,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      * Prevent the player from being asked to name this item
      */
     public void doNotName(ItemStack stack) {
-        stack.setTagInfo("dont_name", new ByteNBT(Byte.MAX_VALUE));
+        stack.setTagInfo("dont_name", ByteNBT.valueOf(Byte.MAX_VALUE));
     }
 
     @Override
@@ -146,7 +146,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
 
 
-        if (this.canBeCharged(stack) && playerIn.isSneaking() && (playerIn.isCreative() || vampire.getBloodLevel() >= 2) && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge)) {
+        if (this.canBeCharged(stack) && playerIn.isShiftKeyDown() && (playerIn.isCreative() || vampire.getBloodLevel() >= 2) && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge)) {
             playerIn.setActiveHand(handIn);
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
@@ -182,7 +182,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
      * @param value Is clamped between 0 and 1
      */
     public void setCharged(@Nonnull ItemStack stack, float value) {
-        stack.setTagInfo("charged", new FloatNBT(MathHelper.clamp(value, 0f, 1f)));
+        stack.setTagInfo("charged", FloatNBT.valueOf(MathHelper.clamp(value, 0f, 1f)));
     }
 
     /**
@@ -201,7 +201,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     public void tryName(ItemStack stack, PlayerEntity player) {
         if (!stack.hasDisplayName() && player instanceof ServerPlayerEntity && (!stack.hasTag() || !stack.getTag().getBoolean("dont_name"))) {
             VampirismMod.proxy.displayNameSwordScreen(stack);
-            player.world.playSound((player).posX, (player).posY, (player).posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
+            player.world.playSound((player).getPosX(), (player).getPosY(), (player).getPosZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
         }
     }
 
@@ -216,7 +216,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         float cached = getTrained(stack);
         float trained = getTrained(stack, player);
         if (cached != trained) {
-            stack.setTagInfo("trained-cache", new FloatNBT(trained));
+            stack.setTagInfo("trained-cache", FloatNBT.valueOf(trained));
             return true;
         }
         return false;
@@ -299,7 +299,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         Vec3d pos = UtilLib.getItemPosition(player, mainHand);
         if (player.getSwingProgress(1f) > 0f) return;
         pos = pos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
-        Vec3d playerPos = new Vec3d((player).posX, (player).posY + player.getEyeHeight() - 0.2f, (player).posZ);
+        Vec3d playerPos = new Vec3d((player).getPosX(), (player).getPosY() + player.getEyeHeight() - 0.2f, (player).getPosZ());
         ModParticles.spawnParticleClient(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.6F + 0.1F)), true, pos.x, pos.y, pos.z), playerPos.x, playerPos.y, playerPos.z);
     }
 

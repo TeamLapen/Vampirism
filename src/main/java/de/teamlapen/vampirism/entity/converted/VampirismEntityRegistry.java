@@ -41,7 +41,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Nonnull
     private final Map<EntityType<? extends CreatureEntity>, IConvertingHandler> convertibles = new ConcurrentHashMap<>();
     @Nonnull
-    private final Map<Class<? extends CreatureEntity>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
+    private final Map<EntityType<? extends CreatureEntity>, ResourceLocation> convertibleOverlay = new ConcurrentHashMap<>();
     @Nonnull
     private final Map<ResourceLocation, Integer> bloodValues = Maps.newHashMap();
     /**
@@ -58,24 +58,24 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, ResourceLocation overlayLocation) {
-        addConvertible(type, clazz, overlayLocation, new DefaultConvertingHandler(null));
+    public void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlayLocation) {
+        addConvertible(type, overlayLocation, new DefaultConvertingHandler(null));
     }
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, ResourceLocation overlay_loc, IConvertingHandler.IDefaultHelper helper) {
-        addConvertible(type, clazz, overlay_loc, defaultConvertingHandlerCreator.apply(helper));
+    public void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlay_loc, IConvertingHandler.IDefaultHelper helper) {
+        addConvertible(type, overlay_loc, defaultConvertingHandlerCreator.apply(helper));
     }
 
     @Override
     @ThreadSafeAPI
-    public void addConvertible(EntityType<? extends CreatureEntity> type, Class<? extends CreatureEntity> clazz, ResourceLocation overlay_loc, @Nonnull IConvertingHandler handler) {
+    public void addConvertible(EntityType<? extends CreatureEntity> type, ResourceLocation overlay_loc, @Nonnull IConvertingHandler handler) {
         if (finished) throw new IllegalStateException("Register convertibles during InterModEnqueueEvent");
         convertibles.put(type, handler);
 
         if (FMLEnvironment.dist.isClient() && overlay_loc != null) {
-            convertibleOverlay.put(clazz, overlay_loc);
+            convertibleOverlay.put(type, overlay_loc);
         }
     }
 
@@ -148,7 +148,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Nonnull
     @Override
     @OnlyIn(Dist.CLIENT)
-    public Map<Class<? extends CreatureEntity>, ResourceLocation> getConvertibleOverlay() {
+    public Map<EntityType<? extends CreatureEntity>, ResourceLocation> getConvertibleOverlay() {
         return convertibleOverlay;
     }
 

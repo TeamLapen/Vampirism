@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world.gen.structures.huntercamp;
 
 import com.google.common.collect.Lists;
-
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
@@ -18,6 +17,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -42,6 +42,15 @@ public abstract class HunterCampPieces extends StructurePiece {
         hunterCamp.buildComponent(hunterCamp, componentsIn, rand);
     }
 
+    @Override
+    public boolean func_225577_a_(IWorld worldIn, ChunkGenerator<?> chunkGenerator, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPosIn) { //AddComponentParts
+        this.y = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, x, z);
+        this.setBoundingBox();
+
+        //fail conditions
+        return testPreconditions(worldIn);
+    }
+
     public static class Fireplace extends HunterCampPieces {
         boolean specialComponentAdd = false;
         private boolean advanced;
@@ -58,9 +67,10 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public boolean addComponentParts(IWorld worldIn, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPosIn) {
+        public boolean func_225577_a_(IWorld worldIn, ChunkGenerator<?> chunkGenerator, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPosIn) { //AddComponentParts
             //preconditions
-            if (!super.addComponentParts(worldIn, randomIn, structureBoundingBoxIn, chunkPosIn)) return false;
+            if (!super.func_225577_a_(worldIn, chunkGenerator, randomIn, structureBoundingBoxIn, chunkPosIn))
+                return false;
 
             //generation
             this.setBlockState(worldIn, ModBlocks.fire_place.getDefaultState(), 1, 0, 1, structureBoundingBoxIn);
@@ -149,7 +159,7 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
 
         @Override
-        public boolean addComponentParts(IWorld worldIn, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPosIn) {
+        public boolean func_225577_a_(IWorld worldIn, ChunkGenerator<?> chunkGenerator, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPosIn) { //AddComponentParts
             //set helper variables
             if (mirror == 0 ? (mirror = randomIn.nextInt(2) + 1) == 1 : mirror == 1) {
                 xDiff = 2;
@@ -160,7 +170,8 @@ public abstract class HunterCampPieces extends StructurePiece {
             }
 
             //preconditions
-            if (!super.addComponentParts(worldIn, randomIn, structureBoundingBoxIn, chunkPosIn)) return false;
+            if (!super.func_225577_a_(worldIn, chunkGenerator, randomIn, structureBoundingBoxIn, chunkPosIn))
+                return false;
 
             //helper variable for tent blockstates
             Direction dir = direction == Direction.SOUTH || direction == Direction.WEST ? direction.getOpposite() : direction;
@@ -255,54 +266,6 @@ public abstract class HunterCampPieces extends StructurePiece {
         }
     }
 
-    public static class SpecialBlock extends HunterCampPieces {
-        private final Direction direction;
-        private final boolean advanced;
-
-        public SpecialBlock(int x, int y, int z, Direction direction, Block baseBlocks, boolean advanced) {
-            super(ModFeatures.hunter_camp_special, 2, x, y, z, baseBlocks);
-            this.setCoordBaseMode(direction);
-            this.direction = direction;
-            this.advanced = advanced;
-        }
-
-        public SpecialBlock(TemplateManager templateManager, CompoundNBT compoundNBT) {
-            super(ModFeatures.hunter_camp_special, compoundNBT);
-            this.direction = Direction.byHorizontalIndex(compoundNBT.getInt("dir"));
-            this.advanced = compoundNBT.getBoolean("advanced");
-        }
-
-        @Override
-        public boolean addComponentParts(IWorld worldIn, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPosIn) {
-            //preconditions
-            if (!super.addComponentParts(worldIn, randomIn, structureBoundingBoxIn, chunkPosIn)) return false;
-
-            //generation
-            if (advanced) {
-                if (!worldIn.getBlockState(new BlockPos(this.x + 1, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + 1, this.z) - 1, z)).getMaterial().isReplaceable())
-                    this.setBlockState(worldIn, ModBlocks.weapon_table.getDefaultState(), 2, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + 1, this.z) - y, 1, structureBoundingBoxIn);
-                if (!worldIn.getBlockState(new BlockPos(this.x - 1, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x - 1, this.z) - 1, z)).getMaterial().isReplaceable())
-                    this.setBlockState(worldIn, Blocks.CRAFTING_TABLE.getDefaultState(), 0, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x - 1, this.z) - y, 1, structureBoundingBoxIn);
-            } else {
-                this.setBlockState(worldIn, Blocks.CRAFTING_TABLE.getDefaultState(), 1, 0, 1, structureBoundingBoxIn);
-            }
-            return true;
-        }
-
-        @Override
-        protected void readAdditional(CompoundNBT tagCompound) {
-            super.readAdditional(tagCompound);
-            tagCompound.putInt("dir", this.direction.getHorizontalIndex());
-            tagCompound.putBoolean("advanced", this.advanced);
-        }
-
-        @Override
-        protected boolean testPreconditions(IWorld worldIn) {
-            return super.testPreconditions(worldIn)
-                    && (Math.abs(this.y - worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 3);
-        }
-    }
-
     protected void setBoundingBox() {
         this.boundingBox = new MutableBoundingBox(this.x - 1, this.y, this.z - 1, this.x + 1, this.y + 2, this.z + 1);
     }
@@ -333,13 +296,54 @@ public abstract class HunterCampPieces extends StructurePiece {
         tagCompound.putString("baseBlock", this.baseBlock.getRegistryName().toString());
     }
 
-    @Override
-    public boolean addComponentParts(IWorld worldIn, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPosIn) {
-        this.y = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, x, z);
-        this.setBoundingBox();
+    public static class SpecialBlock extends HunterCampPieces {
+        private final Direction direction;
+        private final boolean advanced;
 
-        //fail conditions
-        return testPreconditions(worldIn);
+        public SpecialBlock(int x, int y, int z, Direction direction, Block baseBlocks, boolean advanced) {
+            super(ModFeatures.hunter_camp_special, 2, x, y, z, baseBlocks);
+            this.setCoordBaseMode(direction);
+            this.direction = direction;
+            this.advanced = advanced;
+        }
+
+        public SpecialBlock(TemplateManager templateManager, CompoundNBT compoundNBT) {
+            super(ModFeatures.hunter_camp_special, compoundNBT);
+            this.direction = Direction.byHorizontalIndex(compoundNBT.getInt("dir"));
+            this.advanced = compoundNBT.getBoolean("advanced");
+        }
+
+        @Override
+        public boolean func_225577_a_(IWorld worldIn, ChunkGenerator<?> chunkGenerator, Random randomIn, MutableBoundingBox structureBoundingBoxIn, ChunkPos chunkPosIn) { //AddComponentParts
+            //preconditions
+            if (!super.func_225577_a_(worldIn, chunkGenerator, randomIn, structureBoundingBoxIn, chunkPosIn))
+                return false;
+
+            //generation
+            if (advanced) {
+                if (!worldIn.getBlockState(new BlockPos(this.x + 1, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + 1, this.z) - 1, z)).getMaterial().isReplaceable())
+                    this.setBlockState(worldIn, ModBlocks.weapon_table.getDefaultState(), 2, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + 1, this.z) - y, 1, structureBoundingBoxIn);
+                if (!worldIn.getBlockState(new BlockPos(this.x - 1, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x - 1, this.z) - 1, z)).getMaterial().isReplaceable())
+                    this.setBlockState(worldIn, Blocks.CRAFTING_TABLE.getDefaultState(), 0, worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x - 1, this.z) - y, 1, structureBoundingBoxIn);
+            } else {
+                this.setBlockState(worldIn, Blocks.CRAFTING_TABLE.getDefaultState(), 1, 0, 1, structureBoundingBoxIn);
+            }
+            return true;
+        }
+
+        @Override
+        protected void readAdditional(CompoundNBT tagCompound) {
+            super.readAdditional(tagCompound);
+            tagCompound.putInt("dir", this.direction.getHorizontalIndex());
+            tagCompound.putBoolean("advanced", this.advanced);
+        }
+
+
+        @Override
+        protected boolean testPreconditions(IWorld worldIn) {
+            return super.testPreconditions(worldIn)
+                    && (Math.abs(this.y - worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, this.x + (direction.getAxis().equals(Direction.Axis.X) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0), this.z + (direction.getAxis().equals(Direction.Axis.Z) ? direction.getAxisDirection().equals(Direction.AxisDirection.POSITIVE) ? -3 : 3 : 0))) < 3);
+        }
     }
 
     protected boolean testPreconditions(IWorld worldIn) {

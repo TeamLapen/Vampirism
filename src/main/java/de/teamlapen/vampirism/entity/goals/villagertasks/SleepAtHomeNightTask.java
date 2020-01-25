@@ -49,7 +49,7 @@ public class SleepAtHomeNightTask extends Task<LivingEntity> {
             return false;
         } else {
             BlockPos blockpos = optional.get().getPos();
-            return p_212834_2_.getBrain().hasActivity(Activity.REST) && p_212834_2_.posY > (double) blockpos.getY() + 0.4D && blockpos.withinDistance(p_212834_2_.getPositionVec(), 1.14D);
+            return p_212834_2_.getBrain().hasActivity(Activity.REST) && p_212834_2_.getPosY() > (double) blockpos.getY() + 0.4D && blockpos.withinDistance(p_212834_2_.getPositionVec(), 1.14D);
         }
     }
 

@@ -1,5 +1,9 @@
 package de.teamlapen.vampirism.client.model;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.entity.model.IHasArm;
 import net.minecraft.client.renderer.entity.model.VillagerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -14,7 +18,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Villager Model with usable arms
  */
 @OnlyIn(Dist.CLIENT)
-public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerModel<T> {
+public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerModel<T> implements IHasArm {
     private ModelRenderer leftArm;
     private ModelRenderer rightArm;
 
@@ -25,7 +29,7 @@ public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerMod
 
     public VillagerWithArmsModel(float scale, float p_i1164_2_, int width, int height) {
         super(scale, width, height);
-        this.villagerArms.isHidden = true;
+        this.villagerArms.showModel = false;
         this.rightArm = (new ModelRenderer(this).setTextureSize(width, height));
         this.rightArm.setTextureOffset(44, 22).addBox(-4F, -2F, -2F, 4, 8, 4, scale);
         this.rightArm.setRotationPoint(0, 2 + p_i1164_2_, 0);
@@ -39,21 +43,14 @@ public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerMod
 
     }
 
-    public void postRenderArm(float scale, HandSide side) {
-        this.getArmForSide(side).postRender(scale);
-
+    @Override
+    public Iterable<ModelRenderer> getParts() {
+        return Iterables.concat(super.getParts(), ImmutableList.of(leftArm, rightArm));
     }
 
     @Override
-    public void render(T entityIn, float p_78088_2_, float limbSwing, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        super.render(entityIn, p_78088_2_, limbSwing, ageInTicks, netHeadYaw, headPitch, scale);
-        this.leftArm.render(scale);
-        this.rightArm.render(scale);
-    }
-
-    @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
-        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+    public void render(T entityIn, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
+        super.render(entityIn, p_225597_2_, p_225597_3_, p_225597_4_, p_225597_5_, p_225597_6_);
         this.leftArm.setRotationPoint(4, 3, -1);
         this.rightArm.setRotationPoint(-4, 3, -1);
         this.leftArm.rotateAngleX = -0.75F;
@@ -62,7 +59,6 @@ public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerMod
         if (this.swingProgress > 0.0F) {
             HandSide enumhandside = this.getMainHand(entityIn);
             ModelRenderer modelrenderer = this.getArmForSide(enumhandside);
-            this.getArmForSide(enumhandside.opposite());
             float f1;
             f1 = 1.0F - this.swingProgress;
             f1 = f1 * f1;
@@ -73,6 +69,16 @@ public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerMod
             modelrenderer.rotateAngleX = (float) ((double) modelrenderer.rotateAngleX - ((double) f2 * 1.2D + (double) f3));
         }
     }
+
+    @Override
+    public void translateHand(HandSide handSide, MatrixStack matrixStack) {
+        float f = handSide == HandSide.RIGHT ? 1.0F : -1.0F;
+        ModelRenderer arm = getArmForSide(handSide);
+        arm.rotationPointX += f;
+        arm.setAnglesAndRotation(matrixStack);
+        arm.rotationPointX -= f;
+    }
+
 
     protected ModelRenderer getArmForSide(HandSide side) {
         return side == HandSide.LEFT ? this.leftArm : this.rightArm;

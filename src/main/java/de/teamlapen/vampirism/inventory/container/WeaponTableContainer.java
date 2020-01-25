@@ -95,7 +95,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     }
 
     @Override
-    public void func_201771_a(RecipeItemHelper recipeItemHelper) {
+    public void fillStackedContents(RecipeItemHelper recipeItemHelper) {
         craftMatrix.fillStackedContents(recipeItemHelper);
     }
 

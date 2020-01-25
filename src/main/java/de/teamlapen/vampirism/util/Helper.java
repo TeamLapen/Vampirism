@@ -58,12 +58,12 @@ public class Helper {
                 float angle = world.getCelestialAngle(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                 if (angle > 0.78 || angle < 0.24) {
-                    BlockPos pos = new BlockPos(entity.posX, entity.posY + MathHelper.clamp(entity.getHeight() / 2.0F, 0F, 2F), entity.posZ);
+                    BlockPos pos = new BlockPos(entity.getPosX(), entity.getPosY() + MathHelper.clamp(entity.getHeight() / 2.0F, 0F, 2F), entity.getPosZ());
                     if (canBlockSeeSun(world, pos)) {
                         try {
                             Biome biome = world.getBiome(pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (!TotemTileEntity.isInsideVampireAreaCached(world.getDimension(), new BlockPos(entity.posX, entity.posY + 1, entity.posZ))) { //For some reason client returns different value for #getPosition than server
+                                if (!TotemTileEntity.isInsideVampireAreaCached(world.getDimension(), new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))) { //For some reason client returns different value for #getPosition than server
                                     if (profiler != null) profiler.endSection();
                                     return true;
                                 }
@@ -84,10 +84,10 @@ public class Helper {
 
     public static boolean canBlockSeeSun(IWorld world, BlockPos pos) {
         if (pos.getY() >= world.getSeaLevel()) {
-            return world.isSkyLightMax(pos);
+            return world.canSeeSky(pos);
         } else {
             BlockPos blockpos = new BlockPos(pos.getX(), world.getSeaLevel(), pos.getZ());
-            if (!world.isSkyLightMax(blockpos)) {
+            if (!world.canSeeSky(blockpos)) {
                 return false;
             } else {
                 int liquidBlocks = 0;

@@ -38,7 +38,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     public static void updatePlayerBatSize(PlayerEntity player) {
         float width = BAT_WIDTH;
         float height = BAT_HEIGHT;
-        if (player.func_225608_bj_()) { //isSneaking
+        if (player.isShiftKeyDown()) { //isSneaking
             height = BAT_HEIGHT - 0.15F;
         }
         if (player.isSleeping()) {

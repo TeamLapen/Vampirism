@@ -41,7 +41,7 @@ public class GarlicAOFEntityAction<T extends CreatureEntity & IEntityActionUser>
 
     @Override
     public void onUpdate(T entity, int duration) {
-        List<PlayerEntity> players = entity.getEntityWorld().getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(entity.posX - 4, entity.posY - 1, entity.posZ - 4, entity.posX + 4, entity.posY + 3, entity.posZ + 4));
+        List<PlayerEntity> players = entity.getEntityWorld().getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(entity.getPosX() - 4, entity.getPosY() - 1, entity.getPosZ() - 4, entity.getPosX() + 4, entity.getPosY() + 3, entity.getPosZ() + 4));
         for (PlayerEntity e : players) {
             if (VampirismAPI.factionRegistry().getFaction(e) == VReference.VAMPIRE_FACTION) {
                 if (e.getActivePotionEffect(ModEffects.garlic) == null || e.getActivePotionEffect(ModEffects.garlic).getDuration() <= 60) {

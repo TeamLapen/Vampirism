@@ -75,21 +75,6 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public int getBrightnessForRender() {
-        float f = 0.5F;
-        f = MathHelper.clamp(f, 0.0F, 1.0F);
-        int i = super.getBrightnessForRender();
-        int j = i & 255;
-        int k = i >> 16 & 255;
-        j = j + (int) (f * 15.0F * 16.0F);
-
-        if (j > 240) {
-            j = 240;
-        }
-
-        return j | k << 16;
-    }
 
     @Override
     public ItemStack getItem() {
@@ -148,9 +133,9 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
             delayBeforePickup--;
         }
 
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
+        this.prevPosX = this.getPosX();
+        this.prevPosY = this.getPosY();
+        this.prevPosZ = this.getPosZ();
 
         if (this.areEyesInFluid(FluidTags.WATER)) {
             Vec3d vec3d = this.getMotion();
@@ -163,21 +148,17 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
             this.setMotion((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F, 0.2F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
             this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
         }
-
-        if (!this.world.areCollisionShapesEmpty(this.getBoundingBox())) {
-            this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
+        if (!this.world.func_226664_a_(this.getBoundingBox())) { //areCollisionShapesEmpty
+            this.pushOutOfBlocks(this.getPosX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getPosZ());
         }
 
-        if (!this.world.areCollisionShapesEmpty(this.getBoundingBox())) {
-            this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
-        }
 
         if (this.age % 10 == 5 & (this.player == null || !this.player.isAlive() || this.player.getDistanceSq(this) > 64)) {
-            this.player = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 8, EntityPredicates.NOT_SPECTATING.and(Helper::isHunter));
+            this.player = this.world.getClosestPlayer(this.getPosX(), this.getPosY(), this.getPosZ(), 8, EntityPredicates.NOT_SPECTATING.and(Helper::isHunter));
         }
 
         if (this.player != null) {
-            Vec3d vec3d = new Vec3d(this.player.posX - this.posX, this.player.posY + (double) this.player.getEyeHeight() / 2.0D - this.posY, this.player.posZ - this.posZ);
+            Vec3d vec3d = new Vec3d(this.player.getPosX() - this.getPosX(), this.player.getPosY() + (double) this.player.getEyeHeight() / 2.0D - this.getPosY(), this.player.getPosZ() - this.getPosZ());
             double d1 = vec3d.lengthSquared();
             if (d1 < 64.0D) {
                 double d2 = 1.0D - Math.sqrt(d1) / 8.0D;
@@ -189,7 +170,7 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         float f = 0.98F;
 
         if (this.onGround) {
-            BlockPos underPos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getBoundingBox().minY) - 1, MathHelper.floor(this.posZ));
+            BlockPos underPos = new BlockPos(MathHelper.floor(this.getPosX()), MathHelper.floor(this.getBoundingBox().minY) - 1, MathHelper.floor(this.getPosZ()));
             BlockState underState = this.world.getBlockState(underPos);
             f = underState.getBlock().getSlipperiness(underState, this.world, underPos, this) * 0.98F;
         }

@@ -979,8 +979,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public double shouldRenderBeam() {
-        if (!this.isComplete || isDisabled) return 0D;
+    public float shouldRenderBeam() {
+        if (!this.isComplete || isDisabled) return 0f;
         int i = (int) (this.world.getGameTime() - this.beamRenderCounter);
         this.beamRenderCounter = this.world.getGameTime();
         if (i > 1) {

@@ -29,29 +29,25 @@ public class BasicHunterRenderer extends BipedRenderer<BasicHunterEntity, BasicH
         super(renderManagerIn, new BasicHunterModel(), 0.5F);
     }
 
-    @Override
-    public void doRender(BasicHunterEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
-    }
 
     @Override
-    protected ResourceLocation getEntityTexture(BasicHunterEntity entity) {
+    public ResourceLocation getEntityTexture(BasicHunterEntity entity) {
         int level = entity.getLevel();
         if (level > 0) return texture;
         return textures[entity.getEntityId() % textures.length];
     }
-
-    @Override
-    protected void renderModel(BasicHunterEntity entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float partTicks) {
-        int level = entitylivingbaseIn.getLevel();
-        int type = entitylivingbaseIn.getEntityId() % textures.length;
-        if (level == 0) {
-            getEntityModel().setSkipCloakOnce();
-        }
-        super.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, partTicks);
-        bindTexture(textureExtra);
-        getEntityModel().renderHat(partTicks, level == 0 ? type : -1);
-        getEntityModel().renderWeapons(partTicks, level < 2 || entitylivingbaseIn.isCrossbowInMainhand());
-
-    }
+//
+//    @Override
+//    protected void renderModel(BasicHunterEntity entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float partTicks) {
+//        int level = entitylivingbaseIn.getLevel();
+//        int type = entitylivingbaseIn.getEntityId() % textures.length;
+//        if (level == 0) {
+//            getEntityModel().setSkipCloakOnce();
+//        }
+//        super.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, partTicks);
+//        bindTexture(textureExtra);
+//        getEntityModel().renderHat(partTicks, level == 0 ? type : -1);
+//        getEntityModel().renderWeapons(partTicks, level < 2 || entitylivingbaseIn.isCrossbowInMainhand());
+//
+//    }
 }

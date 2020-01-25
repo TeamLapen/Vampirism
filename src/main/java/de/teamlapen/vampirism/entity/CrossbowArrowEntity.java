@@ -37,9 +37,9 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
         if (rightHanded) {
             yaw += Math.PI;
         }
-        double posX = shooter.posX - Math.sin(yaw) * centerOffset;
-        double posZ = shooter.posZ + Math.cos(yaw) * centerOffset;
-        CrossbowArrowEntity entityArrow = new CrossbowArrowEntity(world, posX, shooter.posY + (double) shooter.getEyeHeight() - 0.10000000149011612D + heightOffset, posZ, arrow);
+        double posX = shooter.getPosX() - Math.sin(yaw) * centerOffset;
+        double posZ = shooter.getPosZ() + Math.cos(yaw) * centerOffset;
+        CrossbowArrowEntity entityArrow = new CrossbowArrowEntity(world, posX, shooter.getPosY() + (double) shooter.getEyeHeight() - 0.10000000149011612D + heightOffset, posZ, arrow);
         entityArrow.shootingEntity = shooter.getUniqueID();
         if (shooter instanceof PlayerEntity) {
             entityArrow.pickupStatus = AbstractArrowEntity.PickupStatus.ALLOWED;

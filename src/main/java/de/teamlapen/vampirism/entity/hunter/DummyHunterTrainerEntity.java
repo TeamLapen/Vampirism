@@ -52,7 +52,7 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
         ItemStack stack = player.getHeldItem(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
-        if (!flag && this.isAlive() && !player.isSneaking()) {
+        if (!flag && this.isAlive() && !player.isShiftKeyDown()) {
             if (!this.world.isRemote) {
                 if (Helper.isHunter(player)) {
                     player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled_hunter"));

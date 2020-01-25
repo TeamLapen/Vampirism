@@ -23,7 +23,7 @@ public class GhostRenderer extends MobRenderer<GhostEntity, GhostModel<GhostEnti
 
 
     @Override
-    protected ResourceLocation getEntityTexture(GhostEntity entity) {
+    public ResourceLocation getEntityTexture(GhostEntity entity) {
         return ghostTexture;
     }
 }

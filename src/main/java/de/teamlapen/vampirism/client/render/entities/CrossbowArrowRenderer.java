@@ -17,7 +17,7 @@ public class CrossbowArrowRenderer extends ArrowRenderer<CrossbowArrowEntity> {
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(CrossbowArrowEntity entity) {
+    public ResourceLocation getEntityTexture(CrossbowArrowEntity entity) {
         return RES_ARROW;
     }
 }

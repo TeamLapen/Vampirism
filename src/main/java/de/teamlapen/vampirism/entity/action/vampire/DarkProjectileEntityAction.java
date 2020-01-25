@@ -20,10 +20,10 @@ public class DarkProjectileEntityAction<T extends CreatureEntity & IEntityAction
     public boolean activate(T entity) {
         LivingEntity shooter = entity.getRepresentingEntity();
 
-        Vec3d vec3dd = new Vec3d(entity.getAttackTarget().posX - entity.posX, entity.getAttackTarget().posY - entity.posY, entity.getAttackTarget().posZ - entity.posZ);
+        Vec3d vec3dd = new Vec3d(entity.getAttackTarget().getPosX() - entity.getPosX(), entity.getAttackTarget().getPosY() - entity.getPosY(), entity.getAttackTarget().getPosZ() - entity.getPosZ());
         vec3dd.normalize();
 
-        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(shooter.getEntityWorld(), shooter.posX + vec3dd.x * 1.0f, shooter.posY + shooter.getEyeHeight() * 0.9f, shooter.posZ + vec3dd.z * 1.0f, vec3dd.x, vec3dd.y, vec3dd.z);
+        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(shooter.getEntityWorld(), shooter.getPosX() + vec3dd.x * 1.0f, shooter.getPosY() + shooter.getEyeHeight() * 0.9f, shooter.getPosZ() + vec3dd.z * 1.0f, vec3dd.x, vec3dd.y, vec3dd.z);
         projectile.shootingEntity = shooter;
         projectile.setDamage(VampirismConfig.BALANCE.eaDarkProjectileDamage.get().floatValue(), VampirismConfig.BALANCE.eaDarkProjectileIndirectDamage.get().floatValue());
 
@@ -38,7 +38,7 @@ public class DarkProjectileEntityAction<T extends CreatureEntity & IEntityAction
 
     @Override
     public int getWeight(CreatureEntity entity) {
-        double distanceToTarget = new Vec3d(entity.posX, entity.posY, entity.posZ).subtract(entity.getAttackTarget().posX, entity.getAttackTarget().posY, entity.getAttackTarget().posZ).length();
+        double distanceToTarget = new Vec3d(entity.getPosX(), entity.getPosY(), entity.getPosZ()).subtract(entity.getAttackTarget().getPosX(), entity.getAttackTarget().getPosY(), entity.getAttackTarget().getPosZ()).length();
         if (distanceToTarget > 20) {
             return 3;
         } else if (distanceToTarget > 12) {

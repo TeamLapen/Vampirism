@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.ToolType;
 
@@ -52,7 +53,7 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
     }
 
     @Override
-    public void grow(World worldIn, Random rand, BlockPos pos, BlockState state) {
+    public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
         BlockPos blockpos = pos.up();
 
         for (int i = 0; i < 128; ++i) {
@@ -94,7 +95,6 @@ public class CursedEarthBlock extends VampirismBlock implements IGrowable {
 
     @Override
     public void onPlantGrow(BlockState state, IWorld world, BlockPos pos, BlockPos source) {
-        if (Block.isDirt(getBlock()))
             world.setBlockState(pos, ModBlocks.cursed_earth.getDefaultState(), 2);
     }
 }

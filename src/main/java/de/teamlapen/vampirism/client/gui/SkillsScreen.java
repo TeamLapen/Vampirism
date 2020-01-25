@@ -336,7 +336,7 @@ public class SkillsScreen extends Screen {
 
         float mMouseX = (float) (mouseX - i1) * this.zoomOut;
         float mMouseY = (float) (mouseY - j1) * this.zoomOut;
-        RenderHelper.func_227780_a_(); //enableStandardGUIItemLighting
+        RenderHelper.enableStandardItemLighting(); //enableStandardGUIItemLighting
         RenderSystem.disableLighting();
         RenderSystem.enableRescaleNormal();
         RenderSystem.enableColorMaterial();

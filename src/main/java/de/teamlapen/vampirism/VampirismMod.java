@@ -288,9 +288,6 @@ public class VampirismMod {
         Permissions.init();
         VampirismEntitySelectors.registerSelectors();
 
-        MinecraftForge.EVENT_BUS.register(new HalloweenSpecial());
-
-
     }
 
     /**

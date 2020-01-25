@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.client.render;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -33,7 +33,7 @@ public class LayerPlayerFaceOverlay<T extends MobEntity & IPlayerFace, M extends
     }
 
     @Override
-    public void func_225628_a_(MatrixStack p_225628_1_, IRenderTypeBuffer p_225628_2_, int p_225628_3_, T entityIn, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {//render
+    public void render(MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, T entityIn, float v, float v1, float v2, float v3, float v4, float v5) {
         ResourceLocation loc = DefaultPlayerSkin.getDefaultSkinLegacy();
         GameProfile prof = entityIn.getPlayerFaceProfile();
         if (prof != null) {
@@ -43,19 +43,11 @@ public class LayerPlayerFaceOverlay<T extends MobEntity & IPlayerFace, M extends
             }
 
         }
+        IVertexBuilder vertexBuilder = iRenderTypeBuffer.getBuffer(RenderType.entitySolid(loc));
+        this.getEntityModel().bipedHead.render(matrixStack, vertexBuilder, i, 0, v, v1, v2, v3);
+        this.getEntityModel().bipedHeadwear.render(matrixStack, vertexBuilder, i, 0, v, v1, v2, v3);
 
-        renderBiped.bindTexture(loc);
-        RenderSystem.pushMatrix();
-        if (entityIn.func_225608_bj_()) {//isSneaking
-            RenderSystem.translatef(0.0F, 0.2F, 0.0F);
-        }
-        GlStateManager.setProfile(GlStateManager.Profile.PLAYER_SKIN);
-
-        (this.renderBiped.getEntityModel()).bipedHead.render(scale);
-        (this.renderBiped.getEntityModel()).bipedHeadwear.render(scale);
-        GlStateManager.unsetProfile(GlStateManager.Profile.PLAYER_SKIN);
-
-        RenderSystem.popMatrix();
     }
+
 
 }

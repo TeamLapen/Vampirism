@@ -187,7 +187,7 @@ public class CoffinBlock extends VampirismBlockContainer {
 
             IForgeDimension.SleepResult sleepResult = worldIn.dimension.canSleepAt(player, pos);
             if (sleepResult != IForgeDimension.SleepResult.BED_EXPLODES) {
-                if (sleepResult == IForgeDimension.SleepResult.DENY) return true;
+                if (sleepResult == IForgeDimension.SleepResult.DENY) return ActionResultType.SUCCESS;
                 if (state.get(BedBlock.OCCUPIED)) {
                     player.sendStatusMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
                     return ActionResultType.SUCCESS;

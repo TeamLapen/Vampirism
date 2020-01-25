@@ -5,9 +5,12 @@ import de.teamlapen.vampirism.client.render.entities.*;
 import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.BatRenderer;
+import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+
+import java.util.function.Supplier;
 
 /**
  * Handles entity render registration
@@ -15,7 +18,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 @OnlyIn(Dist.CLIENT)
 public class ModEntitiesRender {
 
-    public static void registerEntityRenderer() {
+    public static void registerEntityRenderer(Supplier<Minecraft> minecraftSupplier) {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.blinding_bat, BatRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ghost, GhostRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_creature_imob, ConvertedCreatureRenderer::new);
@@ -32,7 +35,7 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.advanced_vampire, AdvancedVampireRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.advanced_vampire_imob, AdvancedVampireRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.villager_converted, ConvertedVillagerRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.villager_angry, HunterVillagerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.villager_angry, (renderManager) -> new HunterVillagerRenderer(renderManager, (IReloadableResourceManager) minecraftSupplier.get().getResourceManager()));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.crossbow_arrow, CrossbowArrowRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.particle_cloud, RenderAreaParticleCloud::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.throwable_item, manager -> new ThrowableItemRenderer(manager, Minecraft.getInstance().getItemRenderer()));

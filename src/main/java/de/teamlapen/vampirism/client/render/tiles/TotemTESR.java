@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.ResourceLocation;
@@ -26,25 +28,22 @@ public class TotemTESR extends VampirismTESR<TotemTileEntity> {
     }
 
     @Override
-    public void render(TotemTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
-        super.render(te, x, y, z, partialTicks, destroyStage);
-        GlStateManager.alphaFunc(516, 0.1F);
-        this.bindTexture(TEXTURE_BEACON_BEAM);
-
-        double textureScale = te.shouldRenderBeam();
-        if (textureScale > 0.0D) {
+    public void render(TotemTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
+        RenderSystem.alphaFunc(516, 0.1f);
+        float textureScale = te.shouldRenderBeam();
+        if (textureScale > 0.0f) {
             long totalWorldTime = te.getWorld().getGameTime();
             int captureProgress = te.getCaptureProgress();
             float[] baseColors = te.getBaseColors();
-            GlStateManager.disableFog();
             int offset = 0;
             if (captureProgress > 0) {
                 float[] overtakeColors = te.getCapturingColors();
                 offset = (captureProgress * HEIGHT) / 100;
-                BeaconTileEntityRenderer.renderBeamSegment(x, y, z, partialTicks, textureScale, totalWorldTime, 0, offset, overtakeColors, 0.2D, 0.25D);
+                BeaconTileEntityRenderer.renderBeamSegment(matrixStack, iRenderTypeBuffer, TEXTURE_BEACON_BEAM, partialTicks, textureScale, totalWorldTime, 0, offset, overtakeColors, 0.2f, 0.25f);
             }
-            BeaconTileEntityRenderer.renderBeamSegment(x, y, z, partialTicks, textureScale, totalWorldTime, offset, HEIGHT - offset, baseColors, 0.2D, 0.25D);
+            BeaconTileEntityRenderer.renderBeamSegment(matrixStack, iRenderTypeBuffer, TEXTURE_BEACON_BEAM, partialTicks, textureScale, totalWorldTime, offset, HEIGHT - offset, baseColors, 0.2f, 0.25f);
         }
     }
+
 
 }

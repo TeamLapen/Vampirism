@@ -52,12 +52,12 @@ public class RegenerationAOFEntityAction<T extends CreatureEntity & IEntityActio
 
     @Override
     public void onUpdate(T entity, int duration) {
-        List<MobEntity> entities = entity.getEntityWorld().getEntitiesWithinAABB(MobEntity.class, new AxisAlignedBB(entity.posX - 4, entity.posY - 1, entity.posZ - 4, entity.posX + 4, entity.posY + 3, entity.posZ + 4));
+        List<MobEntity> entities = entity.getEntityWorld().getEntitiesWithinAABB(MobEntity.class, new AxisAlignedBB(entity.getPosX() - 4, entity.getPosY() - 1, entity.getPosZ() - 4, entity.getPosX() + 4, entity.getPosY() + 3, entity.getPosZ() + 4));
         for (MobEntity e : entities) {
             if (VampirismAPI.factionRegistry().getFaction(entity) == VampirismAPI.factionRegistry().getFaction(e)) {
                 e.heal(entity.getMaxHealth() / 100f * VampirismConfig.BALANCE.eaRegenerationAmount.get() / (getDuration(entity.getLevel()) * 20f));
                 if (duration % 20 == 0) {
-                    ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.HEART, e.posX, e.posY + 0.2, e.posZ, 3, 0.2, 0.2, 0.2, 0);
+                    ModParticles.spawnParticlesServer(entity.getEntityWorld(), ParticleTypes.HEART, e.getPosX(), e.getPosY() + 0.2, e.getPosZ(), 3, 0.2, 0.2, 0.2, 0);
                 }
             }
         }

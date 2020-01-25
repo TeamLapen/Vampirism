@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.model;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
@@ -65,28 +66,14 @@ public class CloakModel<T extends LivingEntity> extends BipedModel<T> {
     }
 
     @Override
-    public void render(T entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(entity, f, f1, f2, f3, f4, f5);
-        cloakback.render(f5);
-        leftlong.render(f5);
-        rightmedium.render(f5);
-        leftmedium.render(f5);
-        rightshort.render(f5);
-        leftshort.render(f5);
-        rightlong.render(f5);
-        shoulderright.render(f5);
-        shoulderleft.render(f5);
-    }
-
-    @Override
-    public void setRotationAngles(T entityIn, float f, float f1, float f2, float f3, float f4, float f5) {
-        boolean flag = entityIn instanceof LivingEntity && entityIn.getTicksElytraFlying() > 4;
+    public void render(T entity, float f, float f1, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
+        super.render(entity, f, f1, p_225597_4_, p_225597_5_, p_225597_6_);
+        boolean flag = entity != null && entity.getTicksElytraFlying() > 4;
 
         float f6 = 1.0F;
         if (flag) {
-            f6 = (float) (entityIn.getMotion().x * entityIn.getMotion().x + entityIn.getMotion().y * entityIn.getMotion().y
-                    + entityIn.getMotion().z * entityIn.getMotion().z);
+            f6 = (float) (entity.getMotion().x * entity.getMotion().x + entity.getMotion().y * entity.getMotion().y
+                    + entity.getMotion().z * entity.getMotion().z);
             f6 = f6 / 0.2F;
             f6 = f6 * f6 * f6;
         }
@@ -116,6 +103,12 @@ public class CloakModel<T extends LivingEntity> extends BipedModel<T> {
             this.rightshort.rotateAngleX += 0.5F;
         }
     }
+
+    @Override
+    protected Iterable<ModelRenderer> getBodyParts() {
+        return ImmutableList.of(cloakback, leftlong, rightmedium, leftmedium, rightshort, leftshort, rightlong, shoulderright, shoulderleft);
+    }
+
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
