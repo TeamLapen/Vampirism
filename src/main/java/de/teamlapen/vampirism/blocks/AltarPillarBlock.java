@@ -143,11 +143,17 @@ public class AltarPillarBlock extends VampirismBlock {
             return name;
         }
 
+
         /**
          * @return The "value" or level of this material.
          */
         public float getValue() {
             return value;
+        }
+
+        @Override
+        public String toString() {
+            return getName();
         }
     }
 

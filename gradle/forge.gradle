@@ -71,7 +71,7 @@ minecraft {
             }
 
         }
-        server = {
+        server {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             workingDirectory project.file('run/server').canonicalPath
@@ -85,6 +85,19 @@ minecraft {
                 }
 
 
+            }
+        }
+        data {
+            workingDirectory project.file('run/data').canonicalPath
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'vampirism', '--all', '--output', file('src/generated/resources/'),  '--existing', sourceSets.main.resources.srcDirs[0]
+            mods {
+                vampirism {
+                    source sourceSets.main
+                    source sourceSets.api
+                    source sourceSets.lib
+                }
             }
         }
     }

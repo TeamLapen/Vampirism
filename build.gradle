@@ -47,6 +47,10 @@ sourceSets {
          java{
              exclude '**/guide/*'
          }
+        resources {
+            srcDirs += 'src/generated/resources'
+            exclude '.cache'
+        }
         compileClasspath += sourceSets.lib.output
         compileClasspath += sourceSets.api.output
         runtimeClasspath += sourceSets.api.output

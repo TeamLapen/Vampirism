@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.core.ModCommands;
 import de.teamlapen.vampirism.core.ModEventHandler;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.RegistryManager;
+import de.teamlapen.vampirism.data.BlockStateGenerator;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -235,6 +236,9 @@ public class VampirismMod {
         if (event.includeServer()) {
             gen.addProvider(new VampirismBlockTagProvider(gen));
             gen.addProvider(new VampirismItemTagProvider(gen));
+        }
+        if (event.includeClient()) {
+            gen.addProvider(new BlockStateGenerator(event.getGenerator(), event.getExistingFileHelper()));
         }
     }
 

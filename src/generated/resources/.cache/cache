@@ -1,0 +1,10 @@
+6c8a4d894ff7a1b1d4854b5819222c197d1c9740 assets/vampirism/blockstates/altar_pillar.json
+091cc021ec4a6bfda24a53c6f5755ee701566c55 data/forge/tags/blocks/dirt.json
+3d850462f818cb5d38f940311023068291c2d40e data/forge/tags/blocks/obsidian.json
+3d850462f818cb5d38f940311023068291c2d40e data/forge/tags/items/obsidian.json
+091cc021ec4a6bfda24a53c6f5755ee701566c55 data/vampirism/tags/blocks/cursed_earth.json
+74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/vampirism/tags/items/castle_block.json
+8b5ccc0838c97efbb2c443c4b8c7272007b32608 data/vampirism/tags/items/crossbow_arrow.json
+2e7c31f01b7409c520b5c899ed3413319250d628 data/vampirism/tags/items/hunter_intel.json
+51c2f81bea8458229590ead60308b02b7f25c925 data/vampirism/tags/items/pure_blood.json
+4168a4834c52a603a350b0e3eb4d0794f304fc4f data/vampirism/tags/items/vampire_cloak.json
