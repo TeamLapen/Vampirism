@@ -1,0 +1,33 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "vampirism:block/alchemy_cauldron"
+      }
+    },
+    {
+      "when": {
+        "lit": "true"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_cauldron_fire"
+      }
+    },
+    {
+      "when": {
+        "liquid": "1"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_cauldron_liquid"
+      }
+    },
+    {
+      "when": {
+        "liquid": "2"
+      },
+      "apply": {
+        "model": "vampirism:block/alchemy_cauldron_liquid"
+      }
+    }
+  ]
+}

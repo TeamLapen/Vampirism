@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "vampirism:block/grinder"
+    },
+    "facing=south": {
+      "model": "vampirism:block/grinder",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vampirism:block/grinder",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "vampirism:block/grinder",
+      "y": 90
+    }
+  }
+}

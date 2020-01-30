@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "vampirism:block/garlic_beacon_weak"
+    },
+    "facing=south": {
+      "model": "vampirism:block/garlic_beacon_weak",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vampirism:block/garlic_beacon_weak",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "vampirism:block/garlic_beacon_weak",
+      "y": 90
+    }
+  }
+}

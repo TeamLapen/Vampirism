@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "vampirism:block/hunter_table"
+    },
+    "facing=south": {
+      "model": "vampirism:block/hunter_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vampirism:block/hunter_table",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "vampirism:block/hunter_table",
+      "y": 90
+    }
+  }
+}

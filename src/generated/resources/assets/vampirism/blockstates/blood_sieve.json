@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "vampirism:block/blood_sieve"
+    },
+    "active=true": {
+      "model": "vampirism:block/active_blood_sieve"
+    }
+  }
+}
