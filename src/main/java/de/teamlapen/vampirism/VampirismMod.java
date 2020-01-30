@@ -12,7 +12,6 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.config.BloodValues;
-import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModCommands;
 import de.teamlapen.vampirism.core.ModEventHandler;
@@ -115,7 +114,7 @@ public class VampirismMod {
     public static boolean inDev = false;
 
     public static boolean isRealism() {
-        return Configs.realism_mode;
+        return false;
     }
 
     public final ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat.cfg");

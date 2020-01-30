@@ -34,7 +34,6 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
@@ -65,12 +64,6 @@ public class ModEventHandler {
 
     }
 
-    @SubscribeEvent
-    public void onConfigurationChanged(ConfigChangedEvent.OnConfigChangedEvent e) {
-        if (e.getModID().equalsIgnoreCase(REFERENCE.MODID)) {
-            LOGGER.info("Configuration ({}) changed", e.getConfigID());
-        }
-    }
 
 
     @SubscribeEvent

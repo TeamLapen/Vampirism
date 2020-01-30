@@ -85,7 +85,7 @@ public class VampirismConfig {
     }
 
     @SubscribeEvent
-    public static void onReload(final ModConfig.ConfigReloading configEvent) {
+    public static void onReload(final ModConfig.Reloading configEvent) {
         LogManager.getLogger().fatal(CORE, "Forge config just got changed on the file system!");
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
@@ -122,7 +122,6 @@ public class VampirismConfig {
         public final ForgeConfigSpec.IntValue villageDistance;
         public final ForgeConfigSpec.IntValue villageSeparation;
         public final ForgeConfigSpec.BooleanValue villageModify;
-
 
         public final ForgeConfigSpec.BooleanValue disableFangInfection;
         public final ForgeConfigSpec.BooleanValue disableMobBiteInfection;
@@ -264,6 +263,7 @@ public class VampirismConfig {
 
         public final ForgeConfigSpec.BooleanValue versionCheck;
         public final ForgeConfigSpec.BooleanValue collectStats;
+        public final ForgeConfigSpec.ConfigValue<String> integrationsNotifier;
 
 
         Common(ForgeConfigSpec.Builder builder) {
@@ -271,6 +271,7 @@ public class VampirismConfig {
                     .push("common");
             versionCheck = builder.comment("Check for new versions of Vampirism on startup").define("versionCheck", true);
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
+            integrationsNotifier = builder.comment("INTERNAL - Set to 'never' if you don't want to be notified about integration mods").define("integrationsNotifier", "");
             builder.pop();
         }
 

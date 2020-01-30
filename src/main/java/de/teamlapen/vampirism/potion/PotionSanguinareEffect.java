@@ -18,12 +18,12 @@ public class PotionSanguinareEffect extends EffectInstance {
     }
 
     @Override
-    public boolean tick(LivingEntity entityIn) {
+    public boolean tick(LivingEntity entityIn, Runnable runnable) {
         if (this.getDuration() % 10 == 0 && entityIn instanceof PlayerEntity) {
             if (!Helper.canBecomeVampire((PlayerEntity) entityIn)) {
                 return false;
             }
         }
-        return super.tick(entityIn);
+        return super.tick(entityIn, runnable);
     }
 }

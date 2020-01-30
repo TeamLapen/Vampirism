@@ -84,4 +84,9 @@ public class BakedWeaponTableModel implements IBakedModel {
     public boolean isGui3d() {
         return baseModel.isGui3d();
     }
+
+    @Override
+    public boolean func_230044_c_() {
+        return baseModel.func_230044_c_();
+    }
 }

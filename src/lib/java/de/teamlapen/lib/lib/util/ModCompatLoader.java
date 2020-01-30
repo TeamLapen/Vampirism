@@ -1,8 +1,6 @@
 package de.teamlapen.lib.lib.util;
 
 import com.google.common.collect.ImmutableList;
-import de.teamlapen.lib.lib.config.forge.ConfigCategory;
-import de.teamlapen.lib.lib.config.forge.Configuration;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -27,8 +25,6 @@ public class ModCompatLoader implements IInitListener {
     List<IModCompat> availableModCompats = new LinkedList<>();
     private List<IModCompat> loadedModCompats;
 
-    @Nullable
-    private Configuration config;
 
     /**
      * @param configName Name for the config file. Can be a file in a folder
@@ -53,15 +49,6 @@ public class ModCompatLoader implements IInitListener {
         return availableModCompats;
     }
 
-    /**
-     * May be null before INIT
-     *
-     * @return The mod compat config file
-     */
-    @Nullable
-    public Configuration getConfig() {
-        return config;
-    }
 
     public List<IModCompat> getLoadedModCompats() {
         return ImmutableList.copyOf(loadedModCompats);
@@ -96,22 +83,18 @@ public class ModCompatLoader implements IInitListener {
             LOGGER.warn("Trying to load mod compat twice");
             return;
         }
-        config = new Configuration(new File(configDir, configName));
 
         List<IModCompat> loaded = new LinkedList<>();
         for (IModCompat modCompat : availableModCompats) {
             if (isModLoaded(modCompat)) {
-                ConfigCategory compatCat = config.getCategory(modCompat.getModID());
-                compatCat.setComment("Configure mod compatibility between Vampirism and " + modCompat.getModID());
-                if (config.getBoolean("enable_compat_" + modCompat.getModID(), compatCat.getName(), true, "If the compatibility for this mod should be loaded")) {
-                    loaded.add(modCompat);
-                    LOGGER.trace(LogUtil.COMPAT, "Prepared {} compatibility", modCompat.getModID());
-                }
+                //TODO make configurable again
+                //if (config.getBoolean("enable_compat_" + modCompat.getModID(), compatCat.getName(), true, "If the compatibility for this mod should be loaded")) {
+                loaded.add(modCompat);
+                LOGGER.trace(LogUtil.COMPAT, "Prepared {} compatibility", modCompat.getModID());
+                //}
             }
         }
-        if (config.hasChanged()) {
-            config.save();
-        }
+
         loadedModCompats = loaded;
         availableModCompats = null;
     }

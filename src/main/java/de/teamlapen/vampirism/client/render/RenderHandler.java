@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.client.shader.Shader;
 import net.minecraft.client.shader.ShaderGroup;
@@ -204,10 +205,10 @@ public class RenderHandler {
     }
 
     @SubscribeEvent
-    public void onRenderLivingSpecialPre(RenderLivingEvent.Specials.Pre event) {
+    public void onRenderLivingPre(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> event) {
         LivingEntity entity = event.getEntity();
         if (entity instanceof PlayerEntity && HunterPlayer.get((PlayerEntity) entity).getSpecialAttributes().isDisguised()) {
-            if (entity.getDistanceSq(this.mc.player) > 4) {
+            if (this.mc.player != null && entity.getDistanceSq(this.mc.player) > 4) {
                 event.setCanceled(true);
             }
         }

@@ -43,7 +43,7 @@ public class VampireNightVisionEffect extends EffectInstance {
     }
 
     @Override
-    public boolean tick(LivingEntity entityIn) {
+    public boolean tick(LivingEntity entityIn, Runnable p_76455_2_) {
         return true;
     }
 

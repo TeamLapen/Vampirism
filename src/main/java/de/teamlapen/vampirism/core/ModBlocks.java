@@ -88,7 +88,7 @@ public class ModBlocks {
         registry.register(itemBlock(castle_slab_dark_brick));
         registry.register(itemBlock(castle_slab_dark_stone));
         registry.register(itemBlock(castle_slab_purple_brick));
-        registry.register(itemBlock(coffin, new Item.Properties().group(VampirismMod.creativeTab).setTEISR(() -> VampirismItemStackTESR::new)));
+        registry.register(itemBlock(coffin, new Item.Properties().group(VampirismMod.creativeTab).setISTER(() -> VampirismItemStackTESR::new)));
         registry.register(itemBlock(cursed_earth));
         registry.register(itemBlock(fire_place));
         registry.register(itemBlock(garlic_beacon_improved));
