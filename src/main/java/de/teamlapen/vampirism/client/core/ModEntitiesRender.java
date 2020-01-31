@@ -43,5 +43,6 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.dark_blood_projectile, DarkBloodProjectileRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.soul_orb, manager -> new SoulOrbRenderer(manager, Minecraft.getInstance().getItemRenderer()));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_trainer_dummy, DummyHunterTrainerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.dummy_creature, DummyRenderer::new);
     }
 }

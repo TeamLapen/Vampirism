@@ -26,7 +26,7 @@
         "liquid": "2"
       },
       "apply": {
-        "model": "vampirism:block/alchemy_cauldron_liquid"
+        "model": "vampirism:block/cauldron_boiling"
       }
     }
   ]

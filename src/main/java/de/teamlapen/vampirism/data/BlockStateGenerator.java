@@ -28,12 +28,14 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .partialState().with(AltarPillarBlock.TYPE_PROPERTY, AltarPillarBlock.EnumPillarType.STONE).modelForState().modelFile(models().getExistingFile(modLoc("block/altar_pillar_filled_stone_bricks"))).addModel()
                 .partialState().with(AltarPillarBlock.TYPE_PROPERTY, AltarPillarBlock.EnumPillarType.IRON).modelForState().modelFile(models().getExistingFile(modLoc("block/altar_pillar_filled_iron"))).addModel();
 
+        ModelFile cauldronLiquid = models().getExistingFile(modLoc("block/alchemy_cauldron_liquid"));
+        ModelFile cauldronLiquidBoiling = models().getBuilder("cauldron_boiling").parent(cauldronLiquid).texture("liquid", modLoc("block/blank_liquid_boiling"));
 
         getMultipartBuilder(ModBlocks.alchemical_cauldron)
                 .part().modelFile(models().getExistingFile(modLoc("block/alchemy_cauldron"))).addModel().end()
                 .part().modelFile(models().getExistingFile(modLoc("block/alchemy_cauldron_fire"))).addModel().condition(AlchemicalCauldronBlock.LIT, true).end()
-                .part().modelFile(models().getExistingFile(modLoc("block/alchemy_cauldron_liquid"))).addModel().condition(AlchemicalCauldronBlock.LIQUID, 1).end()
-                .part().modelFile(models().getExistingFile(modLoc("block/alchemy_cauldron_liquid"))).addModel().condition(AlchemicalCauldronBlock.LIQUID, 2).end();
+                .part().modelFile(cauldronLiquid).addModel().condition(AlchemicalCauldronBlock.LIQUID, 1).end()
+                .part().modelFile(cauldronLiquidBoiling).addModel().condition(AlchemicalCauldronBlock.LIQUID, 2).end();
 
         horizontalBlock(ModBlocks.blood_grinder, models().getExistingFile(modLoc("block/grinder")));
 

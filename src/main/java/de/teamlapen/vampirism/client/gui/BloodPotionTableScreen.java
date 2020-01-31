@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
@@ -47,6 +46,7 @@ public class BloodPotionTableScreen extends ContainerScreen<BloodPotionTableCont
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
 

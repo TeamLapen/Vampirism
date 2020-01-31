@@ -49,7 +49,7 @@ public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
             this.motionY = (this.world.rand.nextDouble() + 0.2);
             this.motionZ = (this.world.rand.nextDouble() - 0.5);
         }
-        this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(new ResourceLocation("minecraft", "critical_hit")));
+        this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(new ResourceLocation("minecraft", "particle/critical_hit")));
         //this.tick();
     }
 

@@ -45,8 +45,7 @@ public class ChurchAltarBlock extends VampirismBlock {
         VoxelShape b = Block.makeCuboidShape(7, 1, 7, 9, 12, 11);
         VoxelShape c = Block.makeCuboidShape(1, 9, 3, 15, 14, 13);
         VoxelShape r = VoxelShapes.or(a, b);
-        VoxelShape d = VoxelShapes.or(r, c);
-        return d;
+        return VoxelShapes.or(r, c);
     }
 
 

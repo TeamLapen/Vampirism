@@ -191,7 +191,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
         RenderSystem.lineWidth(2F);
 
-        builder.pos(x1, x2, this.getBlitOffset()).endVertex();
+        builder.pos(x1, y1, this.getBlitOffset()).endVertex();
         builder.pos(x2, y2, this.getBlitOffset()).endVertex();
         Tessellator.getInstance().draw();
         RenderSystem.enableTexture();

@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.util.ResourceLocation;
@@ -21,13 +20,11 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class ModParticles {
     public static final ParticleType<FlyingBloodParticleData> flying_blood = getNull();
     public static final ParticleType<FlyingBloodEntityParticleData> flying_blood_entity = getNull();
-    public static final BasicParticleType halloween = getNull();
     public static final ParticleType<GenericParticleData> generic = getNull();
 
     static void registerParticles(IForgeRegistry<ParticleType<?>> registry) {
         registry.register(new ParticleType<>(false, FlyingBloodParticleData.DESERIALIZER).setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood")));
         registry.register(new ParticleType<>(false, FlyingBloodEntityParticleData.DESERIALIZER).setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood_entity")));
-        registry.register(new BasicParticleType(false).setRegistryName(new ResourceLocation(REFERENCE.MODID, "halloween")));
         registry.register(new ParticleType<>(false, GenericParticleData.DESERIALIZER).setRegistryName(new ResourceLocation(REFERENCE.MODID, "generic")));
     }
 

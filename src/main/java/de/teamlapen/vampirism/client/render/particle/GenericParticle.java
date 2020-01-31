@@ -28,7 +28,7 @@ public class GenericParticle extends SpriteTexturedParticle {
         if ((color >> 24 & 255) != 0) { //Only use alpha value if !=0.
             this.particleAlpha = (color >> 24 & 255) / 255.0F;
         }
-        this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(texture));
+        this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(new ResourceLocation(texture.getNamespace(), "particle/" + texture.getPath())));
     }
 
     @Override

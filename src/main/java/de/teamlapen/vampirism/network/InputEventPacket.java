@@ -196,8 +196,8 @@ public class InputEventPacket implements IMessage {
                     }
                     break;
                 case REVERTBACK:
-
                     FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
+                    player.sendMessage(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0));
                     LOGGER.debug("Player {} left faction", player);
                     if (!ServerLifecycleHooks.getCurrentServer().isHardcore()) {
                         player.attackEntityFrom(DamageSource.MAGIC, 1000);

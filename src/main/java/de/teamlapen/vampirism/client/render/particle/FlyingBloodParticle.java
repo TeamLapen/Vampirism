@@ -47,7 +47,7 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
             this.motionZ = (this.world.rand.nextDouble() / 10 - 0.05) + wayZ / maxAge;
         }
 
-        this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(particleId));
+        this.setSprite(Minecraft.getInstance().particles.atlas.getSprite(new ResourceLocation(particleId.getNamespace(), "particle/" + particleId.getPath())));
     }
 
     @Override
@@ -82,6 +82,8 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
 
     @OnlyIn(Dist.CLIENT)
     public static class Factory implements IParticleFactory<FlyingBloodParticleData> {
+
+
         @Nullable
         @Override
         public Particle makeParticle(FlyingBloodParticleData typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {

@@ -20,11 +20,11 @@ public class PedestalTESR extends VampirismTESR<PedestalTileEntity> {
         ItemStack stack = te.getStackForRender();
         if (!stack.isEmpty()) {
             matrixStack.push();
-            matrixStack.translate(0.5, 0.7, 0.5);
+            matrixStack.translate(0.5, 0.8, 0.5);
             float rotation = (te.getTickForRender() % 512 + partialTicks) / 512f;
-            matrixStack.rotate(Vector3f.ZP.rotationDegrees(rotation * 360));
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(rotation * 360));
             RenderHelper.enableStandardItemLighting();
-            Minecraft.getInstance().getItemRenderer().renderItem(stack, ItemCameraTransforms.TransformType.FIXED, i, i1, matrixStack, iRenderTypeBuffer);
+            Minecraft.getInstance().getItemRenderer().renderItem(stack, ItemCameraTransforms.TransformType.GROUND, i, i1, matrixStack, iRenderTypeBuffer);
             matrixStack.pop();
         }
 
