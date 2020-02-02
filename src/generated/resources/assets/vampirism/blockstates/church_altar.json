@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "vampirism:block/church_altar"
+    },
+    "facing=south": {
+      "model": "vampirism:block/church_altar",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vampirism:block/church_altar",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "vampirism:block/church_altar",
+      "y": 90
+    }
+  }
+}

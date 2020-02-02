@@ -137,8 +137,15 @@ public class MedChairBlock extends VampirismBlock {
         }
 
         @Override
+        public String toString() {
+            return getName();
+        }
+
+        @Override
         public String getName() {
             return name;
         }
+
+
     }
 }

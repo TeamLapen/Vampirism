@@ -20,8 +20,8 @@ import net.minecraftforge.common.IPlantable;
 public class VampirismBiomeFeatures {
 
     private final static BlockClusterFeatureConfig flowerConfig = new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(ModBlocks.vampire_orchid.getDefaultState()), new SimpleBlockPlacer()).func_227315_a_(64).func_227322_d_();
-    private final static TreeFeatureConfig treeConfigSmall = new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.SPRUCE_LOG.getDefaultState()), new SimpleBlockStateProvider(Blocks.SPRUCE_LEAVES.getDefaultState()), new BlobFoliagePlacer(2, 0)).baseHeight(4).func_227354_b_(2).func_227360_i_(3).func_227352_a_().setSapling((IPlantable) Blocks.SPRUCE_SAPLING).build();
-    private final static TreeFeatureConfig treeConfigBig = new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.SPRUCE_LOG.getDefaultState()), new SimpleBlockStateProvider(Blocks.SPRUCE_LEAVES.getDefaultState()), new BlobFoliagePlacer(3, 0)).baseHeight(6).func_227354_b_(2).func_227360_i_(5).func_227352_a_().setSapling((IPlantable) Blocks.SPRUCE_SAPLING).build();
+    private final static TreeFeatureConfig treeConfigSmall = new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.SPRUCE_LOG.getDefaultState()), new SimpleBlockStateProvider(Blocks.SPRUCE_LEAVES.getDefaultState()), new BlobFoliagePlacer(2, 0)).baseHeight(4).heightRandA(2).foliageHeight(3).ignoreVines().setSapling((IPlantable) Blocks.SPRUCE_SAPLING).build();
+    private final static TreeFeatureConfig treeConfigBig = new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.SPRUCE_LOG.getDefaultState()), new SimpleBlockStateProvider(Blocks.SPRUCE_LEAVES.getDefaultState()), new BlobFoliagePlacer(3, 0)).baseHeight(6).heightRandA(2).foliageHeight(5).ignoreVines().setSapling((IPlantable) Blocks.SPRUCE_SAPLING).build();
 
     //public static final CompositeFeature<VampireDungeonConfig, NoPlacementConfig> VAMPIRE_DUNGEON_FEATURE = Biome.createCompositeFeature(VAMPIRE_DUNGEON, new VampireDungeonConfig(), PASSTHROUGH, IPlacementConfig.NO_PLACEMENT_CONFIG);
 

@@ -2,11 +2,13 @@ package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.blocks.AlchemicalCauldronBlock;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
+import de.teamlapen.vampirism.blocks.MedChairBlock;
 import de.teamlapen.vampirism.blocks.SieveBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ExistingFileHelper;
 import net.minecraftforge.client.model.generators.ModelFile;
 
@@ -50,6 +52,15 @@ public class BlockStateGenerator extends BlockStateProvider {
         horizontalBlock(ModBlocks.garlic_beacon_normal, models().getExistingFile(modLoc("block/garlic_beacon_normal")));
         horizontalBlock(ModBlocks.garlic_beacon_weak, models().getExistingFile(modLoc("block/garlic_beacon_weak")));
         horizontalBlock(ModBlocks.garlic_beacon_improved, models().getExistingFile(modLoc("block/garlic_beacon_improved")));
+
+        slabBlock(ModBlocks.castle_slab_dark_brick, modLoc("block/castle_block_dark_brick"), modLoc("block/castle_block_dark_brick"));
+        slabBlock(ModBlocks.castle_slab_dark_stone, modLoc("block/castle_block_dark_stone"), modLoc("block/castle_block_dark_stone"));
+        slabBlock(ModBlocks.castle_slab_purple_brick, modLoc("block/castle_block_purple_brick"), modLoc("block/castle_block_purple_brick"));
+
+        horizontalBlock(ModBlocks.church_altar, models().getExistingFile(modLoc("block/church_altar")));
+
+        getVariantBuilder(ModBlocks.med_chair).forAllStates(blockState -> ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(blockState.get(MedChairBlock.PART) == MedChairBlock.EnumPart.TOP ? "block/medchairhead" : "block/medchairbase"))).rotationY(((int) blockState.get(MedChairBlock.FACING).getHorizontalAngle() + 180) % 360).build());
+
 
     }
 }
