@@ -25,7 +25,7 @@ public class FirePlaceBlock extends VampirismBlock {
     private final static String regName = "fire_place";
 
     private static VoxelShape makeShape() {
-        return Block.makeCuboidShape(0, 0, 0, 16, 4, 16);
+        return Block.makeCuboidShape(0, 0.01, 0, 16, 4, 16);
     }
 
 
@@ -45,9 +45,7 @@ public class FirePlaceBlock extends VampirismBlock {
         return false;
     }
 
-    public boolean isOpaqueCube(BlockState state) {
-        return false;
-    }
+
 
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
@@ -63,8 +61,9 @@ public class FirePlaceBlock extends VampirismBlock {
         }
     }
 
+    @Override
     @OnlyIn(Dist.CLIENT)
-    public void randomDisplayTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (rand.nextInt(24) == 0) {
             worldIn.playSound((float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F, false);
         }

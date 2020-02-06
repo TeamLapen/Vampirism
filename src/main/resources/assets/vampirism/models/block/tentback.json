@@ -23,8 +23,7 @@
             0.001,
             15.999
           ],
-          "texture": "#tent_back",
-          "cullface": "north"
+          "texture": "#tent_back"
         },
         "south": {
           "uv": [
@@ -33,7 +32,8 @@
             15.999,
             15.999
           ],
-          "texture": "#tent_back"
+          "texture": "#tent_back",
+          "cullface": "south"
         }
       }
     }
