@@ -66,8 +66,8 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         super.addInformation(stack, worldIn, tooltip, flagIn);
         float charged = getCharged(stack);
         float trained = getTrained(stack, Minecraft.getMinecraft().player);
-        tooltip.add(UtilLib.translate("text.vampirism.sword_charged") + " " + ((int) (charged * 100f)) + "%");
-        tooltip.add(UtilLib.translate("text.vampirism.sword_trained") + " " + ((int) (trained * 100f)) + "%");
+        tooltip.add(UtilLib.translate("text.vampirism.sword_charged") + " " + ((int) Math.ceil(charged * 100f)) + "%");
+        tooltip.add(UtilLib.translate("text.vampirism.sword_trained") + " " + ((int) Math.ceil(trained * 100f)) + "%");
         if (Minecraft.getMinecraft().player != null && !VReference.VAMPIRE_FACTION.equals(FactionPlayerHandler.get(Minecraft.getMinecraft().player).getCurrentFaction())) {
             tooltip.add(UtilLib.translateFormatted("text.vampirism.can_only_be_used_by", UtilLib.translate(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural())));
         }
