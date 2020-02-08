@@ -947,9 +947,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
             player.setRenderOffsetForSleep(enumfacing);
 
-            player.setPosition((double) ((float) bedLocation.getX() + f), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + f1));
+            player.setPosition((float) bedLocation.getX() + f, (float) bedLocation.getY() + 0.6875F, (float) bedLocation.getZ() + f1);
         } else {
-            player.setPosition((double) ((float) bedLocation.getX() + 0.5F), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + 0.5F));
+            player.setPosition((float) bedLocation.getX() + 0.5F, (float) bedLocation.getY() + 0.6875F, (float) bedLocation.getZ() + 0.5F);
         }
 
         player.capabilities.isFlying = false;
@@ -1120,7 +1120,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         checkAttributes(VReference.biteDamage);
         float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
-        if ((entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) || entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) {
+        if (entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).hasPoisonousBlood()) {
             player.addPotionEffect(new PotionEffect(ModPotions.poison, 60));
             if (player instanceof EntityPlayerMP) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.POISONOUS_BITE);
