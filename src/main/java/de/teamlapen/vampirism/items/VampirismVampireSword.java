@@ -111,7 +111,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
         if (attacker instanceof EntityPlayer && target.getHealth() <= target.getMaxHealth() * Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC && !Helper.isVampire(target)) {
             if (VampirePlayer.get((EntityPlayer) attacker).getSkillHandler().isSkillEnabled(VampireSkills.sword_finisher)) {
-                DamageSource dmg = DamageSource.causePlayerDamage((EntityPlayer) attacker);
+                DamageSource dmg = DamageSource.causePlayerDamage((EntityPlayer) attacker).setDamageBypassesArmor();
                 target.attackEntityFrom(dmg, 10000F);
                 Vec3d center = new Vec3d(target.getPosition());
                 center.add(0, target.height / 2d, 0);
