@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -25,5 +26,11 @@ public class ItemGarlicBread extends ItemFood {
                 DamageHandler.affectVampireGarlicDirect(vampire, EnumStrength.MEDIUM);
             }
         }
+    }
+
+    @Override
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
+        if (!worldIn.isRemote) entityLiving.curePotionEffects(stack);
+        return super.onItemUseFinish(stack, worldIn, entityLiving);
     }
 }
