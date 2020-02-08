@@ -79,6 +79,7 @@ public class HunterWeaponRecipeCategory extends BlankRecipeCategory {
 
         } else if (recipeWrapper instanceof ShapelessHunterWeaponRecipeWrapper) {
             recipeLayout.setShapeless();
+            craftingGridHelper.setInputs(guiItemStackGroup, inputs, 4, 4);
         }
         guiItemStackGroup.set(craftOutputSlot, outputs.get(0));
     }
