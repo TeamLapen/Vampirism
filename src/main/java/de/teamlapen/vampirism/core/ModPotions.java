@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.potion.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SRGNAMES;
-
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.potion.Potion;
@@ -31,6 +30,7 @@ public class ModPotions {
     public static final Potion fire_protection = getNull();
     public static final Potion garlic = getNull();
     public static final Potion poison = getNull();
+    public static final Potion freeze = getNull();
     private static Potion modded_night_vision;  //Substituted version
     private static Potion vanilla_night_vision; //Vanilla night vision instance
 
@@ -49,6 +49,7 @@ public class ModPotions {
         registry.register(new VampirismPotion("disguise_as_vampire", false, 0x999900).setIconIndex(4, 0).setBeneficial());
         registry.register(new VampirismPotion("garlic", true, 0xFFFFFF).setIconIndex(5, 0));
         registry.register(new PotionPoison("poison", true, 0x4E9331));
+        registry.register(new PotionFreeze("freeze"));
     }
 
 
