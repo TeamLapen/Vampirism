@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * Provides several utility methods that are related to blood
@@ -82,13 +83,14 @@ public class BloodHelper {
      * @param exact   If only the exact amount should be drained or if less is ok too
      * @return Drained amount
      */
-    public static int drain(@Nonnull ItemStack stack, int amount, boolean doDrain, boolean exact) {
+    public static int drain(@Nonnull ItemStack stack, int amount, boolean doDrain, boolean exact, Consumer<ItemStack> updateContainer) {
         if (exact && doDrain) {
-            if (drain(stack, amount, false, false) != amount) return 0;
+            if (drain(stack, amount, false, false, updateContainer) != amount) return 0;
         }
         IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
         if (handler != null) {
             FluidStack fluidStack = handler.drain(amount, doDrain);
+            updateContainer.accept(handler.getContainer());
             return fluidStack == null ? 0 : fluidStack.amount;
         }
         return 0;

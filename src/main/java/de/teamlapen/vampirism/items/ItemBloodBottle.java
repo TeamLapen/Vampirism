@@ -18,7 +18,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 /**
  * Stores blood
@@ -88,6 +90,12 @@ public class ItemBloodBottle extends VampirismItem {
     }
 
     @Override
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
+        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
+        return handler != null ? handler.getContainer() : super.onItemUseFinish(stack, worldIn, entityLiving);
+    }
+
+    @Override
     public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
         if (!(player instanceof EntityPlayer)) {
             player.stopActiveHand();
@@ -104,10 +112,9 @@ public class ItemBloodBottle extends VampirismItem {
         if (blood > 0 && count == 1) {
             EnumHand activeHand = player.getActiveHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
-            if (BloodHelper.drain(stack, drink, true, true) > 0) {
+            if (BloodHelper.drain(stack, drink, true, true, newContainer -> player.setHeldItem(activeHand, newContainer)) > 0) {
                 vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false);
             }
-            player.setHeldItem(activeHand, stack);
 
             blood = BloodHelper.getBlood(stack);
             if (blood > 0) {
