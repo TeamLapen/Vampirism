@@ -65,6 +65,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher {
 
                 if (instaKill) {
                     DamageSource dmg = attacker instanceof PlayerEntity ? DamageSource.causePlayerDamage((PlayerEntity) attacker) : DamageSource.causeMobDamage(attacker);
+                    dmg = dmg.setDamageBypassesArmor();
                     target.attackEntityFrom(dmg, 10000F);
                     if (attacker instanceof ServerPlayerEntity) {
                         ModAdvancements.TRIGGER_HUNTER_ACTION.trigger((ServerPlayerEntity) attacker, HunterActionTrigger.Action.STAKE);
