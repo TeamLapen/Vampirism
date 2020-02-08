@@ -12,11 +12,11 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
-
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
@@ -24,7 +24,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Random;
 
 /**
@@ -153,6 +152,16 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     }
 
     /**
+     * Checks for Frugality enchantment on the crossbow
+     *
+     * @param crossbowStack
+     * @return the enchantment level
+     */
+    protected static int isCrossbowFrugal(ItemStack crossbowStack) {
+        return EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowfrugality, crossbowStack);
+    }
+
+    /**
      * If the hurt timer the hit entity should be ignored.
      * This allows double crossbows to hit twice at once
      */
@@ -170,6 +179,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     protected boolean shoot(EntityPlayer player, float heightOffset, float centerOffset, World world, ItemStack stack, EnumHand hand) {
         boolean creative = player.capabilities.isCreativeMode;
         boolean bowInfinite = isCrossbowInfinite(stack, player);
+        int bowFrugal = isCrossbowFrugal(stack);
 
         ItemStack itemstack = this.findAmmo(player, stack);
 
@@ -182,7 +192,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
             float f = getArrowVelocity();
 
             if ((double) f >= 0.1D) {
-                boolean consumeArrow = shouldConsumeArrow(itemstack, creative, bowInfinite);
+                boolean consumeArrow = shouldConsumeArrow(player.getRNG(), itemstack, creative, bowInfinite, bowFrugal);
 
                 if (!world.isRemote) {
                     boolean rightHand = player.getPrimaryHand() == EnumHandSide.RIGHT && hand == EnumHand.MAIN_HAND || player.getPrimaryHand() == EnumHandSide.LEFT && hand == EnumHand.OFF_HAND;
@@ -249,15 +259,16 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @param playerCreative If the player is creative
      * @param bowInfinite    if the bow is infinite
      */
-    protected boolean shouldConsumeArrow(ItemStack arrowStack, boolean playerCreative, boolean bowInfinite) {
-        return !(playerCreative || bowInfinite && canArrowBeInfinite(arrowStack));
+    protected boolean shouldConsumeArrow(Random rnd, ItemStack arrowStack, boolean playerCreative, boolean bowInfinite, int bowFrugal) {
+        return !(playerCreative || bowInfinite && canArrowBeInfinite(arrowStack) || (bowFrugal > 0 && rnd.nextInt(Math.max(2, 4 - bowFrugal)) == 0));
     }
 
     /**
      * @return If the given arrow type can be used in an infinite crossbow
      */
     private boolean canArrowBeInfinite(ItemStack arrowStack) {
-        return !(arrowStack.getItem() instanceof IVampirismCrossbowArrow) || ((IVampirismCrossbowArrow) arrowStack.getItem()).isCanBeInfinite(arrowStack);
+        Item arrow = arrowStack.getItem();
+        return !(arrow instanceof IVampirismCrossbowArrow) || ((IVampirismCrossbowArrow) arrow).isCanBeInfinite(arrowStack);
     }
 
 

@@ -125,7 +125,7 @@ public class ModItems {
                 new ISkill[]{HunterSkills.double_crossbow, HunterSkills.enhanced_crossbow}, 3, "YXXY", "YXXY",
                 " XX ", " XX ", 'X', Items.IRON_INGOT, 'Y', Items.STRING);
         weaponCraftingManager.addRecipe(
-                ItemCrossbowArrow.setType(new ItemStack(crossbow_arrow, 2),
+                ItemCrossbowArrow.setType(new ItemStack(crossbow_arrow, 3),
                         ItemCrossbowArrow.EnumArrowType.VAMPIRE_KILLER),
                 1, (ISkill) null, 1, " X  ", "XYX ", " Z  ", " W  ", 'X', item_garlic, 'Y', Items.GOLD_INGOT, 'Z',
                 Items.STICK, 'W', Items.FEATHER);
@@ -227,8 +227,8 @@ public class ModItems {
         // ItemHolyWaterBottle.registerSplashRecipes(holy_water_bottle,
         // IItemWithTier.TIER.ULTIMATE);
         weaponCraftingManager.addShapelessRecipe(
-                ItemCrossbowArrow.setType(new ItemStack(crossbow_arrow, 2), ItemCrossbowArrow.EnumArrowType.SPITFIRE),
-                1, (ISkill) null, 2, ModItems.crossbow_arrow, ModItems.item_alchemical_fire, ModItems.crossbow_arrow);
+                ItemCrossbowArrow.setType(new ItemStack(crossbow_arrow, 3), ItemCrossbowArrow.EnumArrowType.SPITFIRE),
+                1, (ISkill) null, 1, ModItems.crossbow_arrow, ModItems.item_alchemical_fire, ModItems.crossbow_arrow, ModItems.crossbow_arrow);
         //
         cauldronCraftingManager.registerLiquidColor(ModItems.holy_water_bottle, 0x6666FF);
         cauldronCraftingManager.registerLiquidColor(ModItems.item_garlic, 0xBBBBBB);

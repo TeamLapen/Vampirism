@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.items.enchantment;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.items.ItemTechCrossbow;
+import de.teamlapen.vampirism.core.ModEnchantments;
+import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -20,7 +21,12 @@ public class EnchantmentArrowFrugality extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem() instanceof ItemTechCrossbow;
+        return !stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow;
+    }
+
+    @Override
+    protected boolean canApplyTogether(Enchantment ench) {
+        return super.canApplyTogether(ench) && ench != ModEnchantments.crossbowinfinite;
     }
 
     @Override

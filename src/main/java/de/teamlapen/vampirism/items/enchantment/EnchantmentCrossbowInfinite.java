@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items.enchantment;
 
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.items.ItemTechCrossbow;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -22,6 +23,11 @@ public class EnchantmentCrossbowInfinite extends Enchantment {
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
         return !stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow && !(stack.getItem() instanceof ItemTechCrossbow);
+    }
+
+    @Override
+    protected boolean canApplyTogether(Enchantment ench) {
+        return super.canApplyTogether(ench) && ench != ModEnchantments.crossbowfrugality;
     }
 
     @Override
