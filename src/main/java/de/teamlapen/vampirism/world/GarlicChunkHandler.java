@@ -8,6 +8,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -51,8 +53,12 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
                 throw new IllegalArgumentException("Garlic emitter position should not be null");
             }
         }
+
         Emitter e = new Emitter(strength, pos);
         int hash = e.hashCode();
+        if (isHostingClient()) {
+            return hash;
+        }
         emitterHashMap.put(hash, e);
         rebuildStrengthMap();
         return hash;
@@ -60,9 +66,14 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
 
     @Override
     public void removeGarlicBlock(int id) {
+        if (isHostingClient()) return;
         Emitter e = emitterHashMap.remove(id);
         if (e == null) VampirismMod.log.d("GarlicChunkHandler", "Removed emitter did not exist");
         rebuildStrengthMap();
+    }
+
+    private boolean isHostingClient() {
+        return FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && FMLCommonHandler.instance().getMinecraftServerInstance() != null;
     }
 
     private void rebuildStrengthMap() {
