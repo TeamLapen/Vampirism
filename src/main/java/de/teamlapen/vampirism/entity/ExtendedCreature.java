@@ -217,7 +217,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public int onBite(IVampire biter) {
         if (getBlood() <= 0) return 0;
         int amt = Math.max(1, (getMaxBlood() / (biter instanceof VampirePlayer ? 6 : 2)));
-        if (amt > blood) {
+        if (amt >= blood) {
             if (blood > 1 && biter.isAdvancedBiter()) {
                 amt = blood - 1;
             } else {
@@ -227,9 +227,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         blood -= amt;
         boolean killed = false;
         boolean converted = false;
-        if (blood < getMaxBlood() / 2) {
             if (blood == 0) {
-
                 if (canBecomeVampire && entity.getRNG().nextBoolean()) {
                     if (VampirismMod.isRealism()) {
                         PotionSanguinare.addRandom(entity, false);
@@ -242,8 +240,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                     entity.attackEntityFrom(VReference.NO_BLOOD, 1000);
                     killed = true;
                 }
-            }
-
         }
 
         this.sync();
