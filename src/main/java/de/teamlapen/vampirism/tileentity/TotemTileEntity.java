@@ -425,6 +425,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             return false;
         }
         if (!isInsideVillage) {
+            if (getControllingFaction() != null) {
+                this.setControllingFaction(null);  //Reset the controlling faction only on interaction, not in tick. Maybe village is just temporarily unavailable #417
+                this.markDirty();
+            }
             player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.no_near_village"), true);
             return false;
         }
