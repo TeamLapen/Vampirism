@@ -1,6 +1,7 @@
 {
   "result": {
-    "item": "vampirism:crossbow_arrow_vampire_killer"
+    "item": "vampirism:crossbow_arrow_vampire_killer",
+    "count": 3
   },
   "lava": 1,
   "type": "vampirism:shaped_crafting_weapontable",
