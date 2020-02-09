@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.items.BloodBottleIItem;
+import de.teamlapen.vampirism.items.BloodBottleItem;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public class BloodContainerTileEntity extends net.minecraftforge.fluids.capability.TileFluidHandler implements FluidTankWithListener.IFluidTankListener {
 
-    public static final int LEVEL_AMOUNT = BloodBottleIItem.AMOUNT * VReference.FOOD_TO_FLUID_BLOOD;
+    public static final int LEVEL_AMOUNT = BloodBottleItem.AMOUNT * VReference.FOOD_TO_FLUID_BLOOD;
     public static final int CAPACITY = LEVEL_AMOUNT * 14;
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
     public static final ModelProperty<Fluid> FLUID_PROP = new ModelProperty<>();

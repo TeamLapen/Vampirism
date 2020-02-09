@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * Provides several utility methods that are related to blood
@@ -85,16 +86,18 @@ public class BloodHelper {
     /**
      * Tries to drain the given amount out of the stack.
      *
-     * @param action actually drain
-     * @param exact  If only the exact amount should be drained or if less is ok too
+     * @param action          actually drain
+     * @param exact           If only the exact amount should be drained or if less is ok too
+     * @param updateContainer Is called with the (new) container item after draining
      * @return Drained amount
      */
-    public static int drain(@Nonnull ItemStack stack, int amount, IFluidHandler.FluidAction action, boolean exact) {
+    public static int drain(@Nonnull ItemStack stack, int amount, IFluidHandler.FluidAction action, boolean exact, Consumer<ItemStack> updateContainer) {
         if (exact && action.execute()) {
-            if (drain(stack, amount, IFluidHandler.FluidAction.SIMULATE, false) != amount) return 0;
+            if (drain(stack, amount, IFluidHandler.FluidAction.SIMULATE, false, updateContainer) != amount) return 0;
         }
         return FluidUtil.getFluidHandler(stack).map(handler -> {
             FluidStack fluidStack = handler.drain(amount, action);
+            updateContainer.accept(handler.getContainer());
             return fluidStack.getAmount();
         }).orElse(0);
     }

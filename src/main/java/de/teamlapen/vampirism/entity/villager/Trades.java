@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.villager;
 
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.BloodBottleIItem;
+import de.teamlapen.vampirism.items.BloodBottleItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.item.Item;
@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class Trades {
-    public static final VillagerTrades.ITrade[] converted_trades = new VillagerTrades.ITrade[]{new net.minecraft.entity.merchant.villager.VillagerTrades.EmeraldForItemsTrade(ModItems.human_heart, 9, 2, 2), new VillagerTrades.ItemsForEmeraldsTrade(ModItems.human_heart, 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleIItem.getStackWithDamage(9), 1, 3, 12, 2)};
+    public static final VillagerTrades.ITrade[] converted_trades = new VillagerTrades.ITrade[]{new net.minecraft.entity.merchant.villager.VillagerTrades.EmeraldForItemsTrade(ModItems.human_heart, 9, 2, 2), new VillagerTrades.ItemsForEmeraldsTrade(ModItems.human_heart, 3, 9, 2), new ItemsForEmeraldsTradeWithDamage(BloodBottleItem.getStackWithDamage(9), 1, 3, 12, 2)};
 
     /**
      * copy of {@link VillagerTrades.ItemsForEmeraldsTrade} with damage of itemstack
