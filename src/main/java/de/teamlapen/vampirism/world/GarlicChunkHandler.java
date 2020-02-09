@@ -8,6 +8,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,6 +49,10 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         }
     }
 
+    private static boolean isHostingClient() {
+        return EffectiveSide.get().isClient() && ServerLifecycleHooks.getCurrentServer() != null;
+    }
+
     @Override
     public int registerGarlicBlock(EnumStrength strength, ChunkPos... pos) {
         for (ChunkPos p : pos) {
@@ -56,16 +62,12 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         }
         Emitter e = new Emitter(strength, pos);
         int hash = e.hashCode();
+        if (isHostingClient()) {
+            return hash; //If this is happening on client side and the client is also the server, the emitter has already been registered on server side. Avoid duplicate values and concurrent modification issues
+        }
         emitterHashMap.put(hash, e);
         rebuildStrengthMap();
         return hash;
-    }
-
-    @Override
-    public void removeGarlicBlock(int id) {
-        Emitter e = emitterHashMap.remove(id);
-        if (e == null) LOGGER.debug("Removed emitter did not exist");
-        rebuildStrengthMap();
     }
 
     private void rebuildStrengthMap() {
@@ -79,6 +81,16 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
 
             }
         }
+    }
+
+    @Override
+    public void removeGarlicBlock(int id) {
+        if (isHostingClient()) {
+            return; //If this is happening on client side and the client is also the server, the emitter has already been registered on server side. Avoid duplicate values and concurrent modification issues
+        }
+        Emitter e = emitterHashMap.remove(id);
+        if (e == null) LOGGER.debug("Removed emitter did not exist");
+        rebuildStrengthMap();
     }
 
     public static class Provider implements IGarlicChunkHandler.Provider {
