@@ -127,6 +127,7 @@ public class ModItems {
     public static final BucketItem impure_blood_bucket = getNull();
     public static final GarlicItem item_garlic = getNull();
     public static final MedChairItem item_med_chair = getNull();
+    public static final GarlicBreadItem garlic_bread = getNull();
 
     public static final TentItem item_tent = getNull();
     public static final TentItem item_tent_spawner = getNull();

@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.CreatureEntity;
@@ -11,12 +12,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PotionSanguinare extends VampirismPotion {
@@ -61,5 +64,12 @@ public class PotionSanguinare extends VampirismPotion {
     @Override
     public boolean shouldRenderInvText(EffectInstance effect) {
         return false;
+    }
+
+    @Override
+    public List<ItemStack> getCurativeItems() {
+        List<ItemStack> l = super.getCurativeItems();
+        l.add(new ItemStack(ModItems.garlic_bread));
+        return l;
     }
 }
