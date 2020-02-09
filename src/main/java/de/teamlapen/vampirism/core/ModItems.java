@@ -52,7 +52,7 @@ public class ModItems {
     public static final DoubleCrossbowItem basic_double_crossbow = getNull();
     public static final TechCrossbowItem basic_tech_crossbow = getNull();
 
-    public static final BloodBottleIItem blood_bottle = getNull();
+    public static final BloodBottleItem blood_bottle = getNull();
     public static final BucketItem blood_bucket = getNull();
     public static final VampirismItem blood_infused_iron_ingot = getNull();
     public static final VampirismItem blood_infused_enhanced_iron_ingot = getNull();
@@ -213,7 +213,7 @@ public class ModItems {
         registry.register(new VampireFangItem());
         registry.register(new VampirismItemBloodFood("human_heart", (new Food.Builder()).hunger(20).saturation(1.5F).build()));
         registry.register(new VampirismItemBloodFood("weak_human_heart", (new Food.Builder()).hunger(10).saturation(0.9F).build()));
-        registry.register(new BloodBottleIItem());
+        registry.register(new BloodBottleItem());
         registry.register(new TentItem(true));
         registry.register(new TentItem(false));
 

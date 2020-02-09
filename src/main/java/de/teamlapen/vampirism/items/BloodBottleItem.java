@@ -20,17 +20,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
 
 /**
  * Stores blood
  * Currently the only thing that can interact with the players bloodstats.
- * Can only store blood in {@link BloodBottleIItem#capacity} tenth units.
+ * Can only store blood in {@link BloodBottleItem#capacity} tenth units.
  */
-public class BloodBottleIItem extends VampirismItem {
+public class BloodBottleItem extends VampirismItem {
 
     public static final int AMOUNT = 9;
     private static final String name = "blood_bottle";
@@ -42,10 +44,11 @@ public class BloodBottleIItem extends VampirismItem {
         stack.setDamage(damage);
         return stack;
     }
+
     /**
      * Set's the registry name and the unlocalized name
      */
-    public BloodBottleIItem() {
+    public BloodBottleItem() {
         super(name, new Properties().defaultMaxDamage(AMOUNT).group(VampirismMod.creativeTab));
     }
 
@@ -99,6 +102,16 @@ public class BloodBottleIItem extends VampirismItem {
     }
 
     @Override
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+        return FluidUtil.getFluidHandler(stack).map(IFluidHandlerItem::getContainer).orElse(super.onItemUseFinish(stack, worldIn, entityLiving));
+    }
+
+    @Override
+    public boolean showDurabilityBar(ItemStack stack) {
+        return false;
+    }
+
+    @Override
     public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
         if (!(player instanceof PlayerEntity)) {
             player.stopActiveHand();
@@ -115,20 +128,16 @@ public class BloodBottleIItem extends VampirismItem {
         if (blood > 0 && count == 1) {
             Hand activeHand = player.getActiveHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
-            if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true) > 0) {
+            if (BloodHelper.drain(stack, drink, IFluidHandler.FluidAction.EXECUTE, true, containerStack -> {
+                player.setHeldItem(activeHand, containerStack);
+            }) > 0) {
                 vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false);
             }
-            player.setHeldItem(activeHand, stack);
 
             blood = BloodHelper.getBlood(stack);
             if (blood > 0) {
                 player.setActiveHand(player.getActiveHand());
             }
         }
-    }
-
-    @Override
-    public boolean showDurabilityBar(ItemStack stack) {
-        return false;
     }
 }

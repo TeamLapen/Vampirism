@@ -112,7 +112,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
 
     @Override
     public int getTankCapacity(int tank) {
-        return BloodBottleIItem.AMOUNT * MULTIPLIER;
+        return BloodBottleItem.AMOUNT * MULTIPLIER;
     }
 
     @Override
