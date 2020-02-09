@@ -1,11 +1,9 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
@@ -67,7 +65,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
         if (count == -1) return true;
         if (count == 0) return false;
         int frugal = isCrossbowFrugal(bowStack);
-        if (frugal > 0 && rnd.nextInt(frugal + 2) == 0) return true;
+        if (frugal > 0 && rnd.nextInt(Math.max(2, 4 - frugal)) == 0) return true;
         nbt.putInt("arrows", count - 1);
         bowStack.setTag(nbt);
         return true;
@@ -87,15 +85,6 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
         return setArrowsLeft(new ItemStack(crossbow, 1), 0);
     }
 
-    /**
-     * Checks for Frugality enchanment on the crossbow
-     *
-     * @param crossbowStack
-     * @return the enchantmen level
-     */
-    protected static int isCrossbowFrugal(ItemStack crossbowStack) {
-        return EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowfrugality, crossbowStack);
-    }
 
     public TechCrossbowItem(String regName, float speed, int cooldown, int maxDamage) {
         super(regName, speed, cooldown, maxDamage);
@@ -167,7 +156,7 @@ public class TechCrossbowItem extends SimpleCrossbowItem {
     }
 
     @Override
-    protected boolean shouldConsumeArrow(ItemStack arrowStack, boolean playerCreative, boolean bowInfinite) {
+    protected boolean shouldConsumeArrow(Random rnd, ItemStack arrowStack, boolean playerCreative, boolean bowInfinite, int frugal) {
         return false;
     }
 

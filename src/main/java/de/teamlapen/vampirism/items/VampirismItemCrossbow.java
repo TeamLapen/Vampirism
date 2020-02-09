@@ -41,6 +41,17 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         super(regName, new Properties().maxStackSize(1).defaultMaxDamage(maxDamage).group(VampirismMod.creativeTab));
     }
 
+
+    /**
+     * Checks for Frugality enchantment on the crossbow
+     *
+     * @param crossbowStack
+     * @return the enchantment level
+     */
+    protected static int isCrossbowFrugal(ItemStack crossbowStack) {
+        return EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowfrugality, crossbowStack);
+    }
+
     @Override
     public int getItemEnchantability(ItemStack stack) {
         return enchantability;
@@ -159,9 +170,9 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     protected boolean shoot(PlayerEntity player, float heightOffset, float centerOffset, World world, ItemStack stack, Hand hand) {
         boolean creative = player.abilities.isCreativeMode;
         boolean bowInfinite = isCrossbowInfinite(stack, player);
+        int bowFrugal = isCrossbowFrugal(stack);
 
         ItemStack itemstack = this.findAmmo(player, stack);
-
 
         if (!itemstack.isEmpty() || bowInfinite) {
             if (itemstack.isEmpty()) {
@@ -171,7 +182,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
             float f = getArrowVelocity();
 
             if ((double) f >= 0.1D) {
-                boolean consumeArrow = shouldConsumeArrow(itemstack, creative, bowInfinite);
+                boolean consumeArrow = shouldConsumeArrow(player.getRNG(), itemstack, creative, bowInfinite, bowFrugal);
 
                 if (!world.isRemote) {
                     boolean rightHand = player.getPrimaryHand() == HandSide.RIGHT && hand == Hand.MAIN_HAND || player.getPrimaryHand() == HandSide.LEFT && hand == Hand.OFF_HAND;
@@ -237,8 +248,8 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @param playerCreative If the player is creative
      * @param bowInfinite    if the bow is infinite
      */
-    protected boolean shouldConsumeArrow(ItemStack arrowStack, boolean playerCreative, boolean bowInfinite) {
-        return !(playerCreative || bowInfinite && canArrowBeInfinite(arrowStack));
+    protected boolean shouldConsumeArrow(Random rnd, ItemStack arrowStack, boolean playerCreative, boolean bowInfinite, int bowFrugal) {
+        return !(playerCreative || bowInfinite && canArrowBeInfinite(arrowStack) || (bowFrugal > 0 && rnd.nextInt(Math.max(2, 4 - bowFrugal)) == 0));
     }
 
     /**
