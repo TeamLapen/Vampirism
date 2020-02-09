@@ -959,7 +959,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (!PermissionAPI.hasPermission(player, Permissions.BITE_PLAYER)) return;
         float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getAttribute(VReference.biteDamage).getValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
-        if (((entity.isEntityUndead() || hunter) && player.getRNG().nextInt(4) == 0) || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
+        if (hunter || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
             player.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
             if (player instanceof ServerPlayerEntity) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.POISONOUS_BITE);
