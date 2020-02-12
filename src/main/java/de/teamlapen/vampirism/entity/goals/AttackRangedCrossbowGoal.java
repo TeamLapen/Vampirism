@@ -65,7 +65,8 @@ public class AttackRangedCrossbowGoal extends Goal {
 
     }
 
-    public void updateTask() {
+    @Override
+    public void tick() {
         LivingEntity entitylivingbase = this.entity.getAttackTarget();
 
         if (entitylivingbase != null) {
