@@ -16,6 +16,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
@@ -85,7 +86,7 @@ public class EntityEventHandler {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerClone(PlayerEvent.Clone event) {
         for (Capability listener : listeners) {
             (event.getEntity().getCapability(listener, null)).ifPresent(cap -> ((IPlayerEventListener) cap).onPlayerClone(event.getOriginal(), event.isWasDeath()));
