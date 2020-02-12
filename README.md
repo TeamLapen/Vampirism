@@ -18,11 +18,14 @@ For a more detailed description head over to the Minecraft forums or the Cursefo
 [Downloads](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)  
 [Help to translate](https://crowdin.com/project/vampirism)
 
-## Team
-- [maxanier](http://maxanier.de) _Everything_  
-- [Cheaterpaul]() _Coding_
+## People
+- [maxanier](https://maxanier.de) _Everything_  
+- [Cheaterpaul](https://github.com/Cheaterpaul) _Coding_
+- [1LiterZinalco](https://chimute.org/) _Triage/Support/Community_
 
-#### Inactive
+## Special Thanks to
+- TinkerHatWill _Textures_
+- dimensionpainter _Textures_
 - Mistadon _Code/Models_  
 - wildbill22 _Code_  
 - LRA_10 _Models/Textures_
