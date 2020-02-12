@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,7 +25,7 @@ public class BasicVampireRenderer extends BipedRenderer<BasicVampireEntity, Bipe
     }
 
     public BasicVampireRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new BipedModel<>(RenderType::entityCutoutNoCull, 0F, 0F, 64, 64), 0.5F);
+        super(renderManagerIn, new PlayerModel<>(0, false), 0.5F);
     }
 
     @Override
