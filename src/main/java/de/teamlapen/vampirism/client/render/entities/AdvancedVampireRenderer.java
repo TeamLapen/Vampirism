@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class AdvancedVampireRenderer extends BipedRenderer<AdvancedVampireEntity, BipedModel<AdvancedVampireEntity>> {
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png");
+    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/advanced_vampire.png");
 
     public AdvancedVampireRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BipedModel<>(RenderType::entityCutoutNoCull, 0F, 0F, 64, 64), 0.5F);
