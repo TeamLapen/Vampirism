@@ -34,7 +34,6 @@ public class VampirismBiomeFeatures {
     }
 
     public static void addHunterTent(Biome biomeIn) {
-        biomeIn.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, ModFeatures.hunter_camp.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
         biomeIn.addStructure(ModFeatures.hunter_camp.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
         if (!VampirismConfig.SERVER.disableHunterTentGen.get()) {
             biomeIn.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, ModFeatures.hunter_camp.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).func_227228_a_(Placement.NOPE.func_227446_a_(IPlacementConfig.NO_PLACEMENT_CONFIG)));
