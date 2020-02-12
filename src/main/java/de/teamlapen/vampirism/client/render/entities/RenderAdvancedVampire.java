@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class RenderAdvancedVampire extends RenderBiped<EntityAdvancedVampire> {
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png");
+    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/advanced_vampire.png");
 
     public RenderAdvancedVampire(RenderManager renderManagerIn) {
         super(renderManagerIn, new ModelBiped(0F, 0F, 64, 64), 0.5F);
