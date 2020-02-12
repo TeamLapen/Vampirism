@@ -25,8 +25,8 @@ public class BipedCloakedModel<T extends LivingEntity> extends BipedModel<T> {
     }
 
     @Override
-    public void render(T entity, float f, float f1, float f2, float f3, float f4) {
-        super.render(entity, f, f1, f2, f3, f4);
+    public void setRotationAngles(T entity, float f, float f1, float f2, float f3, float f4) {
+        super.setRotationAngles(entity, f, f1, f2, f3, f4);
         this.bipedCloak.copyModelAngles(this.bipedBody);
 
     }

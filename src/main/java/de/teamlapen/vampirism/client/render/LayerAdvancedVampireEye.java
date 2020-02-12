@@ -41,7 +41,7 @@ public class LayerAdvancedVampireEye extends LayerRenderer<AdvancedVampireEntity
             type = 0;
         }
         IVertexBuilder builder = iRenderTypeBuffer.getBuffer(overlays[type]);
-        this.getEntityModel().render(matrixStack, builder, 15728640, OverlayTexture.DEFAULT_LIGHT, 1, 1, 1, 1);
+        this.getEntityModel().render(matrixStack, builder, 15728640, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
 
     }
 }

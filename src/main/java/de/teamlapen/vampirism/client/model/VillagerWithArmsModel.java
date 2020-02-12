@@ -49,8 +49,8 @@ public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerMod
     }
 
     @Override
-    public void render(T entityIn, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
-        super.render(entityIn, p_225597_2_, p_225597_3_, p_225597_4_, p_225597_5_, p_225597_6_);
+    public void setRotationAngles(T entityIn, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
+        super.setRotationAngles(entityIn, p_225597_2_, p_225597_3_, p_225597_4_, p_225597_5_, p_225597_6_);
         this.leftArm.setRotationPoint(4, 3, -1);
         this.rightArm.setRotationPoint(-4, 3, -1);
         this.leftArm.rotateAngleX = -0.75F;
@@ -75,7 +75,7 @@ public class VillagerWithArmsModel<T extends VillagerEntity> extends VillagerMod
         float f = handSide == HandSide.RIGHT ? 1.0F : -1.0F;
         ModelRenderer arm = getArmForSide(handSide);
         arm.rotationPointX += f;
-        arm.setAnglesAndRotation(matrixStack);
+        arm.translateRotate(matrixStack);
         arm.rotationPointX -= f;
     }
 

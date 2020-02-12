@@ -18,7 +18,7 @@ public class VampirismItemStackTESR extends ItemStackTileEntityRenderer {
     public void render(ItemStack itemStack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
         Item item = itemStack.getItem();
         if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof CoffinBlock) {
-            TileEntityRendererDispatcher.instance.renderNullable(this.coffin, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
+            TileEntityRendererDispatcher.instance.renderItem(this.coffin, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
         } else {
             super.render(itemStack, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
         }

@@ -62,7 +62,7 @@ public class GhostModel<T extends LivingEntity> extends AgeableModel<T> {
     }
 
     @Override
-    public void render(T t, float v, float v1, float v2, float v3, float v4) {
+    public void setRotationAngles(T t, float v, float v1, float v2, float v3, float v4) {
         this.head.rotateAngleY = v3 / (180F / (float) Math.PI);
         this.head.rotateAngleX = v4 / (180F / (float) Math.PI);
         float f6 = MathHelper.sin(this.swingProgress * (float) Math.PI);

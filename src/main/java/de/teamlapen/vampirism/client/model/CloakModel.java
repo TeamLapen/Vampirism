@@ -66,8 +66,8 @@ public class CloakModel<T extends LivingEntity> extends BipedModel<T> {
     }
 
     @Override
-    public void render(T entity, float f, float f1, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
-        super.render(entity, f, f1, p_225597_4_, p_225597_5_, p_225597_6_);
+    public void setRotationAngles(T entity, float f, float f1, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
+        super.setRotationAngles(entity, f, f1, p_225597_4_, p_225597_5_, p_225597_6_);
         boolean flag = entity != null && entity.getTicksElytraFlying() > 4;
 
         float f6 = 1.0F;
