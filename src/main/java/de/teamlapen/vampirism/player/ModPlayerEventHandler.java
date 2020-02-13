@@ -25,6 +25,7 @@ import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.items.GarlicBreadItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
@@ -41,6 +42,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -319,6 +321,15 @@ public class ModPlayerEventHandler {
             });
             if (sleepingInCoffin)
                 event.setTimeAddition(event.getNewTime() - 11000L);
+        }
+    }
+
+    @SubscribeEvent
+    public void eyeHeight(EntityEvent.EyeHeight event) {
+        if (event.getEntity() instanceof PlayerEntity) {
+            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false)) {
+                event.setNewHeight(BatVampireAction.BAT_EYE_HEIGHT);
+            }
         }
     }
 }

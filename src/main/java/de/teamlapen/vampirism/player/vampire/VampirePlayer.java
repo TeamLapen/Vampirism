@@ -28,7 +28,6 @@ import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
-import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
@@ -68,7 +67,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -97,6 +95,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     public static VampirePlayer get(PlayerEntity player) {
         return (VampirePlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player " + player));
+    }
+
+    public static LazyOptional<VampirePlayer> getOpt(PlayerEntity player) {
+        return player.getCapability(CAP, null).cast();
     }
 
     public static void registerCapability() {
@@ -140,7 +142,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private boolean wasDead = false;
     private List<IVampireVision> unlockedVisions = new ArrayList<>();
     private IVampireVision activatedVision = null;
-    private Method reflectionMethodSetSize = null;
 
     private int feed_victim = -1;
     private BITE_TYPE feed_victim_bite_type;
@@ -753,9 +754,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
                 player.world.getProfiler().endSection();
             }
-            if (getSpecialAttributes().bat) {
-                BatVampireAction.updatePlayerBatSize(player);
-            }
+//            if (getSpecialAttributes().bat) {
+//                BatVampireAction.updatePlayerBatSize(player);
+//            }
         }
     }
 
@@ -769,28 +770,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     }
 
-    /**
-     * Set's the players entity size via reflection.
-     * Attention: This is reset by EntityPlayer every tick
-     *
-     * @param width
-     * @param height
-     * @return
-     */
-    public boolean setEntitySize(float width, float height) {
-        //TODO 1.14 this is not going to work wait for https://github.com/MinecraftForge/MinecraftForge/pull/6059
-//        try {
-//            if (reflectionMethodSetSize == null) {
-//                reflectionMethodSetSize = ObfuscationReflectionHelper.findMethod(Entity.class, SRGNAMES.Entity_setSize, float.class, float.class);
-//            }
-//            reflectionMethodSetSize.invoke(player, width, height);
-//            return true;
-//        } catch (Exception e) {
-//            LOGGER.error("Could not change players size! ", e);
-//            return false;
-//        }
-        return true;
-    }
 
     /**
      * Sets the eyeType as long as it is valid.
