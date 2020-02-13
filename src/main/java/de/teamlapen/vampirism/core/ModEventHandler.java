@@ -96,7 +96,6 @@ public class ModEventHandler {
                     event.getPlayer().sendMessage(download.appendText(" ").appendSibling(changelog).appendText(" ").appendSibling(modpage));
                 }
             }
-
         }
         if (isAdminLikePlayer) {
             List<String> mods = IntegrationsNotifier.shouldNotifyAboutIntegrations();
@@ -105,15 +104,11 @@ public class ModEventHandler {
                 event.getPlayer().sendMessage(new StringTextComponent(TextFormatting.BLUE + TextFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + TextFormatting.RESET));
                 event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.integrations_available.download").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.INTEGRATIONS_LINK)).setUnderlined(true)));
             }
-
         }
         if (event.getPlayer().getRNG().nextInt(4) == 0) {
             event.getPlayer().sendMessage(new StringTextComponent("You are running an alpha version of Vampirism for MC 1.14").applyTextStyle(TextFormatting.DARK_RED));
             event.getPlayer().sendMessage(new StringTextComponent("Some important parts are not working yet:"));
-            event.getPlayer().sendMessage(new StringTextComponent("- Bat mode"));
             event.getPlayer().sendMessage(new StringTextComponent("- JEI integration and guide book"));
-
-
         }
 
 

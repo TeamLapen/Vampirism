@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -16,7 +17,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.dimension.EndDimension;
@@ -26,34 +26,9 @@ import java.util.UUID;
 
 public class BatVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
-    private static final float BAT_HEIGHT = 0.8F;
-    public final static float BAT_EYE_HEIGHT = 0.85F * BAT_HEIGHT;
-    private static final float BAT_WIDTH = 0.6F;
+    public final static float BAT_EYE_HEIGHT = 0.85F * 0.6f;
+    public static final EntitySize BAT_SIZE = EntitySize.fixed(0.8f, 0.6f);
 
-    /**
-     * Set the player's entity size to the bat size if it isn't already
-     *
-     * @param player
-     */
-    public static void updatePlayerBatSize(PlayerEntity player) {
-        float width = BAT_WIDTH;
-        float height = BAT_HEIGHT;
-        if (player.isShiftKeyDown()) { //isSneaking
-            height = BAT_HEIGHT - 0.15F;
-        }
-        if (player.isSleeping()) {
-            height = 0.2F;
-            width = 0.2F;
-        }
-        if (player.getWidth() != width || player.getHeight() != height) {
-            AxisAlignedBB axisalignedbb = player.getBoundingBox();
-            axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double) width, axisalignedbb.minY + (double) height, axisalignedbb.minZ + (double) width);
-
-            if (!player.getEntityWorld().checkBlockCollision(axisalignedbb)) {
-                if (!VampirePlayer.get(player).setEntitySize(width, height)) return;
-            }
-        }
-    }
 
     public final UUID healthModifierUUID = UUID.fromString("4392fccb-4bfd-4290-b2e6-5cc91429053c");
     private final float PLAYER_WIDTH = 0.6F;
@@ -74,8 +49,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         float newHealth = mult * oldHealth;
         if (newHealth < 1) newHealth = 1;
         player.setHealth(newHealth);
-        setPlayerBat(player, true);
-        ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
+        updatePlayer((VampirePlayer) vampire, true);
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.BAT);
         }
@@ -105,8 +79,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public void onActivatedClient(IVampirePlayer vampire) {
         if (!((VampirePlayer) vampire).getSpecialAttributes().bat) {
-            setPlayerBat(vampire.getRepresentingPlayer(), true);
-            ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
+            updatePlayer((VampirePlayer) vampire, true);
         }
     }
 
@@ -124,16 +97,14 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 20, 100, false, false));
         }
         //player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 0, false, false));
-        setPlayerBat(player, false);
-        ((VampirePlayer) vampire).getSpecialAttributes().bat = false;
+        updatePlayer((VampirePlayer) vampire, false);
     }
 
     @Override
     public void onReActivated(IVampirePlayer vampire) {
         setModifier(vampire.getRepresentingPlayer(), true);
         if (!((VampirePlayer) vampire).getSpecialAttributes().bat) {
-            setPlayerBat(vampire.getRepresentingPlayer(), true);
-            ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
+            updatePlayer((VampirePlayer) vampire, true);
         }
     }
 
@@ -195,14 +166,16 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     /**
      * Adjust the players size and eye height to fit to the bat model
      *
-     * @param player
      * @param bat
      */
-    private void setPlayerBat(PlayerEntity player, boolean bat) {
-        if (bat) updatePlayerBatSize(player);
+    private void updatePlayer(VampirePlayer vampire, boolean bat) {
+        PlayerEntity player = vampire.getRepresentingPlayer();
+        vampire.getSpecialAttributes().bat = bat;
+        //Eye height is set in {@link ModPlayerEventHandler} on {@link EyeHeight} event
+        //Entity size is hacked in via {@link ASMHooks}
+        player.recalculateSize();
         if (bat)
-            player.setPosition(player.getPosX(), player.getPosY() + (PLAYER_HEIGHT - BAT_HEIGHT), player.getPosZ());
-        player.eyeHeight = (bat ? BAT_EYE_HEIGHT : player.getStandingEyeHeight(player.getPose(), player.size));
+            player.setPosition(player.getPosX(), player.getPosY() + (PLAYER_HEIGHT - BAT_SIZE.height), player.getPosZ());
     }
 
 }
