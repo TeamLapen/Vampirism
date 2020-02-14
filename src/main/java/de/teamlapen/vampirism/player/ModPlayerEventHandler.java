@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.player;
 import com.google.common.base.Throwables;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -24,7 +23,9 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.items.GarlicBreadItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -84,17 +85,21 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onAttackEntity(AttackEntityEvent event) {
-        if (VampirePlayer.get(event.getPlayer()).getSpecialAttributes().bat || HunterPlayer.get(event.getPlayer()).getSpecialAttributes().isDisguised()) {
-            event.setCanceled(true);
+        PlayerEntity player = event.getPlayer();
+        if (player.isAlive()) {
+            if (VampirePlayer.get(player).getSpecialAttributes().bat || HunterPlayer.get(player).getSpecialAttributes().isDisguised()) {
+                event.setCanceled(true);
+            }
+            if (!checkItemUsePerm(player.getHeldItemMainhand(), player)) {
+                event.setCanceled(true);
+            }
         }
-        if (!checkItemUsePerm(event.getPlayer().getHeldItemMainhand(), event.getPlayer())) {
-            event.setCanceled(true);
-        }
+
     }
 
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
-        if (!(event.getEntity() instanceof PlayerEntity)) return;
+        if (!(event.getEntity() instanceof PlayerEntity) || !event.getEntity().isAlive()) return;
         try {
             if (VampirePlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().bat || HunterPlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().isDisguised()) {
                 event.setCanceled(true);
@@ -106,11 +111,9 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        VampirePlayer vampire = VampirePlayer.get(event.getPlayer());
-        HunterPlayer hunter = HunterPlayer.get(event.getPlayer());
-        if (vampire.getSpecialAttributes().bat || hunter.getSpecialAttributes().isDisguised()) {
+        if (VampirePlayer.getOpt(event.getPlayer()).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false) || HunterPlayer.getOpt(event.getPlayer()).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
             event.setCanceled(true);
-        } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && vampire.getLevel() > 0) {
+        } else if ((ModBlocks.garlic_beacon_normal.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_weak.equals(event.getState().getBlock()) || ModBlocks.garlic_beacon_improved.equals(event.getState().getBlock())) && VampirePlayer.getOpt(event.getPlayer()).map(VampirismPlayer::getLevel).orElse(0) > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
         }
     }
@@ -124,7 +127,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemUse(LivingEntityUseItemEvent.Start event) {
-        if (event.getEntity() instanceof PlayerEntity && (VampirePlayer.get((PlayerEntity) event.getEntityLiving()).getSpecialAttributes().bat || HunterPlayer.get((PlayerEntity) event.getEntityLiving()).getSpecialAttributes().isDisguised())) {
+        if (event.getEntity() instanceof PlayerEntity && (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false) || HunterPlayer.getOpt((PlayerEntity) event.getEntity()).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false))) {
             event.setCanceled(true);
         }
         if (event.getEntity() instanceof PlayerEntity && !checkItemUsePerm(event.getItem(), (PlayerEntity) event.getEntityLiving())) {
@@ -134,7 +137,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemUse(LivingEntityUseItemEvent.Finish event) {
-        if (event.getEntityLiving() instanceof IVampire || (event.getEntityLiving() instanceof PlayerEntity && FactionPlayerHandler.get((PlayerEntity) event.getEntity()).isInFaction(VReference.VAMPIRE_FACTION))) {
+        if (Helper.isVampire(event.getEntity())) {
             if (event.getItem().getItem() instanceof GarlicBreadItem) {
                 if (!event.getEntity().getEntityWorld().isRemote) {
                     DamageHandler.affectVampireGarlicDirect(event.getEntity() instanceof IVampire ? (IVampire) event.getEntity() : VampirePlayer.get((PlayerEntity) event.getEntity()), EnumStrength.MEDIUM);
@@ -146,7 +149,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onLivingAttack(LivingAttackEvent event) {
         if (event.getEntity() instanceof PlayerEntity) {
-            if (!FactionPlayerHandler.get((PlayerEntity) event.getEntity()).onEntityAttacked(event.getSource(), event.getAmount())) {
+            if (!FactionPlayerHandler.getOpt((PlayerEntity) event.getEntity()).map(h -> h.onEntityAttacked(event.getSource(), event.getAmount())).orElse(false)) {
                 event.setCanceled(true);
             }
         }
@@ -155,14 +158,14 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onLivingFall(LivingFallEvent event) {
         if (event.getEntity() instanceof PlayerEntity) {
-            event.setDistance(event.getDistance() - VampirePlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().getJumpBoost());
+            event.setDistance(event.getDistance() - VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::getSpecialAttributes).map(VampirePlayerSpecialAttributes::getJumpBoost).orElse(0));
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onLivingHeal(LivingHealEvent event) {
         if (event.getEntityLiving() instanceof PlayerEntity) {
-            if (VampirePlayer.get((PlayerEntity) event.getEntityLiving()).getSpecialAttributes().bat) {
+            if (VampirePlayer.getOpt((PlayerEntity) event.getEntityLiving()).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
                 event.setAmount(event.getAmount() * 0.1F);
             }
         }
@@ -171,7 +174,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onLivingJump(LivingEvent.LivingJumpEvent event) {
         if (event.getEntity() instanceof PlayerEntity) {
-            event.getEntity().setMotion(event.getEntity().getMotion().add(0.0D, (float) (VampirePlayer.get((PlayerEntity) event.getEntity()).getSpecialAttributes().getJumpBoost()) * 0.1F, 0.0D));
+            event.getEntity().setMotion(event.getEntity().getMotion().add(0.0D, (float) (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(VampirePlayer::getSpecialAttributes).map(VampirePlayerSpecialAttributes::getJumpBoost).orElse(0)) * 0.1F, 0.0D));
         }
     }
 
@@ -251,22 +254,30 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.NameFormat event) {
         if (event.getPlayer() != null && VampirismConfig.SERVER.factionColorInChat.get()) {
-            IFactionPlayer fp = FactionPlayerHandler.get(event.getPlayer()).getCurrentFactionPlayer();
-            IFaction f = fp == null ? null : fp.getDisguisedAs();
-            if (f != null) {
-                event.setDisplayname(f.getChatColor() + event.getDisplayname() + TextFormatting.RESET);
-                if (fp instanceof IVampirePlayer && !fp.isDisguised() && ((IVampirePlayer) fp).isVampireLord()) {
-                    event.setDisplayname(TextFormatting.RED + "[" + UtilLib.translate("text.vampirism.lord") + "] " + TextFormatting.RESET + event.getDisplayname());
+            FactionPlayerHandler.getOpt(event.getPlayer()).map(FactionPlayerHandler::getCurrentFactionPlayer).ifPresent(fp -> {
+                IFaction f = fp == null ? null : fp.getDisguisedAs();
+                if (f != null) {
+                    event.setDisplayname(f.getChatColor() + event.getDisplayname() + TextFormatting.RESET);
+                    if (fp instanceof IVampirePlayer && !fp.isDisguised() && ((IVampirePlayer) fp).isVampireLord()) {
+                        event.setDisplayname(TextFormatting.RED + "[" + UtilLib.translate("text.vampirism.lord") + "] " + TextFormatting.RESET + event.getDisplayname());
+                    }
                 }
-            }
 
+            });
         }
     }
 
     @SubscribeEvent
     public void onPlayerVisibilityCheck(PlayerEvent.Visibility event) {
-        if (HunterPlayer.get(event.getPlayer()).getSpecialAttributes().isDisguised()) {
+        if (HunterPlayer.getOpt(event.getPlayer()).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
             event.modifyVisibility(VampirismConfig.BALANCE.haDisguiseVisibilityMod.get());
+        }
+    }
+
+    @SubscribeEvent
+    public void sleepTimeCheck(SleepingTimeCheckEvent event) {
+        if (Helper.isVampire(event.getPlayer())) {
+            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getPlayer().world.getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getPlayer().world.isDaytime() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
         }
     }
 
@@ -279,6 +290,7 @@ public class ModPlayerEventHandler {
 
         boolean message = !player.getEntityWorld().isRemote;
         if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem) {
+            if (!player.isAlive()) return false;
             IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             IPlayableFaction usingFaction = item.getUsingFaction(stack);
@@ -303,13 +315,6 @@ public class ModPlayerEventHandler {
 
         }
         return true;
-    }
-
-    @SubscribeEvent
-    public void sleepTimeCheck(SleepingTimeCheckEvent event) {
-        if (FactionPlayerHandler.get(event.getPlayer()).isInFaction(VReference.VAMPIRE_FACTION)) {
-            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getPlayer().world.getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getPlayer().world.isDaytime() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
-        }
     }
 
     @SubscribeEvent

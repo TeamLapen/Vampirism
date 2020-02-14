@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.entity.goals.LookAtTrainerHunterGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
+import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
@@ -306,7 +307,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     protected boolean processInteract(PlayerEntity player, Hand hand) {
         if (tryCureSanguinare(player)) return true;
-        int hunterLevel = HunterPlayer.get(player).getLevel();
+        int hunterLevel = HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0);
         if (this.isAlive() && !player.isShiftKeyDown()) {//isSneaking
             if (!world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {

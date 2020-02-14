@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.entity.goals.AttackRangedDarkBloodGoal;
 import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
 import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.items.HunterCoatItem;
+import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -65,7 +66,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             float tm = 1f;
             int mr = 1;
             if (entity instanceof PlayerEntity) {
-                float pld = (this.getLevel() + 1) - VampirePlayer.get((PlayerEntity) entity).getLevel() / 3f;
+                float pld = (this.getLevel() + 1) - VampirePlayer.getOpt((PlayerEntity) entity).map(VampirismPlayer::getLevel).orElse(0) / 3f;
                 tm = pld + 1;
                 mr = pld < 1.5f ? 1 : (pld < 3 ? 2 : 3);
                 if (HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) {
@@ -277,7 +278,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     private boolean isLowerLevel(LivingEntity player) {
         if (player instanceof PlayerEntity) {
-            int playerLevel = FactionPlayerHandler.get((PlayerEntity) player).getCurrentLevel();
+            int playerLevel = FactionPlayerHandler.getOpt((PlayerEntity) player).map(FactionPlayerHandler::getCurrentLevel).orElse(0);
             return (playerLevel - 8) / 2F - VampireBaronEntity.this.getLevel() <= 0;
         }
         return false;

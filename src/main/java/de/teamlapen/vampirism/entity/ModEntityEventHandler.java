@@ -146,7 +146,7 @@ public class ModEntityEventHandler {
         //Creeper AI changes for AvoidedByCreepers Skill
         if (!event.getWorld().isRemote && !VampirismConfig.BALANCE.vsDisableAvoidedByCreepers.get()) {
             if (event.getEntity() instanceof CreeperEntity) {
-                ((CreeperEntity) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 20, 1.1, 1.3, input -> input != null && VampirePlayer.get((PlayerEntity) input).getSpecialAttributes().avoided_by_creepers));
+                ((CreeperEntity) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 20, 1.1, 1.3, input -> input != null && VampirePlayer.getOpt((PlayerEntity) input).map(VampirePlayer::getSpecialAttributes).map(s -> s.avoided_by_creepers).orElse(false)));
 
                 Goal target = null;
                 for (PrioritizedGoal t : ((CreeperEntity) event.getEntity()).targetSelector.goals) {
@@ -156,7 +156,7 @@ public class ModEntityEventHandler {
                 }
                 if (target != null) {
                     ((CreeperEntity) event.getEntity()).targetSelector.removeGoal(target);
-                    ((CreeperEntity) event.getEntity()).targetSelector.addGoal(1, new NearestAttackableTargetGoal<PlayerEntity>((CreeperEntity) event.getEntity(), PlayerEntity.class, 10, true, false, input -> input != null && !VampirePlayer.get((PlayerEntity) input).getSpecialAttributes().avoided_by_creepers));
+                    ((CreeperEntity) event.getEntity()).targetSelector.addGoal(1, new NearestAttackableTargetGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 10, true, false, input -> input != null && !VampirePlayer.getOpt((PlayerEntity) input).map(VampirePlayer::getSpecialAttributes).map(s -> s.avoided_by_creepers).orElse(false)));
                 } else {
                     if (warnAboutCreeper) {
                         LOGGER.warn("Could not replace creeper target task");

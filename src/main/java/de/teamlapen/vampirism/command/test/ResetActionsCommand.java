@@ -33,6 +33,7 @@ public class ResetActionsCommand extends BasicCommand {
 
     private static int resetActions(CommandSource commandSource, List<ServerPlayerEntity> players) {
         for (ServerPlayerEntity player : players) {
+            if (!player.isAlive()) continue;
             IFactionPlayer<?> factionPlayer = FactionPlayerHandler.get(player).getCurrentFactionPlayer();
             if (factionPlayer != null) {
                 IActionHandler<?> handler = factionPlayer.getActionHandler();

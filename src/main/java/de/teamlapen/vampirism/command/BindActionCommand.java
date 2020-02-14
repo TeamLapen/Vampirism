@@ -22,13 +22,9 @@ public class BindActionCommand extends BasicCommand {
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ALL))
                 .then(Commands.argument("shortcutnumber", IntegerArgumentType.integer(1, 2))
                         .then(Commands.argument("action", ActionArgument.actions())
-                                .executes(context -> {
-                                    return bindAction(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "shortcutnumber"), ActionArgument.getAction(context, "action"));
-                                })))
+                                .executes(context -> bindAction(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "shortcutnumber"), ActionArgument.getAction(context, "action")))))
                 .then(Commands.literal("help")
-                        .executes(context -> {
-                            return help(context);
-                        }));
+                        .executes(BindActionCommand::help));
     }
 
     private static int bindAction(CommandContext<CommandSource> context, ServerPlayerEntity asPlayer, int number, IAction action) {

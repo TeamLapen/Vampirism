@@ -199,6 +199,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
                 return Color.GREEN;
             else return Color.WHITE;
         }
+        if (!minecraft.player.isAlive()) return Color.RED;
         IFactionPlayer factionPlayer = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
         if (!(s.canUse(factionPlayer) == IAction.PERM.ALLOWED) || actionHandler.getPercentageForAction(s) < 0) {
             return Color.RED;

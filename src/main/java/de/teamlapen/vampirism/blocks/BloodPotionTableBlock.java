@@ -1,10 +1,9 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.BloodPotionTableContainer;
+import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -71,9 +70,8 @@ public class BloodPotionTableBlock extends VampirismBlock {
     }
 
     private boolean canUse(PlayerEntity player) {
-        IPlayableFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
-        if (faction != null && faction.equals(VReference.HUNTER_FACTION)) {
-            return faction.getPlayerCapability(player).getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_table);
+        if (Helper.isHunter(player)) {
+            return HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(h -> h.isSkillEnabled(HunterSkills.blood_potion_table)).orElse(false);
         }
         return false;
     }

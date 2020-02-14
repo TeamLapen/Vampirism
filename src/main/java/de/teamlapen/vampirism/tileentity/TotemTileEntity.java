@@ -212,31 +212,24 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         super(ModTiles.totem);
     }
 
-    public void initiateCapture(PlayerEntity player) {
-        this.updateTileStatus();
-        IFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
-        if (!this.capturePreconditions(faction, player)) return;
-        this.forceVillageUpdate = true;
-        this.captureAbortTimer = 0;
-        this.captureTimer = 0;
-        this.captureForceTargetTimer = 0;
-        this.setCapturingFaction(faction);
-        this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"));
-        this.captureInfo.setColor(BossInfo.Color.YELLOW);
-        this.captureInfo.setPercent(0f);
-        this.defenderMax = 0;
-
-        if (this.controllingFaction == null) {
-            this.phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
-            this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.neutral_village_under_attack", faction.getNamePlural()));
-        } else {
-            this.phase = CAPTURE_PHASE.PHASE_1_OPPOSITE;
-            this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.faction_village_under_attack", this.controllingFaction.getNamePlural(), faction.getNamePlural()));
+    public boolean canPlayerRemoveBlock(PlayerEntity player) {
+        if (player.abilities.isCreativeMode) return true;
+        if (!player.isAlive()) return false;
+        @Nullable IFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
+        if (faction == this.controllingFaction) {
+            if (this.capturingFaction == null) {
+                return true;
+            } else {
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_other_capturing"), true);
+            }
+        } else if (faction == this.capturingFaction) {
+            if (this.controllingFaction == null) {
+                return true;
+            } else {
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_other_faction"), true);
+            }
         }
-
-        this.markDirty();
-
-        this.makeAgressive();
+        return false;
     }
 
     @Override
@@ -633,16 +626,32 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         return this.villageAreaReduced == null ? this.villageAreaReduced = AxisAlignedBB.toImmutable(this.village.getBoundingBox()).grow(-30, -10, -30) : this.villageAreaReduced;
     }
 
-    private float getStrength(LivingEntity entity) {
-        if (entity instanceof PlayerEntity)
-            return FactionPlayerHandler.get((PlayerEntity) entity).getCurrentLevelRelative();
-        if (entity instanceof ConvertedVillagerEntity)
-            return 0.5f;
-        if (entity instanceof IAggressiveVillager)
-            return 0.7f;
-        if (entity instanceof VillagerEntity)
-            return 0.4f;
-        return 1f;
+    public void initiateCapture(PlayerEntity player) {
+        this.updateTileStatus();
+        if (!player.isAlive()) return;
+        IFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
+        if (!this.capturePreconditions(faction, player)) return;
+        this.forceVillageUpdate = true;
+        this.captureAbortTimer = 0;
+        this.captureTimer = 0;
+        this.captureForceTargetTimer = 0;
+        this.setCapturingFaction(faction);
+        this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.bossinfo.capture"));
+        this.captureInfo.setColor(BossInfo.Color.YELLOW);
+        this.captureInfo.setPercent(0f);
+        this.defenderMax = 0;
+
+        if (this.controllingFaction == null) {
+            this.phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
+            this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.neutral_village_under_attack", faction.getNamePlural()));
+        } else {
+            this.phase = CAPTURE_PHASE.PHASE_1_OPPOSITE;
+            this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.faction_village_under_attack", this.controllingFaction.getNamePlural(), faction.getNamePlural()));
+        }
+
+        this.markDirty();
+
+        this.makeAgressive();
     }
 
     private void informEntitiesAboutCaptureStop() {
@@ -871,23 +880,16 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
 
     //accessors for other classes --------------------------------------------------------------------------------------
 
-    public boolean canPlayerRemoveBlock(PlayerEntity player) {
-        if (player.abilities.isCreativeMode) return true;
-        @Nullable IFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
-        if (faction == this.controllingFaction) {
-            if (this.capturingFaction == null) {
-                return true;
-            } else {
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_other_capturing"), true);
-            }
-        } else if (faction == this.capturingFaction) {
-            if (this.controllingFaction == null) {
-                return true;
-            } else {
-                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_other_faction"), true);
-            }
-        }
-        return false;
+    private float getStrength(LivingEntity entity) {
+        if (entity instanceof PlayerEntity)
+            return FactionPlayerHandler.getOpt((PlayerEntity) entity).map(FactionPlayerHandler::getCurrentLevelRelative).orElse(0f);
+        if (entity instanceof ConvertedVillagerEntity)
+            return 0.5f;
+        if (entity instanceof IAggressiveVillager)
+            return 0.7f;
+        if (entity instanceof VillagerEntity)
+            return 0.4f;
+        return 1f;
     }
 
     public @Nullable

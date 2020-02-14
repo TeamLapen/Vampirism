@@ -80,7 +80,6 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IVampirePlayer {
 
     private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
-    private final static String TAG = "VampirePlayer";
     private final static String KEY_EYE = "eye_type";
     private final static String KEY_FANGS = "fang_type";
     private final static String KEY_GLOWING_EYES = "glowing_eyes";
@@ -92,13 +91,22 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     /**
      * Don't call before the construction event of the player entity is finished
+     * Must check Entity#isAlive before
      */
-    public static VampirePlayer get(PlayerEntity player) {
+    public static VampirePlayer get(@Nonnull PlayerEntity player) {
         return (VampirePlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get Vampire player capability from player " + player));
     }
 
-    public static LazyOptional<VampirePlayer> getOpt(PlayerEntity player) {
-        return player.getCapability(CAP, null).cast();
+
+    /**
+     * Return a LazyOptional, but print a warning message if not present.
+     */
+    public static LazyOptional<VampirePlayer> getOpt(@Nonnull PlayerEntity player) {
+        LazyOptional<VampirePlayer> opt = player.getCapability(CAP, null).cast();
+        if (!opt.isPresent()) {
+            LOGGER.warn("Cannot get Vampire player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
+        }
+        return opt;
     }
 
     public static void registerCapability() {
@@ -285,7 +293,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 return BITE_TYPE.NONE;
             }
             boolean hunter = Helper.isHunter(player);
-            if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.get((PlayerEntity) entity).canBeBitten(this)) {
+            if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.getOpt((PlayerEntity) entity).map(v -> v.canBeBitten(this)).orElse(false)) {
                 return hunter ? BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER : BITE_TYPE.SUCK_BLOOD_PLAYER;
 
             } else return hunter ? BITE_TYPE.ATTACK_HUNTER : BITE_TYPE.ATTACK;
@@ -425,6 +433,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return skillHandler;
     }
 
+    @Nonnull
     public VampirePlayerSpecialAttributes getSpecialAttributes() {
         return specialAttributes;
     }
@@ -619,7 +628,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * DON'T add/remove potions here, since it is called while the potion effect list is modified.
      */
     public void onSanguinareFinished() {
-        if (Helper.canBecomeVampire(player) && !isRemote()) {
+        if (Helper.canBecomeVampire(player) && !isRemote() && player.isAlive()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             handler.joinFaction(getFaction());
             player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 300));
@@ -1007,8 +1016,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 continue_feeding = false;
             }
         } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_PLAYER || feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
-            blood = VampirePlayer.get((PlayerEntity) entity).onBite(this);
-            saturationMod = VampirePlayer.get((PlayerEntity) entity).getBloodSaturation();
+            blood = VampirePlayer.getOpt((PlayerEntity) entity).map(v -> v.onBite(this)).orElse(0);
+            saturationMod = VampirePlayer.getOpt((PlayerEntity) entity).map(VampirePlayer::getBloodSaturation).orElse(0f);
             if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
                 player.addPotionEffect(new EffectInstance(ModEffects.poison, 15, 2));
             }

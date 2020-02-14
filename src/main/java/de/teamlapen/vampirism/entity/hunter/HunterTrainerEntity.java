@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.LookAtTrainerHunterGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
+import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -83,7 +83,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
 
         if (!flag && this.isAlive() && !player.isShiftKeyDown()) { //isSneaking
             if (!this.world.isRemote) {
-                if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
+                if (HunterLevelingConf.instance().isLevelValidForTrainer(HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0) + 1)) {
                     if (trainee == null) {
                         player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterTrainerContainer(id, playerInventory, this), name));
                         this.trainee = player;

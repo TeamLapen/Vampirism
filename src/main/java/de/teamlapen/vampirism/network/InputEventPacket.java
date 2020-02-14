@@ -39,6 +39,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -85,22 +86,22 @@ public class InputEventPacket implements IMessage {
         ServerPlayerEntity player = ctx.getSender();
         Validate.notNull(player);
         ctx.enqueueWork(() -> {
-            IFactionPlayer factionPlayer = FactionPlayerHandler.get(player).getCurrentFactionPlayer();
+            @Nullable IFactionPlayer factionPlayer = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
             switch (msg.action) {
                 case SUCKBLOOD: {
-                    int id = 0;
                     try {
-                        id = Integer.parseInt(msg.param);
+                        int id = Integer.parseInt(msg.param);
+                        if (id != 0) {
+                            VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.biteEntity(id));
+                        }
                     } catch (NumberFormatException e) {
                         LOGGER.error("Receiving invalid param {} for {}", msg.param, msg.action);
                     }
-                    if (id != 0) {
-                        VampirePlayer.get(player).biteEntity(id);
-                    }
+
                     break;
                 }
                 case ENDSUCKBLOOD:
-                    VampirePlayer.get(player).endFeeding(true);
+                    VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.endFeeding(true));
                     break;
                 case TOGGLEACTION: {
                     ResourceLocation id = new ResourceLocation(msg.param);
@@ -137,7 +138,7 @@ public class InputEventPacket implements IMessage {
                     String[] coords = msg.param.split(":");
                     if (coords.length == 3) {
                         BlockPos pos = new BlockPos(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
-                        VampirePlayer.get(player).biteBlock(pos);
+                        VampirePlayer.getOpt(player).ifPresent(v -> v.biteBlock(pos));
                     } else {
                         LOGGER.warn("Received invalid {} parameter", DRINK_BLOOD_BLOCK);
                     }
@@ -205,7 +206,7 @@ public class InputEventPacket implements IMessage {
                     }
                     break;
                 case VAMPIRE_VISION_TOGGLE:
-                    VampirePlayer.get(player).switchVision();
+                    VampirePlayer.getOpt(player).ifPresent(VampirePlayer::switchVision);
                     break;
                 case CRAFT_BLOOD_POTION:
                     if (player.openContainer instanceof BloodPotionTableContainer) {
@@ -213,18 +214,19 @@ public class InputEventPacket implements IMessage {
                     }
                     break;
                 case OPEN_BLOOD_POTION:
-
-                    IHunterPlayer hunter = HunterPlayer.get(player);
-                    if (hunter.getLevel() > 0) {
-                        if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_portable_crafting)) {
-                            if (!player.world.isRemote()) {
-                                NetworkHooks.openGui(player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, new BlockPos(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()))), new TranslationTextComponent("container.crafting")), player.getPosition());
+                    if (player.isAlive()) {
+                        IHunterPlayer hunter = HunterPlayer.get(player);
+                        if (hunter.getLevel() > 0) {
+                            if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_portable_crafting)) {
+                                if (!player.world.isRemote()) {
+                                    NetworkHooks.openGui(player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, new BlockPos(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()))), new TranslationTextComponent("container.crafting")), player.getPosition());
+                                }
+                            } else {
+                                player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));
                             }
                         } else {
-                            player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));
+                            player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.HUNTER_FACTION.getName()));
                         }
-                    } else {
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.HUNTER_FACTION.getName()));
                     }
                     break;
                 case BASICHUNTERLEVELUP:

@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -63,8 +63,8 @@ public class MedChairBlock extends VampirismBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 
         ItemStack stack = player.getHeldItem(hand);
-        if (!stack.isEmpty() && stack.getItem().equals(ModItems.injection_garlic)) {
-            IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(player);
+        if (!stack.isEmpty() && stack.getItem().equals(ModItems.injection_garlic) && player.isAlive()) {
+            IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
             IPlayableFaction faction = handler.getCurrentFaction();
             if (handler.canJoin(faction)) {
                 if (world.isRemote) {

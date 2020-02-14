@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -69,7 +68,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
         tooltip.add(new TranslationTextComponent("text.vampirism.sword_charged").appendText(" " + ((int) Math.ceil(charged * 100f)) + "%"));
         tooltip.add(new TranslationTextComponent("text.vampirism.sword_trained").appendText(" " + ((int) Math.ceil(trained * 100f)) + "%"));
-        if (Minecraft.getInstance().player != null && !VReference.VAMPIRE_FACTION.equals(FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction())) {
+        if (Minecraft.getInstance().player != null && !Helper.isVampire(Minecraft.getInstance().player)) {
             tooltip.add(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.VAMPIRE_FACTION.getNamePlural()));
         }
     }
@@ -110,7 +109,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (attacker instanceof PlayerEntity && target.getHealth() <= target.getMaxHealth() * VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() && !Helper.isVampire(target)) {
-            if (VampirePlayer.get((PlayerEntity) attacker).getSkillHandler().isSkillEnabled(VampireSkills.sword_finisher)) {
+            if (VampirePlayer.getOpt((PlayerEntity) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.sword_finisher)).orElse(false)) {
                 DamageSource dmg = DamageSource.causePlayerDamage((PlayerEntity) attacker).setDamageBypassesArmor();
                 target.attackEntityFrom(dmg, 10000F);
                 Vec3d center = new Vec3d(target.getPosition());
@@ -142,15 +141,16 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
-        VampirePlayer vampire = VampirePlayer.get(playerIn);
-        if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
+        if (playerIn.isAlive()) {
+            VampirePlayer vampire = VampirePlayer.get(playerIn);
+            if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
 
 
-        if (this.canBeCharged(stack) && playerIn.isShiftKeyDown() && (playerIn.isCreative() || vampire.getBloodLevel() >= 2) && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge)) {
-            playerIn.setActiveHand(handIn);
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            if (this.canBeCharged(stack) && playerIn.isShiftKeyDown() && (playerIn.isCreative() || vampire.getBloodLevel() >= 2) && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge)) {
+                playerIn.setActiveHand(handIn);
+                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            }
         }
-
         return new ActionResult<>(ActionResultType.PASS, stack);
     }
 

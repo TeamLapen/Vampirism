@@ -37,7 +37,7 @@ public class LayerVampirePlayerHead extends LayerRenderer<AbstractClientPlayerEn
 
     @Override
     public void render(MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, AbstractClientPlayerEntity player, float v, float v1, float v2, float v3, float v4, float v5) {
-        if (!VampirismConfig.CLIENT.renderVampireEyes.get()) return;
+        if (!VampirismConfig.CLIENT.renderVampireEyes.get() || !player.isAlive()) return;
         VampirePlayer vampirePlayer = VampirePlayer.get(player);
         if (vampirePlayer.getLevel() > 0 && !vampirePlayer.isDisguised() && !player.isInvisible()) {
             int eyeType = Math.max(0, Math.min(vampirePlayer.getEyeType(), eyeOverlays.length - 1));

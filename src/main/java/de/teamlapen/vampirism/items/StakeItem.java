@@ -37,7 +37,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher {
             if (target instanceof IVampireMob) {
                 boolean instaKillFromBehind = false;
                 boolean instaKillLowHealth = false;
-                if (attacker instanceof PlayerEntity) {
+                if (attacker instanceof PlayerEntity && attacker.isAlive()) {
                     IFactionPlayer factionPlayer = FactionPlayerHandler.get((PlayerEntity) attacker).getCurrentFactionPlayer();
                     if (factionPlayer != null && factionPlayer.getFaction().equals(VReference.HUNTER_FACTION)) {
                         ISkillHandler skillHandler = factionPlayer.getSkillHandler();

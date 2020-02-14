@@ -41,7 +41,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (getUsingFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
             PlayerEntity player = VampirismMod.proxy.getClientPlayer();
-            TextFormatting color = player != null && Helper.canUseFactionItem(stack, this, FactionPlayerHandler.get(player)) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
+            TextFormatting color = player != null && player.isAlive() && Helper.canUseFactionItem(stack, this, FactionPlayerHandler.get(player)) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
             IFaction f = getUsingFaction(stack);
             tooltip.add(((f == null ? new TranslationTextComponent("text.vampirism.all") : f.getNamePlural())).appendText("@" + getMinLevel(stack)).applyTextStyle(color));
             ISkill reqSkill = this.getRequiredSkill(stack);

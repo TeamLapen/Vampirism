@@ -24,7 +24,7 @@ public class GlowingEyeCommand extends BasicCommand {
     }
 
     private static int setGlowingEye(CommandContext<CommandSource> context, PlayerEntity player, boolean on) {
-        VampirePlayer.get(player).setGlowingEyes(on);
+        VampirePlayer.getOpt(player).ifPresent(vampire -> vampire.setGlowingEyes(on));
         if (on) {
             context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.glowing_eyes.enabled", on), false);
         } else {

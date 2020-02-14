@@ -42,8 +42,22 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @CapabilityInject(IFactionPlayerHandler.class)
     public static Capability<IFactionPlayerHandler> CAP = getNull();
 
+    /**
+     * Must check Entity#isAlive before
+     */
     public static FactionPlayerHandler get(PlayerEntity player) {
         return (FactionPlayerHandler) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get FactionPlayerHandler from EntityPlayer " + player));
+    }
+
+    /**
+     * Return a LazyOptional, but print a warning message if not present.
+     */
+    public static LazyOptional<FactionPlayerHandler> getOpt(@Nonnull PlayerEntity player) {
+        LazyOptional<FactionPlayerHandler> opt = player.getCapability(CAP, null).cast();
+        if (!opt.isPresent()) {
+            LOGGER.warn("Cannot get Faction player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
+        }
+        return opt;
     }
 
 

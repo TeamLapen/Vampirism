@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -76,7 +76,8 @@ public class ChurchAltarBlock extends VampirismBlock {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(player);
+        if (!player.isAlive()) return ActionResultType.PASS;
+        IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
         ItemStack heldItem = player.getHeldItem(hand);
         if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
             VampirismMod.proxy.displayRevertBackScreen();

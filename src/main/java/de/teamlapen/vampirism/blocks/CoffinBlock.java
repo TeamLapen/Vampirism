@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import com.google.common.collect.ImmutableMap;
+import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
 import net.minecraft.block.*;
@@ -180,7 +181,7 @@ public class CoffinBlock extends VampirismBlockContainer {
                 }
             }
 
-            if (VampirePlayer.get(player).getLevel() == 0) {
+            if (VampirePlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0) == 0) {
                 player.sendStatusMessage(new TranslationTextComponent("text.vampirism.coffin.cant_use"), true);
                 return ActionResultType.SUCCESS;
             }

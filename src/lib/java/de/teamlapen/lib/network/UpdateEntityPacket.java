@@ -196,8 +196,6 @@ public class UpdateEntityPacket implements IMessage {
             LOGGER.warn("There is nothing to update for entity {}", entity);
             return null;
         }
-
-
     }
 
     private int id;

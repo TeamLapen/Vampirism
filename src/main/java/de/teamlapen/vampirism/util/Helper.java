@@ -120,7 +120,7 @@ public class Helper {
     }
 
     public static boolean canBecomeVampire(PlayerEntity player) {
-        return FactionPlayerHandler.get(player).canJoin(VReference.VAMPIRE_FACTION);
+        return FactionPlayerHandler.getOpt(player).map(v -> v.canJoin(VReference.VAMPIRE_FACTION)).orElse(false);
     }
 
     public static boolean canTurnPlayer(IVampire biter, @Nullable PlayerEntity target) {
@@ -143,6 +143,14 @@ public class Helper {
 
     public static boolean isHunter(Entity entity) {
         return VReference.HUNTER_FACTION.equals(VampirismAPI.factionRegistry().getFaction(entity));
+    }
+
+    public static boolean isHunter(PlayerEntity entity) {
+        return VampirismAPI.getFactionPlayerHandler((entity)).map(h -> VReference.HUNTER_FACTION.equals(h.getCurrentFaction())).orElse(false);
+    }
+
+    public static boolean isVampire(PlayerEntity entity) {
+        return VampirismAPI.getFactionPlayerHandler((entity)).map(h -> VReference.VAMPIRE_FACTION.equals(h.getCurrentFaction())).orElse(false);
     }
 
     /**

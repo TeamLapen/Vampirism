@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.factions;
 
 import com.google.common.base.Predicate;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -58,8 +57,8 @@ public class PredicateFaction implements Predicate<LivingEntity> {
             return !thisFaction.equals(other) && (otherFaction == null || otherFaction.equals(other));
 
         }
-        if (player && input instanceof PlayerEntity) {
-            IFactionPlayer fp = VampirismAPI.getFactionPlayerHandler((PlayerEntity) input).getCurrentFactionPlayer();
+        if (player && input instanceof PlayerEntity && input.isAlive()) {
+            IFactionPlayer fp = FactionPlayerHandler.get((PlayerEntity) input).getCurrentFactionPlayer();
             IFaction f = fp == null ? null : (ignoreDisguise ? fp.getFaction() : fp.getDisguisedAs());
             if (f == null) {
                 return neutralPlayer;

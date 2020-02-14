@@ -12,7 +12,6 @@ import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.Helper;
@@ -193,7 +192,7 @@ public class RenderHandler {
                 if (creature != null && creature.getBlood() > 0 && !creature.hasPoisonousBlood()) {
                     renderedEntitiesWithBlood.add(event.getEntity());
 
-                } else if (VampirePlayer.get(mc.player).getSpecialAttributes().blood_vision_garlic && ((creature != null && creature.hasPoisonousBlood()) || Helper.isHunter(entity))) {
+                } else if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::getSpecialAttributes).map(s -> s.blood_vision_garlic).orElse(false) && ((creature != null && creature.hasPoisonousBlood()) || Helper.isHunter(entity))) {
                     renderedEntitiesWithGarlicInfused.add(event.getEntity());
 
                 } else {
@@ -207,7 +206,7 @@ public class RenderHandler {
     @SubscribeEvent
     public void onRenderLivingPre(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> event) {
         LivingEntity entity = event.getEntity();
-        if (entity instanceof PlayerEntity && HunterPlayer.get((PlayerEntity) entity).getSpecialAttributes().isDisguised()) {
+        if (entity instanceof PlayerEntity && HunterPlayer.getOpt((PlayerEntity) entity).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
             if (this.mc.player != null && entity.getDistanceSq(this.mc.player) > 4) {
                 event.setCanceled(true);
             }
@@ -235,9 +234,8 @@ public class RenderHandler {
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         PlayerEntity player = event.getPlayer();
-        VampirePlayerSpecialAttributes vampireAttributes = VampirePlayer.get(player).getSpecialAttributes();
-        HunterPlayerSpecialAttribute hunterAttributes = HunterPlayer.get(player).getSpecialAttributes();
-        if (vampireAttributes.bat) {
+
+        if (VampirePlayer.getOpt(player).map(VampirePlayer::getSpecialAttributes).map(s -> s.bat).orElse(false)) {
             event.setCanceled(true);
             if (entityBat == null) {
                 entityBat = EntityType.BAT.create(event.getEntity().getEntityWorld());
@@ -265,14 +263,14 @@ public class RenderHandler {
             float f = MathHelper.lerp(partialTicks, entityBat.prevRotationYaw, entityBat.rotationYaw);
             mc.getRenderManager().renderEntityStatic(entityBat, d0, d1, d2, f, partialTicks, event.getMatrixStack(), mc.getRenderTypeBuffers().getBufferSource(), mc.getRenderManager().getPackedLight(entityBat, partialTicks));
 
-        } else if (hunterAttributes.isDisguised()) {
+        } else if (HunterPlayer.getOpt(player).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
             if (!player.equals(this.mc.player)) {
                 double distSq = player.getDistanceSq(this.mc.player);
                 if (distSq > VampirismConfig.BALANCE.haDisguiseInvisibleSQ.get()) {
                     event.setCanceled(true);
                 } else {
                     hunterDisguiseEnabled = true;
-                    enableProfile(Profile.HUNTER_DISGUISE, MathHelper.clamp((float) (distSq / VampirismConfig.BALANCE.haDisguiseInvisibleSQ.get() * 25), 0, 1) * hunterAttributes.getDisguiseProgress());
+                    enableProfile(Profile.HUNTER_DISGUISE, MathHelper.clamp((float) (distSq / VampirismConfig.BALANCE.haDisguiseInvisibleSQ.get() * 25), 0, 1) * HunterPlayer.getOpt(player).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::getDisguiseProgress).orElse(0f));
                 }
             }
 

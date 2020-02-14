@@ -112,6 +112,7 @@ public class DamageHandler {
      * @param source    The throwing entity
      */
     public static void affectEntityHolyWaterSplash(LivingEntity entity, EnumStrength strength, double distSq, boolean directHit, @Nullable LivingEntity source) {
+        if (!entity.isAlive()) return;
         boolean vampire = Helper.isVampire(entity);
         if (entity.canBeHitWithPotion() && (vampire || CreatureAttribute.UNDEAD.equals(entity.getCreatureAttribute()))) {
             if (distSq < 16.0D) {

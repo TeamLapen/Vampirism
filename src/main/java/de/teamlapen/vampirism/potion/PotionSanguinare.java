@@ -51,12 +51,12 @@ public class PotionSanguinare extends VampirismPotion {
 
     @Override
     public void performEffect(LivingEntity entity, int p_76394_2_) {
-        if (entity.world.isRemote) return;
+        if (entity.world.isRemote || !entity.isAlive()) return;
         if (entity instanceof CreatureEntity) {
             ExtendedCreature.getSafe(entity).ifPresent(IExtendedCreatureVampirism::makeVampire);
         }
         if (entity instanceof PlayerEntity) {
-            VampirePlayer.get((PlayerEntity) entity).onSanguinareFinished();
+            VampirePlayer.getOpt((PlayerEntity) entity).ifPresent(VampirePlayer::onSanguinareFinished);
         }
     }
 
