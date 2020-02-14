@@ -67,7 +67,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     @Override
     public boolean canOpen(PlayerEntity player) {
         if (super.canOpen(player)) {
-            if (HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.basic_alchemy)) {
+            if (HunterPlayer.getOpt(player).map(HunterPlayer::getSkillHandler).map(h -> h.isSkillEnabled(HunterSkills.basic_alchemy)).orElse(false)) {
                 if (ownerID == null) {
                     setOwnerID(player);
                     return true;
@@ -269,7 +269,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         if (world == null) return false;
         if (recipeChecked == recipe) return true;
         PlayerEntity playerEntity = this.world.getPlayerByUuid(ownerID);
-        if (playerEntity == null) return false;
+        if (playerEntity == null || !playerEntity.isAlive()) return false;
         HunterPlayer hunter = HunterPlayer.get(playerEntity);
         boolean canCook = recipe.canBeCooked(hunter.getLevel(), hunter.getSkillHandler());
         if (canCook) {

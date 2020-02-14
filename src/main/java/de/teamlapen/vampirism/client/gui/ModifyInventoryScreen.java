@@ -23,7 +23,7 @@ public class ModifyInventoryScreen {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = false)
     public void onButtonClicked(GuiScreenEvent.MouseClickedEvent.Pre event) {//InventoryScreen changes layout if recipe book button is clicked. Unfortunately it does not propagate this to the screen children so we need to use this
-        if (VampirismConfig.CLIENT.guiSkillButton.get() && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.get(event.getGui().getMinecraft().player).getCurrentFactionPlayer() != null) {
+        if (VampirismConfig.CLIENT.guiSkillButton.get() && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.getOpt(event.getGui().getMinecraft().player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null) != null) {
             //Do the same thing MouseHelper would do. However, if GUI returns false on mouseclick it will be called again by MouseHelper
             if (event.getGui().mouseClicked(event.getMouseX(), event.getMouseY(), event.getButton())) {
                 event.setCanceled(true);
@@ -46,7 +46,7 @@ public class ModifyInventoryScreen {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onInitGuiEventPost(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (VampirismConfig.CLIENT.guiSkillButton.get() && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.get(event.getGui().getMinecraft().player).getCurrentFactionPlayer() != null) {
+        if (VampirismConfig.CLIENT.guiSkillButton.get() && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.getOpt(event.getGui().getMinecraft().player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null) != null) {
             button = new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22, 20, 18, 178, 0, 19, INVENTORY_SKILLS, (context) -> {
                 Minecraft.getInstance().displayGuiScreen(new SkillsScreen());
             });

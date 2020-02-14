@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -55,7 +52,7 @@ public class FactionRegistry implements IFactionRegistry {
         if (entity instanceof IFactionEntity) {
             return ((IFactionEntity) entity).getFaction();
         } else if (entity instanceof PlayerEntity) {
-            return entity.isAlive() ? VampirismAPI.getFactionPlayerHandler(((PlayerEntity) entity)).getCurrentFaction() : null;
+            return VampirismAPI.getFactionPlayerHandler(((PlayerEntity) entity)).map(IFactionPlayerHandler::getCurrentFaction).orElse(null);
         }
         return null;
     }

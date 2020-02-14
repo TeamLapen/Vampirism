@@ -17,6 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 
@@ -125,16 +126,16 @@ public class VampirismAPI {
      * @param player
      * @return The respective {@link IFactionPlayerHandler}
      */
-    public static IFactionPlayerHandler getFactionPlayerHandler(PlayerEntity player) {
-        return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null).orElseThrow(() -> new IllegalStateException("Cannot get faction handler from player"));
+    public static LazyOptional<IFactionPlayerHandler> getFactionPlayerHandler(PlayerEntity player) {
+        return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);
     }
 
 
     /**
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
      */
-    public static IExtendedCreatureVampirism getExtendedCreatureVampirism(CreatureEntity creature) {
-        return creature.getCapability(CAP_CREATURE, null).orElseThrow(() -> new IllegalStateException("Cannot get extended creature from creature"));
+    public static LazyOptional<IExtendedCreatureVampirism> getExtendedCreatureVampirism(CreatureEntity creature) {
+        return creature.getCapability(CAP_CREATURE, null);
     }
 
     /**

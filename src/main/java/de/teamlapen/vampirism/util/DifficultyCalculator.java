@@ -34,6 +34,7 @@ public class DifficultyCalculator {
         int max = 0;
         int sum = 0;
         for (PlayerEntity p : playerList) {
+            if (!p.isAlive()) continue;
             IFactionPlayerHandler handler = FactionPlayerHandler.get(p);
             if (handler.getCurrentLevel() == 0) {
                 min = 0;

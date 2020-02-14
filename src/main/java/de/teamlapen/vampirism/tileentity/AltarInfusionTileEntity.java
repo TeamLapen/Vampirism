@@ -459,7 +459,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         if (this.world == null) return false;
         if (this.world.getPlayers().size() == 0) return false;
         this.player = this.world.getPlayerByUuid(playerID);
-        if (this.player != null) {
+        if (this.player != null && player.isAlive()) {
             this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
             checkStructureLevel(checkRequiredLevel());
         } else {

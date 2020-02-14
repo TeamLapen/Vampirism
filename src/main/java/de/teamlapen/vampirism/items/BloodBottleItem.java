@@ -113,7 +113,7 @@ public class BloodBottleItem extends VampirismItem {
 
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
-        if (!(player instanceof PlayerEntity)) {
+        if (!(player instanceof PlayerEntity) || !player.isAlive()) {
             player.stopActiveHand();
             return;
         }

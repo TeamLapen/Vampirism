@@ -2,10 +2,9 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,8 +38,7 @@ public class InjectionItem extends VampirismItem {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (type == TYPE.SANGUINARE) {
-            IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
-            if (handler.getCurrentLevel(VReference.HUNTER_FACTION) > 0) {
+            if (FactionPlayerHandler.getOpt(playerIn).map(h -> h.getCurrentLevel(VReference.HUNTER_FACTION)).orElse(0) > 0) {
                 VampirismMod.proxy.displayRevertBackScreen();
             } else {
                 if (Helper.canBecomeVampire(playerIn)) {

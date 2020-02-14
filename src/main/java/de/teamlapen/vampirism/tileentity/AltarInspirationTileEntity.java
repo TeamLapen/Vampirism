@@ -90,7 +90,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     }
 
     public void startRitual(PlayerEntity p) {
-        if (ritualTicksLeft > 0) return;
+        if (ritualTicksLeft > 0 || !p.isAlive()) return;
         VampirePlayer player = VampirePlayer.get(p);
         int targetLevel = player.getLevel() + 1;
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
@@ -115,7 +115,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
 
     @Override
     public void tick() {
-        if (ritualTicksLeft == 0 || world == null) return;
+        if (ritualTicksLeft == 0 || world == null || ritualPlayer == null || !ritualPlayer.isAlive()) return;
 
         if (!world.isRemote) {
             switch (ritualTicksLeft) {

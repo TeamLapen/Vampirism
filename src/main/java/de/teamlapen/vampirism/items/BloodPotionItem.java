@@ -1,10 +1,9 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +35,7 @@ public class BloodPotionItem extends VampirismItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (VampirismMod.proxy.getClientPlayer() != null) {
+        if (VampirismMod.proxy.getClientPlayer() != null && VampirismMod.proxy.getClientPlayer().isAlive()) {
             BloodPotions.addTooltip(stack, tooltip, HunterPlayer.get(VampirismMod.proxy.getClientPlayer()));
         }
     }
@@ -61,7 +60,7 @@ public class BloodPotionItem extends VampirismItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
-        if (FactionPlayerHandler.get(playerIn).isInFaction(VReference.HUNTER_FACTION)) {
+        if (Helper.isHunter(playerIn)) {
             playerIn.setActiveHand(handIn);
         }
         return new ActionResult<>(ActionResultType.SUCCESS, stack);

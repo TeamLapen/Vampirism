@@ -131,7 +131,7 @@ public class BloodPotions {
         List<ConfiguredEffect> effects = readEffectsFromNBT(stack.getTag());
         boolean flag = entity instanceof IHunterMob;
         float durationMult = 1;
-        if (!flag && entity instanceof PlayerEntity) {
+        if (!flag && entity instanceof PlayerEntity && entity.isAlive()) {
             IHunterPlayer hunterPlayer = HunterPlayer.get((PlayerEntity) entity);
             if (hunterPlayer.getLevel() > 0) {
                 flag = true;

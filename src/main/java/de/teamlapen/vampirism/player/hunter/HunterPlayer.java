@@ -30,6 +30,8 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
@@ -41,14 +43,28 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  */
 public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHunterPlayer {
 
+    private static final Logger LOGGER = LogManager.getLogger(HunterPlayer.class);
+
     @CapabilityInject(IHunterPlayer.class)
     public static Capability<IHunterPlayer> CAP = getNull();
 
     /**
      * Don't call before the construction event of the player entity is finished
+     * Must check Entity#isAlive before
      */
     public static HunterPlayer get(@Nonnull PlayerEntity player) {
         return (HunterPlayer) player.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get HunterPlayer from player " + player));
+    }
+
+    /**
+     * Return a LazyOptional, but print a warning message if not present.
+     */
+    public static LazyOptional<HunterPlayer> getOpt(@Nonnull PlayerEntity player) {
+        LazyOptional<HunterPlayer> opt = player.getCapability(CAP, null).cast();
+        if (!opt.isPresent()) {
+            LOGGER.warn("Cannot get Hunter player capability. This might break mod functionality.", new Throwable().fillInStackTrace());
+        }
+        return opt;
     }
 
     public static void registerCapability() {
@@ -124,11 +140,13 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         }
     }
 
+    @Nonnull
     @Override
     public ISkillHandler<IHunterPlayer> getSkillHandler() {
         return skillHandler;
     }
 
+    @Nonnull
     public HunterPlayerSpecialAttribute getSpecialAttributes() {
         return this.specialAttributes;
     }

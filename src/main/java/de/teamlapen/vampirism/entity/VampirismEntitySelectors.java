@@ -42,7 +42,7 @@ public class VampirismEntitySelectors {
                             boolean flag1 = f.equals(((IFactionEntity) input).getFaction());
                             return invert != flag1;
                         } else if (f instanceof IPlayableFaction && input instanceof PlayerEntity) {
-                            boolean flag1 = FactionPlayerHandler.get((PlayerEntity) input).isInFaction((IPlayableFaction) f);
+                            boolean flag1 = FactionPlayerHandler.getOpt((PlayerEntity) input).map(h -> h.isInFaction((IPlayableFaction) f)).orElse(false);
                             return invert != flag1;
                         }
                         return invert;
@@ -61,7 +61,7 @@ public class VampirismEntitySelectors {
             if ((bound.getMin() == null || bound.getMin() >= 0) && (bound.getMax() == null || bound.getMax() >= 0)) {
                 parser.addFilter(input -> {
                     if (input instanceof PlayerEntity) {
-                        int level = FactionPlayerHandler.get((PlayerEntity) input).getCurrentLevel();
+                        int level = FactionPlayerHandler.getOpt((PlayerEntity) input).map(FactionPlayerHandler::getCurrentLevel).orElse(0);
                         return (bound.getMin() == null || bound.getMin() <= level) && (bound.getMax() == null || bound.getMax() >= level);
                     }
                     return false;

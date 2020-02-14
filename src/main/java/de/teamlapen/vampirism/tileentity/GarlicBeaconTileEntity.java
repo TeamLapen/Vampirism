@@ -69,10 +69,11 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
     }
 
     public void onTouched(PlayerEntity player) {
-        VampirePlayer vampire = VampirePlayer.get(player);
-        if (vampire.getLevel() > 0) {
-            DamageHandler.affectVampireGarlicDirect(vampire, strength);
-        }
+        VampirePlayer.getOpt(player).ifPresent(vampirePlayer -> {
+            if (vampirePlayer.getLevel() > 0) {
+                DamageHandler.affectVampireGarlicDirect(vampirePlayer, strength);
+            }
+        });
     }
 
     @Override

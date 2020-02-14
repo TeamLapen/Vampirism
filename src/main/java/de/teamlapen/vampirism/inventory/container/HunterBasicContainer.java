@@ -77,7 +77,7 @@ public class HunterBasicContainer extends InventoryContainer {
         if (!canLevelUp()) return;
         int target = player.getLevel() + 1;
         inventory.decrStackSize(0, HunterLevelingConf.instance().getVampireBloodCountForBasicHunter(target));
-        FactionPlayerHandler.get(player.getRepresentingPlayer()).setFactionLevel(VReference.HUNTER_FACTION, target);
+        FactionPlayerHandler.getOpt(player.getRepresentingPlayer()).ifPresent(h -> h.setFactionLevel(VReference.HUNTER_FACTION, target));
         player.getRepresentingPlayer().sendMessage(new TranslationTextComponent("container.vampirism.basic_hunter.levelup"));
         player.getRepresentingPlayer().closeScreen();
 

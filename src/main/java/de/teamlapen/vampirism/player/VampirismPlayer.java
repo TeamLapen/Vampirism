@@ -27,7 +27,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
 
     @Override
     public int getLevel() {
-        return VampirismAPI.getFactionPlayerHandler(player).getCurrentLevel(getFaction());
+        return VampirismAPI.getFactionPlayerHandler(player).map(handler -> handler.getCurrentLevel(getFaction())).orElse(0);
     }
 
 

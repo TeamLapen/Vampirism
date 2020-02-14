@@ -21,12 +21,8 @@ public class LevelUpCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("levelup")
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
-                .executes(context -> {
-                    return levelUp(context, Lists.newArrayList(context.getSource().asPlayer()));
-                }).then(Commands.argument("player", EntityArgument.entities())
-                        .executes(context -> {
-                            return levelUp(context, EntityArgument.getPlayers(context, "player"));
-                        }));
+                .executes(context -> levelUp(context, Lists.newArrayList(context.getSource().asPlayer()))).then(Commands.argument("player", EntityArgument.entities())
+                        .executes(context -> levelUp(context, EntityArgument.getPlayers(context, "player"))));
     }
 
     private static int levelUp(CommandContext<CommandSource> context, Collection<ServerPlayerEntity> players) {
