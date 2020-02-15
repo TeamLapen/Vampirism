@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModCommands;
 import de.teamlapen.vampirism.core.ModEventHandler;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModWorld;
 import de.teamlapen.vampirism.core.RegistryManager;
 import de.teamlapen.vampirism.data.BlockStateGenerator;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -254,6 +255,7 @@ public class VampirismMod {
         if (inDev) {
             Tests.runBackgroundTests();
         }
+        ModWorld.addVillageStructures();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
