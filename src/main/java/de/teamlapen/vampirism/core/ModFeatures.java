@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.gen.features.VampireForestFlowerFeature;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
+import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FlowersFeature;
@@ -15,6 +16,7 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.TreeFeature;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.template.IStructureProcessorType;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -28,6 +30,8 @@ public class ModFeatures {
     public static final IStructurePieceType hunter_camp_fireplace = IStructurePieceType.register(HunterCampPieces.Fireplace::new, REFERENCE.MODID + ":hunter_camp_fireplace");
     public static final IStructurePieceType hunter_camp_tent = IStructurePieceType.register(HunterCampPieces.Tent::new, REFERENCE.MODID + ":hunter_camp_tent");
     public static final IStructurePieceType hunter_camp_special = IStructurePieceType.register(HunterCampPieces.SpecialBlock::new, REFERENCE.MODID + ":hunter_camp_craftingtable");
+
+    public static final IStructureProcessorType random_selector = IStructureProcessorType.register(REFERENCE.MODID+":random_selector", RandomStructureProcessor::new);
 
 
     static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
