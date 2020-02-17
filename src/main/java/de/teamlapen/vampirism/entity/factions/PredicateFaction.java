@@ -58,7 +58,7 @@ public class PredicateFaction implements Predicate<LivingEntity> {
 
         }
         if (player && input instanceof PlayerEntity && input.isAlive()) {
-            IFactionPlayer fp = FactionPlayerHandler.get((PlayerEntity) input).getCurrentFactionPlayer();
+            IFactionPlayer fp = FactionPlayerHandler.get((PlayerEntity) input).getCurrentFactionPlayer().orElse(null);
             IFaction f = fp == null ? null : (ignoreDisguise ? fp.getFaction() : fp.getDisguisedAs());
             if (f == null) {
                 return neutralPlayer;

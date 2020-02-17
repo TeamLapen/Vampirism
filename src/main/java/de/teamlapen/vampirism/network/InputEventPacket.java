@@ -39,7 +39,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -86,7 +86,7 @@ public class InputEventPacket implements IMessage {
         ServerPlayerEntity player = ctx.getSender();
         Validate.notNull(player);
         ctx.enqueueWork(() -> {
-            @Nullable IFactionPlayer factionPlayer = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(null);
+            Optional<? extends IFactionPlayer> factionPlayerOpt = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty());
             switch (msg.action) {
                 case SUCKBLOOD: {
                     try {
@@ -105,7 +105,7 @@ public class InputEventPacket implements IMessage {
                     break;
                 case TOGGLEACTION: {
                     ResourceLocation id = new ResourceLocation(msg.param);
-                    if (factionPlayer != null) {
+                    factionPlayerOpt.ifPresent(factionPlayer -> {
                         IActionHandler actionHandler = factionPlayer.getActionHandler();
                         IAction action = ModRegistries.ACTIONS.getValue(id);
                         if (action != null) {
@@ -127,9 +127,7 @@ public class InputEventPacket implements IMessage {
                         } else {
                             LOGGER.error("Failed to find action with id {}", id);
                         }
-                    } else {
-                        LOGGER.error("Player {} is in no faction, so he cannot use action {}", player, id);
-                    }
+                    });
 
 
                     break;
@@ -144,7 +142,7 @@ public class InputEventPacket implements IMessage {
                     }
                     break;
                 case UNLOCKSKILL:
-                    if (factionPlayer != null) {
+                    factionPlayerOpt.ifPresent(factionPlayer -> {
                         ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(msg.param));
                         if (skill != null) {
                             ISkillHandler skillHandler = factionPlayer.getSkillHandler();
@@ -164,14 +162,12 @@ public class InputEventPacket implements IMessage {
                         } else {
                             LOGGER.warn("Skill {} was not found so {} cannot activate it", msg.param, player);
                         }
-                    } else {
-                        LOGGER.error("Player {} is in no faction, so he cannot unlock skills", player);
-                    }
+                    });
 
 
                     break;
                 case RESETSKILL:
-                    if (factionPlayer != null) {
+                    factionPlayerOpt.ifPresent(factionPlayer -> {
                         ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                         skillHandler.resetSkills();
                         if (!VampirismMod.inDev && !VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
@@ -187,9 +183,7 @@ public class InputEventPacket implements IMessage {
                             HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                         }
                         player.sendMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"));
-                    } else {
-                        LOGGER.error("Player %s is in no faction, so he cannot reset skills");
-                    }
+                    });
                     break;
                 case TRAINERLEVELUP:
                     if (player.openContainer instanceof HunterTrainerContainer) {

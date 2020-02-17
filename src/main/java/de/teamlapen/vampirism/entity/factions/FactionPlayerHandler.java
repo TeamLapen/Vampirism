@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
@@ -91,7 +92,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private final PlayerEntity player;
-    private IPlayableFaction currentFaction = null;
+    private IPlayableFaction<? extends IFactionPlayer> currentFaction = null;
     private int currentLevel = 0;
 
     @Nullable
@@ -114,7 +115,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Override
     public boolean canLeaveFaction() {
-        return currentFaction == null || currentFaction.getPlayerCapability(player).canLeaveFaction();
+        return currentFaction == null || currentFaction.getPlayerCapability(player).map(IFactionPlayer::canLeaveFaction).orElse(false);
     }
 
     public void copyFrom(PlayerEntity old) {
@@ -142,13 +143,14 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public IPlayableFaction getCurrentFaction() {
+    public IPlayableFaction<? extends IFactionPlayer> getCurrentFaction() {
         return currentFaction;
     }
 
+    @Nonnull
     @Override
-    public IFactionPlayer getCurrentFactionPlayer() {
-        return currentFaction == null ? null : currentFaction.getPlayerCapability(player);
+    public Optional<? extends IFactionPlayer> getCurrentFactionPlayer() {
+        return currentFaction == null ? Optional.empty() : currentFaction.getPlayerCapability(player).map(Optional::of).orElse(Optional.empty());
     }
 
     @Override
@@ -246,7 +248,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         IPlayableFaction old = currentFaction;
         int oldLevel = currentLevel;
         if (currentFaction != null && (!currentFaction.equals(faction) || level == 0)) {
-            if (!currentFaction.getPlayerCapability(player).canLeaveFaction()) {
+            if (!currentFaction.getPlayerCapability(player).map(IFactionPlayer::canLeaveFaction).orElse(false)) {
                 LOGGER.info("You cannot leave faction {}, it is prevented by respective mod", currentFaction.getID());
                 return false;
             }
@@ -326,14 +328,14 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      * @param oldFaction
      * @param oldLevel
      */
-    private void notifyFaction(IPlayableFaction oldFaction, int oldLevel) {
+    private void notifyFaction(IPlayableFaction<? extends IFactionPlayer> oldFaction, int oldLevel) {
         if (oldFaction != null && !oldFaction.equals(currentFaction)) {
             LOGGER.debug("Leaving faction {}", oldFaction.getID());
-            oldFaction.getPlayerCapability(player).onLevelChanged(0, oldLevel);
+            oldFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(0, oldLevel));
         }
         if (currentFaction != null) {
             LOGGER.debug("Changing to {} {}", currentFaction, currentLevel);
-            currentFaction.getPlayerCapability(player).onLevelChanged(currentLevel, Objects.equals(oldFaction, currentFaction) ? oldLevel : 0);
+            currentFaction.getPlayerCapability(player).ifPresent(c -> c.onLevelChanged(currentLevel, Objects.equals(oldFaction, currentFaction) ? oldLevel : 0));
         }
         ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getID().hashCode());
     }
