@@ -6,6 +6,7 @@ import net.minecraft.util.DamageSource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Handles factions and levels for the player
@@ -29,13 +30,13 @@ public interface IFactionPlayerHandler {
      * @return The currently active faction. Can be null
      */
     @Nullable
-    IPlayableFaction getCurrentFaction();
+    IPlayableFaction<? extends IFactionPlayer> getCurrentFaction();
 
     /**
      * @return The currently active faction player. Can be null
      */
-    @Nullable
-    IFactionPlayer getCurrentFactionPlayer();
+    @Nonnull
+    Optional<? extends IFactionPlayer> getCurrentFactionPlayer();
 
     /**
      * If no faction is active this returns 0.

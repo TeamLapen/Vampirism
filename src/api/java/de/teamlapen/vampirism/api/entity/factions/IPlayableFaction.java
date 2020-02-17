@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.common.util.LazyOptional;
 
 /**
  * Represents one playable faction (e.g. Vampire Player)
@@ -20,7 +21,7 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
      * @param player
      * @return The "<? extends IFactionPlayer>" of this faction for the given player
      */
-    T getPlayerCapability(PlayerEntity player);
+    LazyOptional<T> getPlayerCapability(PlayerEntity player);
 
     /**
      * @return If the level should be rendered
