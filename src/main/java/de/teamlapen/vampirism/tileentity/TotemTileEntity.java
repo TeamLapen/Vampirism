@@ -717,7 +717,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         return hunter;
     }
 
-    private void spawnCaptureEntity(IFaction faction) {
+    private void spawnCaptureEntity(IFaction<?> faction) {
         EntityType<? extends MobEntity> entityType = this.getCaptureEntityForFaction(faction);
         if (entityType == null) {
             LOGGER.warn("No village capture entity registered for {}", faction);
@@ -759,7 +759,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         }
     }
 
-    private EntityType<? extends MobEntity> getCaptureEntityForFaction(IFaction faction) {
+    private EntityType<? extends MobEntity> getCaptureEntityForFaction(IFaction<?> faction) {
         return WeightedRandom.getRandomItem(RNG, captureEntities.get(faction)).getEntity();
     }
 
@@ -818,6 +818,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             if (fullConvert) {
                 List<VampireBaseEntity> vampireEntities = this.world.getEntitiesWithinAABB(VampireBaseEntity.class, getVillageArea());
                 for (VampireBaseEntity vampire : vampireEntities) {
+                    if(vampire instanceof ICaptureIgnore)
+                        continue;
                     this.spawnEntity(this.getCaptureEntityForFaction(this.capturingFaction).create(this.world), vampire, true);
                 }
             }
@@ -835,9 +837,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                 }
             }
             if (fullConvert) {
-                List<HunterBaseEntity> vampireEntities = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, getVillageArea());
-                for (HunterBaseEntity vampire : vampireEntities) {
-                    this.spawnEntity(this.getCaptureEntityForFaction(this.capturingFaction).create(this.world), vampire, true);
+                List<HunterBaseEntity> hunterEntities = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, getVillageArea());
+                for (HunterBaseEntity hunter : hunterEntities) {
+                    if(hunter instanceof ICaptureIgnore)
+                        continue;
+                    this.spawnEntity(this.getCaptureEntityForFaction(this.capturingFaction).create(this.world), hunter, true);
                 }
             }
             updateTrainer(true);
