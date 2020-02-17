@@ -856,25 +856,23 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     private void updateTrainer(boolean toDummy) {
+        List<Entity> trainer;
+        EntityType<?> entityType;
         if (toDummy) {
-            List<HunterTrainerEntity> huntertrainer = this.world.getEntitiesWithinAABB(HunterTrainerEntity.class, this.getVillageArea());
-            for (HunterTrainerEntity trainer : huntertrainer) {
-                DummyHunterTrainerEntity dummy = ModEntities.hunter_trainer_dummy.create(this.world);
-                dummy.copyDataFromOld(trainer);
-                dummy.setUniqueId(MathHelper.getRandomUUID());
-                trainer.remove();
-                world.addEntity(dummy);
-            }
+            trainer = this.world.getEntitiesWithinAABB(HunterTrainerEntity.class, this.getVillageArea());
+            entityType = ModEntities.hunter_trainer_dummy;
         } else {
-            List<DummyHunterTrainerEntity> huntertrainerdummy = this.world.getEntitiesWithinAABB(DummyHunterTrainerEntity.class, this.getVillageArea());
-            for (DummyHunterTrainerEntity dummy : huntertrainerdummy) {
-                HunterTrainerEntity trainer = ModEntities.hunter_trainer.create(this.world);
-                trainer.copyDataFromOld(dummy);
-                trainer.setUniqueId(MathHelper.getRandomUUID());
-                trainer.setHome(dummy.getHome());
-                dummy.remove();
-                world.addEntity(trainer);
-            }
+            trainer = this.world.getEntitiesWithinAABB(DummyHunterTrainerEntity.class, this.getVillageArea());
+            entityType = ModEntities.hunter_trainer;
+        }
+        for (Entity oldEntity : trainer) {
+            Entity newEntity = entityType.create(this.world);
+            if(newEntity == null)continue;
+            newEntity.copyDataFromOld(oldEntity);
+            newEntity.setUniqueId(MathHelper.getRandomUUID());
+            oldEntity.remove();
+            newEntity.setInvulnerable(true);
+            world.addEntity(newEntity);
         }
     }
 
