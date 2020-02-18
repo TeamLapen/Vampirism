@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.world.IVillageAttributes;
+import de.teamlapen.vampirism.blocks.TotemBaseBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
@@ -457,7 +458,12 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         }
         //server ---------------------------------
         else {
-            if (isDisabled) this.world.destroyBlock(this.pos, true);
+            if (isDisabled){
+                this.world.destroyBlock(this.pos, true);
+                if(this.world.getBlockState(this.pos.down()).getBlock() instanceof TotemBaseBlock){
+                    this.world.destroyBlock(this.pos.down(), true);
+                }
+            }
             if (time % 20 == 0)
                 this.updateTileStatus();
             if (!this.checkTileStatus()) return;
@@ -871,7 +877,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         }
         for (Entity oldEntity : trainer) {
             Entity newEntity = entityType.create(this.world);
-            if(newEntity == null)continue;
+            if(newEntity == null) continue;
             newEntity.copyDataFromOld(oldEntity);
             newEntity.setUniqueId(MathHelper.getRandomUUID());
             oldEntity.remove();
