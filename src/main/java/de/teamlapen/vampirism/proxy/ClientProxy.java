@@ -133,7 +133,7 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(overlay);
         MinecraftForge.EVENT_BUS.register(new RenderHandler(Minecraft.getInstance()));
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
-        MinecraftForge.EVENT_BUS.register(new ModifyInventoryScreen());
+        MinecraftForge.EVENT_BUS.register(new ScreenEventHandler());
     }
 
     private void registerVampireEntityOverlay(EntityRendererManager manager, EntityType<? extends CreatureEntity> type, ResourceLocation loc) {

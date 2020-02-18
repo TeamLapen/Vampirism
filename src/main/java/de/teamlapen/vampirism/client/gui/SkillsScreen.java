@@ -187,6 +187,9 @@ public class SkillsScreen extends Screen {
 
     @Override
     public void tick() {
+        if (!this.minecraft.player.isAlive()) {
+            this.minecraft.player.closeScreen();
+        }
     }
 
     protected void drawTitle() {
