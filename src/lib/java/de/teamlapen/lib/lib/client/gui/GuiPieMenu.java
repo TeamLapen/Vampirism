@@ -170,7 +170,11 @@ public abstract class GuiPieMenu<T> extends Screen {
     @Override
     public void tick() {
         super.tick();
-        this.minecraft.player.movementInput.tick(this.minecraft.player.shouldRenderSneaking(), this.minecraft.player.isSpectator());
+        if (!this.minecraft.player.isAlive()) {
+            this.minecraft.player.closeScreen();
+        } else {
+            this.minecraft.player.movementInput.tick(this.minecraft.player.shouldRenderSneaking(), this.minecraft.player.isSpectator());
+        }
     }
 
     protected void afterIconDraw(T element, int x, int y) {

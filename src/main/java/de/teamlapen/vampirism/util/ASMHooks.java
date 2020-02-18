@@ -13,6 +13,6 @@ public class ASMHooks {
     }
 
     public static boolean overwritePlayerSize(PlayerEntity player) {
-        return VampirePlayer.getOpt(player).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false);
+        return player.isAlive() && VampirePlayer.getOpt(player).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false);
     }
 }

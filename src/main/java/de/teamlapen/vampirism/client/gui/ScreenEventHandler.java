@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 /**
  * Add a button to the inventory screen that allows opening the skill menu from there
  */
-public class ModifyInventoryScreen {
+public class ScreenEventHandler {
 
     private final static ResourceLocation INVENTORY_SKILLS = new ResourceLocation("vampirism", "textures/gui/inventory_skills.png");
     private ImageButton button;

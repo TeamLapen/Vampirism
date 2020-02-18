@@ -332,7 +332,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void eyeHeight(EntityEvent.EyeHeight event) {
         if (event.getEntity() instanceof PlayerEntity) {
-            if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false)) {
+            if (event.getEntity().isAlive() && VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false)) {
                 event.setNewHeight(BatVampireAction.BAT_EYE_HEIGHT);
             }
         }
