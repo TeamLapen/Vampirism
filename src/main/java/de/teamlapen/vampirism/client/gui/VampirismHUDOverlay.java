@@ -50,6 +50,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
+
 /**
  * Handles general Overlay thingies TODO change batmode color
  */
@@ -98,7 +100,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
         if (event.phase == TickEvent.Phase.END)
             return;
-        IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer();
+
+        @Nullable IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer().orElse(null);
         if (player instanceof VampirePlayer) {
             handleScreenColorVampire((VampirePlayer) player);
         } else if (player instanceof HunterPlayer) {

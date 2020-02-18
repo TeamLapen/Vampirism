@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 
 import java.awt.*;
@@ -41,8 +42,8 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
 
 
     @Override
-    public T getPlayerCapability(PlayerEntity player) {
-        return player.getCapability(playerCapabilitySupplier.get(), null).orElseThrow(() -> new IllegalStateException("Cannot get Faction Capability"));
+    public LazyOptional<T> getPlayerCapability(PlayerEntity player) {
+        return player.getCapability(playerCapabilitySupplier.get(), null);
     }
 
     @Override

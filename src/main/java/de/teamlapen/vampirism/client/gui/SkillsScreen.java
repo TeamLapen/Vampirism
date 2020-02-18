@@ -41,6 +41,7 @@ import org.lwjgl.glfw.GLFW;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -74,8 +75,8 @@ public class SkillsScreen extends Screen {
 
     @Override
     public void init() {
-        IFactionPlayer factionPlayer = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
-        if (factionPlayer != null) {
+        Optional<? extends IFactionPlayer> fOpt = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
+        fOpt.ifPresent(factionPlayer -> {
             IPlayableFaction faction = factionPlayer.getFaction();
             display = true;
             skillHandler = (SkillHandler) factionPlayer.getSkillHandler();
@@ -89,7 +90,7 @@ public class SkillsScreen extends Screen {
             skillNodes.clear();
             SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
             addToList(skillNodes, root);
-        }
+        });
         this.addButton(new Button(this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done"), (context) -> {
             this.minecraft.displayGuiScreen(null);
         }));
@@ -112,11 +113,10 @@ public class SkillsScreen extends Screen {
                 Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(faction.getColor(), true));
             }));
 
-            if (factionPlayer.getLevel() < 2) {
+            if (fOpt.map(IFactionPlayer::getLevel).orElse(0) < 2) {
                 resetSkills.active = false;
             }
         }
-
 
     }
 
