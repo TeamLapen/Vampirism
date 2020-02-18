@@ -254,8 +254,8 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.NameFormat event) {
         if (event.getPlayer() != null && VampirismConfig.SERVER.factionColorInChat.get()) {
-            FactionPlayerHandler.getOpt(event.getPlayer()).map(FactionPlayerHandler::getCurrentFactionPlayer).ifPresent(fp -> {
-                IFaction f = fp == null ? null : fp.getDisguisedAs();
+            FactionPlayerHandler.getOpt(event.getPlayer()).map(FactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).ifPresent(fp -> {
+                IFaction f = fp.getDisguisedAs();
                 if (f != null) {
                     event.setDisplayname(f.getChatColor() + event.getDisplayname() + TextFormatting.RESET);
                     if (fp instanceof IVampirePlayer && !fp.isDisguised() && ((IVampirePlayer) fp).isVampireLord()) {
@@ -305,7 +305,7 @@ public class ModPlayerEventHandler {
                     player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by_level", usingFaction == null ? new TranslationTextComponent("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)));
                 return false;
             } else if (requiredSkill != null) {
-                IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer();
+                IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
                 if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                     if (message)
                         player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(requiredSkill.getTranslationKey())));

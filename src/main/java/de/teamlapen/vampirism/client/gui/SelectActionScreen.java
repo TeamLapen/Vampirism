@@ -200,7 +200,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
             else return Color.WHITE;
         }
         if (!minecraft.player.isAlive()) return Color.RED;
-        IFactionPlayer factionPlayer = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
+        IFactionPlayer factionPlayer = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null);
         if (!(s.canUse(factionPlayer) == IAction.PERM.ALLOWED) || actionHandler.getPercentageForAction(s) < 0) {
             return Color.RED;
         } else if (actionHandler.getPercentageForAction(s) > 0) {
@@ -228,18 +228,17 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
 
     @Override
     protected void onElementSelected(IAction action) {
-        if (action != fakeAction && action.canUse(FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer()) == IAction.PERM.ALLOWED) {
+        if (action != fakeAction && action.canUse(FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null)) == IAction.PERM.ALLOWED) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName().toString()));
         }
     }
 
     @Override
     protected void onGuiInit() {
-        IFactionPlayer player = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
-        actionHandler = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().getActionHandler();
-        if (player != null) {
-            updateElements();
-        }
+        IFactionPlayer player = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null);
+        actionHandler = player.getActionHandler();
+        updateElements();
+
     }
 
     /**

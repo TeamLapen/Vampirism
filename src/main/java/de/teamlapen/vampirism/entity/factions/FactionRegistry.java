@@ -3,7 +3,10 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.*;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -14,10 +17,8 @@ import net.minecraftforge.common.util.NonNullSupplier;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 
@@ -52,7 +53,7 @@ public class FactionRegistry implements IFactionRegistry {
         if (entity instanceof IFactionEntity) {
             return ((IFactionEntity) entity).getFaction();
         } else if (entity instanceof PlayerEntity) {
-            return VampirismAPI.getFactionPlayerHandler(((PlayerEntity) entity)).map(IFactionPlayerHandler::getCurrentFaction).orElse(null);
+            return VampirismAPI.getFactionPlayerHandler(((PlayerEntity) entity)).map(f -> Optional.ofNullable(f.getCurrentFaction())).orElse(Optional.empty()).orElse(null); //Not a very clean solution
         }
         return null;
     }

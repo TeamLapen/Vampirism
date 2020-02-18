@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Default Implementation of {@link IFactionPlayerHandler} for the entity capability which is never used, since a default implementation, does not accept constructor parameter.
@@ -38,9 +39,10 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
         return null;
     }
 
+    @Nonnull
     @Override
-    public IFactionPlayer getCurrentFactionPlayer() {
-        return null;
+    public Optional<IFactionPlayer> getCurrentFactionPlayer() {
+        return Optional.empty();
     }
 
     @Override

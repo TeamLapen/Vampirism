@@ -31,7 +31,7 @@ public class SkillCommand extends BasicCommand {
     }
 
     private static int disableall(CommandSource commandSource, ServerPlayerEntity asPlayer) {
-        IFactionPlayer factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer() : null;
+        IFactionPlayer factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer().orElse(null) : null;
         if (factionPlayer == null) {
             commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.noinfaction"), false);
             return 0;
@@ -41,7 +41,7 @@ public class SkillCommand extends BasicCommand {
     }
 
     private static int skill(CommandSource commandSource, ServerPlayerEntity asPlayer, ISkill skill) {
-        IFactionPlayer factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer() : null;
+        IFactionPlayer factionPlayer = asPlayer.isAlive() ? FactionPlayerHandler.get(asPlayer).getCurrentFactionPlayer().orElse(null) : null;
         if (factionPlayer == null) {
             commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.noinfaction"), false);
             return 0;

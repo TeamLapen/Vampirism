@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
@@ -157,10 +156,11 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         if (!(entityLiving instanceof PlayerEntity)) return stack;
-        IVampirePlayer vampire = VReference.VAMPIRE_FACTION.getPlayerCapability((PlayerEntity) entityLiving);
-        if (((PlayerEntity) entityLiving).isCreative() || vampire.useBlood(2, false)) {
-            this.charge(stack, 2 * VReference.FOOD_TO_FLUID_BLOOD);
-        }
+        VReference.VAMPIRE_FACTION.getPlayerCapability((PlayerEntity) entityLiving).ifPresent(vampire -> {
+            if (((PlayerEntity) entityLiving).isCreative() || vampire.useBlood(2, false)) {
+                this.charge(stack, 2 * VReference.FOOD_TO_FLUID_BLOOD);
+            }
+        });
         if (getCharged(stack) == 1) {
             tryName(stack, (PlayerEntity) entityLiving);
         }

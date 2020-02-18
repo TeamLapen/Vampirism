@@ -20,6 +20,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.util.DamageSource;
 
+import javax.annotation.Nullable;
+
 /**
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
  */
@@ -38,7 +40,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher {
                 boolean instaKillFromBehind = false;
                 boolean instaKillLowHealth = false;
                 if (attacker instanceof PlayerEntity && attacker.isAlive()) {
-                    IFactionPlayer factionPlayer = FactionPlayerHandler.get((PlayerEntity) attacker).getCurrentFactionPlayer();
+                    @Nullable IFactionPlayer factionPlayer = FactionPlayerHandler.get((PlayerEntity) attacker).getCurrentFactionPlayer().orElse(null);
                     if (factionPlayer != null && factionPlayer.getFaction().equals(VReference.HUNTER_FACTION)) {
                         ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                         if (skillHandler.isSkillEnabled(HunterSkills.stake2)) {

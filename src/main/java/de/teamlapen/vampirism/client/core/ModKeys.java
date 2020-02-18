@@ -138,14 +138,12 @@ public class ModKeys {
         } else if (keyPressed == KEY.ACTION1) {
             PlayerEntity player = Minecraft.getInstance().player;
             if (player.isAlive()) {
-                FactionPlayerHandler factionHandler = FactionPlayerHandler.get(player);
-                toggleBoundAction(factionHandler.getCurrentFactionPlayer(), factionHandler.getBoundAction1());
+                FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction1())));
             }
         } else if (keyPressed == KEY.ACTION2) {
             PlayerEntity player = Minecraft.getInstance().player;
             if (player.isAlive()) {
-                FactionPlayerHandler factionHandler = FactionPlayerHandler.get(player);
-                toggleBoundAction(factionHandler.getCurrentFactionPlayer(), factionHandler.getBoundAction2());
+                FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction2())));
             }
         }
         if (suckKeyDown && !SUCK.isKeyDown()) {
@@ -178,21 +176,18 @@ public class ModKeys {
 
     /**
      * Try to toggle the given action
-     *
-     * @param player if null nothing happens
-     */
-    private void toggleBoundAction(@Nullable IFactionPlayer player, @Nullable IAction action) {
-        if (player != null) {
-            if (action == null) {
-                player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
+     **/
+    private void toggleBoundAction(@Nonnull IFactionPlayer player, @Nullable IAction action) {
+        if (action == null) {
+            player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
+        } else {
+            if (!action.getFaction().equals(player.getFaction())) {
+                player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.only_faction", action.getFaction().getName()), true);
             } else {
-                if (!action.getFaction().equals(player.getFaction())) {
-                    player.getRepresentingPlayer().sendStatusMessage(new TranslationTextComponent("text.vampirism.action.only_faction", action.getFaction().getName()), true);
-                } else {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName()));
-                }
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName()));
             }
         }
+
     }
 
     public enum KEY {

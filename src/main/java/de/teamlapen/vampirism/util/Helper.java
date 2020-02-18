@@ -186,7 +186,8 @@ public class Helper {
         int reqLevel = item.getMinLevel(stack);
         if (usingFaction != null && !playerHandler.isInFaction(usingFaction)) return false;
         if (playerHandler.getCurrentLevel() < reqLevel) return false;
-        return !(requiredSkill != null && (playerHandler.getCurrentFactionPlayer() == null || !playerHandler.getCurrentFactionPlayer().getSkillHandler().isSkillEnabled(requiredSkill)));
+        if (requiredSkill == null) return true;
+        return playerHandler.getCurrentFactionPlayer().map(fp -> fp.getSkillHandler()).map(s -> s.isSkillEnabled(requiredSkill)).orElse(false);
     }
 
     public static int getExperiencePoints(LivingEntity entity, PlayerEntity player) {
