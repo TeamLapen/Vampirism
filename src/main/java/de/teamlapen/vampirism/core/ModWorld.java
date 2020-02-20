@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.util.ASMHooks;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import de.teamlapen.vampirism.world.gen.util.RandomBlockState;
@@ -59,6 +60,9 @@ public class ModWorld {
     }
 
     public static void addVillageStructures() {
+        //ensure single generation of following structures
+        ASMHooks.addSingleInstanceStructure(Lists.newArrayList("Single[vampirism:village/totem]", "Single[vampirism:village/desert/houses/hunter_trainer]", "Single[vampirism:village/plains/houses/hunter_trainer]", "Single[vampirism:village/snowy/houses/hunter_trainer]", "Single[vampirism:village/savanna/houses/hunter_trainer]", "Single[vampirism:village/taiga/houses/hunter_trainer]"));
+
         //init pools for modification
         PlainsVillagePools.init();
         SnowyVillagePools.init();
