@@ -33,6 +33,7 @@ public class ModLootTables {
     public static final ResourceLocation hunter = register("entities/" + ModEntities.hunter.getRegistryName().getPath());
     public static final ResourceLocation advanced_vampire = register("entities/" + ModEntities.advanced_vampire.getRegistryName().getPath());
     public static final ResourceLocation advanced_hunter = register("entities/" + ModEntities.advanced_hunter.getRegistryName().getPath());
+    public static final ResourceLocation chest_hunter_trainer = register("chests/hunter_trainer");
 
     private static final List<String> INJECTION_TABLES = ImmutableList.of("abandoned_mineshaft", "jungle_temple", "stronghold_corridor", "desert_pyramid", "stronghold_library");
     private static final List<String> STRUCTURE_TABLES = Lists.newArrayList();
@@ -94,10 +95,5 @@ public class ModLootTables {
         ResourceLocation id = new ResourceLocation(rs_id);
         LootTables.register(id);
         return id;
-    }
-
-    private static LootPool getInjectPool(String entryName) {
-        LootEntry.Builder<?> entryBuilder = TableLootEntry.builder(new ResourceLocation(REFERENCE.MODID, "inject/" + entryName)).weight(1);
-        return LootPool.builder().name("vampirism_inject_pool").bonusRolls(0, 1).rolls(new RandomValueRange(1)).addEntry(entryBuilder).build();
     }
 }
