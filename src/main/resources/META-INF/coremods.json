@@ -1,3 +1,4 @@
 {
-  "playersize": "META-INF/coremods/batmode.js"
+  "batmode": "META-INF/coremods/batmode.js",
+  "jigsaw": "META-INF/coremods/jigsaw.js"
 }
