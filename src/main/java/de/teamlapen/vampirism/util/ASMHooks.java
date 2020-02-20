@@ -10,8 +10,6 @@ import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
 import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 
-import org.apache.logging.log4j.LogManager;
-
 import java.util.List;
 
 
