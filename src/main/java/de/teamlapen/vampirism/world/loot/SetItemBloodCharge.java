@@ -15,7 +15,7 @@ import net.minecraft.world.storage.loot.functions.ILootFunction;
 /**
  * Function to set the charge of any {@link de.teamlapen.vampirism.api.items.IBloodChargeable}
  */
-class SetItemBloodCharge implements ILootFunction {
+public class SetItemBloodCharge implements ILootFunction {
 
     /**
      * In blood mB. Used if minCharge and maxCharge are -1
@@ -52,7 +52,7 @@ class SetItemBloodCharge implements ILootFunction {
 
     public static class Serializer extends ILootFunction.Serializer<SetItemBloodCharge> {
 
-        protected Serializer() {
+        public Serializer() {
             super(new ResourceLocation(REFERENCE.MODID, "set_item_blood_charge"), SetItemBloodCharge.class);
         }
 

@@ -58,6 +58,7 @@ public class RegistryManager implements IInitListener {
                 ModItems.registerCraftingRecipes();
                 ModAdvancements.registerAdvancements();
                 ModCommands.registerArgumentTypes();
+                ModLootTables.registerLootFunctions();
                 break;
             case LOAD_COMPLETE:
                 if (ModEffects.checkNightVision()) {

@@ -27,7 +27,7 @@ public class TentSpawnerCondition implements ILootCondition {
 
     public static class Serializer extends ILootCondition.AbstractSerializer<TentSpawnerCondition> {
 
-        protected Serializer() {
+        public Serializer() {
             super(new ResourceLocation(REFERENCE.MODID, "is_tent_spawner"), TentSpawnerCondition.class);
         }
 

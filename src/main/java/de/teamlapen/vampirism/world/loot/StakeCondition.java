@@ -32,7 +32,7 @@ public class StakeCondition implements ILootCondition {
 
     public static class Serializer extends ILootCondition.AbstractSerializer<StakeCondition> {
 
-        protected Serializer() {
+        public Serializer() {
             super(new ResourceLocation(REFERENCE.MODID, "with_stake"), StakeCondition.class);
         }
 
