@@ -16,9 +16,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -32,6 +34,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
     private static final ITextComponent name = new TranslationTextComponent("container.huntertrainer");
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private PlayerEntity trainee;
+    private boolean shouldCreateHome;
 
     public HunterTrainerEntity(EntityType<? extends HunterTrainerEntity> type, World world) {
         super(type, world, false);
@@ -73,6 +76,22 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
     public void setHome(AxisAlignedBB box) {
         super.setHome(box);
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT nbt) {
+        super.readAdditional(nbt);
+        if(nbt.contains("createHome") && (this.shouldCreateHome = nbt.getBoolean("createHome"))){
+            if(this.getHomePosition().equals(BlockPos.ZERO)) {
+                setHomePosAndDistance(this.getPosition(), 5);
+            }
+        }
+    }
+
+    @Override
+    public void writeAdditional(CompoundNBT nbt) {
+        super.writeAdditional(nbt);
+        nbt.putBoolean("createHome", this.shouldCreateHome);
     }
 
     @Override
