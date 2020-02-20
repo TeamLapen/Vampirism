@@ -34,7 +34,7 @@ public class SetMetaBasedOnLevel implements ILootFunction {
 
     public static class Serializer extends ILootFunction.Serializer<SetMetaBasedOnLevel> {
 
-        protected Serializer() {
+        public Serializer() {
             super(new ResourceLocation(REFERENCE.MODID, "set_meta_from_level"), SetMetaBasedOnLevel.class);
         }
 

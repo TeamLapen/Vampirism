@@ -34,7 +34,7 @@ public class AdjustableLevelCondition implements ILootCondition {
 
     public static class Serializer extends ILootCondition.AbstractSerializer<AdjustableLevelCondition> {
 
-        protected Serializer() {
+        public Serializer() {
             super(new ResourceLocation(REFERENCE.MODID, "adjustable_level"), AdjustableLevelCondition.class);
         }
 

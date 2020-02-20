@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModCommands;
 import de.teamlapen.vampirism.core.ModEventHandler;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.core.ModWorld;
 import de.teamlapen.vampirism.core.RegistryManager;
 import de.teamlapen.vampirism.data.BlockStateGenerator;
@@ -48,7 +49,6 @@ import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.WorldGenManager;
 import de.teamlapen.vampirism.world.gen.structures.StructureManager;
-import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityClassification;
@@ -178,7 +178,7 @@ public class VampirismMod {
 
     @SubscribeEvent
     public void onServerStarted(FMLServerStartedEvent event) {
-        if (!LootHandler.getInstance().checkAndResetInsertedAll()) {
+        if (!ModLootTables.checkAndResetInsertedAll()) {
             LOGGER.warn("LootTables -------------------------------");
             LOGGER.warn("LootTables Failed to inject all loottables");
             LOGGER.warn("LootTables -------------------------------");
@@ -284,7 +284,7 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
 
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
-        MinecraftForge.EVENT_BUS.register(LootHandler.getInstance());
+        MinecraftForge.EVENT_BUS.addListener(ModLootTables::onLootLoad);
 
         SupporterManager.getInstance().initAsync();
         VampireBookManager.getInstance().init();

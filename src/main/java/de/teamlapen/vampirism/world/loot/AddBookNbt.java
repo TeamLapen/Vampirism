@@ -23,7 +23,7 @@ public class AddBookNbt implements ILootFunction {
 
     public static class Serializer extends ILootFunction.Serializer<AddBookNbt> {
 
-        protected Serializer() {
+        public Serializer() {
             super(new ResourceLocation(REFERENCE.MODID, "add_book_nbt"), AddBookNbt.class);
         }
 
