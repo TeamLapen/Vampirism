@@ -232,7 +232,7 @@ public class BalanceConfig {
         viNotifyDistanceSQ = builder.comment("Squared distance of village capture notification").defineInRange("notifyDistanceSQ", 40000, 0, 100000);
         viForceTargetTime = builder.comment("Time in 2*seconds in capture phase 2 after which the capture entities should find a target regardless of distance").defineInRange("forceTargetTime", 80, 1, 1000);
         viHunterTrainerWeight = builder.comment("Weight of the Hunter Trainer Building inside the village").defineInRange("viHunterTrainerWeight", 400, 1, Integer.MAX_VALUE);
-        viTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("viTotemWeight", 1,1,Integer.MAX_VALUE);
+        viTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("viTotemWeight", 20,1,Integer.MAX_VALUE);
         viTotemPreSetPercentage = builder.comment("Percentage of totem which should be have a pre defined faction").defineInRange("viTotemPreSetPercentage", 0.90d,0d,1d);
         builder.pop();
 
