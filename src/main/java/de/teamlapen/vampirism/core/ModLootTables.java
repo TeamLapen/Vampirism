@@ -83,17 +83,4 @@ public class ModLootTables {
         injected = 0;
         return i >= INJECTION_TABLES.size(); //Sponge loads the loot tables for all worlds at start. Which makes this test not work anyway.
     }
-
-    /**
-     * Add a loot structure loot table to the list
-     *
-     * @param name
-     */
-    public static ResourceLocation addStructureLootTable(String name) {
-        String rs_id = "structure/" + name;
-        STRUCTURE_TABLES.add(rs_id);
-        ResourceLocation id = new ResourceLocation(rs_id);
-        LootTables.register(id);
-        return id;
-    }
 }

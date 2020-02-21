@@ -60,7 +60,6 @@ public class ModCommands {
                             .then(DebugGenCommand.register())
                             .then(RunTestsCommand.register())
                             .then(GarlicCheckCommand.register())
-                            .then(PlaceCommand.register())
                             .then(SetSwordChargedCommand.register())
                             .then(SetSwordTrainedCommand.register())
                             .then(SpawnTestAnimalCommand.register())
