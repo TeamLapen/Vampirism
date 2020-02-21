@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
 import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import mezz.jei.api.IModPlugin;
+import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.*;
@@ -20,7 +21,8 @@ import javax.annotation.Nonnull;
 /**
  * Plugin for Just Enough Items
  */
-//@JeiPlugin TODO Forge https://github.com/MinecraftForge/MinecraftForge/pull/6254
+@JeiPlugin
+//Currently core mod is required for this to not crash the game Forge https://github.com/MinecraftForge/MinecraftForge/pull/6254
 public class VampirismJEIPlugin implements IModPlugin {
     static final ResourceLocation WEAPON_TABLE_RECIPE_ID = new ResourceLocation("vampirism", "hunter_weapon");
     static final ResourceLocation ALCHEMICAL_CAULDRON_RECIPE_UID = new ResourceLocation("vampirism", "alchemical_cauldron");
