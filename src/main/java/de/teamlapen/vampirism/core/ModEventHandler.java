@@ -108,7 +108,7 @@ public class ModEventHandler {
         if (event.getPlayer().getRNG().nextInt(4) == 0) {
             event.getPlayer().sendMessage(new StringTextComponent("You are running an alpha version of Vampirism for MC 1.14").applyTextStyle(TextFormatting.DARK_RED));
             event.getPlayer().sendMessage(new StringTextComponent("Some important parts are not working yet:"));
-            event.getPlayer().sendMessage(new StringTextComponent("- JEI integration and guide book"));
+            event.getPlayer().sendMessage(new StringTextComponent("- Guide book"));
             event.getPlayer().sendMessage(new StringTextComponent("- Hunter trainer house"));
 
         }
