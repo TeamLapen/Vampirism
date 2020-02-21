@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
+import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -26,6 +27,7 @@ public class ModFeatures {
     public static final IStructurePieceType hunter_camp_special = IStructurePieceType.register(HunterCampPieces.SpecialBlock::new, REFERENCE.MODID + ":hunter_camp_craftingtable");
 
     public static final IStructureProcessorType random_selector = IStructureProcessorType.register(REFERENCE.MODID+":random_selector", RandomStructureProcessor::new);
+    public static final IStructureProcessorType biome_based = IStructureProcessorType.register(REFERENCE.MODID+":biome_based", BiomeTopBlockProcessor::new);
 
 
     static void registerFeatures(IForgeRegistry<Feature<?>> registry) {

@@ -8,8 +8,10 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.ASMHooks;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SRGNAMES;
+import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomBlockState;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
@@ -95,7 +97,8 @@ public class ModWorld {
 
         //totem
         StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.BALANCE.viTotemPreSetPercentage.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top_vampirism_hunter.getDefaultState(), ModBlocks.totem_top_vampirism_vampire.getDefaultState())));
-        JigsawPiece totem = new SingleJigsawPiece(REFERENCE.MODID + ":village/totem", Lists.newArrayList(totemProcessor), JigsawPattern.PlacementBehaviour.RIGID);
+        StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.getDefaultState());
+        JigsawPiece totem = new SingleJigsawPiece(REFERENCE.MODID + ":village/totem", Lists.newArrayList(totemProcessor, totemTopBlock), JigsawPattern.PlacementBehaviour.RIGID);
         for (int i = VampirismConfig.BALANCE.viTotemWeight.get(); i > 0; i--) {
             desertHouses.jigsawPieces.add(totem);
             plainsHouses.jigsawPieces.add(totem);
