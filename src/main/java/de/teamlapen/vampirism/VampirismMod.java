@@ -48,7 +48,6 @@ import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.WorldGenManager;
-import de.teamlapen.vampirism.world.gen.structures.StructureManager;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityClassification;
@@ -289,7 +288,6 @@ public class VampirismMod {
         SupporterManager.getInstance().initAsync();
         VampireBookManager.getInstance().init();
         BloodPotions.register();
-        StructureManager.init();
         Permissions.init();
         VampirismEntitySelectors.registerSelectors();
 
