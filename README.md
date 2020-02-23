@@ -25,7 +25,9 @@ For a more detailed description head over to the Minecraft forums or the Cursefo
 
 ## Special Thanks to
 - TinkerHatWill _Textures_
+- Alis _Textures_
 - dimensionpainter _Textures_
+- S_olace _Textures_
 - Mistadon _Code/Models_  
 - wildbill22 _Code_  
 - LRA_10 _Models/Textures_
@@ -119,8 +121,16 @@ The code style used in this project is the IntelliJ default one.
 For Eclipse you can use the settings created by @Cheaterpaul [FormatFile](https://gist.github.com/Cheaterpaul/1aa0d0014240c8bd854434b5147804df) [ImportOrder](https://gist.github.com/Cheaterpaul/594d16f54358bdca6ea5e549f81b3589)
 
 ## Licence
-This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/LICENCE)
+This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/LICENCE) ***except*** for the following parts:
 
+##### Textures
+Any textures included with this mod are licenced under the following terms:
+```
+Any textures included in the mod may be used, remixed and distributed for anything related to Vampirism (fan art, addon mods, forks, reviews, ...) excluding resource packs.
+If you want to use them in a resource/texture pack, you must credit the Vampirism project or the individual creator where applicable and it must not be used commercially.
+```
+
+##### Sounds
 This mod uses these sounds from freesound:  
 DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC Attribution  
 vampire bites by Bernuy -- http://www.freesound.org/people/Bernuy/sounds/268501/ -- License: CC Attribution  
