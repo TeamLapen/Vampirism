@@ -109,6 +109,7 @@ public class ModEventHandler {
             event.getPlayer().sendMessage(new StringTextComponent("You are running an alpha version of Vampirism for MC 1.14").applyTextStyle(TextFormatting.DARK_RED));
             event.getPlayer().sendMessage(new StringTextComponent("Some important parts are not working yet:"));
             event.getPlayer().sendMessage(new StringTextComponent("- Guide book"));
+            event.getPlayer().sendMessage(new StringTextComponent("- Rendering: There are still some rendering bugs. These should not affect gameplay though."));
         }
 
 
