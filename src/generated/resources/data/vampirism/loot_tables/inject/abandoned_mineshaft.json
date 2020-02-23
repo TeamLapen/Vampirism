@@ -1,0 +1,199 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "name": "main",
+      "rolls": {
+        "min": 0.0,
+        "max": 4.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 35,
+          "name": "vampirism:vampire_fang"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": 1.0
+            }
+          ],
+          "name": "vampirism:blood_bottle"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "vampirism:add_book_nbt"
+            }
+          ],
+          "name": "vampirism:vampire_book"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 40
+        }
+      ]
+    },
+    {
+      "name": "swiftness_armor",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_head_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_chest_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_legs_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_feet_ultimate"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 88
+        }
+      ]
+    },
+    {
+      "name": "hunter_weapons",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:hunter_axe_ultimate"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 95
+        }
+      ]
+    },
+    {
+      "name": "vampire_weapons",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:heart_seeker_enhanced"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:heart_striker_enhanced"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 60
+        }
+      ]
+    },
+    {
+      "name": "holy_Water",
+      "rolls": 2,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 50,
+          "name": "vampirism:holy_salt"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 20,
+          "name": "vampirism:holy_water_bottle_normal"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 20,
+          "name": "vampirism:holy_water_bottle_enhanced"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "name": "vampirism:holy_water_bottle_ultimate"
+        }
+      ]
+    }
+  ]
+}

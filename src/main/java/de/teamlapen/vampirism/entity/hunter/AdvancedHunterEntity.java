@@ -308,10 +308,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             super(type, world);
         }
 
-        @Override
-        protected ResourceLocation getLootTable() {
-            return ModLootTables.advanced_hunter;
-        }
     }
 
     //Village capture --------------------------------------------------------------------------------------------------

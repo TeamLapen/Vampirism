@@ -1,0 +1,102 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 25,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": 0.6
+            }
+          ],
+          "name": "vampirism:blood_bottle"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "vampirism:add_book_nbt"
+            }
+          ],
+          "name": "vampirism:vampire_book"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 60
+        }
+      ]
+    },
+    {
+      "name": "obsidian_armor",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:obsidian_armor_head_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:obsidian_armor_chest_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:obsidian_armor_legs_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:obsidian_armor_feet_ultimate"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 72
+        }
+      ]
+    }
+  ]
+}

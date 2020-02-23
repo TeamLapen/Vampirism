@@ -312,10 +312,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             super(type, world);
         }
 
-        @Override
-        protected ResourceLocation getLootTable() {
-            return ModLootTables.advanced_vampire;
-        }
     }
 
     //Village stuff ----------------------------------------------------------------------------------------------------

@@ -308,10 +308,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             super(type, world);
         }
 
-        @Override
-        protected ResourceLocation getLootTable() {
-            return ModLootTables.vampire;
-        }
     }
     //Entityactions ----------------------------------------------------------------------------------------------------
     /**

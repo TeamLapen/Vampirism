@@ -32,6 +32,10 @@ public class AdjustableLevelCondition implements ILootCondition {
         return false;
     }
 
+    public static IBuilder builder(int level, LootContext.EntityTarget target) {
+        return () -> new AdjustableLevelCondition(level, target);
+    }
+
     public static class Serializer extends ILootCondition.AbstractSerializer<AdjustableLevelCondition> {
 
         public Serializer() {

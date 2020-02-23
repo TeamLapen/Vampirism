@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.core;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -27,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -36,6 +40,8 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
  */
 @ObjectHolder(REFERENCE.MODID)
 public class ModEntities {
+    private static final Set<EntityType<?>> ALL_ENTITIES = Sets.newHashSet();
+
     public static final EntityType<AdvancedHunterEntity> advanced_hunter;
     public static final EntityType<AdvancedHunterEntity.IMob> advanced_hunter_imob = getNull();
     public static final EntityType<AdvancedVampireEntity> advanced_vampire;
@@ -197,6 +203,7 @@ public class ModEntities {
             type.disableSummoning();
         EntityType<T> entry = type.build(REFERENCE.MODID + ":" + id);
         entry.setRegistryName(REFERENCE.MODID, id);
+        ALL_ENTITIES.add(entry);
         return entry;
     }
 
@@ -208,5 +215,9 @@ public class ModEntities {
                 mapping.remap(ModEntities.hunter_imob);
             }
         });
+    }
+
+    public static Set<EntityType<?>> getAllEntities(){
+        return ImmutableSet.copyOf(ALL_ENTITIES);
     }
 }

@@ -35,7 +35,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     private static final String name = "alchemical_fire";
 
     public AlchemicalFireBlock() {
-        super(name, Properties.create(Material.FIRE, MaterialColor.TNT).hardnessAndResistance(0.0f).lightValue(15).sound(SoundType.CLOTH).doesNotBlockMovement().tickRandomly().notSolid());
+        super(name, Properties.create(Material.FIRE, MaterialColor.TNT).hardnessAndResistance(0.0f).lightValue(15).sound(SoundType.CLOTH).doesNotBlockMovement().tickRandomly().notSolid().noDrops());
         this.setDefaultState(this.stateContainer.getBaseState().with(AGE, 0));
     }
 

@@ -30,6 +30,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 import net.minecraftforge.registries.ObjectHolderRegistry;
+import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -58,6 +59,7 @@ public class RegistryManager implements IInitListener {
                 ModItems.registerCraftingRecipes();
                 ModAdvancements.registerAdvancements();
                 ModCommands.registerArgumentTypes();
+            case GATHER_DATA:
                 ModLootTables.registerLootFunctions();
                 break;
             case LOAD_COMPLETE:

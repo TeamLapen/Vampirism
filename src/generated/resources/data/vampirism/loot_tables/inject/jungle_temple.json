@@ -1,0 +1,173 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 2,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 30,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": 1.0
+            }
+          ],
+          "name": "vampirism:blood_bottle"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "vampirism:add_book_nbt"
+            }
+          ],
+          "name": "vampirism:vampire_book"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 30,
+          "name": "vampirism:vampire_fang"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "name": "swiftness_armor",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_head_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_chest_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_legs_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_feet_ultimate"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 72
+        }
+      ]
+    },
+    {
+      "name": "hunter_coat",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:hunter_coat_head_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:hunter_coat_chest_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:hunter_coat_legs_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:hunter_coat_feet_ultimate"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 72
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "name": "main",
+      "rolls": {
+        "min": 5.0,
+        "max": 9.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 40,
+          "name": "minecraft:iron_ingot"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 20,
+          "name": "vampirism:vampire_blood_bottle"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 40,
+          "name": "vampirism:item_garlic"
+        }
+      ]
+    },
+    {
+      "name": "book",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 50,
+          "functions": [
+            {
+              "function": "vampirism:add_book_nbt"
+            }
+          ],
+          "name": "vampirism:vampire_book"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 95
+        }
+      ]
+    },
+    {
+      "name": "hunter_weapons",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:hunter_axe_ultimate"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 95
+        }
+      ]
+    },
+    {
+      "name": "swiftness_armor",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_head_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_chest_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_legs_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:armor_of_swiftness_feet_ultimate"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 60
+        }
+      ]
+    },
+    {
+      "name": "hunter_coat",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:hunter_coat_head_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:hunter_coat_chest_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:hunter_coat_legs_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:hunter_coat_feet_ultimate"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 60
+        }
+      ]
+    },
+    {
+      "name": "obsidian",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:obsidian_armor_head_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:obsidian_armor_chest_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:obsidian_armor_legs_ultimate"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ],
+          "name": "vampirism:obsidian_armor_feet_ultimate"
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 72
+        }
+      ]
+    },
+    {
+      "name": "holy_water",
+      "rolls": 5,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 50,
+          "name": "vampirism:holy_salt"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 20,
+          "name": "vampirism:holy_water_bottle_normal"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 20,
+          "name": "vampirism:holy_water_bottle_enhanced"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "name": "vampirism:holy_water_bottle_ultimate"
+        }
+      ]
+    }
+  ]
+}
