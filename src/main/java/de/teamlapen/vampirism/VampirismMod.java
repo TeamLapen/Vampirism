@@ -20,6 +20,8 @@ import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.core.ModWorld;
 import de.teamlapen.vampirism.core.RegistryManager;
 import de.teamlapen.vampirism.data.BlockStateGenerator;
+import de.teamlapen.vampirism.data.LootTablesGenerator;
+import de.teamlapen.vampirism.data.TagGenerator;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -230,11 +232,14 @@ public class VampirismMod {
         ((BloodPotionRegistry) VampirismAPI.bloodPotionRegistry()).finish();
     }
 
-    private void gatherData(GatherDataEvent event) {
+    private void gatherData(final GatherDataEvent event) {
+        registryManager.onInitStep(IInitListener.Step.GATHER_DATA, event);
         DataGenerator gen = event.getGenerator();
         if (event.includeServer()) {
-            gen.addProvider(new VampirismBlockTagProvider(gen));
-            gen.addProvider(new VampirismItemTagProvider(gen));
+            gen.addProvider(new TagGenerator.ModBlockTagsProvider(gen));
+            gen.addProvider(new TagGenerator.ModItemTagsProvider(gen));
+            gen.addProvider(new TagGenerator.ModEntityTypeTagsProvider(gen));
+            gen.addProvider(new LootTablesGenerator(gen));
         }
         if (event.includeClient()) {
             gen.addProvider(new BlockStateGenerator(event.getGenerator(), event.getExistingFileHelper()));

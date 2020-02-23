@@ -1,5 +1,8 @@
 package de.teamlapen.vampirism.core;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
+
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.render.VampirismItemStackTESR;
@@ -14,6 +17,8 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 
+import java.util.Set;
+
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
@@ -22,6 +27,8 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @ObjectHolder(REFERENCE.MODID)
 @SuppressWarnings("unused")
 public class ModBlocks {
+    private static final Set<Block> ALL_BLOCKS = Sets.newHashSet();
+
     public static final AlchemicalCauldronBlock alchemical_cauldron = getNull();
     public static final AlchemicalFireBlock alchemical_fire = getNull();
     public static final AltarInfusionBlock altar_infusion = getNull();
@@ -110,48 +117,53 @@ public class ModBlocks {
         CastleBricksBlock castle_block_purple_brick = new CastleBricksBlock(CastleBricksBlock.EnumVariant.PURPLE_BRICK);
         VampirismFlowerBlock vampire_orchid = new VampirismFlowerBlock(VampirismFlowerBlock.TYPE.ORCHID);
 
-        registry.register(new AlchemicalCauldronBlock());
-        registry.register(new AlchemicalFireBlock());
-        registry.register(new AltarInfusionBlock());
-        registry.register(new AltarInspirationBlock());
-        registry.register(new AltarPillarBlock());
-        registry.register(new AltarTipBlock());
-        registry.register(new BloodContainerBlock());
-        registry.register(new GrinderBlock());
-        registry.register(new PedestalBlock());
-        registry.register(new BloodPotionTableBlock());
-        registry.register(new SieveBlock());
-        registry.register(castle_block_dark_brick);
-        registry.register(new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_BRICK_BLOODY));
-        registry.register(castle_block_dark_stone);
-        registry.register(new CastleBricksBlock(CastleBricksBlock.EnumVariant.NORMAL_BRICK));
-        registry.register(castle_block_purple_brick);
-        registry.register(new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_BRICK));
-        registry.register(new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_STONE));
-        registry.register(new CastleSlabBlock(CastleBricksBlock.EnumVariant.PURPLE_BRICK));
-        registry.register(new CastleStairsBlock(castle_block_dark_brick.getDefaultState(), CastleBricksBlock.EnumVariant.DARK_BRICK));
-        registry.register(new CastleStairsBlock(castle_block_dark_stone.getDefaultState(), CastleBricksBlock.EnumVariant.DARK_STONE));
-        registry.register(new CastleStairsBlock(castle_block_purple_brick.getDefaultState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK));
-        registry.register(new ChurchAltarBlock());
-        registry.register(new CoffinBlock());
-        registry.register(new CursedEarthBlock());
-        registry.register(new FirePlaceBlock());
-        registry.register(new GarlicBlock());
-        registry.register(new GarlicBeaconBlock(GarlicBeaconBlock.Type.IMPROVED));
-        registry.register(new GarlicBeaconBlock(GarlicBeaconBlock.Type.NORMAL));
-        registry.register(new GarlicBeaconBlock(GarlicBeaconBlock.Type.WEAK));
-        registry.register(new HunterTableBlock());
-        registry.register(new MedChairBlock());
-        registry.register(new FlowerPotBlock(vampire_orchid, Block.Properties.create(Material.MISCELLANEOUS).zeroHardnessAndResistance()).setRegistryName(REFERENCE.MODID, "potted_vampire_orchid"));
-        registry.register(new SunscreenBeaconBlock());
-        registry.register(new TentBlock());
-        registry.register(new TentMainBlock());
-        registry.register(new TotemBaseBlock());
-        registry.register(new TotemTopBlock());
-        registry.register(new TotemTopBlock(REFERENCE.HUNTER_PLAYER_KEY));
-        registry.register(new TotemTopBlock(REFERENCE.VAMPIRE_PLAYER_KEY));
-        registry.register(vampire_orchid);
-        registry.register(new WeaponTableBlock());
+        registry.register(prepareRegister(new AlchemicalCauldronBlock()));
+        registry.register(prepareRegister(new AlchemicalFireBlock()));
+        registry.register(prepareRegister(new AltarInfusionBlock()));
+        registry.register(prepareRegister(new AltarInspirationBlock()));
+        registry.register(prepareRegister(new AltarPillarBlock()));
+        registry.register(prepareRegister(new AltarTipBlock()));
+        registry.register(prepareRegister(new BloodContainerBlock()));
+        registry.register(prepareRegister(new GrinderBlock()));
+        registry.register(prepareRegister(new PedestalBlock()));
+        registry.register(prepareRegister(new BloodPotionTableBlock()));
+        registry.register(prepareRegister(new SieveBlock()));
+        registry.register(prepareRegister(castle_block_dark_brick));
+        registry.register(prepareRegister(new CastleBricksBlock(CastleBricksBlock.EnumVariant.DARK_BRICK_BLOODY)));
+        registry.register(prepareRegister(castle_block_dark_stone));
+        registry.register(prepareRegister(new CastleBricksBlock(CastleBricksBlock.EnumVariant.NORMAL_BRICK)));
+        registry.register(prepareRegister(castle_block_purple_brick));
+        registry.register(prepareRegister(new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_BRICK)));
+        registry.register(prepareRegister(new CastleSlabBlock(CastleBricksBlock.EnumVariant.DARK_STONE)));
+        registry.register(prepareRegister(new CastleSlabBlock(CastleBricksBlock.EnumVariant.PURPLE_BRICK)));
+        registry.register(prepareRegister(new CastleStairsBlock(castle_block_dark_brick.getDefaultState(), CastleBricksBlock.EnumVariant.DARK_BRICK)));
+        registry.register(prepareRegister(new CastleStairsBlock(castle_block_dark_stone.getDefaultState(), CastleBricksBlock.EnumVariant.DARK_STONE)));
+        registry.register(prepareRegister(new CastleStairsBlock(castle_block_purple_brick.getDefaultState(), CastleBricksBlock.EnumVariant.PURPLE_BRICK)));
+        registry.register(prepareRegister(new ChurchAltarBlock()));
+        registry.register(prepareRegister(new CoffinBlock()));
+        registry.register(prepareRegister(new CursedEarthBlock()));
+        registry.register(prepareRegister(new FirePlaceBlock()));
+        registry.register(prepareRegister(new GarlicBlock()));
+        registry.register(prepareRegister(new GarlicBeaconBlock(GarlicBeaconBlock.Type.IMPROVED)));
+        registry.register(prepareRegister(new GarlicBeaconBlock(GarlicBeaconBlock.Type.NORMAL)));
+        registry.register(prepareRegister(new GarlicBeaconBlock(GarlicBeaconBlock.Type.WEAK)));
+        registry.register(prepareRegister(new HunterTableBlock()));
+        registry.register(prepareRegister(new MedChairBlock()));
+        registry.register(prepareRegister(new FlowerPotBlock(vampire_orchid, Block.Properties.create(Material.MISCELLANEOUS).zeroHardnessAndResistance()).setRegistryName(REFERENCE.MODID, "potted_vampire_orchid")));
+        registry.register(prepareRegister(new SunscreenBeaconBlock()));
+        registry.register(prepareRegister(new TentBlock()));
+        registry.register(prepareRegister(new TentMainBlock()));
+        registry.register(prepareRegister(new TotemBaseBlock()));
+        registry.register(prepareRegister(new TotemTopBlock()));
+        registry.register(prepareRegister(new TotemTopBlock(REFERENCE.HUNTER_PLAYER_KEY)));
+        registry.register(prepareRegister(new TotemTopBlock(REFERENCE.VAMPIRE_PLAYER_KEY)));
+        registry.register(prepareRegister(vampire_orchid));
+        registry.register(prepareRegister(new WeaponTableBlock()));
+    }
+
+    private static Block prepareRegister(Block block){
+        ALL_BLOCKS.add(block);
+        return block;
     }
 
     @Nonnull
@@ -165,5 +177,9 @@ public class ModBlocks {
     @Nonnull
     private static BlockItem itemBlock(@Nonnull Block block) {
         return itemBlock(block, new Item.Properties().group(VampirismMod.creativeTab));
+    }
+
+    public static Set<Block> getAllBlocks() {
+        return ImmutableSet.copyOf(ALL_BLOCKS);
     }
 }

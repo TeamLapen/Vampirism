@@ -59,16 +59,6 @@ public class AltarPillarBlock extends VampirismBlock {
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        List<ItemStack> loot = super.getDrops(state, builder);
-        EnumPillarType type = state.get(TYPE_PROPERTY);
-        if (type != EnumPillarType.NONE) {
-            loot.add(new ItemStack(type.fillerBlock.asItem(), 1));
-        }
-        return loot;
-    }
-
-    @Override
     public int getHarvestLevel(BlockState p_getHarvestLevel_1_) {
         return 0;
     }

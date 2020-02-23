@@ -11,6 +11,6 @@ public interface IInitListener {
     }
 
     enum Step {
-        CLIENT_SETUP, COMMON_SETUP, LOAD_COMPLETE, PROCESS_IMC
+        CLIENT_SETUP, COMMON_SETUP, LOAD_COMPLETE, PROCESS_IMC, GATHER_DATA
     }
 }

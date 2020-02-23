@@ -431,10 +431,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             super(type, world);
         }
 
-        @Override
-        protected ResourceLocation getLootTable() {
-            return ModLootTables.hunter;
-        }
     }
 
     //Village capture --------------------------------------------------------------------------------------------------

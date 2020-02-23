@@ -30,6 +30,10 @@ public class StakeCondition implements ILootCondition {
         return false;
     }
 
+    public static IBuilder builder(LootContext.EntityTarget target) {
+        return () -> new StakeCondition(target);
+    }
+
     public static class Serializer extends ILootCondition.AbstractSerializer<StakeCondition> {
 
         public Serializer() {

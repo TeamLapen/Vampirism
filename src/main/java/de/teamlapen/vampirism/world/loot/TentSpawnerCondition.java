@@ -11,6 +11,8 @@ import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraft.world.storage.loot.conditions.ILootCondition;
 
+import javax.annotation.Nonnull;
+
 
 public class TentSpawnerCondition implements ILootCondition {
 
@@ -25,19 +27,24 @@ public class TentSpawnerCondition implements ILootCondition {
         return false;
     }
 
+    public static IBuilder builder() {
+        return () -> INSTANCE;
+    }
+
     public static class Serializer extends ILootCondition.AbstractSerializer<TentSpawnerCondition> {
 
         public Serializer() {
             super(new ResourceLocation(REFERENCE.MODID, "is_tent_spawner"), TentSpawnerCondition.class);
         }
 
+        @Nonnull
         @Override
-        public TentSpawnerCondition deserialize(JsonObject json, JsonDeserializationContext context) {
+        public TentSpawnerCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
             return INSTANCE;
         }
 
         @Override
-        public void serialize(JsonObject json, TentSpawnerCondition value, JsonSerializationContext context) {
+        public void serialize(@Nonnull JsonObject json, @Nonnull TentSpawnerCondition value, @Nonnull JsonSerializationContext context) {
 
         }
     }

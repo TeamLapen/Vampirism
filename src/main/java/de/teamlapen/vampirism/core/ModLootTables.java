@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.loot.AddBookNbt;
@@ -12,6 +14,9 @@ import de.teamlapen.vampirism.world.loot.StakeCondition;
 import de.teamlapen.vampirism.world.loot.TentSpawnerCondition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootParameterSet;
+import net.minecraft.world.storage.loot.LootParameterSets;
+import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.LootTables;
 import net.minecraft.world.storage.loot.RandomValueRange;
@@ -21,7 +26,9 @@ import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.List;
+import javax.annotation.Nonnull;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Handles loading mod loot tables as well as injecting pools into vanilla tables
@@ -29,26 +36,39 @@ import java.util.List;
  * https://github.com/williewillus/Botania/blob/07f68b37da9ad3a246b95c042cd6c10bd91698d1/src/main/java/vazkii/botania/common/core/loot/LootHandler.java
  */
 public class ModLootTables {
-    public static final ResourceLocation vampire = register("entities/" + ModEntities.vampire.getRegistryName().getPath());
-    public static final ResourceLocation hunter = register("entities/" + ModEntities.hunter.getRegistryName().getPath());
-    public static final ResourceLocation advanced_vampire = register("entities/" + ModEntities.advanced_vampire.getRegistryName().getPath());
-    public static final ResourceLocation advanced_hunter = register("entities/" + ModEntities.advanced_hunter.getRegistryName().getPath());
-    public static final ResourceLocation chest_hunter_trainer = register("chests/hunter_trainer");
+    private static final Set<ResourceLocation> LOOT_TABLES = Sets.newHashSet();
+    private static final Map<String, ResourceLocation> INJECTION_TABLES = Maps.newHashMap();
 
-    private static final List<String> INJECTION_TABLES = ImmutableList.of("abandoned_mineshaft", "jungle_temple", "stronghold_corridor", "desert_pyramid", "stronghold_library");
-    private static final List<String> STRUCTURE_TABLES = Lists.newArrayList();
+    //inject
+    public static final ResourceLocation abandoned_mineshaft = registerInject("abandoned_mineshaft");
+    public static final ResourceLocation jungle_temple = registerInject("jungle_temple");
+    public static final ResourceLocation stronghold_corridor = registerInject("stronghold_corridor");
+    public static final ResourceLocation desert_pyramid = registerInject("desert_pyramid");
+    public static final ResourceLocation stronghold_library = registerInject("stronghold_library");
+
+    //chests
+    public static final ResourceLocation chest_hunter_trainer = register("chests/hunter_trainer");
+    public static final ResourceLocation chest_vampire_dungeon = register("chests/vampire_dungeon");
+
     private static int injected = 0;
 
-    static {
-        INJECTION_TABLES.forEach(table -> LootTables.register(new ResourceLocation(REFERENCE.MODID, "inject/" + table)));
+    static ResourceLocation registerInject(String resourceName){
+        ResourceLocation registryName = register("inject/"+resourceName);
+        INJECTION_TABLES.put(resourceName, registryName);
+        return registryName;
     }
 
     static ResourceLocation register(String resourceName){
-        return LootTables.register(new ResourceLocation(REFERENCE.MODID, resourceName));
+        return register(new ResourceLocation(REFERENCE.MODID, resourceName));
     }
 
-    static ResourceLocation register(ResourceLocation resourceLocation) {
+    static ResourceLocation register(@Nonnull ResourceLocation resourceLocation) {
+        LOOT_TABLES.add(resourceLocation);
         return LootTables.register(resourceLocation);
+    }
+
+    public static Set<ResourceLocation> getLootTables() {
+        return ImmutableSet.copyOf(LOOT_TABLES);
     }
 
     static void registerLootFunctions() {
@@ -66,7 +86,7 @@ public class ModLootTables {
         String name = event.getName().toString();
         if (name.startsWith(prefix)) {
             String file = name.substring(name.indexOf(prefix) + prefix.length());
-            if(INJECTION_TABLES.contains(file)){
+            if(INJECTION_TABLES.containsKey(file)){
                 event.getTable().addPool(getInjectPool(file));
                 injected++;
             }
@@ -74,7 +94,7 @@ public class ModLootTables {
     }
 
     private static LootPool getInjectPool(String entryName) {
-        LootEntry.Builder<?> entryBuilder = TableLootEntry.builder(new ResourceLocation(REFERENCE.MODID, "inject/" + entryName)).weight(1);
+        LootEntry.Builder<?> entryBuilder = TableLootEntry.builder(INJECTION_TABLES.get(entryName)).weight(1);
         return LootPool.builder().name("vampirism_inject_pool").bonusRolls(0, 1).rolls(new RandomValueRange(1)).addEntry(entryBuilder).build();
     }
 

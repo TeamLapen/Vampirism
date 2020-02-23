@@ -8,47 +8,59 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.ConstantRange;
+import net.minecraft.world.storage.loot.IRandomRange;
 import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootFunction;
+import net.minecraft.world.storage.loot.RandomRanges;
+import net.minecraft.world.storage.loot.conditions.ILootCondition;
 import net.minecraft.world.storage.loot.functions.ILootFunction;
 
-public class SetMetaBasedOnLevel implements ILootFunction {
-    private final int max;
+import javax.annotation.Nonnull;
+import java.lang.reflect.Type;
+
+public class SetMetaBasedOnLevel extends LootFunction {
+    private final IRandomRange max;
     private final LootContext.EntityTarget target;
 
-    protected SetMetaBasedOnLevel(int max, LootContext.EntityTarget targetIn) {
+    protected SetMetaBasedOnLevel(ILootCondition[] conditions, IRandomRange max, LootContext.EntityTarget targetIn) {
+        super(conditions);
         this.max = max;
         this.target = targetIn;
     }
 
+    @Nonnull
     @Override
-    public ItemStack apply(ItemStack stack, LootContext context) {
+    public ItemStack doApply(@Nonnull ItemStack stack, LootContext context) {
         if (context.get(target.getParameter()) instanceof IAdjustableLevel) {
             int l = ((IAdjustableLevel) target.getParameter()).getLevel();
-            if (max != -1) {
-                l = Math.min(max, l);
-            }
+            int amount = max.generateInt(context.getRandom());
+            if (amount != -1)
+                l = Math.min(amount, l);
             stack.setDamage(l);
         }
         return stack;
     }
 
-    public static class Serializer extends ILootFunction.Serializer<SetMetaBasedOnLevel> {
+    public static class Serializer extends LootFunction.Serializer<SetMetaBasedOnLevel> {
 
         public Serializer() {
             super(new ResourceLocation(REFERENCE.MODID, "set_meta_from_level"), SetMetaBasedOnLevel.class);
         }
 
         @Override
-        public SetMetaBasedOnLevel deserialize(JsonObject json, JsonDeserializationContext context) {
-            return new SetMetaBasedOnLevel(json.has("max") ? JSONUtils.getInt(json, "max") : -1, JSONUtils.deserializeClass(json, "entity", context, LootContext.EntityTarget.class));
+        public void serialize(@Nonnull JsonObject json, SetMetaBasedOnLevel value, @Nonnull JsonSerializationContext context) {
+            super.serialize(json, value, context);
+            json.add("max", RandomRanges.serialize(value.max, context));
+            json.add("entity", context.serialize(value.target));
         }
 
+        @Nonnull
         @Override
-        public void serialize(JsonObject json, SetMetaBasedOnLevel value, JsonSerializationContext context) {
-            if (value.max != -1) {
-                json.addProperty("max", value.max);
-            }
-            json.add("entity", context.serialize(value.target));
+        public SetMetaBasedOnLevel deserialize(@Nonnull JsonObject jsonObject, @Nonnull JsonDeserializationContext jsonDeserializationContext, @Nonnull ILootCondition[] iLootConditions) {
+            IRandomRange range = RandomRanges.deserialize(jsonObject.get("max"), jsonDeserializationContext);
+            LootContext.EntityTarget target = jsonDeserializationContext.deserialize(jsonObject.get("entity"), LootContext.EntityTarget.class);
+            return new SetMetaBasedOnLevel(iLootConditions, range, target);
         }
     }
 }
