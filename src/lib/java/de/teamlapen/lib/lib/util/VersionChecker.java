@@ -14,10 +14,8 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.ConnectException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +28,8 @@ import java.util.Map;
  */
 public class VersionChecker implements Runnable {
     private final static String TAG = "VersionChecker";
+    private static final int MAX_HTTP_REDIRECTS = Integer.getInteger("http.maxRedirects", 20);
+
 
     private final boolean stats;
 
@@ -93,30 +93,10 @@ public class VersionChecker implements Runnable {
         versionInfo.checked = true;
     }
 
-    private String getStatsString() {
-        try {
-            String b = "?" +
-                    "current=" +
-                    URLEncoder.encode(currentVersion.trim(), "UTF-8") +
-                    '&' +
-                    "mc=" +
-                    URLEncoder.encode(Loader.MC_VERSION, "UTF-8") +
-                    '&' +
-                    "count=" +
-                    URLEncoder.encode("" + Loader.instance().getActiveModList().size(), "UTF-8") +
-                    '&' +
-                    "side=" +
-                    (FMLCommonHandler.instance().getEffectiveSide().isClient() ? "client" : "server");
-            return b;
-        } catch (UnsupportedEncodingException e) {
-            return "";
-        }
-    }
-
     private void check(URL url) throws IOException, JsonSyntaxException {
 
-        InputStream con = (url).openStream();
-        String data = new String(ByteStreams.toByteArray(con));
+        InputStream con = openUrlStream(url);
+        String data = new String(ByteStreams.toByteArray(con), StandardCharsets.UTF_8);
         con.close();
 
 
@@ -193,6 +173,53 @@ public class VersionChecker implements Runnable {
         }
 
 
+    }
+
+    private String getStatsString() {
+        try {
+            String b = "?" +
+                    "current=" +
+                    URLEncoder.encode(currentVersion.trim(), "UTF-8") +
+                    '&' +
+                    "mc=" +
+                    URLEncoder.encode(Loader.MC_VERSION, "UTF-8") +
+                    '&' +
+                    "count=" +
+                    URLEncoder.encode("" + Loader.instance().getActiveModList().size(), "UTF-8") +
+                    '&' +
+                    "side=" +
+                    (FMLCommonHandler.instance().getEffectiveSide().isClient() ? "client" : "server");
+            return b;
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
+    }
+
+    /**
+     * Opens stream for given URL while following redirects
+     */
+    private InputStream openUrlStream(URL url) throws IOException {
+        URL currentUrl = url;
+        for (int redirects = 0; redirects < MAX_HTTP_REDIRECTS; redirects++) {
+            URLConnection c = currentUrl.openConnection();
+            if (c instanceof HttpURLConnection) {
+                HttpURLConnection huc = (HttpURLConnection) c;
+                huc.setInstanceFollowRedirects(false);
+                int responseCode = huc.getResponseCode();
+                if (responseCode >= 300 && responseCode <= 399) {
+                    try {
+                        String loc = huc.getHeaderField("Location");
+                        currentUrl = new URL(currentUrl, loc);
+                        continue;
+                    } finally {
+                        huc.disconnect();
+                    }
+                }
+            }
+
+            return c.getInputStream();
+        }
+        throw new IOException("Too many redirects while trying to fetch " + url);
     }
 
     /**
