@@ -24,6 +24,13 @@ public class RenderBasicVampire extends RenderBiped<EntityBasicVampire> {
             new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire9.png"),
             new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire10.png"),
             new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire11.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire12.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire13.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire14.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire15.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire16.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire17.png"),
+
     };
 
     public static ResourceLocation getVampireTexture(int entityId) {

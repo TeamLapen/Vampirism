@@ -5,12 +5,13 @@
     "description": "Adds vampirism features",
     "version": "${m_version}",
     "mcversion": "${mc_version}",
-    "url": "https://maxanier.de/projects/vampirism",
-    "updateUrl": "https://maxanier.de/projects/vampirism",
-    "authors": [
-      "maxanier"
+    "url": "https://vampirism.maxanier.de/",
+    "updateUrl": "https://vampirism.maxanier.de/",
+    "authorList": [
+      "maxanier",
+      "Cheaterpaul"
     ],
-    "credits": "maxanier, Mistadon, wildbill22, LRA10, freesound.org, freeSFX.co.uk",
+    "credits": "TinkerHatWill (textures), Alis (textures), dimensionpainter (textures), S_olace (textures), Mistadon (code/models), wildbill22 (code), LRA_10 (models/textures), freesound.org (sounds), freeSFX.co.uk (sounds)",
     "logoFile": "logo.png",
     "screenshots": [
     ],
@@ -30,8 +31,9 @@
     "version": "${m_version}",
     "mcversion": "${mc_version}",
     "url": "https://maxanier.de/projects/vampirism",
-    "authors": [
-      "maxanier"
+    "authorList": [
+      "maxanier",
+      "Cheaterpaul"
     ],
     "credits": "maxanier",
     "screenshots": [
