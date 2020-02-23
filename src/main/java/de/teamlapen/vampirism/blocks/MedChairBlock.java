@@ -9,9 +9,9 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -19,6 +19,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.stats.Stats;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -92,19 +94,32 @@ public class MedChairBlock extends VampirismBlock {
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-        super.onReplaced(state, world, pos, newState, isMoving);
-        if (state.getBlock() != newState.getBlock()) {
-            Direction dir = state.get(FACING);
-            BlockPos other;
-            if (state.get(PART) == EnumPart.TOP) {
-                other = pos.offset(dir);
-                world.addEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.item_med_chair, 1)));
-            } else {
-                other = pos.offset(dir.getOpposite());
-            }
-            world.removeBlock(other, isMoving);
+    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
+        super.harvestBlock(worldIn, player, pos, Blocks.AIR.getDefaultState(), te, stack);
+    }
+
+    @Override
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        EnumPart part = state.get(PART);
+        BlockPos other;
+        Direction dir = state.get(FACING);
+        if (state.get(PART) == EnumPart.TOP) {
+            other = pos.offset(dir);
+        } else {
+            other = pos.offset(dir.getOpposite());
         }
+        BlockState otherState = worldIn.getBlockState(other);
+        if (otherState.getBlock() == this && otherState.get(PART) != part) {
+            worldIn.setBlockState(other, Blocks.AIR.getDefaultState(), 35);
+            worldIn.playEvent(player, 2001, other, Block.getStateId(otherState));
+            if (!worldIn.isRemote && !player.isCreative()) {
+                ItemStack itemstack = player.getHeldItemMainhand();
+                spawnDrops(state, worldIn, pos, null, player, itemstack);
+                spawnDrops(otherState, worldIn, other, null, player, itemstack);
+            }
+            player.addStat(Stats.BLOCK_MINED.get(this));
+        }
+        super.onBlockHarvested(worldIn, pos, state, player);
     }
 
     @Override
