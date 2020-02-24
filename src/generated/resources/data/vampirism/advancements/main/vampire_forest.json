@@ -1,4 +1,5 @@
 {
+  "parent": "vampirism:main/root",
   "display": {
     "icon": {
       "item": "minecraft:oak_log"
@@ -8,9 +9,12 @@
     },
     "description": {
       "translate": "advancement.vampirism.vampire_forest.desc"
-    }
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
   },
-  "parent": "vampirism:main/root",
   "criteria": {
     "main": {
       "trigger": "minecraft:location",
@@ -18,5 +22,10 @@
         "biome": "vampirism:vampire_forest"
       }
     }
-  }
+  },
+  "requirements": [
+    [
+      "main"
+    ]
+  ]
 }

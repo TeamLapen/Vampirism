@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.advancements;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -14,29 +15,34 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Instance> {
-
     public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "faction");
+
     private final static Logger LOGGER = LogManager.getLogger();
 
     public TriggerFaction() {
         super(ID, Listeners::new);
     }
 
-    @Override
-    public Instance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
+    public static Instance builder(@Nullable IPlayableFaction<?> faction, int level){
+        return new Instance(faction, level);
+    }
 
-        IPlayableFaction faction = null;
+    @Nonnull
+    @Override
+    public Instance deserializeInstance(JsonObject json, @Nonnull JsonDeserializationContext context) {
+        IPlayableFaction<?> faction = null;
         if (json.has("faction")) {
             ResourceLocation id = new ResourceLocation(json.get("faction").getAsString());
-            IFaction faction1 = VampirismAPI.factionRegistry().getFactionByID(id);
-            if (faction1 == null || !(faction1 instanceof IPlayableFaction)) {
+            IFaction<?> faction1 = VampirismAPI.factionRegistry().getFactionByID(id);
+            if (!(faction1 instanceof IPlayableFaction)) {
                 LOGGER.warn("Given faction name does not exist or is not a playable faction: {}", id);
             } else {
-                faction = (IPlayableFaction) faction1;
+                faction = (IPlayableFaction<?>) faction1;
             }
 
         }
@@ -44,38 +50,48 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
         return new Instance(faction, level);
     }
 
-    @Override
-    public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
-        this.listenersForPlayers.remove(playerAdvancementsIn);
-    }
-
     /**
      * Trigger this criterion
      */
-    public void trigger(ServerPlayerEntity playerMP, IPlayableFaction faction, int level) {
+    public void trigger(ServerPlayerEntity playerMP, IPlayableFaction<?> faction, int level) {
         Listeners listeners = (Listeners) this.listenersForPlayers.get(playerMP.getAdvancements());
         if (listeners != null) {
             listeners.trigger(faction, level);
         }
     }
 
+    @Override
+    public void removeAllListeners(@Nonnull PlayerAdvancements playerAdvancementsIn) {
+        this.listenersForPlayers.remove(playerAdvancementsIn);
+    }
+
     static class Instance extends CriterionInstance {
         @Nullable
-        private final IPlayableFaction faction;
+        private final IPlayableFaction<?> faction;
         private final int level;
 
-        public Instance(@Nullable IPlayableFaction faction, int level) {
+        Instance(@Nullable IPlayableFaction<?> faction, int level) {
             super(ID);
             this.faction = faction;
             this.level = level;
         }
 
-        public boolean trigger(IPlayableFaction faction, int level) {
+        public boolean trigger(IPlayableFaction<?> faction, int level) {
             if (this.faction == null || this.faction.equals(faction)) {
                 return level >= this.level;
             }
             return false;
         }
+
+        @Nonnull
+        @Override
+        public JsonElement serialize() {
+            JsonObject json = new JsonObject();
+            json.addProperty("faction", faction == null ? "null":faction.getID().toString());
+            json.addProperty("level", level);
+            return json;
+        }
+
     }
 
     static class Listeners extends GenericListeners<TriggerFaction.Instance> {
@@ -84,7 +100,7 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
             super(playerAdvancementsIn);
         }
 
-        void trigger(IPlayableFaction faction, int level) {
+        void trigger(IPlayableFaction<?> faction, int level) {
             List<Listener<Instance>> list = null;
 
             for (Listener<Instance> listener : this.playerListeners) {

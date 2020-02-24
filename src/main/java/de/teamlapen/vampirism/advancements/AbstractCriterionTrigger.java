@@ -7,6 +7,7 @@ import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -33,8 +34,8 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
     }
 
     @Override
-    public void addListener(PlayerAdvancements playerAdvancementsIn, Listener<T> listener) {
-        GenericListeners listeners = this.listenersForPlayers.get(playerAdvancementsIn);
+    public void addListener(@Nonnull PlayerAdvancements playerAdvancementsIn, @Nonnull Listener<T> listener) {
+        GenericListeners<T> listeners = this.listenersForPlayers.get(playerAdvancementsIn);
         if (listeners == null) {
             listeners = listenerConstructor.apply(playerAdvancementsIn);
             this.listenersForPlayers.put(playerAdvancementsIn, listeners);
@@ -42,19 +43,20 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
         listeners.add(listener);
     }
 
+    @Nonnull
     @Override
     public ResourceLocation getId() {
         return id;
     }
 
     @Override
-    public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
+    public void removeAllListeners(@Nonnull PlayerAdvancements playerAdvancementsIn) {
         this.listenersForPlayers.remove(playerAdvancementsIn);
     }
 
     @Override
-    public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener<T> listener) {
-        GenericListeners listeners = this.listenersForPlayers.get(playerAdvancementsIn);
+    public void removeListener(@Nonnull PlayerAdvancements playerAdvancementsIn, @Nonnull Listener<T> listener) {
+        GenericListeners<T> listeners = this.listenersForPlayers.get(playerAdvancementsIn);
         if (listeners != null) {
             listeners.remove(listener);
             if (listeners.isEmpty()) {
