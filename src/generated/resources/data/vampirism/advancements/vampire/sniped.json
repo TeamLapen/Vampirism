@@ -1,4 +1,5 @@
 {
+  "parent": "vampirism:vampire/bat",
   "display": {
     "icon": {
       "item": "minecraft:arrow"
@@ -9,15 +10,22 @@
     "description": {
       "translate": "advancement.vampirism.sniped"
     },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
     "hidden": true
   },
-  "parent": "vampirism:vampire/bat",
   "criteria": {
     "flower": {
       "trigger": "vampirism:vampire_action",
       "conditions": {
-        "action": "sniped_in_bat"
+        "action": "SNIPED_IN_BAT"
       }
     }
-  }
+  },
+  "requirements": [
+    [
+      "flower"
+    ]
+  ]
 }

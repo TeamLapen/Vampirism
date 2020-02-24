@@ -1,4 +1,5 @@
 {
+  "parent": "vampirism:hunter/stake",
   "display": {
     "icon": {
       "item": "vampirism:item_garlic"
@@ -9,12 +10,14 @@
     "description": {
       "translate": "advancement.vampirism.max_level_hunter.desc"
     },
-    "frame": "goal"
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
   },
-  "reward": {
+  "rewards": {
     "experience": 100
   },
-  "parent": "vampirism:hunter/stake",
   "criteria": {
     "level": {
       "trigger": "vampirism:faction",
@@ -23,5 +26,10 @@
         "level": 14
       }
     }
-  }
+  },
+  "requirements": [
+    [
+      "level"
+    ]
+  ]
 }

@@ -1,7 +1,9 @@
 {
+  "parent": "vampirism:hunter/become_hunter",
   "display": {
     "icon": {
-      "item": "vampirism:stake"
+      "item": "vampirism:stake",
+      "nbt": "{Damage:0}"
     },
     "title": {
       "translate": "advancement.vampirism.stake"
@@ -9,18 +11,25 @@
     "description": {
       "translate": "advancement.vampirism.stake.desc"
     },
-    "frame": "challenge"
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
   },
-  "reward": {
+  "rewards": {
     "experience": 100
   },
-  "parent": "vampirism:hunter/become_hunter",
   "criteria": {
     "flower": {
       "trigger": "vampirism:hunter_action",
       "conditions": {
-        "action": "stake"
+        "action": "STAKE"
       }
     }
-  }
+  },
+  "requirements": [
+    [
+      "flower"
+    ]
+  ]
 }

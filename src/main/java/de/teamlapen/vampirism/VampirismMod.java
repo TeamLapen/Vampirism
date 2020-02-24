@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.core.ModWorld;
 import de.teamlapen.vampirism.core.RegistryManager;
+import de.teamlapen.vampirism.data.AdvancementGenerator;
 import de.teamlapen.vampirism.data.BlockStateGenerator;
 import de.teamlapen.vampirism.data.LootTablesGenerator;
 import de.teamlapen.vampirism.data.TagGenerator;
@@ -240,6 +241,7 @@ public class VampirismMod {
             gen.addProvider(new TagGenerator.ModItemTagsProvider(gen));
             gen.addProvider(new TagGenerator.ModEntityTypeTagsProvider(gen));
             gen.addProvider(new LootTablesGenerator(gen));
+            gen.addProvider(new AdvancementGenerator(gen));
         }
         if (event.includeClient()) {
             gen.addProvider(new BlockStateGenerator(event.getGenerator(), event.getExistingFileHelper()));

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.advancements;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.advancements.PlayerAdvancements;
@@ -26,9 +27,13 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
         super(ID, Listeners::new);
     }
 
+    public static Instance builder(Action action){
+        return new Instance(action);
+    }
+
     @Nonnull
     @Override
-    public Instance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
+    public Instance deserializeInstance(JsonObject json, @Nonnull JsonDeserializationContext context) {
         Action action = Action.NONE;
         if (json.has("action")) {
             String name = json.get("action").getAsString();
@@ -56,8 +61,8 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
     }
 
     static class Instance extends CriterionInstance {
-        private final @Nonnull
-        Action action;
+        @Nonnull
+        private final Action action;
 
         Instance(@Nonnull Action action) {
             super(ID);
@@ -66,6 +71,14 @@ public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTr
 
         boolean trigger(Action action) {
             return this.action == action;
+        }
+
+        @Nonnull
+        @Override
+        public JsonElement serialize() {
+            JsonObject json = new JsonObject();
+            json.addProperty("action",action.name());
+            return json;
         }
     }
 

@@ -1,8 +1,8 @@
 {
+  "parent": "vampirism:vampire/first_blood",
   "display": {
     "icon": {
-      "item": "minecraft:potion",
-      "nbt": "{Potion: \"minecraft:poison\"}"
+      "item": "minecraft:potion"
     },
     "title": {
       "translate": "advancement.vampirism.yuck"
@@ -10,15 +10,22 @@
     "description": {
       "translate": "advancement.vampirism.yuck"
     },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
     "hidden": true
   },
-  "parent": "vampirism:vampire/first_blood",
   "criteria": {
     "flower": {
       "trigger": "vampirism:vampire_action",
       "conditions": {
-        "action": "poisonous_bite"
+        "action": "POISONOUS_BITE"
       }
     }
-  }
+  },
+  "requirements": [
+    [
+      "flower"
+    ]
+  ]
 }
