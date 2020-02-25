@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderVampireMinion extends RenderBiped<EntityVampireMinionBase> {
 
-    private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png");
+    private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/advanced_vampire.png");
 
     public RenderVampireMinion(RenderManager renderManagerIn) {
         super(renderManagerIn, new ModelBipedShrinkable(0F, 0F, 64, 64), 0.35F);
