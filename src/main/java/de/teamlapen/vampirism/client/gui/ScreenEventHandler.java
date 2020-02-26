@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -19,7 +20,7 @@ import java.util.Optional;
  */
 public class ScreenEventHandler {
 
-    private final static ResourceLocation INVENTORY_SKILLS = new ResourceLocation("vampirism", "textures/gui/inventory_skills.png");
+    private final static ResourceLocation INVENTORY_SKILLS = new ResourceLocation(REFERENCE.MODID, "textures/gui/inventory_skills.png");
     private ImageButton button;
 
     @OnlyIn(Dist.CLIENT)
@@ -30,8 +31,7 @@ public class ScreenEventHandler {
             if (event.getGui().mouseClicked(event.getMouseX(), event.getMouseY(), event.getButton())) {
                 event.setCanceled(true);
                 if (button != null)
-                    button.setPosition(((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22);
-
+                    button.setPosition(((InventoryScreen) event.getGui()).getGuiLeft() + VampirismConfig.CLIENT.overrideGuiSkillButtonX.get(), event.getGui().height / 2 + VampirismConfig.CLIENT.overrideGuiSkillButtonY.get());
             }
         }
     }
@@ -49,11 +49,10 @@ public class ScreenEventHandler {
     @SubscribeEvent
     public void onInitGuiEventPost(GuiScreenEvent.InitGuiEvent.Post event) {
         if (VampirismConfig.CLIENT.guiSkillButton.get() && event.getGui() instanceof InventoryScreen && FactionPlayerHandler.getOpt(event.getGui().getMinecraft().player).map(FactionPlayerHandler::getCurrentFactionPlayer).map((Optional::isPresent)).orElse(false)) {
-                button = new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 125, event.getGui().height / 2 - 22, 20, 18, 178, 0, 19, INVENTORY_SKILLS, (context) -> {
-                    Minecraft.getInstance().displayGuiScreen(new SkillsScreen());
-                });
-                event.addWidget(button);
+            button = new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + VampirismConfig.CLIENT.overrideGuiSkillButtonX.get(), event.getGui().height / 2 + VampirismConfig.CLIENT.overrideGuiSkillButtonY.get(), 20, 18, 178, 0, 19, INVENTORY_SKILLS, (context) -> {
+                Minecraft.getInstance().displayGuiScreen(new SkillsScreen());
+            });
+            event.addWidget(button);
         }
     }
-
 }
