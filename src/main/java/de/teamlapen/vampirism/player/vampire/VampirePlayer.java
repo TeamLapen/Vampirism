@@ -272,6 +272,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public BITE_TYPE determineBiteType(EntityLivingBase entity) {
+        if (player.isActiveItemStackBlocking()) {
+            return BITE_TYPE.NONE;
+        }
         if (entity instanceof IBiteableEntity) {
             if (((IBiteableEntity) entity).canBeBitten(this)) return BITE_TYPE.SUCK_BLOOD;
         }
