@@ -41,8 +41,8 @@ public class ModVillage {
     }
 
     static void registerVillagePointOfInterestType(IForgeRegistry<PointOfInterestType> registry) {
-        PointOfInterestType hunter_faction = new PointOfInterestType("hunter_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_hunter.getStateContainer().getBaseState()), 1, null, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
-        PointOfInterestType vampire_faction = new PointOfInterestType("vampire_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_vampire.getStateContainer().getBaseState()), 1, null, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
+        PointOfInterestType hunter_faction = new PointOfInterestType("hunter_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_hunter.getStateContainer().getBaseState()), 1, 1).setRegistryName(REFERENCE.MODID, "hunter_faction");
+        PointOfInterestType vampire_faction = new PointOfInterestType("vampire_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_vampire.getStateContainer().getBaseState()), 1, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
         registry.register(hunter_faction);
         registry.register(vampire_faction);
         PointOfInterestType.func_221052_a(hunter_faction);
