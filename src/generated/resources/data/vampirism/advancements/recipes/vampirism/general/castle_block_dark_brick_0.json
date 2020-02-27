@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:general/castle_block_dark_brick_0"
+    ]
+  },
+  "criteria": {
+    "has_castle_brick": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:castle_block_normal_brick"
+          }
+        ]
+      }
+    },
+    "has_black_dye": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:black_dye"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:general/castle_block_dark_brick_0"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_castle_brick",
+      "has_black_dye",
+      "has_the_recipe"
+    ]
+  ]
+}

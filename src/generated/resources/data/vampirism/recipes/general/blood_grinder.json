@@ -6,21 +6,20 @@
     "YXY"
   ],
   "key": {
-    "X": {
-      "tag": "forge:ingots/iron"
+    "Z": {
+      "item": "minecraft:hopper"
     },
     "Y": {
       "tag": "minecraft:planks"
     },
-    "Z": {
-      "item": "minecraft:hopper"
-    },
     "D": {
       "tag": "forge:gems/diamond"
+    },
+    "X": {
+      "tag": "forge:ingots/iron"
     }
   },
   "result": {
-    "item": "vampirism:blood_grinder",
-    "count": 1
+    "item": "vampirism:blood_grinder"
   }
 }
