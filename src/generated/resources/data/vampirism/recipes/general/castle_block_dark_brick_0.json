@@ -1,8 +1,4 @@
 {
-  "result": {
-    "item": "vampirism:castle_block_dark_brick",
-    "count": 8
-  },
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
@@ -32,5 +28,8 @@
     {
       "item": "minecraft:black_dye"
     }
-  ]
+  ],
+  "result": {
+    "item": "vampirism:castle_block_dark_brick"
+  }
 }

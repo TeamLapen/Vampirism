@@ -9,18 +9,17 @@
     "X": {
       "tag": "forge:ingots/iron"
     },
+    "Q": {
+      "tag": "forge:storage_blocks/quartz"
+    },
     "Y": {
       "tag": "minecraft:planks"
     },
     "Z": {
       "item": "minecraft:cauldron"
-    },
-    "Q": {
-      "tag": "forge:storage_blocks/quartz"
     }
   },
   "result": {
-    "item": "vampirism:blood_sieve",
-    "count": 1
+    "item": "vampirism:blood_sieve"
   }
 }

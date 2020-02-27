@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:general/blood_grinder"
+    ]
+  },
+  "criteria": {
+    "has_hopper": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:hopper"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:general/blood_grinder"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_hopper",
+      "has_the_recipe"
+    ]
+  ]
+}
