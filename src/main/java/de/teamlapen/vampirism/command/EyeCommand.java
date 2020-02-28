@@ -19,9 +19,7 @@ public class EyeCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("eye")
                 .then(Commands.argument("type", IntegerArgumentType.integer(0, REFERENCE.EYE_TYPE_COUNT - 1))
-                        .executes(context -> {
-                            return setEye(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "type"));
-                        }));
+                        .executes(context -> setEye(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "type"))));
     }
 
     private static int setEye(CommandContext<CommandSource> context, PlayerEntity player, int type) {
