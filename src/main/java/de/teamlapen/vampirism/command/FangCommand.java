@@ -17,11 +17,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 public class FangCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
-        return Commands.literal("eye")
+        return Commands.literal("fang")
                 .then(Commands.argument("type", IntegerArgumentType.integer(0, REFERENCE.FANG_TYPE_COUNT - 1))
-                        .executes(context -> {
-                            return setFang(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "type"));
-                        }));
+                        .executes(context -> setFang(context, context.getSource().asPlayer(), IntegerArgumentType.getInteger(context, "type"))));
     }
 
     private static int setFang(CommandContext<CommandSource> context, PlayerEntity player, int type) {
