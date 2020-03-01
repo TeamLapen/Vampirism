@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -27,12 +28,13 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Placed in some churches
  */
-public class ChurchAltarBlock extends VampirismBlock {
+public class ChurchAltarBlock extends HorizontalBlock {
 
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     private final static String regName = "church_altar";
@@ -49,12 +51,13 @@ public class ChurchAltarBlock extends VampirismBlock {
 
 
     public ChurchAltarBlock() {
-        super(regName, Properties.create(Material.WOOD).hardnessAndResistance(0.5f));
+        super(Properties.create(Material.WOOD).hardnessAndResistance(0.5f));
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
-
+        setRegistryName(REFERENCE.MODID, regName);
     }
 
 
+    @Nonnull
     @Override
     public VoxelShape getShape(BlockState blockState, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
         Direction dir = blockState.get(FACING);
@@ -65,11 +68,11 @@ public class ChurchAltarBlock extends VampirismBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext ctx) {
-        return super.getStateForPlacement(ctx).with(FACING, ctx.getPlacementHorizontalFacing().getOpposite());
+        return this.getDefaultState().with(FACING, ctx.getPlacementHorizontalFacing().getOpposite());
     }
 
     @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public boolean isNormalCube(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return false;
     }
 
