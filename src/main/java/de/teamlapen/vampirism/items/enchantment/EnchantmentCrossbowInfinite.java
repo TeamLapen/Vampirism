@@ -45,6 +45,6 @@ public class EnchantmentCrossbowInfinite extends Enchantment {
 
     @Override
     protected String getDefaultTranslationKey() {
-        return "arrow_infinite";
+        return "enchantment.vampirism.crossbow_infinity";
     }
 }
