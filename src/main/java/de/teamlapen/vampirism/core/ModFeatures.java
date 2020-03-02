@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.features.VampireForestFlowerFeature;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
@@ -25,6 +26,7 @@ public class ModFeatures {
     //features
     public static final FlowersFeature vampire_flower = new VampireForestFlowerFeature(NoFeatureConfig::deserialize);
     public static final TreeFeature vampire_tree = new TreeFeature(NoFeatureConfig::deserialize, false, 4, Blocks.SPRUCE_LOG.getDefaultState(), Blocks.OAK_LEAVES.getDefaultState(), false);
+    public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig::deserialize);
     //structures
     public static final Structure<NoFeatureConfig> hunter_camp = new HunterCampStructure();
     //structurepieces
@@ -41,6 +43,7 @@ public class ModFeatures {
         registry.register(vampire_tree.setRegistryName(REFERENCE.MODID, "vampire_tree"));
 
         registry.register(hunter_camp.setRegistryName(REFERENCE.MODID, "hunter_camp"));
+        registry.register(vampire_dungeon.setRegistryName(REFERENCE.MODID,"vampire_dungeon"));
     }
 
     static void registerIgnoredBiomesForStructures() {

@@ -36,6 +36,7 @@ public class ModBiomes {
 
     static void addFeatures() {
         for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
+            VampirismBiomeFeatures.addVampireDungeon(biome);
             if (!VampirismAPI.worldGenRegistry().canStructureBeGeneratedInBiome(ModFeatures.hunter_camp.getRegistryName(), biome))
                 continue;
             if (biome instanceof IFactionBiome && !VReference.HUNTER_FACTION.equals(((IFactionBiome) biome).getFaction()))
