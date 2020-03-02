@@ -2,12 +2,17 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.util.FluidTankWithListener;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.items.BloodBottleItem;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
@@ -18,6 +23,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 /**
  * Stores blood and other liquids in a {@link FluidTank}
@@ -108,5 +114,12 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
         }
         modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_PROP, fluid.getFluid()).build();
         if (refresh) ModelDataManager.requestModelDataRefresh(this);
+    }
+
+    public static void setBloodValue(IBlockReader worldIn, Random randomIn, BlockPos blockPosIn) {
+        TileEntity tileEntity = worldIn.getTileEntity(blockPosIn);
+        if (tileEntity instanceof BloodContainerTileEntity) {
+            ((BloodContainerTileEntity) tileEntity).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))));
+        }
     }
 }

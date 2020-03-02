@@ -1,7 +1,6 @@
 package de.teamlapen.lib.lib.config;
 
 import com.google.common.collect.Maps;
-
 import de.teamlapen.lib.lib.util.LogUtil;
 import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.profiler.IProfiler;
@@ -22,11 +21,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class BloodValueLoader extends ReloadListener {
+public class BloodValueLoader extends ReloadListener<Collection<ResourceLocation>> {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String BLOODVALUEDIRECTORY = "vampirism_blood_values/";
 
     private final String folderLocation;
+    private final String type;
     private final BiConsumer<Map<ResourceLocation, Integer>, Integer> consumer;
     private @Nullable
     final ResourceLocation multiplierName;
@@ -41,18 +41,18 @@ public class BloodValueLoader extends ReloadListener {
         this.folderLocation = BLOODVALUEDIRECTORY + nameIn;
         this.consumer = consumerIn;
         this.multiplierName = multiplierNameIn;
+        this.type = nameIn;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    protected void apply(@Nonnull Object splashList, @Nonnull IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
+    protected void apply(@Nonnull Collection<ResourceLocation> splashList, @Nonnull IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
         Map<ResourceLocation, Integer> values = Maps.newConcurrentMap();
-        for (ResourceLocation location : (Collection<ResourceLocation>) splashList) {
+        for (ResourceLocation location : splashList) {
             String modId = location.getPath().substring(folderLocation.length() + 1, location.getPath().length() - 4);
             Map<ResourceLocation, Integer> values_tmp = loadBloodValuesFromDataPack(location, modId, resourceManagerIn);
             if (values_tmp != null) {
                 values.putAll(values_tmp);
-                LOGGER.info(LogUtil.CONFIG, "Loaded {} blood values for {} from {}", values_tmp.size(), this.getClass().getName(), modId);
+                LOGGER.info(LogUtil.CONFIG, "Loaded {} blood values for {} with {} from {}", values_tmp.size(), this.type, this.getClass().getName(), modId);
             }
         }
         consumer.accept(values, multiplier != 0 ? multiplier : 1);
@@ -125,7 +125,7 @@ public class BloodValueLoader extends ReloadListener {
 
     @Nonnull
     @Override
-    protected Object prepare(IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
+    protected Collection<ResourceLocation> prepare(IResourceManager resourceManagerIn, @Nonnull IProfiler profilerIn) {
         return resourceManagerIn.getAllResourceLocations(folderLocation, (file) -> file.endsWith(".txt"));
     }
 }

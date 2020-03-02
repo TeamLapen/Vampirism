@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.core;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.gen.features.VampireDungeonFeature;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.world.gen.structures.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
@@ -29,10 +30,12 @@ public class ModFeatures {
     public static final IStructureProcessorType random_selector = IStructureProcessorType.register(REFERENCE.MODID+":random_selector", RandomStructureProcessor::new);
     public static final IStructureProcessorType biome_based = IStructureProcessorType.register(REFERENCE.MODID+":biome_based", BiomeTopBlockProcessor::new);
 
+    public static final VampireDungeonFeature vampire_dungeon = new VampireDungeonFeature(NoFeatureConfig::deserialize);
 
     static void registerFeatures(IForgeRegistry<Feature<?>> registry) {
 
         registry.register(hunter_camp.setRegistryName(REFERENCE.MODID, "hunter_camp"));
+        registry.register(vampire_dungeon.setRegistryName(REFERENCE.MODID, "vampire_dungeon"));
     }
 
     static void registerIgnoredBiomesForStructures() {

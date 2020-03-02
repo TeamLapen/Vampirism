@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -17,7 +18,10 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -26,9 +30,11 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 /**
  * Handle blood storage and leveling
@@ -153,6 +159,13 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).build();
         if (refresh) {
             ModelDataManager.requestModelDataRefresh(this);
+        }
+    }
+
+    public static void setBloodValue(IBlockReader worldIn, Random randomIn, BlockPos blockPosIn) {
+        TileEntity tileEntity = worldIn.getTileEntity(blockPosIn);
+        if (tileEntity instanceof AltarInspirationTileEntity) {
+            tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> fluidHandler.fill(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (CAPACITY * randomIn.nextFloat()))), IFluidHandler.FluidAction.EXECUTE));
         }
     }
 

@@ -11,10 +11,7 @@ import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
-import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
-import net.minecraft.world.gen.placement.FrequencyConfig;
-import net.minecraft.world.gen.placement.IPlacementConfig;
-import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.placement.*;
 import net.minecraftforge.common.IPlantable;
 
 public class VampirismBiomeFeatures {
@@ -38,5 +35,9 @@ public class VampirismBiomeFeatures {
         if (!VampirismConfig.SERVER.disableHunterTentGen.get()) {
             biomeIn.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, ModFeatures.hunter_camp.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
         }
+    }
+
+    public static void addVampireDungeon(Biome biome) {
+        biome.addFeature(GenerationStage.Decoration.UNDERGROUND_STRUCTURES, ModFeatures.vampire_dungeon.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.DUNGEONS.configure(new ChanceConfig(VampirismConfig.BALANCE.vampireDungeonWeight.get()))));
     }
 }

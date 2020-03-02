@@ -1,26 +1,12 @@
 package de.teamlapen.vampirism.core;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.world.loot.AddBookNbt;
-import de.teamlapen.vampirism.world.loot.AdjustableLevelCondition;
-import de.teamlapen.vampirism.world.loot.SetItemBloodCharge;
-import de.teamlapen.vampirism.world.loot.SetMetaBasedOnLevel;
-import de.teamlapen.vampirism.world.loot.StakeCondition;
-import de.teamlapen.vampirism.world.loot.TentSpawnerCondition;
+import de.teamlapen.vampirism.world.loot.*;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootEntry;
-import net.minecraft.world.storage.loot.LootParameterSet;
-import net.minecraft.world.storage.loot.LootParameterSets;
-import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.LootTables;
-import net.minecraft.world.storage.loot.RandomValueRange;
-import net.minecraft.world.storage.loot.TableLootEntry;
+import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.event.LootTableLoadEvent;
@@ -48,7 +34,7 @@ public class ModLootTables {
 
     //chests
     public static final ResourceLocation chest_hunter_trainer = register("chests/hunter_trainer");
-    public static final ResourceLocation chest_vampire_dungeon = register("chests/vampire_dungeon");
+    public static final ResourceLocation chest_vampire_dungeon = register("chests/dungeon/vampire_dungeon");
 
     private static int injected = 0;
 
