@@ -33,7 +33,7 @@ public class ModLootTables {
     public static final ResourceLocation hunter = register("entities/" + ModEntities.hunter.getRegistryName().getPath());
     public static final ResourceLocation advanced_vampire = register("entities/" + ModEntities.advanced_vampire.getRegistryName().getPath());
     public static final ResourceLocation advanced_hunter = register("entities/" + ModEntities.advanced_hunter.getRegistryName().getPath());
-    public static final ResourceLocation chest_hunter_trainer = register("chests/hunter_trainer");
+    public static final ResourceLocation vampire_dungeon = register("chests/dungeon/vampire_dungeon");
 
     private static final List<String> INJECTION_TABLES = ImmutableList.of("abandoned_mineshaft", "jungle_temple", "stronghold_corridor", "desert_pyramid", "stronghold_library");
     private static final List<String> STRUCTURE_TABLES = Lists.newArrayList();
