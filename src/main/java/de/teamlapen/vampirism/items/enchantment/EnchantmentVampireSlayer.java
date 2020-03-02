@@ -63,6 +63,6 @@ public class EnchantmentVampireSlayer extends Enchantment {
 
     @Override
     protected String getDefaultTranslationKey() {
-        return "vampirism.vampire_slayer";
+        return "enchantment.vampirism.vampire_slayer";
     }
 }
