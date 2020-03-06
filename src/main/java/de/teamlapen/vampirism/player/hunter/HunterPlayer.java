@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.blocks.TentBlock;
+import de.teamlapen.vampirism.client.gui.SleepInMultiplayerModScreen;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModStats;
@@ -16,6 +18,8 @@ import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.SleepInMultiplayerScreen;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -37,6 +41,8 @@ import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
+import static de.teamlapen.vampirism.blocks.TentBlock.FACING;
+import static de.teamlapen.vampirism.blocks.TentBlock.POSITION;
 
 /**
  * Main class for hunter players
@@ -255,6 +261,15 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         } else {
             if (level > 0) {
                 actionHandler.updateActions();
+            }
+            if (player.isSleeping()) {
+                player.getBedPosition().ifPresent(pos -> {
+                    if (player.world.getBlockState(pos).getBlock() instanceof TentBlock) {
+                        if (Minecraft.getInstance().currentScreen instanceof SleepInMultiplayerScreen && !(Minecraft.getInstance().currentScreen instanceof SleepInMultiplayerModScreen))
+                            Minecraft.getInstance().displayGuiScreen(new SleepInMultiplayerModScreen("text.vampirism.tent.stop_sleeping"));
+                        TentBlock.setTentSleepPosition(player, pos, player.world.getBlockState(pos).get(POSITION), player.world.getBlockState(pos).get(FACING));
+                    }
+                });
             }
         }
         player.getEntityWorld().getProfiler().endSection();

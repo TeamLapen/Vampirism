@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -278,6 +279,9 @@ public class ModPlayerEventHandler {
     public void sleepTimeCheck(SleepingTimeCheckEvent event) {
         if (Helper.isVampire(event.getPlayer())) {
             event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getPlayer().world.getBlockState(blockPos).getBlock() instanceof CoffinBlock ? event.getPlayer().world.isDaytime() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
+        }
+        if (Helper.isHunter(event.getPlayer())) {
+            event.getSleepingLocation().ifPresent((blockPos -> event.setResult(event.getPlayer().getEntityWorld().getBlockState(blockPos).getBlock() instanceof TentBlock ? !event.getPlayer().getEntityWorld().isDaytime() ? Event.Result.ALLOW : Event.Result.DENY : event.getResult())));
         }
     }
 

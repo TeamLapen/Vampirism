@@ -1,21 +1,40 @@
 package de.teamlapen.vampirism.blocks;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.Table;
+import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.util.UtilLib;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.block.SoundType;
+import de.teamlapen.vampirism.player.VampirismPlayer;
+import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.*;
+import net.minecraftforge.common.extensions.IForgeDimension;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
+
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 /**
  * Part of a 2x2 block tent
@@ -30,23 +49,123 @@ public class TentBlock extends VampirismBlock {
     private static final VoxelShape SOUTH = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
     private static final VoxelShape WEST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
 
+    private static final Map<PlayerEntity.SleepResult, ITextComponent> sleepResults;
+    private static final Table<Integer, Direction, Pair<Double, Double>> offsets;
+
     public TentBlock() {
         this(name);
     }
 
-    protected TentBlock(String name) {
-        super(name, Properties.create(Material.WOOL).hardnessAndResistance(0.6f).sound(SoundType.CLOTH));
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POSITION, 0));
+    static {
+        ImmutableTable.Builder<Integer, Direction, Pair<Double, Double>> offsetsBuilder = ImmutableTable.builder();
+        offsetsBuilder.put(0, Direction.NORTH, Pair.of(1.0, 1.6));
+        offsetsBuilder.put(0, Direction.EAST, Pair.of(-0.6, 1.0));
+        offsetsBuilder.put(0, Direction.SOUTH, Pair.of(0.0, -0.6));
+        offsetsBuilder.put(0, Direction.WEST, Pair.of(1.6, 0.0));
+        offsetsBuilder.put(1, Direction.NORTH, Pair.of(1.0, -0.6));
+        offsetsBuilder.put(1, Direction.EAST, Pair.of(1.6, 1.0));
+        offsetsBuilder.put(1, Direction.SOUTH, Pair.of(0.0, 1.6));
+        offsetsBuilder.put(1, Direction.WEST, Pair.of(-0.6, 0.0));
+        offsetsBuilder.put(2, Direction.NORTH, Pair.of(1.0, 0.4));
+        offsetsBuilder.put(2, Direction.EAST, Pair.of(0.6, 1.0));
+        offsetsBuilder.put(2, Direction.SOUTH, Pair.of(0.0, 0.6));
+        offsetsBuilder.put(2, Direction.WEST, Pair.of(0.4, 0.0));
+        offsetsBuilder.put(3, Direction.NORTH, Pair.of(1.0, 0.6));
+        offsetsBuilder.put(3, Direction.EAST, Pair.of(0.4, 1.0));
+        offsetsBuilder.put(3, Direction.SOUTH, Pair.of(0.0, 0.4));
+        offsetsBuilder.put(3, Direction.WEST, Pair.of(0.6, 0.0));
+        offsets = offsetsBuilder.build();
+
+        ImmutableMap.Builder<PlayerEntity.SleepResult, ITextComponent> sleepBuilder = ImmutableMap.builder();
+        sleepBuilder.put(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW, new TranslationTextComponent("text.vampirism.tent.no_sleep"));
+        sleepBuilder.put(PlayerEntity.SleepResult.TOO_FAR_AWAY, new TranslationTextComponent("text.vampirism.tent.too_far_away"));
+        sleepBuilder.put(PlayerEntity.SleepResult.OBSTRUCTED, new TranslationTextComponent("text.vampirism.tent.obstructed"));
+        sleepResults = sleepBuilder.build();
     }
 
+    public static void setTentSleepPosition(PlayerEntity player, BlockPos blockPos, int position, Direction facing) {
+        player.setPosition(blockPos.getX() + offsets.get(position, facing).getFirst(), blockPos.getY() + 0.0625, blockPos.getZ() + offsets.get(position, facing).getSecond());
+    }
+
+    protected TentBlock(String name) {
+        super(name, Properties.create(Material.WOOL).hardnessAndResistance(0.6f).sound(SoundType.CLOTH));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POSITION, 0).with(BedBlock.OCCUPIED, false));
+    }
 
     @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos) {
+        switch (state.get(POSITION)) {
+            case 0:
+            case 3:
+                return state.get(HORIZONTAL_FACING).getOpposite();
+            default:
+                return state.get(HORIZONTAL_FACING);
+        }
+    }
+
+    @Nonnull
+    @Override
+    public VoxelShape getShape(BlockState blockState, IBlockReader blockReader, BlockPos blockPos, ISelectionContext context) {
+        switch (blockState.get(FACING)) {
+            case NORTH:
+                return NORTH;
+            case EAST:
+                return EAST;
+            case SOUTH:
+                return SOUTH;
+            case WEST:
+                return WEST;
+        }
+        return NORTH;
+    }
+
+    @Override
+    public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, @Nullable Entity player) {
+        return true;
+    }
+
+    @Override
+    public boolean isNormalCube(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return false;
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public ActionResultType onBlockActivated(BlockState blockState, World world, final BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult rayTraceResult) {
+        if (world.isRemote()) return ActionResultType.SUCCESS;
+        if (HunterPlayer.getOpt(playerEntity).map(VampirismPlayer::getLevel).orElse(0) == 0) {
+            playerEntity.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.cant_use"), true);
+            return ActionResultType.SUCCESS;
+        }
+        IForgeDimension.SleepResult sleepResult = world.getDimension().canSleepAt(playerEntity, blockPos);
+        if (sleepResult != IForgeDimension.SleepResult.BED_EXPLODES) {
+            if (sleepResult == IForgeDimension.SleepResult.DENY) return ActionResultType.SUCCESS;
+            if (blockState.get(BedBlock.OCCUPIED)) {
+                playerEntity.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.occupied"), true);
+                return ActionResultType.SUCCESS;
+            } else {
+                playerEntity.trySleep(blockPos).ifLeft(sleepResult1 -> {
+                    if (sleepResult1 != null) {
+                        playerEntity.sendStatusMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
+                    }
+                }).ifRight(u -> {
+                    setOccupied(world, blockState, blockPos, true);
+                    setTentSleepPosition(playerEntity, blockPos, playerEntity.world.getBlockState(blockPos).get(POSITION), playerEntity.world.getBlockState(blockPos).get(HORIZONTAL_FACING));
+                });
+                return ActionResultType.SUCCESS;
+            }
+        } else {
+            world.removeBlock(blockPos, false);
+            BlockPos blockPos1 = blockPos.offset(blockState.get(HORIZONTAL_FACING).getOpposite());
+            if (world.getBlockState(blockPos1).getBlock() == this) {
+                world.removeBlock(blockPos1, false);
+            }
+            world.createExplosion(null, DamageSource.netherBedExplosion(), (double) blockPos.getX() + 0.5D, (double) blockPos.getY() + 0.5D, (double) blockPos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+            return ActionResultType.SUCCESS;
+        }
+    }
+
+    @Override
+    public void onReplaced(BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
         super.onReplaced(state, world, pos, newState, isMoving);
         if (newState.getBlock() != state.getBlock()) {
             BlockPos main = pos;
@@ -75,23 +194,22 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState blockState, IBlockReader blockReader, BlockPos blockPos, ISelectionContext context) {
-        switch (blockState.get(FACING)) {
-            case NORTH:
-                return NORTH;
-            case EAST:
-                return EAST;
-            case SOUTH:
-                return SOUTH;
-            case WEST:
-                return WEST;
+    public void setBedOccupied(BlockState state, IWorldReader world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
+        if (world instanceof IWorldWriter) {
+            setOccupied((IWorldWriter & IWorldReader) world, state, pos, occupied);
         }
-        return NORTH;
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, POSITION);
+        builder.add(FACING, POSITION, BlockStateProperties.OCCUPIED);
+    }
+
+    private <T extends IWorldWriter & IWorldReader> void replaceWithOccupied(T world, BlockPos pos, boolean occupied) {
+        BlockState state = world.getBlockState(pos);
+        if (state.getBlock() instanceof TentBlock) {
+            world.setBlockState(pos, world.getBlockState(pos).with(BlockStateProperties.OCCUPIED, occupied), 2);
+        }
     }
 
     private static VoxelShape makeShape() {
@@ -136,5 +254,29 @@ public class TentBlock extends VampirismBlock {
                 Block.makeCuboidShape(14.9, 15.4, 0, 15.8, 15.85, 16),
                 Block.makeCuboidShape(15, 15, 0, 16, 16, 16)
         );
+    }
+
+    private <T extends IWorldWriter & IWorldReader> void setOccupied(T world, BlockState state, BlockPos pos, boolean occupied) {
+        BlockPos main = pos;
+        Direction dir = state.get(FACING);
+        int p = state.get(POSITION);
+        if (p == 0) {
+            dir = dir.getOpposite();
+        } else if (p == 1) {
+            main = pos.offset(dir.rotateY());
+        } else if (p == 2) {
+            main = pos.offset(dir.rotateY()).offset(dir.getOpposite());
+        } else if (p == 3) {
+            main = pos.offset(dir);
+            dir = dir.getOpposite();
+        }
+        BlockPos cur = main;
+        replaceWithOccupied(world, cur, occupied);
+        cur = main.offset(dir);
+        replaceWithOccupied(world, cur, occupied);
+        cur = main.offset(dir.rotateYCCW());
+        replaceWithOccupied(world, cur, occupied);
+        cur = main.offset(dir).offset(dir.rotateYCCW());
+        replaceWithOccupied(world, cur, occupied);
     }
 }

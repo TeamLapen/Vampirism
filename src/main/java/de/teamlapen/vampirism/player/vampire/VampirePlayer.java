@@ -15,6 +15,8 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.blocks.CoffinBlock;
+import de.teamlapen.vampirism.client.gui.SleepInMultiplayerModScreen;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.DamageHandler;
@@ -33,6 +35,8 @@ import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.SleepInMultiplayerScreen;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
@@ -747,6 +751,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     return;
                 }
                 feedBiteTickCounter = 0;
+            }
+            if (player.isSleeping()) {
+                player.getBedPosition().ifPresent(pos -> {
+                    if (player.world.getBlockState(pos).getBlock() instanceof CoffinBlock) {
+                        if (Minecraft.getInstance().currentScreen instanceof SleepInMultiplayerScreen && !(Minecraft.getInstance().currentScreen instanceof SleepInMultiplayerModScreen))
+                            Minecraft.getInstance().displayGuiScreen(new SleepInMultiplayerModScreen("text.vampirism.coffin.stop_sleeping"));
+                    }
+                });
             }
         }
         world.getProfiler().endSection();
