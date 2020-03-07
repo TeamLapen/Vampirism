@@ -339,7 +339,7 @@ public class RenderHandler {
 
         if (bloodVisionTicks > 0) {
 
-            renderBloodVisionOutlines((bloodVisionTicks + (bloodVisionTicks - lastBloodVisionTicks) * event.getPartialTicks()) / (float) BLOOD_VISION_FADE_TICKS, event.getPartialTicks());
+            renderBloodVisionOutlines((bloodVisionTicks + (bloodVisionTicks - lastBloodVisionTicks) * event.getPartialTicks()) / (float) BLOOD_VISION_FADE_TICKS, Minecraft.getInstance().getRenderPartialTicks()); //https://github.com/MinecraftForge/MinecraftForge/issues/6380 TODO switch to event.getPartialTicks
 
         }
 
