@@ -53,7 +53,6 @@ public class SkillTree {
     /**
      * Initialized with root nodes so skill before the actual tree is received
      */
-    @OnlyIn(Dist.CLIENT)
     public void initRootSkills() {
         //Built root nodes
         rootNodes.clear();
@@ -73,7 +72,6 @@ public class SkillTree {
             SkillNode rootNode = new SkillNode(faction, ((SkillManager) VampirismAPI.skillManager()).getRootSkill(faction));
             builtNodes.put(faction.getID(), rootNode);
             rootNodes.put(faction.getID(), rootNode);
-
         }
 
         //Merge

@@ -30,7 +30,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
 import net.minecraftforge.registries.ObjectHolderRegistry;
-import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -79,21 +78,18 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterActions(RegistryEvent.Register<IAction> event) {
-
         VampireActions.registerDefaultActions(event.getRegistry());
         HunterActions.registerDefaultActions(event.getRegistry());
-        ObjectHolderRegistry.applyObjectHolders();
+        ObjectHolderRegistry.applyObjectHolders(); //Apply object holders so action skills can use them
     }
 
     @SubscribeEvent
     public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
-
         ModBiomes.registerBiomes(event.getRegistry());
     }
 
     @SubscribeEvent
     public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
-
         ModBlocks.registerBlocks(event.getRegistry());
     }
 
@@ -104,13 +100,11 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterEnchantments(RegistryEvent.Register<Enchantment> event) {
-
         ModEnchantments.registerEnchantments(event.getRegistry());
     }
 
     @SubscribeEvent
     public void onRegisterEntities(RegistryEvent.Register<EntityType<?>> event) {
-
         ModEntities.registerEntities(event.getRegistry());
     }
 
@@ -121,7 +115,6 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterFeatures(RegistryEvent.Register<Feature<?>> event) {
-
         ModFeatures.registerFeatures(event.getRegistry());
     }
 
@@ -132,7 +125,6 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterItems(RegistryEvent.Register<Item> event) {
-
         ModItems.registerItems(event.getRegistry());
         ModBlocks.registerItemBlocks(event.getRegistry());
     }
@@ -144,7 +136,6 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterPotions(RegistryEvent.Register<Effect> event) {
-
         ModEffects.registerEffects(event.getRegistry());
     }
 
@@ -170,7 +161,6 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterSkills(RegistryEvent.Register<ISkill> event) {
-
         HunterSkills.registerHunterSkills(event.getRegistry());
         VampireSkills.registerVampireSkills(event.getRegistry());
     }
