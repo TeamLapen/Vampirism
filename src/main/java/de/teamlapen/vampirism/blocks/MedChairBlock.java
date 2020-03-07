@@ -24,6 +24,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -37,12 +39,15 @@ public class MedChairBlock extends VampirismBlock {
     public static final EnumProperty<EnumPart> PART = EnumProperty.create("part", EnumPart.class);
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     private final static String name = "med_chair";
+    private final VoxelShape SHAPE_TOP;
+    private final VoxelShape SHAPE_BOTTOM;
 
 
     public MedChairBlock() {
         super(name, Properties.create(Material.IRON).hardnessAndResistance(1));
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(PART, EnumPart.TOP));
-
+        SHAPE_TOP = makeCuboidShape(2, 6, 0, 14, 16, 16);
+        SHAPE_BOTTOM = makeCuboidShape(1, 1, 0, 15, 10, 16);
     }
 
     @Nullable
@@ -59,6 +64,12 @@ public class MedChairBlock extends VampirismBlock {
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+    }
+
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return state.get(PART) == EnumPart.BOTTOM ? SHAPE_BOTTOM : SHAPE_TOP;
     }
 
     @Override
