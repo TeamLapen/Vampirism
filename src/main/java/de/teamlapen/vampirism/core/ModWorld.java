@@ -131,8 +131,6 @@ public class ModWorld {
             return false;
         }));
 
-        allPieces.forEach((string, sd) -> sd.forEach(pair -> LOGGER.info(string + " " + pair.getFirst().toString())));
-
         //add old and new JigsawPieces with half weight to the JigsawPattern lists
         //if NullPointerException a ResourceLocation of an JigsawPiece could not be found
         temples.forEach((biome, replacer) -> replacer.values().forEach(piece -> allPieces.get(biome).forEach(pair -> {
