@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
+import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
@@ -23,7 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
@@ -107,8 +108,8 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     //Village capture---------------------------------------------------------------------------------------------------
-    @Nonnull
-    private LazyOptional<Optional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
+    @Nullable
+    private BlockPos totemPos;
     @Override
     public void stopVillageAttackDefense() {
         VillagerEntity villager = EntityType.VILLAGER.create(this.world);
@@ -122,29 +123,22 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public boolean isAttackingVillage() {
+    public boolean getAttacking() {
         return false;
     }
 
     @Override
-    public boolean isDefendingVillage() {
-        return villageAttributes.map(Optional::isPresent).orElse(false);
+    public void setAttacking(boolean attack) {
     }
 
     @Override
-    public void attackVillage(IVillageAttributes villageAttributes) {
-        this.villageAttributes = LazyOptional.of(() -> Optional.of(villageAttributes));
-    }
-
-    @Override
-    public void defendVillage(IVillageAttributes villageAttributes) {
-        this.villageAttributes = LazyOptional.of(() -> Optional.of(villageAttributes));
+    public void setTotemPos(@Nullable BlockPos pos) {
+        this.totemPos = pos;
     }
 
     @Nonnull
     @Override
-    public LazyOptional<Optional<IVillageAttributes>> getVillageAttributes() {
-        return villageAttributes;
+    public Optional<? extends IVillageAttributes> getVillageAttributes() {
+        return TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), this.totemPos);
     }
-
 }

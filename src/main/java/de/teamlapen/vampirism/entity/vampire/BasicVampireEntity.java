@@ -32,13 +32,10 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.common.util.LazyOptional;
@@ -176,7 +173,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.villageAttributes = LazyOptional.of(() -> Optional.ofNullable(TotemTileEntity.getVillageAttributes((TotemTileEntity)this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))))));
+            this.totemPos = new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"));
         }
 
         if (entityActionHandler != null) {
@@ -224,11 +221,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         super.writeAdditional(nbt);
         nbt.putInt("level", getLevel());
         nbt.putBoolean("attack", this.attack);
-        this.villageAttributes.ifPresent((opt) -> opt.ifPresent(village -> {
-            nbt.putInt("x", village.getPosition().getX());
-            nbt.putInt("y", village.getPosition().getY());
-            nbt.putInt("z", village.getPosition().getZ());
-        }));
+        if(this.totemPos != null){
+            nbt.putInt("x", this.totemPos.getX());
+            nbt.putInt("y", this.totemPos.getY());
+            nbt.putInt("z", this.totemPos.getZ());
+        }
         nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
         if (this.entityActionHandler != null) {
             this.entityActionHandler.write(nbt);
@@ -343,43 +340,38 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     //Village stuff ----------------------------------------------------------------------------------------------------
-    @Nonnull
-    private LazyOptional<Optional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
+    @Nullable
+    private BlockPos totemPos;
     private boolean attack;
 
     @Override
-    public void attackVillage(IVillageAttributes totem) {
+    public void attack(BlockPos totem) {
         this.goalSelector.removeGoal(tasks_avoidHunter);
-        this.villageAttributes = LazyOptional.of(() -> Optional.of(totem));
-        this.attack = true;
     }
 
     @Override
-    public void defendVillage(IVillageAttributes totem) {
+    public void defend(BlockPos totem) {
         this.goalSelector.removeGoal(tasks_avoidHunter);
-        this.villageAttributes = LazyOptional.of(() -> Optional.of(totem));
-        this.attack = false;
+    }
+
+    @Override
+    public boolean getAttacking() {
+        return this.attack;
+    }
+
+    @Override
+    public void setAttacking(boolean attack) {
+        this.attack = attack;
+    }
+
+    @Override
+    public void setTotemPos(BlockPos pos) {
+        this.totemPos = pos;
     }
 
     @Nonnull
     @Override
-    public LazyOptional<Optional<IVillageAttributes>> getVillageAttributes() {
-        return villageAttributes;
-    }
-
-    @Override
-    public void stopVillageAttackDefense() {
-        this.setCustomName(null);
-        this.villageAttributes = LazyOptional.empty();
-    }
-
-    @Override
-    public boolean isAttackingVillage() {
-        return villageAttributes.map(Optional::isPresent).orElse(false) && attack;
-    }
-
-    @Override
-    public boolean isDefendingVillage() {
-        return villageAttributes.map(Optional::isPresent).orElse(false) && !attack;
+    public Optional<? extends IVillageAttributes> getVillageAttributes() {
+        return TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), this.totemPos);
     }
 }

@@ -27,7 +27,7 @@ public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity>
         this.entityPredicate = new EntityPredicate() {
             @Override
             public boolean canTarget(@Nullable LivingEntity entity, @Nonnull LivingEntity entity1) {
-                if (creature.getVillageAttributes().map(opt -> opt.map(IVillageAttributes::shouldForceTargets).orElse(false)).orElse(false) && getTargetDistance() > 0) {
+                if (creature.getVillageAttributes().map(IVillageAttributes::shouldForceTargets).orElse(false) && getTargetDistance() > 0) {
                     setDistance(-1.0D);
                 } else if (getTargetDistance() < 0) {
                     setDistance(distance);
@@ -40,7 +40,7 @@ public class DefendVillageGoal<T extends CreatureEntity & IVillageCaptureEntity>
     @Override
     public boolean shouldExecute() {
         if (!creature.isDefendingVillage()) return false;
-        this.target = this.creature.world.getClosestEntityWithinAABB(LivingEntity.class, entityPredicate, this.goalOwner, this.goalOwner.posX, this.goalOwner.posY + (double) this.goalOwner.getEyeHeight(), this.goalOwner.posZ, creature.getVillageAttributes().map(opt -> opt.map(IVillageAttributes::getVillageArea).orElse(NULLAXIS)).orElse(NULLAXIS));
+        this.target = this.creature.world.getClosestEntityWithinAABB(LivingEntity.class, entityPredicate, this.goalOwner, this.goalOwner.posX, this.goalOwner.posY + (double) this.goalOwner.getEyeHeight(), this.goalOwner.posZ, creature.getVillageAttributes().map(IVillageAttributes::getVillageArea).orElse(NULLAXIS));
         return target != null;
     }
 

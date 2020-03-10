@@ -42,7 +42,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -221,7 +220,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.villageAttributes = LazyOptional.of(() -> Optional.ofNullable(TotemTileEntity.getVillageAttributes((TotemTileEntity)this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))))));
+            this.totemPos = new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"));
         }
     }
 
@@ -246,11 +245,11 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", this.attack);
-        this.villageAttributes.ifPresent((opt) -> opt.ifPresent(village -> {
-            nbt.putInt("x", village.getPosition().getX());
-            nbt.putInt("y", village.getPosition().getY());
-            nbt.putInt("z", village.getPosition().getZ());
-        }));
+        if (totemPos != null) {
+            nbt.putInt("x", this.totemPos.getX());
+            nbt.putInt("y", this.totemPos.getY());
+            nbt.putInt("z", this.totemPos.getZ());
+        }
     }
 
     @Override
@@ -332,41 +331,28 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     //Village stuff ----------------------------------------------------------------------------------------------------
-    @Nonnull
-    private LazyOptional<Optional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
+    @Nullable
+    private BlockPos totemPos;
     private boolean attack;
 
     @Override
-    public void attackVillage(IVillageAttributes totem) {
-        this.villageAttributes = LazyOptional.of(() -> Optional.of(totem));
-        this.attack = true;
+    public boolean getAttacking() {
+        return this.attack;
     }
 
     @Override
-    public void defendVillage(IVillageAttributes totem) {
-        this.villageAttributes = LazyOptional.of(() -> Optional.of(totem));
-        this.attack = false;
+    public void setAttacking(boolean attack) {
+        this.attack = attack;
+    }
+
+    @Override
+    public void setTotemPos(BlockPos pos) {
+        this.totemPos = pos;
     }
 
     @Nonnull
     @Override
-    public LazyOptional<Optional<IVillageAttributes>> getVillageAttributes() {
-        return villageAttributes;
-    }
-
-    @Override
-    public void stopVillageAttackDefense() {
-        this.setCustomName(null);
-        this.villageAttributes = LazyOptional.empty();
-    }
-
-    @Override
-    public boolean isAttackingVillage() {
-        return villageAttributes.map(Optional::isPresent).orElse(false) && attack;
-    }
-
-    @Override
-    public boolean isDefendingVillage() {
-        return villageAttributes.map(Optional::isPresent).orElse(false) && !attack;
+    public Optional<? extends IVillageAttributes> getVillageAttributes() {
+        return TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), this.totemPos);
     }
 }

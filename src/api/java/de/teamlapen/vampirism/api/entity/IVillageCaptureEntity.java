@@ -2,11 +2,10 @@ package de.teamlapen.vampirism.api.entity;
 
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.world.IVillageAttributes;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 
@@ -14,24 +13,52 @@ import java.util.Optional;
  * Required for entities that are supposed to attack/defend villages during a capture progress
  */
 public interface IVillageCaptureEntity extends IFactionEntity {
-    void attackVillage(IVillageAttributes totem);
+    default void attackVillage(BlockPos totem){
+        setAttacking(true);
+        setTotemPos(totem);
+        attack(totem);
+    }
 
-    void defendVillage(IVillageAttributes totem);
+    default void defendVillage(BlockPos totem){
+        setAttacking(false);
+        setTotemPos(totem);
+        defend(totem);
+    }
 
-    boolean isAttackingVillage();
+    default boolean isAttackingVillage(){
+        return getAttacking() && getVillageAttributes().isPresent();
+    }
 
-    boolean isDefendingVillage();
+    default boolean isDefendingVillage(){
+        return !getAttacking() && getVillageAttributes().isPresent();
+
+    }
+
+    default void attack(BlockPos totem){
+    }
+
+    default void defend(BlockPos totem){
+    }
+
+    boolean getAttacking();
+
+    void setAttacking(boolean attack);
+
+    void setTotemPos(BlockPos pos);
 
     /**
      * Called when the entity is within a village whre a capture progress has been stopped.
-     * {@link #attackVillage(IVillageAttributes)} or {@link #defendVillage(IVillageAttributes)} may not have been called before
+     * {@link #attackVillage(BlockPos)} or {@link #defendVillage(BlockPos)} may not have been called before
      */
-    void stopVillageAttackDefense();
+    default void stopVillageAttackDefense(){
+        setTotemPos(null);
+        getRepresentingEntity().setCustomName(null);
+    }
 
     /**
      * @return A (cached) instance of the village the entity is currently in if it is of the same faction or null otherwise
      */
     @Nonnull
-    LazyOptional<Optional<IVillageAttributes>> getVillageAttributes();
+    Optional<? extends IVillageAttributes> getVillageAttributes();
 
 }

@@ -26,7 +26,7 @@ public class AttackVillageGoal<T extends VampirismEntity & IVillageCaptureEntity
         this.entityPredicate = new EntityPredicate() {
             @Override
             public boolean canTarget(@Nullable LivingEntity entity, @Nonnull LivingEntity entity1) {
-                if (attacker.getVillageAttributes().map(opt -> opt.map(IVillageAttributes::shouldForceTargets).orElse(false)).orElse(false) && getTargetDistance() > 0) {
+                if (attacker.getVillageAttributes().map(IVillageAttributes::shouldForceTargets).orElse(false) && getTargetDistance() > 0) {
                     setDistance(-1.0D);
                 } else if (getTargetDistance() < 0) {
                     setDistance(distance);
@@ -39,7 +39,7 @@ public class AttackVillageGoal<T extends VampirismEntity & IVillageCaptureEntity
     @Override
     public boolean shouldExecute() {
         if (!attacker.isAttackingVillage()) return false;
-        this.target = this.attacker.world.getClosestEntityWithinAABB(LivingEntity.class, entityPredicate, this.goalOwner, this.goalOwner.posX, this.goalOwner.posY + (double) this.goalOwner.getEyeHeight(), this.goalOwner.posZ, this.attacker.getVillageAttributes().map(opt -> opt.map(IVillageAttributes::getVillageArea).orElse(NULLAXIS)).orElse(NULLAXIS));
+        this.target = this.attacker.world.getClosestEntityWithinAABB(LivingEntity.class, entityPredicate, this.goalOwner, this.goalOwner.posX, this.goalOwner.posY + (double) this.goalOwner.getEyeHeight(), this.goalOwner.posZ, this.attacker.getVillageAttributes().map(IVillageAttributes::getVillageArea).orElse(NULLAXIS));
         return target != null;
     }
 
