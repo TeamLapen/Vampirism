@@ -108,8 +108,8 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     //Village capture---------------------------------------------------------------------------------------------------
-    @Nullable
-    private BlockPos totemPos;
+    @Nonnull
+    private LazyOptional<Optional<BlockPos>> totemPos = LazyOptional.empty();
     @Override
     public void stopVillageAttackDefense() {
         VillagerEntity villager = EntityType.VILLAGER.create(this.world);
@@ -132,13 +132,13 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public void setTotemPos(@Nullable BlockPos pos) {
+    public void setTotemPos(@Nonnull LazyOptional<Optional<BlockPos>> pos) {
         this.totemPos = pos;
     }
 
     @Nonnull
     @Override
-    public Optional<? extends IVillageAttributes> getVillageAttributes() {
-        return TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), this.totemPos);
+    public Optional<IVillageAttributes> getVillageAttributes() {
+        return this.totemPos.map(opt -> TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), opt.orElse(null))).orElse(Optional.empty());
     }
 }

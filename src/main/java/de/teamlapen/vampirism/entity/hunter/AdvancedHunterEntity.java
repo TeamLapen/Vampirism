@@ -201,7 +201,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.totemPos = new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"));
+            this.totemPos = TotemTileEntity.getVillageBlockPosOpt(this.getEntityWorld().getDimension(),new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")));
         }
     }
 
@@ -232,11 +232,13 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", attack);
-        if(this.totemPos != null) {
-            nbt.putInt("x", this.totemPos.getX());
-            nbt.putInt("y", this.totemPos.getY());
-            nbt.putInt("z", this.totemPos.getZ());
-        }
+        this.totemPos.ifPresent(opt -> {
+            opt.ifPresent(totemPos -> {
+                nbt.putInt("x", totemPos.getX());
+                nbt.putInt("y", totemPos.getY());
+                nbt.putInt("z", totemPos.getZ());
+            });
+        });
     }
 
     @Override
@@ -319,14 +321,8 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
-    @Nullable
-    private BlockPos totemPos;
-
-    @Override
-    public void stopVillageAttackDefense() {
-        this.setCustomName(null);
-        this.totemPos = null;
-    }
+    @Nonnull
+    private LazyOptional<Optional<BlockPos>> totemPos = LazyOptional.empty();
 
     @Override
     public boolean getAttacking() {
@@ -339,13 +335,13 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void setTotemPos(@Nullable BlockPos pos) {
+    public void setTotemPos(@Nonnull LazyOptional<Optional<BlockPos>> pos) {
         this.totemPos = pos;
     }
 
     @Nonnull
     @Override
-    public Optional<? extends IVillageAttributes> getVillageAttributes() {
-        return TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), this.totemPos);
+    public Optional<IVillageAttributes> getVillageAttributes() {
+        return this.totemPos.map(opt -> TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), opt.orElse(null))).orElse(Optional.empty());
     }
 }

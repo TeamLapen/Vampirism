@@ -264,7 +264,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.totemPos = new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"));
+            this.totemPos = TotemTileEntity.getVillageBlockPosOpt(this.getEntityWorld().getDimension(),new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")));
         }
 
         if (entityActionHandler != null) {
@@ -303,11 +303,13 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         nbt.putInt("level", getLevel());
         nbt.putBoolean("crossbow", isCrossbowInMainhand());
         nbt.putBoolean("attack", attack);
-        if(this.totemPos != null) {
-                nbt.putInt("x", this.totemPos.getX());
-                nbt.putInt("y", this.totemPos.getY());
-                nbt.putInt("z", this.totemPos.getZ());
-        }
+        this.totemPos.isPresent();
+        this.totemPos.ifPresent(opt -> opt.isPresent());
+        this.totemPos.ifPresent(opt -> opt.ifPresent(totemPos -> {
+            nbt.putInt("x", totemPos.getX());
+            nbt.putInt("y", totemPos.getY());
+            nbt.putInt("z", totemPos.getZ());
+        }));
         nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
         if (entityActionHandler != null) {
             entityActionHandler.write(nbt);
@@ -455,12 +457,12 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
-    @Nullable
-    private BlockPos totemPos;
+    @Nonnull
+    private LazyOptional<Optional<BlockPos>> totemPos = LazyOptional.empty();
 
     @Override
     public boolean getAttacking() {
-        return this.attack;
+        return attack;
     }
 
     @Override
@@ -469,13 +471,13 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void setTotemPos(@Nullable BlockPos pos) {
+    public void setTotemPos(@Nonnull LazyOptional<Optional<BlockPos>> pos) {
         this.totemPos = pos;
     }
 
     @Nonnull
     @Override
-    public Optional<? extends IVillageAttributes> getVillageAttributes() {
-        return TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), this.totemPos);
+    public Optional<IVillageAttributes> getVillageAttributes() {
+        return this.totemPos.map(opt -> TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), opt.orElse(null))).orElse(Optional.empty());
     }
 }
