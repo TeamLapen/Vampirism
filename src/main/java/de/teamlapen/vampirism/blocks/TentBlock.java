@@ -172,14 +172,6 @@ public class TentBlock extends VampirismBlock {
 
 
 
-    @Override
-    public void onReplaced(BlockState oldState, @Nonnull World world, @Nonnull BlockPos blockPos, @Nonnull BlockState newState, boolean p_196243_5_) {
-        super.onReplaced(oldState, world, blockPos, newState, p_196243_5_);
-        forWholeTent(blockPos,oldState, (direction, blockPos1) -> {
-            world.destroyBlock(blockPos1, true);
-        });
-    }
-
     private void forWholeTent(BlockPos blockPos, BlockState blockState, BiConsumer<Direction, BlockPos> consumer){
         BlockPos main = blockPos;
         Direction dir = blockState.get(FACING);
