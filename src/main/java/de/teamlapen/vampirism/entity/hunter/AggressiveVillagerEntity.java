@@ -107,6 +107,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     //Village capture---------------------------------------------------------------------------------------------------
+    @Nonnull
     private LazyOptional<Optional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
     @Override
     public void stopVillageAttackDefense() {
@@ -127,7 +128,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
 
     @Override
     public boolean isDefendingVillage() {
-        return villageAttributes != null;
+        return villageAttributes.map(Optional::isPresent).orElse(false);
     }
 
     @Override

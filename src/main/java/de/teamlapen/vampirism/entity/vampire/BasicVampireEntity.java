@@ -343,6 +343,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     //Village stuff ----------------------------------------------------------------------------------------------------
+    @Nonnull
     private LazyOptional<Optional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
     private boolean attack;
 
@@ -374,11 +375,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     public boolean isAttackingVillage() {
-        return villageAttributes.isPresent() && attack;
+        return villageAttributes.map(Optional::isPresent).orElse(false) && attack;
     }
 
     @Override
     public boolean isDefendingVillage() {
-        return villageAttributes.isPresent() && !attack;
+        return villageAttributes.map(Optional::isPresent).orElse(false) && !attack;
     }
 }

@@ -332,6 +332,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     //Village stuff ----------------------------------------------------------------------------------------------------
+    @Nonnull
     private LazyOptional<Optional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
     private boolean attack;
 
@@ -356,16 +357,16 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Override
     public void stopVillageAttackDefense() {
         this.setCustomName(null);
-        this.villageAttributes = null;
+        this.villageAttributes = LazyOptional.empty();
     }
 
     @Override
     public boolean isAttackingVillage() {
-        return villageAttributes.isPresent() && attack;
+        return villageAttributes.map(Optional::isPresent).orElse(false) && attack;
     }
 
     @Override
     public boolean isDefendingVillage() {
-        return villageAttributes.isPresent() && !attack;
+        return villageAttributes.map(Optional::isPresent).orElse(false) && !attack;
     }
 }

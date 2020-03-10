@@ -456,22 +456,23 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
-    private LazyOptional<Optional<IVillageAttributes>> villageAttributes;
+    @Nonnull
+    private LazyOptional<Optional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
 
     @Override
     public void stopVillageAttackDefense() {
         this.setCustomName(null);
-        this.villageAttributes = null;
+        this.villageAttributes = LazyOptional.empty();
     }
 
     @Override
     public boolean isAttackingVillage() {
-        return villageAttributes != null && attack;
+        return villageAttributes.map(Optional::isPresent).orElse(false) && attack;
     }
 
     @Override
     public boolean isDefendingVillage() {
-        return villageAttributes != null && !attack;
+        return villageAttributes.map(Optional::isPresent).orElse(false) && !attack;
     }
 
     @Override
