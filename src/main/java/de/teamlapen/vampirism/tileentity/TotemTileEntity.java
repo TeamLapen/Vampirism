@@ -61,6 +61,7 @@ import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -153,8 +154,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         return new TranslationTextComponent("command.vampirism.test.village.success", faction.getName());
     }
 
-    public static VillageAttributes getVillageAttributes(TotemTileEntity totem) {
-        return new VillageAttributes(totem);
+    @Nullable
+    public static VillageAttributes getVillageAttributes(@Nullable TotemTileEntity totem) {
+        return totem == null ? null :new VillageAttributes(totem);
     }
 
     //block attributes
@@ -622,14 +624,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         this.progressColor = faction != null ? faction.getColor().getColorComponents(null) : DyeColor.WHITE.getColorComponentValues();
     }
 
-    public @Nonnull
-    AxisAlignedBB getVillageArea() {
-        return this.villageArea == null ? this.villageArea = AxisAlignedBB.func_216363_a(this.village.getBoundingBox()) : this.villageArea;
+    @Nonnull
+    public AxisAlignedBB getVillageArea() {
+        return this.villageArea == null ? this.village != null ?this.villageArea = AxisAlignedBB.func_216363_a(this.village.getBoundingBox()) :new AxisAlignedBB(0,0,0,0,0,0): this.villageArea;
     }
 
-    private @Nonnull
-    AxisAlignedBB getVillageAreaReduced() {
-        return this.villageAreaReduced == null ? this.villageAreaReduced = AxisAlignedBB.func_216363_a(this.village.getBoundingBox()).grow(-30, -10, -30) : this.villageAreaReduced;
+    @Nonnull
+    private AxisAlignedBB getVillageAreaReduced() {
+        return this.villageAreaReduced == null ? this.village != null ?this.villageAreaReduced = AxisAlignedBB.func_216363_a(this.village.getBoundingBox()).grow(-30, -10, -30) : new AxisAlignedBB(0,0,0,0,0,0): this.villageAreaReduced;
     }
 
     public void initiateCapture(PlayerEntity player) {
@@ -976,6 +978,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             return this.attackingFaction;
         }
 
+        @Nonnull
         @Override
         public AxisAlignedBB getVillageArea() {
             return this.villageArea;

@@ -3,8 +3,11 @@ package de.teamlapen.vampirism.api.entity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.world.IVillageAttributes;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.common.util.LazyOptional;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 
 /**
@@ -14,12 +17,6 @@ public interface IVillageCaptureEntity extends IFactionEntity {
     void attackVillage(IVillageAttributes totem);
 
     void defendVillage(IVillageAttributes totem);
-
-    /**
-     * @return The village area that is target of the capture
-     */
-    @Nullable
-    AxisAlignedBB getTargetVillageArea();
 
     boolean isAttackingVillage();
 
@@ -34,7 +31,7 @@ public interface IVillageCaptureEntity extends IFactionEntity {
     /**
      * @return A (cached) instance of the village the entity is currently in if it is of the same faction or null otherwise
      */
-    @Nullable
-    IVillageAttributes getVillageAttributes();
+    @Nonnull
+    LazyOptional<Optional<IVillageAttributes>> getVillageAttributes();
 
 }

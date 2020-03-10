@@ -33,6 +33,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -43,9 +44,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Advanced hunter. Is strong. Represents supporters
@@ -199,7 +202,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))));
+            this.villageAttributes = LazyOptional.of(() -> Optional.ofNullable(TotemTileEntity.getVillageAttributes((TotemTileEntity)this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))))));
         }
     }
 
@@ -230,11 +233,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", attack);
-        if (villageAttributes != null) {
-            nbt.putInt("x", villageAttributes.getPosition().getX());
-            nbt.putInt("y", villageAttributes.getPosition().getY());
-            nbt.putInt("z", villageAttributes.getPosition().getZ());
-        }
+        this.villageAttributes.ifPresent(opt -> opt.ifPresent(village -> {
+            nbt.putInt("x", village.getPosition().getX());
+            nbt.putInt("y", village.getPosition().getY());
+            nbt.putInt("z", village.getPosition().getZ());
+        }));
     }
 
     @Override
@@ -308,6 +311,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             super(type, world);
         }
 
+        @Nonnull
         @Override
         protected ResourceLocation getLootTable() {
             return ModLootTables.advanced_hunter;
@@ -316,7 +320,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
-    private IVillageAttributes villageAttributes;
+    private LazyOptional<Optional<IVillageAttributes>> villageAttributes;
 
     @Override
     public void stopVillageAttackDefense() {
@@ -331,30 +335,25 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     @Override
     public boolean isDefendingVillage() {
-        return villageAttributes != null && !attack;
+        return villageAttributes.isPresent() && !attack;
     }
 
     @Override
     public void defendVillage(IVillageAttributes attributes) {
-        this.villageAttributes = attributes;
+        this.villageAttributes = LazyOptional.of(() -> Optional.of(attributes));
         this.attack = false;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public IVillageAttributes getVillageAttributes() {
+    public LazyOptional<Optional<IVillageAttributes>> getVillageAttributes() {
         return this.villageAttributes;
     }
 
     @Override
     public void attackVillage(IVillageAttributes attributes) {
-        this.villageAttributes = attributes;
+        this.villageAttributes = LazyOptional.of(() -> Optional.of(attributes));
         this.attack = true;
     }
 
-    @Nullable
-    @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return this.villageAttributes.getVillageArea();
-    }
 }

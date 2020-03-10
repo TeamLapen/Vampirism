@@ -36,6 +36,7 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
@@ -211,6 +212,19 @@ public class UtilLib {
         double x = p.posX + sinYaw * distance;
         double z = p.posZ + cosYaw * distance;
         return new BlockPos(x, p.posY, z);
+    }
+
+    /**
+     * @param world           World
+     * @param box             LazyOptional of the Area where the creature should spawn
+     * @param e               Entity that has a EntityType<? extends EntityLiving>
+     * @param maxTry          Max position tried
+     * @param avoidedEntities Avoid being to close or seen by these entities. If no valid spawn location is found, this is ignored
+     * @param reason          Spawn reason
+     * @return Successful spawn
+     */
+    public static boolean spawnEntityInWorld(World world, LazyOptional<AxisAlignedBB> box, Entity e, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, SpawnReason reason) {
+        return box.map(box2 -> spawnEntityInWorld(world, box2, e, maxTry, avoidedEntities, reason)).orElse(false);
     }
 
     /**

@@ -14,7 +14,11 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.goals.*;
+import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
+import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
+import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
+import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
+import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.IPlayerFace;
@@ -24,7 +28,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.goal.BreakDoorGoal;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -33,9 +42,9 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -43,8 +52,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Advanced vampire. Is strong. Represents supporters
@@ -209,7 +221,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))));
+            this.villageAttributes = LazyOptional.of(() -> Optional.ofNullable(TotemTileEntity.getVillageAttributes((TotemTileEntity)this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))))));
         }
     }
 
@@ -234,11 +246,11 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", this.attack);
-        if (this.villageAttributes != null) {
-            nbt.putInt("x", this.villageAttributes.getPosition().getX());
-            nbt.putInt("y", this.villageAttributes.getPosition().getY());
-            nbt.putInt("z", this.villageAttributes.getPosition().getZ());
-        }
+        this.villageAttributes.ifPresent((opt) -> opt.ifPresent(village -> {
+            nbt.putInt("x", village.getPosition().getX());
+            nbt.putInt("y", village.getPosition().getY());
+            nbt.putInt("z", village.getPosition().getZ());
+        }));
     }
 
     @Override
@@ -312,6 +324,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             super(type, world);
         }
 
+        @Nonnull
         @Override
         protected ResourceLocation getLootTable() {
             return ModLootTables.advanced_vampire;
@@ -319,25 +332,24 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     //Village stuff ----------------------------------------------------------------------------------------------------
-    private @Nullable
-    IVillageAttributes villageAttributes;
+    private LazyOptional<Optional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
     private boolean attack;
 
     @Override
     public void attackVillage(IVillageAttributes totem) {
-        this.villageAttributes = totem;
+        this.villageAttributes = LazyOptional.of(() -> Optional.of(totem));
         this.attack = true;
     }
 
     @Override
     public void defendVillage(IVillageAttributes totem) {
-        this.villageAttributes = totem;
+        this.villageAttributes = LazyOptional.of(() -> Optional.of(totem));
         this.attack = false;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public IVillageAttributes getVillageAttributes() {
+    public LazyOptional<Optional<IVillageAttributes>> getVillageAttributes() {
         return villageAttributes;
     }
 
@@ -347,19 +359,13 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.villageAttributes = null;
     }
 
-    @Nullable
-    @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return villageAttributes.getVillageArea();
-    }
-
     @Override
     public boolean isAttackingVillage() {
-        return villageAttributes != null && attack;
+        return villageAttributes.isPresent() && attack;
     }
 
     @Override
     public boolean isDefendingVillage() {
-        return villageAttributes != null && !attack;
+        return villageAttributes.isPresent() && !attack;
     }
 }

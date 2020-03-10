@@ -32,16 +32,21 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.structure.Structures;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Basic vampire mob.
@@ -171,7 +176,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))));
+            this.villageAttributes = LazyOptional.of(() -> Optional.ofNullable(TotemTileEntity.getVillageAttributes((TotemTileEntity)this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))))));
         }
 
         if (entityActionHandler != null) {
@@ -219,11 +224,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         super.writeAdditional(nbt);
         nbt.putInt("level", getLevel());
         nbt.putBoolean("attack", this.attack);
-        if (this.villageAttributes != null) {
-            nbt.putInt("x", this.villageAttributes.getPosition().getX());
-            nbt.putInt("y", this.villageAttributes.getPosition().getY());
-            nbt.putInt("z", this.villageAttributes.getPosition().getZ());
-        }
+        this.villageAttributes.ifPresent((opt) -> opt.ifPresent(village -> {
+            nbt.putInt("x", village.getPosition().getX());
+            nbt.putInt("y", village.getPosition().getY());
+            nbt.putInt("z", village.getPosition().getZ());
+        }));
         nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
         if (this.entityActionHandler != null) {
             this.entityActionHandler.write(nbt);
@@ -308,6 +313,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             super(type, world);
         }
 
+        @Nonnull
         @Override
         protected ResourceLocation getLootTable() {
             return ModLootTables.vampire;
@@ -337,49 +343,42 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     //Village stuff ----------------------------------------------------------------------------------------------------
-    private @Nullable
-    IVillageAttributes villageAttributes;
+    private LazyOptional<Optional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
     private boolean attack;
 
     @Override
     public void attackVillage(IVillageAttributes totem) {
         this.goalSelector.removeGoal(tasks_avoidHunter);
-        this.villageAttributes = totem;
+        this.villageAttributes = LazyOptional.of(() -> Optional.of(totem));
         this.attack = true;
     }
 
     @Override
     public void defendVillage(IVillageAttributes totem) {
         this.goalSelector.removeGoal(tasks_avoidHunter);
-        this.villageAttributes = totem;
+        this.villageAttributes = LazyOptional.of(() -> Optional.of(totem));
         this.attack = false;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public IVillageAttributes getVillageAttributes() {
+    public LazyOptional<Optional<IVillageAttributes>> getVillageAttributes() {
         return villageAttributes;
     }
 
     @Override
     public void stopVillageAttackDefense() {
         this.setCustomName(null);
-        this.villageAttributes = null;
-    }
-
-    @Nullable
-    @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return villageAttributes.getVillageArea();
+        this.villageAttributes = LazyOptional.empty();
     }
 
     @Override
     public boolean isAttackingVillage() {
-        return villageAttributes != null && attack;
+        return villageAttributes.isPresent() && attack;
     }
 
     @Override
     public boolean isDefendingVillage() {
-        return villageAttributes != null && !attack;
+        return villageAttributes.isPresent() && !attack;
     }
 }

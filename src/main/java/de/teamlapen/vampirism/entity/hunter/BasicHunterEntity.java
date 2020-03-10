@@ -23,8 +23,21 @@ import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.OpenDoorGoal;
+import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,6 +52,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -50,9 +64,11 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.structure.Structures;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 
 /**
@@ -249,7 +265,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))));
+            this.villageAttributes = LazyOptional.of(() -> Optional.ofNullable(TotemTileEntity.getVillageAttributes((TotemTileEntity)this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))))));
         }
 
         if (entityActionHandler != null) {
@@ -288,11 +304,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         nbt.putInt("level", getLevel());
         nbt.putBoolean("crossbow", isCrossbowInMainhand());
         nbt.putBoolean("attack", attack);
-        if (villageAttributes != null) {
-            nbt.putInt("x", villageAttributes.getPosition().getX());
-            nbt.putInt("y", villageAttributes.getPosition().getY());
-            nbt.putInt("z", villageAttributes.getPosition().getZ());
-        }
+        this.villageAttributes.ifPresent(opt -> opt.ifPresent(village -> {
+            nbt.putInt("x", village.getPosition().getX());
+            nbt.putInt("y", village.getPosition().getY());
+            nbt.putInt("z", village.getPosition().getZ());
+        }));
         nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
         if (entityActionHandler != null) {
             entityActionHandler.write(nbt);
@@ -431,6 +447,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             super(type, world);
         }
 
+        @Nonnull
         @Override
         protected ResourceLocation getLootTable() {
             return ModLootTables.hunter;
@@ -439,7 +456,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
-    private IVillageAttributes villageAttributes;
+    private LazyOptional<Optional<IVillageAttributes>> villageAttributes;
 
     @Override
     public void stopVillageAttackDefense() {
@@ -459,25 +476,20 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Override
     public void defendVillage(IVillageAttributes attributes) {
-        this.villageAttributes = attributes;
+        this.villageAttributes = LazyOptional.of(() -> Optional.of(attributes));
         this.attack = false;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public IVillageAttributes getVillageAttributes() {
+    public LazyOptional<Optional<IVillageAttributes>> getVillageAttributes() {
         return this.villageAttributes;
     }
 
     @Override
     public void attackVillage(IVillageAttributes attributes) {
-        this.villageAttributes = attributes;
+        this.villageAttributes = LazyOptional.of(() -> Optional.of(attributes));
         this.attack = true;
     }
 
-    @Nullable
-    @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return this.villageAttributes.getVillageArea();
-    }
 }

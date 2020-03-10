@@ -29,9 +29,11 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Villager that is equipped with a fork and hunts vampires
@@ -64,7 +66,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(@Nonnull IWorld worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         ILivingEntityData data = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
         return data;
@@ -105,7 +107,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     //Village capture---------------------------------------------------------------------------------------------------
-    private IVillageAttributes villageAttributes;
+    private LazyOptional<Optional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
     @Override
     public void stopVillageAttackDefense() {
         VillagerEntity villager = EntityType.VILLAGER.create(this.world);
@@ -130,22 +132,18 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
 
     @Override
     public void attackVillage(IVillageAttributes villageAttributes) {
-        this.villageAttributes = villageAttributes;
+        this.villageAttributes = LazyOptional.of(() -> Optional.of(villageAttributes));
     }
 
     @Override
     public void defendVillage(IVillageAttributes villageAttributes) {
-        this.villageAttributes = villageAttributes;
+        this.villageAttributes = LazyOptional.of(() -> Optional.of(villageAttributes));
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public IVillageAttributes getVillageAttributes() {
+    public LazyOptional<Optional<IVillageAttributes>> getVillageAttributes() {
         return villageAttributes;
     }
 
-    @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return villageAttributes.getVillageArea();
-    }
 }
