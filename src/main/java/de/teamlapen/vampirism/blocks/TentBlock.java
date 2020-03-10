@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.network.PlayEventPacket;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.block.BedBlock;
@@ -29,6 +31,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -106,6 +109,11 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
+    public boolean isValidPosition(BlockState blockState, IWorldReader worldReader, BlockPos blockPos) {
+        return worldReader.getBlockState(blockPos).isAir(worldReader,blockPos);
+    }
+
+    @Override
     public void setBedOccupied(BlockState state, IWorldReader world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
         if (world instanceof IWorldWriter) {
             forWholeTent(pos, state, ((direction, blockPos) -> {
@@ -119,10 +127,28 @@ public class TentBlock extends VampirismBlock {
 
 
     @Override
+    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
+        super.onFallenUpon(worldIn, pos, entityIn, fallDistance * 0.7F);
+    }
+
+    @Override
+    public void onLanded(IBlockReader worldIn, Entity entityIn) {
+        if (entityIn.isShiftKeyDown()) {
+            super.onLanded(worldIn, entityIn);
+        } else {
+            Vec3d vec3d = entityIn.getMotion();
+            if (vec3d.y < 0.0D) {
+                double d0 = entityIn instanceof LivingEntity ? 1.0D : 0.8D;
+                entityIn.setMotion(vec3d.x, -vec3d.y * (double)0.33F * d0, vec3d.z);
+            }
+        }
+
+    }
+
+    @Override
     public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, @Nullable Entity player) {
         return true;
     }
-
 
     @Override
     public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos) {
@@ -136,12 +162,22 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public void onReplaced(BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
-        super.onReplaced(state, world, pos, newState, isMoving);
-        if (newState.getBlock() != state.getBlock()) {
-            forWholeTent(pos,state, (direction, blockpos) -> world.destroyBlock(blockpos,true));
-        }
+    public void onBlockHarvested(World world, @Nonnull BlockPos blockPos, BlockState blockState, @Nonnull PlayerEntity playerEntity) {
+        forWholeTent(blockPos,blockState, (direction, blockPos1) -> {
+            VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1,blockPos1, Block.getStateId(world.getBlockState(blockPos1))),world.getDimension().getType(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
+            world.destroyBlock(blockPos1, true);
+            spawnDrops(world.getBlockState(blockPos1), world, blockPos1, null, playerEntity, playerEntity.getHeldItemMainhand());
+        });
+    }
 
+
+
+    @Override
+    public void onReplaced(BlockState oldState, @Nonnull World world, @Nonnull BlockPos blockPos, @Nonnull BlockState newState, boolean p_196243_5_) {
+        super.onReplaced(oldState, world, blockPos, newState, p_196243_5_);
+        forWholeTent(blockPos,oldState, (direction, blockPos1) -> {
+            world.destroyBlock(blockPos1, true);
+        });
     }
 
     private void forWholeTent(BlockPos blockPos, BlockState blockState, BiConsumer<Direction, BlockPos> consumer){
@@ -158,6 +194,7 @@ public class TentBlock extends VampirismBlock {
             main = blockPos.offset(dir);
             dir = dir.getOpposite();
         }
+        consumer.accept(dir, blockPos);
         BlockPos cur = main;
         if (cur != blockPos) consumer.accept(dir, cur);
         cur = main.offset(dir);
@@ -180,20 +217,11 @@ public class TentBlock extends VampirismBlock {
         return true;
     }
 
-    @Override
-    public void onPlayerDestroy(IWorld world, BlockPos blockPos, BlockState blockState) {
-        super.onPlayerDestroy(world, blockPos, blockState);
-        if (world.isRemote() && world instanceof World) {
-            forWholeTent(blockPos, blockState, (direction, blockPos1) -> spawnParticles((World)world,blockPos1));
-        }
-    }
-
-
     /**
      * copied from {@link net.minecraft.client.particle.ParticleManager#addBlockDestroyEffects(net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState)} but which much lesser particles
      */
-    private void spawnParticles(World world, BlockPos pos){
-        VoxelShape voxelshape = world.getBlockState(pos).getShape(world, pos);
+    public void spawnParticles(World world, BlockPos pos, BlockState state) {
+        VoxelShape voxelshape = state.getShape(world, pos);
         voxelshape.forEachBox((p_199284_3_, p_199284_5_, p_199284_7_, p_199284_9_, p_199284_11_, p_199284_13_) -> {
             double d1 = Math.min(1.0D, p_199284_9_ - p_199284_3_);
             double d2 = Math.min(1.0D, p_199284_11_ - p_199284_5_);
@@ -211,14 +239,13 @@ public class TentBlock extends VampirismBlock {
                         double d7 = d4 * d1 + p_199284_3_;
                         double d8 = d5 * d2 + p_199284_5_;
                         double d9 = d6 * d3 + p_199284_7_;
-                        Minecraft.getInstance().particles.addEffect((new DiggingParticle( world, (double) pos.getX() + d7, (double) pos.getY() + d8, (double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, world.getBlockState(pos))).setBlockPos(pos));
+                        Minecraft.getInstance().particles.addEffect((new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8, (double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).setBlockPos(pos));
                     }
                 }
             }
 
         });
     }
-
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
@@ -228,7 +255,6 @@ public class TentBlock extends VampirismBlock {
     public static void setTentSleepPosition(PlayerEntity player, BlockPos blockPos, int position, Direction facing) {
         player.setPosition(blockPos.getX() + offsets.get(position, facing).getFirst(), blockPos.getY() + 0.0625, blockPos.getZ() + offsets.get(position, facing).getSecond());
     }
-
 
     static {
         VoxelShape NORTH = makeShape();

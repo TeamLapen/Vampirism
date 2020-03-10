@@ -7,12 +7,15 @@ import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.network.BloodValuePacket;
 import de.teamlapen.vampirism.network.OpenVampireBookPacket;
+import de.teamlapen.vampirism.network.PlayEventPacket;
 import de.teamlapen.vampirism.network.SkillTreePacket;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ReadBookScreen;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -161,6 +164,15 @@ public class ClientProxy extends CommonProxy {
     private void registerVampirePlayerHead(EntityRendererManager manager) {
         for (PlayerRenderer renderPlayer : manager.getSkinMap().values()) {
             renderPlayer.addLayer(new LayerVampirePlayerHead(renderPlayer));
+        }
+    }
+
+    @Override
+    public void handlePlayEventPacket(PlayEventPacket msg) {
+        switch (msg.type){
+            case 1:
+                ModBlocks.tent.spawnParticles(Minecraft.getInstance().world, msg.pos, Block.getStateById(msg.stateId));
+                break;
         }
     }
 }
