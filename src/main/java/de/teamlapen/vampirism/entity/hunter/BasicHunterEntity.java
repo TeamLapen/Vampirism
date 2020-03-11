@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModLootTables;
+import de.teamlapen.vampirism.entity.IVampirismVillageCaptureEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
@@ -73,7 +74,7 @@ import java.util.Optional;
 /**
  * Exists in {@link BasicHunterEntity#MAX_LEVEL}+1 different levels
  */
-public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter, LookAtTrainerHunterGoal.ITrainer, AttackRangedCrossbowGoal.IAttackWithCrossbow, IEntityActionUser {
+public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter, LookAtTrainerHunterGoal.ITrainer, AttackRangedCrossbowGoal.IAttackWithCrossbow, IEntityActionUser, IVampirismVillageCaptureEntity {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> WATCHED_ID = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
@@ -264,7 +265,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.totemPos = TotemTileEntity.getVillageBlockPosOpt(this.getEntityWorld().getDimension(),new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")));
+            this.totemPos = new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"));
         }
 
         if (entityActionHandler != null) {
@@ -303,13 +304,11 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         nbt.putInt("level", getLevel());
         nbt.putBoolean("crossbow", isCrossbowInMainhand());
         nbt.putBoolean("attack", attack);
-        this.totemPos.isPresent();
-        this.totemPos.ifPresent(opt -> opt.isPresent());
-        this.totemPos.ifPresent(opt -> opt.ifPresent(totemPos -> {
+        if(totemPos != null){
             nbt.putInt("x", totemPos.getX());
             nbt.putInt("y", totemPos.getY());
             nbt.putInt("z", totemPos.getZ());
-        }));
+        }
         nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
         if (entityActionHandler != null) {
             entityActionHandler.write(nbt);
@@ -457,8 +456,10 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
+    @Nullable
+    private BlockPos totemPos;
     @Nonnull
-    private LazyOptional<Optional<BlockPos>> totemPos = LazyOptional.empty();
+    private LazyOptional<LazyOptional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
 
     @Override
     public boolean getAttacking() {
@@ -471,13 +472,19 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void setTotemPos(@Nonnull LazyOptional<Optional<BlockPos>> pos) {
-        this.totemPos = pos;
+    public void setTotemPos(BlockPos pos) {
+        totemPos = pos;
+        villageAttributes = pos == null?LazyOptional.empty():TotemTileEntity.getVillageOpt(this.getEntityWorld().getDimension(), pos);
     }
 
     @Nonnull
     @Override
-    public Optional<IVillageAttributes> getVillageAttributes() {
-        return this.totemPos.map(opt -> TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), opt.orElse(null))).orElse(Optional.empty());
+    public LazyOptional<IVillageAttributes> getVillageAttributes() {
+        return getAttributes(this.totemPos, villageAttributes, this.getEntityWorld().getDimension());
+    }
+
+    @Override
+    public void setVillageAttributes(@Nonnull LazyOptional<LazyOptional<IVillageAttributes>> opt) {
+        this.villageAttributes = opt;
     }
 }

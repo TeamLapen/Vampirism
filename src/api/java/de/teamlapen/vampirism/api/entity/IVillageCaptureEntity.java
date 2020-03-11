@@ -13,15 +13,15 @@ import java.util.Optional;
  * Required for entities that are supposed to attack/defend villages during a capture progress
  */
 public interface IVillageCaptureEntity extends IFactionEntity {
-    default void attackVillage(LazyOptional<Optional<BlockPos>> totem){
+    default void attackVillage(BlockPos pos){
         setAttacking(true);
-        setTotemPos(totem);
+        setTotemPos(pos);
         attack();
     }
 
-    default void defendVillage(LazyOptional<Optional<BlockPos>> totem){
+    default void defendVillage(BlockPos pos){
         setAttacking(false);
-        setTotemPos(totem);
+        setTotemPos(pos);
         defend();
     }
 
@@ -44,14 +44,14 @@ public interface IVillageCaptureEntity extends IFactionEntity {
 
     void setAttacking(boolean attack);
 
-    void setTotemPos(@Nonnull LazyOptional<Optional<BlockPos>> pos);
+    void setTotemPos(BlockPos pos);
 
     /**
      * Called when the entity is within a village whre a capture progress has been stopped.
-     * {@link #attackVillage(net.minecraftforge.common.util.LazyOptional)} )} or {@link #defendVillage(net.minecraftforge.common.util.LazyOptional)} may not have been called before
+     * {@link #attackVillage(net.minecraft.util.math.BlockPos)} )} or {@link #defendVillage(net.minecraft.util.math.BlockPos)} may not have been called before
      */
     default void stopVillageAttackDefense(){
-        setTotemPos(LazyOptional.empty());
+        setTotemPos(null);
         getRepresentingEntity().setCustomName(null);
     }
 
@@ -59,6 +59,5 @@ public interface IVillageCaptureEntity extends IFactionEntity {
      * @return A (cached) instance of the village the entity is currently in if it is of the same faction or null otherwise
      */
     @Nonnull
-    Optional<? extends IVillageAttributes> getVillageAttributes();
-
+    LazyOptional<IVillageAttributes> getVillageAttributes();
 }

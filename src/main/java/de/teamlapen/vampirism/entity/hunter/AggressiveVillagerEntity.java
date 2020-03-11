@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.world.IVillageAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.IVampirismVillageCaptureEntity;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
@@ -39,7 +40,7 @@ import java.util.Optional;
 /**
  * Villager that is equipped with a fork and hunts vampires
  */
-public class AggressiveVillagerEntity extends VampirismVillagerEntity implements IHunterMob, IAggressiveVillager, IVillageCaptureEntity {
+public class AggressiveVillagerEntity extends VampirismVillagerEntity implements IHunterMob, IAggressiveVillager, IVampirismVillageCaptureEntity {
     /**
      * Creates a hunter villager as an copy to the given villager
      *
@@ -108,8 +109,11 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     //Village capture---------------------------------------------------------------------------------------------------
+    @Nullable
+    private BlockPos totemPos;
     @Nonnull
-    private LazyOptional<Optional<BlockPos>> totemPos = LazyOptional.empty();
+    private LazyOptional<LazyOptional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
+
     @Override
     public void stopVillageAttackDefense() {
         VillagerEntity villager = EntityType.VILLAGER.create(this.world);
@@ -132,13 +136,19 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public void setTotemPos(@Nonnull LazyOptional<Optional<BlockPos>> pos) {
-        this.totemPos = pos;
+    public void setTotemPos(BlockPos pos) {
+        totemPos = pos;
+        villageAttributes = TotemTileEntity.getVillageOpt(this.getEntityWorld().getDimension(), pos);
     }
 
     @Nonnull
     @Override
-    public Optional<IVillageAttributes> getVillageAttributes() {
-        return this.totemPos.map(opt -> TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), opt.orElse(null))).orElse(Optional.empty());
+    public LazyOptional<IVillageAttributes> getVillageAttributes() {
+        return getAttributes(this.totemPos, this.villageAttributes, this.getEntityWorld().getDimension());
+    }
+
+    @Override
+    public void setVillageAttributes(@Nonnull LazyOptional<LazyOptional<IVillageAttributes>> opt) {
+        this.villageAttributes = opt;
     }
 }

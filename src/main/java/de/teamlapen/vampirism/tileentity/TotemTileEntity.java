@@ -58,7 +58,6 @@ import net.minecraft.village.PointOfInterestManager;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.ServerBossInfo;
 import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.structure.Structures;
@@ -93,8 +92,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
      * setup once
      */
     private static final Map<IFaction, List<CaptureEntityEntry>> captureEntities;
-    private static final Table<Dimension, BlockPos, VillageAttributes> villageAttributes = HashBasedTable.create();
-    private static final Table<Dimension, BlockPos, LazyOptional<Optional<BlockPos>>> villagePosition = HashBasedTable.create();
+    /**
+     * the first LazyOptional is invalid if the totem has been destroyed
+     * the inner LazyOptional is invalid if the totem is not loaded
+     */
+    private static final Table<Dimension, BlockPos, LazyOptional<LazyOptional<IVillageAttributes>>> villageAttributes = HashBasedTable.create();
 
     public static boolean isInsideVampireAreaCached(Dimension dimension, BlockPos blockPos) {
         if (vampireVillages.containsRow(dimension)) {
@@ -130,9 +132,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         totemPositions.remove(structure);
     }
 
-    private static void removeVillageData(Dimension dim, BlockPos pos){
-        villageAttributes.remove(dim, pos);
+    private static void unloadVillageData(Dimension dim, BlockPos pos){
+        villageAttributes.get(dim, pos).ifPresent(LazyOptional::invalidate);
     }
+
+    private static void deleteVillageData(Dimension dim, BlockPos pos){
+        villageAttributes.get(dim, pos).invalidate();
+    }
+
     /**
      * @return {@code null} if no totem exists
      */
@@ -162,17 +169,12 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Nonnull
-    public static LazyOptional<Optional<BlockPos>> getVillageBlockPosOpt(Dimension dim, BlockPos pos){
-        LazyOptional<Optional<BlockPos>> opt = villagePosition.get(dim, pos);
+    public static LazyOptional<LazyOptional<IVillageAttributes>> getVillageOpt(Dimension dim, BlockPos pos){
+        LazyOptional<LazyOptional<IVillageAttributes>> opt = villageAttributes.get(dim, pos);
         if(opt == null){
-            opt = LazyOptional.of(() -> Optional.of(pos));
-            villagePosition.put(dim, pos, opt);
+            opt = LazyOptional.empty();
         }
         return(opt);
-    }
-    @Nonnull
-    public static Optional<IVillageAttributes> getVillageAttributes(Dimension dim, @Nullable BlockPos pos) {
-        return Optional.ofNullable(villageAttributes.get(dim,pos));
     }
 
     //block attributes
@@ -181,11 +183,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     private boolean isDisabled;
 
     //tile attributes
-    /**
-     * use {@link #getBlockPos()}
-     */
-    @Nullable
-    private LazyOptional<Optional<BlockPos>> blockPos;
+    private VillageAttributes attributes;
     private @Nullable
     StructureStart village;
     /**
@@ -259,17 +257,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     @Override
     public void onLoad() {
         super.onLoad();
-        TotemTileEntity.villageAttributes.put(this.getWorld().getDimension(), this.getPos(), new VillageAttributes(this));
+        this.attributes = new VillageAttributes(this);
+        TotemTileEntity.villageAttributes.put(this.getWorld().getDimension(), this.getPos(), LazyOptional.of(() -> LazyOptional.of(() -> attributes)));
     }
 
     @Override
     public void onChunkUnloaded() {
-        removeVillageData(this.getWorld().getDimension(), this.getPos());
-    }
-
-    @Nonnull
-    public LazyOptional<Optional<BlockPos>> getBlockPos() {
-        return blockPos == null ? blockPos = getVillageBlockPosOpt(this.getWorld().getDimension(), this.getPos()): blockPos;
+        unloadVillageData(this.getWorld().getDimension(), this.getPos());
     }
 
     @Override
@@ -284,6 +278,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                     removeVampireVillage(this.world.dimension, this.village.getPos());
                 }
             }
+            this.attributes = new VillageAttributes(this);
         }
     }
 
@@ -291,8 +286,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     public void remove() {
         removeVampireVillage(this.getWorld().getDimension(), this.pos);
         removeTotem(this.village);
-        removeVillageData(this.getWorld().getDimension(), this.getPos());
-        this.getBlockPos().invalidate();
+        deleteVillageData(this.getWorld().getDimension(), this.getPos());
         if (this.capturingFaction != null) {
             this.abortCapture(false);
         } else {
@@ -496,14 +490,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                             attackerStrength += this.getStrength(entity);
                             if (entity instanceof PlayerEntity) attackerPlayer++;
                             if (entity instanceof IVillageCaptureEntity) {
-                                ((IVillageCaptureEntity) entity).attackVillage(this.getBlockPos());
+                                ((IVillageCaptureEntity) entity).attackVillage(this.pos);
                             }
                         } else if (faction.equals(this.controllingFaction)) {
                             defender++;
                             defenderStrength += this.getStrength(entity);
                             if (entity instanceof PlayerEntity) defenderPlayer++;
                             if (entity instanceof IVillageCaptureEntity) {
-                                ((IVillageCaptureEntity) entity).defendVillage(this.getBlockPos());
+                                ((IVillageCaptureEntity) entity).defendVillage(this.pos);
                             }
                         } else {
                             neutral++;
@@ -781,9 +775,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         }
         if (entity instanceof IVillageCaptureEntity) {
             if (this.controllingFaction.equals(faction))
-                ((IVillageCaptureEntity) entity).defendVillage(this.getBlockPos());
+                ((IVillageCaptureEntity) entity).defendVillage(this.pos);
             else
-                ((IVillageCaptureEntity) entity).attackVillage(this.getBlockPos());
+                ((IVillageCaptureEntity) entity).attackVillage(this.pos);
         } else if (entity != null) {
             LOGGER.warn("Creature registered for village capture does not implement IVillageCaptureEntity ({})", entity.getEntityString());
         } else {

@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
+import de.teamlapen.vampirism.entity.IVampirismVillageCaptureEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
@@ -60,7 +61,7 @@ import java.util.Optional;
 /**
  * Advanced vampire. Is strong. Represents supporters
  */
-public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerFace, IEntityActionUser {
+public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerFace, IEntityActionUser, IVampirismVillageCaptureEntity {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.VARINT);
     private static final DataParameter<String> NAME = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.STRING);
@@ -220,7 +221,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.totemPos = TotemTileEntity.getVillageBlockPosOpt(this.getEntityWorld().getDimension(),new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")));
+            this.totemPos = new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"));
         }
     }
 
@@ -245,13 +246,11 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", this.attack);
-        this.totemPos.ifPresent(opt -> {
-            opt.ifPresent(totemPos -> {
-                nbt.putInt("x", totemPos.getX());
-                nbt.putInt("y", totemPos.getY());
-                nbt.putInt("z", totemPos.getZ());
-            });
-        });
+        if(totemPos != null){
+            nbt.putInt("x", totemPos.getX());
+            nbt.putInt("y", totemPos.getY());
+            nbt.putInt("z", totemPos.getZ());
+        }
     }
 
     @Override
@@ -334,8 +333,10 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     //Village stuff ----------------------------------------------------------------------------------------------------
     private boolean attack;
+    @Nullable
+    private BlockPos totemPos;
     @Nonnull
-    private LazyOptional<Optional<BlockPos>> totemPos = LazyOptional.empty();
+    private LazyOptional<LazyOptional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
 
     @Override
     public boolean getAttacking() {
@@ -348,13 +349,19 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void setTotemPos(@Nonnull LazyOptional<Optional<BlockPos>> pos) {
-        this.totemPos = pos;
+    public void setTotemPos(BlockPos pos) {
+        totemPos = pos;
+        villageAttributes = pos == null?LazyOptional.empty():TotemTileEntity.getVillageOpt(this.getEntityWorld().getDimension(), pos);
     }
 
     @Nonnull
     @Override
-    public Optional<IVillageAttributes> getVillageAttributes() {
-        return this.totemPos.map(opt -> TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), opt.orElse(null))).orElse(Optional.empty());
+    public LazyOptional<IVillageAttributes> getVillageAttributes() {
+        return getAttributes(this.totemPos, villageAttributes, this.getEntityWorld().getDimension());
+    }
+
+    @Override
+    public void setVillageAttributes(@Nonnull LazyOptional<LazyOptional<IVillageAttributes>> opt) {
+        this.villageAttributes = opt;
     }
 }

@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.api.world.IVillageAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
+import de.teamlapen.vampirism.entity.IVampirismVillageCaptureEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
@@ -52,7 +53,7 @@ import java.util.Optional;
 /**
  * Advanced hunter. Is strong. Represents supporters
  */
-public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerFace, IEntityActionUser {
+public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerFace, IEntityActionUser, IVampirismVillageCaptureEntity {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.VARINT);
     private static final DataParameter<String> NAME = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.STRING);
@@ -201,7 +202,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.totemPos = TotemTileEntity.getVillageBlockPosOpt(this.getEntityWorld().getDimension(),new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")));
+            this.totemPos = new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"));
         }
     }
 
@@ -232,13 +233,11 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", attack);
-        this.totemPos.ifPresent(opt -> {
-            opt.ifPresent(totemPos -> {
-                nbt.putInt("x", totemPos.getX());
-                nbt.putInt("y", totemPos.getY());
-                nbt.putInt("z", totemPos.getZ());
-            });
-        });
+        if(totemPos != null){
+            nbt.putInt("x", totemPos.getX());
+            nbt.putInt("y", totemPos.getY());
+            nbt.putInt("z", totemPos.getZ());
+        }
     }
 
     @Override
@@ -321,8 +320,10 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
+    @Nullable
+    private BlockPos totemPos;
     @Nonnull
-    private LazyOptional<Optional<BlockPos>> totemPos = LazyOptional.empty();
+    private LazyOptional<LazyOptional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
 
     @Override
     public boolean getAttacking() {
@@ -335,13 +336,19 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void setTotemPos(@Nonnull LazyOptional<Optional<BlockPos>> pos) {
-        this.totemPos = pos;
+    public void setTotemPos(@Nullable BlockPos pos) {
+        totemPos = pos;
+        villageAttributes = pos == null?LazyOptional.empty() :TotemTileEntity.getVillageOpt(this.getEntityWorld().getDimension(), pos);
     }
 
     @Nonnull
     @Override
-    public Optional<IVillageAttributes> getVillageAttributes() {
-        return this.totemPos.map(opt -> TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), opt.orElse(null))).orElse(Optional.empty());
+    public LazyOptional<IVillageAttributes> getVillageAttributes() {
+        return getAttributes(this.totemPos,villageAttributes,this.getEntityWorld().getDimension());
+    }
+
+    @Override
+    public void setVillageAttributes(@Nonnull LazyOptional<LazyOptional<IVillageAttributes>> opt) {
+        this.villageAttributes = opt;
     }
 }

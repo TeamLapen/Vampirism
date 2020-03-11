@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.entity.IVampirismVillageCaptureEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
@@ -49,7 +50,7 @@ import java.util.Optional;
  * Basic vampire mob.
  * Follows nearby advanced hunters
  */
-public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser {
+public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser, IVampirismVillageCaptureEntity {
 
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 2;
@@ -173,7 +174,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.totemPos = TotemTileEntity.getVillageBlockPosOpt(this.getEntityWorld().getDimension(),new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")));
+            this.totemPos = new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"));
         }
 
         if (entityActionHandler != null) {
@@ -221,13 +222,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         super.writeAdditional(nbt);
         nbt.putInt("level", getLevel());
         nbt.putBoolean("attack", this.attack);
-        this.totemPos.ifPresent(opt -> {
-            opt.ifPresent(totemPos -> {
-                nbt.putInt("x", totemPos.getX());
-                nbt.putInt("y", totemPos.getY());
-                nbt.putInt("z", totemPos.getZ());
-            });
-        });
+        if(totemPos != null){
+            nbt.putInt("x", totemPos.getX());
+            nbt.putInt("y", totemPos.getY());
+            nbt.putInt("z", totemPos.getZ());
+        }
         nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
         if (this.entityActionHandler != null) {
             this.entityActionHandler.write(nbt);
@@ -343,18 +342,10 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     //Village stuff ----------------------------------------------------------------------------------------------------
     private boolean attack;
-
+    @Nullable
+    private BlockPos totemPos;
     @Nonnull
-    private LazyOptional<Optional<BlockPos>> totemPos = LazyOptional.empty();
-
-    @Override
-    public void attack() {
-        this.goalSelector.removeGoal(tasks_avoidHunter);
-    }
-    @Override
-    public void defend() {
-        this.goalSelector.removeGoal(tasks_avoidHunter);
-    }
+    private LazyOptional<LazyOptional<IVillageAttributes>> villageAttributes = LazyOptional.empty();
 
     @Override
     public boolean getAttacking() {
@@ -367,13 +358,28 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void setTotemPos(@Nonnull LazyOptional<Optional<BlockPos>> pos) {
-        this.totemPos = pos;
+    public void attack() {
+        this.goalSelector.removeGoal(tasks_avoidHunter);
+    }
+    @Override
+    public void defend() {
+        this.goalSelector.removeGoal(tasks_avoidHunter);
+    }
+
+    @Override
+    public void setTotemPos(BlockPos pos) {
+        totemPos = pos;
+        villageAttributes = pos == null? LazyOptional.empty():TotemTileEntity.getVillageOpt(this.getEntityWorld().getDimension(), pos);
     }
 
     @Nonnull
     @Override
-    public Optional<IVillageAttributes> getVillageAttributes() {
-        return this.totemPos.map(opt -> TotemTileEntity.getVillageAttributes(this.getEntityWorld().getDimension(), opt.orElse(null))).orElse(Optional.empty());
+    public LazyOptional<IVillageAttributes> getVillageAttributes() {
+        return getAttributes(this.totemPos, villageAttributes, this.getEntityWorld().getDimension());
+    }
+
+    @Override
+    public void setVillageAttributes(@Nonnull LazyOptional<LazyOptional<IVillageAttributes>> opt) {
+        this.villageAttributes = opt;
     }
 }
