@@ -166,6 +166,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         LazyOptional<Optional<BlockPos>> opt = villagePosition.get(dim, pos);
         if(opt == null){
             opt = LazyOptional.of(() -> Optional.of(pos));
+            villagePosition.put(dim, pos, opt);
         }
         return(opt);
     }
@@ -1028,8 +1029,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         }
 
         public boolean shouldForceTargets() {
-            totem.onChunkUnloaded();
-            totem.world.isAreaLoaded(pos, (int)villageArea.getAverageEdgeLength());
             return this.totem.captureForceTargetTimer > VampirismConfig.BALANCE.viForceTargetTime.get();
         }
 
