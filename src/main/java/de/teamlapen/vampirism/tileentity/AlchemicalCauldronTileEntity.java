@@ -55,9 +55,6 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     private String ownerName;
     private AlchemicalCauldronRecipe recipeChecked;
 
-    @OnlyIn(Dist.CLIENT)
-    private boolean boilingSound = false;
-
     public AlchemicalCauldronTileEntity() {
         super(ModTiles.alchemical_cauldron, ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
         this.items = NonNullList.withSize(4, ItemStack.EMPTY);
