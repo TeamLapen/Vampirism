@@ -229,8 +229,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void read(CompoundNBT tagCompund) {
-        super.read(tagCompund);
+    public void readAdditional(CompoundNBT tagCompund) {
+        super.readAdditional(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
         }
