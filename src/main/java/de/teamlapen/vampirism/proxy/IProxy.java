@@ -54,4 +54,10 @@ public interface IProxy extends IInitListener {
     }
 
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
+
+    /**
+     * Handle client side only sleep things
+     */
+    void handleSleepClient(PlayerEntity player);
+
 }
