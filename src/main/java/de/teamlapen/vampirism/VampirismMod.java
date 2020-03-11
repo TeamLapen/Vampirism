@@ -14,12 +14,7 @@ import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.config.BloodValues;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModCommands;
-import de.teamlapen.vampirism.core.ModEventHandler;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModLootTables;
-import de.teamlapen.vampirism.core.ModWorld;
-import de.teamlapen.vampirism.core.RegistryManager;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
@@ -161,6 +156,7 @@ public class VampirismMod {
 
     @SubscribeEvent
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+        SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
         event.getServer().getResourceManager().addReloadListener(SkillTreeManager.getInstance());
         event.getServer().getResourceManager().addReloadListener(BloodValues.ENTITIES);
         event.getServer().getResourceManager().addReloadListener(BloodValues.ITEMS);
