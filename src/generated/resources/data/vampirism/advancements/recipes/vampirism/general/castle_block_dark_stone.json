@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:general/castle_block_dark_stone"
+    ]
+  },
+  "criteria": {
+    "has_orchid": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:vampire_orchid"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:general/castle_block_dark_stone"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_orchid",
+      "has_the_recipe"
+    ]
+  ]
+}
