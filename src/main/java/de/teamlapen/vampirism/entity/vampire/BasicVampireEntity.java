@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -36,7 +35,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -171,7 +169,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))));
+            //this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")))); TODO #629
         }
 
         if (entityActionHandler != null) {

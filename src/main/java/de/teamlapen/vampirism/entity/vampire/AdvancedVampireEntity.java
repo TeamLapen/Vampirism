@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import com.mojang.authlib.GameProfile;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -16,7 +15,6 @@ import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.util.SupporterManager;
@@ -36,7 +34,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -209,7 +206,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))));
+            //this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")))); TODO #629
         }
     }
 

@@ -22,7 +22,6 @@ import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.PatrollerEntity;
@@ -42,7 +41,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -249,7 +247,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             this.attack = tagCompund.getBoolean("attack");
         }
         if (tagCompund.contains("x")) {
-            this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z"))));
+            //this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")))); TODO #629
         }
 
         if (entityActionHandler != null) {
