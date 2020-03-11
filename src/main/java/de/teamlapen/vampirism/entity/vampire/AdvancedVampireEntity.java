@@ -189,8 +189,8 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void read(CompoundNBT tagCompund) {
-        super.read(tagCompund);
+    public void readAdditional(CompoundNBT tagCompund) {
+        super.readAdditional(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
         }
