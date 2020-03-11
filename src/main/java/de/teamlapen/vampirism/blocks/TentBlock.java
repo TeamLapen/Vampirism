@@ -14,8 +14,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.DiggingParticle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -30,7 +28,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -115,7 +112,7 @@ public class TentBlock extends VampirismBlock {
 
     @Override
     public void setBedOccupied(BlockState state, IWorldReader world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
-        if (world instanceof IWorldWriter) {
+        if(world instanceof IWorldWriter){
             forWholeTent(pos, state, ((direction, blockPos) -> {
                 BlockState blockState = world.getBlockState(blockPos);
                 if(blockState.getBlock() instanceof TentBlock){
@@ -124,7 +121,6 @@ public class TentBlock extends VampirismBlock {
             }));
         }
     }
-
 
     @Override
     public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
@@ -164,13 +160,11 @@ public class TentBlock extends VampirismBlock {
     @Override
     public void onBlockHarvested(World world, @Nonnull BlockPos blockPos, BlockState blockState, @Nonnull PlayerEntity playerEntity) {
         forWholeTent(blockPos,blockState, (direction, blockPos1) -> {
-            VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1,blockPos1, Block.getStateId(world.getBlockState(blockPos1))),world.getDimension().getType(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
+            VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1, blockPos1, Block.getStateId(world.getBlockState(blockPos1))), world.getDimension().getType(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
             world.destroyBlock(blockPos1, true);
             spawnDrops(world.getBlockState(blockPos1), world, blockPos1, null, playerEntity, playerEntity.getHeldItemMainhand());
         });
     }
-
-
 
     private void forWholeTent(BlockPos blockPos, BlockState blockState, BiConsumer<Direction, BlockPos> consumer){
         BlockPos main = blockPos;
@@ -197,7 +191,6 @@ public class TentBlock extends VampirismBlock {
         if (cur != blockPos) consumer.accept(dir, cur);
     }
 
-
     @Nonnull
     @Override
     public VoxelShape getShape(BlockState blockState, IBlockReader blockReader, BlockPos blockPos, ISelectionContext context) {
@@ -209,35 +202,6 @@ public class TentBlock extends VampirismBlock {
         return true;
     }
 
-    /**
-     * copied from {@link net.minecraft.client.particle.ParticleManager#addBlockDestroyEffects(net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState)} but which much lesser particles
-     */
-    public void spawnParticles(World world, BlockPos pos, BlockState state) {
-        VoxelShape voxelshape = state.getShape(world, pos);
-        voxelshape.forEachBox((p_199284_3_, p_199284_5_, p_199284_7_, p_199284_9_, p_199284_11_, p_199284_13_) -> {
-            double d1 = Math.min(1.0D, p_199284_9_ - p_199284_3_);
-            double d2 = Math.min(1.0D, p_199284_11_ - p_199284_5_);
-            double d3 = Math.min(1.0D, p_199284_13_ - p_199284_7_);
-            int i = Math.max(2, MathHelper.ceil(d1 / 0.25D));
-            int j = Math.max(2, MathHelper.ceil(d2 / 0.25D));
-            int k = Math.max(2, MathHelper.ceil(d3 / 0.25D));
-
-            for (int l = 0; l < i / 2; ++l) {
-                for (int i1 = 0; i1 < j / 2; ++i1) {
-                    for (int j1 = 0; j1 < k / 2; ++j1) {
-                        double d4 = ((double) l + 0.5D) / (double) i;
-                        double d5 = ((double) i1 + 0.5D) / (double) j;
-                        double d6 = ((double) j1 + 0.5D) / (double) k;
-                        double d7 = d4 * d1 + p_199284_3_;
-                        double d8 = d5 * d2 + p_199284_5_;
-                        double d9 = d6 * d3 + p_199284_7_;
-                        Minecraft.getInstance().particles.addEffect((new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8, (double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).setBlockPos(pos));
-                    }
-                }
-            }
-
-        });
-    }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
