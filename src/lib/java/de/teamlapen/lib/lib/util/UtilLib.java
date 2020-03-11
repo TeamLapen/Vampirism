@@ -216,19 +216,6 @@ public class UtilLib {
 
     /**
      * @param world           World
-     * @param box             LazyOptional of the Area where the creature should spawn
-     * @param e               Entity that has a EntityType<? extends EntityLiving>
-     * @param maxTry          Max position tried
-     * @param avoidedEntities Avoid being to close or seen by these entities. If no valid spawn location is found, this is ignored
-     * @param reason          Spawn reason
-     * @return Successful spawn
-     */
-    public static boolean spawnEntityInWorld(World world, LazyOptional<AxisAlignedBB> box, Entity e, int maxTry, @Nonnull List<? extends LivingEntity> avoidedEntities, SpawnReason reason) {
-        return box.map(box2 -> spawnEntityInWorld(world, box2, e, maxTry, avoidedEntities, reason)).orElse(false);
-    }
-
-    /**
-     * @param world           World
      * @param box             Area where the creature should spawn
      * @param e               Entity that has a EntityType<? extends EntityLiving>
      * @param maxTry          Max position tried
