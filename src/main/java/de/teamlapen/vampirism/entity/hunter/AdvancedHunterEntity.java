@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import com.mojang.authlib.GameProfile;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -185,8 +184,8 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void read(CompoundNBT tagCompund) {
-        super.read(tagCompund);
+    public void readAdditional(CompoundNBT tagCompund) {
+        super.readAdditional(tagCompund);
         if (tagCompund.contains("level")) {
             setLevel(tagCompund.getInt("level"));
         }

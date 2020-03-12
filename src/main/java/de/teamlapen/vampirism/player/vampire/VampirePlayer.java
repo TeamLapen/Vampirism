@@ -748,6 +748,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
                 feedBiteTickCounter = 0;
             }
+            VampirismMod.proxy.handleSleepClient(player);
+
         }
         world.getProfiler().endSection();
     }

@@ -45,6 +45,6 @@ public class EnchantmentArrowFrugality extends Enchantment {
 
     @Override
     protected String getDefaultTranslationKey() {
-        return "vampirism.arrow_frugality";
+        return "enchantment.vampirism.arrow_frugality";
     }
 }

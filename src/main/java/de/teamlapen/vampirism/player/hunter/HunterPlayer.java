@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.hunter;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -256,6 +257,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             if (level > 0) {
                 actionHandler.updateActions();
             }
+            VampirismMod.proxy.handleSleepClient(player);
         }
         player.getEntityWorld().getProfiler().endSection();
     }

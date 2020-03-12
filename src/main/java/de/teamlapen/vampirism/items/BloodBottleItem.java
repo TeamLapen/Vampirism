@@ -49,7 +49,7 @@ public class BloodBottleItem extends VampirismItem {
      * Set's the registry name and the unlocalized name
      */
     public BloodBottleItem() {
-        super(name, new Properties().defaultMaxDamage(AMOUNT).group(VampirismMod.creativeTab));
+        super(name, new Properties().defaultMaxDamage(AMOUNT).group(VampirismMod.creativeTab).setNoRepair());
     }
 
     @Override
