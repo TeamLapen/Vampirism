@@ -143,12 +143,6 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'META-INF/mods.toml'
     }
-    from{
-        fileTree('build/translations').matching{
-            exclude "**/en_us.json" //Don't override local file
-        }
-    }
-
 
     exclude '**/Thumbs.db'
 }
@@ -172,6 +166,8 @@ processLibResources {
 
 
 jar {
+    dependsOn 'crowdin'
+
     //Keep the jar as clean as possible
     includeEmptyDirs = false
 
@@ -184,11 +180,10 @@ jar {
     
     from{
         fileTree('build/translations').matching{
-            exclude "**/en_US.lang"
+            exclude "**/en_us.json" //Don't override local source file
         }
     }
 
-    dependsOn 'crowdin'
 
 
     manifest {
