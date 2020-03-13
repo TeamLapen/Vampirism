@@ -20,6 +20,7 @@ public class ModEnchantments {
 
 
     static void registerEnchantments(IForgeRegistry<Enchantment> registry) {
+        //Don't forget to add a enchantment description "enchantment.vampirism.<id>.desc" for new enchantments #624
         registry.register(new EnchantmentCrossbowInfinite(Enchantment.Rarity.VERY_RARE));
         registry.register(new EnchantmentArrowFrugality(Enchantment.Rarity.VERY_RARE));
         registry.register(new EnchantmentVampireSlayer(Enchantment.Rarity.UNCOMMON));
