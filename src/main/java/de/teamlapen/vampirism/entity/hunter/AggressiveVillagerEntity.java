@@ -41,11 +41,13 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
      * Creates a hunter villager as an copy to the given villager
      *
      * @param villager Is not modified
-     * @return
      */
     public static AggressiveVillagerEntity makeHunter(@Nonnull VillagerEntity villager) {
         AggressiveVillagerEntity hunter = ModEntities.villager_angry.create(villager.world);
         CompoundNBT nbt = new CompoundNBT();
+        if (villager.isSleeping()) {
+            villager.wakeUp();
+        }
         villager.writeWithoutTypeId(nbt);
         hunter.read(nbt);
         hunter.setUniqueId(MathHelper.getRandomUUID(hunter.rand));
