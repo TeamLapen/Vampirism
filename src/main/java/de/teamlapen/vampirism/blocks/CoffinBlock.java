@@ -26,13 +26,10 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.*;
-import net.minecraft.world.storage.loot.LootContext;
 import net.minecraftforge.common.extensions.IForgeDimension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
@@ -85,12 +82,6 @@ public class CoffinBlock extends VampirismBlockContainer {
     @Override
     public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos) {
         return state.get(HORIZONTAL_FACING);
-    }
-
-    @Nonnull
-    @Override
-    public List<ItemStack> getDrops(BlockState state, @Nonnull LootContext.Builder builder) {
-        return state.get(PART) == CoffinPart.FOOT ? Collections.emptyList() : super.getDrops(state, builder);
     }
 
     @Nonnull
