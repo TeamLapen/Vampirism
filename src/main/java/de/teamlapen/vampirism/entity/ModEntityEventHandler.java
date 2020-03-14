@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blocks.CastleBricksBlock;
 import de.teamlapen.vampirism.blocks.CastleSlabBlock;
@@ -25,6 +26,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
@@ -32,6 +34,7 @@ import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -65,6 +68,7 @@ public class ModEntityEventHandler {
 
     private boolean warnAboutCreeper = true;
     private boolean warnAboutZombie = true;
+    private boolean warnAboutGolem = true;
 
     @SubscribeEvent
     public void onAttachCapabilityEntity(AttachCapabilitiesEvent<Entity> event) {
@@ -126,103 +130,123 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (!event.getWorld().isRemote && (event.getEntity() instanceof IAdjustableLevel)) {
-            IAdjustableLevel entity = (IAdjustableLevel) event.getEntity();
-            if (entity.getLevel() == -1) {
-                Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().getPosition(), 30);
-                int l = entity.suggestLevel(d);
-                if (l > entity.getMaxLevel()) {
-                    l = entity.getMaxLevel();
-                } else if (l < 0) {
-                    event.setCanceled(true);
-                }
-                entity.setLevel(l);
-                if (entity instanceof CreatureEntity) {
-                    ((CreatureEntity) entity).setHealth(((CreatureEntity) entity).getMaxHealth());
-                }
-            }
-        }
-
-        //Creeper AI changes for AvoidedByCreepers Skill
-        if (!event.getWorld().isRemote && !VampirismConfig.BALANCE.vsDisableAvoidedByCreepers.get()) {
-            if (event.getEntity() instanceof CreeperEntity) {
-                ((CreeperEntity) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 20, 1.1, 1.3, input -> input != null && VampirePlayer.getOpt((PlayerEntity) input).map(VampirePlayer::getSpecialAttributes).map(s -> s.avoided_by_creepers).orElse(false)));
-
-                Goal target = null;
-                for (PrioritizedGoal t : ((CreeperEntity) event.getEntity()).targetSelector.goals) {
-                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 1) {
-                        target = t.getGoal();
+        if (!event.getWorld().isRemote()) {
+            if (event.getEntity() instanceof IAdjustableLevel) {
+                IAdjustableLevel entity = (IAdjustableLevel) event.getEntity();
+                if (entity.getLevel() == -1) {
+                    Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().getPosition(), 30);
+                    int l = entity.suggestLevel(d);
+                    if (l > entity.getMaxLevel()) {
+                        l = entity.getMaxLevel();
+                    } else if (l < 0) {
+                        event.setCanceled(true);
                     }
-                }
-                if (target != null) {
-                    ((CreeperEntity) event.getEntity()).targetSelector.removeGoal(target);
-                    ((CreeperEntity) event.getEntity()).targetSelector.addGoal(1, new NearestAttackableTargetGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 10, true, false, input -> input != null && !VampirePlayer.getOpt((PlayerEntity) input).map(VampirePlayer::getSpecialAttributes).map(s -> s.avoided_by_creepers).orElse(false)));
-                } else {
-                    if (warnAboutCreeper) {
-                        LOGGER.warn("Could not replace creeper target task");
-                        warnAboutCreeper = false;
+                    entity.setLevel(l);
+                    if (entity instanceof CreatureEntity) {
+                        ((CreatureEntity) entity).setHealth(((CreatureEntity) entity).getMaxHealth());
                     }
                 }
             }
-        }
 
-        //Zombie AI changes
-        if (!event.getWorld().isRemote && VampirismConfig.BALANCE.zombieIgnoreVampire.get()) {
-            if (event.getEntity() instanceof ZombieEntity) {
-                Goal target = null;
-                for (PrioritizedGoal t : ((ZombieEntity) event.getEntity()).targetSelector.goals) {
-                    Goal g = t.getGoal();
-                    if (g instanceof NearestAttackableTargetGoal && NearestAttackableTargetGoal.class.equals(g.getClass()) && t.getPriority() == 2 && PlayerEntity.class.equals(((NearestAttackableTargetGoal) g).targetClass)) { //Make sure to not replace pigmen task
-                        target = g;
-                        break;
-                    }
-                }
-                if (target != null) {
-                    ((ZombieEntity) event.getEntity()).targetSelector.removeGoal(target);
-                    ((ZombieEntity) event.getEntity()).targetSelector.addGoal(2, new NearestAttackableTargetGoal<>((ZombieEntity) event.getEntity(), PlayerEntity.class, 10, true, false, entity -> !Helper.isVampire(entity)));
-                } else {
-                    if (warnAboutZombie) {
-                        LOGGER.warn("Could not replace zombie target task");
-                        warnAboutZombie = false;
-                    }
-                }
-                Goal villagerTarget = null;
+            //Creeper AI changes for AvoidedByCreepers Skill
+            if (!VampirismConfig.BALANCE.vsDisableAvoidedByCreepers.get()) {
+                if (event.getEntity() instanceof CreeperEntity) {
+                    ((CreeperEntity) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 20, 1.1, 1.3, input -> input != null && VampirePlayer.getOpt((PlayerEntity) input).map(VampirePlayer::getSpecialAttributes).map(s -> s.avoided_by_creepers).orElse(false)));
 
-                for (PrioritizedGoal t : ((ZombieEntity) event.getEntity()).targetSelector.goals) {
-                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && AbstractVillagerEntity.class.equals(((NearestAttackableTargetGoal) t.getGoal()).targetClass)) {
-                        villagerTarget = t.getGoal();
-                        break;
+                    Goal target = null;
+                    for (PrioritizedGoal t : ((CreeperEntity) event.getEntity()).targetSelector.goals) {
+                        if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 1) {
+                            target = t.getGoal();
+                        }
                     }
-                }
-                if (villagerTarget != null) {
-                    ((ZombieEntity) event.getEntity()).targetSelector.removeGoal(villagerTarget);
-                    ((ZombieEntity) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((ZombieEntity) event.getEntity(), AbstractVillagerEntity.class, 10, false, false, entity -> !Helper.isVampire(entity)));
-                } else {
-                    if (warnAboutZombie) {
-                        LOGGER.warn("Could not replace villager zombie target task");
-                        warnAboutZombie = false;
+                    if (target != null) {
+                        ((CreeperEntity) event.getEntity()).targetSelector.removeGoal(target);
+                        ((CreeperEntity) event.getEntity()).targetSelector.addGoal(1, new NearestAttackableTargetGoal<>((CreeperEntity) event.getEntity(), PlayerEntity.class, 10, true, false, input -> input != null && !VampirePlayer.getOpt((PlayerEntity) input).map(VampirePlayer::getSpecialAttributes).map(s -> s.avoided_by_creepers).orElse(false)));
+                    } else {
+                        if (warnAboutCreeper) {
+                            LOGGER.warn("Could not replace creeper target task");
+                            warnAboutCreeper = false;
+                        }
                     }
                 }
             }
-        }
 
-        if (!event.getWorld().isRemote && VampirismConfig.BALANCE.golemAttackVampire.get()) {
+            //Zombie AI changes
+            if (VampirismConfig.BALANCE.zombieIgnoreVampire.get()) {
+                if (event.getEntity() instanceof ZombieEntity) {
+                    Goal target = null;
+                    for (PrioritizedGoal t : ((ZombieEntity) event.getEntity()).targetSelector.goals) {
+                        Goal g = t.getGoal();
+                        if (g instanceof NearestAttackableTargetGoal && NearestAttackableTargetGoal.class.equals(g.getClass()) && t.getPriority() == 2 && PlayerEntity.class.equals(((NearestAttackableTargetGoal) g).targetClass)) { //Make sure to not replace pigmen task
+                            target = g;
+                            break;
+                        }
+                    }
+                    if (target != null) {
+                        ((ZombieEntity) event.getEntity()).targetSelector.removeGoal(target);
+                        ((ZombieEntity) event.getEntity()).targetSelector.addGoal(2, new NearestAttackableTargetGoal<>((ZombieEntity) event.getEntity(), PlayerEntity.class, 10, true, false, entity -> !Helper.isVampire(entity)));
+                    } else {
+                        if (warnAboutZombie) {
+                            LOGGER.warn("Could not replace zombie target task");
+                            warnAboutZombie = false;
+                        }
+                    }
+                    Goal villagerTarget = null;
+
+                    for (PrioritizedGoal t : ((ZombieEntity) event.getEntity()).targetSelector.goals) {
+                        if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && AbstractVillagerEntity.class.equals(((NearestAttackableTargetGoal) t.getGoal()).targetClass)) {
+                            villagerTarget = t.getGoal();
+                            break;
+                        }
+                    }
+                    if (villagerTarget != null) {
+                        ((ZombieEntity) event.getEntity()).targetSelector.removeGoal(villagerTarget);
+                        ((ZombieEntity) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((ZombieEntity) event.getEntity(), AbstractVillagerEntity.class, 10, false, false, entity -> !Helper.isVampire(entity)));
+                    } else {
+                        if (warnAboutZombie) {
+                            LOGGER.warn("Could not replace villager zombie target task");
+                            warnAboutZombie = false;
+                        }
+                    }
+                }
+            }
+
             if (event.getEntity() instanceof IronGolemEntity) {
-                ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(4, new GolemTargetVampireGoal((IronGolemEntity) event.getEntity()));
-            }
-        }
-        //------------------
+                if (VampirismConfig.BALANCE.golemAttackVampire.get()) {
+                    ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(4, new GolemTargetVampireGoal((IronGolemEntity) event.getEntity()));
+                }
 
-        if (event.getEntity() instanceof VillagerEntity && !event.getWorld().isRemote) {
-            if(Structures.VILLAGE.isPositionInStructure(event.getWorld(),event.getEntity().getPosition())){
-                StructureStart structure = Structures.VILLAGE.getStart(event.getWorld(),event.getEntity().getPosition(),false);
-                if(!(structure == StructureStart.DUMMY)) {
-                    BlockPos pos = TotemTileEntity.getTotemPosition(structure);
-                    if(pos != null) {
-                        TileEntity tileEntity = event.getWorld().getTileEntity(pos);
-                        if(tileEntity instanceof TotemTileEntity) {
-                            if (VReference.HUNTER_FACTION.equals(((TotemTileEntity) tileEntity).getControllingFaction())) {
-                                ExtendedCreature.getSafe(event.getEntity()).ifPresent(e -> e.setPoisonousBlood(true));
+                Goal mobTarget = null;
+
+                for (PrioritizedGoal t : ((IronGolemEntity) event.getEntity()).targetSelector.goals) {
+                    if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && MobEntity.class.equals(((NearestAttackableTargetGoal) t.getGoal()).targetClass)) {
+                        mobTarget = t.getGoal();
+                        break;
+                    }
+                }
+                if (mobTarget != null) {
+                    ((IronGolemEntity) event.getEntity()).targetSelector.removeGoal(mobTarget);
+                    ((IronGolemEntity) event.getEntity()).targetSelector.addGoal(3, new NearestAttackableTargetGoal<>((IronGolemEntity) event.getEntity(), MobEntity.class, 5, false, false, entity -> entity instanceof IMob && !(entity instanceof IHunter) && !(entity instanceof CreeperEntity)));
+                } else {
+                    if (warnAboutGolem) {
+                        LOGGER.warn("Could not replace villager iron golem target task");
+                        warnAboutGolem = false;
+                    }
+                }
+            }
+            //------------------
+
+            if (event.getEntity() instanceof VillagerEntity) {
+                if (Structures.VILLAGE.isPositionInStructure(event.getWorld(), event.getEntity().getPosition())) {
+                    StructureStart structure = Structures.VILLAGE.getStart(event.getWorld(), event.getEntity().getPosition(), false);
+                    if (!(structure == StructureStart.DUMMY)) {
+                        BlockPos pos = TotemTileEntity.getTotemPosition(structure);
+                        if (pos != null) {
+                            TileEntity tileEntity = event.getWorld().getTileEntity(pos);
+                            if (tileEntity instanceof TotemTileEntity) {
+                                if (VReference.HUNTER_FACTION.equals(((TotemTileEntity) tileEntity).getControllingFaction())) {
+                                    ExtendedCreature.getSafe(event.getEntity()).ifPresent(e -> e.setPoisonousBlood(true));
+                                }
                             }
                         }
                     }
