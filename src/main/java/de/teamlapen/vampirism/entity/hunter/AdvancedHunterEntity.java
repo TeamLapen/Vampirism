@@ -1,13 +1,14 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import com.mojang.authlib.GameProfile;
+
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
-import de.teamlapen.vampirism.api.world.IVillageAttributes;
+import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
@@ -21,7 +22,13 @@ import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.OpenDoorGoal;
+import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -195,9 +202,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
         }
-        if (tagCompund.contains("x")) {
-            //this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")))); TODO #629
-        }
     }
 
     @Override
@@ -227,11 +231,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", attack);
-        if (villageAttributes != null) {
-            nbt.putInt("x", villageAttributes.getPosition().getX());
-            nbt.putInt("y", villageAttributes.getPosition().getY());
-            nbt.putInt("z", villageAttributes.getPosition().getZ());
-        }
     }
 
     @Override
@@ -305,6 +304,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             super(type, world);
         }
 
+        @Nonnull
         @Override
         protected ResourceLocation getLootTable() {
             return ModLootTables.advanced_hunter;
@@ -313,7 +313,8 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
-    private IVillageAttributes villageAttributes;
+    @Nullable
+    private ICaptureAttributes villageAttributes;
 
     @Override
     public void stopVillageAttackDefense() {
@@ -332,19 +333,19 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void defendVillage(IVillageAttributes attributes) {
+    public void defendVillage(ICaptureAttributes attributes) {
         this.villageAttributes = attributes;
         this.attack = false;
     }
 
     @Nullable
     @Override
-    public IVillageAttributes getVillageAttributes() {
+    public ICaptureAttributes getCaptureInfo() {
         return this.villageAttributes;
     }
 
     @Override
-    public void attackVillage(IVillageAttributes attributes) {
+    public void attackVillage(ICaptureAttributes attributes) {
         this.villageAttributes = attributes;
         this.attack = true;
     }
@@ -352,6 +353,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Nullable
     @Override
     public AxisAlignedBB getTargetVillageArea() {
-        return this.villageAttributes.getVillageArea();
+        return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 }

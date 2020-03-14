@@ -7,19 +7,35 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
-import de.teamlapen.vampirism.api.world.IVillageAttributes;
+import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.goals.*;
+import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
+import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
+import de.teamlapen.vampirism.entity.goals.BiteNearbyEntityVampireGoal;
+import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
+import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
+import de.teamlapen.vampirism.entity.goals.FollowAdvancedVampireGoal;
+import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
+import de.teamlapen.vampirism.entity.goals.MoveToBiteableVampireGoal;
+import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.entity.ai.goal.BreakDoorGoal;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -39,11 +55,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Basic vampire mob.
- * Follows nearby advanced hunters
+ * Follows nearby advanced vampire
  */
 public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser {
 
@@ -84,8 +101,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     /**
      * @return The advanced vampire this entity is following or null if none
      */
-    public
-    @Nullable
+    public @Nullable
     AdvancedVampireEntity getAdvancedLeader() {
         return advancedLeader;
     }
@@ -93,7 +109,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     /**
      * Set an advanced vampire, this vampire should follow
      *
-     * @param advancedLeader
+     * @param advancedLeader new leader
      */
     public void setAdvancedLeader(@Nullable AdvancedVampireEntity advancedLeader) {
         this.advancedLeader = advancedLeader;
@@ -150,6 +166,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         if (this.ticksExisted % 9 == 3) {
             if (this.isPotionActive(Effects.FIRE_RESISTANCE)) {
                 EffectInstance fireResistance = this.removeActivePotionEffect(Effects.FIRE_RESISTANCE);
+                assert fireResistance != null;
                 onFinishedPotionEffect(fireResistance);
                 this.addPotionEffect(new EffectInstance(ModEffects.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
             }
@@ -167,9 +184,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         }
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
-        }
-        if (tagCompund.contains("x")) {
-            //this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")))); TODO #629
         }
 
         if (entityActionHandler != null) {
@@ -217,11 +231,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         super.writeAdditional(nbt);
         nbt.putInt("level", getLevel());
         nbt.putBoolean("attack", this.attack);
-        if (this.villageAttributes != null) {
-            nbt.putInt("x", this.villageAttributes.getPosition().getX());
-            nbt.putInt("y", this.villageAttributes.getPosition().getY());
-            nbt.putInt("z", this.villageAttributes.getPosition().getZ());
-        }
         nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
         if (this.entityActionHandler != null) {
             this.entityActionHandler.write(nbt);
@@ -273,7 +282,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.goalSelector.addGoal(5, new BiteNearbyEntityVampireGoal<>(this));
         this.goalSelector.addGoal(6, new FollowAdvancedVampireGoal(this, 1.0));
         this.goalSelector.addGoal(7, new MoveToBiteableVampireGoal<>(this, 0.75));
-        this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.6, true, 600, () -> false));//TODO was MoveThroughVillageCustomGoal (test)
+        this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.6, true, 600, () -> false));
         this.goalSelector.addGoal(9, new RandomWalkingGoal(this, 0.7));
         this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 20F, 0.6F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
@@ -306,6 +315,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             super(type, world);
         }
 
+        @Nonnull
         @Override
         protected ResourceLocation getLootTable() {
             return ModLootTables.vampire;
@@ -335,19 +345,19 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     //Village stuff ----------------------------------------------------------------------------------------------------
-    private @Nullable
-    IVillageAttributes villageAttributes;
+    @Nullable
+    private ICaptureAttributes villageAttributes;
     private boolean attack;
 
     @Override
-    public void attackVillage(IVillageAttributes totem) {
+    public void attackVillage(ICaptureAttributes totem) {
         this.goalSelector.removeGoal(tasks_avoidHunter);
         this.villageAttributes = totem;
         this.attack = true;
     }
 
     @Override
-    public void defendVillage(IVillageAttributes totem) {
+    public void defendVillage(ICaptureAttributes totem) {
         this.goalSelector.removeGoal(tasks_avoidHunter);
         this.villageAttributes = totem;
         this.attack = false;
@@ -355,7 +365,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Nullable
     @Override
-    public IVillageAttributes getVillageAttributes() {
+    public ICaptureAttributes getCaptureInfo() {
         return villageAttributes;
     }
 
@@ -368,7 +378,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Nullable
     @Override
     public AxisAlignedBB getTargetVillageArea() {
-        return villageAttributes.getVillageArea();
+        return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 
     @Override

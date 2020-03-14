@@ -4,13 +4,18 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
-import de.teamlapen.vampirism.api.world.IVillageAttributes;
+import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
-import net.minecraft.entity.*;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
@@ -44,6 +49,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
      */
     public static AggressiveVillagerEntity makeHunter(@Nonnull VillagerEntity villager) {
         AggressiveVillagerEntity hunter = ModEntities.villager_angry.create(villager.world);
+        assert hunter != null;
         CompoundNBT nbt = new CompoundNBT();
         if (villager.isSleeping()) {
             villager.wakeUp();
@@ -66,7 +72,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(@Nonnull IWorld worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         ILivingEntityData data = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
         return data;
@@ -87,7 +93,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.55, false, 400, () -> true));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
         this.targetSelector.addGoal(3, new DefendVillageGoal<>(this));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
 
@@ -99,18 +105,20 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    protected void initBrain(Brain<VillagerEntity> p_213744_1_) {
+    protected void initBrain(Brain<VillagerEntity> brainIn) {
     }
 
     @Override
-    public void func_213770_a(ServerWorld p_213770_1_) { //resetBrain
+    public void func_213770_a(@Nonnull ServerWorld serverWorldIn) { //resetBrain
     }
 
     //Village capture---------------------------------------------------------------------------------------------------
-    private IVillageAttributes villageAttributes;
+    @Nullable
+    private ICaptureAttributes villageAttributes;
     @Override
     public void stopVillageAttackDefense() {
         VillagerEntity villager = EntityType.VILLAGER.create(this.world);
+        assert villager != null;
         this.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
         CompoundNBT nbt = new CompoundNBT();
         this.writeWithoutTypeId(nbt);
@@ -131,23 +139,24 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public void attackVillage(IVillageAttributes villageAttributes) {
+    public void attackVillage(ICaptureAttributes villageAttributes) {
         this.villageAttributes = villageAttributes;
     }
 
     @Override
-    public void defendVillage(IVillageAttributes villageAttributes) {
+    public void defendVillage(ICaptureAttributes villageAttributes) {
         this.villageAttributes = villageAttributes;
     }
 
     @Nullable
     @Override
-    public IVillageAttributes getVillageAttributes() {
+    public ICaptureAttributes getCaptureInfo() {
         return villageAttributes;
     }
 
+    @Nullable
     @Override
     public AxisAlignedBB getTargetVillageArea() {
-        return villageAttributes.getVillageArea();
+        return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 }
