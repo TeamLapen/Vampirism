@@ -58,6 +58,7 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
         matrixStack.push();
         adjustRotatePivotViaState(tile, matrixStack);
         matrixStack.rotate(Vector3f.XP.rotationDegrees(180));
+        matrixStack.translate(0, 0, -1);
         IVertexBuilder vertexBuilder = iRenderTypeBuffer.getBuffer(RenderType.entitySolid(textures[color]));
         this.model.render(matrixStack, vertexBuilder, i, i1, 1, 1, 1, 1);
         matrixStack.pop();

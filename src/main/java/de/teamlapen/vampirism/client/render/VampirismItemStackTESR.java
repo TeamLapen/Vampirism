@@ -12,12 +12,15 @@ import net.minecraft.item.ItemStack;
 
 public class VampirismItemStackTESR extends ItemStackTileEntityRenderer {
 
-    private final CoffinTileEntity coffin = new CoffinTileEntity(true);
+    private CoffinTileEntity coffin;
 
     @Override
     public void render(ItemStack itemStack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
         Item item = itemStack.getItem();
         if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof CoffinBlock) {
+            if (coffin == null) {
+                coffin = new CoffinTileEntity(true);
+            }
             TileEntityRendererDispatcher.instance.renderItem(this.coffin, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
         } else {
             super.render(itemStack, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
