@@ -337,6 +337,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             compound.putInt("captureTimer", this.captureTimer);
             compound.putInt("captureAbortTimer", this.captureAbortTimer);
             compound.putString("phase", this.phase.name());
+            if (this.phase == CAPTURE_PHASE.PHASE_2) {
+                compound.putInt("defenderMax", this.defenderMax);
+            }
         }
         if (village != null) {
             compound.putIntArray("villageArea", UtilLib.bbToInt(this.getVillageArea()));
@@ -360,6 +363,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             this.captureTimer = compound.getInt("captureTimer");
             this.captureAbortTimer = compound.getInt("captureabortTimer");
             this.phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
+            if (this.phase == CAPTURE_PHASE.PHASE_2 && compound.contains("defenderMax")) {
+                this.defenderMax = compound.getInt("defenderMax");
+                this.setupPhase2();
+            }
         } else {
             this.setCapturingFaction(null);
         }
@@ -535,14 +542,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                             case PHASE_1_NEUTRAL:
                                 if (captureTimer >= VampirismConfig.BALANCE.viPhase1Duration.get()) {
                                     this.captureTimer = 1;
-                                    this.phase = CAPTURE_PHASE.PHASE_2;
+                                    this.setupPhase2();
                                     this.markDirty();
                                 }
                                 break;
                             case PHASE_1_OPPOSITE:
                                 if (captureTimer >= VampirismConfig.BALANCE.viPhase1Duration.get()) {
                                     captureTimer = 1;
-                                    this.phase = CAPTURE_PHASE.PHASE_2;
+                                    this.setupPhase2();
                                     this.markDirty();
                                     this.notifyNearbyPlayers(new TranslationTextComponent("text.vampirism.village.almost_captured", defender));
                                 } else {
@@ -750,6 +757,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         }
     }
 
+    private void setupPhase2() {
+        if (this.phase != CAPTURE_PHASE.PHASE_2)
+            this.phase = CAPTURE_PHASE.PHASE_2;
+        this.captureInfo.setName(new TranslationTextComponent("text.vampirism.village.defender_remaining"));
+        this.captureInfo.setColor(BossInfo.Color.WHITE);
+    }
+
     private void handleBossBar(int defenderLeft) {
         if (phase == CAPTURE_PHASE.PHASE_1_NEUTRAL || phase == CAPTURE_PHASE.PHASE_1_OPPOSITE) {
             captureInfo.setPercent(this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get());
@@ -759,8 +773,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                 captureInfo.setPercent((float) defenderLeft / (float) defenderMax);
             } else {
                 defenderMax = defenderLeft;
-                captureInfo.setName(new TranslationTextComponent("text.vampirism.village.defender_remaining"));
-                captureInfo.setColor(BossInfo.Color.WHITE);
+                this.setupPhase2();
             }
         }
     }
