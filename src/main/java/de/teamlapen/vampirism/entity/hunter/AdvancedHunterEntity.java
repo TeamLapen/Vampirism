@@ -7,10 +7,9 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
-import de.teamlapen.vampirism.api.world.IVillageAttributes;
+import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerFace;
@@ -32,7 +31,6 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -195,9 +193,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
         }
-        if (tagCompund.contains("x")) {
-            //this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")))); TODO #629
-        }
     }
 
     @Override
@@ -227,11 +222,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", attack);
-        if (villageAttributes != null) {
-            nbt.putInt("x", villageAttributes.getPosition().getX());
-            nbt.putInt("y", villageAttributes.getPosition().getY());
-            nbt.putInt("z", villageAttributes.getPosition().getZ());
-        }
     }
 
     @Override
@@ -304,12 +294,12 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         public IMob(EntityType<? extends AdvancedHunterEntity> type, World world) {
             super(type, world);
         }
-
     }
 
     //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
-    private IVillageAttributes villageAttributes;
+    @Nullable
+    private ICaptureAttributes villageAttributes;
 
     @Override
     public void stopVillageAttackDefense() {
@@ -328,26 +318,26 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void defendVillage(IVillageAttributes attributes) {
+    public void attackVillage(ICaptureAttributes attributes) {
+        this.villageAttributes = attributes;
+        this.attack = true;
+    }
+
+    @Override
+    public void defendVillage(ICaptureAttributes attributes) {
         this.villageAttributes = attributes;
         this.attack = false;
     }
 
     @Nullable
     @Override
-    public IVillageAttributes getVillageAttributes() {
+    public ICaptureAttributes getCaptureInfo() {
         return this.villageAttributes;
-    }
-
-    @Override
-    public void attackVillage(IVillageAttributes attributes) {
-        this.villageAttributes = attributes;
-        this.attack = true;
     }
 
     @Nullable
     @Override
     public AxisAlignedBB getTargetVillageArea() {
-        return this.villageAttributes.getVillageArea();
+        return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 }

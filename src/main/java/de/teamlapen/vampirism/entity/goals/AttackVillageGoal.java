@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
@@ -21,13 +22,13 @@ public class AttackVillageGoal<T extends VampirismEntity & IVillageCaptureEntity
         this.attacker = creature;
         this.entityPredicate = new EntityPredicate() {
             @Override
-            public boolean canTarget(@Nullable LivingEntity p_221015_1_, LivingEntity p_221015_2_) {
-                if (attacker.getVillageAttributes().shouldForceTargets() && getTargetDistance() > 0) {
+            public boolean canTarget(@Nullable LivingEntity attackEntity, @Nonnull LivingEntity targetEntity) {
+                if (attacker.getCaptureInfo().shouldForceTargets() && getTargetDistance() > 0) {
                     setDistance(-1.0D);
                 } else if (getTargetDistance() < 0) {
                     setDistance(distance);
                 }
-                return super.canTarget(p_221015_1_, p_221015_2_);
+                return super.canTarget(attackEntity, targetEntity);
             }
         }.setCustomPredicate(VampirismAPI.factionRegistry().getPredicate(attacker.getFaction(), false));
     }

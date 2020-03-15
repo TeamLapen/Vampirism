@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.world.IVillageAttributes;
+import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.blocks.TotemBaseBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -151,10 +151,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         tile.forcedFactionTimer = 5;
         tile.markDirty();
         return new TranslationTextComponent("command.vampirism.test.village.success", faction.getName());
-    }
-
-    public static VillageAttributes getVillageAttributes(TotemTileEntity totem) {
-        return new VillageAttributes(totem);
     }
 
     //block attributes
@@ -503,6 +499,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                     float defenderStrength = 0f;
 
                     //count entities
+                    CaptureInfo captureInfo = new CaptureInfo(this);
                     for (LivingEntity entity : entities) {
                         IFaction faction = VampirismAPI.factionRegistry().getFaction(entity);
                         if (faction == null) continue;
@@ -512,14 +509,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                             attackerStrength += this.getStrength(entity);
                             if (entity instanceof PlayerEntity) attackerPlayer++;
                             if (entity instanceof IVillageCaptureEntity) {
-                                ((IVillageCaptureEntity) entity).attackVillage(getVillageAttributes(this));
+                                ((IVillageCaptureEntity) entity).attackVillage(captureInfo);
                             }
                         } else if (faction.equals(this.controllingFaction)) {
                             defender++;
                             defenderStrength += this.getStrength(entity);
                             if (entity instanceof PlayerEntity) defenderPlayer++;
                             if (entity instanceof IVillageCaptureEntity) {
-                                ((IVillageCaptureEntity) entity).defendVillage(getVillageAttributes(this));
+                                ((IVillageCaptureEntity) entity).defendVillage(captureInfo);
                             }
                         } else {
                             neutral++;
@@ -747,9 +744,9 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         }
         if (entity instanceof IVillageCaptureEntity) {
             if (this.controllingFaction.equals(faction))
-                ((IVillageCaptureEntity) entity).defendVillage(getVillageAttributes(this));
+                ((IVillageCaptureEntity) entity).defendVillage(new CaptureInfo(this));
             else
-                ((IVillageCaptureEntity) entity).attackVillage(getVillageAttributes(this));
+                ((IVillageCaptureEntity) entity).attackVillage(new CaptureInfo(this));
         } else if (entity != null) {
             LOGGER.warn("Creature registered for village capture does not implement IVillageCaptureEntity ({})", entity.getEntityString());
         } else {
@@ -960,33 +957,33 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         return INFINITE_EXTENT_AABB;
     }
 
-    private static class VillageAttributes implements IVillageAttributes {
-        private final @Nullable
-        IFaction defendingFaction;
-        private final @Nullable
-        IFaction attackingFaction;
+    public static class CaptureInfo implements ICaptureAttributes {
+        @Nullable
+        private final IFaction defendingFaction;
+        @Nullable
+        private final IFaction attackingFaction;
         private final AxisAlignedBB villageArea;
-        private final TotemTileEntity totem;
         private final BlockPos pos;
+        private final boolean shouldForceTargets;
 
-        private VillageAttributes(TotemTileEntity totem) {
+        private CaptureInfo(TotemTileEntity totem) {
             this.defendingFaction = totem.controllingFaction;
             this.attackingFaction = totem.capturingFaction;
             this.villageArea = totem.getVillageAreaReduced();
-            this.totem = totem;
             this.pos = totem.pos;
+            this.shouldForceTargets = totem.captureForceTargetTimer > VampirismConfig.BALANCE.viForceTargetTime.get();
         }
 
+        @Nullable
         @Override
-        public @Nullable
-        IFaction getDefendingFaction() {
-            return this.defendingFaction;
-        }
-
-        @Override
-        public @Nullable
-        IFaction getAttackingFaction() {
+        public IFaction getAttackingFaction() {
             return this.attackingFaction;
+        }
+
+        @Nullable
+        @Override
+        public IFaction getDefendingFaction() {
+            return this.defendingFaction;
         }
 
         @Override
@@ -1000,7 +997,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         }
 
         public boolean shouldForceTargets() {
-            return this.totem.captureForceTargetTimer > VampirismConfig.BALANCE.viForceTargetTime.get();
+            return this.shouldForceTargets;
         }
 
     }

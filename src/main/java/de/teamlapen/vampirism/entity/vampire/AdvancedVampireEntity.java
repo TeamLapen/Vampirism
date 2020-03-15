@@ -7,11 +7,10 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
-import de.teamlapen.vampirism.api.world.IVillageAttributes;
+import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
@@ -32,7 +31,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -41,6 +39,7 @@ import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -146,11 +145,9 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         return MAX_LEVEL;
     }
 
-    @Override
-    public ITextComponent getName() {
-        String senderName = this.getDataManager().get(NAME);
-        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
-    }
+    //Village stuff ----------------------------------------------------------------------------------------------------
+    @Nullable
+    private ICaptureAttributes villageAttributes;
 
     @OnlyIn(Dist.CLIENT)
     @Nullable
@@ -205,9 +202,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
         }
-        if (tagCompund.contains("x")) {
-            //this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")))); TODO #629
-        }
     }
 
     @Override
@@ -231,11 +225,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             entityActionHandler.write(nbt);
         }
         nbt.putBoolean("attack", this.attack);
-        if (this.villageAttributes != null) {
-            nbt.putInt("x", this.villageAttributes.getPosition().getX());
-            nbt.putInt("y", this.villageAttributes.getPosition().getY());
-            nbt.putInt("z", this.villageAttributes.getPosition().getZ());
-        }
     }
 
     @Override
@@ -272,22 +261,9 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> difficulty == net.minecraft.world.Difficulty.HARD));//Only break doors on hard difficulty
-        this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
-        this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
-        this.goalSelector.addGoal(3, new FleeGarlicVampireGoal(this, 0.9, false));
-        this.goalSelector.addGoal(4, new AttackMeleeNoSunGoal(this, 1.0, false));
-        this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.9, 25));
-        this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 13F));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
-        this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
-
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> Structures.VILLAGE.isPositionInStructure(living.world, living.getPosition())));
+    public void attackVillage(ICaptureAttributes totem) {
+        this.villageAttributes = totem;
+        this.attack = true;
     }
 
     @Override
@@ -311,27 +287,31 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     }
 
-    //Village stuff ----------------------------------------------------------------------------------------------------
-    private @Nullable
-    IVillageAttributes villageAttributes;
-    private boolean attack;
-
     @Override
-    public void attackVillage(IVillageAttributes totem) {
-        this.villageAttributes = totem;
-        this.attack = true;
-    }
-
-    @Override
-    public void defendVillage(IVillageAttributes totem) {
+    public void defendVillage(ICaptureAttributes totem) {
         this.villageAttributes = totem;
         this.attack = false;
     }
 
+    private boolean attack;
+
     @Nullable
     @Override
-    public IVillageAttributes getVillageAttributes() {
+    public ICaptureAttributes getCaptureInfo() {
         return villageAttributes;
+    }
+
+    @Nonnull
+    @Override
+    public ITextComponent getName() {
+        String senderName = this.getDataManager().get(NAME);
+        return "none".equals(senderName) ? super.getName() : new StringTextComponent(senderName);
+    }
+
+    @Nullable
+    @Override
+    public AxisAlignedBB getTargetVillageArea() {
+        return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 
     @Override
@@ -340,10 +320,23 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.villageAttributes = null;
     }
 
-    @Nullable
     @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return villageAttributes.getVillageArea();
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> difficulty == net.minecraft.world.Difficulty.HARD));//Only break doors on hard difficulty
+        this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
+        this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
+        this.goalSelector.addGoal(3, new FleeGarlicVampireGoal(this, 0.9, false));
+        this.goalSelector.addGoal(4, new AttackMeleeNoSunGoal(this, 1.0, false));
+        this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.9, 25));
+        this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 13F));
+        this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
+        this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
+
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> Structures.VILLAGE.isPositionInStructure(living.world, living.getPosition())));
     }
 
     @Override

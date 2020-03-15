@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
-import de.teamlapen.vampirism.api.world.IVillageAttributes;
+import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
@@ -44,6 +44,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
      */
     public static AggressiveVillagerEntity makeHunter(@Nonnull VillagerEntity villager) {
         AggressiveVillagerEntity hunter = ModEntities.villager_angry.create(villager.world);
+        assert hunter != null;
         CompoundNBT nbt = new CompoundNBT();
         if (villager.isSleeping()) {
             villager.wakeUp();
@@ -65,12 +66,9 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         return this;
     }
 
-    @Override
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        ILivingEntityData data = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
-        return data;
-    }
+    //Village capture---------------------------------------------------------------------------------------------------
+    @Nullable
+    private ICaptureAttributes villageAttributes;
 
     @Override
     protected void registerAttributes() {
@@ -81,43 +79,32 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 0.6, false));
-        this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.55, false, 400, () -> true));
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetSelector.addGoal(3, new DefendVillageGoal<>(this));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
-
-            @Override
-            protected double getTargetDistance() {
-                return super.getTargetDistance() / 2;
-            }
-        });
+    public void attackVillage(ICaptureAttributes villageAttributes) {
+        this.villageAttributes = villageAttributes;
     }
 
     @Override
-    protected void initBrain(Brain<VillagerEntity> p_213744_1_) {
+    public void defendVillage(ICaptureAttributes villageAttributes) {
+        this.villageAttributes = villageAttributes;
+    }
+
+    @Nullable
+    @Override
+    public ICaptureAttributes getCaptureInfo() {
+        return villageAttributes;
+    }
+
+    @Nullable
+    @Override
+    public AxisAlignedBB getTargetVillageArea() {
+        return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 
     @Override
-    public void resetBrain(ServerWorld p_213770_1_) {
-    }
-
-    //Village capture---------------------------------------------------------------------------------------------------
-    private IVillageAttributes villageAttributes;
-    @Override
-    public void stopVillageAttackDefense() {
-        VillagerEntity villager = EntityType.VILLAGER.create(this.world);
-        this.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
-        CompoundNBT nbt = new CompoundNBT();
-        this.writeWithoutTypeId(nbt);
-        villager.read(nbt);
-        villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
-        world.addEntity(villager);
-        this.remove();
+    public ILivingEntityData onInitialSpawn(@Nonnull IWorld worldIn, @Nonnull DifficultyInstance difficultyIn, @Nonnull SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        ILivingEntityData data = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.pitchfork));
+        return data;
     }
 
     @Override
@@ -131,23 +118,41 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public void attackVillage(IVillageAttributes villageAttributes) {
-        this.villageAttributes = villageAttributes;
+    public void resetBrain(@Nonnull ServerWorld p_213770_1_) {
     }
 
     @Override
-    public void defendVillage(IVillageAttributes villageAttributes) {
-        this.villageAttributes = villageAttributes;
+    public void stopVillageAttackDefense() {
+        VillagerEntity villager = EntityType.VILLAGER.create(this.world);
+        assert villager != null;
+        this.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
+        CompoundNBT nbt = new CompoundNBT();
+        this.writeWithoutTypeId(nbt);
+        villager.read(nbt);
+        villager.setUniqueId(MathHelper.getRandomUUID(this.rand));
+        world.addEntity(villager);
+        this.remove();
     }
 
-    @Nullable
     @Override
-    public IVillageAttributes getVillageAttributes() {
-        return villageAttributes;
+    protected void initBrain(Brain<VillagerEntity> brainIn) {
     }
 
     @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return villageAttributes.getVillageArea();
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(6, new MeleeAttackGoal(this, 0.6, false));
+        this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.55, false, 400, () -> true));
+
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetSelector.addGoal(3, new DefendVillageGoal<>(this));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
+
+            @Override
+            protected double getTargetDistance() {
+                return super.getTargetDistance() / 2;
+            }
+        });
     }
 }
