@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
-import de.teamlapen.vampirism.api.world.IVillageAttributes;
+import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
@@ -22,8 +22,21 @@ import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.OpenDoorGoal;
+import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -69,8 +82,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     /**
      * Player currently being trained otherwise null
      */
-    private @Nullable
-    PlayerEntity trainee;
+    private @Nullable PlayerEntity trainee;
 
     /**
      * Stores the x axis angle between when targeting an enemy with the crossbow
@@ -213,7 +225,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        ILivingEntityData livingdata = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        ILivingEntityData livingData = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 
         if (this.getRNG().nextInt(4) == 0) {
             this.setLeftHanded(true);
@@ -225,7 +237,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         }
 
         this.updateCombatTask();
-        return livingdata;
+        return livingData;
     }
 
     @Override
@@ -245,9 +257,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.updateCombatTask();
         if (tagCompund.contains("attack")) {
             this.attack = tagCompund.getBoolean("attack");
-        }
-        if (tagCompund.contains("x")) {
-            //this.villageAttributes = TotemTileEntity.getVillageAttributes((TotemTileEntity) this.world.getTileEntity(new BlockPos(tagCompund.getInt("x"), tagCompund.getInt("y"), tagCompund.getInt("z")))); TODO #629
         }
 
         if (entityActionHandler != null) {
@@ -286,11 +295,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         nbt.putInt("level", getLevel());
         nbt.putBoolean("crossbow", isCrossbowInMainhand());
         nbt.putBoolean("attack", attack);
-        if (villageAttributes != null) {
-            nbt.putInt("x", villageAttributes.getPosition().getX());
-            nbt.putInt("y", villageAttributes.getPosition().getY());
-            nbt.putInt("z", villageAttributes.getPosition().getZ());
-        }
         nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
         if (entityActionHandler != null) {
             entityActionHandler.write(nbt);
@@ -356,7 +360,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(2, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<PlayerEntity>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
             @Override
             protected double getTargetDistance() {
@@ -429,6 +433,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             super(type, world);
         }
 
+        @Nonnull
         @Override
         protected ResourceLocation getLootTable() {
             return ModLootTables.hunter;
@@ -437,7 +442,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
-    private IVillageAttributes villageAttributes;
+
+    private @Nullable ICaptureAttributes villageAttributes;
 
     @Override
     public void stopVillageAttackDefense() {
@@ -456,26 +462,25 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void defendVillage(IVillageAttributes attributes) {
+    public void defendVillage(ICaptureAttributes attributes) {
         this.villageAttributes = attributes;
         this.attack = false;
     }
 
-    @Nullable
     @Override
-    public IVillageAttributes getVillageAttributes() {
+    public @Nullable ICaptureAttributes getCaptureInfo() {
         return this.villageAttributes;
     }
 
     @Override
-    public void attackVillage(IVillageAttributes attributes) {
+    public void attackVillage(ICaptureAttributes attributes) {
         this.villageAttributes = attributes;
         this.attack = true;
     }
 
-    @Nullable
+
     @Override
-    public AxisAlignedBB getTargetVillageArea() {
-        return this.villageAttributes.getVillageArea();
+    public @Nullable AxisAlignedBB getTargetVillageArea() {
+        return villageAttributes == null ? null : villageAttributes.getVillageArea();
     }
 }

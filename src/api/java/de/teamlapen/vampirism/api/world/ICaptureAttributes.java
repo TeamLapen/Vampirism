@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 
-public interface IVillageAttributes {
+public interface ICaptureAttributes {
 
     @Nullable
     IFaction getDefendingFaction();
