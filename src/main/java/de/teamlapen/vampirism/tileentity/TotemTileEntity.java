@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.tileentity;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -15,12 +14,7 @@ import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.blocks.TotemBaseBlock;
 import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEffects;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModParticles;
-import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.core.ModVillage;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -37,12 +31,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BushBlock;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.player.PlayerEntity;
@@ -79,12 +68,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @ParametersAreNonnullByDefault
 public class TotemTileEntity extends TileEntity implements ITickableTileEntity {//TODO 1.14 add village events
@@ -458,11 +442,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
                     float defenderStrength = 0f;
 
                     //count entities
+                    CaptureInfo captureInfo = new CaptureInfo(this);
                     for (LivingEntity entity : entities) {
                         IFaction faction = VampirismAPI.factionRegistry().getFaction(entity);
                         if (faction == null) continue;
                         if (entity instanceof ICaptureIgnore) continue;
-                        CaptureInfo captureInfo = new CaptureInfo(this);
                         if (this.capturingFaction.equals(faction)) {
                             attacker++;
                             attackerStrength += this.getStrength(entity);
