@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.render;
+package de.teamlapen.vampirism.client.render.layers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.client.render.entities.ConvertedCreatureRenderer;
@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Render the vampire overlay
  */
 @OnlyIn(Dist.CLIENT)
-public class LayerVampireEntity<T extends CreatureEntity, U extends EntityModel<T>> extends LayerRenderer<T, U> {
+public class VampireEntityLayer<T extends CreatureEntity, U extends EntityModel<T>> extends LayerRenderer<T, U> {
 
     private final ResourceLocation overlay;
     private final boolean checkIfRender;
@@ -24,7 +24,7 @@ public class LayerVampireEntity<T extends CreatureEntity, U extends EntityModel<
      * @param overlay
      * @param checkIfRender If it should check if {@link ConvertedCreatureRenderer#renderOverlay} is true
      */
-    public LayerVampireEntity(IEntityRenderer<T, U> entityRendererIn, ResourceLocation overlay, boolean checkIfRender) {
+    public VampireEntityLayer(IEntityRenderer<T, U> entityRendererIn, ResourceLocation overlay, boolean checkIfRender) {
         super(entityRendererIn);
         this.overlay = overlay;
         this.checkIfRender = checkIfRender;

@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.render;
+package de.teamlapen.vampirism.client.render.layers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -18,12 +18,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class LayerVampirePlayerHead extends LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> {
+public class VampirePlayerHeadLayer extends LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> {
 
     private final ResourceLocation[] eyeOverlays;
     private final ResourceLocation[] fangOverlays;
 
-    public LayerVampirePlayerHead(IEntityRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> entityRendererIn) {
+    public VampirePlayerHeadLayer(IEntityRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> entityRendererIn) {
         super(entityRendererIn);
         eyeOverlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < eyeOverlays.length; i++) {
@@ -42,14 +42,15 @@ public class LayerVampirePlayerHead extends LayerRenderer<AbstractClientPlayerEn
         if (vampirePlayer.getLevel() > 0 && !vampirePlayer.isDisguised() && !player.isInvisible()) {
             int eyeType = Math.max(0, Math.min(vampirePlayer.getEyeType(), eyeOverlays.length - 1));
             int fangType = Math.max(0, Math.min(vampirePlayer.getFangType(), fangOverlays.length - 1));
-            IVertexBuilder vertexBuilderEye = iRenderTypeBuffer.getBuffer(RenderType.entitySolid(eyeOverlays[eyeType]));
-            IVertexBuilder vertexBuilderFang = iRenderTypeBuffer.getBuffer(RenderType.entitySolid(fangOverlays[fangType]));
+            IVertexBuilder vertexBuilderEye = iRenderTypeBuffer.getBuffer(RenderType.entityCutoutNoCull(eyeOverlays[eyeType]));
             int packerOverlay = LivingRenderer.getPackedOverlay(player, 0);
             ModelRenderer head = this.getEntityModel().bipedHead;
             head.rotationPointX = 0.0F;
             head.rotationPointY = 0.0F;
-            head.render(matrixStack, vertexBuilderFang, i, packerOverlay);
             head.render(matrixStack, vertexBuilderEye, i, packerOverlay);
+            IVertexBuilder vertexBuilderFang = iRenderTypeBuffer.getBuffer(RenderType.entityCutoutNoCull(fangOverlays[fangType]));
+            head.render(matrixStack, vertexBuilderFang, i, packerOverlay);
+
 
         }
 

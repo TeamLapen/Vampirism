@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.render.entities;
 
-import de.teamlapen.vampirism.client.render.LayerVampireEntity;
+import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -18,6 +18,6 @@ public class ConvertedVillagerRenderer extends VillagerRenderer {
 
     public ConvertedVillagerRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, (IReloadableResourceManager) Minecraft.getInstance().getResourceManager());
-        this.addLayer(new LayerVampireEntity<>(this, overlay, false));
+        this.addLayer(new VampireEntityLayer<>(this, overlay, false));
     }
 }

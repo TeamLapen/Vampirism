@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.teamlapen.vampirism.client.render.LayerAdvancedVampireEye;
-import de.teamlapen.vampirism.client.render.LayerPlayerFaceOverlay;
+import de.teamlapen.vampirism.client.render.layers.AdvancedVampireEyeLayer;
+import de.teamlapen.vampirism.client.render.layers.PlayerFaceOverlayLayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -25,8 +25,8 @@ public class AdvancedVampireRenderer extends BipedRenderer<AdvancedVampireEntity
     public AdvancedVampireRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BipedModel<>(RenderType::entityCutoutNoCull, 0F, 0F, 64, 64), 0.5F);
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
-            this.addLayer(new LayerPlayerFaceOverlay<>(this));
-            this.addLayer(new LayerAdvancedVampireEye(this));
+            this.addLayer(new PlayerFaceOverlayLayer<>(this));
+            this.addLayer(new AdvancedVampireEyeLayer(this));
 
         }
     }

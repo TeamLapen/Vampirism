@@ -17,7 +17,7 @@ public class VampireBaronModel<T extends LivingEntity> extends BipedCloakedModel
     private ModelRenderer leftwing2;
 
     public VampireBaronModel() {
-        super(0.0F, 0.0F, 64, 64, 38, 34);
+        super(0.0F, 0.0F, 64, 64);
 //        textureWidth = 64;
 //        textureHeight = 64;
 

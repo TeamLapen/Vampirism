@@ -6,9 +6,9 @@ import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.*;
-import de.teamlapen.vampirism.client.render.LayerVampireEntity;
-import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
+import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
+import de.teamlapen.vampirism.client.render.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.network.BloodValuePacket;
 import de.teamlapen.vampirism.network.OpenVampireBookPacket;
@@ -179,7 +179,7 @@ public class ClientProxy extends CommonProxy {
             return;
         }
         LivingRenderer rendererLiving = (LivingRenderer) render;
-        rendererLiving.addLayer(new LayerVampireEntity(rendererLiving, loc, true));
+        rendererLiving.addLayer(new VampireEntityLayer(rendererLiving, loc, true));
     }
 
     private void registerVampireEntityOverlays() {
@@ -192,7 +192,7 @@ public class ClientProxy extends CommonProxy {
 
     private void registerVampirePlayerHead(EntityRendererManager manager) {
         for (PlayerRenderer renderPlayer : manager.getSkinMap().values()) {
-            renderPlayer.addLayer(new LayerVampirePlayerHead(renderPlayer));
+            renderPlayer.addLayer(new VampirePlayerHeadLayer(renderPlayer));
         }
     }
 

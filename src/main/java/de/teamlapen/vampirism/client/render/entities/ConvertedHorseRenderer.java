@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.google.common.collect.Maps;
-import de.teamlapen.vampirism.client.render.LayerVampireEntity;
+import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
@@ -25,7 +25,7 @@ public final class ConvertedHorseRenderer extends AbstractHorseRenderer<HorseEnt
     public ConvertedHorseRenderer(EntityRendererManager p_i47205_1_) {
         super(p_i47205_1_, new HorseModel<>(0.0F), 1.1F);
         this.addLayer(new LeatherHorseArmorLayer(this));
-        this.addLayer(new LayerVampireEntity<>(this, overlay, false));
+        this.addLayer(new VampireEntityLayer<>(this, overlay, false));
 
     }
 

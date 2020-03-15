@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
+import de.teamlapen.vampirism.client.render.layers.CloakLayer;
+import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.BipedRenderer;
@@ -23,12 +25,13 @@ public class BasicHunterRenderer extends BipedRenderer<BasicHunterEntity, BasicH
             new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base4.png"),
             new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base5.png")
     };
-    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
+    private final ResourceLocation textureCloak = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_cloak.png");
 
     public BasicHunterRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new BasicHunterModel(), 0.5F);
+        super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
+        this.addLayer(new HunterEquipmentLayer<>(this, entity -> entity.getLevel() < 2 || entity.isCrossbowInMainhand(), entity -> entity.getLevel() == 0 ? entity.getEntityId() % 4 : -1));
+        this.addLayer(new CloakLayer<>(this, textureCloak, entity -> entity.getLevel() >= 0));
     }
-
 
     @Override
     public ResourceLocation getEntityTexture(BasicHunterEntity entity) {
@@ -36,18 +39,4 @@ public class BasicHunterRenderer extends BipedRenderer<BasicHunterEntity, BasicH
         if (level > 0) return texture;
         return textures[entity.getEntityId() % textures.length];
     }
-//
-//    @Override
-//    protected void renderModel(BasicHunterEntity entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float partTicks) {
-//        int level = entitylivingbaseIn.getLevel();
-//        int type = entitylivingbaseIn.getEntityId() % textures.length;
-//        if (level == 0) {
-//            getEntityModel().setSkipCloakOnce();
-//        }
-//        super.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, partTicks);
-//        bindTexture(textureExtra);
-//        getEntityModel().renderHat(partTicks, level == 0 ? type : -1);
-//        getEntityModel().renderWeapons(partTicks, level < 2 || entitylivingbaseIn.isCrossbowInMainhand());
-//
-//    }
 }

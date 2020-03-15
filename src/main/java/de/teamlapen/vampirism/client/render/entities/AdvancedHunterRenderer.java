@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.client.render.entities;
 
+import com.google.common.base.Predicates;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
-import de.teamlapen.vampirism.client.render.LayerPlayerFaceOverlay;
+import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
+import de.teamlapen.vampirism.client.render.layers.PlayerFaceOverlayLayer;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -20,14 +22,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity, BasicHunterModel<AdvancedHunterEntity>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
-    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
 
 
     public AdvancedHunterRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
+        this.addLayer(new HunterEquipmentLayer<>(this, Predicates.alwaysFalse(), AdvancedHunterEntity::getHunterType));
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
-            this.addLayer(new LayerPlayerFaceOverlay<>(this));
-
+            this.addLayer(new PlayerFaceOverlayLayer<>(this));
+            this.getEntityModel().bipedHead.showModel = false;
+            this.getEntityModel().bipedHeadwear.showModel = false;
         }
     }
 
