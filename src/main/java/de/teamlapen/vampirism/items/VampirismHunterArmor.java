@@ -62,7 +62,7 @@ public abstract class VampirismHunterArmor extends ArmorItem {
         super.addInformation(p_77624_1_, p_77624_2_, tooltip, p_77624_4_);
         PlayerEntity player = VampirismMod.proxy.getClientPlayer();
         if (player != null && Helper.isVampire(player)) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_hunter").applyTextStyle(TextFormatting.RED));
+            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_vampires").applyTextStyle(TextFormatting.RED));
         }
     }
 
