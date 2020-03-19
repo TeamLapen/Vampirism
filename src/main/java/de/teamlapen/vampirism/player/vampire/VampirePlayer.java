@@ -221,6 +221,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * @param entityId The id of the entity to start biting
      */
     public void biteEntity(int entityId) {
+        if (this.getLevel() == 0) {
+            LOGGER.warn("Player can't bite. Isn't a vampire");
+            return;
+        }
         Entity e = player.getEntityWorld().getEntityByID(entityId);
         if (player.isSpectator()) {
             LOGGER.warn("Player can't bite in spectator mode");
