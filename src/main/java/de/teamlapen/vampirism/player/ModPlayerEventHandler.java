@@ -328,8 +328,11 @@ public class ModPlayerEventHandler {
                 Optional<BlockPos> pos = player.getBedPosition();
                 return pos.isPresent() && event.getWorld().getBlockState(pos.get()).getBlock() instanceof CoffinBlock;
             });
-            if (sleepingInCoffin)
-                event.setTimeAddition(event.getNewTime() - 11000L);
+            if (sleepingInCoffin) {
+                long dist = event.getWorld().getWorld().getDayTime() % 24000L > 12000L ? 13000 : -11000; //Make sure we don't go backwards in time (in special case sleeping at 23500)
+                event.setTimeAddition(event.getNewTime() + dist);
+
+            }
         }
     }
 
