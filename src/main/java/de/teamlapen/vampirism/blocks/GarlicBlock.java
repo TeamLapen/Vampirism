@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropsBlock;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,7 +49,7 @@ public class GarlicBlock extends CropsBlock {
     }
 
     public GarlicBlock() {
-        super(Properties.create(Material.PLANTS));
+        super(Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.CROP));
         setRegistryName(REFERENCE.MODID, regName);
     }
 
