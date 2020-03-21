@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
@@ -210,5 +211,10 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterStructures(RegistryEvent.Register<Structure<?>> event) {
         ModFeatures.registerStructures(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterTasks(RegistryEvent.Register<Task> event) {
+        ModTasks.registerTasks(event.getRegistry());
     }
 }
