@@ -71,6 +71,7 @@ public class ModEntities {
     public static final EntityType<ConvertedVillagerEntity> villager_converted = getNull();
     public static final EntityType<VampireMinionEntity> vampire_minion = getNull();
     public static final EntityType<HunterMinionEntity> hunter_minion = getNull();
+    public static final EntityType<TaskMasterEntity> task_master = getNull();
 
     private static final Logger LOGGER = LogManager.getLogger(ModEntities.class);
 
@@ -147,7 +148,7 @@ public class ModEntities {
         VampireMinionEntity.init();
         HunterMinionEntity.init();
         registry.register(prepareEntityType("hunter_minion", EntityType.Builder.create(HunterMinionEntity::new, EntityClassification.CREATURE).size(0.6f, 1.95f), false));
-
+        registry.register(prepareEntityType("task_master", EntityType.Builder.create(TaskMasterEntity::new, EntityClassification.CREATURE).size(0.6f, 1.95f), true));//TODO adjust
 
         //add to biomes
         for (Biome e : getZombieBiomes()) {
