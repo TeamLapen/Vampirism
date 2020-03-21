@@ -20,11 +20,12 @@ import javax.annotation.Nonnull;
 public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
 
     private static final Logger LOGGER = LogManager.getLogger(VampirismPlayer.class);
-    private final TaskManager taskManager = new TaskManager(this.getFaction());
+    private final TaskManager taskManager;
     protected final PlayerEntity player;
 
     public VampirismPlayer(PlayerEntity player) {
         this.player = player;
+        this.taskManager = new TaskManager(player, this.getFaction());
     }
 
 
