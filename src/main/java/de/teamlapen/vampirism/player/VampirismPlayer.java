@@ -11,13 +11,16 @@ import net.minecraft.nbt.CompoundNBT;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
+
 /**
  * Basic class for all of Vampirism's players.
  * Implements basic methods for level or minion handling
  */
 public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
 
-    private final static Logger LOGGER = LogManager.getLogger(VampirismPlayer.class);
+    private static final Logger LOGGER = LogManager.getLogger(VampirismPlayer.class);
+    private final TaskManager taskManager = new TaskManager(this.getFaction());
     protected final PlayerEntity player;
 
     public VampirismPlayer(PlayerEntity player) {
@@ -30,12 +33,15 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
         return VampirismAPI.getFactionPlayerHandler(player).map(handler -> handler.getCurrentLevel(getFaction())).orElse(0);
     }
 
+    @Nonnull
+    @Override
+    public TaskManager getTaskManager() {
+        return taskManager;
+    }
 
     /**
      * Only use this if you are dealing with minions.
      * Otherwise use {@link VampirismPlayer#getRepresentingPlayer()}
-     *
-     * @return
      */
     @Override
     public LivingEntity getRepresentingEntity() {
@@ -54,6 +60,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     }
 
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean isRemote() {
         if (player.getEntityWorld() == null) {
@@ -96,7 +103,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
      * @param old
      * @return
      */
-    protected abstract VampirismPlayer copyFromPlayer(PlayerEntity old);
+    protected abstract VampirismPlayer<T> copyFromPlayer(PlayerEntity old);
 
 
     /**
@@ -105,6 +112,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
      * @param nbt
      */
     protected void loadUpdate(CompoundNBT nbt) {
+        this.taskManager.readNBT(nbt);
     }
 
 
@@ -124,9 +132,18 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
      * @param nbt
      */
     protected void writeFullUpdate(CompoundNBT nbt) {
+        this.taskManager.writeNBT(nbt);
     }
 
     private void copyFrom(PlayerEntity old) {
-        VampirismPlayer p = copyFromPlayer(old);
+        VampirismPlayer<T> p = copyFromPlayer(old);
+    }
+
+    public void loadData(CompoundNBT nbt) {
+        this.taskManager.readNBT(nbt);
+    }
+
+    public void saveData(CompoundNBT nbt) {
+        this.taskManager.writeNBT(nbt);
     }
 }
