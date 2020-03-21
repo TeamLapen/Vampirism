@@ -508,6 +508,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void loadData(CompoundNBT nbt) {
+        super.loadData(nbt);
         bloodStats.readNBT(nbt);
         eyeType = nbt.getInt(KEY_EYE);
         fangType = nbt.getInt(KEY_FANGS);
@@ -801,6 +802,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void saveData(CompoundNBT nbt) {
+        super.saveData(nbt);
         bloodStats.writeNBT(nbt);
         nbt.putInt(KEY_EYE, eyeType);
         nbt.putInt(KEY_FANGS, fangType);

@@ -4,11 +4,13 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 /**
@@ -85,5 +87,11 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
 
+    }
+
+    @Nonnull
+    @Override
+    public ITaskManager getTaskManager() {
+        return null;
     }
 }

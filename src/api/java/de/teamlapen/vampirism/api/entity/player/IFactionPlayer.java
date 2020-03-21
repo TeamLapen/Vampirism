@@ -5,10 +5,12 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
@@ -37,6 +39,9 @@ public interface IFactionPlayer<T extends IFactionPlayer<?>> extends IFactionEnt
      */
     @Nullable
     IFaction getDisguisedAs();
+
+    @Nonnull
+    ITaskManager getTaskManager();
 
     /**
      * @return the faction this faction player belongs to
