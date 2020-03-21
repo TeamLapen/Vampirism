@@ -95,7 +95,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
      * @param level
      * @return If successful
      */
-    boolean setFactionAndLevel(IPlayableFaction<? extends IFactionPlayer<?>> faction, int level);
+    boolean setFactionAndLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level);
 
     /**
      * Set the players lord level.

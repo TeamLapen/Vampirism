@@ -499,6 +499,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void loadData(CompoundNBT nbt) {
+        super.loadData(nbt);
         bloodStats.readNBT(nbt);
         eyeType = nbt.getInt(KEY_EYE);
         fangType = nbt.getInt(KEY_FANGS);
@@ -792,6 +793,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void saveData(CompoundNBT nbt) {
+        super.saveData(nbt);
         bloodStats.writeNBT(nbt);
         nbt.putInt(KEY_EYE, eyeType);
         nbt.putInt(KEY_FANGS, fangType);
@@ -898,6 +900,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     protected void loadUpdate(CompoundNBT nbt) {
+        super.loadUpdate(nbt);
         if (nbt.contains(KEY_EYE)) {
             setEyeType(nbt.getInt(KEY_EYE));
         }
@@ -935,6 +938,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     protected void writeFullUpdate(CompoundNBT nbt) {
+        super.writeFullUpdate(nbt);
         nbt.putInt(KEY_EYE, getEyeType());
         nbt.putInt(KEY_FANGS, getFangType());
         nbt.putBoolean(KEY_GLOWING_EYES, getGlowingEyes());

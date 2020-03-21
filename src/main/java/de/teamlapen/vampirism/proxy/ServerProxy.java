@@ -32,4 +32,5 @@ public class ServerProxy extends CommonProxy {
     public void handleSleepClient(PlayerEntity player) {
 
     }
+
 }

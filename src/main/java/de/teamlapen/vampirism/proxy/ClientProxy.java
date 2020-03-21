@@ -10,6 +10,8 @@ import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.client.render.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
@@ -27,6 +29,7 @@ import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -248,4 +251,14 @@ public class ClientProxy extends CommonProxy {
     public void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, ITextComponent>> minions) {
         Minecraft.getInstance().displayGuiScreen(new SelectMinionScreen(action, minions));
     }
+
+    @Override
+    public void handleTaskStatusPacket(TaskStatusPacket msg) {
+        Container container = Minecraft.getInstance().player.openContainer;
+        if (msg.containerId == container.windowId && container instanceof TaskMasterContainer) {
+            ((TaskMasterContainer) container).setPossibleTasks(msg.possibleTasks);
+        }
+        FactionPlayerHandler.getOpt(Minecraft.getInstance().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().setCompletedTasks(msg.completedTasks)));
+    }
+
 }

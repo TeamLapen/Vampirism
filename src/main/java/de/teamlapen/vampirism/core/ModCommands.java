@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.command.*;
 import de.teamlapen.vampirism.command.arguments.ActionArgument;
 import de.teamlapen.vampirism.command.arguments.FactionArgument;
 import de.teamlapen.vampirism.command.arguments.SkillArgument;
+import de.teamlapen.vampirism.command.arguments.TaskArgument;
 import de.teamlapen.vampirism.command.test.*;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.arguments.ArgumentSerializer;
@@ -67,6 +68,7 @@ public class ModCommands {
                             .then(HealCommand.register())
                             .then(CaptureVillageCommand.register())
                             .then(MinionCommand.register())
+                            .then(TaskCommand.register())
             );
         }
     }
@@ -75,5 +77,6 @@ public class ModCommands {
         ArgumentTypes.register("vampirism_faction", FactionArgument.class, new ArgumentSerializer<>(FactionArgument::new));
         ArgumentTypes.register("vampirism_skill", SkillArgument.class, new ArgumentSerializer<>(SkillArgument::new));
         ArgumentTypes.register("vampirism_action", ActionArgument.class, new ArgumentSerializer<>(ActionArgument::new));
+        ArgumentTypes.register("vampirism_task", TaskArgument.class, new ArgumentSerializer<>(TaskArgument::new));
     }
 }
