@@ -26,9 +26,9 @@ public class TaskManager implements ITaskManager {
 
     private final @Nonnull PlayerEntity player;
     private final @Nonnull IPlayableFaction<? extends IFactionPlayer> faction;
-    private final Set<Task> completedTasks = Sets.newHashSet();
-    private final Set<Task> availableTasks = Sets.newHashSet();
-    private final Map<Task, Map<EntityType<?>, Integer>> killStats = Maps.newHashMap();
+    private final @Nonnull Set<Task> completedTasks = Sets.newHashSet();
+    private final @Nonnull Set<Task> availableTasks = Sets.newHashSet();
+    private final @Nonnull Map<Task, Map<EntityType<?>, Integer>> killStats = Maps.newHashMap();
 
     public TaskManager(@Nonnull PlayerEntity player, @Nonnull IPlayableFaction<? extends IFactionPlayer> faction) {
         this.faction = faction;
