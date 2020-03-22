@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -90,13 +91,14 @@ public class TaskManager implements ITaskManager {
     @Override
     public void reset() {
         this.completedTasks.clear();
+        //this.availableTasks.addAll(ModRegistries.TASKS.getValues());
         this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task -> faction.equals(task.getFaction()) || task.getFaction() == null).collect(Collectors.toList()));
         this.killStats.clear();
         this.updateKillStats();
     }
 
     private void updateKillStats() {
-        if (!player.getEntityWorld().isRemote()) return;
+        if (player.getEntityWorld().isRemote()) return;
         for (Task task : this.availableTasks) {
             if (this.killStats.containsKey(task)) continue;
             Map<EntityType<?>, Integer> stats = null;
@@ -106,7 +108,8 @@ public class TaskManager implements ITaskManager {
                 if (stats == null) {
                     stats = Maps.newHashMap();
                 }
-                stats.put(entityType, ((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED.get(entityType)));
+                Stat<EntityType<?>> stat = Stats.ENTITY_KILLED.get(entityType);
+                stats.put(entityType, stat == null ? 0 : ((ServerPlayerEntity) this.player).getStats().getValue(stat));
             }
             if (stats != null) {
                 this.killStats.put(task, stats);
