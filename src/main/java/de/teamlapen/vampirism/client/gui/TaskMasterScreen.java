@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
-import org.apache.logging.log4j.LogManager;
 
 public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     public TaskMasterScreen(TaskMasterContainer container, PlayerInventory playerInventory, ITextComponent containerName) {
@@ -17,7 +16,6 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
     @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-        LogManager.getLogger().info("{}, {}", this.container.size(), this.container.getAvailableTasks().size());
         return super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);
     }
 }

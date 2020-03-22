@@ -16,6 +16,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,27 +32,27 @@ public class TaskManager implements ITaskManager {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private final @Nonnull PlayerEntity player;
-    private final @Nonnull IPlayableFaction<? extends IFactionPlayer> faction;
+    private final @Nonnull IPlayableFaction<?> faction;
     private final @Nonnull Set<Task> completedTasks = Sets.newHashSet();
     private final @Nonnull Set<Task> availableTasks = Sets.newHashSet();
     private final @Nonnull Map<Task, Map<EntityType<?>, Integer>> killStats = Maps.newHashMap();
+    private boolean update = true;
 
-    public TaskManager(@Nonnull PlayerEntity player, @Nonnull IPlayableFaction<? extends IFactionPlayer> faction) {
+    public TaskManager(@Nonnull PlayerEntity player, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
         this.player = player;
-        this.reset();
     }
 
     @Nonnull
     public static List<ResourceLocation> getTaskForPlayer(PlayerEntity player) {
-        return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(ITaskManager::getCompletedTasks).map(tasks -> tasks.stream().map(ForgeRegistryEntry::getRegistryName).collect(Collectors.toList())).orElse(ImmutableList.of());
+        return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(ITaskManager::getCompletableTasks).map(tasks -> tasks.stream().map(ForgeRegistryEntry::getRegistryName).collect(Collectors.toList())).orElse(ImmutableList.of());
     }
 
     @Override
     public void completeTask(@Nonnull Task task) {
         if (!(this.faction.equals(task.getFaction()) || task.getFaction() == null)) return;
         this.completedTasks.add(task);
-        this.availableTasks.remove(task);
+        this.getAvailableTasks().remove(task);
     }
 
     @Nonnull
@@ -63,15 +64,20 @@ public class TaskManager implements ITaskManager {
     @Nonnull
     @Override
     public Set<Task> getAvailableTasks() {
+        if (this.update) {
+            this.reset();
+            this.update = false;
+        }
         return this.availableTasks;
     }
 
+    @Nonnull
     public Set<Task> getCompletableTasks() {
-        return this.availableTasks.stream().filter(this::canCompleteTask).collect(Collectors.toSet());
+        return this.getAvailableTasks().stream().filter(this::canCompleteTask).collect(Collectors.toSet());
     }
 
     public boolean canCompleteTask(Task task) {
-        if (!this.player.getEntityWorld().isRemote()) return false;
+        if (this.player.getEntityWorld().isRemote()) return false;
         for (TaskRequirement requirement : task.getRequirements()) {
             if (requirement.getType().equals(TaskRequirement.Type.KILLS)) {
                 EntityType<?> entityType = ((KillRequirement) requirement).getEntityType();
@@ -91,7 +97,6 @@ public class TaskManager implements ITaskManager {
     @Override
     public void reset() {
         this.completedTasks.clear();
-        //this.availableTasks.addAll(ModRegistries.TASKS.getValues());
         this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task -> faction.equals(task.getFaction()) || task.getFaction() == null).collect(Collectors.toList()));
         this.killStats.clear();
         this.updateKillStats();
@@ -109,7 +114,7 @@ public class TaskManager implements ITaskManager {
                     stats = Maps.newHashMap();
                 }
                 Stat<EntityType<?>> stat = Stats.ENTITY_KILLED.get(entityType);
-                stats.put(entityType, stat == null ? 0 : ((ServerPlayerEntity) this.player).getStats().getValue(stat));
+                stats.put(entityType, ((ServerPlayerEntity) this.player).getStats().getValue(stat));
             }
             if (stats != null) {
                 this.killStats.put(task, stats);
@@ -121,16 +126,41 @@ public class TaskManager implements ITaskManager {
         if (this.completedTasks.isEmpty()) return;
         CompoundNBT tasks = new CompoundNBT();
         this.completedTasks.forEach(task -> tasks.putBoolean(task.getRegistryName().toString(), true));
+        CompoundNBT stats = new CompoundNBT();
+        this.killStats.forEach((key, value) -> {
+            CompoundNBT statNBT = new CompoundNBT();
+            value.forEach((key1, value1) -> statNBT.putInt(key1.getRegistryName().toString(), value1));
+            stats.put(key.getRegistryName().toString(), statNBT);
+        });
+        compoundNBT.put("stats", stats);
         compoundNBT.put("tasks", tasks);
     }
 
     public void readNBT(CompoundNBT compoundNBT) {
-        if (!compoundNBT.contains("tasks")) return;
-        compoundNBT.getCompound("tasks").keySet().forEach(taskId -> {
-            Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
-            if (task != null) {
-                this.completeTask(task);
-            }
-        });
+        if (compoundNBT.contains("tasks")) {
+            compoundNBT.getCompound("tasks").keySet().forEach(taskId -> {
+                Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
+                if (task != null) {
+                    this.completeTask(task);
+                }
+            });
+        }
+        if (compoundNBT.contains("stats")) {
+            CompoundNBT stats = compoundNBT.getCompound("stats");
+            stats.keySet().forEach(taskId -> {
+                Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
+                if (task != null) {
+                    this.killStats.put(task, Maps.newHashMap());
+                    CompoundNBT stat = stats.getCompound(taskId);
+                    stat.keySet().forEach(entityTypeId -> {
+                        EntityType<?> entityType = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityTypeId));
+                        if (entityType != null) {
+                            this.killStats.get(task).put(entityType, stat.getInt(entityTypeId));
+                        }
+                    });
+                }
+            });
+        }
     }
+
 }
