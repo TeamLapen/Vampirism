@@ -21,9 +21,9 @@ public @interface DefaultDouble {
      */
     boolean hasAlternate() default false;
 
-    double maxValue() default Double.MAX_VALUE;
+    double maxValue() default Double.POSITIVE_INFINITY;
 
-    double minValue() default Double.MIN_VALUE;
+    double minValue() default Double.NEGATIVE_INFINITY;
 
     String name() default "";
 
