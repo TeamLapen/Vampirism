@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -9,7 +10,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class TaskStatusPacket {
+public class TaskStatusPacket implements IMessage {
 
     public final List<ResourceLocation> possibleTasks;
     public final int containerId;

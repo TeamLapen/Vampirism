@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.player;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.*;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -13,11 +15,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,6 +41,11 @@ public class TaskManager implements ITaskManager {
         this.reset();
     }
 
+    @Nonnull
+    public static List<ResourceLocation> getTaskForPlayer(PlayerEntity player) {
+        return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(ITaskManager::getCompletedTasks).map(tasks -> tasks.stream().map(ForgeRegistryEntry::getRegistryName).collect(Collectors.toList())).orElse(ImmutableList.of());
+    }
+
     @Override
     public void completeTask(@Nonnull Task task) {
         if (!(this.faction.equals(task.getFaction()) || task.getFaction() == null)) return;
@@ -43,12 +53,20 @@ public class TaskManager implements ITaskManager {
         this.availableTasks.remove(task);
     }
 
+    @Nonnull
+    @Override
     public Set<Task> getCompletedTasks() {
         return completedTasks;
     }
 
+    @Nonnull
+    @Override
     public Set<Task> getAvailableTasks() {
-        return availableTasks;
+        return this.availableTasks;
+    }
+
+    public Set<Task> getCompletableTasks() {
+        return this.availableTasks.stream().filter(this::canCompleteTask).collect(Collectors.toSet());
     }
 
     public boolean canCompleteTask(Task task) {

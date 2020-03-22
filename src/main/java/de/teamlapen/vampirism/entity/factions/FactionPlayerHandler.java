@@ -146,6 +146,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return REFERENCE.FACTION_PLAYER_HANDLER_KEY;
     }
 
+    @Nullable
     @Override
     public IPlayableFaction<? extends IFactionPlayer<?>> getCurrentFaction() {
         return currentFaction;
