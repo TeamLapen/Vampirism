@@ -21,15 +21,16 @@ public class TaskStatusPacket implements IMessage {
     }
 
     static void encode(TaskStatusPacket msg, PacketBuffer buf) {
-        buf.writeInt(msg.containerId);
-        buf.writeInt(msg.possibleTasks.size());
+        buf.writeVarInt(msg.containerId);
+        buf.writeVarInt(msg.possibleTasks.size());
         msg.possibleTasks.forEach(res -> buf.writeString(res.toString()));
     }
 
     static TaskStatusPacket decode(PacketBuffer buf) {
-        int containerId = buf.readInt();
+        int containerId = buf.readVarInt();
+        int taskSize = buf.readVarInt();
         List<ResourceLocation> res = Lists.newArrayList();
-        for (int i = 0; i < buf.readInt(); i++) {
+        for (int i = 0; i < taskSize; i++) {
             res.add(new ResourceLocation(buf.readString()));
         }
         return new TaskStatusPacket(res, containerId);

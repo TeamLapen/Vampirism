@@ -13,5 +13,8 @@ public interface ITaskManager {
     @Nonnull
     Set<Task> getCompletedTasks();
 
+    @Nonnull
+    Set<Task> getCompletableTasks();
+
     void reset();
 }
