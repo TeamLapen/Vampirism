@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Set;
 
 
 public class TaskMasterContainer extends Container {
@@ -30,6 +31,10 @@ public class TaskMasterContainer extends Container {
 
     public boolean canCompleteTask(Task task) {
         return possibleTasks != null && possibleTasks.contains(task.getRegistryName());
+    }
+
+    public Set<Task> getAvailableTasks() {
+        return taskManager.getAvailableTasks();
     }
 
     public void setPossibleTasks(List<ResourceLocation> possibleTasks) {
