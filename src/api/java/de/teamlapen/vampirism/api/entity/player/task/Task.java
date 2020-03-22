@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
 import com.google.common.collect.ImmutableList;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -10,18 +9,18 @@ import javax.annotation.Nullable;
 
 public class Task extends ForgeRegistryEntry<Task> {
 
-    private final @Nullable IPlayableFaction<? extends IFaction<?>> faction;
+    private final @Nullable IPlayableFaction<?> faction;
     private final @Nullable Task parentTask;
     private final @Nonnull ImmutableList<TaskRequirement> requirements;
 
-    public Task(@Nullable IPlayableFaction<? extends IFaction<?>> faction, @Nonnull ImmutableList<TaskRequirement> requirements, @Nullable Task parentTask) {
+    public Task(@Nullable IPlayableFaction<?> faction, @Nonnull ImmutableList<TaskRequirement> requirements, @Nullable Task parentTask) {
         this.faction = faction;
         this.requirements = requirements;
         this.parentTask = parentTask;
     }
 
     @Nullable
-    public IPlayableFaction<? extends IFaction<?>> getFaction() {
+    public IPlayableFaction<?> getFaction() {
         return faction;
     }
 

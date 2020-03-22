@@ -24,7 +24,7 @@ public class TaskRequirement {
         KILLS, ITEMS
     }
 
-    private static class Builder {
+    public static class Builder {
 
         private final ImmutableList.Builder<TaskRequirement> requirements = ImmutableList.builder();
 

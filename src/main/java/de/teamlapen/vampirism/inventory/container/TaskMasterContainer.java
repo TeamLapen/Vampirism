@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.inventory.container;
 
+import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.core.ModContainer;
@@ -17,7 +18,7 @@ import java.util.Set;
 public class TaskMasterContainer extends Container {
 
     private final ITaskManager taskManager;
-    private List<ResourceLocation> possibleTasks;
+    private List<ResourceLocation> possibleTasks = ImmutableList.of();
 
     public TaskMasterContainer(int id, PlayerInventory playerInventory) {
         super(ModContainer.task_master, id);
@@ -31,6 +32,10 @@ public class TaskMasterContainer extends Container {
 
     public boolean canCompleteTask(Task task) {
         return possibleTasks != null && possibleTasks.contains(task.getRegistryName());
+    }
+
+    public int size() {
+        return possibleTasks.size();
     }
 
     public Set<Task> getAvailableTasks() {
