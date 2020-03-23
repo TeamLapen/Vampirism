@@ -68,6 +68,7 @@ public class ModCommands {
                             .then(HealCommand.register())
                             .then(CaptureVillageCommand.register())
                             .then(MinionCommand.register())
+                            .then(TaskCommand.register())
             );
         }
     }
