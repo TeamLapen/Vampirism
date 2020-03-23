@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
@@ -246,5 +247,12 @@ public class ClientProxy extends CommonProxy {
         if (msg.containerId == container.windowId && container instanceof TaskMasterContainer) {
             ((TaskMasterContainer) container).setPossibleTasks(msg.possibleTasks);
         }
+        LOGGER.info(msg.completedTasks.size());
+        FactionPlayerHandler.getOpt(Minecraft.getInstance().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().setCompletedTasks(msg.completedTasks)));
+    }
+
+    @Override
+    public void handleTaskFinishedPacket(TaskFinishedPacket msg, PlayerEntity playerEntity) {
+        FactionPlayerHandler.getOpt(Minecraft.getInstance().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(sd -> sd.getTaskManager().addCompletedTask(msg.task)));
     }
 }

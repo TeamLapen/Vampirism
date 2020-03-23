@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
 import de.teamlapen.vampirism.network.TaskStatusPacket;
@@ -27,7 +28,7 @@ public class TaskMasterEntity extends VampirismEntity {
         if (FactionPlayerHandler.getOpt(playerEntity).map(player -> player.getCurrentFaction() != null).orElse(false)) {
             OptionalInt containerIdOpt = playerEntity.openContainer(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskMasterContainer(containerId, playerInventory), new TranslationTextComponent("container.taskmaster")));
             if (containerIdOpt.isPresent()) {
-                VampirismMod.dispatcher.sendTo(new TaskStatusPacket(TaskManager.getTaskForPlayer(playerEntity), containerIdOpt.getAsInt()), (ServerPlayerEntity) playerEntity);
+                VampirismMod.dispatcher.sendTo(new TaskStatusPacket(TaskManager.getTasks(playerEntity, ITaskManager::getCompletableTasks), TaskManager.getTasks(playerEntity, ITaskManager::getCompletedTasks), containerIdOpt.getAsInt()), (ServerPlayerEntity) playerEntity);
             }
         }
         return true;
