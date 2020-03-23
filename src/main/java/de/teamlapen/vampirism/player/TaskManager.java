@@ -45,7 +45,7 @@ public class TaskManager implements ITaskManager {
     public TaskManager(@Nonnull PlayerEntity player, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
         this.player = player;
-        reset();
+        this.reset();
     }
 
     @Nonnull
@@ -53,6 +53,9 @@ public class TaskManager implements ITaskManager {
         return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(mapper).orElse(ImmutableSet.of());
     }
 
+    /**
+     * completes task and informs the other Dist about the completion
+     */
     @Override
     public void completeTask(@Nonnull Task task) {
         if (addCompletedTask(task)) {
@@ -64,6 +67,12 @@ public class TaskManager implements ITaskManager {
         }
     }
 
+    /**
+     * simply adds the given task to the completion list
+     * or not if the task is not applicant to the {@link TaskManager#player}
+     *
+     * @return if the task got added
+     */
     @Override
     public boolean addCompletedTask(@Nonnull Task task) {
         if (!(this.faction.equals(task.getFaction()) || task.getFaction() == null)) return false;
@@ -86,6 +95,9 @@ public class TaskManager implements ITaskManager {
         this.availableTasks.removeAll(tasks);
     }
 
+    /**
+     * returns {@link TaskManager#availableTasks} and initiate the Stats on first call
+     */
     @Nonnull
     @Override
     public Set<Task> getAvailableTasks() {
