@@ -18,6 +18,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.NonNullFunction;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
@@ -43,6 +45,7 @@ public class TaskManager implements ITaskManager {
     public TaskManager(@Nonnull PlayerEntity player, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
         this.player = player;
+        reset();
     }
 
     @Nonnull
@@ -75,12 +78,12 @@ public class TaskManager implements ITaskManager {
         return completedTasks;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void setCompletedTasks(@Nonnull Collection<Task> tasks) {
         this.completedTasks.clear();
         this.completedTasks.addAll(tasks);
-        this.availableTasks.clear();
-        this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task -> faction.equals(task.getFaction()) || task.getFaction() == null).collect(Collectors.toList()));
+        this.availableTasks.removeAll(tasks);
     }
 
     @Nonnull
@@ -88,7 +91,6 @@ public class TaskManager implements ITaskManager {
     public Set<Task> getAvailableTasks() {
         if (this.init) {
             this.init = false;
-            this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task -> faction.equals(task.getFaction()) || task.getFaction() == null).collect(Collectors.toList()));
             this.updateKillStats();
         }
         return this.availableTasks;
@@ -120,8 +122,8 @@ public class TaskManager implements ITaskManager {
     @Override
     public void reset() {
         this.completedTasks.clear();
-        this.availableTasks.clear();
-        this.init = true;
+        this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task -> faction.equals(task.getFaction()) || task.getFaction() == null).collect(Collectors.toList()));
+        this.killStats.clear();
     }
 
     /**
@@ -129,7 +131,6 @@ public class TaskManager implements ITaskManager {
      */
     private void updateKillStats() {
         if (player.getEntityWorld().isRemote()) return;
-        this.killStats.clear();
         for (Task task : this.availableTasks) {
             if (this.killStats.containsKey(task)) continue;
             Map<EntityType<?>, Integer> stats = null;
