@@ -247,7 +247,6 @@ public class ClientProxy extends CommonProxy {
         if (msg.containerId == container.windowId && container instanceof TaskMasterContainer) {
             ((TaskMasterContainer) container).setPossibleTasks(msg.possibleTasks);
         }
-        LOGGER.info(msg.completedTasks.size());
         FactionPlayerHandler.getOpt(Minecraft.getInstance().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().setCompletedTasks(msg.completedTasks)));
     }
 
