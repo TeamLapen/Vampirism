@@ -3,9 +3,8 @@ package de.teamlapen.vampirism.world;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import mcp.MethodsReturnNonnullByDefault;
-
 import de.teamlapen.vampirism.api.world.IWorldGenManager;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
@@ -20,13 +19,11 @@ public class WorldGenManager implements IWorldGenManager {
     /**
      * stores structures {@link ResourceLocation} -> set of {@link Biome}s in which the structure shouldn't be generated
      */
-    private @Nonnull
-    final Map<ResourceLocation, Set<Biome>> ignoreStructureBiome = Maps.newHashMap();
+    private @Nonnull final Map<ResourceLocation, Set<Biome>> ignoreStructureBiome = Maps.newHashMap();
     /**
      * stores structures {@link ResourceLocation} -> set of {@link Biome.Category}s in which the structure shouldn't be generated
      */
-    private @Nonnull
-    final Map<ResourceLocation, Set<BiomeDictionary.Type>> ignoreStructureBiomeCategory = Maps.newHashMap();
+    private @Nonnull final Map<ResourceLocation, Set<BiomeDictionary.Type>> ignoreStructureBiomeCategory = Maps.newHashMap();
 
     @Override
     public void removeStructureFromBiomes(ResourceLocation structure, List<Biome> biomes) {
@@ -56,7 +53,10 @@ public class WorldGenManager implements IWorldGenManager {
             if (ignoreStructureBiome.get(structure).contains(biome)) return false;
         }
         if (ignoreStructureBiomeCategory.containsKey(structure)) {
-            if (ignoreStructureBiomeCategory.get(structure).containsAll(BiomeDictionary.getTypes(biome))) return false;
+            Set<BiomeDictionary.Type> categories = ignoreStructureBiomeCategory.get(structure);
+            for (BiomeDictionary.Type type : BiomeDictionary.getTypes(biome)) {
+                if (categories.contains(type)) return false;
+            }
         }
         return true;
     }
