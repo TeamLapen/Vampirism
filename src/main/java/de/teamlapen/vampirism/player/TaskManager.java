@@ -1,13 +1,15 @@
 package de.teamlapen.vampirism.player;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.*;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.network.TaskFinishedPacket;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -16,13 +18,13 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.NonNullFunction;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -36,7 +38,7 @@ public class TaskManager implements ITaskManager {
     private final @Nonnull Set<Task> completedTasks = Sets.newHashSet();
     private final @Nonnull Set<Task> availableTasks = Sets.newHashSet();
     private final @Nonnull Map<Task, Map<EntityType<?>, Integer>> killStats = Maps.newHashMap();
-    private boolean update = true;
+    private boolean init = true;
 
     public TaskManager(@Nonnull PlayerEntity player, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
@@ -44,15 +46,27 @@ public class TaskManager implements ITaskManager {
     }
 
     @Nonnull
-    public static List<ResourceLocation> getTaskForPlayer(PlayerEntity player) {
-        return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(ITaskManager::getCompletableTasks).map(tasks -> tasks.stream().map(ForgeRegistryEntry::getRegistryName).collect(Collectors.toList())).orElse(ImmutableList.of());
+    public static Set<Task> getTasks(PlayerEntity player, NonNullFunction<? super ITaskManager, Set<Task>> mapper) {
+        return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(mapper).orElse(ImmutableSet.of());
     }
 
     @Override
     public void completeTask(@Nonnull Task task) {
-        if (!(this.faction.equals(task.getFaction()) || task.getFaction() == null)) return;
+        if (addCompletedTask(task)) {
+            if (player.world.isRemote()) {
+                VampirismMod.dispatcher.sendToServer(new TaskFinishedPacket(task));
+            } else {
+                VampirismMod.dispatcher.sendTo(new TaskFinishedPacket(task), (ServerPlayerEntity) player);
+            }
+        }
+    }
+
+    @Override
+    public boolean addCompletedTask(@Nonnull Task task) {
+        if (!(this.faction.equals(task.getFaction()) || task.getFaction() == null)) return false;
         this.completedTasks.add(task);
         this.getAvailableTasks().remove(task);
+        return true;
     }
 
     @Nonnull
@@ -61,12 +75,21 @@ public class TaskManager implements ITaskManager {
         return completedTasks;
     }
 
+    @Override
+    public void setCompletedTasks(@Nonnull Collection<Task> tasks) {
+        this.completedTasks.clear();
+        this.completedTasks.addAll(tasks);
+        this.availableTasks.clear();
+        this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task -> faction.equals(task.getFaction()) || task.getFaction() == null).collect(Collectors.toList()));
+    }
+
     @Nonnull
     @Override
     public Set<Task> getAvailableTasks() {
-        if (this.update) {
-            this.reset();
-            this.update = false;
+        if (this.init) {
+            this.init = false;
+            this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task -> faction.equals(task.getFaction()) || task.getFaction() == null).collect(Collectors.toList()));
+            this.updateKillStats();
         }
         return this.availableTasks;
     }
@@ -97,13 +120,16 @@ public class TaskManager implements ITaskManager {
     @Override
     public void reset() {
         this.completedTasks.clear();
-        this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task -> faction.equals(task.getFaction()) || task.getFaction() == null).collect(Collectors.toList()));
-        this.killStats.clear();
-        this.updateKillStats();
+        this.availableTasks.clear();
+        this.init = true;
     }
 
+    /**
+     * cannot be called in constructor, because player is not constructed jet
+     */
     private void updateKillStats() {
         if (player.getEntityWorld().isRemote()) return;
+        this.killStats.clear();
         for (Task task : this.availableTasks) {
             if (this.killStats.containsKey(task)) continue;
             Map<EntityType<?>, Integer> stats = null;
@@ -141,7 +167,7 @@ public class TaskManager implements ITaskManager {
             compoundNBT.getCompound("tasks").keySet().forEach(taskId -> {
                 Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
                 if (task != null) {
-                    this.completeTask(task);
+                    this.addCompletedTask(task);
                 }
             });
         }
