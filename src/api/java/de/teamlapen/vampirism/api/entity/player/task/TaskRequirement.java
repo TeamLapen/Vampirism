@@ -13,7 +13,7 @@ public class TaskRequirement {
     }
 
     public enum Type {
-        KILLS, ITEMS
+        STATS, ITEMS
     }
 
 }

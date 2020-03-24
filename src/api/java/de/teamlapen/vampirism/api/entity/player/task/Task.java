@@ -4,8 +4,11 @@ import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatType;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.Util;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,7 +72,11 @@ public class Task extends ForgeRegistryEntry<Task> {
         }
 
         public Builder addEntityRequirement(EntityType<?> entityType, int amount) {
-            this.requirements.add(new KillRequirement(entityType, amount));
+            return this.addStatRequirement(Stats.ENTITY_KILLED, entityType, amount);
+        }
+
+        public <T extends IForgeRegistryEntry<?>> Builder addStatRequirement(StatType<T> statType, T stat, int amount) {
+            this.requirements.add(new StatRequirement<>(statType, stat, amount));
             return this;
         }
 
