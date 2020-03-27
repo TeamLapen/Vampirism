@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.inventory.container;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.core.ModContainer;
@@ -9,16 +9,17 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
-import java.util.Set;
+import java.util.List;
 
 
 public class TaskMasterContainer extends Container {
 
     private final ITaskManager taskManager;
-    private Set<Task> possibleTasks = ImmutableSet.of();
-    private Set<Task> completed = Sets.newHashSet();
+    private List<Task> possibleTasks = ImmutableList.of();
+    private List<Task> completed = Lists.newArrayList();
 
     public TaskMasterContainer(int id, PlayerInventory playerInventory) {
         super(ModContainer.task_master, id);
@@ -35,6 +36,7 @@ public class TaskMasterContainer extends Container {
     }
 
     public void completeTask(Task task) {
+        this.taskManager.completeTask(task);
         this.completed.add(task);
     }
 
@@ -46,11 +48,15 @@ public class TaskMasterContainer extends Container {
         return this.possibleTasks.size();
     }
 
-    public Set<Task> getAvailableTasks() {
+    public List<Task> getAvailableTasks() {
         return this.taskManager.getAvailableTasks();
     }
 
-    public void setPossibleTasks(Set<Task> possibleTasks) {
+    public void setPossibleTasks(List<Task> possibleTasks) {
         this.possibleTasks = possibleTasks;
+    }
+
+    public TextFormatting getFactionColor() {
+        return this.taskManager.getFaction().getChatColor();
     }
 }

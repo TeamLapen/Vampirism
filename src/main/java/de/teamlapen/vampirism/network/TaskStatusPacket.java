@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.network;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
@@ -9,16 +9,16 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import java.util.Set;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class TaskStatusPacket implements IMessage {
 
-    public final Set<Task> possibleTasks;
-    public final Set<Task> completedTasks;
+    public final List<Task> possibleTasks;
+    public final List<Task> completedTasks;
     public final int containerId;
 
-    public TaskStatusPacket(Set<Task> possibleTasks, Set<Task> completedTasks, int containerId) {
+    public TaskStatusPacket(List<Task> possibleTasks, List<Task> completedTasks, int containerId) {
         this.possibleTasks = possibleTasks;
         this.completedTasks = completedTasks;
         this.containerId = containerId;
@@ -36,11 +36,11 @@ public class TaskStatusPacket implements IMessage {
         int containerId = buf.readVarInt();
         int taskSize = buf.readVarInt();
         int completeSize = buf.readVarInt();
-        Set<Task> res = Sets.newHashSet();
+        List<Task> res = Lists.newArrayList();
         for (int i = 0; i < taskSize; i++) {
             res.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
         }
-        Set<Task> res2 = Sets.newHashSet();
+        List<Task> res2 = Lists.newArrayList();
         for (int i = 0; i < completeSize; i++) {
             res2.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
         }

@@ -23,7 +23,7 @@ public class TaskFinishedPacket implements IMessage {
     }
 
     static TaskFinishedPacket decode(PacketBuffer buf) {
-        return new TaskFinishedPacket(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
+        return new TaskFinishedPacket(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString(32767))));
     }
 
     public static void handle(final TaskFinishedPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {

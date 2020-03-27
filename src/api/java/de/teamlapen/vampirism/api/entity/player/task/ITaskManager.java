@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 public interface ITaskManager {
 
@@ -11,13 +13,15 @@ public interface ITaskManager {
     boolean addCompletedTask(@Nonnull Task task);
 
     @Nonnull
-    Set<Task> getAvailableTasks();
+    List<Task> getAvailableTasks();
 
     @Nonnull
-    Set<Task> getCompletedTasks();
+    List<Task> getCompletedTasks();
 
     @Nonnull
-    Set<Task> getCompletableTasks();
+    List<Task> getCompletableTasks();
+
+    IPlayableFaction<?> getFaction();
 
     void setCompletedTasks(@Nonnull Collection<Task> tasks);
 

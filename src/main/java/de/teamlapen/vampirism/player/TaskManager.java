@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.player;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -26,9 +26,9 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TaskManager implements ITaskManager {
@@ -36,8 +36,8 @@ public class TaskManager implements ITaskManager {
 
     private final @Nonnull PlayerEntity player;
     private final @Nonnull IPlayableFaction<?> faction;
-    private final @Nonnull Set<Task> completedTasks = Sets.newHashSet();
-    private final @Nonnull Set<Task> availableTasks = Sets.newHashSet();
+    private final @Nonnull List<Task> completedTasks = Lists.newArrayList();
+    private final @Nonnull List<Task> availableTasks = Lists.newArrayList();
     private final @Nonnull Map<Task, Map<Stat<?>, Integer>> stats = Maps.newHashMap();
     private boolean init = true;
 
@@ -48,8 +48,8 @@ public class TaskManager implements ITaskManager {
     }
 
     @Nonnull
-    public static Set<Task> getTasks(PlayerEntity player, NonNullFunction<? super ITaskManager, Set<Task>> mapper) {
-        return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(mapper).orElse(ImmutableSet.of());
+    public static List<Task> getTasks(PlayerEntity player, NonNullFunction<? super ITaskManager, List<Task>> mapper) {
+        return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(mapper).orElse(ImmutableList.of());
     }
 
     /**
@@ -82,7 +82,7 @@ public class TaskManager implements ITaskManager {
 
     @Nonnull
     @Override
-    public Set<Task> getCompletedTasks() {
+    public List<Task> getCompletedTasks() {
         return completedTasks;
     }
 
@@ -99,7 +99,7 @@ public class TaskManager implements ITaskManager {
      */
     @Nonnull
     @Override
-    public Set<Task> getAvailableTasks() {
+    public List<Task> getAvailableTasks() {
         if (this.init) {
             this.init = false;
             this.updateKillStats();
@@ -108,16 +108,22 @@ public class TaskManager implements ITaskManager {
     }
 
     @Nonnull
-    public Set<Task> getCompletableTasks() {
-        return this.getAvailableTasks().stream().filter(this::canCompleteTask).collect(Collectors.toSet());
+    public List<Task> getCompletableTasks() {
+        return this.getAvailableTasks().stream().filter(this::canCompleteTask).collect(Collectors.toList());
+    }
+
+    @Override
+    @Nonnull
+    public IPlayableFaction<?> getFaction() {
+        return faction;
     }
 
     public boolean canCompleteTask(Task task) {
         if (this.player.getEntityWorld().isRemote()) return false;
         for (TaskRequirement requirement : task.getRequirements()) {
             if (requirement.getType().equals(TaskRequirement.Type.STATS)) {
-                int amount = ((StatRequirement) requirement).getAmount();
-                if (((ServerPlayerEntity) this.player).getStats().getValue(((StatRequirement) requirement).getStat()) < stats.get(task).get(((StatRequirement) requirement).getStat()) + amount)
+                int amount = ((StatRequirement<?>) requirement).getAmount();
+                if (((ServerPlayerEntity) this.player).getStats().getValue(((StatRequirement<?>) requirement).getStat()) < stats.get(task).get(((StatRequirement<?>) requirement).getStat()) + amount)
                     return false;
             } else if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
                 ItemStack stack = ((ItemRequirement) requirement).getItemRequirement();
@@ -194,7 +200,7 @@ public class TaskManager implements ITaskManager {
                 }
             });
         }
-
+        //stats
         if (compoundNBT.contains("stats")) {
             CompoundNBT tasks = compoundNBT.getCompound("stats");
             tasks.keySet().forEach(taskId -> {

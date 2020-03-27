@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatType;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Util;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -20,11 +22,17 @@ public class Task extends ForgeRegistryEntry<Task> {
     private final @Nonnull ImmutableList<TaskRequirement> requirements;
     private @Nullable String translationKey;
     private @Nullable String descKey;
+    private @Nullable ITextComponent translation;
+    private @Nullable ITextComponent desc;
 
     public Task(@Nullable IPlayableFaction<?> faction, @Nonnull ImmutableList<TaskRequirement> requirements, @Nullable Task parentTask) {
         this.faction = faction;
         this.requirements = requirements;
         this.parentTask = parentTask;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     @Nullable
@@ -44,21 +52,27 @@ public class Task extends ForgeRegistryEntry<Task> {
 
     @Nonnull
     public String getTranslationKey() {
-        return translationKey != null ? translationKey : (this.translationKey = Util.makeTranslationKey("task", this.getRegistryName()));
+        return this.translationKey != null ? this.translationKey : (this.translationKey = Util.makeTranslationKey("task", this.getRegistryName()));
     }
 
     @Nonnull
     public String getDescriptionKey() {
-        return descKey != null ? descKey : (descKey = (translationKey != null ? translationKey : getTranslationKey()) + ".desc");
+        return this.descKey != null ? this.descKey : (this.descKey = (this.translationKey != null ? this.translationKey : getTranslationKey()) + ".desc");
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Nonnull
+    public ITextComponent getTranslation() {
+        return (this.translation != null ? this.translation : (this.translation = new TranslationTextComponent(this.getTranslationKey()))).shallowCopy();
+    }
+
+    @Nonnull
+    public ITextComponent getDescription() {
+        return (this.desc != null ? this.desc : (this.desc = new TranslationTextComponent(this.getDescriptionKey()))).shallowCopy();
     }
 
     public static class Builder {
-        private @Nullable IPlayableFaction<?> faction;
         private final ImmutableList.Builder<TaskRequirement> requirements = ImmutableList.builder();
+        private @Nullable IPlayableFaction<?> faction;
         private @Nullable Task parentTask;
 
         public Builder withFaction(@Nullable IPlayableFaction<?> faction) {
