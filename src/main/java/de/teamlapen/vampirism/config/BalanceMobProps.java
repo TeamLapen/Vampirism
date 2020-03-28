@@ -76,7 +76,7 @@ public class BalanceMobProps {
     //    @DefaultInt(value = 5, minValue = 0, maxValue = 100, comment = "Maximum number of vampires that will follow a advanced vampire")
     public final int ADVANCED_VAMPIRE_MAX_FOLLOWER = 5;
     //    @DefaultInt(value = 7, minValue = 0, maxValue = 1000000, name = "advanced_vampire_spawn_probe", comment = "e.g. Zombie spawn probe: 100")
-    public final int ADVANCED_VAMPIRE_SPAWN_PROBE = 7;
+    public final int ADVANCED_VAMPIRE_SPAWN_PROBE = 19;
     //    @DefaultDouble(value = 3, minValue = 0, comment = "Any fire damage that is received by a advanced vampire is multiplied by this")
     public final double ADVANCED_VAMPIRE_FIRE_VULNERABILITY = 3;
 
