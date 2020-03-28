@@ -529,8 +529,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             //normal village life
             else {
                 if (this.controllingFaction != null && time % 512 == 0) {
-                    int beds = (int) ((ServerWorld) world).getPointOfInterestManager().func_219146_b(pointOfInterestType -> pointOfInterestType.equals(PointOfInterestType.HOME), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.HAS_SPACE).count();
-                    if (this.world.getEntitiesWithinAABB(AbstractVillagerEntity.class, this.getVillageArea()).size() < beds) {
+                    int beds = (int) ((ServerWorld) world).getPointOfInterestManager().func_219146_b(pointOfInterestType -> pointOfInterestType.equals(PointOfInterestType.HOME), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 1.6))) / 2, PointOfInterestManager.Status.HAS_SPACE).count();
+                    if (this.world.getEntitiesWithinAABB(AbstractVillagerEntity.class, this.getVillageArea()).size() < Math.min(beds, VampirismConfig.BALANCE.viMaxVillagerRespawn.get())) {
                         boolean isConverted = this.controllingFaction != VReference.HUNTER_FACTION && RNG.nextBoolean();
                         if (isConverted) {
                             this.spawnVillagerVampire();
