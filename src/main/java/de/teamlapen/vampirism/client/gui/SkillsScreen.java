@@ -127,14 +127,13 @@ public class SkillsScreen extends Screen {
 
     @Override
     public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if (p_keyPressed_1_ == 256 || ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getKey().getKeyCode() == p_keyPressed_1_) {
+        if (p_keyPressed_1_ == GLFW.GLFW_KEY_ESCAPE || ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getKey().getKeyCode() == p_keyPressed_1_) {
             this.minecraft.displayGuiScreen(null);
             this.minecraft.setGameFocused(true);
             return true;
         } else {
-            super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+            return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
         }
-        return false;
     }
 
     @Override
