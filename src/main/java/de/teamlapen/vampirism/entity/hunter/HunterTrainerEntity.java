@@ -47,7 +47,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
 
     @Override
     public boolean canDespawn(double distanceToClosestPlayer) {
-        return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
+        return super.canDespawn(distanceToClosestPlayer) && getHome() == null;
     }
 
     @Override
