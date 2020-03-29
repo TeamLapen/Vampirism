@@ -32,6 +32,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BushBlock;
 import net.minecraft.entity.*;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,6 +53,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.PointOfInterestManager;
+import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.Heightmap;
@@ -61,7 +63,6 @@ import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -578,7 +579,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             //normal village life
             else {
                 if (this.controllingFaction != null && time % 512 == 0) {
-                    if (((ServerWorld) world).getPointOfInterestManager().func_219146_b(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().anyMatch(villagerProfession -> villagerProfession.getPointOfInterest() == pointOfInterestType), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.HAS_SPACE).findFirst().isPresent()) {
+                    int beds = (int) ((ServerWorld) world).getPointOfInterestManager().func_219146_b(pointOfInterestType -> pointOfInterestType.equals(PointOfInterestType.HOME), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.ANY).count();
+                    if (this.world.getEntitiesWithinAABB(AbstractVillagerEntity.class, this.getVillageArea().grow(20)).size() < Math.min(beds, VampirismConfig.BALANCE.viMaxVillagerRespawn.get())) {
                         boolean isConverted = this.controllingFaction != VReference.HUNTER_FACTION && RNG.nextBoolean();
                         if (isConverted) {
                             this.spawnVillagerVampire();
