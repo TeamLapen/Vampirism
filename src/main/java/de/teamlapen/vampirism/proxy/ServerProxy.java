@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.proxy;
 
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.TaskFinishedPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -35,8 +33,4 @@ public class ServerProxy extends CommonProxy {
 
     }
 
-    @Override
-    public void handleTaskFinishedPacket(TaskFinishedPacket msg, PlayerEntity playerEntity) {
-        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(sd -> sd.getTaskManager().addCompletedTask(msg.task)));
-    }
 }

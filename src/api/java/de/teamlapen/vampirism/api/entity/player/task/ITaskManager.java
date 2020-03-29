@@ -21,6 +21,10 @@ public interface ITaskManager {
     @Nonnull
     List<Task> getCompletableTasks();
 
+    boolean canCompleteTask(Task task);
+
+    void removeRequirements(@Nonnull Task task);
+
     IPlayableFaction<?> getFaction();
 
     void setCompletedTasks(@Nonnull Collection<Task> tasks);
