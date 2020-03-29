@@ -810,6 +810,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
             List<HunterBaseEntity> hunterEntities = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, getVillageArea());
             int i = Math.max(2, hunterEntities.size() / 2);
             for (HunterBaseEntity hunter : hunterEntities) {
+                if (hunter instanceof ICaptureIgnore)
+                    continue;
                 if (i-- > 0) {
                     this.spawnVillagerReplace(hunter, true, true);
                 }
