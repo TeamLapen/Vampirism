@@ -435,6 +435,7 @@ text.vampirism.vampire_villager.decline_trade_normal=Sorry, but my trades are on
 
 
 #ETC
+text.vampirism.no_permission=You do not have permission to do so
 text.vampirism.vampire=Vampire
 text.vampirism.vampires=Vampires
 text.vampirism.all=All
