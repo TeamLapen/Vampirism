@@ -52,6 +52,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
@@ -238,20 +239,28 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (e.getDistance(player) <= player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1) {
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
                 if (feed_victim_bite_type == BITE_TYPE.ATTACK || feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER || feed_victim_bite_type == BITE_TYPE.HUNTER_CREATURE) {
-                    biteAttack((LivingEntity) e, feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER);
+                    if (e instanceof PlayerEntity ? PermissionAPI.hasPermission(player, Permissions.BITE_PLAYER) : PermissionAPI.hasPermission(player, Permissions.BITE)) {
+                        biteAttack((LivingEntity) e, feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER);
+                    } else {
+                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.no_permission"), false);
+                    }
                 } else if (feed_victim_bite_type == BITE_TYPE.NONE) {
                     return;
                 } else {
-                    if (feed_victim == -1) feedBiteTickCounter = 0;
+                    if (e instanceof PlayerEntity ? PermissionAPI.hasPermission(player, Permissions.FEED_PLAYER) : PermissionAPI.hasPermission(player, Permissions.FEED)) {
+                        if (feed_victim == -1) feedBiteTickCounter = 0;
 
-                    feed_victim = e.getEntityId();
+                        feed_victim = e.getEntityId();
 
-                    ((LivingEntity) e).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 7, false, false));
-                    player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 25, 4, false, false));
+                        ((LivingEntity) e).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 7, false, false));
+                        player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 25, 4, false, false));
 
-                    CompoundNBT nbt = new CompoundNBT();
-                    nbt.putInt(KEY_VICTIM_ID, feed_victim);
-                    sync(nbt, true);
+                        CompoundNBT nbt = new CompoundNBT();
+                        nbt.putInt(KEY_VICTIM_ID, feed_victim);
+                        sync(nbt, true);
+                    } else {
+                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.no_permission"), false);
+                    }
 
                 }
             } else {

@@ -1,4 +1,5 @@
 {
+  "text.vampirism.no_permission": "You do not have permission to do so",
   "text.vampirism.command.available_subcommands": "Available Subcommands:",
   "text.vampirism.command.subcommand_help": "Use '/%s help <subcommand>' to get more information",
   "text.vampirism.command.usage": "/%s <subcommand> <params> | Use /%s help to get all available subcommands",
