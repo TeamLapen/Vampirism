@@ -58,6 +58,7 @@ public class TaskManager implements ITaskManager {
     @Override
     public void completeTask(@Nonnull Task task) {
         if (addCompletedTask(task)) {
+            this.removeRequirements(task);
             if (player.world.isRemote()) {
                 VampirismMod.dispatcher.sendToServer(new TaskFinishedPacket(task));
             } else {
@@ -78,6 +79,16 @@ public class TaskManager implements ITaskManager {
         this.completedTasks.add(task);
         this.getAvailableTasks().remove(task);
         return true;
+    }
+
+    @Override
+    public void removeRequirements(@Nonnull Task task) {
+        for (TaskRequirement requirement : task.getRequirements()) {
+            if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
+                ItemStack stack = ((ItemRequirement) requirement).getItemRequirement();
+                this.player.inventory.clearMatchingItems(itemStack -> itemStack.isItemEqual(stack), stack.getCount());
+            }
+        }
     }
 
     @Nonnull
@@ -118,10 +129,11 @@ public class TaskManager implements ITaskManager {
         return faction;
     }
 
+    @Override
     public boolean canCompleteTask(Task task) {
-        if (this.player.getEntityWorld().isRemote()) return false;
         for (TaskRequirement requirement : task.getRequirements()) {
             if (requirement.getType().equals(TaskRequirement.Type.STATS)) {
+                if (this.player.getEntityWorld().isRemote()) return false;
                 int amount = ((StatRequirement<?>) requirement).getAmount();
                 if (((ServerPlayerEntity) this.player).getStats().getValue(((StatRequirement<?>) requirement).getStat()) < stats.get(task).get(((StatRequirement<?>) requirement).getStat()) + amount)
                     return false;

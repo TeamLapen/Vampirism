@@ -9,6 +9,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -24,7 +25,7 @@ public class TaskStatusPacket implements IMessage {
         this.containerId = containerId;
     }
 
-    static void encode(TaskStatusPacket msg, PacketBuffer buf) {
+    static void encode(@Nonnull TaskStatusPacket msg, @Nonnull PacketBuffer buf) {
         buf.writeVarInt(msg.containerId);
         buf.writeVarInt(msg.possibleTasks.size());
         buf.writeVarInt(msg.completedTasks.size());
@@ -32,7 +33,7 @@ public class TaskStatusPacket implements IMessage {
         msg.completedTasks.forEach(res -> buf.writeString(res.getRegistryName().toString()));
     }
 
-    static TaskStatusPacket decode(PacketBuffer buf) {
+    static TaskStatusPacket decode(@Nonnull PacketBuffer buf) {
         int containerId = buf.readVarInt();
         int taskSize = buf.readVarInt();
         int completeSize = buf.readVarInt();
@@ -48,7 +49,7 @@ public class TaskStatusPacket implements IMessage {
         return new TaskStatusPacket(res, res2, containerId);
     }
 
-    public static void handle(final TaskStatusPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final TaskStatusPacket msg, @Nonnull Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskStatusPacket(msg));
         ctx.setPacketHandled(true);

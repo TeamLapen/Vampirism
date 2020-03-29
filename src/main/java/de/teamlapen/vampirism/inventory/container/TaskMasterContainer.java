@@ -38,6 +38,7 @@ public class TaskMasterContainer extends Container {
     public void completeTask(Task task) {
         this.taskManager.completeTask(task);
         this.completed.add(task);
+        this.possibleTasks.removeIf(task1 -> !taskManager.canCompleteTask(task1));
     }
 
     public boolean isCompleted(Task task) {

@@ -250,8 +250,4 @@ public class ClientProxy extends CommonProxy {
         FactionPlayerHandler.getOpt(Minecraft.getInstance().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().setCompletedTasks(msg.completedTasks)));
     }
 
-    @Override
-    public void handleTaskFinishedPacket(TaskFinishedPacket msg, PlayerEntity playerEntity) {
-        FactionPlayerHandler.getOpt(Minecraft.getInstance().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(sd -> sd.getTaskManager().addCompletedTask(msg.task)));
-    }
 }
