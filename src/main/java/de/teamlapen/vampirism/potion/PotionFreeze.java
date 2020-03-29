@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.potion;
 
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.potion.EffectType;
 
 public class PotionFreeze extends VampirismPotion {
     public PotionFreeze(String name) {
         super(name, EffectType.HARMFUL, 0xFFFFFF);
+        this.addAttributesModifier(SharedMonsterAttributes.MOVEMENT_SPEED, "ae1402d5-64b2-400a-ac1e-6c3a87a64305", -1, AttributeModifier.Operation.MULTIPLY_TOTAL);
     }
 
     @Override
@@ -14,10 +16,6 @@ public class PotionFreeze extends VampirismPotion {
         return true;
     }
 
-    @Override
-    public void performEffect(LivingEntity entityLivingBaseIn, int amplifier) {
-        entityLivingBaseIn.setMotion(0, Math.min(0, entityLivingBaseIn.getMotion().getY()), 0);
-    }
 
     @Override
     protected String getOrCreateDescriptionId() {

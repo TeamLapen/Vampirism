@@ -252,7 +252,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
                         feed_victim = e.getEntityId();
 
-                        ((LivingEntity) e).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 7, false, false));
+                        ((LivingEntity) e).addPotionEffect(new EffectInstance(ModEffects.freeze, 20, 0, false, false));
                         player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 25, 4, false, false));
 
                         CompoundNBT nbt = new CompoundNBT();
@@ -334,7 +334,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (feed_victim != -1)
             feed_victim = -1;
         feed_victim_bite_type = null;
-        if (player.isPotionActive(Effects.SLOWNESS)) player.removePotionEffect(Effects.SLOWNESS);
+        if (player.isPotionActive(ModEffects.freeze)) player.removePotionEffect(ModEffects.freeze);
         if (sync) {
             CompoundNBT nbt = new CompoundNBT();
             nbt.putInt(KEY_VICTIM_ID, feed_victim);
@@ -1124,7 +1124,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             endFeeding(true);
             return;
         }
-        e.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20, 7, false, false));
+        e.addPotionEffect(new EffectInstance(ModEffects.freeze, 20, 0, false, false));
 
         player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 25, 4, false, false));
 
