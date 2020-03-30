@@ -12,6 +12,8 @@ public interface ITaskManager {
 
     boolean addCompletedTask(@Nonnull Task task);
 
+    boolean hasAvailableTasks();
+
     @Nonnull
     List<Task> getAvailableTasks();
 

@@ -105,6 +105,11 @@ public class TaskManager implements ITaskManager {
         this.availableTasks.removeAll(tasks);
     }
 
+    @Override
+    public boolean hasAvailableTasks() {
+        return !this.availableTasks.isEmpty();
+    }
+
     /**
      * returns {@link TaskManager#availableTasks} and initiate the Stats on first call
      */
