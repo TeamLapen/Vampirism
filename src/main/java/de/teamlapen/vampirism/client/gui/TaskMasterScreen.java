@@ -37,7 +37,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         int k = j + 16 + 2;
 
         for (int l = 0; l < 7; ++l) {
-            this.buttons[l] = this.addButton(new CompleteButton(i + 5, k, l, (button) -> {
+            this.buttons[l] = this.addButton(new CompleteButton(i + 5 + 132, k + 3, l, (button) -> {
                 if (button instanceof CompleteButton) {
                     Task task = this.container.getAvailableTasks().get(((CompleteButton) button).getChosenItem() + this.scrolledTask);
                     if (this.container.canCompleteTask(task)) {
@@ -99,15 +99,15 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 }
             }
             for (CompleteButton button : this.buttons) { //TODO
-                button.visible = button.getChosenItem() < this.container.getAvailableTasks().size();
+                button.visible = button.getChosenItem() < this.container.getAvailableTasks().size() && this.container.canCompleteTask(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask));
+            }
+            for (CompleteButton button : this.buttons) {
+                button.render(mouseX, mouseY, partialTicks);
             }
             if (tooltips != null) {
                 renderToolTip(tooltips.getLeft(), tooltips.getMiddle(), tooltips.getRight());
             }
             GlStateManager.popMatrix();
-        }
-        for (CompleteButton button : this.buttons) {
-            button.render(mouseX, mouseY, partialTicks);
         }
     }
 
@@ -129,15 +129,6 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         }
 
         RenderHelper.enableGUIStandardItemLighting();
-    }
-
-    private void renderCheck(Task task, int x, int y) {
-        this.minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
-        if (this.container.canCompleteTask(task)) {
-            this.blit(x + 138, y, 0, 222, 14, 12);
-        } else if (!this.container.isCompleted(task)) {
-            this.blit(x + 138, y, 0, 234, 14, 12);
-        }
     }
 
     private void renderScroller(int x, int y, Collection<Task> tasks) {
@@ -204,7 +195,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         final int chosenItem;
 
         public CompleteButton(int xPos, int yPos, int chosenItem, IPressable onPress) {
-            super(xPos, yPos, 14, 12, 0, 222, 0, TASKMASTER_GUI_TEXTURE, 256, 256, onPress, "");
+            super(xPos, yPos, 14, 12, 0, 222, 12, TASKMASTER_GUI_TEXTURE, 256, 256, onPress, "");
             this.chosenItem = chosenItem;
             this.visible = false;
         }
