@@ -5,28 +5,29 @@ import amerifrance.guideapi.api.impl.Book;
 import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.api.util.GuiHelper;
-import amerifrance.guideapi.gui.GuiBase;
-import amerifrance.guideapi.gui.GuiEntry;
+import amerifrance.guideapi.gui.BaseScreen;
+import amerifrance.guideapi.gui.EntryScreen;
 import com.google.common.collect.Lists;
-
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.modcompat.guide.GuideBook;
-import de.teamlapen.vampirism.modcompat.guide.client.GuiLinkedEntry;
+import de.teamlapen.vampirism.modcompat.guide.client.LinkedEntryScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URI;
 import java.util.List;
 
 
 public class PageHolderWithLinks implements IPage {
+    private static final Logger LOGGER = LogManager.getLogger();
+
 
     private final IPage page;
     private final List<ResourceLocation> lateLinks = Lists.newArrayList();
@@ -77,20 +78,22 @@ public class PageHolderWithLinks implements IPage {
         return this;
     }
 
+
     @Override
-    public boolean canSee(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, GuiEntry guiEntry) {
+    public boolean canSee(Book book, CategoryAbstract category, EntryAbstract entry, PlayerEntity player, ItemStack bookStack, EntryScreen guiEntry) {
         return page.canSee(book, category, entry, player, bookStack, guiEntry);
     }
 
+
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
+    public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
         page.draw(book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void drawExtras(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
+    public void drawExtras(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
         int ll = guiLeft + guiBase.xSize - 5;
         int y = guiTop + 10;
         for (Link l : links) {
@@ -105,12 +108,12 @@ public class PageHolderWithLinks implements IPage {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onInit(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, GuiEntry guiEntry) {
+    public void onInit(Book book, CategoryAbstract category, EntryAbstract entry, PlayerEntity player, ItemStack bookStack, EntryScreen guiEntry) {
         while (lateLinks.size() > 0) {
             ResourceLocation s = lateLinks.remove(0);
             EntryAbstract e = GuideBook.getLinkedEntry(s);
             if (e == null) {
-                VampirismMod.log.w(GuideBook.TAG, "Failed to find linked entry %s", s);
+                LOGGER.warn("Failed to find linked entry {}", s);
             } else {
                 addLink(e);
             }
@@ -118,9 +121,10 @@ public class PageHolderWithLinks implements IPage {
         page.onInit(book, category, entry, player, bookStack, guiEntry);
     }
 
+
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onLeftClicked(Book book, CategoryAbstract category, EntryAbstract entry, int mouseX, int mouseY, EntityPlayer player, GuiEntry guiEntry) {
+    public void onLeftClicked(Book book, CategoryAbstract category, EntryAbstract entry, double mouseX, double mouseY, PlayerEntity player, EntryScreen guiEntry) {
         if (mouseX > guiEntry.guiLeft + guiEntry.xSize) {
             //Avoid double/triple execution per click
             long lastClock = System.currentTimeMillis() / 4;
@@ -140,7 +144,7 @@ public class PageHolderWithLinks implements IPage {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void onRightClicked(Book book, CategoryAbstract category, EntryAbstract entry, int mouseX, int mouseY, EntityPlayer player, GuiEntry guiEntry) {
+    public void onRightClicked(Book book, CategoryAbstract category, EntryAbstract entry, double mouseX, double mouseY, PlayerEntity player, EntryScreen guiEntry) {
         page.onRightClicked(book, category, entry, mouseX, mouseY, player, guiEntry);
     }
 
@@ -150,7 +154,7 @@ public class PageHolderWithLinks implements IPage {
         public abstract String getDisplayName();
 
         @OnlyIn(Dist.CLIENT)
-        public abstract void onClicked(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, int page);
+        public abstract void onClicked(Book book, CategoryAbstract category, EntryAbstract entry, PlayerEntity player, ItemStack bookStack, int page);
     }
 
     public static class URLLink extends Link {
@@ -168,15 +172,16 @@ public class PageHolderWithLinks implements IPage {
         }
 
         @Override
-        public void onClicked(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, int page) {
+        public void onClicked(Book book, CategoryAbstract category, EntryAbstract entry, PlayerEntity player, ItemStack bookStack, int page) {
             try {
                 Class<?> oclass = Class.forName("java.awt.Desktop");
                 Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null);
                 oclass.getMethod("browse", new Class[]{URI.class}).invoke(object, link);
             } catch (Throwable throwable1) {
                 Throwable throwable = throwable1.getCause();
-                VampirismMod.log.e(GuideBook.TAG, throwable, "Couldn\'t open link: {%s}", link);
-                player.sendMessage(ForgeHooks.newChatWithLinks("Couldn\'t open link: " + link.toString()));
+                LOGGER.error("Couldn't open link: {}", link);
+                LOGGER.catching(throwable);
+                player.sendMessage(ForgeHooks.newChatWithLinks("Couldn't open link: " + link.toString()));
             }
         }
     }
@@ -195,7 +200,7 @@ public class PageHolderWithLinks implements IPage {
 
         @OnlyIn(Dist.CLIENT)
         @Override
-        public void onClicked(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, int page) {
+        public void onClicked(Book book, CategoryAbstract category, EntryAbstract entry, PlayerEntity player, ItemStack bookStack, int page) {
             openLinkedEntry(book, category, linkedEntry, player, bookStack, entry, page);
         }
 
@@ -203,15 +208,15 @@ public class PageHolderWithLinks implements IPage {
          * Simply opens a gui screen with a GuiLinkedEntry. Not sure why the @SideOnly does not work, but this uses Class.forName to solve server side class not found issues
          */
         @OnlyIn(Dist.CLIENT)
-        private void openLinkedEntry(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, EntryAbstract from, int fromPage) {
+        private void openLinkedEntry(Book book, CategoryAbstract category, EntryAbstract entry, PlayerEntity player, ItemStack bookStack, EntryAbstract from, int fromPage) {
 //        GuiScreen screen = null;
 //        try {
 //            screen = Class.forName("de.teamlapen.vampirism.client.gui.GuiLinkedEntry").asSubclass(GuiScreen.class).getConstructor(Book.class, CategoryAbstract.class, EntryAbstract.class, EntityPlayer.class, ItemStack.class, EntryAbstract.class, int.class).newInstance(book, category, entry, player, bookStack, from, fromPage);
 //        } catch (Exception e) {
 //            Logger.e("PHWithLink", e, "Failed to create a GuiLinkedEntry. This should not be impossible. But maybe the mod author has messed something up.");
 //        }
-            GuiScreen screen = new GuiLinkedEntry(book, category, entry, player, bookStack, from, fromPage);
-            Minecraft.getMinecraft().displayGuiScreen(screen);
+            BaseScreen screen = new LinkedEntryScreen(book, category, entry, player, bookStack, from, fromPage);
+            Minecraft.getInstance().displayGuiScreen(screen);
         }
     }
 

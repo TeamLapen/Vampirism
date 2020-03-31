@@ -15,32 +15,23 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.blocks.BlockAltarPillar;
-import de.teamlapen.vampirism.blocks.BlockGarlicBeacon;
 import de.teamlapen.vampirism.client.core.ModKeys;
-import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.ItemBloodBottle;
-import de.teamlapen.vampirism.items.ItemCrossbowArrow;
-import de.teamlapen.vampirism.items.ItemInjection;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageTable;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -58,14 +49,14 @@ import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.addItemWithTier
 @amerifrance.guideapi.api.GuideBook
 public class GuideBook implements IGuideBook {
 
-    public final static String TAG = "GuideBook";
+    private static final Logger LOGGER = LogManager.getLogger();
     private final static String IMAGE_BASE = "vampirismguide:textures/images/";
     private static Book guideBook;
     private static Map<ResourceLocation, EntryAbstract> links = Maps.newHashMap();
 
 
     static void buildCategories() {
-        VampirismMod.log.d(TAG, "Building categories");
+        LOGGER.debug("Building categories");
         long start = System.currentTimeMillis();
         guideBook.addCategory(new CategoryItemStack(buildOverview(), "guide.vampirism.overview.title", new ItemStack(ModItems.vampire_fang)));
         guideBook.addCategory(new CategoryItemStack(buildVampire(), "guide.vampirism.vampire.title", new ItemStack(ModItems.blood_bottle, 1, ItemBloodBottle.AMOUNT)));
@@ -74,7 +65,7 @@ public class GuideBook implements IGuideBook {
         guideBook.addCategory(new CategoryItemStack(buildWorld(), "guide.vampirism.world.title", new ItemStack(ModBlocks.cursed_earth)));
         guideBook.addCategory(new CategoryItemStack(buildItems(), "guide.vampirism.items.title", new ItemStack(Items.APPLE)));
         guideBook.addCategory(new CategoryItemStack(buildBlocks(), "guide.vampirism.blocks.title", new ItemStack(ModBlocks.castle_block)));
-        VampirismMod.log.d(TAG, "Finished building categories after %d ms", System.currentTimeMillis() - start);
+        LOGGER.debug("Built categories in {} ms", System.currentTimeMillis() - start);
     }
 
     /**

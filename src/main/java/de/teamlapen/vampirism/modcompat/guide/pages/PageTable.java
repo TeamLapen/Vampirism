@@ -5,12 +5,12 @@ import amerifrance.guideapi.api.impl.Book;
 import amerifrance.guideapi.api.impl.Page;
 import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.gui.GuiBase;
+import amerifrance.guideapi.gui.BaseScreen;
+import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -35,11 +35,11 @@ public class PageTable extends Page {
         this.headline = headline;
     }
 
+
     @Override
-    @SideOnly(Side.CLIENT)
-    public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
-        fontRendererObj.setUnicodeFlag(true);
-        int charWidth = fontRendererObj.getCharWidth(' ');
+    @OnlyIn(Dist.CLIENT)
+    public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
+        float charWidth = fontRendererObj.getCharWidth(' ');
         int y = guiTop + 12;
         int x = guiLeft + 39;
         if (headline != null) {
@@ -50,7 +50,7 @@ public class PageTable extends Page {
         for (String[] l : lines) {
             x = guiLeft + 39;
             for (int i = 0; i < l.length; i++) {
-                int mw = width[i] * charWidth;
+                int mw = (int) (width[i] * charWidth);
                 int aw = fontRendererObj.getStringWidth(l[i]);
                 int dw = (mw - aw) / 2;
                 fontRendererObj.drawString(l[i], x + dw, y, 0);
@@ -60,29 +60,25 @@ public class PageTable extends Page {
 
         }
 
-        fontRendererObj.setUnicodeFlag(false);
     }
 
     /**
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
+     * Copied from GuiPieMenu
      */
-    protected void drawLine(float x1, float y1, float x2, float y2, float publicZLevel) {
+    protected void drawLine(double x1, double y1, double x2, double y2, float publicZLevel) {
         GlStateManager.pushMatrix();
-        GlStateManager.disableTexture2D();
-        GlStateManager.color(0F, 0F, 0F, 1F);
-        GlStateManager.glLineWidth(2F);
-        GlStateManager.glBegin(GL11.GL_LINES);
-        GlStateManager.glVertex3f(x1, y1, publicZLevel);
-        GlStateManager.glVertex3f(x2, y2, publicZLevel);
-        GlStateManager.glEnd();
-        GlStateManager.enableTexture2D();
-        GlStateManager.color(1, 1, 1, 1);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GlStateManager.color4f(0F, 0F, 0F, 1F);
+        GlStateManager.lineWidth(2F);
+        GlStateManager.begin(GL11.GL_LINES);
+        GlStateManager.vertex3f((float) x1, (float) y1, publicZLevel);
+        GlStateManager.vertex3f((float) x2, (float) y2, publicZLevel);
+        GlStateManager.end();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.color4f(0F, 0F, 0F, 1F);
         GlStateManager.popMatrix();
-
     }
+
 
     public static class Builder {
         int columns;
@@ -111,7 +107,7 @@ public class PageTable extends Page {
             for (int i = 0; i < strings.length; i++) {
                 loc[i] = UtilLib.translate(strings[i]);
             }
-            return addLine((Object[]) loc);
+            return addLine(loc);
         }
 
         public PageTable build() {
