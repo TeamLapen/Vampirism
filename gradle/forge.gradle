@@ -24,6 +24,7 @@ repositories {
         url 'https://dl.bintray.com/shinoow/maven/'
     }
     mavenCentral()
+    mavenLocal()
 }
 
 
@@ -35,6 +36,7 @@ dependencies {
     ])
     compileOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}:api") //API for compile
     runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}") //Full for runtime
+    compile fg.deobf("info.amerifrance.guideapi:Guide-API:1.14.4-2.2-CUSTOM")
 
     //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
     //deobfCompile 'mcp.mobius.waila:Waila:' + config.waila_version
