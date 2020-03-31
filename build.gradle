@@ -44,9 +44,6 @@ sourceSets {
         compileClasspath += configurations["minecraft"]
     }
     main {
-         java{
-             exclude '**/guide/*'
-         }
         compileClasspath += sourceSets.lib.output
         compileClasspath += sourceSets.api.output
         runtimeClasspath += sourceSets.api.output
