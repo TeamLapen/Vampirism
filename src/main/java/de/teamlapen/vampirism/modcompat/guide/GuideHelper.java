@@ -3,28 +3,26 @@ package de.teamlapen.vampirism.modcompat.guide;
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.IRecipeRenderer;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.page.*;
+import amerifrance.guideapi.page.PageBrewingRecipe;
+import amerifrance.guideapi.page.PageIRecipe;
+import amerifrance.guideapi.page.PageItemStack;
+import amerifrance.guideapi.page.PageText;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
-import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
-import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
-import de.teamlapen.vampirism.inventory.ShapedHunterWeaponRecipe;
-import de.teamlapen.vampirism.inventory.ShapelessHunterWeaponRecipe;
-import de.teamlapen.vampirism.modcompat.guide.pages.*;
+import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -37,6 +35,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Collection of helper methods
  */
 public class GuideHelper {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     /**
      * Adds multiple strings together seperated by a double line break
@@ -76,7 +76,7 @@ public class GuideHelper {
                     p.addLink((PageHolderWithLinks.URLLink) l);
                 }
             } else {
-                VampirismMod.log.w("GuideHelper", "Given link object cannot be linked %s", l);
+                LOGGER.warn("Given link object cannot be linked {}", l);
             }
         }
         pages.clear();
@@ -139,9 +139,7 @@ public class GuideHelper {
     private static boolean checkOutput(ItemStack resultStack, ItemStack stack, boolean checkNBT) {
         if (!stack.isEmpty() && !resultStack.isEmpty()) {
             if (resultStack.getItem() == stack.getItem() && resultStack.getItemDamage() == stack.getItemDamage()) {
-                if (!checkNBT || resultStack.getTagCompound() == null && stack.getTagCompound() == null || resultStack.getTagCompound() != null && resultStack.getTagCompound().equals(stack.getTagCompound())) {
-                    return true;
-                }
+                return !checkNBT || resultStack.getTagCompound() == null && stack.getTagCompound() == null || resultStack.getTagCompound() != null && resultStack.getTagCompound().equals(stack.getTagCompound());
             }
         }
         return false;

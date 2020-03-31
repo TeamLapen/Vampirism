@@ -4,8 +4,7 @@ import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.impl.Book;
 import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
 import amerifrance.guideapi.entry.EntryResourceLocation;
-import amerifrance.guideapi.gui.GuiBase;
-
+import amerifrance.guideapi.gui.BaseScreen;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -27,8 +26,9 @@ public class EntryText extends EntryResourceLocation {
     }
 
     @OnlyIn(Dist.CLIENT)
+
     @Override
-    public void drawExtras(Book book, CategoryAbstract category, int entryX, int entryY, int entryWidth, int entryHeight, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
+    public void drawExtras(Book book, CategoryAbstract category, int entryX, int entryY, int entryWidth, int entryHeight, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
         super.drawExtras(book, category, entryX, entryY, entryWidth, entryHeight, mouseX, mouseY, guiBase, fontRendererObj);
     }
 }
