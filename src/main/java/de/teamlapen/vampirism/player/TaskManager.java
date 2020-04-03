@@ -43,7 +43,7 @@ public class TaskManager implements ITaskManager {
     private final @Nonnull Set<Task> availableTasks = Sets.newHashSet();
     private final @Nonnull Map<Task, Map<ResourceLocation, Integer>> stats = Maps.newHashMap();
     private final @Nonnull Map<Task, Map<EntityType<?>, Integer>> entityStats = Maps.newHashMap();
-    private boolean init = true;
+    private boolean init;
 
     public TaskManager(@Nonnull PlayerEntity player, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
@@ -111,6 +111,11 @@ public class TaskManager implements ITaskManager {
     }
 
     @Override
+    public void applyRewards(Task task) {
+        task.getRewards().forEach(reward -> reward.applyReward(this.player));
+    }
+
+    @Override
     public boolean hasAvailableTasks() {
         return !this.availableTasks.isEmpty();
     }
@@ -121,10 +126,6 @@ public class TaskManager implements ITaskManager {
     @Nonnull
     @Override
     public Set<Task> getAvailableTasks() {
-        if (this.init) {
-            this.init = false;
-            this.updateStats();
-        }
         return this.availableTasks;
     }
 
@@ -139,6 +140,7 @@ public class TaskManager implements ITaskManager {
         return faction;
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     @Override
     public boolean canCompleteTask(Task task) {
         for (TaskRequirement<?> requirement : task.getRequirements()) {
@@ -146,12 +148,12 @@ public class TaskManager implements ITaskManager {
             switch (requirement.getType()) {
                 case STATS:
                     if (this.player.getEntityWorld().isRemote()) return false;
-                    if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM, (ResourceLocation) requirement.getStat()) < this.stats.get(task).get(requirement.getStat()) + requirement.getAmount())
+                    if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat())) < this.getStats().get(task).get(requirement.getStat()) + requirement.getAmount())
                         return false;
                     continue;
                 case ENTITY:
                     if (this.player.getEntityWorld().isRemote()) return false;
-                    if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED, (EntityType<?>) requirement.getStat()) < this.entityStats.get(task).get(requirement.getStat()) + requirement.getAmount())
+                    if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat())) < this.getEntityStats().get(task).get(requirement.getStat()) + requirement.getAmount())
                         return false;
                     continue;
                 case ITEMS:
@@ -173,29 +175,51 @@ public class TaskManager implements ITaskManager {
         this.completedTasks.clear();
         this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task -> (faction.equals(task.getFaction()) || task.getFaction() == null) && !task.requireParent()).collect(Collectors.toList()));
         this.stats.clear();
+        this.init = true;
     }
 
     /**
      * cannot be called in constructor, because player is not constructed yet
      */
     private void updateStats() {
-        if (player.getEntityWorld().isRemote()) return;
         for (Task task : this.availableTasks) {
             for (TaskRequirement<?> requirement : task.getRequirements()) {
-                if (this.stats.containsKey(task) || this.entityStats.containsKey(task)) continue;
+                if (this.getStats().containsKey(task) || this.getEntityStats().containsKey(task)) continue;
                 switch (requirement.getType()) {
                     case STATS:
-                        this.stats.computeIfAbsent(task, task1 -> Maps.newHashMap()).put((ResourceLocation) requirement.getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM, (ResourceLocation) requirement.getStat()));
+                        if (!player.getEntityWorld().isRemote()) {
+                            this.getStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((ResourceLocation) requirement.getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat())));
+                        }
                         break;
                     case ENTITY:
-                        this.entityStats.computeIfAbsent(task, task1 -> Maps.newHashMap()).put((EntityType<?>) requirement.getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED, (EntityType<?>) requirement.getStat()));
+                        if (!player.getEntityWorld().isRemote()) {
+                            this.getEntityStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((EntityType<?>) requirement.getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat())));
+                        }
                         break;
                     default:
                 }
             }
         }
-        this.stats.entrySet().removeIf(entry -> !this.availableTasks.contains(entry.getKey()));
-        this.entityStats.entrySet().removeIf(entry -> !this.availableTasks.contains(entry.getKey()));
+        this.getStats().entrySet().removeIf(entry -> !this.availableTasks.contains(entry.getKey()));
+        this.getEntityStats().entrySet().removeIf(entry -> !this.availableTasks.contains(entry.getKey()));
+    }
+
+    @Nonnull
+    private Map<Task, Map<ResourceLocation, Integer>> getStats() {
+        if (this.init) {
+            this.init = false;
+            this.updateStats();
+        }
+        return stats;
+    }
+
+    @Nonnull
+    private Map<Task, Map<EntityType<?>, Integer>> getEntityStats() {
+        if (this.init) {
+            this.init = false;
+            this.updateStats();
+        }
+        return entityStats;
     }
 
     public void writeNBT(CompoundNBT compoundNBT) {

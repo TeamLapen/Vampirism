@@ -72,7 +72,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     }
 
 
-
     @Override
     public final void loadUpdateFromNBT(CompoundNBT nbt) {
         loadUpdate(nbt);
