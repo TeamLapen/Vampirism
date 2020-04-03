@@ -32,4 +32,6 @@ public interface ITaskManager {
     void setCompletedTasks(@Nonnull Collection<Task> tasks);
 
     void reset();
+
+    void applyRewards(Task task);
 }

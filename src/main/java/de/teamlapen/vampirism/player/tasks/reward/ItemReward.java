@@ -16,6 +16,8 @@ public class ItemReward implements TaskReward {
 
     @Override
     public void applyReward(PlayerEntity player) {
-        player.addItemStackToInventory(this.reward.copy());//TODO inventory full
+        if (!player.addItemStackToInventory(this.reward.copy())) {
+            player.dropItem(this.reward.copy(), true);
+        }
     }
 }

@@ -5,15 +5,38 @@ import javax.annotation.Nonnull;
 public interface TaskRequirement<T> {
 
     @Nonnull
-    Type getType();
+    default Type getType() {
+        return Type.BOOLEAN;
+    }
 
+    /**
+     * @throws ClassCastException if Object is not applicant for the {@link #getType()}
+     */
     @Nonnull
     T getStat();
 
-    int getAmount();
+    default int getAmount() {
+        return 1;
+    }
 
+    @SuppressWarnings("JavadocReference")
     enum Type {
-        STATS, ITEMS, ENTITY, BOOLEAN
+        /**
+         * based on {@link net.minecraft.stats.Stats.CUSTOM} stat increase
+         */
+        STATS,
+        /**
+         * based on item in inventory
+         */
+        ITEMS,
+        /**
+         * based on {@link net.minecraft.stats.Stats.ENTITY_KILLED} stat increased
+         */
+        ENTITY,
+        /**
+         * based on boolean supplier
+         */
+        BOOLEAN
     }
 
 }
