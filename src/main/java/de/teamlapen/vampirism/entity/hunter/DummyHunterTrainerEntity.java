@@ -33,7 +33,7 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
 
     @Override
     public boolean canDespawn(double distanceToClosestPlayer) {
-        return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
+        return super.canDespawn(distanceToClosestPlayer) && getHome() == null;
     }
 
     @Override
