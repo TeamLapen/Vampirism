@@ -2,14 +2,12 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
@@ -36,6 +34,7 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ForgeI18n;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
@@ -575,11 +574,7 @@ public class UtilLib {
     }
 
     public static String translate(String key, Object... format) {
-        if (I18n.hasKey(key)) {
-            return I18n.format(key, format);
-        } else {
-            return key;
-        }
+        return ForgeI18n.parseMessage(key, format);
     }
 
     /**
