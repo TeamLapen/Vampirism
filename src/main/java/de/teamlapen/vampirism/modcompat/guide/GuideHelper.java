@@ -3,23 +3,25 @@ package de.teamlapen.vampirism.modcompat.guide;
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.IRecipeRenderer;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.page.PageBrewingRecipe;
 import amerifrance.guideapi.page.PageIRecipe;
 import amerifrance.guideapi.page.PageItemStack;
+import amerifrance.guideapi.page.PageJsonRecipe;
 import amerifrance.guideapi.page.PageText;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.inventory.recipes.ShapedWeaponTableRecipe;
+import de.teamlapen.vampirism.inventory.recipes.ShapelessWeaponTableRecipe;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
+import de.teamlapen.vampirism.modcompat.guide.recipes.AlchemicalCauldronRecipeRenderer;
+import de.teamlapen.vampirism.modcompat.guide.recipes.ShapedWeaponTableRecipeRenderer;
+import de.teamlapen.vampirism.modcompat.guide.recipes.ShapelessWeaponTableRecipeRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,9 +29,6 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Collection of helper methods
@@ -84,129 +83,30 @@ public class GuideHelper {
         return pages;
     }
 
-    public static IRecipe getRecipeForOutput(ItemStack stack) {
-
-        for (IRecipe recipe : ForgeRegistries.RECIPES) {
-            if (checkRecipeOutput(recipe, stack, true)) return recipe;
-        }
-
-        return null;
-    }
-
-    public static IAlchemicalCauldronRecipe getAlchemicalCauldronRecipeForOutput(ItemStack stack) {
-        for (IAlchemicalCauldronRecipe recipe : AlchemicalCauldronCraftingManager.getInstance().getRecipes()) {
-            if (checkOutput(recipe.getOutput(), stack, true)) return recipe;
-        }
-        return null;
-    }
-
-    public static IWeaponTableRecipe getWeaponTableRecipeForOutput(ItemStack stack) {
-        for (IWeaponTableRecipe recipe : HunterWeaponCraftingManager.getInstance().getRecipes()) {
-            if (checkRecipeOutput(recipe, stack, true)) return recipe;
-        }
-        return null;
-    }
-
-    public static ItemStack getFurnaceRecipe(ItemStack stack) {
-        for (Map.Entry<ItemStack, ItemStack> e : FurnaceRecipes.instance().getSmeltingList().entrySet()) {
-            if (stack.isItemEqual(e.getValue())) {
-                return e.getKey();
-            }
-        }
-        return null;
-    }
 
     public static BrewingRecipe getBrewingRecipe(ItemStack stack) {
         return (BrewingRecipe) BrewingRecipeRegistry.getRecipes().stream().filter(iBrewingRecipe -> iBrewingRecipe instanceof BrewingRecipe && ItemStack.areItemStacksEqual(((BrewingRecipe) iBrewingRecipe).getOutput(), stack)).findFirst().orElse(null);
     }
 
-    private static boolean checkRecipeOutput(IRecipe recipe, ItemStack stack, boolean checkNBT) {
-        if (recipe != null) {
-            ItemStack resultStack = recipe.getRecipeOutput();
-            return checkOutput(resultStack, stack, checkNBT);
-        }
-        return false;
-    }
-
-    private static boolean checkRecipeOutput(IWeaponTableRecipe recipe, ItemStack stack, boolean checkNBT) {
-        if (recipe != null) {
-            ItemStack resultStack = recipe.getRecipeOutput();
-            return checkOutput(resultStack, stack, checkNBT);
-        }
-        return false;
-    }
-
-    private static boolean checkOutput(ItemStack resultStack, ItemStack stack, boolean checkNBT) {
-        if (!stack.isEmpty() && !resultStack.isEmpty()) {
-            if (resultStack.getItem() == stack.getItem() && resultStack.getItemDamage() == stack.getItemDamage()) {
-                return !checkNBT || resultStack.getTagCompound() == null && stack.getTagCompound() == null || resultStack.getTagCompound() != null && resultStack.getTagCompound().equals(stack.getTagCompound());
-            }
-        }
-        return false;
-    }
-
-    public static
     @Nullable
-    IPage getRecipePage(ItemStack stack, RECIPE_TYPE type) {
-        try {
-            switch (type) {
-                case WORKBENCH:
-                    IRecipe r = checkNotNull(getRecipeForOutput(stack));
-                    return new PageIRecipe(r);
-                case FURNACE:
-                    ItemStack s = checkNotNull(getFurnaceRecipe(stack));
-                    return new PageFurnaceRecipe(s);
-                case BREWING_STAND:
-                    BrewingRecipe b = checkNotNull(getBrewingRecipe(stack));
-                    return new PageBrewingRecipe(b);
-                case WEAPON_TABLE:
-                    IWeaponTableRecipe r2 = checkNotNull(getWeaponTableRecipeForOutput(stack));
-                    IRecipeRenderer renderer = null;
-                    if (r2 instanceof ShapedHunterWeaponRecipe) {
-                        renderer = new ShapedWeaponTableRecipeRenderer((ShapedHunterWeaponRecipe) r2);
-                    } else if (r2 instanceof ShapelessHunterWeaponRecipe) {
-                        renderer = new ShapelessWeaponTableRecipeRenderer((ShapelessHunterWeaponRecipe) r2);
-                    }
-                    checkNotNull(renderer);
-                    return new PageRecipe<>(r2, renderer);
-                case ALCHEMICAL_CAULDRON:
-                    IAlchemicalCauldronRecipe r3 = checkNotNull(getAlchemicalCauldronRecipeForOutput(stack));
-                    return new AlchemicalCauldronRecipePage(r3);
-                default:
-                    throw new IllegalArgumentException("Type unknown " + type);
-            }
-        } catch (NullPointerException e) {
-            return null;
+    private static IRecipeRenderer getRenderer(IRecipe<?> recipe) {
+        IRecipeRenderer recipeRenderer = PageIRecipe.getRenderer(recipe);
+        if (recipeRenderer != null) return recipeRenderer;
+        if (recipe instanceof ShapedWeaponTableRecipe) {
+            return new ShapedWeaponTableRecipeRenderer((ShapedWeaponTableRecipe) recipe);
+        } else if (recipe instanceof ShapelessWeaponTableRecipe) {
+            return new ShapelessWeaponTableRecipeRenderer((ShapelessWeaponTableRecipe) recipe);
+        } else if (recipe instanceof AlchemicalCauldronRecipe) {
+            return new AlchemicalCauldronRecipeRenderer((AlchemicalCauldronRecipe) recipe);
         }
+        LOGGER.warn("Did not find renderer for recipe {}", recipe);
+        return null;
     }
 
-    public static void addArmorWithTier(Map<ResourceLocation, EntryAbstract> entries, String name, IItemWithTier helmet, IItemWithTier chest, IItemWithTier legs, IItemWithTier boots, RECIPE_TYPE recipeType) {
-        List<Object> craftable = new ArrayList<>();
-        for (IItemWithTier.TIER t : IItemWithTier.TIER.values()) {
-            craftable.add(ModItems.createStack(helmet, t));
-            craftable.add(RECIPE_TYPE.WEAPON_TABLE);
-            craftable.add(ModItems.createStack(chest, t));
-            craftable.add(RECIPE_TYPE.WEAPON_TABLE);
-            craftable.add(ModItems.createStack(legs, t));
-            craftable.add(RECIPE_TYPE.WEAPON_TABLE);
-            craftable.add(ModItems.createStack(boots, t));
-            craftable.add(RECIPE_TYPE.WEAPON_TABLE);
-        }
-        ItemInfoBuilder builder = new ItemInfoBuilder(ModItems.createStack(helmet, IItemWithTier.TIER.NORMAL), false);
-        builder.setName(name).ignoreMissingRecipes().craftableStacks(craftable).customName();
-        builder.build(entries);
+    public static IPage getRecipePage(ResourceLocation id) {
+        return new PageJsonRecipe(id, GuideHelper::getRenderer);
     }
 
-    public static ItemInfoBuilder addItemWithTier(IItemWithTier item, RECIPE_TYPE recipeType) {
-        List<Object> craftable = new ArrayList<>();
-        for (IItemWithTier.TIER t : IItemWithTier.TIER.values()) {
-            craftable.add(ModItems.createStack(item, t));
-            craftable.add(recipeType);
-        }
-        ItemInfoBuilder builder = new ItemInfoBuilder(ModItems.createStack(item, IItemWithTier.TIER.NORMAL), false);
-        builder.craftableStacks(craftable).ignoreMissingRecipes();
-        return builder;
-    }
 
     /**
      * Creates as many pages as required to display the given string while displaying the given stack on the first page.
@@ -263,9 +163,6 @@ public class GuideHelper {
         return pagesForLongText(s, 13);
     }
 
-    public enum RECIPE_TYPE {
-        WORKBENCH, FURNACE, WEAPON_TABLE, ALCHEMICAL_CAULDRON, BREWING_STAND
-    }
 
 
 }

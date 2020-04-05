@@ -18,11 +18,7 @@ import java.util.List;
  */
 public class EntryText extends EntryResourceLocation {
     public EntryText(List<IPage> pageList, String unlocEntryName) {
-        this(pageList, unlocEntryName, true);
-    }
-
-    public EntryText(List<IPage> pageList, String unlocEntryName, boolean unicode) {
-        super(pageList, unlocEntryName, new ResourceLocation(REFERENCE.MODID, "textures/items/vampire_fang.png"), unicode);
+        super(pageList, unlocEntryName, new ResourceLocation(REFERENCE.MODID, "textures/item/vampire_fang.png"));
     }
 
     @OnlyIn(Dist.CLIENT)
