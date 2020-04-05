@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.inventory.container.BloodGrinderContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
@@ -35,6 +35,6 @@ public class BloodGrinderScreen extends ContainerScreen<BloodGrinderContainer> {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         this.font.drawString(title.getFormattedText(), 8, 6, 0x404040);
-        this.font.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 0x404040);
+        this.font.drawString(UtilLib.translate("container.inventory"), 8, this.ySize - 94, 0x404040);
     }
 }
