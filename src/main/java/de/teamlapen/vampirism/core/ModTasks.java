@@ -29,7 +29,7 @@ public class ModTasks {
         registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).enableDescription().build("vampire_killer7"));
         registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).build("vampire_killer8"));
         registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).build("vampire_killer9"));
-        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).build("vampire_killer10"));
+        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).addReward(new ItemStack(Items.DIAMOND)).addReward(new ItemStack(Items.DIAMOND)).addReward(new ItemStack(Items.DIAMOND)).addReward(new ItemStack(Items.DIAMOND)).addReward(new ItemStack(Items.DIAMOND)).addReward(new ItemStack(Items.DIAMOND)).addReward(new ItemStack(Items.DIAMOND)).addReward(new ItemStack(Items.DIAMOND)).addReward(new ItemStack(Items.DIAMOND)).build("vampire_killer10"));
         registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(ModEntities.hunter, 1).addReward(new ItemStack(Items.DIAMOND)).build("hunter_killer"));
         registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(Stats.BELL_RING, 3).requireParent(() -> hunter_killer).build("hunter_killer2"));
     }

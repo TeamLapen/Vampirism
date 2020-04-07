@@ -46,7 +46,6 @@ public class TaskMasterContainer extends Container {
         this.completed.add(task);
         this.possibleTasks.removeIf(task1 -> !taskManager.canCompleteTask(task1));
         this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task1 -> task1.requireParent() && task == task1.getParentTask()).collect(Collectors.toList()));
-        this.sortTasks();
     }
 
     public boolean isCompleted(Task task) {
