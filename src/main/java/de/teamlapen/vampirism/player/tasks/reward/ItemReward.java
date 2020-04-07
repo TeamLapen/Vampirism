@@ -20,4 +20,9 @@ public class ItemReward implements TaskReward {
             player.dropItem(this.reward.copy(), true);
         }
     }
+
+    @Nonnull
+    public ItemStack getReward() {
+        return reward.copy();
+    }
 }
