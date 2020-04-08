@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 
 public class Task extends ForgeRegistryEntry<Task> {
 
+    private final @Nonnull Variant variant;
     private final @Nullable IPlayableFaction<?> faction;
     private final @Nullable Supplier<Task> parentTask;
     private final @Nonnull TaskRequirement<?> requirements;
@@ -22,12 +23,18 @@ public class Task extends ForgeRegistryEntry<Task> {
     private @Nullable ITextComponent translation;
     private @Nullable ITextComponent desc;
 
-    public Task(@Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement<?> requirements, @Nonnull TaskReward rewards, @Nullable Supplier<Task> parentTask, boolean useDescription) {
+    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement<?> requirements, @Nonnull TaskReward rewards, @Nullable Supplier<Task> parentTask, boolean useDescription) {
+        this.variant = variant;
         this.faction = faction;
         this.requirements = requirements;
         this.parentTask = parentTask;
         this.useDescription = useDescription;
         this.rewards = rewards;
+    }
+
+    @Nonnull
+    public Variant getVariant() {
+        return variant;
     }
 
     @Nullable
@@ -78,4 +85,7 @@ public class Task extends ForgeRegistryEntry<Task> {
         return useDescription;
     }
 
+    public enum Variant {
+        REPEATABLE, UNIQUE
+    }
 }

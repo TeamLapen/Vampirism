@@ -25,6 +25,7 @@ public class TaskBuilder {
     private @Nullable TaskReward reward;
     private @Nullable IPlayableFaction<?> faction;
     private @Nullable Supplier<Task> parentTask;
+    private @Nonnull Task.Variant variant = Task.Variant.REPEATABLE;
     private boolean useDescription = false;
 
     private TaskBuilder() {
@@ -41,6 +42,11 @@ public class TaskBuilder {
 
     public TaskBuilder requireParent(@Nonnull Task parentTask) {
         this.parentTask = () -> parentTask;
+        return this;
+    }
+
+    public TaskBuilder setUnique() {
+        this.variant = Task.Variant.UNIQUE;
         return this;
     }
 
@@ -102,7 +108,7 @@ public class TaskBuilder {
 
     public Task build(ResourceLocation registryName) {
         if (requirement == null) throw new IllegalStateException("The task " + registryName + " needs a requirement");
-        return new Task(this.faction, this.requirement, this.reward == null ? player -> {
+        return new Task(this.variant, this.faction, this.requirement, this.reward == null ? player -> {
         } : this.reward, this.parentTask, this.useDescription).setRegistryName(registryName);
     }
 

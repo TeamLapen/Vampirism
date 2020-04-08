@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.entity.TaskMasterEntity;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityType;
@@ -16,7 +17,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements TaskMast
     @Override
     protected boolean processInteract(PlayerEntity playerEntity, Hand hand) {
         if (this.world.isRemote) return true;
-        this.processInteraction(playerEntity, Helper.isHunter(playerEntity));
+        this.processInteraction(playerEntity, Helper.isHunter(playerEntity), Task.Variant.REPEATABLE);
         return true;
     }
 
