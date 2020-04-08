@@ -20,10 +20,10 @@ public class ModTasks {
     public static final Task hunter_killer2 = getNull();
 
     public static void registerTasks(IForgeRegistry<Task> registry) { //TODO revert/adjust tasks
-        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).build("vampire_killer"));
-        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).build("vampire_killer2"));
-        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).build("vampire_killer3"));
-        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).build("vampire_killer4"));
+        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND, 2)).build("vampire_killer"));
+        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND, 2)).build("vampire_killer2"));
+        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND, 2)).build("vampire_killer3"));
+        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND, 2)).build("vampire_killer4"));
         registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).enableDescription().build("vampire_killer5"));
         registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).enableDescription().build("vampire_killer6"));
         registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(new ItemStack(ModItems.vampire_fang)).addReward(new ItemStack(Items.DIAMOND)).enableDescription().build("vampire_killer7"));

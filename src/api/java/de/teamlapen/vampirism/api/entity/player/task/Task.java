@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
-import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
@@ -15,15 +14,15 @@ public class Task extends ForgeRegistryEntry<Task> {
 
     private final @Nullable IPlayableFaction<?> faction;
     private final @Nullable Supplier<Task> parentTask;
-    private final @Nonnull ImmutableList<TaskRequirement<?>> requirements;
-    private final @Nonnull ImmutableList<TaskReward> rewards;
+    private final @Nonnull TaskRequirement<?> requirements;
+    private final @Nonnull TaskReward rewards;
     private @Nullable String translationKey;
     private @Nullable String descKey;
     private final boolean useDescription;
     private @Nullable ITextComponent translation;
     private @Nullable ITextComponent desc;
 
-    public Task(@Nullable IPlayableFaction<?> faction, @Nonnull ImmutableList<TaskRequirement<?>> requirements, @Nonnull ImmutableList<TaskReward> rewards, @Nullable Supplier<Task> parentTask, boolean useDescription) {
+    public Task(@Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement<?> requirements, @Nonnull TaskReward rewards, @Nullable Supplier<Task> parentTask, boolean useDescription) {
         this.faction = faction;
         this.requirements = requirements;
         this.parentTask = parentTask;
@@ -37,12 +36,12 @@ public class Task extends ForgeRegistryEntry<Task> {
     }
 
     @Nonnull
-    public ImmutableList<TaskRequirement<?>> getRequirements() {
+    public TaskRequirement<?> getRequirement() {
         return this.requirements;
     }
 
     @Nonnull
-    public ImmutableList<TaskReward> getRewards() {
+    public TaskReward getReward() {
         return this.rewards;
     }
 

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -9,8 +8,10 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
+import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.RenderHelper;
@@ -22,30 +23,34 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     private static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
-    private final Task dummy = new Task(null, ImmutableList.of(), ImmutableList.of(), null, false) {
+    private static final ITextComponent SUBMIT = new TranslationTextComponent("gui.vampirism.taskmaster.complete_task");
+    private static final ITextComponent REQUIREMENT = new TranslationTextComponent("gui.vampirism.taskmaster.requirement").applyTextStyle(TextFormatting.UNDERLINE);
+    private static final ITextComponent REWARD = new TranslationTextComponent("gui.vampirism.taskmaster.reward").applyTextStyle(TextFormatting.UNDERLINE);
+
+    @SuppressWarnings("ConstantConditions")
+    private final Task dummy = new Task(null, null, null, null, false) {
         @Nonnull
         @Override
-        public ImmutableList<TaskReward> getRewards() {
-            return TaskMasterScreen.this.container.getAvailableTasks().get(TaskMasterScreen.this.openedTask).getRewards();
+        public TaskReward getReward() {
+            return TaskMasterScreen.this.container.getAvailableTasks().get(TaskMasterScreen.this.openedTask).getReward();
         }
 
         @Nonnull
         @Override
-        public ImmutableList<TaskRequirement<?>> getRequirements() {
-            return TaskMasterScreen.this.container.getAvailableTasks().get(TaskMasterScreen.this.openedTask).getRequirements();
+        public TaskRequirement<?> getRequirement() {
+            return TaskMasterScreen.this.container.getAvailableTasks().get(TaskMasterScreen.this.openedTask).getRequirement();
         }
 
         @Nullable
@@ -132,7 +137,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 if (tasks.size() > 7 && (i1 < this.scrolledTask || i1 >= 7 + this.scrolledTask)) {
                     ++i1;
                 } else {
-                    this.renderTask(task, i - 1 + 17, k - 4);
+                    this.renderTask(task, i - 1 + 17, k - 4, mouseX, mouseY);
                     if (mouseX > i - 1 && mouseX < i - 1 + 139 && mouseY > k && mouseY < k + 21) {
                         if (!(this.isOpen && ((mouseY - (j - 4 + 21)) / 21) + this.scrolledTask == this.openedTask + 1)) {
                             tooltips = Triple.of(task, i - 1, k);
@@ -148,48 +153,70 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             for (CompleteButton button : this.buttons) {
                 button.render(mouseX, mouseY, partialTicks);
             }
-            if (tooltips != null) {
-                renderToolTip(tooltips.getLeft(), tooltips.getMiddle(), tooltips.getRight());
+            for (CompleteButton button : this.buttons) {
+                button.renderToolTip(mouseX, mouseY);
+            }
+            i1 = 0;
+            k = j + 16 + 3 + 2;
+            for (Task task : tasks) {
+                if (tasks.size() > 7 && (i1 < this.scrolledTask || i1 >= 7 + this.scrolledTask)) {
+                    ++i1;
+                } else {
+                    if (mouseX > i - 1 + 17 && mouseX < i - 1 + 139 + 17 && mouseY > k - 4 && mouseY < k + 21 - 4) {
+                        this.renderTaskToolTip(task, i - 1 + 17, k - 4, mouseX, mouseY);
+                    }
+                    k += 21;
+                    ++i1;
+                }
             }
             GlStateManager.popMatrix();
         }
     }
 
-    private void renderToolTip(Task task, int x, int y) {
-        List<String> toolTips = this.toolTips.computeIfAbsent(task, task1 -> Lists.newArrayList());
-        if (toolTips.isEmpty()) {
-            ITextComponent paragraph = new StringTextComponent(" ");
-            toolTips.add(task.getTranslation().applyTextStyle(this.container.getFactionColor()).getFormattedText());
-            List<TaskRequirement<?>> items = task.getRequirements().stream().filter(taskRequirement -> taskRequirement.getType().equals(TaskRequirement.Type.ITEMS)).collect(Collectors.toList());
-            List<TaskRequirement<?>> entities = task.getRequirements().stream().filter(taskRequirement -> taskRequirement.getType().equals(TaskRequirement.Type.ENTITY)).collect(Collectors.toList());
-            List<TaskRequirement<?>> stats = task.getRequirements().stream().filter(taskRequirement -> taskRequirement.getType().equals(TaskRequirement.Type.STATS)).collect(Collectors.toList());
-            if (!items.isEmpty()) {
-                toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.itemreq").appendText(":").getFormattedText());
-                for (TaskRequirement<?> requirement : items) {
-                    toolTips.add(paragraph.shallowCopy().appendSibling(((Item) requirement.getStat()).getName()).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
+    private void renderTaskToolTip(Task task, int x, int y, int mouseX, int mouseY) {
+        if (task == dummy) {
+            if (mouseX >= x + 3 + 113 && mouseX < x + 3 + 113 + 16 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
+                TaskReward reward = task.getReward();
+                if (reward instanceof ItemReward) {
+                    this.renderRewardTooltip(((ItemReward) reward).getReward(), x + 3 + 113, y + 2, REWARD.getFormattedText());
                 }
             }
-            if (!entities.isEmpty()) {
-                toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entityreq").appendText(":").getFormattedText());
-                for (TaskRequirement<?> requirement : entities) {
-                    toolTips.add(paragraph.shallowCopy().appendSibling(((EntityType<?>) requirement.getStat()).getName()).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
+            if (mouseX >= x + 3 + 3 && mouseX < x + 3 + 16 + 3 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
+                TaskRequirement<?> requirement = task.getRequirement();
+                if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
+                    this.renderRewardTooltip(((ItemRequirement) requirement).getItemStack(), x + 3 + 3, y + 2, REQUIREMENT.getFormattedText());
                 }
             }
-            if (!stats.isEmpty()) {
-                toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.statreq").appendText(":").getFormattedText());
-                for (TaskRequirement<?> requirement : stats) {
-                    toolTips.add(paragraph.shallowCopy().appendSibling(new TranslationTextComponent("stat." + requirement.getStat().toString().replace(':', '.'))).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
+        } else {
+            List<String> toolTips = this.toolTips.computeIfAbsent(task, task1 -> Lists.newArrayList());
+            if (toolTips.isEmpty()) {
+                ITextComponent paragraph = new StringTextComponent(" ");
+                toolTips.add(task.getTranslation().applyTextStyle(this.container.getFactionColor()).getFormattedText());
+                TaskRequirement<?> requirement = task.getRequirement();
+                switch (requirement.getType()) {
+                    case ITEMS:
+                        toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.item_req").appendText(":").getFormattedText());
+                        toolTips.add(paragraph.shallowCopy().appendSibling(((Item) requirement.getStat()).getName()).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
+                        break;
+                    case STATS:
+                        toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.stat_req").appendText(":").getFormattedText());
+                        toolTips.add(paragraph.shallowCopy().appendSibling(new TranslationTextComponent("stat." + requirement.getStat().toString().replace(':', '.')).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount()))).getFormattedText());
+                        break;
+                    case ENTITY:
+                        toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entity_req").appendText(":").getFormattedText());
+                        toolTips.add(paragraph.shallowCopy().appendSibling(((EntityType<?>) requirement.getStat()).getName()).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
+                        break;
                 }
-            }
-            if (task.useDescription()) {
-                toolTips.add(task.getDescription().getFormattedText());
-            }
+                if (task.useDescription()) {
+                    toolTips.add(task.getDescription().getFormattedText());
+                }
 
+            }
+            this.renderTooltip(toolTips, x, y);
         }
-        this.renderTooltip(toolTips, x, y);
     }
 
-    private void renderTask(Task task, int x, int y) {
+    private void renderTask(Task task, int x, int y, int mouseX, int mouseY) {
         RenderHelper.disableStandardItemLighting();
         GlStateManager.enableBlend();
         this.minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
@@ -209,14 +236,30 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         if (!dummy) {
             this.font.drawString(this.font.trimStringToWidth(task.getTranslationKey(), 105), x + 4, y + 7, 3419941);//(6839882 & 16711422) >> 1 //8453920 //4226832
         } else {
-            Iterator<ItemStack> rewards = task.getRewards().stream().filter(taskReward -> taskReward instanceof ItemReward).map(taskReward -> ((ItemReward) taskReward).getReward()).iterator();
-            for (int i = 0; i < 6; i++) {
-                if (!rewards.hasNext()) break;
-                this.itemRenderer.renderItemAndEffectIntoGUI(rewards.next(), x + 3 + i * 15, y + 2);
+            TaskReward reward = task.getReward();
+            if (reward instanceof ItemReward) {
+                ItemStack stack = ((ItemReward) reward).getReward();
+                this.itemRenderer.renderItemAndEffectIntoGUI(stack, x + 3 + 113, y + 2);
+                this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 113, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
+            }
+            TaskRequirement<?> requirement = task.getRequirement();
+            if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
+                ItemStack stack = ((ItemRequirement) requirement).getItemStack();
+                this.itemRenderer.renderItemAndEffectIntoGUI(stack, x + 3 + 3, y + 2);
+                this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 3, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
             }
         }
 
         RenderHelper.enableGUIStandardItemLighting();
+    }
+
+    private void renderRewardTooltip(ItemStack stack, int x, int y, String text) {
+        FontRenderer font = stack.getItem().getFontRenderer(stack);
+        net.minecraftforge.fml.client.config.GuiUtils.preItemToolTip(stack);
+        List<String> tooltips = this.getTooltipFromItem(stack);
+        tooltips.add(0, text);
+        this.renderTooltip(tooltips, x, y, (font == null ? this.font : font));
+        net.minecraftforge.fml.client.config.GuiUtils.postItemToolTip();
     }
 
     private void renderScroller(int x, int y, Collection<Task> tasks) {
@@ -320,9 +363,9 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         }
 
         @Override
-        public void renderToolTip(int p_renderToolTip_1_, int p_renderToolTip_2_) {
+        public void renderToolTip(int mouseX, int mouseY) {
             if (this.isHovered && TaskMasterScreen.this.container.getAvailableTasks().size() > this.chosenItem + TaskMasterScreen.this.scrolledTask) {
-                TaskMasterScreen.this.renderTooltip("test", p_renderToolTip_1_, p_renderToolTip_2_);
+                TaskMasterScreen.this.renderTooltip(SUBMIT.getFormattedText(), mouseX, mouseY);
             }
         }
     }
