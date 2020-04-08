@@ -12,16 +12,16 @@ public interface ITaskManager {
 
     boolean addCompletedTask(@Nonnull Task task);
 
-    boolean hasAvailableTasks();
+    boolean hasAvailableTasks(Task.Variant variant);
 
     @Nonnull
-    Set<Task> getAvailableTasks();
+    Set<Task> getAvailableTasks(Task.Variant variant);
 
     @Nonnull
-    Set<Task> getCompletedTasks();
+    Set<Task> getCompletedTasks(Task.Variant variant);
 
     @Nonnull
-    Set<Task> getCompletableTasks();
+    Set<Task> getCompletableTasks(Task.Variant variant);
 
     boolean canCompleteTask(Task task);
 

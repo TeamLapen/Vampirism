@@ -38,9 +38,8 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     private static final ITextComponent SUBMIT = new TranslationTextComponent("gui.vampirism.taskmaster.complete_task");
     private static final ITextComponent REQUIREMENT = new TranslationTextComponent("gui.vampirism.taskmaster.requirement").applyTextStyle(TextFormatting.UNDERLINE);
     private static final ITextComponent REWARD = new TranslationTextComponent("gui.vampirism.taskmaster.reward").applyTextStyle(TextFormatting.UNDERLINE);
-
     @SuppressWarnings("ConstantConditions")
-    private final Task dummy = new Task(null, null, null, null, false) {
+    private final Task dummy = new Task(Task.Variant.UNIQUE, null, null, null, null, false) {
         @Nonnull
         @Override
         public TaskReward getReward() {
@@ -266,7 +265,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         this.minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
         RenderHelper.disableStandardItemLighting();
         int i = tasks.size() - 7;
-        if (i > 1) {
+        if (i >= 1) {
             int k = 144 - (2 + (i - 1) * 144 / i);
             int i1 = Math.min(121, this.scrolledTask * k);
             if (this.scrolledTask >= i + 4) {

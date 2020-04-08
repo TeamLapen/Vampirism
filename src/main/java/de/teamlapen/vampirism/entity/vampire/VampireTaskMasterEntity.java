@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
+import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.entity.TaskMasterEntity;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityType;
@@ -16,7 +17,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements TaskMa
     @Override
     protected boolean processInteract(PlayerEntity playerEntity, Hand hand) {
         if (this.world.isRemote) return true;
-        this.processInteraction(playerEntity, Helper.isVampire(playerEntity));
+        this.processInteraction(playerEntity, Helper.isVampire(playerEntity), Task.Variant.REPEATABLE);
         return true;
     }
 

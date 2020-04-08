@@ -22,14 +22,21 @@ import java.util.stream.Collectors;
 public class TaskMasterContainer extends Container {
 
     private final @Nonnull ITaskManager taskManager;
+    private final @Nonnull Task.Variant variant;
     private @Nonnull Set<Task> possibleTasks = ImmutableSet.of();
     private @Nonnull Set<Task> completed = Sets.newHashSet();
     private @Nonnull List<Task> availableTasks;
 
+    @Deprecated
     public TaskMasterContainer(int id, PlayerInventory playerInventory) {
+        this(id, playerInventory, Task.Variant.REPEATABLE);
+    }
+
+    public TaskMasterContainer(int id, PlayerInventory playerInventory, @Nonnull Task.Variant variant) {
         super(ModContainer.task_master, id);
+        this.variant = variant;
         this.taskManager = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get().getTaskManager();
-        this.availableTasks = Lists.newArrayList(taskManager.getAvailableTasks());
+        this.availableTasks = Lists.newArrayList(taskManager.getAvailableTasks(variant));
     }
 
     @Override
@@ -45,7 +52,7 @@ public class TaskMasterContainer extends Container {
         this.taskManager.completeTask(task);
         this.completed.add(task);
         this.possibleTasks.removeIf(task1 -> !taskManager.canCompleteTask(task1));
-        this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task1 -> task1.requireParent() && task == task1.getParentTask()).collect(Collectors.toList()));
+        this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task1 -> task1.requireParent() && task == task1.getParentTask()).filter(task1 -> task1.getVariant() == this.variant).collect(Collectors.toList()));
     }
 
     public boolean isCompleted(Task task) {
@@ -71,6 +78,7 @@ public class TaskMasterContainer extends Container {
     }
 
     private void sortTasks() {
+        this.availableTasks = Lists.newArrayList(taskManager.getAvailableTasks(variant));
         this.availableTasks.sort((task1, task2) -> (possibleTasks.contains(task1) && !possibleTasks.contains(task2)) || (!possibleTasks.contains(task1) && !completed.contains(task1) && completed.contains(task2)) ? -1 : 0);
     }
 
