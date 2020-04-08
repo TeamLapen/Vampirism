@@ -89,10 +89,8 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void removeRequirements(@Nonnull Task task) {
-        for (TaskRequirement<?> requirement : task.getRequirements()) {
-            if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
-                this.player.inventory.clearMatchingItems(itemStack -> itemStack.getItem() == requirement.getStat(), requirement.getAmount());
-            }
+        if (task.getRequirement().getType().equals(TaskRequirement.Type.ITEMS)) {
+            this.player.inventory.clearMatchingItems(itemStack -> itemStack.getItem() == task.getRequirement().getStat(), task.getRequirement().getAmount());
         }
     }
 
@@ -112,7 +110,7 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void applyRewards(Task task) {
-        task.getRewards().forEach(reward -> reward.applyReward(this.player));
+        task.getReward().applyReward(this.player);
     }
 
     @Override
@@ -143,29 +141,27 @@ public class TaskManager implements ITaskManager {
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
     public boolean canCompleteTask(Task task) {
-        for (TaskRequirement<?> requirement : task.getRequirements()) {
             if (task.requireParent() && !this.completedTasks.contains(task.getParentTask())) return false;
-            switch (requirement.getType()) {
-                case STATS:
-                    if (this.player.getEntityWorld().isRemote()) return false;
-                    if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat())) < this.getStats().get(task).get(requirement.getStat()) + requirement.getAmount())
-                        return false;
-                    continue;
-                case ENTITY:
-                    if (this.player.getEntityWorld().isRemote()) return false;
-                    if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat())) < this.getEntityStats().get(task).get(requirement.getStat()) + requirement.getAmount())
-                        return false;
-                    continue;
-                case ITEMS:
-                    ItemStack stack = ((ItemRequirement) requirement).getItemStack();
-                    if (this.player.inventory.count(stack.getItem()) < stack.getCount()) return false;
-                    continue;
-                case BOOLEAN:
-                    if (!(Boolean) requirement.getStat()) return false;
-                    continue;
-                default:
+        switch (task.getRequirement().getType()) {
+            case STATS:
+                if (this.player.getEntityWorld().isRemote()) return false;
+                if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())) < this.getStats().get(task).get(task.getRequirement().getStat()) + task.getRequirement().getAmount())
                     return false;
-            }
+                break;
+            case ENTITY:
+                if (this.player.getEntityWorld().isRemote()) return false;
+                if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat())) < this.getEntityStats().get(task).get(task.getRequirement().getStat()) + task.getRequirement().getAmount())
+                    return false;
+                break;
+            case ITEMS:
+                ItemStack stack = ((ItemRequirement) task.getRequirement()).getItemStack();
+                if (this.player.inventory.count(stack.getItem()) < stack.getCount()) return false;
+                break;
+            case BOOLEAN:
+                if (!(Boolean) task.getRequirement().getStat()) return false;
+                break;
+            default:
+                return false;
         }
         return true;
     }
@@ -183,22 +179,20 @@ public class TaskManager implements ITaskManager {
      */
     private void updateStats() {
         for (Task task : this.availableTasks) {
-            for (TaskRequirement<?> requirement : task.getRequirements()) {
                 if (this.getStats().containsKey(task) || this.getEntityStats().containsKey(task)) continue;
-                switch (requirement.getType()) {
-                    case STATS:
-                        if (!player.getEntityWorld().isRemote()) {
-                            this.getStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((ResourceLocation) requirement.getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat())));
-                        }
-                        break;
-                    case ENTITY:
-                        if (!player.getEntityWorld().isRemote()) {
-                            this.getEntityStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((EntityType<?>) requirement.getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat())));
-                        }
-                        break;
+            switch (task.getRequirement().getType()) {
+                case STATS:
+                    if (!player.getEntityWorld().isRemote()) {
+                        this.getStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((ResourceLocation) task.getRequirement().getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())));
+                    }
+                    break;
+                case ENTITY:
+                    if (!player.getEntityWorld().isRemote()) {
+                        this.getEntityStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((EntityType<?>) task.getRequirement().getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat())));
+                    }
+                    break;
                     default:
                 }
-            }
         }
         this.getStats().entrySet().removeIf(entry -> !this.availableTasks.contains(entry.getKey()));
         this.getEntityStats().entrySet().removeIf(entry -> !this.availableTasks.contains(entry.getKey()));
