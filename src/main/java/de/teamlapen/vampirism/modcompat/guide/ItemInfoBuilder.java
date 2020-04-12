@@ -2,14 +2,20 @@ package de.teamlapen.vampirism.modcompat.guide;
 
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
+import amerifrance.guideapi.api.util.PageHelper;
 import amerifrance.guideapi.entry.EntryItemStack;
-import de.teamlapen.lib.lib.util.UtilLib;
+import amerifrance.guideapi.page.PageBrewingRecipe;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.brewing.BrewingRecipe;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,47 +23,64 @@ import java.util.stream.Collectors;
  * Utility class to build item or block info pages
  */
 public class ItemInfoBuilder {
-    private final ItemStack stack;
+    public static ItemInfoBuilder create(Item... items) {
+        assert items.length > 0;
+        Item i0 = items[0];
+        String name = i0 instanceof IItemWithTier ? ((IItemWithTier) i0).getBaseRegName() : i0.getRegistryName().getPath();
+        return new ItemInfoBuilder(Ingredient.fromItems(items), new ItemStack(i0), name, false);
+    }
+
     private final boolean block;
     private String name;
     private Object[] formats = new Object[0];
     private Object[] links = null;
     private boolean customName;
 
+    /**
+     * @param block Whether to use "block" or "item" translation keys
+     */
+    public static ItemInfoBuilder create(boolean block, ItemStack... stacks) {
+        assert stacks.length > 0;
+        ItemStack i0 = stacks[0];
+        Item item = i0.getItem();
+        String name = item instanceof IItemWithTier ? ((IItemWithTier) item).getBaseRegName() : item.getRegistryName().getPath();
+        return new ItemInfoBuilder(Ingredient.fromStacks(stacks), i0, name, block);
+    }
+
     @Nonnull
     private List<ResourceLocation> recipes = Collections.emptyList();
 
+    public static ItemInfoBuilder create(Block... blocks) {
+        assert blocks.length > 0;
+        Block i0 = blocks[0];
+        String name = i0.getRegistryName().getPath();
+        return new ItemInfoBuilder(Ingredient.fromItems(blocks), new ItemStack(i0), name, true);
+    }
+
+    private final Ingredient ingredient;
+    private final ItemStack mainStack;
+    @Nullable
+    private ItemStack[] brewingStacks;
+
     /**
-     * @param stack The relevant item stack. Used for display and strings.
-     * @param block If this entry is a about a block or not
+     * @param ingredient The relevant item stack. Used for display and strings.
+     * @param block      If this entry is a about a block or not
      */
-    public ItemInfoBuilder(ItemStack stack, boolean block) {
-        assert !stack.isEmpty();
-        this.stack = stack;
+    private ItemInfoBuilder(Ingredient ingredient, ItemStack mainStack, String name, boolean block) {
+        this.ingredient = ingredient;
         this.block = block;
-        name = stack.getItem().getRegistryName().getPath();
-    }
-
-    public ItemInfoBuilder(Item item) {
-        this(new ItemStack(item), false);
-    }
-
-    public ItemInfoBuilder(Block block) {
-        this(new ItemStack(block), true);
+        this.mainStack = mainStack;
+        this.name = name;
     }
 
     /**
-     * Builds the entry and adds it to the given map
+     * Add items that can be created in a brewing stand
+     *
+     * @return this
      */
-    public void build(Map<ResourceLocation, EntryAbstract> entries) {
-        ArrayList<IPage> pages = new ArrayList<>();
-        String base = "guide.vampirism." + (block ? "blocks" : "items") + "." + name;
-        pages.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + ".text", formats), stack));
-        for (ResourceLocation id : recipes) {
-            pages.add(GuideHelper.getRecipePage(id));
-        }
-        if (links != null) GuideHelper.addLinks(pages, links);
-        entries.put(new ResourceLocation(base), new EntryItemStack(pages, customName ? base : stack.getTranslationKey(), stack));
+    public ItemInfoBuilder brewingItems(Item... brewableItems) {
+        this.brewingStacks = Arrays.stream(brewableItems).map(ItemStack::new).toArray(ItemStack[]::new);
+        return this;
     }
 
     /**
@@ -82,6 +105,39 @@ public class ItemInfoBuilder {
         return this;
     }
 
+    /**
+     * Add stacks that can be created in a brewing stand
+     *
+     * @return this
+     */
+    public ItemInfoBuilder brewingStacks(ItemStack... brewableStacks) {
+        this.brewingStacks = brewableStacks;
+        return this;
+    }
+
+    /**
+     * Builds the entry and adds it to the given map
+     */
+    public void build(Map<ResourceLocation, EntryAbstract> entries) {
+        ArrayList<IPage> pages = new ArrayList<>();
+        String base = "guide.vampirism." + (block ? "blocks" : "items") + "." + name;
+        pages.addAll(PageHelper.pagesForLongText(GuideBook.translate(base + ".text", formats), ingredient));
+        for (ResourceLocation id : recipes) {
+            pages.add(GuideHelper.getRecipePage(id));
+        }
+        if (brewingStacks != null) {
+            for (ItemStack brew : brewingStacks) {
+                BrewingRecipe r = GuideHelper.getBrewingRecipe(brew);
+                if (r == null) {
+                    LogManager.getLogger().error("Could not find brewing recipe for {}", brew.toString());
+                } else {
+                    pages.add(new PageBrewingRecipe(r));
+                }
+            }
+        }
+        if (links != null) GuideHelper.addLinks(pages, links);
+        entries.put(new ResourceLocation(base), new EntryItemStack(pages, customName ? base : mainStack.getTranslationKey(), mainStack));
+    }
 
 
     /**
@@ -103,7 +159,7 @@ public class ItemInfoBuilder {
     }
 
     /**
-     * Sets links that are added to the description pages
+     * Sets links that are added to the description pages>
      */
     public ItemInfoBuilder setLinks(Object... links) {
         this.links = links;

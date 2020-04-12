@@ -36,6 +36,11 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier 
         addTierInformation(tooltip);
     }
 
+    @Override
+    public String getBaseRegName() {
+        return regName;
+    }
+
     /**
      * Converts the tier of this bottle into the strength of the applied holy water
      *
