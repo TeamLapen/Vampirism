@@ -45,6 +45,10 @@ public class HeartSeekerItem extends VampirismVampireSword implements IItemWithT
         return tier;
     }
 
+    @Override
+    public String getBaseRegName() {
+        return regName;
+    }
 
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
