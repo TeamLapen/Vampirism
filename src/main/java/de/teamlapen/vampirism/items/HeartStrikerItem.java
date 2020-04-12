@@ -42,6 +42,11 @@ public class HeartStrikerItem extends VampirismVampireSword implements IItemWith
     }
 
     @Override
+    public String getBaseRegName() {
+        return regName;
+    }
+
+    @Override
     public TIER getVampirismTier() {
         return tier;
     }

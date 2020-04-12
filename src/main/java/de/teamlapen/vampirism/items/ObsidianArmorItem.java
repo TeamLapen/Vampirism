@@ -52,6 +52,11 @@ public class ObsidianArmorItem extends VampirismHunterArmor implements IItemWith
     }
 
     @Override
+    public String getBaseRegName() {
+        return baseRegName;
+    }
+
+    @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         switch (getVampirismTier()) {
             case ENHANCED:
