@@ -44,6 +44,11 @@ public class HunterAxeItem extends VampirismHunterWeapon implements IItemWithTie
     }
 
     @Override
+    public String getBaseRegName() {
+        return regName;
+    }
+
+    @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         if (this.isInGroup(group)) {
             items.add(getEnchantedStack());
