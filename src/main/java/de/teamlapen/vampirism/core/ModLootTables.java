@@ -33,7 +33,7 @@ public class ModLootTables {
     public static final ResourceLocation stronghold_library = registerInject("stronghold_library");
 
     //chests
-    public static final ResourceLocation chest_hunter_trainer = register("chests/hunter_trainer");
+    public static final ResourceLocation chest_hunter_trainer = register("chests/village/hunter_trainer");
     public static final ResourceLocation chest_vampire_dungeon = register("chests/dungeon/vampire_dungeon");
 
     private static int injected = 0;
