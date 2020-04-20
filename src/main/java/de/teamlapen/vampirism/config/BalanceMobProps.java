@@ -92,7 +92,7 @@ public class BalanceMobProps {
     //    @DefaultDouble(value = 0.3D, minValue = 0.1, maxValue = 2, name = "vampire_speed")
     public final double VAMPIRE_SPEED = 0.3;
     //    @DefaultInt(value = 75, minValue = 0, maxValue = 1000000, name = "vampire_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
-    public final int VAMPIRE_SPAWN_CHANCE = 75;
+    public final int VAMPIRE_SPAWN_CHANCE = 100;
     //    @DefaultDouble(value = 2, minValue = 0, comment = "Any fire damage that is received by a basic vampire is multiplied by this")
     public final double VAMPIRE_FIRE_VULNERABILITY = 2;
 
