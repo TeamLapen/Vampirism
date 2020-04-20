@@ -1,7 +1,7 @@
 {
   "__comment": "Designed by Maxanier ",
   "textures": {
-    "fluid": "block/water_still"
+    "fluid": "vampirism:block/blood_still"
   },
   "elements": [
     {

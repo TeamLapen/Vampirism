@@ -17,8 +17,6 @@ import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.fluid.EmptyFluid;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -26,7 +24,6 @@ import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,32 +39,13 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void onModelBakeEvent(ModelBakeEvent event) {
+
         try {
-            // load the fluid models for the different levels from the .json files
-            IUnbakedModel[] containerFluidModels = new IUnbakedModel[BakedBloodContainerModel.FLUID_LEVELS];
-
             for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
-                //event.getModelManager().getModel(new ResourceLocation(REFERENCE.MODID, "block/blood_container/fluid_" + (x + 1))); //backed
-                //event.getModelLoader().getModelOrMissing(new ResourceLocation(REFERENCE.MODID, "block/blood_container/fluid_" + (x + 1))); //unbaked
-                containerFluidModels[x] = event.getModelLoader().getModelOrMissing(new ResourceLocation(REFERENCE.MODID, "block/blood_container/fluid_" + (x + 1)));
+                ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "block/blood_container/fluid_" + (x + 1));
+                IUnbakedModel model = event.getModelLoader().getModelOrMissing(loc);
+                BakedBloodContainerModel.FLUID_MODELS[x] = model.bakeModel(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, loc);
             }
-
-            //For each registered fluid: Replace the fluid model texture by fluid (still) texture and cache the retextured model
-
-            for (Fluid f : ForgeRegistries.FLUIDS) {
-                if (f instanceof EmptyFluid)
-                    continue;
-                for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
-                    //TODO 1.15 maybe switch to MultiPartModel?
-                    //IModelGeometry<?> retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder<String, String>().put("fluid", f.getAttributes().getStillTexture().toString()).build());
-
-                    BakedBloodContainerModel.FLUID_MODELS[x].put(f, containerFluidModels[x].bakeModel(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, new ResourceLocation("temp")));
-
-                }
-            }
-
-            // get ModelResourceLocations of all tank block variants from the registry
-
             Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
 
@@ -86,7 +64,6 @@ public class ClientEventHandler {
                 newModel = new BakedBloodContainerModel(registeredModel);
                 event.getModelRegistry().put(loc, newModel);
             }
-
         } catch (Exception e) {
             LOGGER.error("Failed to load fluid models for blood container", e);
         }

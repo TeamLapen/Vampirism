@@ -23,7 +23,6 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -35,18 +34,14 @@ import java.util.Random;
 public class BakedBloodContainerModel implements IDynamicBakedModel {
 
     public static final int FLUID_LEVELS = 14;
+
     /**
-     * Stores a FluidName-> Baked Fluid model map for each possible fluid level
+     * Stores a fluid level -> fluid model array
      * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)} )}
      */
-    public static final HashMap<Fluid, IBakedModel>[] FLUID_MODELS = new HashMap[FLUID_LEVELS];
+    public static final IBakedModel[] FLUID_MODELS = new IBakedModel[FLUID_LEVELS];
     private final static ItemOverrideList overrideList = new CustomItemOverride();
 
-    static {
-        for (int x = 0; x < FLUID_LEVELS; x++) {
-            FLUID_MODELS[x] = new HashMap<>();
-        }
-    }
 
     private final IBakedModel baseModel;
     private Fluid fluid;
@@ -89,17 +84,12 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
 
         if (!item) {
             Integer level = extraData.getData(BloodContainerTileEntity.FLUID_LEVEL_PROP);
-            Fluid fluid = extraData.getData(BloodContainerTileEntity.FLUID_PROP);
-            if (fluid != null && level != null && level > 0 && level <= FLUID_LEVELS) {
-                HashMap<Fluid, IBakedModel> fluidModels = FLUID_MODELS[level - 1];
-                if (FLUID_MODELS[level - 1].containsKey(fluid)) {
-                    quads.addAll(fluidModels.get(fluid).getQuads(state, side, rand));
-                }
+            if (level != null && level > 0 && level <= FLUID_LEVELS) {
+                quads.addAll(FLUID_MODELS[level - 1].getQuads(state, side, rand));
             }
         } else {
-            HashMap<Fluid, IBakedModel> fluidModels = FLUID_MODELS[fluidLevel];
-            if (FLUID_MODELS[fluidLevel].containsKey(fluid)) {
-                quads.addAll(fluidModels.get(fluid).getQuads(state, side, rand));
+            {
+                quads.addAll(FLUID_MODELS[fluidLevel].getQuads(state, side, rand));
             }
         }
         return quads;

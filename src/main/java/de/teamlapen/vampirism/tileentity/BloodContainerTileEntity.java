@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.items.BloodBottleItem;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -34,14 +33,13 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     public static final int LEVEL_AMOUNT = BloodBottleItem.AMOUNT * VReference.FOOD_TO_FLUID_BLOOD;
     public static final int CAPACITY = LEVEL_AMOUNT * 14;
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
-    public static final ModelProperty<Fluid> FLUID_PROP = new ModelProperty<>();
     private int lastSyncedAmount = Integer.MIN_VALUE;
     private IModelData modelData;
 
 
     public BloodContainerTileEntity() {
         super(ModTiles.blood_container);
-        this.tank = new FluidTankWithListener(CAPACITY).setListener(this);
+        this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.blood.isEquivalentTo(fluidStack.getFluid())).setListener(this);
 
     }
 
@@ -112,7 +110,7 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
             float amount = fluid.getAmount() / (float) BloodContainerTileEntity.LEVEL_AMOUNT;
             l = (amount > 0 && amount < 1) ? 1 : (int) amount;
         }
-        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_PROP, fluid.getFluid()).build();
+        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).build();
         if (refresh) ModelDataManager.requestModelDataRefresh(this);
     }
 
