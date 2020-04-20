@@ -31,6 +31,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -61,6 +62,12 @@ public class ClientProxy extends CommonProxy {
 
     private VampirismHUDOverlay overlay;
     private ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
+
+    public ClientProxy() {
+        RenderHandler renderHandler = new RenderHandler(Minecraft.getInstance());
+        MinecraftForge.EVENT_BUS.register(renderHandler);
+        ((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(renderHandler);
+    }
 
     @Override
     public void displayNameSwordScreen(ItemStack stack) {
@@ -163,7 +170,7 @@ public class ClientProxy extends CommonProxy {
     private void registerSubscriptions() {
         overlay = new VampirismHUDOverlay(Minecraft.getInstance());
         MinecraftForge.EVENT_BUS.register(overlay);
-        MinecraftForge.EVENT_BUS.register(new RenderHandler(Minecraft.getInstance()));
+
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
         MinecraftForge.EVENT_BUS.register(new ScreenEventHandler());
     }
