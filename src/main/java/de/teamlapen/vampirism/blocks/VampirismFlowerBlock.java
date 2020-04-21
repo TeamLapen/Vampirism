@@ -1,51 +1,45 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.BushBlock;
+import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.IStringSerializable;
+
+import javax.annotation.Nonnull;
 
 /**
  * Vampirism's flowers. To add one add it to {@link TYPE}
  */
-public class VampirismFlowerBlock extends BushBlock {
+public class VampirismFlowerBlock extends FlowerBlock {
     private final TYPE type;
 
     public VampirismFlowerBlock(TYPE type) {
-        super(Properties.create(Material.PLANTS).hardnessAndResistance(0).doesNotBlockMovement().sound(SoundType.PLANT));
+        super(type.effect, type.duration, Properties.create(Material.PLANTS).zeroHardnessAndResistance().doesNotBlockMovement().sound(SoundType.PLANT));
         this.type = type;
-        setRegistryName(REFERENCE.MODID, type.getName());
-
+        this.setRegistryName(REFERENCE.MODID, type.getName());
     }
 
 
     public enum TYPE implements IStringSerializable {
+        ORCHID("vampire_orchid", Effects.BLINDNESS, 7);
 
-        ORCHID(0, "vampire_orchid", "vampire_orchid");
-
-
-        private final int meta;
         private final String name;
-        private final String unlocalizedName;
+        private final Effect effect;
+        private final int duration;
 
-        TYPE(int meta, String name, String unlocalizedName) {
-            this.meta = meta;
+        TYPE(String name, Effect effect, int duration) {
             this.name = name;
-            this.unlocalizedName = unlocalizedName;
+            this.effect = effect;
+            this.duration = duration;
         }
 
-        public int getMeta() {
-            return meta;
-        }
-
+        @Nonnull
         @Override
         public String getName() {
             return name;
-        }
-
-        public String getUnlocalizedName() {
-            return unlocalizedName;
         }
 
     }

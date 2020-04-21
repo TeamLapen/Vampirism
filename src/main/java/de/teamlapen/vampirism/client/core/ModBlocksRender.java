@@ -99,7 +99,7 @@ public class ModBlocksRender {
         RenderTypeLookup.setRenderLayer(ModBlocks.weapon_table, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.vampire_orchid, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.garlic, cutout);
-
+        RenderTypeLookup.setRenderLayer(ModBlocks.potted_vampire_orchid, cutout);
 
     }
 

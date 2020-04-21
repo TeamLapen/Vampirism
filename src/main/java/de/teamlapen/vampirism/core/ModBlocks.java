@@ -149,7 +149,7 @@ public class ModBlocks {
         registry.register(prepareRegister(new GarlicBeaconBlock(GarlicBeaconBlock.Type.WEAK)));
         registry.register(prepareRegister(new HunterTableBlock()));
         registry.register(prepareRegister(new MedChairBlock()));
-        registry.register(prepareRegister(new FlowerPotBlock(vampire_orchid, Block.Properties.create(Material.MISCELLANEOUS).zeroHardnessAndResistance()).setRegistryName(REFERENCE.MODID, "potted_vampire_orchid")));
+        registry.register(prepareRegister(new FlowerPotBlock(vampire_orchid, Block.Properties.create(Material.MISCELLANEOUS).zeroHardnessAndResistance().notSolid()).setRegistryName(REFERENCE.MODID, "potted_vampire_orchid")));
         registry.register(prepareRegister(new SunscreenBeaconBlock()));
         registry.register(prepareRegister(new TentBlock()));
         registry.register(prepareRegister(new TentMainBlock()));
