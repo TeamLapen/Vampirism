@@ -180,6 +180,7 @@ public class ModItems {
     public static final SpawnEggItem hunter_trainer_spawn_egg = getNull();
 
     public static final UmbrellaItem umbrella = getNull();
+    public static final BlockItem vampire_orchid = getNull();
 
 
     static void registerCraftingRecipes() {
