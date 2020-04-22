@@ -30,6 +30,7 @@ public class ModTags {
         public static final Tag<Item> VAMPIRE_CLOAK = tag("vampire_cloak");
         public static final Tag<Item> OBSIDIAN = tag("forge", "obsidian");
         public static final Tag<Item> CASTLE_BLOCK = tag("castle_block");
+        public static final Tag<Item> GARLIC = tag("forge", "crops/garlic");
 
 
         private static Tag<Item> tag(String domain, String name) {

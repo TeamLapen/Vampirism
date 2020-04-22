@@ -16,7 +16,7 @@
       "item": "minecraft:stone_bricks"
     },
     "Z": {
-      "item": "vampirism:item_garlic"
+      "tag": "forge:crops/garlic"
     }
   }
 }

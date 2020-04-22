@@ -21,7 +21,7 @@
       "tag": "forge:gems/diamond"
     },
     "Z": {
-      "item": "vampirism:item_garlic"
+      "tag": "forge:crops/garlic"
     }
   }
 }

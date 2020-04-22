@@ -7,7 +7,7 @@
     "tag": "minecraft:wool"
   },
   "fluidItem": {
-    "item": "vampirism:item_garlic"
+    "tag": "forge:crops/garlic"
   },
   "skill": [
     "vampirism:garlic_beacon"

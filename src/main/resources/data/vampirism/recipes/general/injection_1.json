@@ -7,7 +7,7 @@
       "item": "vampirism:injection_empty"
     },
     {
-      "item": "vampirism:item_garlic"
+      "tag": "forge:crops/garlic"
     }
   ],
   "type": "minecraft:crafting_shapeless"
