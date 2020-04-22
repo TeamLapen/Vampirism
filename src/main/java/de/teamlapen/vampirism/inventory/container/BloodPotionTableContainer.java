@@ -2,10 +2,7 @@ package de.teamlapen.vampirism.inventory.container;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModContainer;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModStats;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
@@ -14,9 +11,11 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,13 +24,16 @@ import net.minecraftforge.fml.network.IContainerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Table to create blood potions
  */
 public class BloodPotionTableContainer extends InventoryContainer {
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 115, 55, 1), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 137, 55, 1), new SelectorInfo(Ingredient.fromItems(ModItems.item_garlic), 126, 14), new SelectorInfo(Ingredient.fromItems(ModItems.item_garlic, ModItems.vampire_blood_bottle), 101, 22, true)};
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 115, 55, 1), new SelectorInfo(Ingredient.fromItems(ModItems.vampire_blood_bottle), 137, 55, 1), new SelectorInfo(Ingredient.fromTag(ModTags.Items.GARLIC), 126, 14), new SelectorInfo(getSpecialIngredient(ModTags.Items.GARLIC, ModItems.vampire_blood_bottle), 101, 22, true)};
     private final HunterPlayer hunterPlayer;
     private final int max_crafting_time;
     private final boolean portable;
@@ -197,13 +199,19 @@ public class BloodPotionTableContainer extends InventoryContainer {
      */
     private boolean areRequirementsMet() {
         ItemStack garlic = inventory.getStackInSlot(2);
-        if (garlic.isEmpty() || !ModItems.item_garlic.equals(garlic.getItem())) return false;
+        if (garlic.isEmpty() || !ModTags.Items.GARLIC.contains(garlic.getItem())) return false;
         boolean bottle = false;
         ItemStack bottle1 = inventory.getStackInSlot(0);
         ItemStack bottle2 = inventory.getStackInSlot(1);
         if (!bottle1.isEmpty() && bottle1.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
         if (!bottle2.isEmpty() && bottle2.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
         return bottle;
+    }
+
+    private static Ingredient getSpecialIngredient(Tag<Item> tag, Item... items) {
+        Collection<Item> d = tag.getAllElements();
+        d.addAll(Arrays.asList(items));
+        return Ingredient.fromStacks(d.stream().map(ItemStack::new).collect(Collectors.toList()).toArray(new ItemStack[0]));
     }
 
     /**

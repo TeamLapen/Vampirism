@@ -5,7 +5,7 @@
     "count": 2
   },
   "ingredient": {
-    "item": "vampirism:item_garlic"
+    "tag": "forge:crops/garlic"
   },
   "fluidItem": {
     "item": "vampirism:holy_water_bottle_normal"

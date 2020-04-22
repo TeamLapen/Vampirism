@@ -6,7 +6,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "vampirism:item_garlic"
+      "tag": "forge:crops/garlic"
     },
     {
       "item": "minecraft:bread"

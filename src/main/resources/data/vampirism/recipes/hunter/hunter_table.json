@@ -19,7 +19,7 @@
       "tag": "minecraft:planks"
     },
     "W": {
-      "item": "vampirism:item_garlic"
+      "tag": "forge:crops/garlic"
     }
   }
 }

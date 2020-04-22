@@ -13,7 +13,7 @@
   ],
   "key": {
     "X": {
-      "item": "vampirism:item_garlic"
+      "tag": "forge:crops/garlic"
     },
     "Y": {
       "tag": "forge:ingots/gold"

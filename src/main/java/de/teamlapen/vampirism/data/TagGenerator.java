@@ -62,6 +62,7 @@ public class TagGenerator {
             getBuilder(ModTags.Items.PURE_BLOOD).add(ModItems.pure_blood_0, ModItems.pure_blood_1, ModItems.pure_blood_2, ModItems.pure_blood_3, ModItems.pure_blood_4);
             getBuilder(ModTags.Items.VAMPIRE_CLOAK).add(ModItems.vampire_cloak_black_blue, ModItems.vampire_cloak_black_red, ModItems.vampire_cloak_black_white, ModItems.vampire_cloak_red_black, ModItems.vampire_cloak_white_black);
             getBuilder(ItemTags.SMALL_FLOWERS).add(ModItems.vampire_orchid);
+            getBuilder(ModTags.Items.GARLIC).add(ModItems.item_garlic);
         }
     }
 

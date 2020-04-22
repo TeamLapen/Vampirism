@@ -17,7 +17,7 @@
       "item": "minecraft:leather"
     },
     "Y": {
-      "item": "vampirism:item_garlic"
+      "tag": "forge:crops/garlic"
     },
     "Z": {
       "tag": "forge:ingots/gold"

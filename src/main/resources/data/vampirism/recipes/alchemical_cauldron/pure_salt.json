@@ -5,7 +5,7 @@
     "count": 4
   },
   "ingredient": {
-    "item": "vampirism:item_garlic"
+    "tag": "forge:crops/garlic"
   },
   "fluid": {
     "fluid": "minecraft:water"
