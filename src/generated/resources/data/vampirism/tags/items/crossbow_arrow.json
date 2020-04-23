@@ -4,5 +4,6 @@
     "vampirism:crossbow_arrow_normal",
     "vampirism:crossbow_arrow_spitfire",
     "vampirism:crossbow_arrow_vampire_killer"
-  ]
+  ],
+  "optional": []
 }

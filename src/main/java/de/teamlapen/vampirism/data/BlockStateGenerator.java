@@ -23,6 +23,28 @@ public class BlockStateGenerator extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
 
+        //default blocks
+        horizontalBlock(ModBlocks.hunter_table, models().getExistingFile(modLoc("block/hunter_table")));
+        horizontalBlock(ModBlocks.garlic_beacon_normal, models().getExistingFile(modLoc("block/garlic_beacon_normal")));
+        horizontalBlock(ModBlocks.garlic_beacon_weak, models().getExistingFile(modLoc("block/garlic_beacon_weak")));
+        horizontalBlock(ModBlocks.garlic_beacon_improved, models().getExistingFile(modLoc("block/garlic_beacon_improved")));
+        horizontalBlock(ModBlocks.church_altar, models().getExistingFile(modLoc("block/church_altar")));
+        horizontalBlock(ModBlocks.blood_grinder, models().getExistingFile(modLoc("block/grinder")));
+
+        simpleBlock(ModBlocks.castle_block_dark_brick);
+        simpleBlock(ModBlocks.castle_block_dark_brick_bloody);
+        simpleBlock(ModBlocks.castle_block_dark_stone);
+        simpleBlock(ModBlocks.castle_block_normal_brick);
+        simpleBlock(ModBlocks.castle_block_purple_brick);
+
+        stairsBlock(ModBlocks.castle_stairs_dark_stone,modLoc("block/castle_block_dark_brick"));
+        stairsBlock(ModBlocks.castle_stairs_dark_brick,modLoc("block/castle_block_dark_brick"));
+        stairsBlock(ModBlocks.castle_stairs_purple_brick,modLoc("block/castle_block_dark_brick"));
+
+        slabBlock(ModBlocks.castle_slab_dark_brick, modLoc("block/castle_block_dark_brick"), modLoc("block/castle_block_dark_brick"));
+        slabBlock(ModBlocks.castle_slab_dark_stone, modLoc("block/castle_block_dark_stone"), modLoc("block/castle_block_dark_stone"));
+        slabBlock(ModBlocks.castle_slab_purple_brick, modLoc("block/castle_block_purple_brick"), modLoc("block/castle_block_purple_brick"));
+
         getVariantBuilder(ModBlocks.altar_pillar)
                 .partialState().with(AltarPillarBlock.TYPE_PROPERTY, AltarPillarBlock.EnumPillarType.NONE).modelForState().modelFile(models().getExistingFile(modLoc("block/altar_pillar"))).addModel()
                 .partialState().with(AltarPillarBlock.TYPE_PROPERTY, AltarPillarBlock.EnumPillarType.BONE).modelForState().modelFile(models().getExistingFile(modLoc("block/altar_pillar_filled_bone"))).addModel()
@@ -39,7 +61,6 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .part().modelFile(cauldronLiquid).addModel().condition(AlchemicalCauldronBlock.LIQUID, 1).end()
                 .part().modelFile(cauldronLiquidBoiling).addModel().condition(AlchemicalCauldronBlock.LIQUID, 2).end();
 
-        horizontalBlock(ModBlocks.blood_grinder, models().getExistingFile(modLoc("block/grinder")));
 
         ModelFile sieve = models().getExistingFile(modLoc("block/blood_sieve"));
         ModelFile activeSieve = models().getBuilder("active_blood_sieve").parent(sieve).texture("filter", modLoc("block/blood_sieve_filter_active"));
@@ -47,17 +68,6 @@ public class BlockStateGenerator extends BlockStateProvider {
         getVariantBuilder(ModBlocks.blood_sieve)
                 .partialState().with(SieveBlock.PROPERTY_ACTIVE, true).modelForState().modelFile(activeSieve).addModel()
                 .partialState().with(SieveBlock.PROPERTY_ACTIVE, false).modelForState().modelFile(sieve).addModel();
-
-        horizontalBlock(ModBlocks.hunter_table, models().getExistingFile(modLoc("block/hunter_table")));
-        horizontalBlock(ModBlocks.garlic_beacon_normal, models().getExistingFile(modLoc("block/garlic_beacon_normal")));
-        horizontalBlock(ModBlocks.garlic_beacon_weak, models().getExistingFile(modLoc("block/garlic_beacon_weak")));
-        horizontalBlock(ModBlocks.garlic_beacon_improved, models().getExistingFile(modLoc("block/garlic_beacon_improved")));
-
-        slabBlock(ModBlocks.castle_slab_dark_brick, modLoc("block/castle_block_dark_brick"), modLoc("block/castle_block_dark_brick"));
-        slabBlock(ModBlocks.castle_slab_dark_stone, modLoc("block/castle_block_dark_stone"), modLoc("block/castle_block_dark_stone"));
-        slabBlock(ModBlocks.castle_slab_purple_brick, modLoc("block/castle_block_purple_brick"), modLoc("block/castle_block_purple_brick"));
-
-        horizontalBlock(ModBlocks.church_altar, models().getExistingFile(modLoc("block/church_altar")));
 
         getVariantBuilder(ModBlocks.med_chair).forAllStates(blockState -> ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(blockState.get(MedChairBlock.PART) == MedChairBlock.EnumPart.TOP ? "block/medchairhead" : "block/medchairbase"))).rotationY(((int) blockState.get(MedChairBlock.FACING).getHorizontalAngle() + 180) % 360).build());
 

@@ -2,5 +2,6 @@
   "replace": false,
   "values": [
     "vampirism:cursed_earth"
-  ]
+  ],
+  "optional": []
 }
