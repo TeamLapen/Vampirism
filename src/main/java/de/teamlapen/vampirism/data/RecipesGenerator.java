@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
@@ -30,6 +31,10 @@ public class RecipesGenerator extends RecipeProvider {
         ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.castle_block_dark_stone, 7).addIngredient(Items.STONE, 7).addIngredient(Items.BLACK_DYE).addIngredient(ModBlocks.vampire_orchid).addCriterion("has_orchid", this.hasItem(ModBlocks.vampire_orchid)).build(consumer, new ResourceLocation(REFERENCE.MODID,"general/castle_block_dark_stone"));
         ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.castle_block_normal_brick, 8).addIngredient(Items.STONE_BRICKS, 8).addIngredient(ModBlocks.vampire_orchid).addCriterion("has_orchid", this.hasItem(ModBlocks.vampire_orchid)).build(consumer, new ResourceLocation(REFERENCE.MODID,"general/castle_block_normal_brick"));
         ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.castle_block_purple_brick, 8).addIngredient(ModBlocks.castle_block_normal_brick, 8).addIngredient(ModBlocks.vampire_orchid).addCriterion("has_orchid", this.hasItem(ModBlocks.vampire_orchid)).build(consumer, new ResourceLocation(REFERENCE.MODID,"general/castle_block_purple_brick"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.castle_slab_dark_brick).patternLine("###").key('#',ModBlocks.castle_block_dark_brick).addCriterion("has_castle_brick",this.hasItem(ModBlocks.castle_block_dark_brick)).build(consumer, new ResourceLocation(REFERENCE.MODID, "general/castle_slab_dark_brick"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.castle_slab_dark_stone).patternLine("###").key('#',ModBlocks.castle_block_dark_stone).addCriterion("has_castle_brick",this.hasItem(ModBlocks.castle_block_dark_stone)).build(consumer, new ResourceLocation(REFERENCE.MODID, "general/castle_slab_dark_stone"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.castle_slab_purple_brick).patternLine("###").key('#',ModBlocks.castle_block_purple_brick).addCriterion("has_castle_brick",this.hasItem(ModBlocks.castle_block_purple_brick)).build(consumer, new ResourceLocation(REFERENCE.MODID, "general/castle_slab_purple_brick"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.castle_stairs_dark_brick).patternLine("#  ").patternLine("## ").patternLine("###").key('#',ModBlocks.castle_block_dark_brick).addCriterion("has_castle_brick",this.hasItem(ModBlocks.castle_block_dark_brick)).build(consumer, new ResourceLocation(REFERENCE.MODID, "general/castle_stairs_dark_brick"));
     }
 
     @Nonnull

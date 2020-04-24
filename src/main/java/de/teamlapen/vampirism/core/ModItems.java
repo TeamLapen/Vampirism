@@ -181,6 +181,7 @@ public class ModItems {
 
     public static final UmbrellaItem umbrella = getNull();
     public static final BlockItem vampire_orchid = getNull();
+    public static final AlchemicalFireItem item_alchemical_fire = getNull();
 
 
     static void registerCraftingRecipes() {

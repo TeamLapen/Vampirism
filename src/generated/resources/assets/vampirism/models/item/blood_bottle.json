@@ -1,0 +1,68 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "vampirism:item/blood_bottle_0"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "damage": 0.0
+      },
+      "model": "vampirism:item/blood_bottle_0"
+    },
+    {
+      "predicate": {
+        "damage": 0.11
+      },
+      "model": "vampirism:item/blood_bottle_1"
+    },
+    {
+      "predicate": {
+        "damage": 0.22
+      },
+      "model": "vampirism:item/blood_bottle_2"
+    },
+    {
+      "predicate": {
+        "damage": 0.33
+      },
+      "model": "vampirism:item/blood_bottle_3"
+    },
+    {
+      "predicate": {
+        "damage": 0.44
+      },
+      "model": "vampirism:item/blood_bottle_4"
+    },
+    {
+      "predicate": {
+        "damage": 0.55
+      },
+      "model": "vampirism:item/blood_bottle_5"
+    },
+    {
+      "predicate": {
+        "damage": 0.66
+      },
+      "model": "vampirism:item/blood_bottle_6"
+    },
+    {
+      "predicate": {
+        "damage": 0.77
+      },
+      "model": "vampirism:item/blood_bottle_7"
+    },
+    {
+      "predicate": {
+        "damage": 0.88
+      },
+      "model": "vampirism:item/blood_bottle_8"
+    },
+    {
+      "predicate": {
+        "damage": 0.99
+      },
+      "model": "vampirism:item/blood_bottle_9"
+    }
+  ]
+}
