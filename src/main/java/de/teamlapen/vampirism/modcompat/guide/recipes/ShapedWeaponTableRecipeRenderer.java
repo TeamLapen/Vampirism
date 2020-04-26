@@ -19,7 +19,7 @@ public class ShapedWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRende
         super.draw(book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
         for (int y = 0; y < recipe.getRecipeHeight(); y++) {
             for (int x = 0; x < recipe.getRecipeWidth(); x++) {
-                int stackX = (x + 1) * 17 + (guiLeft + 29);
+                int stackX = (x + 1) * 17 + (guiLeft + 49);
                 int stackY = (y + 1) * 17 + (guiTop + 30);
                 int i = y * recipe.getRecipeWidth() + x;
                 if (i < recipe.getIngredients().size()) {
