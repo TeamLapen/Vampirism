@@ -161,7 +161,7 @@ public class VampirismConfig {
 
             }));
 
-            sundamageDimensionsOverrideNegative = builder.comment("Add the id of any dimension you want to disable sundamage for to this list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverridePositive", Collections.emptyList(), (object) -> {
+            sundamageDimensionsOverrideNegative = builder.comment("Add the id of any dimension you want to disable sundamage for to this list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverrideNegative", Collections.emptyList(), (object) -> {
                 if (object instanceof String) {
                     try {
                         new ResourceLocation((String) object);

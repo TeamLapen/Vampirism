@@ -27,7 +27,7 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
             for (int x = 0; x < 3; x++) {
                 int i = 3 * y + x;
                 if (i < recipe.getIngredients().size()) {
-                    int stackX = (x + 1) * 17 + (guiLeft + 29);
+                    int stackX = (x + 1) * 17 + (guiLeft + 49);
                     int stackY = (y + 1) * 17 + (guiTop + 30);
                     Ingredient ingredient = recipe.getIngredients().get(i);
                     ingredientCycler.getCycledIngredientStack(ingredient, i).ifPresent(stack -> {

@@ -31,15 +31,16 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
     @Override
     public void draw(Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, FontRenderer fontRenderer, IngredientCycler ingredientCycler) {
 
+        CRAFTING_GRID.draw(guiLeft + 60, guiTop + 42);
         baseScreen.drawCenteredString(fontRenderer, UtilLib.translate(ModBlocks.alchemical_cauldron.getTranslationKey()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
         baseScreen.drawCenteredString(fontRenderer, "§o" + UtilLib.translate("guideapi.text.crafting.shaped") + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
 
-        int outputX = 95 + (guiLeft + baseScreen.xSize / 7);
-        int outputY = 34 + (guiTop + baseScreen.ySize / 5);
-        int in1X = 23 + (guiLeft + baseScreen.xSize / 7);
-        int in1Y = 22 + (guiTop + baseScreen.ySize / 5);
-        int in2X = 53 + (guiLeft + baseScreen.xSize / 7);
-        int in2Y = 22 + (guiTop + baseScreen.ySize / 5);
+        int outputX = guiLeft + 150;
+        int outputY = guiTop + 72;
+        int in1X = guiLeft + 78;
+        int in1Y = guiTop + 59;
+        int in2X = guiLeft + 108;
+        int in2Y = guiTop + 59;
 
         ItemStack stack = recipe.getRecipeOutput();
 
