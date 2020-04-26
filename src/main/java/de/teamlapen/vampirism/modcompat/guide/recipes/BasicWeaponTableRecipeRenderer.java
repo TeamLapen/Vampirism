@@ -35,13 +35,13 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
     public void draw(Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, FontRenderer fontRenderer, IngredientCycler ingredientCycler) {
 
 
-        CRAFTING_GRID.draw(guiLeft + 42, guiTop + 43);
+        CRAFTING_GRID.draw(guiLeft + 62, guiTop + 43);
 
         baseScreen.drawCenteredString(fontRenderer, UtilLib.translate(ModBlocks.weapon_table.getTranslationKey()), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
         baseScreen.drawCenteredString(fontRenderer, "§o" + getRecipeName() + "§r", guiLeft + baseScreen.xSize / 2, guiTop + 14 + fontRenderer.FONT_HEIGHT, 0);
 
-        int outputX = 3 + (6 * 17) + (guiLeft + baseScreen.xSize / 7);
-        int outputY = (2 * 17) + (guiTop + baseScreen.xSize / 5);
+        int outputX = guiLeft + 152;
+        int outputY = guiTop + 72;
 
         ItemStack stack = recipe.getRecipeOutput();
 
