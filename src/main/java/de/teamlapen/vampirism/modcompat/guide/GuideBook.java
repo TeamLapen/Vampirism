@@ -13,6 +13,7 @@ import amerifrance.guideapi.page.PageText;
 import amerifrance.guideapi.page.PageTextImage;
 import com.google.common.collect.Maps;
 import de.teamlapen.lib.VampLib;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.VampirismConfig;
@@ -117,7 +118,7 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> creditsPages = new ArrayList<>();
         String lang = VampLib.proxy.getActiveLanguage();
-        String credits = "§lDeveloper:§r\nMaxanier\n\n§lInactive Developer:§r\nMistadon\nwildbill22\n\n§lTranslators:§r\n§b" + lang + "§r\n" + translate("text.vampirism.translators");
+        String credits = "§lDeveloper:§r\nMaxanier\nChaterpaul\n§lThanks to:§r\nMistadon\nwildbill22\n1LiterZinalco\nAlis\ndimensionpainter\nS_olace\nPiklach\n\n§lTranslators:§r\n§b" + lang + "§r\n" + translate("text.vampirism.translators");
         creditsPages.addAll(PageHelper.pagesForLongText(translate(credits)));
         entries.put(new ResourceLocation(base + "credits"), new EntryText(creditsPages, translate(base + "credits")));
         links.putAll(entries);
@@ -421,7 +422,7 @@ public class GuideBook implements IGuideBook {
     }
 
     public static String translate(String key, Object... format) {
-        String s = translate(key, format);
+        String s = UtilLib.translate(key, format);
         return s.replaceAll("\\\\n", Matcher.quoteReplacement("\n")); //Fix legacy newlines
     }
 
@@ -431,7 +432,7 @@ public class GuideBook implements IGuideBook {
     public Book buildBook() {
         BookBinder binder = new BookBinder(new ResourceLocation("vampirism", "guidebook"));
         binder.setGuideTitle("guide.vampirism.title");
-        binder.setItemName("guide.vampirism.name");
+        binder.setItemName("guide.vampirism");
         binder.setHeader("guide.vampirism.welcome");
         binder.setAuthor("Maxanier");
         binder.setColor(Color.getHSBColor(0.5f, 0.2f, 0.5f));
