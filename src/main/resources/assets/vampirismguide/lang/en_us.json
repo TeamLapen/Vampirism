@@ -80,7 +80,7 @@
   "guide.vampirism.hunter.vamp_slayer.holy_water": "A reliable way to hurt vampires is the usage of Holy Water. This elaborately crafted holy liquid deals quite some damage to undead creatures, especially to vampires. It also cancels their disguise and invisibility action.\\n Checkout the linked pages to learn how to obtain this liquid.",
   "guide.vampirism.hunter.vamp_slayer.fire": "Vampires suffer more damage from fire than normal humans.\\nYou can use that to your advantage. You could for example use indefinitely burning alchemical fire to protect your base.\\n Or you could use special fire spreading bolts for your crossbow. Don’t worry, alchemical fire does not spread or damage blocks.",
   "guide.vampirism.hunter.unhunter": "Un-Hunter",
-  "guide.vampirism.hunter.unhunter.text": "If you decide to become a vampire, you have to get rid of the garlic in your blood. To do that craft yourself a %s and inject it.",
+  "guide.vampirism.hunter.unhunter.text": "If you decide to become a vampire, you have to get rid of the garlic in your blood. To do that craft yourself a %s and inject it by right clicking a %s.",
   "guide.vampirism.skills.bind_action": "You can also bind up to two actions to keyboard keys. See controls and /vampirism bind-action.",
   "guide.vampirism.entity.title": "Creatures",
   "guide.vampirism.entity.general": "General",

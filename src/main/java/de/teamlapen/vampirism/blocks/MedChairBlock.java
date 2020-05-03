@@ -4,9 +4,11 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.potion.PotionSanguinare;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -76,26 +78,52 @@ public class MedChairBlock extends VampirismBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 
         ItemStack stack = player.getHeldItem(hand);
-        if (!stack.isEmpty() && stack.getItem().equals(ModItems.injection_garlic) && player.isAlive()) {
+        boolean garlic = stack.getItem().equals(ModItems.injection_garlic);
+        boolean sanguinare = stack.getItem().equals(ModItems.injection_sanguinare);
+        if ((garlic || sanguinare) && player.isAlive()) {
             IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
             IPlayableFaction faction = handler.getCurrentFaction();
-            if (handler.canJoin(faction)) {
-                if (world.isRemote) {
-                    VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
-                } else {
-                    handler.joinFaction(VReference.HUNTER_FACTION);
-                    player.addPotionEffect(new EffectInstance(ModEffects.poison, 200, 1));
+            boolean used = false;
+            if (garlic) {
+                if (handler.canJoin(VReference.HUNTER_FACTION)) {
+                    if (world.isRemote) {
+                        VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
+                    } else {
+                        handler.joinFaction(VReference.HUNTER_FACTION);
+                        player.addPotionEffect(new EffectInstance(ModEffects.poison, 200, 1));
+                    }
+                    used = true;
+                } else if (faction != null) {
+                    if (!world.isRemote) {
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.med_chair_other_faction", faction.getName()));
+                    }
+
                 }
+            } else if (sanguinare) {
+                if (VReference.HUNTER_FACTION.equals(faction)) {
+                    VampirismMod.proxy.displayRevertBackScreen();
+                    used = true;
+                } else if (faction == null) {
+                    if (handler.canJoin(VReference.VAMPIRE_FACTION)) {
+                        if (VampirismConfig.SERVER.disableFangInfection.get()) {
+                            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.deactivated_by_serveradmin"), true);
+                        } else {
+                            PotionSanguinare.addRandom(player, true);
+                            player.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
+                            used = true;
+                        }
+                    }
+                } else if (VReference.VAMPIRE_FACTION.equals(faction)) {
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.already_vampire"));
+                }
+            }
+            if (used) {
                 stack.shrink(1);
                 if (stack.isEmpty()) {
                     player.inventory.deleteStack(stack);
                 }
-            } else if (faction != null) {
-                if (!world.isRemote) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.med_chair_other_faction", faction.getName()));
-                }
-
             }
+
         } else {
             if (world.isRemote)
                 player.sendMessage(new TranslationTextComponent("text.vampirism.need_item_to_use", new TranslationTextComponent((new ItemStack(ModItems.injection_garlic).getTranslationKey()))));
