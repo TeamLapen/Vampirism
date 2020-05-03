@@ -27,7 +27,7 @@
       "conditions": [
         {
           "condition": "vampirism:with_stake",
-          "entity": "this"
+          "entity": "killer_player"
         },
         {
           "condition": "random_chance_with_looting",
