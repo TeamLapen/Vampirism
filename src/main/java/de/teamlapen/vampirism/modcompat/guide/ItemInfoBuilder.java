@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.modcompat.guide;
 
-import amerifrance.guideapi.api.IPage;
-import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.api.util.PageHelper;
-import amerifrance.guideapi.entry.EntryItemStack;
-import amerifrance.guideapi.page.PageBrewingRecipe;
+import de.maxanier.guideapi.api.IPage;
+import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
+import de.maxanier.guideapi.api.util.PageHelper;
+import de.maxanier.guideapi.entry.EntryItemStack;
+import de.maxanier.guideapi.page.PageBrewingRecipe;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;

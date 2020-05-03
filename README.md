@@ -64,7 +64,7 @@ vampirism_version=1.0.3
 
 #### Rerun Gradle setup commands
 Please run the commands that you used to setup your development environment again.
-E.g. `gradlew setupDecompWorkspace eclipse --refresh-dependencies` or `gradlew setupDecompWorkspace ideaModule --refresh-dependencies`
+E.g. `gradlew` or `gradlew --refresh-dependencies`
 Refresh/Restart your IDE afterwards.
 
 #### Examples
