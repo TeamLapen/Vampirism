@@ -207,14 +207,12 @@ class VampirismRecipeHelper {
     }
 
     static Either<Ingredient, FluidStack> getFluidOrItem(JsonObject json) {
-        try {
+        if (json.has("fluidItem")) {
             return Either.left(Ingredient.deserialize(json.get("fluidItem")));
-        } catch (JsonSyntaxException e) {
-            try {
-                return Either.right(deserializeFluid(json.getAsJsonObject("fluid")));
-            } catch (JsonSyntaxException r) {
-                throw new JsonSyntaxException(e.getMessage() + r.getMessage());
-            }
+
+        } else {
+            return Either.right(deserializeFluid(json.getAsJsonObject("fluid")));
+
         }
     }
 }
