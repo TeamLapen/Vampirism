@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.data;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
-
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.GarlicBlock;
@@ -12,10 +11,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModLootTables;
-import de.teamlapen.vampirism.world.loot.AddBookNbt;
-import de.teamlapen.vampirism.world.loot.AdjustableLevelCondition;
-import de.teamlapen.vampirism.world.loot.SetItemBloodCharge;
-import de.teamlapen.vampirism.world.loot.TentSpawnerCondition;
+import de.teamlapen.vampirism.world.loot.*;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -28,27 +24,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.ConstantRange;
-import net.minecraft.world.storage.loot.EmptyLootEntry;
-import net.minecraft.world.storage.loot.ItemLootEntry;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameterSet;
-import net.minecraft.world.storage.loot.LootParameterSets;
-import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.LootTable;
-import net.minecraft.world.storage.loot.LootTableManager;
-import net.minecraft.world.storage.loot.RandomValueRange;
-import net.minecraft.world.storage.loot.ValidationTracker;
-import net.minecraft.world.storage.loot.conditions.BlockStateProperty;
-import net.minecraft.world.storage.loot.conditions.KilledByPlayer;
-import net.minecraft.world.storage.loot.conditions.RandomChance;
-import net.minecraft.world.storage.loot.conditions.RandomChanceWithLooting;
-import net.minecraft.world.storage.loot.conditions.SurvivesExplosion;
-import net.minecraft.world.storage.loot.functions.ApplyBonus;
-import net.minecraft.world.storage.loot.functions.LootingEnchantBonus;
-import net.minecraft.world.storage.loot.functions.SetCount;
-import net.minecraft.world.storage.loot.functions.SetDamage;
-import net.minecraft.world.storage.loot.functions.SetNBT;
+import net.minecraft.world.storage.loot.*;
+import net.minecraft.world.storage.loot.conditions.*;
+import net.minecraft.world.storage.loot.functions.*;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -114,7 +92,7 @@ public class LootTablesGenerator extends LootTableProvider {
             LootTable.Builder vampire = LootTable.builder()
                     .addLootPool(LootPool.builder().name("general").rolls(ConstantRange.of(1)).acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.33f, 0.05f))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_fang).weight(1)))
-                    .addLootPool(LootPool.builder().name("special").rolls(ConstantRange.of(1)).acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.5f, 0.05f))
+                    .addLootPool(LootPool.builder().name("special").rolls(ConstantRange.of(1)).acceptCondition(StakeCondition.builder(LootContext.EntityTarget.KILLER_PLAYER)).acceptCondition(RandomChanceWithLooting.builder(0.5f, 0.05f))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_blood_bottle).weight(1)));
             this.registerLootTable(ModEntities.vampire, vampire);
             this.registerLootTable(ModEntities.vampire_imob, vampire);

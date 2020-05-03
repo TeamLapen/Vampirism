@@ -47,7 +47,7 @@ public class StakeCondition implements ILootCondition {
 
         @Override
         public void serialize(JsonObject json, StakeCondition value, JsonSerializationContext context) {
-
+            json.add("entity", context.serialize(value.target));
         }
     }
 }
