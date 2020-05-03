@@ -283,7 +283,7 @@ public class GuideBook implements IGuideBook {
         entries.put(new ResourceLocation(base + "vamp_slayer"), new EntryText(vampSlayerPages, base + "vamp_slayer"));
 
         List<IPage> unHunterPages = new ArrayList<>();
-        unHunterPages.addAll(PageHelper.pagesForLongText(translate(base + "unhunter.text", new ItemStack(ModItems.injection_sanguinare).getDisplayName())));
+        unHunterPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(translate(base + "unhunter.text", loc(ModItems.injection_sanguinare), loc(ModBlocks.med_chair))), new ResourceLocation("guide.vampirism.items.injection_empty"), new ResourceLocation("guide.vampirism.blocks.item_med_chair")));
         entries.put(new ResourceLocation(base + "unhunter"), new EntryText(unHunterPages, base + "unhunter"));
 
         links.putAll(entries);
