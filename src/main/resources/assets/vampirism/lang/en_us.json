@@ -201,6 +201,8 @@
   "text.vampirism.translators": "None",
   "text.vampirism.sword_charged": "Charged:",
   "text.vampirism.sword_trained": "Trained:",
+  "text.vampirism.guideapi_available.first": "To get a GuideBook for Vampirism install GuideAPI-VP",
+  "text.vampirism.guideapi_available.download": "Click here to go to the mod page",
   "text.vampirism.integrations_available.first": "There is an integrations mod for Vampirism that adds enhanced compatibility for the following installed mods:",
   "text.vampirism.integrations_available.download": "Click here to go to the mod page",
   "text.vampirism.trainer_disabled": "I am not a hunter",
