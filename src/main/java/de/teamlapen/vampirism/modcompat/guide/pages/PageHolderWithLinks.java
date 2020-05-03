@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.modcompat.guide.pages;
 
-import amerifrance.guideapi.api.IPage;
-import amerifrance.guideapi.api.impl.Book;
-import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
-import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.api.util.GuiHelper;
-import amerifrance.guideapi.gui.BaseScreen;
-import amerifrance.guideapi.gui.EntryScreen;
 import com.google.common.collect.Lists;
+import de.maxanier.guideapi.api.IPage;
+import de.maxanier.guideapi.api.impl.Book;
+import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
+import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
+import de.maxanier.guideapi.api.util.GuiHelper;
+import de.maxanier.guideapi.gui.BaseScreen;
+import de.maxanier.guideapi.gui.EntryScreen;
 import de.teamlapen.vampirism.modcompat.guide.GuideBook;
 import de.teamlapen.vampirism.modcompat.guide.client.LinkedEntryScreen;
 import net.minecraft.client.Minecraft;
