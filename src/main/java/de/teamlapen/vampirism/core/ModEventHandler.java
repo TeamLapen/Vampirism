@@ -106,11 +106,6 @@ public class ModEventHandler {
                 event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.integrations_available.download").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.INTEGRATIONS_LINK)).setUnderlined(true)));
             }
         }
-        if (event.getPlayer().getRNG().nextInt(4) == 0) {
-            event.getPlayer().sendMessage(new StringTextComponent("You are running a beta version of Vampirism for MC 1.14").applyTextStyle(TextFormatting.DARK_RED));
-            event.getPlayer().sendMessage(new StringTextComponent("Some important parts are not working yet:"));
-            event.getPlayer().sendMessage(new StringTextComponent("- Guide book"));
-        }
 
 
 

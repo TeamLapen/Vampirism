@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.modcompat.guide.pages;
 
 
-import amerifrance.guideapi.api.impl.Book;
-import amerifrance.guideapi.api.impl.Page;
-import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
-import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.gui.BaseScreen;
 import com.mojang.blaze3d.platform.GlStateManager;
+import de.maxanier.guideapi.api.impl.Book;
+import de.maxanier.guideapi.api.impl.Page;
+import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
+import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
+import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.api.distmarker.Dist;

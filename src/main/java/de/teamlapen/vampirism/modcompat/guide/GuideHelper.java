@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.modcompat.guide;
 
-import amerifrance.guideapi.api.IPage;
-import amerifrance.guideapi.api.IRecipeRenderer;
-import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.page.PageIRecipe;
-import amerifrance.guideapi.page.PageJsonRecipe;
 import com.google.common.collect.Lists;
+import de.maxanier.guideapi.api.IPage;
+import de.maxanier.guideapi.api.IRecipeRenderer;
+import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
+import de.maxanier.guideapi.page.PageIRecipe;
+import de.maxanier.guideapi.page.PageJsonRecipe;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.inventory.recipes.ShapedWeaponTableRecipe;
