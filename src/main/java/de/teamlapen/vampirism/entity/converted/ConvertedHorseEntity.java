@@ -33,6 +33,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
 public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreature<HorseEntity> {
@@ -42,6 +43,8 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
     private HorseEntity entityCreature;
     private boolean sundamageCache;
     private boolean dropSoul = false;
+    @Nullable
+    private ITextComponent name;
 
 
     public ConvertedHorseEntity(EntityType<? extends HorseEntity> p_i50238_1_, World p_i50238_2_) {
@@ -82,7 +85,13 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
 
     @Override
     public ITextComponent getName() {
-        return new TranslationTextComponent("entity.vampirism.vampire").appendSibling(new TranslationTextComponent("entity.horse"));
+        if (hasCustomName()) {
+            return super.getName();
+        }
+        if (name == null) {
+            this.name = new TranslationTextComponent("entity.vampirism.vampire").appendSibling(new TranslationTextComponent("entity.horse"));
+        }
+        return name;
     }
 
     @Override
