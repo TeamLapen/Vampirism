@@ -39,7 +39,7 @@ public class PageTable extends Page {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
-        float charWidth = fontRendererObj.getCharWidth(' ');
+        float charWidth = fontRendererObj.getCharWidth('W');
         int y = guiTop + 12;
         int x = guiLeft + 39;
         if (headline != null) {
