@@ -44,6 +44,8 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * General Utility Class
@@ -573,9 +575,45 @@ public class UtilLib {
         return ServerLifecycleHooks.getCurrentServer() != null;
     }
 
+    private final static Pattern oldFormatPattern = Pattern.compile("%[sd]");
+
     public static String translate(String key, Object... format) {
-        return ForgeI18n.parseMessage(key, format);
+        String pattern = ForgeI18n.getPattern(key);
+        if (format.length == 0) {
+            return pattern;
+        } else {
+            try {
+                pattern = replaceDeprecatedFormatter(pattern);
+                return ForgeI18n.parseFormat(pattern, format);
+            } catch (IllegalArgumentException e) {
+                LOGGER.error("Illegal format found `{}`", pattern);
+                return pattern;
+            }
+        }
+
     }
+
+    private static String replaceDeprecatedFormatter(String text) {
+        StringBuffer sb = null;
+        Matcher m = oldFormatPattern.matcher(text);
+        int i = 0;
+        while (m.find()) {
+            String t = m.group();
+            t = "{" + i++ + "}";
+
+            if (sb == null) {
+                sb = new StringBuffer(text.length());
+            }
+            m.appendReplacement(sb, t);
+        }
+        if (sb == null) {
+            return text;
+        } else {
+            m.appendTail(sb);
+            return sb.toString();
+        }
+    }
+
 
     /**
      * Rotate voxel. Credits to JTK222|Lukas
