@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "BAB",
+    " A "
+  ],
+  "key": {
+    "#": {
+      "tag": "minecraft:wool"
+    },
+    "A": {
+      "tag": "forge:rods/wooden"
+    },
+    "B": {
+      "item": "vampirism:vampire_orchid"
+    }
+  },
+  "result": {
+    "item": "vampirism:umbrella"
+  },
+  "conditions": [
+    {
+      "type": "vampirism:config",
+      "option": "umbrella"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ZXZ",
+    "YYY",
+    " Y "
+  ],
+  "key": {
+    "X": {
+      "item": "vampirism:vampire_fang"
+    },
+    "Y": {
+      "tag": "minecraft:planks"
+    },
+    "Z": {
+      "item": "minecraft:book"
+    }
+  },
+  "result": {
+    "item": "vampirism:church_altar"
+  }
+}

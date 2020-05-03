@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:hunter/garlic_beacon_improved"
+    ]
+  },
+  "criteria": {
+    "has_garlic_beacon": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:garlic_beacon_normal"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:hunter/garlic_beacon_improved"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_garlic_beacon",
+      "has_the_recipe"
+    ]
+  ]
+}

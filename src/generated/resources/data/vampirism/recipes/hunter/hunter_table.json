@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XYW",
+    "ZZZ",
+    "Z Z"
+  ],
+  "key": {
+    "X": {
+      "item": "vampirism:vampire_fang"
+    },
+    "Y": {
+      "item": "minecraft:book"
+    },
+    "Z": {
+      "tag": "minecraft:planks"
+    },
+    "W": {
+      "tag": "forge:crops/garlic"
+    }
+  },
+  "result": {
+    "item": "vampirism:hunter_table"
+  }
+}

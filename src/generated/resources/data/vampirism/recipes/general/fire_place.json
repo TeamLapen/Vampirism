@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " X ",
+    "XYX"
+  ],
+  "key": {
+    "X": {
+      "tag": "minecraft:logs"
+    },
+    "Y": {
+      "tag": "forge:storage_blocks/coal"
+    }
+  },
+  "result": {
+    "item": "vampirism:fire_place"
+  }
+}
