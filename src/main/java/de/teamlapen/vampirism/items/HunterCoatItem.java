@@ -83,4 +83,9 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
                 return DAMAGE_REDUCTION_NORMAL[slot];
         }
     }
+
+    @Override
+    protected double getToughness(int slot, ItemStack stack) {
+        return 2;
+    }
 }
