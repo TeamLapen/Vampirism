@@ -8,6 +8,8 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.data.recipebuilder.AlchemicalCauldronRecipeBuilder;
+import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.REFERENCE;
 import javafx.util.Pair;
 import net.minecraft.advancements.Advancement;
@@ -16,7 +18,7 @@ import net.minecraft.advancements.IRequirementsStrategy;
 import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.*;
-import net.minecraft.item.IItemTier;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
@@ -26,6 +28,7 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -59,6 +62,10 @@ public class RecipesGenerator extends RecipeProvider {
         IItemProvider garlic_beacon_core_improved = ModItems.garlic_beacon_core_improved;
         IItemProvider garlic_beacon_normal = ModBlocks.garlic_beacon_normal;
         IItemProvider bucket = Items.BUCKET;
+        IItemProvider gun_powder = Items.GUNPOWDER;
+        IItemProvider holy_water_bottle_normal = ModItems.holy_water_bottle_normal;
+        IItemProvider holy_water_bottle_enhanced = ModItems.holy_water_bottle_enhanced;
+        IItemProvider holy_water_bottle_ultimate = ModItems.holy_water_bottle_ultimate;
         Tag<Item> planks = ItemTags.PLANKS;
         Tag<Item> glass = Tags.Items.GLASS;
         Tag<Item> glass_pane = Tags.Items.GLASS_PANES;
@@ -119,6 +126,14 @@ public class RecipesGenerator extends RecipeProvider {
         SingleItemRecipeBuilder.stonecuttingRecipe(Ingredient.fromItems(castle_block_dark_brick),ModBlocks.castle_slab_dark_brick,2).addCriterion("has_stone",this.hasItem(castle_block_dark_brick)).build(consumer,modId("stonecutting/castle_slaps_dark_brick_from_castle_block_dark_brick"));
         SingleItemRecipeBuilder.stonecuttingRecipe(Ingredient.fromItems(castle_block_dark_brick),ModBlocks.castle_slab_dark_stone,2).addCriterion("has_stone",this.hasItem(castle_block_dark_brick)).build(consumer,modId("stonecutting/castle_slaps_dark_stone_from_castle_block_dark_brick"));
         SingleItemRecipeBuilder.stonecuttingRecipe(Ingredient.fromItems(castle_block_purple_brick),ModBlocks.castle_slab_purple_brick,2).addCriterion("has_stone",this.hasItem(castle_block_purple_brick)).build(consumer,modId("stonecutting/castle_slaps_purple_brick_from_castle_block_purple_brick"));
+
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.pure_salt,4).withIngredient(garlic).withFluid(new FluidStack(Fluids.WATER,1)).withSkills(HunterSkills.basic_alchemy).cookTime(1200).build(consumer,modId("alchemical_cauldron/pure_salt"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.item_alchemical_fire, 4).withIngredient(gun_powder).withFluid(holy_water_bottle_normal).build(consumer,modId("alchemical_cauldron/alchemical_fire_4"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.item_alchemical_fire, 5).withIngredient(gun_powder).withFluid(holy_water_bottle_enhanced).build(consumer,modId("alchemical_cauldron/alchemical_fire_5"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.item_alchemical_fire, 5).withIngredient(gun_powder).withFluid(holy_water_bottle_ultimate).build(consumer,modId("alchemical_cauldron/alchemical_fire_6"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.garlic_beacon_core).withIngredient(wool).withFluid(garlic).withSkills(HunterSkills.garlic_beacon).build(consumer,modId("alchemical_cauldron/garlic_beacon_core"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.garlic_beacon_core_improved).withIngredient(garlic_beacon_core).withFluid(holy_water_bottle_ultimate).withSkills(HunterSkills.garlic_beacon_improved).experience(2.0f).build(consumer,modId("alchemical_cauldron/garlic_beacon_core_improved"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.purified_garlic).withIngredient(garlic).withFluid(holy_water_bottle_normal).withSkills(HunterSkills.purified_garlic).build(consumer,modId("alchemical_cauldron/purified_garlic"));
 
     }
 

@@ -11,5 +11,8 @@
   },
   "skill": [
     "vampirism:garlic_beacon"
-  ]
+  ],
+  "cookTime": 200,
+  "experience": 0.2,
+  "reqLevel": 1
 }

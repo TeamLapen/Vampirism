@@ -13,5 +13,7 @@
   "skill": [
     "vampirism:basic_alchemy"
   ],
-  "cookTime": 1200
+  "cookTime": 1200,
+  "experience": 0.2,
+  "reqLevel": 1
 }
