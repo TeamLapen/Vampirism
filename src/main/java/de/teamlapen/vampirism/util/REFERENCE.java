@@ -21,6 +21,7 @@ public class REFERENCE {
     public static final String PATREON_LINK = "https://www.patreon.com/maxanier";
     public static final String INTEGRATIONS_MODID = "vampirism_integrations";
     public static final String INTEGRATIONS_LINK = "https://minecraft.curseforge.com/projects/vampirism-integrations";
+    public static final String GUIDEAPI_LINK = "https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage";
     public static final int EYE_TYPE_COUNT = 16;
     public static final int FANG_TYPE_COUNT = 7;
     /**
