@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.modcompat.guide.client;
 
-import amerifrance.guideapi.api.impl.Book;
-import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
-import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.button.ButtonBack;
-import amerifrance.guideapi.gui.EntryScreen;
+import de.maxanier.guideapi.api.impl.Book;
+import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
+import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
+import de.maxanier.guideapi.button.ButtonBack;
+import de.maxanier.guideapi.gui.EntryScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 

@@ -109,7 +109,6 @@ public class ModEventHandler {
             event.getPlayer().sendMessage(new StringTextComponent("You are running an alpha version of Vampirism for MC 1.15").applyTextStyle(TextFormatting.DARK_RED));
             event.getPlayer().sendMessage(new StringTextComponent("Some parts are not working yet:"));
             event.getPlayer().sendMessage(new StringTextComponent("- Blood vision"));
-            event.getPlayer().sendMessage(new StringTextComponent("- Guide book"));
         }
 
 

@@ -1,17 +1,17 @@
 package de.teamlapen.vampirism.modcompat.guide;
 
-import amerifrance.guideapi.api.IGuideBook;
-import amerifrance.guideapi.api.IPage;
-import amerifrance.guideapi.api.impl.Book;
-import amerifrance.guideapi.api.impl.BookBinder;
-import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
-import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.api.util.PageHelper;
-import amerifrance.guideapi.category.CategoryItemStack;
-import amerifrance.guideapi.page.PageImage;
-import amerifrance.guideapi.page.PageText;
-import amerifrance.guideapi.page.PageTextImage;
 import com.google.common.collect.Maps;
+import de.maxanier.guideapi.api.IGuideBook;
+import de.maxanier.guideapi.api.IPage;
+import de.maxanier.guideapi.api.impl.Book;
+import de.maxanier.guideapi.api.impl.BookBinder;
+import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
+import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
+import de.maxanier.guideapi.api.util.PageHelper;
+import de.maxanier.guideapi.category.CategoryItemStack;
+import de.maxanier.guideapi.page.PageImage;
+import de.maxanier.guideapi.page.PageText;
+import de.maxanier.guideapi.page.PageTextImage;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.AltarPillarBlock;
@@ -47,7 +47,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 
-@amerifrance.guideapi.api.GuideBook
+@de.maxanier.guideapi.api.GuideBook
 public class GuideBook implements IGuideBook {
 
     private static final Logger LOGGER = LogManager.getLogger();

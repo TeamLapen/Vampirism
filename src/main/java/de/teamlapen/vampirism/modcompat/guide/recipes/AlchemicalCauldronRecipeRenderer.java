@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.modcompat.guide.recipes;
 
-import amerifrance.guideapi.api.IRecipeRenderer;
-import amerifrance.guideapi.api.SubTexture;
-import amerifrance.guideapi.api.impl.Book;
-import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
-import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.api.util.GuiHelper;
-import amerifrance.guideapi.api.util.IngredientCycler;
-import amerifrance.guideapi.gui.BaseScreen;
+import de.maxanier.guideapi.api.IRecipeRenderer;
+import de.maxanier.guideapi.api.SubTexture;
+import de.maxanier.guideapi.api.impl.Book;
+import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
+import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
+import de.maxanier.guideapi.api.util.GuiHelper;
+import de.maxanier.guideapi.api.util.IngredientCycler;
+import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModBlocks;
