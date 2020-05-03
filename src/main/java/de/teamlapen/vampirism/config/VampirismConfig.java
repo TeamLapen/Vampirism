@@ -133,6 +133,8 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue disableVampireForest;
         public final ForgeConfigSpec.BooleanValue disableHunterTentGen;
 
+        public final ForgeConfigSpec.BooleanValue infoAboutGuideAPI;
+
 
         Server(ForgeConfigSpec.Builder builder) {
             builder.comment("Server configuration settings")
@@ -205,6 +207,10 @@ public class VampirismConfig {
             disableVampireForest = builder.comment("Disable vampire forest generation").define("disableVampireForest", false);
             disableHunterTentGen = builder.comment("Disable hunter camp generation").define("disableHunterTentGen", false);
 
+            builder.pop();
+
+            builder.push("internal");
+            infoAboutGuideAPI = builder.comment("Send message about Guide-API once").define("infoAboutGuideAPI", true);
             builder.pop();
 
             builder.pop();
