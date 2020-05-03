@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.modcompat.guide.pages;
 
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxanier.guideapi.api.impl.Book;
 import de.maxanier.guideapi.api.impl.Page;
 import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
@@ -9,6 +9,9 @@ import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -66,17 +69,18 @@ public class PageTable extends Page {
      * Copied from GuiPieMenu
      */
     protected void drawLine(double x1, double y1, double x2, double y2, float publicZLevel) {
-        GlStateManager.pushMatrix();
+        RenderSystem.pushMatrix();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GlStateManager.color4f(0F, 0F, 0F, 1F);
-        GlStateManager.lineWidth(2F);
-        GlStateManager.begin(GL11.GL_LINES);
-        GlStateManager.vertex3f((float) x1, (float) y1, publicZLevel);
-        GlStateManager.vertex3f((float) x2, (float) y2, publicZLevel);
-        GlStateManager.end();
+        RenderSystem.color4f(0F, 0F, 0F, 1F);
+        RenderSystem.lineWidth(2F);
+        BufferBuilder builder = Tessellator.getInstance().getBuffer();
+        builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+        builder.pos((float) x1, (float) y1, publicZLevel).endVertex();
+        builder.pos((float) x2, (float) y2, publicZLevel).endVertex();
+        Tessellator.getInstance().draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GlStateManager.color4f(0F, 0F, 0F, 1F);
-        GlStateManager.popMatrix();
+        RenderSystem.color4f(0F, 0F, 0F, 1F);
+        RenderSystem.popMatrix();
     }
 
 
