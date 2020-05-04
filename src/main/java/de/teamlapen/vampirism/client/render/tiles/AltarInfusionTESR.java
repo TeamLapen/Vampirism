@@ -1,13 +1,16 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import de.teamlapen.vampirism.tileentity.AltarInfusionTileEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
+import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -18,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
 
 
-    private final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation("textures/entity/end_crystal/end_crystal_beam.png");
+    private final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation(REFERENCE.MODID, "textures/entity/infusion_beam.png");
     private final ResourceLocation beaconBeamTexture = new ResourceLocation("textures/entity/beacon_beam.png");
 
     public AltarInfusionTESR(TileEntityRendererDispatcher dispatcher) {
@@ -27,29 +30,28 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
 
 
     @Override
-    public void render(AltarInfusionTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
+    public void render(AltarInfusionTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int combinedLight, int combinedOverlay) {
         // Render the beams if the ritual is running
         AltarInfusionTileEntity.PHASE phase = te.getCurrentPhase();
         if (phase == AltarInfusionTileEntity.PHASE.BEAM1 || phase == AltarInfusionTileEntity.PHASE.BEAM2) {
-//            x += 0.5;
-//            y += 3;
-//            z += 0.5;
             // Calculate center coordinates
-            double cX = te.getPos().getX() + 0.5;
-            double cY = te.getPos().getY() + 3;
-            double cZ = te.getPos().getZ() + 0.5;
-
+            float cX = te.getPos().getX() + 0.5f;
+            float cY = te.getPos().getY() + 3f;
+            float cZ = te.getPos().getZ() + 0.5f;
+            matrixStack.push();
+            matrixStack.translate(0.5, 3, 0.5);
             BlockPos[] tips = te.getTips();
             for (BlockPos tip : tips) {
-                this.renderBeam(matrixStack, iRenderTypeBuffer, partialTicks, 0, 0, 0, cX, cY, cZ, tip.getX() + 0.5, tip.getY() + 0.5, tip.getZ() + 0.5, te.getRunningTick() + partialTicks, false);
+                this.renderBeam(matrixStack, iRenderTypeBuffer, -(te.getRunningTick() + partialTicks), tip.getX() + 0.5f - cX, tip.getY() + 0.5f - cY, tip.getZ() + 0.5f - cZ, combinedLight, true);
             }
+
             if (phase == AltarInfusionTileEntity.PHASE.BEAM2) {
                 PlayerEntity p = te.getPlayer();
                 if (p != null) {
-                    this.renderBeam(matrixStack, iRenderTypeBuffer, partialTicks, 0, 0, 0, cX, cY, cZ, p.getPosX(), p.getPosY() + 1.2d, p.getPosZ(), -(te.getRunningTick() + partialTicks), true);
-
+                    this.renderBeam(matrixStack, iRenderTypeBuffer, -(te.getRunningTick() + partialTicks), (float) p.getPosX() - cX, (float) p.getPosY() + 1.2f - cY, (float) p.getPosZ() - cZ, combinedLight, false);
                 }
             }
+            matrixStack.pop();
 
 
         }
@@ -57,67 +59,39 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
 
     /**
      * Renders a beam in the world, similar to the dragon healing beam
-     *
-     * @param relX      startX relative to the player
-     * @param relY
-     * @param relZ
-     * @param centerX   startX in world
-     * @param centerY
-     * @param centerZ
-     * @param targetX   targetX in world
-     * @param targetY
-     * @param targetZ
-     * @param tickStuff
-     * @param beacon    whether it should be a beacon or a dragon style beam
      */
-    private void renderBeam(MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, float partialTicks, double relX, double relY, double relZ, double centerX, double centerY, double centerZ, double targetX, double targetY, double targetZ, float tickStuff, boolean beacon) {
-        BeaconTileEntityRenderer.renderBeamSegment(matrixStack, renderTypeBuffer, beacon ? beaconBeamTexture : enderDragonCrystalBeamTextures, partialTicks, 1, 1024, 0, 0, new float[]{0, 0, 0}, 0.2f, 0.25f);
-        //        float f2 = 50000;
-//        float f3 = MathHelper.sin(f2 * 0.2F) / 2.0F + 0.5F;
-//        f3 = (f3 * f3 + f3) * 0.2F;
-//        float wayX = (float) (targetX - centerX);
-//        float wayY = (float) (targetY - centerY);
-//        float wayZ = (float) (targetZ - centerZ);
-//        float distFlat = MathHelper.sqrt(wayX * wayX + wayZ * wayZ);
-//        float dist = MathHelper.sqrt(wayX * wayX + wayY * wayY + wayZ * wayZ);
-//        RenderSystem.pushMatrix();
-//        RenderSystem.translated(relX, relY, relZ);
-//        RenderSystem.rotatef((float) (-Math.atan2(wayZ, wayX)) * 180.0F / (float) Math.PI - 90.0F, 0.0F, 1.0F, 0.0F);
-//        RenderSystem.rotatef((float) (-Math.atan2(distFlat, wayY)) * 180.0F / (float) Math.PI - 90.0F, 1.0F, 0.0F, 0.0F);
-//
-//        RenderHelper.disableStandardItemLighting();
-//        GlStateManager.disableCull();
-//        if (beacon) {
-//            this.bindTexture(beaconBeamTexture);
-//        } else {
-//            this.bindTexture(enderDragonCrystalBeamTextures);
-//        }
-//        RenderSystem.shadeModel(GL11.GL_SMOOTH);
-//        float f9 = -(tickStuff * 0.005F);
-//        float f10 = MathHelper.sqrt(wayX * wayX + wayY * wayY + wayZ * wayZ) / 32.0F + f9;
-//        Tessellator tessellator = Tessellator.getInstance();
-//        BufferBuilder worldRenderer = tessellator.getBuffer();
-//        worldRenderer.begin(GL11.GL_TRIANGLE_STRIP, DefaultVertexFormats.POSITION_TEX_COLOR);
-//        // Add all 2*8 vertex/corners
-//        byte b0 = 8;
-//        for (int i = 0; i <= b0; ++i) {
-//            float f11 = 0.2F * (MathHelper.sin(i % b0 * (float) Math.PI * 2.0F / b0) * 0.75F);
-//            float f12 = 0.2F * (MathHelper.cos(i % b0 * (float) Math.PI * 2.0F / b0) * 0.75F);
-//            float f13 = i % b0 * 1.0F / b0;
-//            worldRenderer.pos(f11, f12, 0).tex(f13, f10).color(255, 0, 0, 255).endVertex();
-//            if (beacon) {
-//                worldRenderer.pos(f11, f12, dist).tex(f13, f9).color(255, 0, 0, 255).endVertex();
-//            } else {
-//                worldRenderer.pos(f11, f12, dist).tex(f13, f9).color(255, 255, 255, 255).endVertex();
-//            }
-//        }
-//
-//        tessellator.draw();
-//
-//        RenderSystem.shadeModel(GL11.GL_FLAT);
-//        GlStateManager.enableCull();
-//        RenderHelper.enableStandardItemLighting();
-//        RenderSystem.popMatrix();
+    private void renderBeam(MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, float partialTicks, float dx, float dy, float dz, int packedLight, boolean beacon) {
+
+        float distFlat = MathHelper.sqrt(dx * dx + dz * dz);
+        float dist = MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
+        matrixStack.push();
+        matrixStack.rotate(Vector3f.YP.rotation((float) (-Math.atan2(dz, dx)) - ((float) Math.PI / 2F)));
+        matrixStack.rotate(Vector3f.XP.rotation((float) (-Math.atan2(distFlat, dy)) - ((float) Math.PI / 2F)));
+        IVertexBuilder ivertexbuilder = renderTypeBuffer.getBuffer(RenderType.entitySmoothCutout(beacon ? beaconBeamTexture : enderDragonCrystalBeamTextures));
+        float f2 = partialTicks * 0.05f;
+        float f3 = dist / 32.0F + partialTicks * 0.05f;
+        float f4 = 0.0F;
+        float f5 = 0.2F;
+        float f6 = 0.0F;
+        MatrixStack.Entry matrixstack$entry = matrixStack.getLast();
+        Matrix4f matrix4f = matrixstack$entry.getPositionMatrix();
+        Matrix3f matrix3f = matrixstack$entry.getNormalMatrix();
+
+        for (int j = 1; j <= 8; ++j) {
+            float f7 = MathHelper.sin((float) j * ((float) Math.PI * 2F) / 8.0F) * 0.2F;
+            float f8 = MathHelper.cos((float) j * ((float) Math.PI * 2F) / 8.0F) * 0.2F;
+            float f9 = (float) j / 8.0F;
+            ivertexbuilder.pos(matrix4f, f4 * 1F, f5 * 1F, 0.0F).color(75, 0, 0, 255).tex(f6, f2).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+            ivertexbuilder.pos(matrix4f, f4 * 0.5f, f5 * 0.5f, dist).color(255, 0, 0, 255).tex(f6, f3).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+            ivertexbuilder.pos(matrix4f, f7 * 0.5f, f8 * 0.5f, dist).color(255, 0, 0, 255).tex(f9, f3).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+            ivertexbuilder.pos(matrix4f, f7 * 1F, f8 * 1F, 0.0F).color(75, 0, 0, 255).tex(f9, f2).overlay(OverlayTexture.NO_OVERLAY).lightmap(packedLight).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+            f4 = f7;
+            f5 = f8;
+            f6 = f9;
+        }
+
+        matrixStack.pop();
+
     }
 
 

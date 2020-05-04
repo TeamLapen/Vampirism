@@ -288,7 +288,6 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             if (runningTick == DURATION_TICK - 200) {
                 if (getPlayer().isUser()) {
                     VampirismMod.proxy.renderScreenFullColor(DURATION_TICK - 250, 50, 0xFF0000);
-
                 }
             }
         }
