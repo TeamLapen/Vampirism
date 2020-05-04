@@ -1,0 +1,26 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "pattern": [
+    "XZZX",
+    "XXXX",
+    "XYYX",
+    "XXXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:leather"
+    },
+    "Y": {
+      "tag": "forge:crops/garlic"
+    },
+    "Z": {
+      "tag": "forge:ingots/gold"
+    }
+  },
+  "result": {
+    "item": "vampirism:armor_of_swiftness_chest_enhanced"
+  },
+  "lava": 3,
+  "skill": [],
+  "level": 1
+}

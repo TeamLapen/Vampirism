@@ -1,4 +1,21 @@
 {
-  "criteria": {},
-  "requirements": []
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:alchemical_cauldron/garlic_beacon_core"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:alchemical_cauldron/garlic_beacon_core"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe"
+    ]
+  ]
 }

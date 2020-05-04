@@ -1,0 +1,28 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "pattern": [
+    "XZZX",
+    "XYYX",
+    "XXXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:leather"
+    },
+    "Y": {
+      "tag": "forge:crops/garlic"
+    },
+    "Z": {
+      "item": "minecraft:potion",
+      "nbt": {
+        "Potion": "minecraft:swiftness"
+      }
+    }
+  },
+  "result": {
+    "item": "vampirism:armor_of_swiftness_feet_normal"
+  },
+  "lava": 1,
+  "skill": [],
+  "level": 1
+}

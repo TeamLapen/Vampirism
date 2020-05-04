@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:weapontable/obsidian_armor_chest_enhanced"
+    ]
+  },
+  "criteria": {
+    "has_iron": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ingots/iron"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:weapontable/obsidian_armor_chest_enhanced"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_iron",
+      "has_the_recipe"
+    ]
+  ]
+}
