@@ -116,7 +116,7 @@ public class ModEventHandler {
             }
         }
         if (event.getPlayer().getRNG().nextInt(4) == 0) {
-            event.getPlayer().sendMessage(new StringTextComponent("You are running an alpha version of Vampirism for MC 1.15").applyTextStyle(TextFormatting.DARK_RED));
+            event.getPlayer().sendMessage(new StringTextComponent("You are running a beta version of Vampirism for MC 1.15").applyTextStyle(TextFormatting.DARK_RED));
             event.getPlayer().sendMessage(new StringTextComponent("Some parts are not working yet:"));
             event.getPlayer().sendMessage(new StringTextComponent("- Blood vision"));
         }
