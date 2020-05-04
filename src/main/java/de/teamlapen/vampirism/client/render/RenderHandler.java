@@ -35,6 +35,7 @@ import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
@@ -46,10 +47,13 @@ import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.resource.VanillaResourceType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
+
+import static org.lwjgl.opengl.GL11.GL_QUAD_STRIP;
 
 /**
  * Handle most general rendering related stuff
@@ -62,6 +66,11 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     private final int BLOOD_VISION_FADE_TICKS = 80;
 
     private final int VAMPIRE_BIOME_FADE_TICKS = 60;
+    private static final int ENTITY_NEAR_SQ_DISTANCE = 100;
+    private final int ENTITY_RADIUS = 100;
+    private final int ENTITY_MIN_SQ_RADIUS = 10;
+    private int entityDisplayListId = 0;
+    private int entitySphereListId = 0;
     private final Logger LOGGER = LogManager.getLogger();
     private final List<LivingEntity> renderedEntitiesWithBlood = Lists.newLinkedList();
     private final List<LivingEntity> renderedEntitiesWithoutBlood = Lists.newLinkedList();
@@ -100,6 +109,9 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
     public RenderHandler(Minecraft mc) {
         this.mc = mc;
+        entityDisplayListId = GL11.glGenLists(2);
+        entitySphereListId = entityDisplayListId + 1;
+        this.buildEntitySphere();
     }
 
     @Nullable
@@ -235,7 +247,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         if (mc.world == null || mc.player == null || !mc.player.isAlive()) return;
         if (event.phase == TickEvent.Phase.END) return;
         lastBloodVisionTicks = bloodVisionTicks;
-
+        this.compileEntitys();
         VampirePlayer vampire = VampirePlayer.get(mc.player);
         if (vampire.getSpecialAttributes().blood_vision && !VampirePlayer.get(mc.player).isGettingSundamage(mc.player.world)) {
 
@@ -293,6 +305,128 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 //            mc.player.sendMessage(new StringTextComponent("If you are running on recent hardware and use updated drivers, but this still shows up, please contact the author of Vampirism"));
 //        }
 
+
+    }
+
+    @SubscribeEvent
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+        if (mc.world == null) return;
+
+        /**
+         * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
+         */
+        float partialTicks = mc.getRenderPartialTicks();
+
+
+        if (displayHeight != mc.getMainWindow().getFramebufferHeight() || displayWidth != mc.getMainWindow().getFramebufferWidth()) {
+            this.displayHeight = mc.getMainWindow().getFramebufferHeight();
+            this.displayWidth = mc.getMainWindow().getFramebufferWidth();
+            this.updateFramebufferSize(this.displayWidth, this.displayHeight);
+        }
+
+        GL11.glPushMatrix();
+        GL11.glTranslated(-this.mc.player.getPosX(), -this.mc.player.getPosY(), -this.mc.player.getPosZ());
+        GL11.glCallList(entityDisplayListId);
+        GL11.glPopMatrix();
+
+//        if (this.isRenderEntityOutlines()) {
+//            if (bloodVisionBuffer != null) {
+//                bloodVisionBuffer.finish();
+//            }
+//            this.bloodVisionShader.render(partialTicks);
+//            this.mc.getFramebuffer().bindFramebuffer(false);
+//        }
+//
+//        if (isRenderEntityOutlines()) {
+//            this.renderBloodVisionFramebuffer();
+//            RenderSystem.disableBlend();
+//            RenderSystem.disableDepthTest();
+//            RenderSystem.disableAlphaTest();
+//            RenderSystem.enableTexture();
+//            RenderSystem.matrixMode(5890);
+//            RenderSystem.pushMatrix();
+//            RenderSystem.loadIdentity();
+//            this.blurShader.render(partialTicks);
+//            RenderSystem.popMatrix();
+//        }
+
+
+    }
+
+    /**
+     * Compiles a render list of the entitys nearby
+     */
+    private void compileEntitys() {
+        GL11.glNewList(entityDisplayListId, GL11.GL_COMPILE);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
+
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+
+        World world = this.mc.world;
+
+        PlayerEntity player = this.mc.player;
+        if ((world == null) || (player == null))
+            return;
+
+        List list = world.getEntitiesWithinAABBExcludingEntity(player, player.getBoundingBox().expand(ENTITY_RADIUS, ENTITY_RADIUS, ENTITY_RADIUS));
+        for (Object o : list) {
+            if (o instanceof LivingEntity) {
+                LivingEntity e = (LivingEntity) o;
+                int distance = (int) e.getDistanceSq(player);
+                if (distance <= ENTITY_NEAR_SQ_DISTANCE && (distance >= ENTITY_MIN_SQ_RADIUS)) {
+                    // ||!player.canEntityBeSeen(e)
+                    renderEntity(e, (((float) distance - ENTITY_MIN_SQ_RADIUS) / (ENTITY_NEAR_SQ_DISTANCE - ENTITY_MIN_SQ_RADIUS)));
+                } else if (distance > ENTITY_NEAR_SQ_DISTANCE) {
+                    renderEntity(e, 1F);
+                }
+
+            }
+        }
+
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEndList();
+    }
+
+    /**
+     * Renders the sphere around the give entity
+     *
+     * @param entity
+     * @param f
+     */
+    private void renderEntity(LivingEntity entity, float f) {
+        float red = 1.0F;
+        float green = 0.0F;
+        float blue = 0.0F;
+
+//        if (entity instanceof EntityCreature) {
+//            if (VampireMob.get((EntityCreature) entity).isVampire()) {
+//                red = 0.23127F;
+//                green = 0.04313F;
+//                blue = 0.04313F;
+//
+//            } else if (!(VampireMob.get((EntityCreature) entity).getBlood() > 0)) {
+//                red = 0.039215F;
+//                green = 0.0745F;
+//                blue = 0.1647F;
+//            }
+//        } else if (entity instanceof EntityPlayer) {
+//            if (VampirePlayer.get((EntityPlayer) entity).getLevel() > 0) {
+//                red = 0.039215F;
+//                green = 0.0745F;
+//                blue = 0.1647F;
+//            }
+//        }
+        GL11.glPushMatrix();
+        GL11.glTranslated(entity.getPosX(), entity.getPosY() + entity.getHeight() / 2, entity.getPosZ());
+        GL11.glScalef(entity.getWidth() * 1.5F, entity.getHeight() * 1.5F, entity.getWidth() * 1.5F);
+        GL11.glColor4f(red, green, blue, 0.5F * f);
+        GL11.glCallList(entitySphereListId);
+        GL11.glPopMatrix();
 
     }
 
@@ -373,44 +507,40 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         }
     }
 
-    @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-        if (mc.world == null) return;
+    /**
+     * Builds and saves a sphere for entitys
+     */
+    private void buildEntitySphere() {
+        GL11.glNewList(entitySphereListId, GL11.GL_COMPILE);
 
-        /**
-         * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
-         */
-        float partialTicks = mc.getRenderPartialTicks();
+        int lats = 32, longs = 32;
+        double r = 0.5;
+        int i, j;
+        for (i = 0; i <= lats; i++) {
+            double lat0 = Math.PI * (-0.5 + (double) (i - 1) / lats);
+            double z0 = Math.sin(lat0);
+            double zr0 = Math.cos(lat0);
 
+            double lat1 = Math.PI * (-0.5 + (double) i / lats);
+            double z1 = Math.sin(lat1);
+            double zr1 = Math.cos(lat1);
 
-        if (displayHeight != mc.getMainWindow().getFramebufferHeight() || displayWidth != mc.getMainWindow().getFramebufferWidth()) {
-            this.displayHeight = mc.getMainWindow().getFramebufferHeight();
-            this.displayWidth = mc.getMainWindow().getFramebufferWidth();
-            this.updateFramebufferSize(this.displayWidth, this.displayHeight);
-        }
+            GL11.glBegin(GL_QUAD_STRIP);
+            for (j = 0; j <= longs; j++) {
+                double lng = 2 * Math.PI * (double) (j - 1) / longs;
+                double x = Math.cos(lng);
+                double y = Math.sin(lng);
 
-
-        if (this.isRenderEntityOutlines()) {
-            if (bloodVisionBuffer != null) {
-                bloodVisionBuffer.finish();
+                GL11.glNormal3d(x * zr0, y * zr0, z0);
+                GL11.glVertex3d(r * x * zr0, r * y * zr0, r * z0);
+                GL11.glNormal3d(x * zr1, y * zr1, z1);
+                GL11.glVertex3d(r * x * zr1, r * y * zr1, r * z1);
             }
-            this.bloodVisionShader.render(partialTicks);
-            this.mc.getFramebuffer().bindFramebuffer(false);
+            GL11.glEnd();
         }
 
-        if (isRenderEntityOutlines()) {
-            this.renderBloodVisionFramebuffer();
-            RenderSystem.disableBlend();
-            RenderSystem.disableDepthTest();
-            RenderSystem.disableAlphaTest();
-            RenderSystem.enableTexture();
-            RenderSystem.matrixMode(5890);
-            RenderSystem.pushMatrix();
-            RenderSystem.loadIdentity();
-            this.blurShader.render(partialTicks);
-            RenderSystem.popMatrix();
-        }
 
+        GL11.glEndList();
 
     }
 
