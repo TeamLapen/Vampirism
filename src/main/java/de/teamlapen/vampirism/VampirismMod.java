@@ -245,6 +245,7 @@ public class VampirismMod {
             gen.addProvider(new LootTablesGenerator(gen));
             gen.addProvider(new AdvancementGenerator(gen));
             gen.addProvider(new RecipesGenerator(gen));
+            gen.addProvider(new SkillNodeGenerator(gen));
         }
         if (event.includeClient()) {
             gen.addProvider(new BlockStateGenerator(event.getGenerator(), event.getExistingFileHelper()));
