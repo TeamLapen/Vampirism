@@ -107,6 +107,7 @@ public class VampirismMod {
     public static VampirismMod instance;
     public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean inDev = false;
+    public static boolean inDataGen = false;
 
     public static boolean isRealism() {
         return false;
@@ -119,6 +120,7 @@ public class VampirismMod {
     public VampirismMod() {
         instance = this;
         checkDevEnv();
+        checkDataEnv();
 
         Optional<? extends net.minecraftforge.fml.ModContainer> opt = ModList.get().getModContainerById(REFERENCE.MODID);
         if (opt.isPresent()) {
@@ -195,6 +197,13 @@ public class VampirismMod {
         String launchTarget = System.getenv().get("target");
         if (launchTarget != null && launchTarget.contains("dev")) {
             inDev = true;
+        }
+    }
+
+    private void checkDataEnv() {
+        String launchTarget = System.getenv().get("target");
+        if(launchTarget != null && launchTarget.contains("data")) {
+            inDataGen = true;
         }
     }
 

@@ -1,13 +1,10 @@
 {
-  "result": {
-    "item": "vampirism:heart_striker_enhanced"
-  },
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "XX",
     "XX",
     "YY"
   ],
-  "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
       "item": "vampirism:blood_infused_enhanced_iron_ingot"
@@ -15,5 +12,8 @@
     "Y": {
       "tag": "forge:rods/wooden"
     }
+  },
+  "result": {
+    "item": "vampirism:heart_striker_enhanced"
   }
 }

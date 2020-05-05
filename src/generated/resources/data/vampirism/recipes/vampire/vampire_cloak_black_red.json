@@ -1,16 +1,13 @@
 {
-  "result": {
-    "item": "vampirism:vampire_cloak_black_white"
-  },
+  "type": "minecraft:crafting_shaped",
   "pattern": [
-    "YZY",
+    "XZX",
     "XAX",
     "Y Y"
   ],
-  "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "minecraft:white_wool"
+      "item": "minecraft:red_wool"
     },
     "Y": {
       "item": "minecraft:black_wool"
@@ -21,5 +18,8 @@
     "A": {
       "tag": "vampirism:pure_blood"
     }
+  },
+  "result": {
+    "item": "vampirism:vampire_cloak_black_red"
   }
 }

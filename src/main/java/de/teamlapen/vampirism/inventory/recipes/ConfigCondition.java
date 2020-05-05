@@ -19,8 +19,8 @@ public class ConfigCondition implements ICondition {
     private final Supplier<Boolean> tester;
     private final String option;
 
-    private ConfigCondition(String option, Supplier<Boolean> tester) {
-        this.tester = tester;
+    public ConfigCondition(String option) {
+        this.tester = getTester(option);
         this.option = option;
     }
 
@@ -34,6 +34,17 @@ public class ConfigCondition implements ICondition {
         return tester.get();
     }
 
+    private Supplier<Boolean> getTester(String option) {
+        switch (option){
+            case "auto_convert":
+                return VampirismConfig.SERVER.autoConvertGlassBottles::get;
+            case "umbrella":
+                return VampirismConfig.SERVER.umbrella::get;
+            default:
+                throw new JsonSyntaxException("Unknown config option: " + option);
+        }
+    }
+
     public static class Serializer implements IConditionSerializer<ConfigCondition> {
 
         @Override
@@ -44,13 +55,7 @@ public class ConfigCondition implements ICondition {
         @Override
         public ConfigCondition read(JsonObject json) {
             String option = json.get("option").getAsString();
-            if ("auto_convert".equals(option)) {
-                return new ConfigCondition(option, VampirismConfig.SERVER.autoConvertGlassBottles::get);
-            } else if ("umbrella".equals(option)) {
-                return new ConfigCondition(option, VampirismConfig.SERVER.umbrella::get);
-            } else {
-                throw new JsonSyntaxException("Unknown config option: " + option);
-            }
+            return new ConfigCondition(option);
         }
 
         @Override

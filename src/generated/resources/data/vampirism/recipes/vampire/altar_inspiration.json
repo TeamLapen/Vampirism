@@ -1,13 +1,10 @@
 {
-  "result": {
-    "item": "vampirism:altar_inspiration"
-  },
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     " X ",
     "XYX",
     "ZZZ"
   ],
-  "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
       "tag": "forge:glass"
@@ -18,5 +15,8 @@
     "Z": {
       "tag": "forge:ingots/iron"
     }
+  },
+  "result": {
+    "item": "vampirism:altar_inspiration"
   }
 }

@@ -1,13 +1,10 @@
 {
-  "result": {
-    "item": "vampirism:blood_container"
-  },
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "XYX",
     "YZY",
     "XYX"
   ],
-  "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
       "tag": "minecraft:planks"
@@ -18,5 +15,8 @@
     "Z": {
       "tag": "forge:ingots/iron"
     }
+  },
+  "result": {
+    "item": "vampirism:blood_container"
   }
 }

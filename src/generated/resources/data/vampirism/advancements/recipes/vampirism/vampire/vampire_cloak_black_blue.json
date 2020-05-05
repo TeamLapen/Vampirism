@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vampirism:general/umbrella"
+      "vampirism:vampire/vampire_cloak_black_blue"
     ]
   },
   "criteria": {
-    "has_wool": {
+    "has_pure_blood": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "tag": "minecraft:wool"
+            "tag": "vampirism:pure_blood"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vampirism:general/umbrella"
+        "recipe": "vampirism:vampire/vampire_cloak_black_blue"
       }
     }
   },
   "requirements": [
     [
-      "has_wool",
+      "has_pure_blood",
       "has_the_recipe"
     ]
   ]

@@ -10,7 +10,9 @@ import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.data.recipebuilder.AlchemicalCauldronRecipeBuilder;
 import de.teamlapen.vampirism.data.recipebuilder.ShapedWeaponTableRecipeBuilder;
+import de.teamlapen.vampirism.inventory.recipes.ConfigCondition;
 import de.teamlapen.vampirism.inventory.recipes.ShapedWeaponTableRecipe;
+import de.teamlapen.vampirism.items.UmbrellaItem;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.REFERENCE;
 import javafx.util.Pair;
@@ -27,14 +29,21 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.crafting.ConditionalAdvancement;
+import net.minecraftforge.common.crafting.ConditionalRecipe;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.NBTIngredient;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
+import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -80,7 +89,19 @@ public class RecipesGenerator extends RecipeProvider {
         IItemProvider feather = Items.FEATHER;
         IItemProvider string = Items.STRING;
         IItemProvider black_wool = Items.BLACK_WOOL;
+        IItemProvider blue_wool = Items.BLUE_WOOL;
+        IItemProvider white_wool = Items.WHITE_WOOL;
+        IItemProvider red_wool = Items.RED_WOOL;
         IItemProvider crossbow_arrow_normal = ModItems.crossbow_arrow_normal;
+        IItemProvider blood_bottle = ModItems.blood_bottle;
+        IItemProvider pure_blood_0 = ModItems.pure_blood_0;
+        IItemProvider pure_blood_1 = ModItems.pure_blood_1;
+        IItemProvider pure_blood_2 = ModItems.pure_blood_2;
+        IItemProvider pure_blood_3 = ModItems.pure_blood_3;
+        IItemProvider pure_blood_4 = ModItems.pure_blood_4;
+        IItemProvider blood_infused_enhanced_iron_ingot = ModItems.blood_infused_enhanced_iron_ingot;
+        IItemProvider blood_infused_iron_ingot = ModItems.blood_infused_iron_ingot;
+        IItemProvider rotten_flesh = Items.ROTTEN_FLESH;
         Tag<Item> planks = ItemTags.PLANKS;
         Tag<Item> glass = Tags.Items.GLASS;
         Tag<Item> glass_pane = Tags.Items.GLASS_PANES;
@@ -95,6 +116,7 @@ public class RecipesGenerator extends RecipeProvider {
         Tag<Item> stick = Tags.Items.RODS_WOODEN;
         Tag<Item> iron_block = Tags.Items.STORAGE_BLOCKS_IRON;
         Tag<Item> gold_ingot = Tags.Items.INGOTS_GOLD;
+        Tag<Item> pure_blood = ModTags.Items.PURE_BLOOD;
 
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.blood_grinder).key('Z', hopper).key('Y', planks).key('D', diamond).key('X',iron_ingot).patternLine(" Z ").patternLine("YDY").patternLine("YXY").addCriterion("has_hopper", this.hasItem(hopper)).build(consumer, general("blood_grinder"));
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.blood_sieve).key('X',iron_ingot).key('Q',quartz_block).key('Y', planks).key('Z', cauldron).patternLine("XQX").patternLine("YZY").patternLine("YXY").addCriterion("has_cauldron", this.hasItem(cauldron)).build(consumer, general("blood_sieve"));
@@ -118,7 +140,7 @@ public class RecipesGenerator extends RecipeProvider {
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.injection_sanguinare).addIngredient(injection_empty).addIngredient(vampire_fang,8).addCriterion("has_injection",this.hasItem(injection_empty)).build(consumer,general("injection_2"));
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.totem_base).patternLine("XYX").patternLine("XYX").patternLine("ZZZ").key('X',planks).key('Y',obsidian).key('Z',iron_ingot).addCriterion("has_obsidian",this.hasItem(obsidian)).build(consumer,general("totem_base"));
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.totem_top).patternLine("YXY").patternLine("XZX").patternLine("Y Y").key('X',glass).key('Y',obsidian).key('Z',iron_ingot).addCriterion("has_obsidian",this.hasItem(obsidian)).build(consumer,general("totem_top"));
-        shapedWithCondition(ModItems.umbrella).condition(ModRecipes.CONFIG_CONDITION,"umbrella").patternLine("###").patternLine("BAB").patternLine(" A ").key('#',wool).key('A',stick).key('B',vampire_orchid).addCriterion("has_wool",this.hasItem(wool)).build(consumer,general("umbrella"));
+        ConditionalRecipe.builder().addCondition(new ConfigCondition("umbrella")).addRecipe((consumer1)-> ShapedRecipeBuilder.shapedRecipe(ModItems.umbrella).patternLine("###").patternLine("BAB").patternLine(" A ").key('#',wool).key('A',stick).key('B', vampire_orchid).addCriterion("has_wool",this.hasItem(wool)).build(consumer1, general("umbrella"))).build(consumer,general("umbrella"));
 
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.alchemical_cauldron).patternLine("XZX").patternLine("XXX").patternLine("Y Y").key('X',iron_ingot).key('Y',stone_bricks).key('Z',garlic).addCriterion("has_iron",this.hasItem(iron_ingot)).build(consumer,hunter("alchemical_cauldron"));
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.blood_potion_table).patternLine("XXX").patternLine("Y Y").patternLine("ZZZ").key('X',glass_bottle).key('Y',planks).key('Z',iron_ingot).addCriterion("has_glass_bottle",this.hasItem(glass_bottle)).build(consumer,hunter("hunter_blood_potion_table"));
@@ -187,6 +209,32 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.tech_crossbow_ammo_package).lava(1).patternLine(" XZ ").patternLine("YYYY").patternLine("YYYY").patternLine("YYYY").key('X',iron_ingot).key('Y',crossbow_arrow_normal).key('Z',planks).addCriterion("has_iron",this.hasItem(iron_ingot)).build(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_axe_normal,1,enchantment(2,Enchantments.KNOCKBACK)).lava(5).patternLine("XXZY").patternLine("XXZY").patternLine("  ZY").patternLine("  Z ").key('X',iron_ingot).key('Y',garlic).addCriterion("has_iron",this.hasItem(iron_ingot)).key('Z',stick).build(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.hunter_axe_enhanced,1,enchantment(3,Enchantments.KNOCKBACK)).lava(5).patternLine("XWZY").patternLine("XWZY").patternLine("  ZY").patternLine("  Z ").key('X',iron_ingot).key('Y',garlic).key('W',diamond).addCriterion("has_iron",this.hasItem(iron_ingot)).key('Z',stick).build(consumer);
+
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.altar_infusion).patternLine("YZY").patternLine("ZZZ").key('Y',gold_ingot).key('Z',obsidian).addCriterion("has_gold",this.hasItem(gold_ingot)).build(consumer,vampire("altar_infusion"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.altar_inspiration).patternLine(" X ").patternLine("XYX").patternLine("ZZZ").key('X',glass).key('Y',glass_bottle).key('Z',iron_ingot).addCriterion("has_iron",this.hasItem(iron_ingot)).build(consumer,vampire("altar_inspiration"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.altar_pillar).patternLine("X X").patternLine("   ").patternLine("XXX").key('X',stone_bricks).addCriterion("has_stones",this.hasItem(stone_bricks)).build(consumer,vampire("altar_piller"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.altar_tip).patternLine(" X ").patternLine("XYX").key('X',iron_ingot).key('Y',iron_block).addCriterion("has_iron",this.hasItem(iron_ingot)).build(consumer,vampire("altar_tip"));
+        ShapelessRecipeBuilder.shapelessRecipe(Items.GLASS_BOTTLE).addIngredient(blood_bottle).addCriterion("has_blood_bottle",this.hasItem(blood_bottle)).build(consumer,vampire("blood_bottle_to_glass"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.blood_container).patternLine("XYX").patternLine("YZY").patternLine("XYX").key('X',planks).key('Y',glass).key('Z',iron_ingot).addCriterion("has_iron",this.hasItem(iron_ingot)).build(consumer,vampire("blood_container"));
+        new Shapeless(ModItems.blood_infused_enhanced_iron_ingot,3).addIngredient(iron_ingot,3).addIngredient(pure_blood_4).addCriterion("has_iron",this.hasItem(iron_ingot)).build(consumer,vampire("blood_infused_enhanced_iron_ingot"));
+        new Shapeless(ModItems.blood_infused_iron_ingot,3).addIngredient(iron_ingot,3).addIngredient(Ingredient.fromItems(pure_blood_0,pure_blood_1,pure_blood_2,pure_blood_3)).addCriterion("has_iron",this.hasItem(iron_ingot)).build(consumer,vampire("blood_infused_iron_ingot"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.blood_pedestal).patternLine("GYG").patternLine("YZY").patternLine("XXX").key('X',obsidian).key('Y',planks).key('Z',blood_bottle).key('G',gold_ingot).addCriterion("has_gold",this.hasItem(gold_ingot)).build(consumer,vampire("blood_pedestal"));
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.coffin).patternLine("XXX").patternLine("YYY").patternLine("XXX").key('X',planks).key('Y',wool).addCriterion("has_wool",this.hasItem(wool)).build(consumer,vampire("coffin"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.heart_seeker_enhanced).patternLine("X").patternLine("X").patternLine("Y").key('X',blood_infused_enhanced_iron_ingot).key('Y',stick).addCriterion("has_ingot",this.hasItem(blood_infused_enhanced_iron_ingot)).build(consumer,vampire("heart_seeker_enhanced"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.heart_striker_enhanced).patternLine("XX").patternLine("XX").patternLine("YY").key('X',blood_infused_enhanced_iron_ingot).key('Y',stick).addCriterion("has_ingot",this.hasItem(blood_infused_enhanced_iron_ingot)).build(consumer,vampire("heart_striker_enhanced"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.heart_seeker_normal).patternLine("X").patternLine("X").patternLine("Y").key('X',blood_infused_iron_ingot).key('Y',stick).addCriterion("has_ingot",this.hasItem(blood_infused_iron_ingot)).build(consumer,vampire("heart_seeker_normal"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.heart_striker_normal).patternLine("XX").patternLine("XX").patternLine("YY").key('X',blood_infused_iron_ingot).key('Y',stick).addCriterion("has_ingot",this.hasItem(blood_infused_iron_ingot)).build(consumer,vampire("heart_striker_normal"));
+
+        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_cloak_black_blue).patternLine("XZX").patternLine("XAX").patternLine("Y Y").key('X',blue_wool).key('Y',black_wool).key('Z',diamond).key('A',pure_blood).addCriterion("has_pure_blood",this.hasItem(pure_blood)).build(consumer,vampire("vampire_cloak_black_blue"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_cloak_black_red).patternLine("XZX").patternLine("XAX").patternLine("Y Y").key('X',red_wool).key('Y',black_wool).key('Z',diamond).key('A',pure_blood).addCriterion("has_pure_blood",this.hasItem(pure_blood)).build(consumer,vampire("vampire_cloak_black_red"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_cloak_black_white).patternLine("XZX").patternLine("XAX").patternLine("Y Y").key('X',white_wool).key('Y',black_wool).key('Z',diamond).key('A',pure_blood).addCriterion("has_pure_blood",this.hasItem(pure_blood)).build(consumer,vampire("vampire_cloak_black_white"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_cloak_white_black).patternLine("XZX").patternLine("XAX").patternLine("Y Y").key('X',black_wool).key('Y',white_wool).key('Z',diamond).key('A',pure_blood).addCriterion("has_pure_blood",this.hasItem(pure_blood)).build(consumer,vampire("vampire_cloak_white_black"));
+        ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_cloak_red_black).patternLine("XZX").patternLine("XAX").patternLine("Y Y").key('X',black_wool).key('Y',red_wool).key('Z',diamond).key('A',pure_blood).addCriterion("has_pure_blood",this.hasItem(pure_blood)).build(consumer,vampire("vampire_cloak_red_black"));
+//        new ConditionalShapelessRecipeBuilder(ModItems.blood_bottle,1).nbt(damage(0)).condition();
+//        ConditionalRecipe.builder().addRecipe((callable) -> ShapelessRecipeBuilder.)
+        ItemStack blood_bottle_stack = new ItemStack(ModItems.blood_bottle);
+        blood_bottle_stack.setDamage(0);
+        ConditionalRecipe.builder().addCondition(new NotCondition(new ConfigCondition("auto_convert"))).addRecipe((consumer1 -> new Shaped(blood_bottle_stack).patternLine("XYX").patternLine(" X ").key('X',glass).key('Y',rotten_flesh).addCriterion("has_glass",this.hasItem(glass)).build(consumer1,vampire("blood_bottle")))).build(consumer,vampire("blood_bottle"));
     }
 
     @Nonnull
@@ -211,12 +259,16 @@ public class RecipesGenerator extends RecipeProvider {
         return modId("general/" + path);
     }
 
-    private static ConditionalShapedRecipeBuilder shapedWithCondition(IItemProvider itemProvider) {
-        return new ConditionalShapedRecipeBuilder(itemProvider);
+    private Ingredient potion(Potion potion) {
+        ItemStack stack = new ItemStack(Items.POTION, 1);
+        PotionUtils.addPotionToItemStack(stack,potion);
+        return new NBTIngredient(stack);
     }
 
-    private static Ingredient potion(Potion potion) {
-        return Ingredient.fromItemListStream(Stream.of(new NBTIngredient(new ItemStack(Items.POTION, 1), potion)));
+    private static class NBTIngredient extends net.minecraftforge.common.crafting.NBTIngredient {
+        public NBTIngredient(ItemStack stack) {
+            super(stack);
+        }
     }
 
     private JsonObject enchantment(int level, Enchantment enchantment) {
@@ -230,73 +282,47 @@ public class RecipesGenerator extends RecipeProvider {
         return nbt;
     }
 
-    private static class NBTIngredient extends Ingredient.SingleItemList {
-        private final ItemStack stack;
-        private final Potion potion;
-        public NBTIngredient(ItemStack stackIn, Potion potion) {
-            super(stackIn);
-            this.stack = stackIn;
-            this.potion = potion;
+    private static class Shapeless extends ShapelessRecipeBuilder {
+        public Shapeless(IItemProvider itemProvider, int amount) {
+            super(itemProvider, amount);
         }
 
-        public Collection<ItemStack> getStacks() {
-            return Collections.singleton(this.stack);
-        }
-
-        public JsonObject serialize() {
-            JsonObject jsonobject = new JsonObject();
-            jsonobject.addProperty("item", stack.getItem().getRegistryName().toString());
-            JsonObject nbt = new JsonObject();
-            nbt.addProperty("Potion",potion.getRegistryName().toString());
-            jsonobject.add("nbt", nbt);
-            return jsonobject;
+        public ShapelessRecipeBuilder addIngredient(Tag<Item> tag, int amount) {
+            return this.addIngredient(Ingredient.fromTag(tag), amount);
         }
     }
 
-    private static class ConditionalShapedRecipeBuilder extends ShapedRecipeBuilder {
-        private List<Pair<IConditionSerializer<?>,Object>> conditions = Lists.newArrayList();
-
-        public ConditionalShapedRecipeBuilder(IItemProvider resultIn) {
-            super(resultIn, 1);
-        }
-
-        public ConditionalShapedRecipeBuilder(IItemProvider resultIn, int countIn) {
-            super(resultIn, countIn);
-        }
-
-        public ConditionalShapedRecipeBuilder condition(IConditionSerializer<?> condition, Object value) {
-            conditions.add(new Pair<>(condition,value));
-            return this;
+    private static class Shaped extends ShapedRecipeBuilder {
+        private final ItemStack stack;
+        public Shaped(ItemStack resultIn) {
+            super(resultIn.getItem(), resultIn.getCount());
+            this.stack = resultIn;
         }
 
         @Override
         public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
             this.validate(id);
             this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(id)).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
-            consumerIn.accept(new ConditionalResult(id, this.result, this.count, this.group == null ? "" : this.group, this.pattern, this.key, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + (this.result.getGroup() != null?this.result.getGroup().getPath(): VampirismMod.creativeTab.getPath()) + "/" + id.getPath()),conditions));
+            consumerIn.accept(new Result(id, this.count, this.group == null ? "" : this.group, this.pattern, this.key, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath()), this.stack));
+
         }
 
-        private class ConditionalResult extends Result {
-            private List<Pair<IConditionSerializer<?>,Object>> conditions;
-
-            public ConditionalResult(ResourceLocation idIn, Item resultIn, int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn, List<Pair<IConditionSerializer<?>,Object>> conditions) {
-                super(idIn, resultIn, countIn, groupIn, patternIn, keyIn, advancementBuilderIn, advancementIdIn);
-                this.conditions = conditions;
+        private class Result extends ShapedRecipeBuilder.Result {
+            private final ItemStack stack;
+            public Result(ResourceLocation idIn, int countIn, String groupIn, List<String> patternIn, Map<Character, Ingredient> keyIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn, ItemStack stack) {
+                super(idIn, stack.getItem(), countIn, groupIn, patternIn, keyIn, advancementBuilderIn, advancementIdIn);
+                this.stack = stack;
             }
 
             @Override
             public void serialize(JsonObject json) {
                 super.serialize(json);
-                if(this.conditions != null) {
-                    JsonArray array = new JsonArray();
-                    for (Pair<IConditionSerializer<?>,Object> pair: this.conditions) {
-                        JsonObject object = new JsonObject();
-                        object.addProperty("type",pair.getKey().getID().toString());
-                        object.addProperty("option",pair.getValue().toString());
-                        array.add(object);
-                    }
-                    json.add("conditions", array);
-                }
+                JsonObject result = json.get("result").getAsJsonObject();
+                result.entrySet().clear();
+                result.addProperty("item", this.stack.getItem().getRegistryName().toString());
+                result.addProperty("count", this.stack.getCount());
+                if (stack.hasTag())
+                    result.addProperty("nbt", this.stack.getTag().toString());
             }
         }
     }

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:vampire/blood_bottle_to_glass"
+    ]
+  },
+  "criteria": {
+    "has_blood_bottle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:blood_bottle"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:vampire/blood_bottle_to_glass"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_blood_bottle",
+      "has_the_recipe"
+    ]
+  ]
+}
