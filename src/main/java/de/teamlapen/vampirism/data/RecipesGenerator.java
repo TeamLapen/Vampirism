@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.data.recipebuilder.AlchemicalCauldronRecipeBuilder;
+import de.teamlapen.vampirism.data.recipebuilder.IItemWIthTierRecipeBuilder;
 import de.teamlapen.vampirism.data.recipebuilder.ShapedWeaponTableRecipeBuilder;
 import de.teamlapen.vampirism.inventory.recipes.ConfigCondition;
 import de.teamlapen.vampirism.inventory.recipes.ShapedWeaponTableRecipe;
@@ -230,11 +231,14 @@ public class RecipesGenerator extends RecipeProvider {
         ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_cloak_black_white).patternLine("XZX").patternLine("XAX").patternLine("Y Y").key('X',white_wool).key('Y',black_wool).key('Z',diamond).key('A',pure_blood).addCriterion("has_pure_blood",this.hasItem(pure_blood)).build(consumer,vampire("vampire_cloak_black_white"));
         ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_cloak_white_black).patternLine("XZX").patternLine("XAX").patternLine("Y Y").key('X',black_wool).key('Y',white_wool).key('Z',diamond).key('A',pure_blood).addCriterion("has_pure_blood",this.hasItem(pure_blood)).build(consumer,vampire("vampire_cloak_white_black"));
         ShapedRecipeBuilder.shapedRecipe(ModItems.vampire_cloak_red_black).patternLine("XZX").patternLine("XAX").patternLine("Y Y").key('X',black_wool).key('Y',red_wool).key('Z',diamond).key('A',pure_blood).addCriterion("has_pure_blood",this.hasItem(pure_blood)).build(consumer,vampire("vampire_cloak_red_black"));
-//        new ConditionalShapelessRecipeBuilder(ModItems.blood_bottle,1).nbt(damage(0)).condition();
-//        ConditionalRecipe.builder().addRecipe((callable) -> ShapelessRecipeBuilder.)
         ItemStack blood_bottle_stack = new ItemStack(ModItems.blood_bottle);
         blood_bottle_stack.setDamage(0);
         ConditionalRecipe.builder().addCondition(new NotCondition(new ConfigCondition("auto_convert"))).addRecipe((consumer1 -> new Shaped(blood_bottle_stack).patternLine("XYX").patternLine(" X ").key('X',glass).key('Y',rotten_flesh).addCriterion("has_glass",this.hasItem(glass)).build(consumer1,vampire("blood_bottle")))).build(consumer,vampire("blood_bottle"));
+
+        new IItemWIthTierRecipeBuilder(ModItems.heart_seeker_normal,1).patternLine(" X ").patternLine("XYX").key('X',blood_infused_iron_ingot).key('Y',ModItems.heart_seeker_normal).addCriterion("has_heart_seeker",this.hasItem(ModItems.heart_seeker_normal)).build(consumer,vampire("heart_seeker_normal_repair"));
+        new IItemWIthTierRecipeBuilder(ModItems.heart_striker_normal,1).patternLine("XXX").patternLine("XYX").key('X',blood_infused_iron_ingot).key('Y',ModItems.heart_striker_normal).addCriterion("has_heart_striker",this.hasItem(ModItems.heart_striker_normal)).build(consumer,vampire("heart_striker_normal_repair"));
+        new IItemWIthTierRecipeBuilder(ModItems.heart_seeker_enhanced,1).patternLine(" X ").patternLine("XYX").key('X',blood_infused_enhanced_iron_ingot).key('Y',ModItems.heart_seeker_enhanced).addCriterion("has_heart_seeker",this.hasItem(ModItems.heart_seeker_enhanced)).build(consumer,vampire("heart_seeker_enhanced_repair"));
+        new IItemWIthTierRecipeBuilder(ModItems.heart_striker_enhanced,1).patternLine("XXX").patternLine("XYX").key('X',blood_infused_enhanced_iron_ingot).key('Y',ModItems.heart_striker_enhanced).addCriterion("has_heart_striker",this.hasItem(ModItems.heart_striker_enhanced)).build(consumer,vampire("heart_striker_enhanced_repair"));
     }
 
     @Nonnull

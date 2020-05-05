@@ -1,12 +1,9 @@
 {
-  "result": {
-    "item": "vampirism:heart_seeker_enhanced"
-  },
+  "type": "vampirism:repair_iitemwithtier",
   "pattern": [
     " X ",
     "XYX"
   ],
-  "type": "vampirism:repair_iitemwithtier",
   "key": {
     "X": {
       "item": "vampirism:blood_infused_enhanced_iron_ingot"
@@ -14,5 +11,8 @@
     "Y": {
       "item": "vampirism:heart_seeker_enhanced"
     }
+  },
+  "result": {
+    "item": "vampirism:heart_seeker_enhanced"
   }
 }
