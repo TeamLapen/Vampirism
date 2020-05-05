@@ -435,10 +435,16 @@ public class GuideBook implements IGuideBook {
         binder.setItemName("guide.vampirism");
         binder.setHeader("guide.vampirism.welcome");
         binder.setAuthor("Maxanier");
-        binder.setColor(Color.getHSBColor(0.5f, 0.2f, 0.5f));
+        binder.setColor(Color.WHITE);
         binder.setOutlineTexture(new ResourceLocation("vampirismguide", "textures/gui/book_violet_border.png"));
         binder.setSpawnWithBook();
         binder.setContentProvider(GuideBook::buildCategories);
         return guideBook = binder.build();
+    }
+
+    @Nullable
+    @Override
+    public ResourceLocation getModel() {
+        return new ResourceLocation(REFERENCE.MODID, "guidebook");
     }
 }
