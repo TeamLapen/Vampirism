@@ -23,7 +23,7 @@ public class BlockStateGenerator extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         //models
-        models().getBuilder("coffin").texture("particles", mcLoc("block/spruce_planks"));
+        models().getBuilder("coffin").texture("particle", mcLoc("block/spruce_planks"));
         models().withExistingParent("fire_side_alt0", modLoc("block/fire_side_alt")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
         models().withExistingParent("fire_side_alt1", modLoc("block/fire_side_alt")).texture("particle", mcLoc("block/fire_1")).texture("fire", mcLoc("block/fire_1"));
         models().withExistingParent("fire_side0", modLoc("block/fire_side")).texture("particle", mcLoc("block/fire_0")).texture("fire", mcLoc("block/fire_0"));
@@ -63,9 +63,9 @@ public class BlockStateGenerator extends BlockStateProvider {
         simpleBlock(ModBlocks.fire_place, models().getExistingFile(modLoc("block/fire_place")));
         simpleBlock(ModBlocks.potted_vampire_orchid, models().withExistingParent("vampirism:block/potted_vampire_orchid", "minecraft:block/flower_pot_cross").texture("plant", "vampirism:block/vampire_orchid"));
 
-        stairsBlock(ModBlocks.castle_stairs_dark_stone, modLoc("block/castle_block_dark_brick"));
+        stairsBlock(ModBlocks.castle_stairs_dark_stone, modLoc("block/castle_block_dark_stone"));
         stairsBlock(ModBlocks.castle_stairs_dark_brick, modLoc("block/castle_block_dark_brick"));
-        stairsBlock(ModBlocks.castle_stairs_purple_brick, modLoc("block/castle_block_dark_brick"));
+        stairsBlock(ModBlocks.castle_stairs_purple_brick, modLoc("block/castle_block_purple_brick"));
 
         slabBlock(ModBlocks.castle_slab_dark_brick, modLoc("block/castle_block_dark_brick"), modLoc("block/castle_block_dark_brick"));
         slabBlock(ModBlocks.castle_slab_dark_stone, modLoc("block/castle_block_dark_stone"), modLoc("block/castle_block_dark_stone"));

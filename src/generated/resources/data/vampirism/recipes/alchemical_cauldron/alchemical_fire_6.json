@@ -2,7 +2,7 @@
   "type": "vampirism:alchemical_cauldron",
   "result": {
     "item": "vampirism:item_alchemical_fire",
-    "count": 5
+    "count": 6
   },
   "ingredient": {
     "item": "minecraft:gunpowder"

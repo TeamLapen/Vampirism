@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.data.recipebuilder;
 
 import de.teamlapen.vampirism.core.ModRecipes;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.IRequirementsStrategy;
@@ -13,10 +14,13 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class IItemWIthTierRecipeBuilder extends ShapedRecipeBuilder {
     public IItemWIthTierRecipeBuilder(IItemProvider resultIn, int countIn) {
         super(resultIn, countIn);

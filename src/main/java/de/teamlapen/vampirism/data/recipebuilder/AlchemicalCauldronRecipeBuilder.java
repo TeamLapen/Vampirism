@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.ICriterionInstance;
@@ -23,21 +24,32 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class AlchemicalCauldronRecipeBuilder {
+    private final ItemStack result;
+    private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
     private String group;
     private Ingredient ingredient;
     private Either<Ingredient, FluidStack> fluid;
-    private final ItemStack result;
     private ISkill[] skills;
     private int reqLevel = 1;
     private int cookTime = 200;
     private float exp = 0.2f;
-    private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
 
     public AlchemicalCauldronRecipeBuilder(Item result, int count) {
-        this.result = new ItemStack(result,count);
+        this.result = new ItemStack(result, count);
+    }
+
+    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item) {
+        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(item, 1);
+    }
+
+    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item, int count) {
+        return new AlchemicalCauldronRecipeBuilder(item, count);
     }
 
     public AlchemicalCauldronRecipeBuilder withIngredient(Tag<Item> tag) {
@@ -96,7 +108,7 @@ public class AlchemicalCauldronRecipeBuilder {
     }
 
     public AlchemicalCauldronRecipeBuilder withCriterion(String name, ICriterionInstance criterion) {
-        this.advancementBuilder.withCriterion(name,criterion);
+        this.advancementBuilder.withCriterion(name, criterion);
         return this;
     }
 
@@ -106,29 +118,21 @@ public class AlchemicalCauldronRecipeBuilder {
     }
 
     private void validate(ResourceLocation id) {
-        if(this.ingredient == null) {
+        if (this.ingredient == null) {
             throw new IllegalStateException("No ingredients defined for alchemical cauldron recipe " + id + "!");
-        }else if(this.fluid == null) {
+        } else if (this.fluid == null) {
             throw new IllegalStateException("No fluid defined for alchemical cauldron recipe " + id + "!");
         }
     }
 
     public void build(Consumer<IFinishedRecipe> consumer, ResourceLocation id) {
-        id = new ResourceLocation(id.getNamespace(),"alchemical_cauldron/"+id.getPath());
+        id = new ResourceLocation(id.getNamespace(), "alchemical_cauldron/" + id.getPath());
         this.validate(id);
         this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(id)).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
-        consumer.accept(new Result(id,this.group != null? this.group:"",this.ingredient,this.fluid,this.result,this.skills != null?skills:new ISkill[]{HunterSkills.basic_alchemy},this.reqLevel,this.cookTime,this.exp,advancementBuilder,new ResourceLocation(id.getNamespace(),"recipes/" + this.result.getItem().getGroup().getPath()+"/"+id.getPath())));
+        consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.fluid, this.result, this.skills != null ? skills : new ISkill[]{HunterSkills.basic_alchemy}, this.reqLevel, this.cookTime, this.exp, advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getGroup().getPath() + "/" + id.getPath())));
     }
 
-    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item) {
-        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(item,1);
-    }
-
-    public static AlchemicalCauldronRecipeBuilder cauldronRecipe(Item item, int count) {
-        return new AlchemicalCauldronRecipeBuilder(item,count);
-    }
-
-    public class Result implements IFinishedRecipe{
+    public static class Result implements IFinishedRecipe {
         private ResourceLocation id;
         private String group;
         private Ingredient ingredient;
@@ -157,33 +161,33 @@ public class AlchemicalCauldronRecipeBuilder {
 
         @Override
         public void serialize(JsonObject jsonObject) {
-            if(!this.group.isEmpty()) {
-                jsonObject.addProperty("group",this.group);
+            if (!this.group.isEmpty()) {
+                jsonObject.addProperty("group", this.group);
             }
 
             JsonObject result = new JsonObject();
             result.addProperty("item", this.result.getItem().getRegistryName().toString());
-            if(this.result.getCount() > 1) {
+            if (this.result.getCount() > 1) {
                 result.addProperty("count", this.result.getCount());
             }
             jsonObject.add("result", result);
 
-            jsonObject.add("ingredient",this.ingredient.serialize());
+            jsonObject.add("ingredient", this.ingredient.serialize());
 
-            this.fluid.ifLeft(ingredient1 -> jsonObject.add("fluidItem",ingredient1.serialize()));
+            this.fluid.ifLeft(ingredient1 -> jsonObject.add("fluidItem", ingredient1.serialize()));
             this.fluid.ifRight(fluidStack -> {
                 JsonObject fluid = new JsonObject();
-                fluid.addProperty("fluid",fluidStack.getFluid().getRegistryName().toString());
+                fluid.addProperty("fluid", fluidStack.getFluid().getRegistryName().toString());
                 jsonObject.add("fluid", fluid);
             });
 
             JsonArray skills = new JsonArray();
-            for(ISkill skill : this.skills){
+            for (ISkill skill : this.skills) {
                 skills.add(skill.getRegistryName().toString());
             }
             jsonObject.add("skill", skills);
 
-            jsonObject.addProperty("cookTime",this.cookTimeIn);
+            jsonObject.addProperty("cookTime", this.cookTimeIn);
             jsonObject.addProperty("experience", this.exp);
             jsonObject.addProperty("reqLevel", this.reqLevel);
         }

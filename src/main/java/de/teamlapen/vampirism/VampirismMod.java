@@ -119,8 +119,7 @@ public class VampirismMod {
 
     public VampirismMod() {
         instance = this;
-        checkDevEnv();
-        checkDataEnv();
+        checkEnv();
 
         Optional<? extends net.minecraftforge.fml.ModContainer> opt = ModList.get().getModContainerById(REFERENCE.MODID);
         if (opt.isPresent()) {
@@ -193,15 +192,11 @@ public class VampirismMod {
 
     }
 
-    private void checkDevEnv() {
+    private void checkEnv() {
         String launchTarget = System.getenv().get("target");
         if (launchTarget != null && launchTarget.contains("dev")) {
             inDev = true;
         }
-    }
-
-    private void checkDataEnv() {
-        String launchTarget = System.getenv().get("target");
         if(launchTarget != null && launchTarget.contains("data")) {
             inDataGen = true;
         }

@@ -1,31 +1,28 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
   "pattern": [
-    "XWWX",
+    "YXXY",
     "XZZX",
-    "XYYX",
-    "XYYX"
+    " XX ",
+    " XX "
   ],
   "key": {
     "X": {
       "tag": "forge:ingots/iron"
     },
     "Y": {
-      "tag": "forge:gems/diamond"
+      "item": "minecraft:string"
     },
     "Z": {
-      "tag": "forge:crops/garlic"
-    },
-    "W": {
-      "item": "vampirism:vampire_fang"
+      "tag": "forge:gems/diamond"
     }
   },
   "result": {
-    "item": "vampirism:hunter_coat_chest_enhanced"
+    "item": "vampirism:basic_tech_crossbow"
   },
   "lava": 5,
   "skill": [
-    "vampirism:enhanced_armor"
+    "vampirism:tech_weapons"
   ],
   "level": 1
 }

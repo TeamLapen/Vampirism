@@ -5,10 +5,14 @@ import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class SkillNodeBuilder {
 
     private final ResourceLocation parent;
@@ -20,21 +24,31 @@ public class SkillNodeBuilder {
         this.skills = skills;
     }
 
-    public SkillNodeBuilder faction (IPlayableFaction<?> faction) {
+    public static SkillNodeBuilder skill(ResourceLocation parent, ISkill... skills) {
+        return new SkillNodeBuilder(parent, skills);
+    }
+
+    public static SkillNodeBuilder hunter(ResourceLocation parent, ISkill... skills) {
+        return skill(parent, skills).faction(VReference.HUNTER_FACTION);
+    }
+
+    public static SkillNodeBuilder vampire(ResourceLocation parent, ISkill... skills) {
+        return skill(parent, skills).faction(VReference.VAMPIRE_FACTION);
+    }
+
+    public SkillNodeBuilder faction(IPlayableFaction<?> faction) {
         this.faction = faction.getID();
         return this;
     }
 
     private void validate(ResourceLocation id) {
-        if(this.skills == null || this.skills.length == 0) {
+        if (this.skills.length == 0) {
             throw new IllegalStateException("No skills defined for skill node " + id + "!");
-        }else if(this.parent == null) {
-            throw new IllegalStateException("No parent skill is set for skill node " + id + "!");
         }
     }
 
     public ResourceLocation build(Consumer<FinishedSkillNode> consumer, ResourceLocation id) {
-        if(faction != null) {
+        if (faction != null) {
             id = new ResourceLocation(id.getNamespace(), faction.getPath() + "/" + id.getPath());
         }
         this.validate(id);
@@ -67,17 +81,5 @@ public class SkillNodeBuilder {
         public ResourceLocation getID() {
             return id;
         }
-    }
-
-    public static SkillNodeBuilder skill(ResourceLocation parent, ISkill... skills) {
-        return new SkillNodeBuilder(parent, skills);
-    }
-
-    public static SkillNodeBuilder hunter(ResourceLocation parent, ISkill... skills) {
-        return skill(parent, skills).faction(VReference.HUNTER_FACTION);
-    }
-
-    public static SkillNodeBuilder vampire(ResourceLocation parent, ISkill... skills) {
-        return skill(parent, skills).faction(VReference.VAMPIRE_FACTION);
     }
 }

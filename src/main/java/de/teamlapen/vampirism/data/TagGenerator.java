@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.block.Blocks;
 import net.minecraft.data.*;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -64,12 +63,12 @@ public class TagGenerator {
             getBuilder(ModTags.Items.VAMPIRE_CLOAK).add(ModItems.vampire_cloak_black_blue, ModItems.vampire_cloak_black_red, ModItems.vampire_cloak_black_white, ModItems.vampire_cloak_red_black, ModItems.vampire_cloak_white_black);
             getBuilder(ItemTags.SMALL_FLOWERS).add(ModItems.vampire_orchid);
             getBuilder(ModTags.Items.GARLIC).add(ModItems.item_garlic);
-            getBuilder(ModTags.Items.HOLY_WATER).add(ModItems.holy_water_bottle_normal,ModItems.holy_water_bottle_enhanced,ModItems.holy_water_bottle_ultimate);
-            getBuilder(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.holy_water_splash_bottle_normal,ModItems.holy_water_splash_bottle_enhanced,ModItems.holy_water_splash_bottle_ultimate);
+            getBuilder(ModTags.Items.HOLY_WATER).add(ModItems.holy_water_bottle_normal, ModItems.holy_water_bottle_enhanced, ModItems.holy_water_bottle_ultimate);
+            getBuilder(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.holy_water_splash_bottle_normal, ModItems.holy_water_splash_bottle_enhanced, ModItems.holy_water_splash_bottle_ultimate);
         }
     }
 
-    public static class ModEntityTypeTagsProvider extends EntityTypeTagsProvider{
+    public static class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
         public ModEntityTypeTagsProvider(DataGenerator dataGenerator) {
             super(dataGenerator);
         }

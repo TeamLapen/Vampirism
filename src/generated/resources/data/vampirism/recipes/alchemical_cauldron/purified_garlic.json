@@ -1,7 +1,8 @@
 {
   "type": "vampirism:alchemical_cauldron",
   "result": {
-    "item": "vampirism:purified_garlic"
+    "item": "vampirism:purified_garlic",
+    "count": 2
   },
   "ingredient": {
     "tag": "forge:crops/garlic"

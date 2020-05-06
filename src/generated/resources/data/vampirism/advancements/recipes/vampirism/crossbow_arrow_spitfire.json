@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vampirism:weapontable/crossbow_arrow_vampire_killer"
+      "vampirism:crossbow_arrow_spitfire"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vampirism:weapontable/crossbow_arrow_vampire_killer"
+        "recipe": "vampirism:crossbow_arrow_spitfire"
       }
     }
   },

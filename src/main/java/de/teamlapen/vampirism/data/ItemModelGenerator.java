@@ -104,7 +104,7 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModItems.item_tent);
             addAll(ModTags.Items.PURE_BLOOD.getAllElements());
         }};
-        Map<Item,ResourceLocation> itemsWithTexture = new HashMap<Item,ResourceLocation>() {{
+        Map<Item, ResourceLocation> itemsWithTexture = new HashMap<Item, ResourceLocation>() {{
             put(ModItems.holy_water_bottle_normal, modLoc("item/holy_water_normal"));
             put(ModItems.holy_water_bottle_enhanced, modLoc("item/holy_water_enhanced"));
             put(ModItems.holy_water_bottle_ultimate, modLoc("item/holy_water_ultimate"));
@@ -212,7 +212,7 @@ public class ItemModelGenerator extends ItemModelProvider {
 
     public ItemModelBuilder item(String item, ResourceLocation... texture) {
         ItemModelBuilder model = withExistingParent(item, mcLoc("item/generated"));
-        if(texture != null) {
+        if (texture != null) {
             for (int i = 0; i < texture.length; i++) {
                 model.texture("layer" + i, texture[i]);
             }

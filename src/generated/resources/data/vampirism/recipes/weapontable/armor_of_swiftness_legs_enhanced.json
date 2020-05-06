@@ -21,6 +21,8 @@
     "item": "vampirism:armor_of_swiftness_legs_enhanced"
   },
   "lava": 3,
-  "skill": [],
+  "skill": [
+    "vampirism:enhanced_armor"
+  ],
   "level": 1
 }

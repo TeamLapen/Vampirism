@@ -38,11 +38,11 @@ public class SkillNodeGenerator implements IDataProvider {
     public void act(DirectoryCache cache) throws IOException {
         Path path = this.generator.getOutputFolder();
         Set<ResourceLocation> set = Sets.newHashSet();
-        this.registerSkillNodes((node)-> {
-            if(!set.add(node.getID())) {
+        this.registerSkillNodes((node) -> {
+            if (!set.add(node.getID())) {
                 throw new IllegalStateException("Dublicate skill node " + node.getID());
             } else {
-                this.saveSkillNode(cache,node.getSkillNodeJson(),path.resolve("data/"+node.getID().getNamespace() + "/vampirismskillnodes/" + node.getID().getPath() + ".json"));
+                this.saveSkillNode(cache, node.getSkillNodeJson(), path.resolve("data/" + node.getID().getNamespace() + "/vampirismskillnodes/" + node.getID().getPath() + ".json"));
             }
         });
     }
@@ -52,16 +52,16 @@ public class SkillNodeGenerator implements IDataProvider {
             String s = GSON.toJson(nodeJson);
             @SuppressWarnings("UnstableApiUsage")
             String s1 = HASH_FUNCTION.hashUnencodedChars(s).toString();
-            if(!Objects.equals(cache.getPreviousHash(path),s1) || !Files.exists(path)) {
+            if (!Objects.equals(cache.getPreviousHash(path), s1) || !Files.exists(path)) {
                 Files.createDirectories(path.getParent());
 
                 try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
                     bufferedWriter.write(s);
                 }
             }
-            cache.recordHash(path,s1);
-        }catch (IOException ioExeption) {
-            LOGGER.error("Couldn't save skill node {}",path,ioExeption);
+            cache.recordHash(path, s1);
+        } catch (IOException ioExeption) {
+            LOGGER.error("Couldn't save skill node {}", path, ioExeption);
         }
     }
 
@@ -70,7 +70,7 @@ public class SkillNodeGenerator implements IDataProvider {
         return "Vampirism skillnode generator";
     }
 
-    protected void registerSkillNodes(Consumer<FinishedSkillNode> consumer){
+    protected void registerSkillNodes(Consumer<FinishedSkillNode> consumer) {
         //hunter
         {
             ResourceLocation skill2 = SkillNodeBuilder.hunter(modId("hunter"), HunterSkills.stake1).build(consumer, modId("skill2"));
@@ -105,26 +105,26 @@ public class SkillNodeGenerator implements IDataProvider {
             ResourceLocation skill3 = SkillNodeBuilder.vampire(skill2, VampireSkills.vampire_regeneration).build(consumer, modId("skill3"));
             ResourceLocation skill4 = SkillNodeBuilder.vampire(skill3, VampireSkills.bat).build(consumer, modId("skill4"));
 
-            ResourceLocation util1 = SkillNodeBuilder.vampire(skill4,VampireSkills.summon_bats).build(consumer,modId("util1"));
-            ResourceLocation util2 = SkillNodeBuilder.vampire(util1,VampireSkills.less_sundamage,VampireSkills.water_resistance).build(consumer,modId("util2"));
-            ResourceLocation util3 = SkillNodeBuilder.vampire(util2,VampireSkills.less_blood_thirst).build(consumer,modId("util3"));
-            ResourceLocation util4 = SkillNodeBuilder.vampire(util3,VampireSkills.vampire_disguise).build(consumer,modId("util4"));
-            ResourceLocation util5 = SkillNodeBuilder.vampire(util4,VampireSkills.half_invulnerable).build(consumer,modId("util5"));
-            ResourceLocation util6 = SkillNodeBuilder.vampire(util5,VampireSkills.vampire_invisibility).build(consumer,modId("util6"));
+            ResourceLocation util1 = SkillNodeBuilder.vampire(skill4, VampireSkills.summon_bats).build(consumer, modId("util1"));
+            ResourceLocation util2 = SkillNodeBuilder.vampire(util1, VampireSkills.less_sundamage, VampireSkills.water_resistance).build(consumer, modId("util2"));
+            ResourceLocation util3 = SkillNodeBuilder.vampire(util2, VampireSkills.less_blood_thirst).build(consumer, modId("util3"));
+            ResourceLocation util4 = SkillNodeBuilder.vampire(util3, VampireSkills.vampire_disguise).build(consumer, modId("util4"));
+            ResourceLocation util5 = SkillNodeBuilder.vampire(util4, VampireSkills.half_invulnerable).build(consumer, modId("util5"));
+            ResourceLocation util6 = SkillNodeBuilder.vampire(util5, VampireSkills.vampire_invisibility).build(consumer, modId("util6"));
 
-            ResourceLocation offensive1 = SkillNodeBuilder.vampire(skill4,VampireSkills.vampire_rage).build(consumer,modId("offensive1"));
-            ResourceLocation offensive2 = SkillNodeBuilder.vampire(offensive1,VampireSkills.advanced_biter).build(consumer,modId("offensive2"));
-            ResourceLocation offensive3 = SkillNodeBuilder.vampire(offensive2,VampireSkills.sword_finisher).build(consumer,modId("offensive3"));
-            ResourceLocation offensive4 = SkillNodeBuilder.vampire(offensive3,VampireSkills.dark_blood_projectile).build(consumer,modId("offensive4"));
-            ResourceLocation offensive5 = SkillNodeBuilder.vampire(offensive4,VampireSkills.blood_charge).build(consumer,modId("offensive5"));
-            ResourceLocation offensive6 = SkillNodeBuilder.vampire(offensive5,VampireSkills.freeze).build(consumer,modId("offensive6"));
+            ResourceLocation offensive1 = SkillNodeBuilder.vampire(skill4, VampireSkills.vampire_rage).build(consumer, modId("offensive1"));
+            ResourceLocation offensive2 = SkillNodeBuilder.vampire(offensive1, VampireSkills.advanced_biter).build(consumer, modId("offensive2"));
+            ResourceLocation offensive3 = SkillNodeBuilder.vampire(offensive2, VampireSkills.sword_finisher).build(consumer, modId("offensive3"));
+            ResourceLocation offensive4 = SkillNodeBuilder.vampire(offensive3, VampireSkills.dark_blood_projectile).build(consumer, modId("offensive4"));
+            ResourceLocation offensive5 = SkillNodeBuilder.vampire(offensive4, VampireSkills.blood_charge).build(consumer, modId("offensive5"));
+            ResourceLocation offensive6 = SkillNodeBuilder.vampire(offensive5, VampireSkills.freeze).build(consumer, modId("offensive6"));
 
-            ResourceLocation defensive1 = SkillNodeBuilder.vampire(skill4,VampireSkills.sunscreen).build(consumer,modId("defensive1"));
-            ResourceLocation defensive2 = SkillNodeBuilder.vampire(defensive1,VampireSkills.vampire_jump,VampireSkills.vampire_speed).build(consumer,modId("defensive2"));
-            ResourceLocation defensive3 = SkillNodeBuilder.vampire(defensive2,VampireSkills.blood_vision).build(consumer,modId("defensive3"));
-            ResourceLocation defensive4 = SkillNodeBuilder.vampire(defensive3,VampireSkills.creeper_avoided).build(consumer,modId("defensive4"));
-            ResourceLocation defensive5 = SkillNodeBuilder.vampire(defensive4,VampireSkills.vampire_forest_fog,VampireSkills.blood_vision_garlic).build(consumer,modId("defensive5"));
-            ResourceLocation defensive6 = SkillNodeBuilder.vampire(defensive5,VampireSkills.teleport).build(consumer,modId("defensive6"));
+            ResourceLocation defensive1 = SkillNodeBuilder.vampire(skill4, VampireSkills.sunscreen).build(consumer, modId("defensive1"));
+            ResourceLocation defensive2 = SkillNodeBuilder.vampire(defensive1, VampireSkills.vampire_jump, VampireSkills.vampire_speed).build(consumer, modId("defensive2"));
+            ResourceLocation defensive3 = SkillNodeBuilder.vampire(defensive2, VampireSkills.blood_vision).build(consumer, modId("defensive3"));
+            ResourceLocation defensive4 = SkillNodeBuilder.vampire(defensive3, VampireSkills.creeper_avoided).build(consumer, modId("defensive4"));
+            ResourceLocation defensive5 = SkillNodeBuilder.vampire(defensive4, VampireSkills.vampire_forest_fog, VampireSkills.blood_vision_garlic).build(consumer, modId("defensive5"));
+            ResourceLocation defensive6 = SkillNodeBuilder.vampire(defensive5, VampireSkills.teleport).build(consumer, modId("defensive6"));
 
         }
 

@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "vampirism:weapontable/crossbow_arrow_vampire_killer"
+      "vampirism:weapontable/basic_double_crossbow"
     ]
   },
   "criteria": {
-    "has_crossbow_arrow_normal": {
+    "has_iron": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "vampirism:crossbow_arrow_normal"
+            "tag": "forge:ingots/iron"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "vampirism:weapontable/crossbow_arrow_vampire_killer"
+        "recipe": "vampirism:weapontable/basic_double_crossbow"
       }
     }
   },
   "requirements": [
     [
-      "has_crossbow_arrow_normal",
+      "has_iron",
       "has_the_recipe"
     ]
   ]

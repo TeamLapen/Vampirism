@@ -13,6 +13,7 @@
     }
   },
   "result": {
-    "item": "vampirism:crossbow_arrow_normal"
+    "item": "vampirism:crossbow_arrow_normal",
+    "count": 6
   }
 }
