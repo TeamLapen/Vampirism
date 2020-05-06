@@ -239,9 +239,7 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.GATHER_DATA, event);
         DataGenerator gen = event.getGenerator();
         if (event.includeServer()) {
-            gen.addProvider(new TagGenerator.ModBlockTagsProvider(gen));
-            gen.addProvider(new TagGenerator.ModItemTagsProvider(gen));
-            gen.addProvider(new TagGenerator.ModEntityTypeTagsProvider(gen));
+            TagGenerator.register(gen);
             gen.addProvider(new LootTablesGenerator(gen));
             gen.addProvider(new AdvancementGenerator(gen));
             gen.addProvider(new RecipesGenerator(gen));

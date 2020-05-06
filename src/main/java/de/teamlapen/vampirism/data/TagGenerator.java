@@ -1,15 +1,9 @@
 package de.teamlapen.vampirism.data;
 
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModTags;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.BlockTagsProvider;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.EntityTypeTagsProvider;
-import net.minecraft.data.ItemTagsProvider;
+import net.minecraft.data.*;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.Tags;
@@ -17,6 +11,13 @@ import net.minecraftforge.common.Tags;
 import javax.annotation.Nonnull;
 
 public class TagGenerator {
+
+    public static void register(DataGenerator generator) {
+        generator.addProvider(new ModBlockTagsProvider(generator));
+        generator.addProvider(new ModItemTagsProvider(generator));
+        generator.addProvider(new ModEntityTypeTagsProvider(generator));
+        generator.addProvider(new ModFluidTagsProvider(generator));
+    }
 
     public static class ModBlockTagsProvider extends BlockTagsProvider {
         public ModBlockTagsProvider(DataGenerator dataGenerator) {
@@ -63,6 +64,8 @@ public class TagGenerator {
             getBuilder(ModTags.Items.VAMPIRE_CLOAK).add(ModItems.vampire_cloak_black_blue, ModItems.vampire_cloak_black_red, ModItems.vampire_cloak_black_white, ModItems.vampire_cloak_red_black, ModItems.vampire_cloak_white_black);
             getBuilder(ItemTags.SMALL_FLOWERS).add(ModItems.vampire_orchid);
             getBuilder(ModTags.Items.GARLIC).add(ModItems.item_garlic);
+            getBuilder(ModTags.Items.HOLY_WATER).add(ModItems.holy_water_bottle_normal,ModItems.holy_water_bottle_enhanced,ModItems.holy_water_bottle_ultimate);
+            getBuilder(ModTags.Items.HOLY_WATER_SPLASH).add(ModItems.holy_water_splash_bottle_normal,ModItems.holy_water_splash_bottle_enhanced,ModItems.holy_water_splash_bottle_ultimate);
         }
     }
 
@@ -75,6 +78,23 @@ public class TagGenerator {
         protected void registerTags() {
             getBuilder(ModTags.Entities.HUNTER).add(ModEntities.hunter, ModEntities.hunter_imob, ModEntities.advanced_hunter, ModEntities.advanced_hunter_imob, ModEntities.hunter_trainer);
             getBuilder(ModTags.Entities.VAMPIRE).add(ModEntities.vampire, ModEntities.vampire_imob, ModEntities.advanced_vampire, ModEntities.advanced_vampire_imob, ModEntities.vampire_baron);
+        }
+    }
+
+    public static class ModFluidTagsProvider extends FluidTagsProvider {
+        public ModFluidTagsProvider(DataGenerator generatorIn) {
+            super(generatorIn);
+        }
+
+        @Override
+        public String getName() {
+            return REFERENCE.MODID + " " + super.getName();
+        }
+
+        @Override
+        protected void registerTags() {
+            getBuilder(ModTags.Fluids.BLOOD).add(ModFluids.blood);
+            getBuilder(ModTags.Fluids.IMPURE_BLOOD).add(ModFluids.impure_blood);
         }
     }
 }

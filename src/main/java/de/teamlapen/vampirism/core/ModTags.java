@@ -3,11 +3,9 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.*;
 import net.minecraft.util.ResourceLocation;
 
 public class ModTags {
@@ -33,6 +31,8 @@ public class ModTags {
         public static final Tag<Item> VAMPIRE_CLOAK = tag("vampire_cloak");
         public static final Tag<Item> CASTLE_BLOCK = tag("castle_block");
         public static final Tag<Item> GARLIC = tag(forge("crops/garlic"));
+        public static final Tag<Item> HOLY_WATER = tag("holy_water");
+        public static final Tag<Item> HOLY_WATER_SPLASH = tag("holy_water_splash");
 
 
         private static Tag<Item> tag(ResourceLocation resourceLocation) {
@@ -53,6 +53,19 @@ public class ModTags {
         }
 
         private static Tag<EntityType<?>> tag(String name) {
+            return tag(new ResourceLocation(REFERENCE.MODID, name));
+        }
+    }
+
+    public static class Fluids {
+        public static final Tag<Fluid> BLOOD = tag("blood");
+        public static final Tag<Fluid> IMPURE_BLOOD = tag("impure_blood");
+
+        private static Tag<Fluid> tag(ResourceLocation resourceLocation) {
+            return new FluidTags.Wrapper(resourceLocation);
+        }
+
+        private static Tag<Fluid> tag(String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
