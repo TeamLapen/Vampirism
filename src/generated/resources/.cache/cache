@@ -564,8 +564,8 @@ eec0607ec57ff92feb16988f12898e94d99cc63e data/vampirism/tags/blocks/castle_stair
 091cc021ec4a6bfda24a53c6f5755ee701566c55 data/vampirism/tags/blocks/cursed_earth.json
 f9811dedd38bb05828a56423fdf49a7f89c91269 data/vampirism/tags/entity_types/hunter.json
 ae226db68ca2e9c1ddf84a8f69488194cde7c0b5 data/vampirism/tags/entity_types/vampire.json
-052c96e352a5ab4d1d24dab25e8af31f59b42005 data/vampirism/tags/fluids/blood.json
-471457089210d84add7fdacb9d0eb520abdf9002 data/vampirism/tags/fluids/impure_blood.json
+052c96e352a5ab4d1d24dab25e8af31f59b42005 data/vampirism/tags/fluids/vampirism_blood.json
+471457089210d84add7fdacb9d0eb520abdf9002 data/vampirism/tags/fluids/vampirism_impure_blood.json
 d4a0a289e890be3685d664f380313daf4031bbb6 data/vampirism/tags/items/castle_block.json
 8b5ccc0838c97efbb2c443c4b8c7272007b32608 data/vampirism/tags/items/crossbow_arrow.json
 7fa9da8b175279175f25095619e629271109d613 data/vampirism/tags/items/holy_water.json

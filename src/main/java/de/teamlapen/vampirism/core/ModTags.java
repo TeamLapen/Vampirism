@@ -58,8 +58,8 @@ public class ModTags {
     }
 
     public static class Fluids {
-        public static final Tag<Fluid> BLOOD = tag("blood");
-        public static final Tag<Fluid> IMPURE_BLOOD = tag("impure_blood");
+        public static final Tag<Fluid> BLOOD = tag("vampirism_blood");
+        public static final Tag<Fluid> IMPURE_BLOOD = tag("vampirism_impure_blood");
 
         private static Tag<Fluid> tag(ResourceLocation resourceLocation) {
             return new FluidTags.Wrapper(resourceLocation);
