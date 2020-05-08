@@ -2,8 +2,8 @@
   "multipart": [
     {
       "when": {
-        "position": "0",
-        "facing": "north"
+        "facing": "north",
+        "position": "0"
       },
       "apply": {
         "model": "vampirism:block/tent_br"
@@ -11,8 +11,8 @@
     },
     {
       "when": {
-        "position": "0",
-        "facing": "east"
+        "facing": "east",
+        "position": "0"
       },
       "apply": {
         "model": "vampirism:block/tent_br",
@@ -21,8 +21,8 @@
     },
     {
       "when": {
-        "position": "0",
-        "facing": "south"
+        "facing": "south",
+        "position": "0"
       },
       "apply": {
         "model": "vampirism:block/tent_br",
@@ -31,8 +31,8 @@
     },
     {
       "when": {
-        "position": "0",
-        "facing": "west"
+        "facing": "west",
+        "position": "0"
       },
       "apply": {
         "model": "vampirism:block/tent_br",
@@ -41,8 +41,8 @@
     },
     {
       "when": {
-        "position": "1",
-        "facing": "north"
+        "facing": "north",
+        "position": "1"
       },
       "apply": {
         "model": "vampirism:block/tent_bl"
@@ -50,8 +50,8 @@
     },
     {
       "when": {
-        "position": "1",
-        "facing": "east"
+        "facing": "east",
+        "position": "1"
       },
       "apply": {
         "model": "vampirism:block/tent_bl",
@@ -60,8 +60,8 @@
     },
     {
       "when": {
-        "position": "1",
-        "facing": "south"
+        "facing": "south",
+        "position": "1"
       },
       "apply": {
         "model": "vampirism:block/tent_bl",
@@ -70,8 +70,8 @@
     },
     {
       "when": {
-        "position": "1",
-        "facing": "west"
+        "facing": "west",
+        "position": "1"
       },
       "apply": {
         "model": "vampirism:block/tent_bl",
@@ -80,8 +80,8 @@
     },
     {
       "when": {
-        "position": "2",
-        "facing": "north"
+        "facing": "north",
+        "position": "2"
       },
       "apply": {
         "model": "vampirism:block/tent_tl"
@@ -89,8 +89,8 @@
     },
     {
       "when": {
-        "position": "2",
-        "facing": "east"
+        "facing": "east",
+        "position": "2"
       },
       "apply": {
         "model": "vampirism:block/tent_tl",
@@ -99,8 +99,8 @@
     },
     {
       "when": {
-        "position": "2",
-        "facing": "south"
+        "facing": "south",
+        "position": "2"
       },
       "apply": {
         "model": "vampirism:block/tent_tl",
@@ -109,8 +109,8 @@
     },
     {
       "when": {
-        "position": "2",
-        "facing": "west"
+        "facing": "west",
+        "position": "2"
       },
       "apply": {
         "model": "vampirism:block/tent_tl",
@@ -119,8 +119,8 @@
     },
     {
       "when": {
-        "position": "3",
-        "facing": "north"
+        "facing": "north",
+        "position": "3"
       },
       "apply": {
         "model": "vampirism:block/tent_tr"
@@ -128,8 +128,8 @@
     },
     {
       "when": {
-        "position": "3",
-        "facing": "east"
+        "facing": "east",
+        "position": "3"
       },
       "apply": {
         "model": "vampirism:block/tent_tr",
@@ -138,8 +138,8 @@
     },
     {
       "when": {
-        "position": "3",
-        "facing": "south"
+        "facing": "south",
+        "position": "3"
       },
       "apply": {
         "model": "vampirism:block/tent_tr",
@@ -148,8 +148,8 @@
     },
     {
       "when": {
-        "position": "3",
-        "facing": "west"
+        "facing": "west",
+        "position": "3"
       },
       "apply": {
         "model": "vampirism:block/tent_tr",
@@ -158,8 +158,8 @@
     },
     {
       "when": {
-        "position": "2",
-        "facing": "north"
+        "facing": "north",
+        "position": "2"
       },
       "apply": {
         "model": "vampirism:block/tentback",
@@ -168,8 +168,8 @@
     },
     {
       "when": {
-        "position": "2",
-        "facing": "east"
+        "facing": "east",
+        "position": "2"
       },
       "apply": {
         "model": "vampirism:block/tentback",
@@ -178,8 +178,8 @@
     },
     {
       "when": {
-        "position": "2",
-        "facing": "south"
+        "facing": "south",
+        "position": "2"
       },
       "apply": {
         "model": "vampirism:block/tentback"
@@ -187,8 +187,8 @@
     },
     {
       "when": {
-        "position": "2",
-        "facing": "west"
+        "facing": "west",
+        "position": "2"
       },
       "apply": {
         "model": "vampirism:block/tentback",
@@ -197,8 +197,8 @@
     },
     {
       "when": {
-        "position": "3",
-        "facing": "north"
+        "facing": "north",
+        "position": "3"
       },
       "apply": {
         "model": "vampirism:block/tentback_flipped"
@@ -206,8 +206,8 @@
     },
     {
       "when": {
-        "position": "3",
-        "facing": "east"
+        "facing": "east",
+        "position": "3"
       },
       "apply": {
         "model": "vampirism:block/tentback_flipped",
@@ -216,8 +216,8 @@
     },
     {
       "when": {
-        "position": "3",
-        "facing": "south"
+        "facing": "south",
+        "position": "3"
       },
       "apply": {
         "model": "vampirism:block/tentback_flipped",
@@ -226,8 +226,8 @@
     },
     {
       "when": {
-        "position": "3",
-        "facing": "west"
+        "facing": "west",
+        "position": "3"
       },
       "apply": {
         "model": "vampirism:block/tentback_flipped",

@@ -2,8 +2,10 @@ package de.teamlapen.vampirism.data.recipebuilder;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import de.teamlapen.vampirism.advancements.SkillUnlockedTrigger;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModRecipes;
+import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.ICriterionInstance;
@@ -99,8 +101,13 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     @Override
     public void build(Consumer<IFinishedRecipe> consumer, ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "weapontable/" + id.getPath());
+        this.advancementBuilder.withCriterion("has_skill", SkillUnlockedTrigger.builder(this.skills != null && this.skills.length >= 1? this.skills[0]:HunterSkills.weapon_table));
         this.validate(id);
-        this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(id)).withRewards(net.minecraft.advancements.AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
+        this.advancementBuilder
+                .withParentId(new ResourceLocation("recipes/root"))
+                .withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(id))
+                .withRewards(net.minecraft.advancements.AdvancementRewards.Builder.recipe(id))
+                .withRequirementsStrategy(IRequirementsStrategy.OR);
         consumer.accept(new Result(id, this.result, this.count, this.group == null ? "" : this.group, this.pattern, this.key, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath()), this.lava, this.skills != null ? this.skills : new ISkill[]{}, this.level, this.extraNbt));
     }
 

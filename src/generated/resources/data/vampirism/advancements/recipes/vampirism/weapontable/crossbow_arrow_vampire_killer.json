@@ -16,6 +16,12 @@
         ]
       }
     },
+    "has_skill": {
+      "trigger": "vampirism:skill_unlocked",
+      "conditions": {
+        "skill": "vampirism:weapon_table"
+      }
+    },
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
@@ -26,6 +32,7 @@
   "requirements": [
     [
       "has_crossbow_arrow_normal",
+      "has_skill",
       "has_the_recipe"
     ]
   ]

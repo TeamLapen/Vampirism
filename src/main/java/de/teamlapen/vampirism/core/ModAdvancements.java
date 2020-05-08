@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.advancements.HunterActionTrigger;
+import de.teamlapen.vampirism.advancements.SkillUnlockedTrigger;
 import de.teamlapen.vampirism.advancements.TriggerFaction;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -15,6 +16,7 @@ public class ModAdvancements {
     public static final TriggerFaction TRIGGER_FACTION = register(new TriggerFaction());
     public static final VampireActionTrigger TRIGGER_VAMPIRE_ACTION = register(new VampireActionTrigger());
     public static final HunterActionTrigger TRIGGER_HUNTER_ACTION = register(new HunterActionTrigger());
+    public static final SkillUnlockedTrigger TRIGGER_SKILL_UNLOCKED = register(new SkillUnlockedTrigger());
 
 
     private static <T extends ICriterionTrigger> T register(T trigger) {

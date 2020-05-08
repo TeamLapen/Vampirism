@@ -128,7 +128,11 @@ public class AlchemicalCauldronRecipeBuilder {
     public void build(Consumer<IFinishedRecipe> consumer, ResourceLocation id) {
         id = new ResourceLocation(id.getNamespace(), "alchemical_cauldron/" + id.getPath());
         this.validate(id);
-        this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(id)).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
+        this.advancementBuilder
+                .withParentId(new ResourceLocation("recipes/root"))
+                .withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(id))
+                .withRewards(AdvancementRewards.Builder.recipe(id))
+                .withRequirementsStrategy(IRequirementsStrategy.OR);
         consumer.accept(new Result(id, this.group != null ? this.group : "", this.ingredient, this.fluid, this.result, this.skills != null ? skills : new ISkill[]{HunterSkills.basic_alchemy}, this.reqLevel, this.cookTime, this.exp, advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getGroup().getPath() + "/" + id.getPath())));
     }
 
