@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.modcompat.guide;
 
-import amerifrance.guideapi.api.IPage;
-import amerifrance.guideapi.api.impl.Book;
-import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
-import amerifrance.guideapi.entry.EntryResourceLocation;
-import amerifrance.guideapi.gui.GuiBase;
-
+import de.maxanier.guideapi.api.IPage;
+import de.maxanier.guideapi.api.impl.Book;
+import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
+import de.maxanier.guideapi.entry.EntryResourceLocation;
+import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -19,16 +18,13 @@ import java.util.List;
  */
 public class EntryText extends EntryResourceLocation {
     public EntryText(List<IPage> pageList, String unlocEntryName) {
-        this(pageList, unlocEntryName, true);
-    }
-
-    public EntryText(List<IPage> pageList, String unlocEntryName, boolean unicode) {
-        super(pageList, unlocEntryName, new ResourceLocation(REFERENCE.MODID, "textures/items/vampire_fang.png"), unicode);
+        super(pageList, unlocEntryName, new ResourceLocation(REFERENCE.MODID, "textures/item/vampire_fang.png"));
     }
 
     @OnlyIn(Dist.CLIENT)
+
     @Override
-    public void drawExtras(Book book, CategoryAbstract category, int entryX, int entryY, int entryWidth, int entryHeight, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
+    public void drawExtras(Book book, CategoryAbstract category, int entryX, int entryY, int entryWidth, int entryHeight, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
         super.drawExtras(book, category, entryX, entryY, entryWidth, entryHeight, mouseX, mouseY, guiBase, fontRendererObj);
     }
 }

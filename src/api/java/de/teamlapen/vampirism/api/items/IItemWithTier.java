@@ -27,6 +27,11 @@ public interface IItemWithTier {
      */
     TIER getVampirismTier();
 
+    /**
+     * The registry name all tier items are derived from (basename+"_"+tier)
+     */
+    String getBaseRegName();
+
     enum TIER implements IStringSerializable {
         NORMAL, ENHANCED, ULTIMATE;
 

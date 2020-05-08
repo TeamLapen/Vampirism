@@ -46,6 +46,11 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     }
 
     @Override
+    public String getBaseRegName() {
+        return baseRegName;
+    }
+
+    @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         if (type == null) {
             return getTextureLocationLeather(slot);

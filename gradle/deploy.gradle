@@ -26,7 +26,7 @@ curseforge {
 
         relations {
             optionalLibrary 'jei'
-            optionalLibrary 'guide-api'
+            optionalLibrary 'guide-api-village-and-pillage'
         }
 
     }

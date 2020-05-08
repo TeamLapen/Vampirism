@@ -39,7 +39,7 @@ public class FlyingBloodParticleData implements IParticleData {
     }
 
     public FlyingBloodParticleData(ParticleType<FlyingBloodParticleData> particleTypeIn, int maxAgeIn, boolean direct, double targetX, double targetY, double targetZ) {
-        this(particleTypeIn, maxAgeIn, direct, targetX, targetY, targetZ, new ResourceLocation("minecraft", "particle/critical_hit"));
+        this(particleTypeIn, maxAgeIn, direct, targetX, targetY, targetZ, new ResourceLocation("minecraft", "critical_hit"));
     }
 
     @OnlyIn(Dist.CLIENT)

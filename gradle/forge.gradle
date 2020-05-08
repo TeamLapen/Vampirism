@@ -23,7 +23,11 @@ repositories {
         name 'shinoow'
         url 'https://dl.bintray.com/shinoow/maven/'
     }
+    maven {
+        url = "https://maxanier.de/maven2"
+    }
     mavenCentral()
+    mavenLocal()
 }
 
 
@@ -35,11 +39,11 @@ dependencies {
     ])
     compileOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}:api") //API for compile
     runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}") //Full for runtime
+    compile fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
 
     //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
     //deobfCompile 'mcp.mobius.waila:Waila:' + config.waila_version
     //deobfCompile 'Waila:Waila:1.7.1_1.11.2' //Backup Waila on curseforge
-    //deobf 'info.amerifrance.guideapi:Guide-API:${guide_api_version}'
 
 
 }

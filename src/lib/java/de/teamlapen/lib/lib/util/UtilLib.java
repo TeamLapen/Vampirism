@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
@@ -36,6 +35,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ForgeI18n;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
@@ -44,6 +44,8 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * General Utility Class
@@ -573,13 +575,45 @@ public class UtilLib {
         return ServerLifecycleHooks.getCurrentServer() != null;
     }
 
+    private final static Pattern oldFormatPattern = Pattern.compile("%[sd]");
+
     public static String translate(String key, Object... format) {
-        if (I18n.hasKey(key)) {
-            return I18n.format(key, format);
+        String pattern = ForgeI18n.getPattern(key);
+        if (format.length == 0) {
+            return pattern;
         } else {
-            return key;
+            try {
+                pattern = replaceDeprecatedFormatter(pattern);
+                return ForgeI18n.parseFormat(pattern, format);
+            } catch (IllegalArgumentException e) {
+                LOGGER.error("Illegal format found `{}`", pattern);
+                return pattern;
+            }
+        }
+
+    }
+
+    private static String replaceDeprecatedFormatter(String text) {
+        StringBuffer sb = null;
+        Matcher m = oldFormatPattern.matcher(text);
+        int i = 0;
+        while (m.find()) {
+            String t = m.group();
+            t = "{" + i++ + "}";
+
+            if (sb == null) {
+                sb = new StringBuffer(text.length());
+            }
+            m.appendReplacement(sb, t);
+        }
+        if (sb == null) {
+            return text;
+        } else {
+            m.appendTail(sb);
+            return sb.toString();
         }
     }
+
 
     /**
      * Rotate voxel. Credits to JTK222|Lukas

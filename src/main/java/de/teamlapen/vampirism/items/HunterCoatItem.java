@@ -48,6 +48,10 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
         addTierInformation(tooltip);
     }
 
+    @Override
+    public String getBaseRegName() {
+        return baseRegName;
+    }
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
@@ -78,5 +82,10 @@ public class HunterCoatItem extends VampirismHunterArmor implements IItemWithTie
             default:
                 return DAMAGE_REDUCTION_NORMAL[slot];
         }
+    }
+
+    @Override
+    protected double getToughness(int slot, ItemStack stack) {
+        return 2;
     }
 }

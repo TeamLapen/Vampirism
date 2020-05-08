@@ -34,6 +34,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
@@ -104,12 +105,20 @@ public class ModEventHandler {
                 event.getPlayer().sendMessage(new StringTextComponent(TextFormatting.BLUE + TextFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + TextFormatting.RESET));
                 event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.integrations_available.download").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.INTEGRATIONS_LINK)).setUnderlined(true)));
             }
+
+            if (!ModList.get().isLoaded("guideapi-vp")) {
+                if (VampirismConfig.SERVER.infoAboutGuideAPI.get()) {
+                    event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.guideapi_available.first"));
+                    event.getPlayer().sendMessage(new TranslationTextComponent("text.vampirism.guideapi_available.download").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.GUIDEAPI_LINK)).setUnderlined(true)));
+
+                    VampirismConfig.SERVER.infoAboutGuideAPI.set(false);
+                }
+            }
         }
         if (event.getPlayer().getRNG().nextInt(4) == 0) {
-            event.getPlayer().sendMessage(new StringTextComponent("You are running an alpha version of Vampirism for MC 1.15").applyTextStyle(TextFormatting.DARK_RED));
+            event.getPlayer().sendMessage(new StringTextComponent("You are running a beta version of Vampirism for MC 1.15").applyTextStyle(TextFormatting.DARK_RED));
             event.getPlayer().sendMessage(new StringTextComponent("Some parts are not working yet:"));
             event.getPlayer().sendMessage(new StringTextComponent("- Blood vision"));
-            event.getPlayer().sendMessage(new StringTextComponent("- Guide book"));
         }
 
 

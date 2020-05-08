@@ -46,9 +46,12 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity> entityType, IWorld iWorld, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         return (iWorld.getBlockState(blockPos.down()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.down()).getBlock() == ModBlocks.cursed_earth) && iWorld.getLightSubtracted(blockPos, 0) > 8;
     }
+
     private T entityCreature;
     private boolean entityChanged = false;
     private boolean canDespawn = false;
+    @Nullable
+    private ITextComponent name;
 
     public ConvertedCreatureEntity(EntityType<? extends ConvertedCreatureEntity> type, World world) {
         super(type, world, false);
@@ -117,7 +120,13 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     @Nonnull
     @Override
     public ITextComponent getName() {
-        return new StringTextComponent(new TranslationTextComponent("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName()));
+        if (hasCustomName()) {
+            return super.getName();
+        }
+        if (name == null) {
+            this.name = new StringTextComponent(new TranslationTextComponent("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName()));
+        }
+        return name;
     }
 
     public T getOldCreature() {

@@ -1,51 +1,118 @@
 package de.teamlapen.vampirism.modcompat.guide;
 
-import amerifrance.guideapi.api.IPage;
-import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.entry.EntryItemStack;
-import com.google.common.collect.Lists;
-import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
+import de.maxanier.guideapi.api.IPage;
+import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
+import de.maxanier.guideapi.api.util.PageHelper;
+import de.maxanier.guideapi.entry.EntryItemStack;
+import de.maxanier.guideapi.page.PageBrewingRecipe;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraftforge.common.brewing.BrewingRecipe;
+import org.apache.logging.log4j.LogManager;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Utility class to build item or block info pages
  */
 public class ItemInfoBuilder {
-    private final ItemStack stack;
+    public static ItemInfoBuilder create(Item... items) {
+        assert items.length > 0;
+        Item i0 = items[0];
+        String name = i0 instanceof IItemWithTier ? ((IItemWithTier) i0).getBaseRegName() : i0.getRegistryName().getPath();
+        return new ItemInfoBuilder(Ingredient.fromItems(items), new ItemStack(i0), name, false);
+    }
+
     private final boolean block;
     private String name;
     private Object[] formats = new Object[0];
     private Object[] links = null;
-    private boolean ignoreMissingRecipes = false;
     private boolean customName;
 
-    private List<Pair<ItemStack, GuideHelper.RECIPE_TYPE>> craftableStacks = null;
+    /**
+     * @param block Whether to use "block" or "item" translation keys
+     */
+    public static ItemInfoBuilder create(boolean block, ItemStack... stacks) {
+        assert stacks.length > 0;
+        ItemStack i0 = stacks[0];
+        Item item = i0.getItem();
+        String name = item instanceof IItemWithTier ? ((IItemWithTier) item).getBaseRegName() : item.getRegistryName().getPath();
+        return new ItemInfoBuilder(Ingredient.fromStacks(stacks), i0, name, block);
+    }
+
+    @Nonnull
+    private List<ResourceLocation> recipes = Collections.emptyList();
+
+    public static ItemInfoBuilder create(Block... blocks) {
+        assert blocks.length > 0;
+        Block i0 = blocks[0];
+        String name = i0.getRegistryName().getPath();
+        return new ItemInfoBuilder(Ingredient.fromItems(blocks), new ItemStack(i0), name, true);
+    }
+
+    private final Ingredient ingredient;
+    private final ItemStack mainStack;
+    @Nullable
+    private ItemStack[] brewingStacks;
 
     /**
-     * @param stack The relevant item stack. Used for display and strings.
-     * @param block If this entry is a about a block or not
+     * @param ingredient The relevant item stack. Used for display and strings.
+     * @param block      If this entry is a about a block or not
      */
-    public ItemInfoBuilder(ItemStack stack, boolean block) {
-        assert !stack.isEmpty();
-        this.stack = stack;
+    private ItemInfoBuilder(Ingredient ingredient, ItemStack mainStack, String name, boolean block) {
+        this.ingredient = ingredient;
         this.block = block;
-        name = stack.getItem().getRegistryName().getPath();
+        this.mainStack = mainStack;
+        this.name = name;
     }
 
-    public ItemInfoBuilder(Item item) {
-        this(new ItemStack(item), false);
+    /**
+     * Add items that can be created in a brewing stand
+     *
+     * @return this
+     */
+    public ItemInfoBuilder brewingItems(Item... brewableItems) {
+        this.brewingStacks = Arrays.stream(brewableItems).map(ItemStack::new).toArray(ItemStack[]::new);
+        return this;
     }
 
-    public ItemInfoBuilder(Block block) {
-        this(new ItemStack(block), true);
+    /**
+     * Add recipes
+     *
+     * @param ids the ids of the recipes to be displayeed
+     */
+    public ItemInfoBuilder recipes(ResourceLocation... ids) {
+        this.recipes = Arrays.asList(ids);
+        return this;
+    }
+
+    /**
+     * Add recipes
+     * String ids are prefixed with vampirism
+     *
+     * @param vampIDs without namespace prefix
+     * @return this
+     */
+    public ItemInfoBuilder recipes(String... vampIDs) {
+        this.recipes = Arrays.stream(vampIDs).map(id -> new ResourceLocation("vampirism", id)).collect(Collectors.toList());
+        return this;
+    }
+
+    /**
+     * Add stacks that can be created in a brewing stand
+     *
+     * @return this
+     */
+    public ItemInfoBuilder brewingStacks(ItemStack... brewableStacks) {
+        this.brewingStacks = brewableStacks;
+        return this;
     }
 
     /**
@@ -54,77 +121,22 @@ public class ItemInfoBuilder {
     public void build(Map<ResourceLocation, EntryAbstract> entries) {
         ArrayList<IPage> pages = new ArrayList<>();
         String base = "guide.vampirism." + (block ? "blocks" : "items") + "." + name;
-        pages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + ".text", formats), stack));
-        if (craftableStacks != null) {
-
-            for (Pair<ItemStack, GuideHelper.RECIPE_TYPE> craft : craftableStacks) {
-                IPage p = GuideHelper.getRecipePage(craft.getLeft(), craft.getRight());
-                if (p != null) {
-                    pages.add(p);
+        pages.addAll(PageHelper.pagesForLongText(GuideBook.translate(base + ".text", formats), ingredient));
+        for (ResourceLocation id : recipes) {
+            pages.add(GuideHelper.getRecipePage(id));
+        }
+        if (brewingStacks != null) {
+            for (ItemStack brew : brewingStacks) {
+                BrewingRecipe r = GuideHelper.getBrewingRecipe(brew);
+                if (r == null) {
+                    LogManager.getLogger().error("Could not find brewing recipe for {}", brew.toString());
                 } else {
-                    if (!ignoreMissingRecipes)
-                        VampirismMod.log.e(GuideBook.TAG, "Failed to find %s recipe for %s", craft.getRight(), craft.getLeft());
+                    pages.add(new PageBrewingRecipe(r));
                 }
             }
         }
         if (links != null) GuideHelper.addLinks(pages, links);
-        entries.put(new ResourceLocation(base), new EntryItemStack(pages, customName ? base : stack.getTranslationKey() + ".name", stack, true));
-    }
-
-    /**
-     * Marks this as craftable
-     *
-     * @param type The crafting type
-     */
-    public ItemInfoBuilder craftable(GuideHelper.RECIPE_TYPE type) {
-        this.craftableStacks = Collections.singletonList(ImmutablePair.of(stack, type));
-        return this;
-    }
-
-    /**
-     * Sets the craftable stacks/blocks/items whose recipes should be shown in this item entry.
-     * You have to specify the recipe type for each craftable.
-     * Pass Itemstack,RecipeType,ItemStack,RecipeType... or Item,RecipeType... or Block,RecipeType...
-     */
-    public ItemInfoBuilder craftableStacks(List<Object> list) {
-        int length = list.size();
-        if (length % 2 != 0) {
-            VampirismMod.log.w("GuideBook", "Arguments: %s", list);
-            throw new IllegalArgumentException("You have to provide a recipe type after each craftable");
-        }
-        this.craftableStacks = Lists.newArrayList();
-        Iterator it = list.iterator();
-        while (it.hasNext()) {
-            ItemStack stack;
-            Object craftable = it.next();
-            if (craftable instanceof ItemStack) {
-                stack = (ItemStack) craftable;
-            } else if (craftable instanceof Item) {
-                stack = new ItemStack((Item) craftable);
-            } else if (craftable instanceof Block) {
-                stack = new ItemStack((Block) craftable);
-            } else {
-                VampirismMod.log.w("GuideBook", "Arguments: %s", list);
-                throw new IllegalArgumentException("Inputs have to be items or blocks or stacks");
-            }
-            Object type = it.next();
-            if (!(type instanceof GuideHelper.RECIPE_TYPE)) {
-                VampirismMod.log.w("GuideBook", "Arguments: %s", list);
-                throw new IllegalArgumentException("You have to provide a recipe type after each craftable");
-            }
-            craftableStacks.add(ImmutablePair.of(stack, (GuideHelper.RECIPE_TYPE) type));
-
-        }
-        return this;
-    }
-
-    /**
-     * Sets the craftable stacks/blocks/items whose recipes should be shown in this item entry.
-     * You have to specify the recipe type for each craftable.
-     * Pass Itemstack,RecipeType,ItemStack,RecipeType... or Item,RecipeType... or Block,RecipeType...
-     */
-    public ItemInfoBuilder craftableStacks(Object... stacks) {
-        return craftableStacks(Arrays.asList(stacks));
+        entries.put(new ResourceLocation(base), new EntryItemStack(pages, customName ? base : mainStack.getTranslationKey(), mainStack));
     }
 
 
@@ -139,14 +151,6 @@ public class ItemInfoBuilder {
     }
 
     /**
-     * Don't complain about missing recipes
-     */
-    public ItemInfoBuilder ignoreMissingRecipes() {
-        this.ignoreMissingRecipes = true;
-        return this;
-    }
-
-    /**
      * Adds format arguments which are used when translating the description
      */
     public ItemInfoBuilder setFormats(Object... formats) {
@@ -155,7 +159,7 @@ public class ItemInfoBuilder {
     }
 
     /**
-     * Sets links that are added to the description pages
+     * Sets links that are added to the description pages>
      */
     public ItemInfoBuilder setLinks(Object... links) {
         this.links = links;

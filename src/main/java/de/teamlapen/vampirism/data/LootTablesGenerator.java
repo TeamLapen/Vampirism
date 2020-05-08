@@ -11,10 +11,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModLootTables;
-import de.teamlapen.vampirism.world.loot.AddBookNbt;
-import de.teamlapen.vampirism.world.loot.AdjustableLevelCondition;
-import de.teamlapen.vampirism.world.loot.SetItemBloodCharge;
-import de.teamlapen.vampirism.world.loot.TentSpawnerCondition;
+import de.teamlapen.vampirism.world.loot.*;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -95,7 +92,7 @@ public class LootTablesGenerator extends LootTableProvider {
             LootTable.Builder vampire = LootTable.builder()
                     .addLootPool(LootPool.builder().name("general").rolls(ConstantRange.of(1)).acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.33f, 0.05f))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_fang).weight(1)))
-                    .addLootPool(LootPool.builder().name("special").rolls(ConstantRange.of(1)).acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.5f, 0.05f))
+                    .addLootPool(LootPool.builder().name("special").rolls(ConstantRange.of(1)).acceptCondition(StakeCondition.builder(LootContext.EntityTarget.KILLER_PLAYER)).acceptCondition(RandomChanceWithLooting.builder(0.5f, 0.05f))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_blood_bottle).weight(1)));
             this.registerLootTable(ModEntities.vampire, vampire);
             this.registerLootTable(ModEntities.vampire_imob, vampire);

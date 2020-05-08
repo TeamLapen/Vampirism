@@ -45,7 +45,6 @@ sourceSets {
     }
     main {
          java{
-             exclude '**/guide/*'
          }
         resources {
             srcDirs += 'src/generated/resources'

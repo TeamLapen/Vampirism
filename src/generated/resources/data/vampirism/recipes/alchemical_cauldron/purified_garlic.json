@@ -7,9 +7,17 @@
   "ingredient": {
     "tag": "forge:crops/garlic"
   },
-  "fluidItem": {
-    "item": "vampirism:holy_water_bottle_normal"
-  },
+  "fluidItem": [
+    {
+      "item": "vampirism:holy_water_bottle_normal"
+    },
+    {
+      "item": "vampirism:holy_water_bottle_enhanced"
+    },
+    {
+      "item": "vampirism:holy_water_bottle_ultimate"
+    }
+  ],
   "skill": [
     "vampirism:purified_garlic"
   ],

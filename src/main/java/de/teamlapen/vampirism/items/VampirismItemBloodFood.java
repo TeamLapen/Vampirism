@@ -24,9 +24,8 @@ public class VampirismItemBloodFood extends VampirismItem {
             PlayerEntity player = (PlayerEntity) entityLiving;
             VampirePlayer.getOpt(player).ifPresent(v -> v.drinkBlood(stack.getItem().getFood().getHealing(), stack.getItem().getFood().getSaturation()));
             worldIn.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
-            entityLiving.onFoodEaten(worldIn, stack);
+            entityLiving.onFoodEaten(worldIn, stack); //Shrinks stack
         }
-        stack.shrink(1);
         return stack;
     }
 
