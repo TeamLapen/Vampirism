@@ -182,7 +182,6 @@ public class ModItems {
 
     public static final UmbrellaItem umbrella = getNull();
     public static final BlockItem vampire_orchid = getNull();
-    public static final AlchemicalFireItem item_alchemical_fire = getNull();
 
 
     static void registerCraftingRecipes() {
@@ -380,6 +379,10 @@ public class ModItems {
 
         registry.register(new GarlicBreadItem());
         registry.register(new UmbrellaItem());
+
+        if(VampirismMod.inDataGen) {
+            registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));
+        }
     }
 
     private static Item.Properties creativeTabProps() {

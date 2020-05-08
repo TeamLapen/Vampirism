@@ -34,8 +34,10 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -106,6 +108,7 @@ public class RecipesGenerator extends RecipeProvider {
         Tag<Item> iron_block = Tags.Items.STORAGE_BLOCKS_IRON;
         Tag<Item> gold_ingot = Tags.Items.INGOTS_GOLD;
         Tag<Item> pure_blood = ModTags.Items.PURE_BLOOD;
+        Tag<Item> holy_water = ModTags.Items.HOLY_WATER;
 
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.blood_grinder).key('Z', hopper).key('Y', planks).key('D', diamond).key('X', iron_ingot).patternLine(" Z ").patternLine("YDY").patternLine("YXY").addCriterion("has_hopper", this.hasItem(hopper)).build(consumer, general("blood_grinder"));
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.blood_sieve).key('X', iron_ingot).key('Q', quartz_block).key('Y', planks).key('Z', cauldron).patternLine("XQX").patternLine("YZY").patternLine("YXY").addCriterion("has_cauldron", this.hasItem(cauldron)).build(consumer, general("blood_sieve"));
@@ -160,7 +163,7 @@ public class RecipesGenerator extends RecipeProvider {
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.item_alchemical_fire, 6).withIngredient(gun_powder).withFluid(holy_water_bottle_ultimate).build(consumer, modId("alchemical_fire_6"));
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.garlic_beacon_core).withIngredient(wool).withFluid(garlic).withSkills(HunterSkills.garlic_beacon).build(consumer, modId("garlic_beacon_core"));
         AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.garlic_beacon_core_improved).withIngredient(garlic_beacon_core).withFluid(holy_water_bottle_ultimate).withSkills(HunterSkills.garlic_beacon_improved).experience(2.0f).build(consumer, modId("garlic_beacon_core_improved"));
-        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.purified_garlic, 2).withIngredient(garlic).withFluid(holy_water_bottle_normal).withSkills(HunterSkills.purified_garlic).build(consumer, modId("purified_garlic"));
+        AlchemicalCauldronRecipeBuilder.cauldronRecipe(ModItems.purified_garlic, 2).withIngredient(garlic).withFluid(holy_water).withSkills(HunterSkills.purified_garlic).build(consumer, modId("purified_garlic"));
 
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.armor_of_swiftness_chest_normal).lava(1).patternLine("XZZX").patternLine("XXXX").patternLine("XYYX").patternLine("XXXX").key('X', leather).key('Y', garlic).key('Z', potion(Potions.SWIFTNESS)).build(consumer);
         ShapedWeaponTableRecipeBuilder.shapedWeaponTable(ModItems.armor_of_swiftness_chest_enhanced).lava(3).skills(HunterSkills.enhanced_armor).patternLine("XZZX").patternLine("XXXX").patternLine("XYYX").patternLine("XXXX").key('X', leather).key('Y', garlic).key('Z', gold_ingot).build(consumer);
@@ -232,6 +235,9 @@ public class RecipesGenerator extends RecipeProvider {
         new IItemWIthTierRecipeBuilder(ModItems.heart_striker_normal, 1).patternLine("XXX").patternLine("XYX").key('X', blood_infused_iron_ingot).key('Y', ModItems.heart_striker_normal).addCriterion("has_heart_striker", this.hasItem(ModItems.heart_striker_normal)).build(consumer, vampire("heart_striker_normal_repair"));
         new IItemWIthTierRecipeBuilder(ModItems.heart_seeker_enhanced, 1).patternLine(" X ").patternLine("XYX").key('X', blood_infused_enhanced_iron_ingot).key('Y', ModItems.heart_seeker_enhanced).addCriterion("has_heart_seeker", this.hasItem(ModItems.heart_seeker_enhanced)).build(consumer, vampire("heart_seeker_enhanced_repair"));
         new IItemWIthTierRecipeBuilder(ModItems.heart_striker_enhanced, 1).patternLine("XXX").patternLine("XYX").key('X', blood_infused_enhanced_iron_ingot).key('Y', ModItems.heart_striker_enhanced).addCriterion("has_heart_striker", this.hasItem(ModItems.heart_striker_enhanced)).build(consumer, vampire("heart_striker_enhanced_repair"));
+
+        //noinspection ConstantConditions
+        ConditionalRecipe.builder().addCondition(new ModLoadedCondition("guideapi-vp")).addRecipe((consumer1 -> ShapelessRecipeBuilder.shapelessRecipe(ForgeRegistries.ITEMS.getValue(new ResourceLocation("guideapi-vp","vampirism-guidebook"))).addIngredient(vampire_fang).addIngredient(book).addCriterion("has_fang", this.hasItem(vampire_fang)).build(consumer1, modId("general/guidebook")))).build(consumer,modId("general/guidebook"));
     }
 
     @Nonnull
