@@ -1,0 +1,19 @@
+{
+  "type": "vampirism:alchemical_cauldron",
+  "result": {
+    "item": "vampirism:pure_salt",
+    "count": 4
+  },
+  "ingredient": {
+    "tag": "forge:crops/garlic"
+  },
+  "fluid": {
+    "fluid": "minecraft:water"
+  },
+  "skill": [
+    "vampirism:basic_alchemy"
+  ],
+  "cookTime": 1200,
+  "experience": 0.2,
+  "reqLevel": 1
+}

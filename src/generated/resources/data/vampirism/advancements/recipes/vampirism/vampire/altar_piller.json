@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:vampire/altar_piller"
+    ]
+  },
+  "criteria": {
+    "has_stones": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:stone_bricks"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:vampire/altar_piller"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stones",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -6,7 +6,9 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -84,6 +86,9 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
             skill.onEnable(player);
             enabledSkills.add(skill);
             dirty = true;
+            if(this.player.getRepresentingPlayer() instanceof ServerPlayerEntity) {
+                ModAdvancements.TRIGGER_SKILL_UNLOCKED.trigger((ServerPlayerEntity)player.getRepresentingPlayer(), skill);
+            }
         }
 
     }

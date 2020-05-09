@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "vampirism:holy_water_splash_bottle_normal",
+    "vampirism:holy_water_splash_bottle_enhanced",
+    "vampirism:holy_water_splash_bottle_ultimate"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:general/garlic_bread"
+    ]
+  },
+  "criteria": {
+    "has_garlic": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:crops/garlic"
+          }
+        ]
+      }
+    },
+    "has_bread": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:bread"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:general/garlic_bread"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_garlic",
+      "has_bread",
+      "has_the_recipe"
+    ]
+  ]
+}

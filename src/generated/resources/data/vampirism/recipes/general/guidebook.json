@@ -1,0 +1,27 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "guideapi-vp",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "vampirism:vampire_fang"
+          },
+          {
+            "item": "minecraft:book"
+          }
+        ],
+        "result": {
+          "item": "guideapi-vp:vampirism-guidebook"
+        }
+      }
+    }
+  ]
+}

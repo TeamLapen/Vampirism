@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:ingots/iron"
+    },
+    {
+      "tag": "forge:ingots/iron"
+    },
+    {
+      "tag": "forge:ingots/iron"
+    },
+    [
+      {
+        "item": "vampirism:pure_blood_0"
+      },
+      {
+        "item": "vampirism:pure_blood_1"
+      },
+      {
+        "item": "vampirism:pure_blood_2"
+      },
+      {
+        "item": "vampirism:pure_blood_3"
+      }
+    ]
+  ],
+  "result": {
+    "item": "vampirism:blood_infused_iron_ingot",
+    "count": 3
+  }
+}

@@ -1,7 +1,0 @@
-{
-  "parent": "vampirism:block/fire_side",
-  "textures": {
-    "particle": "block/fire_0",
-    "fire": "block/fire_0"
-  }
-}

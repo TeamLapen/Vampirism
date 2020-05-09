@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "YXY",
+    "XZX",
+    "Y Y"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:glass"
+    },
+    "Y": {
+      "tag": "forge:obsidian"
+    },
+    "Z": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "vampirism:totem_top"
+  }
+}

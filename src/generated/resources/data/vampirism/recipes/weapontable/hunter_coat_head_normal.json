@@ -1,0 +1,25 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "pattern": [
+    "XYYX",
+    "XZZX",
+    "XZZX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "item": "minecraft:leather"
+    },
+    "Z": {
+      "tag": "forge:crops/garlic"
+    }
+  },
+  "result": {
+    "item": "vampirism:hunter_coat_head_normal"
+  },
+  "lava": 2,
+  "skill": [],
+  "level": 1
+}

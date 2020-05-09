@@ -1,0 +1,18 @@
+{
+  "type": "vampirism:alchemical_cauldron",
+  "result": {
+    "item": "vampirism:garlic_beacon_core"
+  },
+  "ingredient": {
+    "tag": "minecraft:wool"
+  },
+  "fluidItem": {
+    "tag": "forge:crops/garlic"
+  },
+  "skill": [
+    "vampirism:garlic_beacon"
+  ],
+  "cookTime": 200,
+  "experience": 0.2,
+  "reqLevel": 1
+}

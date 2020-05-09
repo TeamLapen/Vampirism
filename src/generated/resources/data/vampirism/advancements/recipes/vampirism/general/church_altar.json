@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:general/church_altar"
+    ]
+  },
+  "criteria": {
+    "has_vampire_book": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:planks"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:general/church_altar"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_vampire_book",
+      "has_the_recipe"
+    ]
+  ]
+}

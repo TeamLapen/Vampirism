@@ -1,13 +1,16 @@
 package de.teamlapen.vampirism.inventory.container;
 
+import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
+import de.teamlapen.vampirism.client.gui.recipebook.WeaponTableRecipePlacer;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.inventory.inventory.WeaponTableCraftingSlot;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -30,6 +33,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.IContainerFactory;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -75,8 +79,14 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
         this.onCraftMatrixChanged(this.craftMatrix);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public void func_217056_a(boolean shouldPlaceAll, @Nonnull IRecipe<?> recipe, @Nonnull ServerPlayerEntity serverPlayer) {
+        new WeaponTableRecipePlacer<>(this).place(serverPlayer, (IRecipe<CraftingInventory>)recipe, shouldPlaceAll);
+    }
+
+    @Override
+    public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
         return isWithinUsableDistance(this.worldPos, playerIn, ModBlocks.weapon_table);
     }
 
@@ -95,7 +105,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     }
 
     @Override
-    public void fillStackedContents(RecipeItemHelper recipeItemHelper) {
+    public void fillStackedContents(@Nonnull RecipeItemHelper recipeItemHelper) {
         craftMatrix.fillStackedContents(recipeItemHelper);
     }
 
@@ -241,6 +251,12 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
             }
             entityplayermp.connection.sendPacket(new SSetSlotPacket(this.windowId, 0, craftResultIn.getStackInSlot(0)));
         }
+    }
+
+    @Nonnull
+    @Override
+    public List<RecipeBookCategories> getRecipeBookCategories() {
+        return Lists.newArrayList(RecipeBookCategories.MISC);
     }
 
     public static class Factory implements IContainerFactory<WeaponTableContainer> {

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XYX",
+    "XXX",
+    "XZX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "tag": "minecraft:wool"
+    },
+    "Z": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "result": {
+    "item": "vampirism:item_med_chair"
+  }
+}

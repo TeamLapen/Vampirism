@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XYX",
+    "XYX",
+    "ZZZ"
+  ],
+  "key": {
+    "X": {
+      "tag": "minecraft:planks"
+    },
+    "Y": {
+      "tag": "forge:obsidian"
+    },
+    "Z": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "vampirism:totem_base"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:vampire/heart_striker_normal_repair"
+    ]
+  },
+  "criteria": {
+    "has_heart_striker": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:heart_striker_normal"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:vampire/heart_striker_normal_repair"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_heart_striker",
+      "has_the_recipe"
+    ]
+  ]
+}

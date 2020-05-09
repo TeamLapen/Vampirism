@@ -1,6 +1,0 @@
-{
-  "parent": "vampirism:block/garlic_beacon",
-  "textures": {
-    "garlic": "vampirism:block/garlic_beacon_inside_improved"
-  }
-}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:general/injection_2"
+    ]
+  },
+  "criteria": {
+    "has_injection": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:injection_empty"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:general/injection_2"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_injection",
+      "has_the_recipe"
+    ]
+  ]
+}

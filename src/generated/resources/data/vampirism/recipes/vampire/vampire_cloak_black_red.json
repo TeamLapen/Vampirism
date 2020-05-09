@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "YZY",
+    "XAX",
+    "Y Y"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:red_wool"
+    },
+    "Y": {
+      "item": "minecraft:black_wool"
+    },
+    "Z": {
+      "tag": "forge:gems/diamond"
+    },
+    "A": {
+      "tag": "vampirism:pure_blood"
+    }
+  },
+  "result": {
+    "item": "vampirism:vampire_cloak_black_red"
+  }
+}

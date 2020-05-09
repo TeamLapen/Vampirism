@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:weapontable/pitchfork"
+    ]
+  },
+  "criteria": {
+    "has_skill": {
+      "trigger": "vampirism:skill_unlocked",
+      "conditions": {
+        "skill": "vampirism:weapon_table"
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:weapontable/pitchfork"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_skill",
+      "has_the_recipe"
+    ]
+  ]
+}

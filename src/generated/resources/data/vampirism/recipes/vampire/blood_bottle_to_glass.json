@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "vampirism:blood_bottle"
+    }
+  ],
+  "result": {
+    "item": "minecraft:glass_bottle"
+  }
+}

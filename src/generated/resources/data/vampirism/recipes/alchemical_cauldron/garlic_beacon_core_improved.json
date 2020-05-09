@@ -1,0 +1,18 @@
+{
+  "type": "vampirism:alchemical_cauldron",
+  "result": {
+    "item": "vampirism:garlic_beacon_core_improved"
+  },
+  "ingredient": {
+    "item": "vampirism:garlic_beacon_core"
+  },
+  "fluidItem": {
+    "item": "vampirism:holy_water_bottle_ultimate"
+  },
+  "skill": [
+    "vampirism:garlic_beacon_improved"
+  ],
+  "cookTime": 200,
+  "experience": 2.0,
+  "reqLevel": 1
+}

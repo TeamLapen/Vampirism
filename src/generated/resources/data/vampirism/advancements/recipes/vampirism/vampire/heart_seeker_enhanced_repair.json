@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:vampire/heart_seeker_enhanced_repair"
+    ]
+  },
+  "criteria": {
+    "has_heart_seeker": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:heart_seeker_enhanced"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:vampire/heart_seeker_enhanced_repair"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_heart_seeker",
+      "has_the_recipe"
+    ]
+  ]
+}

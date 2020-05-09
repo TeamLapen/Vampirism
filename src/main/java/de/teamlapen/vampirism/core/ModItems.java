@@ -379,6 +379,10 @@ public class ModItems {
 
         registry.register(new GarlicBreadItem());
         registry.register(new UmbrellaItem());
+
+        if(VampirismMod.inDataGen) {
+            registry.register(new DummyItem().setRegistryName("guideapi-vp", "vampirism-guidebook"));
+        }
     }
 
     private static Item.Properties creativeTabProps() {

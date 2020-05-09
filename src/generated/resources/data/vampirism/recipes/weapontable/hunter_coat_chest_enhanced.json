@@ -1,0 +1,31 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "pattern": [
+    "XWWX",
+    "XZZX",
+    "XYYX",
+    "XYYX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "tag": "forge:gems/diamond"
+    },
+    "Z": {
+      "tag": "forge:crops/garlic"
+    },
+    "W": {
+      "item": "vampirism:vampire_fang"
+    }
+  },
+  "result": {
+    "item": "vampirism:hunter_coat_chest_enhanced"
+  },
+  "lava": 5,
+  "skill": [
+    "vampirism:enhanced_armor"
+  ],
+  "level": 1
+}

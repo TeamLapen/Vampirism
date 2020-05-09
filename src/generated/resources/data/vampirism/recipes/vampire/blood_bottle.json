@@ -1,0 +1,36 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "value": {
+            "option": "auto_convert",
+            "type": "vampirism:config"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "XYX",
+          " X "
+        ],
+        "key": {
+          "X": {
+            "tag": "forge:glass"
+          },
+          "Y": {
+            "item": "minecraft:rotten_flesh"
+          }
+        },
+        "result": {
+          "item": "vampirism:blood_bottle",
+          "count": 1,
+          "nbt": "{Damage:0}"
+        }
+      }
+    }
+  ]
+}

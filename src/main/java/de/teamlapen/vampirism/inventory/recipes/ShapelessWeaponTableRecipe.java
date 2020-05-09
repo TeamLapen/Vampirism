@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.core.ModRegistries;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
@@ -16,9 +17,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * @author Cheaterpaul
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class ShapelessWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRecipe {
     protected static int MAX_WIDTH = 4;
     protected static int MAX_HEIGHT = 4;

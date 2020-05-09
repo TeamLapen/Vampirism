@@ -1,0 +1,28 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "pattern": [
+    "YXXY",
+    "XZZX",
+    " XX ",
+    " XX "
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "item": "minecraft:string"
+    },
+    "Z": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "result": {
+    "item": "vampirism:basic_tech_crossbow"
+  },
+  "lava": 5,
+  "skill": [
+    "vampirism:tech_weapons"
+  ],
+  "level": 1
+}

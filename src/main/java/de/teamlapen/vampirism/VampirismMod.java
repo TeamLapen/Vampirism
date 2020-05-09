@@ -107,6 +107,7 @@ public class VampirismMod {
     public static VampirismMod instance;
     public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static boolean inDev = false;
+    public static boolean inDataGen = false;
 
     public static boolean isRealism() {
         return false;
@@ -118,7 +119,7 @@ public class VampirismMod {
 
     public VampirismMod() {
         instance = this;
-        checkDevEnv();
+        checkEnv();
 
         Optional<? extends net.minecraftforge.fml.ModContainer> opt = ModList.get().getModContainerById(REFERENCE.MODID);
         if (opt.isPresent()) {
@@ -191,10 +192,13 @@ public class VampirismMod {
 
     }
 
-    private void checkDevEnv() {
+    private void checkEnv() {
         String launchTarget = System.getenv().get("target");
         if (launchTarget != null && launchTarget.contains("dev")) {
             inDev = true;
+        }
+        if(launchTarget != null && launchTarget.contains("data")) {
+            inDataGen = true;
         }
     }
 
@@ -230,15 +234,15 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.GATHER_DATA, event);
         DataGenerator gen = event.getGenerator();
         if (event.includeServer()) {
-            gen.addProvider(new TagGenerator.ModBlockTagsProvider(gen));
-            gen.addProvider(new TagGenerator.ModItemTagsProvider(gen));
-            gen.addProvider(new TagGenerator.ModEntityTypeTagsProvider(gen));
+            TagGenerator.register(gen);
             gen.addProvider(new LootTablesGenerator(gen));
             gen.addProvider(new AdvancementGenerator(gen));
             gen.addProvider(new RecipesGenerator(gen));
+            gen.addProvider(new SkillNodeGenerator(gen));
         }
         if (event.includeClient()) {
             gen.addProvider(new BlockStateGenerator(event.getGenerator(), event.getExistingFileHelper()));
+            gen.addProvider(new ItemModelGenerator(event.getGenerator(), event.getExistingFileHelper()));
         }
     }
 

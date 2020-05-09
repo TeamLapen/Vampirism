@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vampirism:hunter/hunter_blood_potion_table"
+    ]
+  },
+  "criteria": {
+    "has_glass_bottle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:glass_bottle"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vampirism:hunter/hunter_blood_potion_table"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_glass_bottle",
+      "has_the_recipe"
+    ]
+  ]
+}

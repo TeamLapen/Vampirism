@@ -23,7 +23,7 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     private static final String regName = "sunscreen_beacon";
 
     public SunscreenBeaconBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(-1, 3600000));
+        super(regName, Properties.create(Material.IRON).hardnessAndResistance(-1, 3600000).notSolid());
     }
 
     @Override
