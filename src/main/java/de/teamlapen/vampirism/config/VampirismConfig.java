@@ -282,6 +282,8 @@ public class VampirismConfig {
             collectStats = builder.comment("Send mod version, MC version and mod count to mod author").define("collectStats", true);
             useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
 
+            useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
+
             integrationsNotifier = builder.comment("INTERNAL - Set to 'never' if you don't want to be notified about integration mods").define("integrationsNotifier", "");
             builder.pop();
         }
