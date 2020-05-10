@@ -14,6 +14,8 @@ public class REFERENCE {
     public static final String FORGE_VERSION_MIN = "14.23.1.2554";
     public static final int HIGHEST_VAMPIRE_LEVEL = 14;
     public static final int HIGHEST_HUNTER_LEVEL = 14;
+    public static final int HIGHEST_VAMPIRE_LORD = 5;
+    public static final int HIGHEST_HUNTER_LORD = 5;
     public static final String FORGE_VERSION = "@FVERSION@";
     public static final String VERSION_UPDATE_FILE = "https://maxanier.de/projects/vampirism/versions.json";
     public static final String SUPPORTER_FILE = "http://maxanier.de/projects/vampirism/supporters.json";

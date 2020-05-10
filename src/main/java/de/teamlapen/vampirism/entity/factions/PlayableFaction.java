@@ -14,15 +14,17 @@ import java.awt.*;
  * Represents one playable faction (e.g. Vampire Player)
  * One instance should be used for players and entities at the same time.
  */
-public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implements IPlayableFaction<T> {
+public class PlayableFaction<T extends IFactionPlayer<?>> extends Faction<T> implements IPlayableFaction<T> {
     private final int highestLevel;
+    private final int highestLordLevel;
     private final NonNullSupplier<Capability<T>> playerCapabilitySupplier;
     private boolean renderLevel = true;
 
-    PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
+    PlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel) {
         super(id, entityInterface, color, hostileTowardsNeutral);
         this.highestLevel = highestLevel;
         this.playerCapabilitySupplier = playerCapabilitySupplier;
+        this.highestLordLevel = highestLordLevel;
     }
 
     @Override
@@ -55,6 +57,11 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
     public PlayableFaction<T> setRenderLevel(boolean render) {
         renderLevel = render;
         return this;
+    }
+
+    @Override
+    public int getHighestLordLevel() {
+        return highestLordLevel;
     }
 
     @Override

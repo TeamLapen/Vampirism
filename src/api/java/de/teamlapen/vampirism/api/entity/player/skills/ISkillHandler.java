@@ -4,7 +4,7 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 /**
  * Handles the players skills
  */
-public interface ISkillHandler<T extends ISkillPlayer> {
+public interface ISkillHandler<T extends ISkillPlayer<?>> {
 
     /**
      * @param skill
