@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -24,8 +25,9 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
 
     }
 
+
     @Override
-    public boolean canJoin(IPlayableFaction faction) {
+    public boolean canJoin(IPlayableFaction<? extends IFactionPlayer<?>> faction) {
         return false;
     }
 
@@ -34,14 +36,15 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
         return false;
     }
 
+    @Nullable
     @Override
-    public IPlayableFaction getCurrentFaction() {
+    public IPlayableFaction<? extends IFactionPlayer<?>> getCurrentFaction() {
         return null;
     }
 
     @Nonnull
     @Override
-    public Optional<IFactionPlayer> getCurrentFactionPlayer() {
+    public Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer() {
         return Optional.empty();
     }
 
@@ -51,12 +54,23 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
-    public int getCurrentLevel(IPlayableFaction f) {
+    public int getCurrentLevel(IPlayableFaction<? extends IFactionPlayer<?>> f) {
         return 0;
     }
 
     @Override
     public float getCurrentLevelRelative() {
+        return 0;
+    }
+
+    @Nullable
+    @Override
+    public IPlayableFaction<?> getLordFaction() {
+        return null;
+    }
+
+    @Override
+    public int getLordLevel() {
         return 0;
     }
 
@@ -66,12 +80,12 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
-    public boolean isInFaction(IPlayableFaction f) {
+    public boolean isInFaction(IPlayableFaction<? extends IFactionPlayer<?>> f) {
         return false;
     }
 
     @Override
-    public void joinFaction(@Nonnull IPlayableFaction faction) {
+    public void joinFaction(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction) {
 
     }
 
@@ -81,12 +95,17 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
-    public boolean setFactionAndLevel(IPlayableFaction faction, int level) {
+    public boolean setFactionAndLevel(IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
         return false;
     }
 
     @Override
-    public boolean setFactionLevel(@Nonnull IPlayableFaction faction, int level) {
+    public boolean setLordLevel(int level) {
+        return false;
+    }
+
+    @Override
+    public boolean setFactionLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
         return false;
     }
 }

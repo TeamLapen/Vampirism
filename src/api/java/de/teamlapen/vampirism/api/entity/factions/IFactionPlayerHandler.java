@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
 
@@ -12,14 +13,14 @@ import java.util.Optional;
  * Handles factions and levels for the player
  * Attached to all players as capability
  */
-public interface IFactionPlayerHandler {
+public interface IFactionPlayerHandler extends ILordPlayer {
 
     /**
      * Players can only join a faction if they are in no other.
      *
      * @return If the player can join the given faction
      */
-    boolean canJoin(IPlayableFaction faction);
+    boolean canJoin(IPlayableFaction<? extends IFactionPlayer<?>> faction);
 
     /**
      * Checks currents factions {@link IFactionPlayer#canLeaveFaction()}
@@ -30,13 +31,13 @@ public interface IFactionPlayerHandler {
      * @return The currently active faction. Can be null
      */
     @Nullable
-    IPlayableFaction<? extends IFactionPlayer> getCurrentFaction();
+    IPlayableFaction<? extends IFactionPlayer<?>> getCurrentFaction();
 
     /**
      * @return The currently active faction player. Can be null
      */
     @Nonnull
-    Optional<? extends IFactionPlayer> getCurrentFactionPlayer();
+    Optional<? extends IFactionPlayer<?>> getCurrentFactionPlayer();
 
     /**
      * If no faction is active this returns 0.
@@ -52,7 +53,7 @@ public interface IFactionPlayerHandler {
      *
      * @return If the faction is active: The faction level, otherwise 0
      */
-    int getCurrentLevel(IPlayableFaction f);
+    int getCurrentLevel(IPlayableFaction<? extends IFactionPlayer<?>> f);
 
     /**
      * If not in faction returns 0f
@@ -69,7 +70,7 @@ public interface IFactionPlayerHandler {
     /**
      * @return If the given faction is equal to the current one
      */
-    boolean isInFaction(IPlayableFaction f);
+    boolean isInFaction(IPlayableFaction<? extends IFactionPlayer<?>> f);
 
     /**
      * Join the given faction and set the faction level to 1.
@@ -77,7 +78,7 @@ public interface IFactionPlayerHandler {
      *
      * @param faction
      */
-    void joinFaction(@Nonnull IPlayableFaction faction);
+    void joinFaction(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction);
 
     /**
      * Should be called if the entity attacked.
@@ -94,7 +95,16 @@ public interface IFactionPlayerHandler {
      * @param level
      * @return If successful
      */
-    boolean setFactionAndLevel(IPlayableFaction faction, int level);
+    boolean setFactionAndLevel(IPlayableFaction<? extends IFactionPlayer<?>> faction, int level);
+
+    /**
+     * Set the players lord level.
+     * Checks if player is in faction and at faction max level and if level is lower than max lord level
+     *
+     * @param level
+     * @return if successful
+     */
+    boolean setLordLevel(int level);
 
     /**
      * Set the level for a faction. Only works if the player already is in the given faction.
@@ -104,5 +114,5 @@ public interface IFactionPlayerHandler {
      * @param level
      * @return If successful
      */
-    boolean setFactionLevel(@Nonnull IPlayableFaction faction, int level);
+    boolean setFactionLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level);
 }

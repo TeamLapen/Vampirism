@@ -35,4 +35,9 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
      */
     IPlayableFaction<T> setRenderLevel(boolean render);
 
+    /**
+     * @return The highest reachable lord level or 0 if no lord
+     */
+    int getHighestLordLevel();
+
 }

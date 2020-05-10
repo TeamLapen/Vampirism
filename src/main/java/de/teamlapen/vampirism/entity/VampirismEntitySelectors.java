@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.command.arguments.EntityOptions;
@@ -42,7 +43,7 @@ public class VampirismEntitySelectors {
                             boolean flag1 = f.equals(((IFactionEntity) input).getFaction());
                             return invert != flag1;
                         } else if (f instanceof IPlayableFaction && input instanceof PlayerEntity) {
-                            boolean flag1 = FactionPlayerHandler.getOpt((PlayerEntity) input).map(h -> h.isInFaction((IPlayableFaction) f)).orElse(false);
+                            boolean flag1 = FactionPlayerHandler.getOpt((PlayerEntity) input).map(h -> h.isInFaction((IPlayableFaction<IFactionPlayer<?>>) f)).orElse(false);
                             return invert != flag1;
                         }
                         return invert;
