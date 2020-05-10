@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
  * Basic class for all of Vampirism's players.
  * Implements basic methods for level or minion handling
  */
-public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
+public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
 
     private final static Logger LOGGER = LogManager.getLogger(VampirismPlayer.class);
     protected final PlayerEntity player;

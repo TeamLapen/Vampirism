@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
@@ -208,11 +209,13 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_LIGHTING);
-        IPlayableFaction faction = FactionPlayerHandler.get(mc.player).getCurrentFaction();
+        IFactionPlayerHandler handler = FactionPlayerHandler.get(mc.player);
+        IPlayableFaction faction = handler.getCurrentFaction();
         if (mc.playerController.gameIsSurvivalOrAdventure() && faction != null && faction.renderLevel()) {
             // boolean flag1 = false;
             int color = faction.getColor().getRGB();
-            String text = "" + FactionPlayerHandler.get(mc.player).getCurrentLevel();
+            int lord = handler.getLordLevel();
+            String text = lord > 0 ? "L" + lord : "" + handler.getCurrentLevel();
             int x = (this.mc.getMainWindow().getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
             int y = this.mc.getMainWindow().getScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
             mc.fontRenderer.drawString(text, x + 1, y, 0);

@@ -78,6 +78,8 @@ public interface IFactionRegistry {
     <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral);
 
     /**
+     * Use {@link IFactionRegistry#registerPlayableFaction(ResourceLocation, Class, Color, boolean, NonNullSupplier, int, int)} instead
+     * <p>
      * Create and registerAdvancements a playable faction. Has to be called during InterModEnqueueEvent
      *
      * @param id                       Faction id e.g. for level command
@@ -88,6 +90,22 @@ public interface IFactionRegistry {
      * @param <T>                      nterface all entities or (the given capability for players)  implement
      * @return The created faction
      */
+    @Deprecated
     @ThreadSafeAPI
-    <T extends IFactionPlayer> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
+    <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel);
+
+    /**
+     * Create and registerAdvancements a playable faction. Has to be called during InterModEnqueueEvent
+     *
+     * @param id                       Faction id e.g. for level command
+     * @param entityInterface          Interface all entities or (the given capability for players) implement
+     * @param color                    Color e.g. for level rendering
+     * @param playerCapabilitySupplier The capability which is attached to all players
+     * @param highestLevel             The highest reachable player level
+     * @param highestLordLevel         The highest reachable lord level or 0 if no lord
+     * @param <T>                      nterface all entities or (the given capability for players)  implement
+     * @return The created faction
+     */
+    @ThreadSafeAPI
+    <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel);
 }

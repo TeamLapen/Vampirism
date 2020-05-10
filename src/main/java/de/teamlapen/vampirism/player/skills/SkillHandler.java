@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Handles skills for Vampirism's IFactionPlayers
  */
-public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> {
+public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<T> {
     private final static Logger LOGGER = LogManager.getLogger(SkillHandler.class);
     /**
      * All currently activated skills
@@ -126,7 +126,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
             return node.getParent().getElements();
     }
 
-    public IFactionPlayer<T> getPlayer() {
+    public T getPlayer() {
         return player;
     }
 

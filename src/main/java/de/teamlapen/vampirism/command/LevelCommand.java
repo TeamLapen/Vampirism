@@ -39,7 +39,7 @@ public class LevelCommand extends BasicCommand {
                                 .executes(context -> leaveFaction(EntityArgument.getPlayers(context, "player")))));
     }
 
-    private static int setLevel(CommandContext<CommandSource> context, IPlayableFaction<IFactionPlayer> faction, int level, Collection<ServerPlayerEntity> players) {
+    private static int setLevel(CommandContext<CommandSource> context, IPlayableFaction<IFactionPlayer<?>> faction, int level, Collection<ServerPlayerEntity> players) {
         for (ServerPlayerEntity player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             if (level == 0 && !handler.canLeaveFaction()) {
