@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.world.gen.structures.huntercamp;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.blocks.TentBlock;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFeatures;
 import de.teamlapen.vampirism.tileentity.TentTileEntity;
@@ -73,7 +74,7 @@ public abstract class HunterCampPieces extends StructurePiece {
                 return false;
 
             //generation
-            this.setBlockState(worldIn, ModBlocks.fire_place.getDefaultState(), 1, 0, 1, structureBoundingBoxIn);
+            this.setBlockState(worldIn, VampirismConfig.COMMON.useVanillaCampfire.get() ? Blocks.CAMPFIRE.getDefaultState() : ModBlocks.fire_place.getDefaultState(), 1, 0, 1, structureBoundingBoxIn);
             this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), 1, 1, 1, structureBoundingBoxIn);
 
             return true;
