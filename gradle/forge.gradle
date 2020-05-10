@@ -155,6 +155,7 @@ processResources {
         expand 'version': project.mod_version, 'mcversion': minecraft_version, 'forge_version': forge_version
     }
 
+    outputs.upToDateWhen { false }
 
 
     from(sourceSets.main.resources.srcDirs) {
