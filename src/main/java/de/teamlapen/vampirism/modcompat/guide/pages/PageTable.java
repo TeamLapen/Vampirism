@@ -22,12 +22,12 @@ import java.util.List;
  * @author Maxanier
  */
 public class PageTable extends Page {
-    private List<String[]> lines;
+    private final List<String[]> lines;
     /**
      * Max char count in one cell for each column
      */
-    private int[] width;
-    private String headline;
+    private final int[] width;
+    private final String headline;
 
     private PageTable(List<String[]> lines, int[] width, String headline) {
         this.lines = lines;
@@ -102,6 +102,7 @@ public class PageTable extends Page {
             return this;
         }
 
+        @SuppressWarnings("ConfusingArgumentToVarargsMethod")
         public Builder addUnlocLine(String... strings) {
             String[] loc = new String[strings.length];
             for (int i = 0; i < strings.length; i++) {
