@@ -147,6 +147,7 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'META-INF/mods.toml'
     }
+    outputs.upToDateWhen { false }
 
     exclude '**/Thumbs.db'
 }
