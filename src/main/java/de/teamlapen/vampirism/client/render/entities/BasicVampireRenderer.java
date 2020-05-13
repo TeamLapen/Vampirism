@@ -27,6 +27,6 @@ public class BasicVampireRenderer extends BipedRenderer<BasicVampireEntity, Bipe
 
     @Override
     public ResourceLocation getEntityTexture(BasicVampireEntity entity) {
-        return getVampireTexture(entity.getEntityId());
+        return getVampireTexture(entity.getEntityTextureType());
     }
 }

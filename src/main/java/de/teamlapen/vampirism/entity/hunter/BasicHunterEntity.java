@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.entity.goals.LookAtTrainerHunterGoal;
+import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
@@ -58,6 +59,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> WATCHED_ID = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
+
     private static final ITextComponent name = new TranslationTextComponent("container.hunter");
 
     private final int MAX_LEVEL = 3;
@@ -212,27 +215,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     ICaptureAttributes villageAttributes;
 
     @Override
-    public void readAdditional(CompoundNBT tagCompund) {
-        super.readAdditional(tagCompund);
-        if (tagCompund.contains("level")) {
-            setLevel(tagCompund.getInt("level"));
-        }
-
-        if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
-            this.setLeftHanded(true);
-            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.basic_crossbow));
-        } else {
-            this.setLeftHanded(false);
-            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
-        }
-        this.updateCombatTask();
-        if (tagCompund.contains("attack")) {
-            this.attack = tagCompund.getBoolean("attack");
-        }
-
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
-        }
+    public int getEntityTextureType() {
+        return getDataManager().get(TYPE);
     }
 
     @Override
@@ -261,14 +245,10 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putInt("level", getLevel());
-        nbt.putBoolean("crossbow", isCrossbowInMainhand());
-        nbt.putBoolean("attack", attack);
-        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
-        if (entityActionHandler != null) {
-            entityActionHandler.write(nbt);
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        if (getDataManager().get(TYPE) == -1) {
+            getDataManager().set(TYPE, this.getRNG().nextInt(TYPES));
         }
     }
 
@@ -345,6 +325,47 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     private void updateWatchedId(int id) {
         getDataManager().set(WATCHED_ID, id);
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT tagCompund) {
+        super.readAdditional(tagCompund);
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
+        }
+
+        if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
+            this.setLeftHanded(true);
+            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.basic_crossbow));
+        } else {
+            this.setLeftHanded(false);
+            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+        }
+        this.updateCombatTask();
+        if (tagCompund.contains("attack")) {
+            this.attack = tagCompund.getBoolean("attack");
+        }
+        if (tagCompund.contains("type")) {
+            int t = tagCompund.getInt("type");
+            getDataManager().set(TYPE, t < TYPES && t >= 0 ? t : -1);
+        }
+
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
+        }
+    }
+
+    @Override
+    public void writeAdditional(CompoundNBT nbt) {
+        super.writeAdditional(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putBoolean("crossbow", isCrossbowInMainhand());
+        nbt.putBoolean("attack", attack);
+        nbt.putInt("type", getEntityTextureType());
+        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
+        if (entityActionHandler != null) {
+            entityActionHandler.write(nbt);
+        }
     }
 
     //Entityactions ----------------------------------------------------------------------------------------------------

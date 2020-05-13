@@ -46,6 +46,7 @@ import javax.annotation.Nullable;
 public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser {
 
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 2;
     private final int ANGRY_TICKS_PER_ATTACK = 120;
     private int bloodtimer = 100;
@@ -136,18 +137,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void readAdditional(CompoundNBT tagCompund) {
-        super.readAdditional(tagCompund);
-        if (tagCompund.contains("level")) {
-            setLevel(tagCompund.getInt("level"));
-        }
-        if (tagCompund.contains("attack")) {
-            this.attack = tagCompund.getBoolean("attack");
-        }
-
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
-        }
+    public int getEntityTextureType() {
+        return getDataManager().get(TYPE);
     }
 
     @Override
@@ -186,13 +177,10 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putInt("level", getLevel());
-        nbt.putBoolean("attack", this.attack);
-        nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
-        if (this.entityActionHandler != null) {
-            this.entityActionHandler.write(nbt);
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        if (getDataManager().get(TYPE) == -1) {
+            getDataManager().set(TYPE, this.getRNG().nextInt(TYPES));
         }
     }
 
@@ -224,9 +212,21 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        getDataManager().register(LEVEL, -1);
+    public void readAdditional(CompoundNBT tagCompund) {
+        super.readAdditional(tagCompund);
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
+        }
+        if (tagCompund.contains("attack")) {
+            this.attack = tagCompund.getBoolean("attack");
+        }
+        if (tagCompund.contains("type")) {
+            int t = tagCompund.getInt("type");
+            getDataManager().set(TYPE, t < TYPES && t >= 0 ? t : -1);
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
+        }
     }
 
     /**
@@ -243,7 +243,27 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_SPEED);
     }
-    //IMob -------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void writeAdditional(CompoundNBT nbt) {
+        super.writeAdditional(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putInt("type", getEntityTextureType());
+        nbt.putBoolean("attack", this.attack);
+        nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
+        if (this.entityActionHandler != null) {
+            this.entityActionHandler.write(nbt);
+        }
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        getDataManager().register(LEVEL, -1);
+        getDataManager().register(TYPE, -1);
+    }
+
+//IMob -------------------------------------------------------------------------------------------------------------
 
     @Override
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
