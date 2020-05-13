@@ -26,7 +26,7 @@ public class BasicHunterRenderer extends BipedRenderer<BasicHunterEntity, BasicH
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
 
     public BasicHunterRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new BasicHunterModel(), 0.5F);
+        super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
     }
 
     @Override
@@ -38,13 +38,13 @@ public class BasicHunterRenderer extends BipedRenderer<BasicHunterEntity, BasicH
     protected ResourceLocation getEntityTexture(BasicHunterEntity entity) {
         int level = entity.getLevel();
         if (level > 0) return texture;
-        return textures[entity.getEntityId() % textures.length];
+        return textures[entity.getEntityTextureType() % textures.length];
     }
 
     @Override
     protected void renderModel(BasicHunterEntity entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float partTicks) {
         int level = entitylivingbaseIn.getLevel();
-        int type = entitylivingbaseIn.getEntityId() % textures.length;
+        int type = entitylivingbaseIn.getEntityTextureType() % textures.length;
         if (level == 0) {
             getEntityModel().setSkipCloakOnce();
         }
