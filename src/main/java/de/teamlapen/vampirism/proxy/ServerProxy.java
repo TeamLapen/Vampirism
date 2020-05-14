@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
+import de.teamlapen.vampirism.network.AppearancePacket;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -24,12 +26,10 @@ public class ServerProxy extends CommonProxy {
     }
 
     @Override
-    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
-
-    }
-
-    @Override
-    public void handleSleepClient(PlayerEntity player) {
-
+    public void handleAppearancePacket(PlayerEntity player, AppearancePacket msg) {
+        VampirePlayer.getOpt(player).ifPresent(vampire -> {
+            vampire.setFangType(msg.fangType);
+            vampire.setEyeType(msg.eyeType);
+        });
     }
 }

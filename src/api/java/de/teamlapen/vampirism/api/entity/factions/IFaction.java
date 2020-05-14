@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -27,6 +28,7 @@ public interface IFaction<T extends IFactionEntity> {
     /**
      * Used for some rendering, e.g. for displaying the level
      */
+    @Nonnull
     Color getColor();
 
     /**
