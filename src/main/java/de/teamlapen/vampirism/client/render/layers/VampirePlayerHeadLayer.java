@@ -45,8 +45,6 @@ public class VampirePlayerHeadLayer extends LayerRenderer<AbstractClientPlayerEn
             IVertexBuilder vertexBuilderEye = iRenderTypeBuffer.getBuffer(RenderType.entityCutoutNoCull(eyeOverlays[eyeType]));
             int packerOverlay = LivingRenderer.getPackedOverlay(player, 0);
             ModelRenderer head = this.getEntityModel().bipedHead;
-            head.rotationPointX = 0.0F;
-            head.rotationPointY = 0.0F;
             head.render(matrixStack, vertexBuilderEye, i, packerOverlay);
             IVertexBuilder vertexBuilderFang = iRenderTypeBuffer.getBuffer(RenderType.entityCutoutNoCull(fangOverlays[fangType]));
             head.render(matrixStack, vertexBuilderFang, i, packerOverlay);
