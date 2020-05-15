@@ -32,8 +32,8 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
 
     public TentTileEntity() {
         super(ModTiles.tent);
-        this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.pos));
-        this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.advanced_hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.pos));
+        this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setDailyLimit(VampirismConfig.BALANCE.hunterTentMaxSpawn.get()).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.pos));
+        this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.advanced_hunter).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setDailyLimit(1).setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE).setOnSpawned(hunter -> hunter.makeCampHunter(this.pos));
     }
 
     public boolean isSpawner() {
@@ -45,16 +45,40 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
+    public void read(CompoundNBT nbt) {
+        super.read(nbt);
+        if (nbt.contains("spawner_logic_1")) {
+            spawnerLogicHunter.readFromNbt(nbt.getCompound("spawner_logic_1"));
+        }
+        if (nbt.contains("spawner_logic_2")) {
+            spawnerLogicAdvancedHunter.readFromNbt(nbt.getCompound("spawner_logic_2"));
+        }
+        if (nbt.contains("advanced")) {
+            advanced = nbt.getBoolean("advanced");
+        }
+        spawn = nbt.getBoolean("spawn");
+    }
+
+    @Override
+    public void setPos(BlockPos posIn) {
+        super.setPos(posIn);
+        this.spawnerLogicHunter.setBlockPos(this.pos); //Internal position should be set here using the immutable version of the given block pos
+        this.spawnerLogicAdvancedHunter.setBlockPos(this.pos);
+    }
+
+    @Override
+    public void setWorldAndPos(World worldIn, BlockPos pos) {
+        super.setWorldAndPos(worldIn, pos);
+        this.spawnerLogicHunter.setWorld(worldIn);
+        this.spawnerLogicAdvancedHunter.setWorld(worldIn);
+        this.spawnerLogicHunter.setBlockPos(this.pos); //Internal position should be set here using the immutable version of the given block pos
+        this.spawnerLogicAdvancedHunter.setBlockPos(this.pos);
+    }
+
+    @Override
     public void tick() {
         if (world == null) return;
-        if (this.spawnerLogicHunter.getSpawnedToday() >= VampirismConfig.BALANCE.hunterTentMaxSpawn.get()) {
-            this.spawnerLogicHunter.setSpawn(false);
-        }
-        if (advanced) {
-            if (this.spawnerLogicAdvancedHunter.getSpawnedToday() >= VampirismConfig.BALANCE.hunterTentMaxSpawn.get()) {
-                this.spawnerLogicAdvancedHunter.setSpawn(false);
-            }
-        }
+
         if (spawn) {
             if (!this.world.isRemote && this.world.getGameTime() % 64 == 0) {
                 if (Feature.VILLAGE.isPositionInsideStructure(world, pos)) {
@@ -79,33 +103,8 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
         nbt.put("spawner_logic_1", logic1);
         nbt.put("spawner_logic_2", logic2);
         nbt.putBoolean("spawn", this.spawn);
+        nbt.putBoolean("advanced", this.advanced);
         return nbt;
-    }
-
-    @Override
-    public void read(CompoundNBT nbt) {
-        super.read(nbt);
-        if (nbt.contains("spawner_logic_1")) {
-            spawnerLogicHunter.readFromNbt(nbt.getCompound("spawner_logic_1"));
-        }
-        if (nbt.contains("spawner_logic_2")) {
-            spawnerLogicAdvancedHunter.readFromNbt(nbt.getCompound("spawner_logic_2"));
-        }
-        spawn = nbt.getBoolean("spawn");
-    }
-
-    @Override
-    public void setWorldAndPos(World worldIn, BlockPos pos) {
-        super.setWorldAndPos(worldIn, pos);
-        this.spawnerLogicHunter.setWorld(worldIn);
-        this.spawnerLogicAdvancedHunter.setWorld(world);
-    }
-
-    @Override
-    public void setPos(BlockPos posIn) {
-        super.setPos(posIn);
-        this.spawnerLogicHunter.setBlockPos(posIn);
-        this.spawnerLogicAdvancedHunter.setBlockPos(posIn);
     }
 
     public void setSpawn(boolean spawn) {

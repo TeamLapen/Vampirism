@@ -7,6 +7,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.AbstractSpawner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,6 +20,7 @@ import java.util.function.Consumer;
  */
 public class SimpleSpawnerLogic<T extends Entity> {
 
+    private final static Logger LOGGER = LogManager.getLogger();
     private static final int MOB_COUNT_DIV = (int) Math.pow(17.0D, 2.0D);
 
     private @Nonnull
@@ -31,6 +34,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
     private int minSpawnDelay = 200;
     private int maxSpawnDelay = 800;
     private int activateRange = 16;
+    private int dailyLimit = Integer.MAX_VALUE;
     private int spawnCount = 1;
     private int maxNearbyEntities = 4;
     private int spawnRange = 4;
@@ -60,13 +64,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
     }
 
     public void readFromNbt(CompoundNBT nbt) {
-        this.minSpawnDelay = nbt.getInt("min_delay");
-        this.maxSpawnDelay = nbt.getInt("max_delay");
-        this.maxNearbyEntities = nbt.getInt("max_nearby");
         this.spawnDelay = nbt.getInt("delay");
-        this.activateRange = nbt.getInt("activate_range");
-        this.spawnRange = nbt.getInt("spawn_range");
-        this.spawnCount = nbt.getInt("spawn_count");
         this.spawnedToday = nbt.getInt("spawned_today");
         this.spawnedLast = nbt.getLong("spawned_last");
         this.flag = nbt.getBoolean("spawner_flag");
@@ -122,6 +120,11 @@ public class SimpleSpawnerLogic<T extends Entity> {
         return this;
     }
 
+    public SimpleSpawnerLogic<T> setDailyLimit(int dailyLimit) {
+        this.dailyLimit = dailyLimit;
+        return this;
+    }
+
     public SimpleSpawnerLogic<T> setSpawnRange(int spawnRange) {
         this.spawnRange = spawnRange;
         return this;
@@ -149,9 +152,12 @@ public class SimpleSpawnerLogic<T extends Entity> {
                     return;
                 }
 
+
                 if ((this.world.getGameTime()) % 24000 < this.spawnedLast) {
                     this.spawnedToday = 0;
                     this.flag = true;
+                } else if (this.spawnedToday >= dailyLimit) {
+                    this.flag = false;
                 }
                 if (!this.flag)
                     return;
@@ -159,7 +165,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
                 boolean flag1 = false;
 
                 for (int i = 0; i < this.spawnCount; ++i) {
-                    T entity = (T) this.getEntityType().create(this.world);
+                    T entity = this.getEntityType().create(this.world);
 
                     if (entity == null) {
                         break;
@@ -196,14 +202,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
     }
 
     public void writeToNbt(CompoundNBT nbt) {
-        nbt.putString("id", EntityType.getKey(entityType).toString());
-        nbt.putInt("min_delay", minSpawnDelay);
-        nbt.putInt("max_delay", maxSpawnDelay);
-        nbt.putInt("max_nearby", maxNearbyEntities);
         nbt.putInt("delay", spawnDelay);
-        nbt.putInt("activate_range", activateRange);
-        nbt.putInt("spawn_range", spawnRange);
-        nbt.putInt("spawn_count", spawnCount);
         nbt.putInt("spawned_today", spawnedToday);
         nbt.putLong("spawned_last", spawnedLast);
         nbt.putBoolean("spawner_flag", flag);
