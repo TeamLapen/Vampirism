@@ -25,7 +25,10 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;
-import net.minecraft.world.storage.loot.conditions.*;
+import net.minecraft.world.storage.loot.conditions.BlockStateProperty;
+import net.minecraft.world.storage.loot.conditions.KilledByPlayer;
+import net.minecraft.world.storage.loot.conditions.RandomChanceWithLooting;
+import net.minecraft.world.storage.loot.conditions.SurvivesExplosion;
 import net.minecraft.world.storage.loot.functions.*;
 
 import javax.annotation.Nonnull;
@@ -69,7 +72,7 @@ public class LootTablesGenerator extends LootTableProvider {
                             .addEntry(ItemLootEntry.builder(ModItems.holy_water_bottle_enhanced).weight(3).acceptFunction(SetNBT.func_215952_a(splash)))
                             .addEntry(ItemLootEntry.builder(ModItems.holy_water_bottle_ultimate).weight(1).acceptFunction(SetNBT.func_215952_a(splash)))
                             .addEntry(ItemLootEntry.builder(ModItems.holy_salt).weight(4).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0, 1))).acceptFunction(SetCount.builder(RandomValueRange.of(1, 2)))))
-                    .addLootPool(LootPool.builder().name("special").acceptCondition(RandomChance.builder(0.05f)).rolls(ConstantRange.of(1))
+                    .addLootPool(LootPool.builder().name("special").acceptCondition(RandomChanceWithLooting.builder(0.05f, 0.01f)).rolls(ConstantRange.of(1))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_book).weight(1).acceptFunction(AddBookNbt.builder())));
             this.registerLootTable(ModEntities.advanced_hunter, advanced_hunter);
             this.registerLootTable(ModEntities.advanced_hunter_imob, advanced_hunter);
@@ -77,7 +80,7 @@ public class LootTablesGenerator extends LootTableProvider {
                     .addLootPool(LootPool.builder().name("general").acceptCondition(KilledByPlayer.builder()).rolls(ConstantRange.of(1))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_blood_bottle).weight(1))
                             .addEntry(ItemLootEntry.builder(ModItems.blood_bottle).weight(1).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.5f, 1.0f))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(1f, 1f)))))
-                    .addLootPool(LootPool.builder().name("special").acceptCondition(RandomChance.builder(0.05f)).rolls(ConstantRange.of(1))
+                    .addLootPool(LootPool.builder().name("special").acceptCondition(RandomChanceWithLooting.builder(0.05f, 0.01f)).rolls(ConstantRange.of(1))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_book).weight(1).acceptFunction(AddBookNbt.builder())));
             this.registerLootTable(ModEntities.advanced_vampire, advanced_vampire);
             this.registerLootTable(ModEntities.advanced_vampire_imob, advanced_vampire);
