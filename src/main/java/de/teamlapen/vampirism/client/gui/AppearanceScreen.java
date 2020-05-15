@@ -1,9 +1,13 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import de.teamlapen.lib.client.gui.ScrollableListButton;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.network.AppearancePacket;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -29,13 +33,11 @@ public class AppearanceScreen extends Screen {
     static {
         descEye = new String[REFERENCE.EYE_TYPE_COUNT];
         descFang = new String[REFERENCE.FANG_TYPE_COUNT];
-        descEye[0] = "None";
-        for (int i = 1; i < descEye.length; i++) {
-            descEye[i] = "Type " + i;
+        for (int i = 0; i < descEye.length; i++) {
+            descEye[i] = "Type " + (i + 1);
         }
-        descFang[0] = "None";
-        for (int i = 1; i < descFang.length; i++) {
-            descFang[i] = "Type " + i;
+        for (int i = 0; i < descFang.length; i++) {
+            descFang[i] = "Type " + (i + 1);
         }
     }
 
@@ -44,6 +46,11 @@ public class AppearanceScreen extends Screen {
     protected int guiLeft;
     protected int guiTop;
     private float[] color;
+
+    private Button eyes;
+    private Button fangs;
+    private int fangType;
+    private int eyeType;
 
 
     public AppearanceScreen() {
@@ -57,14 +64,27 @@ public class AppearanceScreen extends Screen {
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        this.addButton(new GuiButtonExt(this.guiLeft + 100, this.guiTop + 152, 120, 20, UtilLib.translate("gui.vampirism.appearance.skill_order"), (context) -> {
-            Color color = FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getCurrentFaction).map(IPlayableFaction::getColor).orElse(Color.gray);
-            Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(color, true));
-        }));
+        this.eyes = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 30 + 20, 100, 100, REFERENCE.EYE_TYPE_COUNT, 5, descEye, UtilLib.translate("gui.vampirism.appearance.eyestyle"), this::eye));
+        this.fangs = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 50 + 20, 100, 80, REFERENCE.FANG_TYPE_COUNT, 4, descFang, UtilLib.translate("gui.vampirism.appearance.fangstyle"), this::fang));
+
+        this.addButton(new GuiButtonExt(this.guiLeft + 20, this.guiTop + 30, 100, 20, UtilLib.translate("gui.vampirism.appearance.eyes"), (button -> {
+            this.eyes.visible = !this.eyes.visible;
+            this.fangs.visible = false;
+        })));
+        this.addButton(new GuiButtonExt(this.guiLeft + 20, this.guiTop + 50, 100, 20, UtilLib.translate("gui.vampirism.appearance.fangs"), (button -> {
+            this.fangs.visible = !this.fangs.visible;
+            this.eyes.visible = false;
+        })));
 
         this.addButton(new Button(this.guiLeft + 5, this.guiTop + 152, 80, 20, UtilLib.translate("gui.done"), (context) -> {
             this.onClose();
         }));
+
+        this.eyes.visible = false;
+        this.fangs.visible = false;
+
+        this.fangType = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getFangType).orElse(0);
+        this.eyeType = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getEyeType).orElse(0);
     }
 
 
@@ -79,13 +99,42 @@ public class AppearanceScreen extends Screen {
         GlStateManager.color4f(1, 1, 1, 1);
 
         this.drawTitle();
-        InventoryScreen.drawEntityOnScreen((int) (this.width * 0.65), (int) (this.height * 0.7), 60, (float) (this.guiLeft + 200) - mouseX, (float) (this.guiTop + 45) - mouseY, this.minecraft.player);
+        InventoryScreen.drawEntityOnScreen(this.guiLeft + 200, this.guiTop + 145, 60, (float) (this.guiLeft + 200) - mouseX, (float) (this.guiTop + 45) - mouseY, this.minecraft.player);
 
         super.render(mouseX, mouseY, partialTicks);
+
+        this.eyes.render(mouseX, mouseY, partialTicks);
+        this.fangs.render(mouseX, mouseY, partialTicks);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int buttonId) {
+        if (this.fangs.mouseClicked(mouseX, mouseY, buttonId) || this.fangs.mouseClicked(mouseX, mouseY, buttonId)) {
+            return true;
+        }
+        return super.mouseClicked(mouseX, mouseY, buttonId);
     }
 
     protected void drawTitle() {
         String title = NAME.getFormattedText();
         this.font.drawStringWithShadow(title, this.guiLeft + 15, this.guiTop + 5, 0xFFFFFFFF);
+    }
+
+    private void fang(int fangType) {
+        VampirePlayer.getOpt(this.minecraft.player).ifPresent(vampire -> {
+            vampire.setFangType(this.fangType = fangType);
+        });
+    }
+
+    private void eye(int eyeType) {
+        VampirePlayer.getOpt(this.minecraft.player).ifPresent(vampire -> {
+            vampire.setEyeType(this.eyeType = eyeType);
+        });
+    }
+
+    @Override
+    public void onClose() {
+        VampirismMod.dispatcher.sendToServer(new AppearancePacket(fangType, eyeType));
+        super.onClose();
     }
 }

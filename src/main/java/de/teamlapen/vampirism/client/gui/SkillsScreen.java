@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -24,6 +25,7 @@ import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -36,7 +38,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -52,7 +53,7 @@ import java.util.Random;
 @OnlyIn(Dist.CLIENT)
 public class SkillsScreen extends Screen {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills_window.png");
-    private static final ResourceLocation ACTIONBUTTON = new ResourceLocation(REFERENCE.MODID, "textures/gui/action_configure.png");
+    private static final ResourceLocation ACTIONBUTTON = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/misc.png");
     private final int area_min_y = -77;
     private final int skill_width = 24;
     private final List<SkillNode> skillNodes = new ArrayList<>();
@@ -78,9 +79,9 @@ public class SkillsScreen extends Screen {
     public void init() {
         Optional<? extends IFactionPlayer> fOpt = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer();
         fOpt.ifPresent(factionPlayer -> {
-            IPlayableFaction<?> faction = factionPlayer.getFaction();
+            IPlayableFaction faction = factionPlayer.getFaction();
             display = true;
-            skillHandler = (SkillHandler<?>) factionPlayer.getSkillHandler();
+            skillHandler = (SkillHandler) factionPlayer.getSkillHandler();
             Integer[] info = VampirismMod.proxy.getSkillTree(true).getDisplayInfo(faction.getID());
             int w = info[0] * info[1] * skill_width * 2;
             area_max_x = w + 10 - display_width;
@@ -92,22 +93,30 @@ public class SkillsScreen extends Screen {
             SkillNode root = VampirismMod.proxy.getSkillTree(true).getRootNodeForFaction(faction.getID());
             addToList(skillNodes, root);
         });
-        this.addButton(new Button(this.width / 2 + 24 + 18 + 30, this.height / 2 + 74, 50, 20, UtilLib.translate("gui.done"), (context) -> {
+        this.addButton(new Button(this.width / 2 + 24 + 15, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done"), (context) -> {
             this.minecraft.displayGuiScreen(null);
         }));
         if (display) {
-            Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 20 + 44 + 30, this.height / 2 + 74, 80, 20, UtilLib.translate("text.vampirism.skill.resetall"), (context) -> {
+            Button resetSkills = this.addButton(new Button((this.width - display_width) / 2 + 24 + 20 + 20, this.height / 2 + 74, 80, 20, UtilLib.translate("text.vampirism.skill.resetall"), (context) -> {
                 boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
                 ConfirmScreen resetGui = new ConfirmScreen((cxt) -> {
                     if (cxt) {
                         VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
+                        Minecraft.getInstance().displayGuiScreen(this);
+                    } else {
+                        Minecraft.getInstance().displayGuiScreen(this);
                     }
-                    Minecraft.getInstance().displayGuiScreen(this);
                 }, new TranslationTextComponent("gui.vampirism.reset_skills.title"), new TranslationTextComponent("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")));
                 Minecraft.getInstance().displayGuiScreen(resetGui);
             }));
-            this.addButton(new GuiButtonExt((this.width - display_width) / 2 + 6, this.height / 2 + 74, 110, 20, UtilLib.translate("gui.vampirism.skill.appearance"), (context) -> {
-                Minecraft.getInstance().displayGuiScreen(Helper.isVampire(this.minecraft.player) ? new VampireAppearanceScreen() : new AppearanceScreen());
+            if (Helper.isVampire(minecraft.player)) {
+                this.addButton(new ImageButton((this.width - display_width) / 2 + 10 + 22, this.height / 2 + 74, 20, 20, 41, 0, 20, ACTIONBUTTON, 256, 256, (context) -> {
+                    Minecraft.getInstance().displayGuiScreen(new AppearanceScreen());
+                }));
+            }
+            this.addButton(new ImageButton((this.width - display_width) / 2 + 10, this.height / 2 + 74, 20, 20, 21, 0, 20, ACTIONBUTTON, 256, 256, (context) -> {
+                IPlayableFaction<?> faction = FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction();
+                Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(faction.getColor(), true));
             }));
 
             if (fOpt.map(IFactionPlayer::getLevel).orElse(0) < 2) {
