@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.command.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.lib.lib.util.BasicCommand;
-import de.teamlapen.vampirism.world.VampirismWorldData;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -28,8 +27,7 @@ public class GiveTestTargetMapCommand extends BasicCommand {
 
     private static int giveTestTargetMap(ServerPlayerEntity asPlayer) {
         ServerWorld w = asPlayer.func_71121_q(); //getServerWorld
-        VampirismWorldData worldData = VampirismWorldData.get(w);
-        BlockPos dungeonPos = worldData.getRandomVampireDungeon(asPlayer.getRNG());
+        BlockPos dungeonPos = new BlockPos(0, 0, 0);
         ItemStack itemstack = FilledMapItem.setupNewMap(w, dungeonPos.getX(), dungeonPos.getZ(), (byte) 2, true, true);
         FilledMapItem.renderBiomePreviewMap(w, itemstack);
         MapData.addTargetDecoration(itemstack, dungeonPos, "+", MapDecoration.Type.TARGET_X);

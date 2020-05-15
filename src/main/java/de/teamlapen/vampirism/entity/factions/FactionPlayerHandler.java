@@ -309,6 +309,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             return false;
         }
         this.currentLordLevel = level;
+        sync(false);
         return true;
     }
 
