@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.tileentity.AltarInspirationTileEntity;
-import de.teamlapen.vampirism.world.VampirismWorldData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -19,7 +18,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidUtil;
@@ -110,14 +108,6 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         }
 
         return ActionResultType.SUCCESS;
-    }
-
-    @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
-        if (worldIn instanceof ServerWorld) {
-            VampirismWorldData.get((ServerWorld) worldIn).onAltarInspirationDestroyed(pos);
-        }
     }
 
 }
