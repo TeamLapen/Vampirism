@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.api.entity.player;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import net.minecraft.entity.player.PlayerEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -14,4 +16,7 @@ public interface ILordPlayer {
     IPlayableFaction<?> getLordFaction();
 
     int getLordLevel();
+
+    @Nonnull
+    PlayerEntity getPlayer();
 }

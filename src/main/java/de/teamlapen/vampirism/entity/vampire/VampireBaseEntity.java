@@ -48,6 +48,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     private final boolean countAsMonsterForSpawn;
+
     /**
      * Rules to consider for {@link #canSpawn(IWorld, SpawnReason)}
      */

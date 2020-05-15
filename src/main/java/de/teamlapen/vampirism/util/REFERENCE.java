@@ -40,6 +40,7 @@ public class REFERENCE {
     public final static ResourceLocation VAMPIRE_PLAYER_KEY = new ResourceLocation(MODID, "vampire");
     public final static ResourceLocation HUNTER_PLAYER_KEY = new ResourceLocation(MODID, "hunter");
     public final static ResourceLocation EXTENDED_CREATURE_KEY = new ResourceLocation(MODID, "iextendedcreature");
+    public final static ResourceLocation WORLD_CAP_KEY = new ResourceLocation(MODID, "world");
     public final static ResourceLocation VAMPIRISM_VILLAGE_KEY_NEW = new ResourceLocation(MODID, "ivv");
     public static ArtifactVersion VERSION = new DefaultArtifactVersion("0.0.0");
 
