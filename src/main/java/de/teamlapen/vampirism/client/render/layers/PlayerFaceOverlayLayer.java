@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import de.teamlapen.vampirism.util.IPlayerFace;
+import de.teamlapen.vampirism.util.IPlayerOverlay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -24,7 +24,7 @@ import java.util.Map;
  * Renders an overlay over the entities face
  */
 @OnlyIn(Dist.CLIENT)
-public class PlayerFaceOverlayLayer<T extends MobEntity & IPlayerFace, M extends BipedModel<T>> extends LayerRenderer<T, M> {
+public class PlayerFaceOverlayLayer<T extends MobEntity & IPlayerOverlay, M extends BipedModel<T>> extends LayerRenderer<T, M> {
 
 
     public PlayerFaceOverlayLayer(BipedRenderer<T, M> renderBiped) {
@@ -34,7 +34,7 @@ public class PlayerFaceOverlayLayer<T extends MobEntity & IPlayerFace, M extends
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ResourceLocation loc = DefaultPlayerSkin.getDefaultSkinLegacy();
-        GameProfile prof = entityIn.getPlayerFaceProfile();
+        GameProfile prof = entityIn.getOverlayPlayerProfile();
         if (prof != null) {
             Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(prof);
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {

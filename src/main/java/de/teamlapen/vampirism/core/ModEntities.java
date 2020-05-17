@@ -11,6 +11,8 @@ import de.teamlapen.vampirism.entity.converted.ConvertedHorseEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedSheepEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.hunter.*;
+import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
@@ -60,6 +62,8 @@ public class ModEntities {
     public static final EntityType<BasicHunterEntity.IMob> hunter_imob = getNull();
     public static final EntityType<AggressiveVillagerEntity> villager_angry = getNull();
     public static final EntityType<ConvertedVillagerEntity> villager_converted = getNull();
+    public static final EntityType<VampireMinionEntity> vampire_minion = getNull();
+    public static final EntityType<HunterMinionEntity> hunter_minion = getNull();
 
     private static final Logger LOGGER = LogManager.getLogger(ModEntities.class);
 
@@ -129,6 +133,8 @@ public class ModEntities {
         registry.register(prepareEntityType("villager_angry", EntityType.Builder.create(AggressiveVillagerEntity::new, EntityClassification.CREATURE).size(0.6F, 1.95F), false));
         registry.register(prepareEntityType("villager_converted", EntityType.Builder.create(ConvertedVillagerEntity::new, VReference.VAMPIRE_CREATURE_TYPE).size(0.6F, 1.95F), false));
         registry.register(prepareEntityType("converted_horse", EntityType.Builder.create(ConvertedHorseEntity::new, EntityClassification.CREATURE).size(1.3964844F, 1.6F), false));
+        registry.register(prepareEntityType("vampire_minion", EntityType.Builder.create(VampireMinionEntity::new, EntityClassification.CREATURE).size(0.6f, 1.95f), false));
+        registry.register(prepareEntityType("hunter_minion", EntityType.Builder.create(HunterMinionEntity::new, EntityClassification.CREATURE).size(0.6f, 1.95f), false));
     }
 
     static void registerSpawns() {
@@ -167,6 +173,9 @@ public class ModEntities {
         GlobalEntityTypeAttributes.put(vampire_baron, VampireBaronEntity.getAttributeBuilder().create());
         GlobalEntityTypeAttributes.put(villager_angry, AggressiveVillagerEntity.getAttributeBuilder().create());
         GlobalEntityTypeAttributes.put(villager_converted, ConvertedVillagerEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(hunter_minion, VampirismEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(vampire_minion, VampireMinionEntity.getAttributeBuilder().create());
+
     }
 
     private static <T extends Entity> EntityType<T> prepareEntityType(String id, EntityType.Builder<T> builder, boolean spawnable) {

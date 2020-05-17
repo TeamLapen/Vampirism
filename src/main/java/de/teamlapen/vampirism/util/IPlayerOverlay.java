@@ -9,12 +9,12 @@ import javax.annotation.Nullable;
 /**
  * Interface for creatures which have a biped model with a exchangeable face
  */
-public interface IPlayerFace {
+public interface IPlayerOverlay {
 
     /**
      * @return Game profile of the player who's face should be overlayed. Null if none
      */
     @OnlyIn(Dist.CLIENT)
     @Nullable
-    GameProfile getPlayerFaceProfile();
+    GameProfile getOverlayPlayerProfile();
 }

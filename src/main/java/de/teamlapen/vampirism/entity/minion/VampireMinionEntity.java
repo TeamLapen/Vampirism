@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.minion;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.DamageHandler;
@@ -11,6 +12,7 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.world.IWorld;
@@ -19,12 +21,12 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 
-public class VampireMinion extends MinionEntity implements IVampire {
+public class VampireMinionEntity extends MinionEntity implements IVampire {
     private boolean sundamageCache;
     private EnumStrength garlicCache = EnumStrength.NONE;
 
-    public VampireMinion(EntityType<? extends VampirismEntity> type, World world) {
-        super(type, world);
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampirismEntity.getAttributeBuilder().createMutableAttribute(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     @Override
@@ -36,6 +38,7 @@ public class VampireMinion extends MinionEntity implements IVampire {
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
 
     }
+
 
     @Override
     public LivingEntity getRepresentingEntity() {
@@ -88,6 +91,10 @@ public class VampireMinion extends MinionEntity implements IVampire {
             }
         }
         super.livingTick();
+    }
+
+    public VampireMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
+        super(type, world);
     }
 
     @Override
