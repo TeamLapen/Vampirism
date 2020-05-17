@@ -18,11 +18,11 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 
-public class VampireMinion extends MinionEntity implements IVampire {
+public class VampireMinionEntity extends MinionEntity implements IVampire {
     private boolean sundamageCache;
     private EnumStrength garlicCache = EnumStrength.NONE;
 
-    public VampireMinion(EntityType<? extends VampirismEntity> type, World world) {
+    public VampireMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
         super(type, world);
     }
 
@@ -35,6 +35,7 @@ public class VampireMinion extends MinionEntity implements IVampire {
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
 
     }
+
 
     @Override
     public LivingEntity getRepresentingEntity() {

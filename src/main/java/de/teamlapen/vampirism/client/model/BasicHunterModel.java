@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class BasicHunterModel<T extends LivingEntity> extends BipedCloakedModel<T> {
-    private RendererModel hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, secondHead, hatTop2, hatRim2, hatRim3;
+    private final RendererModel hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, secondHead, hatTop2, hatRim2, hatRim3;
     private boolean targetingLeft = false;
     private boolean targetingRight = false;
     private float xAngle = 0;
