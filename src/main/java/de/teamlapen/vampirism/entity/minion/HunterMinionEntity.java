@@ -7,8 +7,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
 
-public class HunterMinion extends MinionEntity implements IHunter {
-    public HunterMinion(EntityType<? extends VampirismEntity> type, World world) {
+public class HunterMinionEntity extends MinionEntity implements IHunter {
+    public HunterMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
         super(type, world);
     }
 

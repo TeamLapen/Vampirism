@@ -44,5 +44,7 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.soul_orb, manager -> new SoulOrbRenderer(manager, Minecraft.getInstance().getItemRenderer()));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_trainer_dummy, HunterTrainerRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.dummy_creature, DummyRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.vampire_minion, VampireMinionRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_minion, HunterMinionRenderer::new);
     }
 }

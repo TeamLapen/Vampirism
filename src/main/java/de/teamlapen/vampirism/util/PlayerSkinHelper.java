@@ -27,12 +27,12 @@ public class PlayerSkinHelper {
      * @param callback Will be called with the populated profile. Might be called outside the main thread
      */
     public static void updateGameProfileAsync(final GameProfile input, Consumer<GameProfile> callback) {
-        if (input != null && !StringUtils.isNullOrEmpty(input.getName())) {
+        if (input != null) {
             if (input.isComplete() && input.getProperties().containsKey("textures")) {
                 callback.accept(input);
             } else if (SkullTileEntity.profileCache != null && SkullTileEntity.sessionService != null) {
                 THREAD_POOL.submit(() -> {
-                    GameProfile gameprofile = SkullTileEntity.profileCache.getGameProfileForUsername(input.getName()); //This might create race conditions with other game profile updates. Maybe this has to be moved to the main thread
+                    GameProfile gameprofile = input.getId()==null?SkullTileEntity.profileCache.getGameProfileForUsername(input.getName()) : SkullTileEntity.profileCache.getProfileByUUID(input.getId()); //This might create race conditions with other game profile updates. Maybe this has to be moved to the main thread
 
                     if (gameprofile == null) {
                         gameprofile = input;

@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
-import de.teamlapen.vampirism.util.IPlayerFace;
+import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.client.Minecraft;
@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
 /**
  * Advanced vampire. Is strong. Represents supporters
  */
-public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerFace, IEntityActionUser {
+public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerOverlay, IEntityActionUser {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.VARINT);
     private static final DataParameter<String> NAME = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.STRING);
@@ -152,7 +152,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @OnlyIn(Dist.CLIENT)
     @Nullable
     @Override
-    public GameProfile getPlayerFaceProfile() {
+    public GameProfile getOverlayPlayerProfile() {
         if (this.facePlayerProfile == null) {
             String name = getTextureName();
             if (name == null) return null;

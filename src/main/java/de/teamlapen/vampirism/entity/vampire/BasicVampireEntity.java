@@ -138,7 +138,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     public int getEntityTextureType() {
-        return getDataManager().get(TYPE);
+        int i = getDataManager().get(TYPE);
+        return Math.max(i, 0);
     }
 
     @Override
