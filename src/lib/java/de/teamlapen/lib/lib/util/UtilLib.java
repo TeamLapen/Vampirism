@@ -706,6 +706,10 @@ public class UtilLib {
         return new MutableBoundingBox(array[0], array[1], array[2], array[3], array[4], array[5]);
     }
 
+    public static MutableBoundingBox AABBtoMB(AxisAlignedBB bb) {
+        return new MutableBoundingBox((int)bb.minX,(int)bb.minY,(int)bb.minZ,(int)bb.maxX,(int)bb.maxY,(int)bb.maxZ);
+    }
+
     public enum RotationAmount {
         NINETY,
         HUNDRED_EIGHTY,
