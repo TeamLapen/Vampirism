@@ -213,21 +213,24 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     public boolean canPlayerRemoveBlock(PlayerEntity player) {
         if (player.abilities.isCreativeMode) return true;
         if (!player.isAlive()) return false;
-        @Nullable IFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
+        @Nullable IFaction<?> faction = FactionPlayerHandler.get(player).getCurrentFaction();
         if (faction == this.controllingFaction) {
             if (this.capturingFaction == null) {
                 return true;
             } else {
                 player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_other_capturing"), true);
+                return false;
             }
         } else if (faction == this.capturingFaction) {
             if (this.controllingFaction == null) {
                 return true;
             } else {
                 player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_other_faction"), true);
+                return false;
             }
+        }else {
+            return this.capturingFaction == null && this.controllingFaction == null;
         }
-        return false;
     }
 
     @Override
