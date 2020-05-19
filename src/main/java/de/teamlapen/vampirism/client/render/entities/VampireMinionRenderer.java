@@ -26,20 +26,20 @@ public class VampireMinionRenderer extends BipedRenderer<VampireMinionEntity, Mi
         this.getEntityModel().bipedRightLeg.showModel = this.getEntityModel().bipedRightLegwear.showModel = this.getEntityModel().bipedLeftLeg.showModel = this.getEntityModel().bipedLeftLegwear.showModel = false;
     }
 
-    @Override
-    public ResourceLocation getEntityTexture(VampireMinionEntity entity) {
-        return getVampireTexture(entity.getEntityId());
-    }
-
     public ResourceLocation getVampireTexture(int entityId) {
         return textures[entityId % textures.length];
     }
 
     @Override
+    public ResourceLocation getEntityTexture(VampireMinionEntity entity) {
+        return getVampireTexture(entity.getEntityId());
+    }
+
+    @Override
     protected void preRenderCallback(VampireMinionEntity entityIn, MatrixStack matrixStackIn, float partialTickTime) {
         float s = entityIn.getScale();
-        float off = (1 - s) * 1.95f;
+        //float off = (1 - s) * 1.95f;
         matrixStackIn.scale(s, s, s);
-        matrixStackIn.translate(0, off, 0f);
+        //matrixStackIn.translate(0,off,0f);
     }
 }
