@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.client.render.entities;
 
-import de.teamlapen.vampirism.client.model.BasicHunterModel;
+import com.google.common.base.Predicates;
+import de.teamlapen.vampirism.client.model.MinionModel;
+import de.teamlapen.vampirism.client.render.LayerHunterEquipment;
+import de.teamlapen.vampirism.client.render.LayerPlayerBodyOverlay;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.BipedRenderer;
@@ -15,7 +18,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Hunter as of level 1 look all the same, but have different weapons
  */
 @OnlyIn(Dist.CLIENT)
-public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, BasicHunterModel<HunterMinionEntity>> {
+public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, MinionModel<HunterMinionEntity>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
     private final ResourceLocation[] textures = {
             new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base2.png"),
@@ -26,8 +29,9 @@ public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, Basi
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
 
     public HunterMinionRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
-        //this.addLayer(new LayerPlayerBodyOverlay<>(this));
+        super(renderManagerIn, new MinionModel<>(0.5f, false), 0.5F);
+        this.addLayer(new LayerPlayerBodyOverlay<>(this));
+        this.addLayer(new LayerHunterEquipment<>(this, Predicates.alwaysFalse(), entityModel -> 1));
     }
 
 
@@ -38,17 +42,5 @@ public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, Basi
 //        return textures[entity.getEntityTextureType() % textures.length];
 //    }
 //
-//    @Override
-//    protected void renderModel(HunterMinion entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float partTicks) {
-//        int level = entitylivingbaseIn.getLevel();
-//        int type = entitylivingbaseIn.getEntityTextureType() % textures.length;
-//        if (level == 0) {
-//            getEntityModel().setSkipCloakOnce();
-//        }
-//        super.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, partTicks);
-//        bindTexture(textureExtra);
-//        getEntityModel().renderHat(partTicks, level == 0 ? type : -1);
-//        getEntityModel().renderWeapons(partTicks, level < 2 || entitylivingbaseIn.isCrossbowInMainhand());
-//
-//    }
+
 }
