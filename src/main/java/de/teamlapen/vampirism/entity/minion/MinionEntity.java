@@ -83,6 +83,15 @@ public abstract class MinionEntity extends VampirismEntity implements IPlayerOve
         this.getDataManager().set(LORD_ID, Optional.ofNullable(id));
     }
 
+    /**
+     * DON't use
+     * Called to remove entity from world on call from lord.
+     * Does checkin minion
+     */
+    @Deprecated
+    public void recallMinion() {
+    }
+
     @Override
     public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
