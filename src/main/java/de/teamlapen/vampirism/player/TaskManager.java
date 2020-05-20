@@ -28,10 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TaskManager implements ITaskManager {
@@ -44,6 +41,7 @@ public class TaskManager implements ITaskManager {
     private final @Nonnull Map<Task, Map<ResourceLocation, Integer>> stats = Maps.newHashMap();
     private final @Nonnull Map<Task, Map<EntityType<?>, Integer>> entityStats = Maps.newHashMap();
     private boolean init;
+    private long taskUpdateLast;
 
     public TaskManager(@Nonnull PlayerEntity player, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
@@ -99,13 +97,14 @@ public class TaskManager implements ITaskManager {
     @Nonnull
     @Override
     public Set<Task> getCompletedTasks(Task.Variant variant) {
-        return completedTasks.get(variant);
+        return completedTasks.getOrDefault(variant, ImmutableSet.of());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void setCompletedTasks(@Nonnull Collection<Task> tasks) {
         this.completedTasks.clear();
+        ModRegistries.TASKS.getValues().stream().filter(task -> (faction.equals(task.getFaction()) || task.getFaction() == null) && !task.requireParent()).forEach(task1 -> this.availableTasks.computeIfAbsent(task1.getVariant(), variant -> Sets.newHashSet()).add(task1));
         tasks.forEach(task -> this.completedTasks.computeIfAbsent(task.getVariant(), variant -> Sets.newHashSet()).add(task));
         tasks.forEach(task -> this.availableTasks.get(task.getVariant()).remove(task));
     }
@@ -117,6 +116,7 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public boolean hasAvailableTasks(Task.Variant variant) {
+        this.updateTasks();
         return !this.availableTasks.isEmpty() && this.availableTasks.get(variant) != null && !this.availableTasks.get(variant).isEmpty();
     }
 
@@ -176,6 +176,25 @@ public class TaskManager implements ITaskManager {
         this.stats.clear();
         this.entityStats.clear();
         this.init = true;
+    }
+
+    public void updateTasks() {
+        if (this.taskUpdateLast < this.player.getEntityWorld().getGameTime() / 24000) {
+            Set<Task> completed = this.completedTasks.get(Task.Variant.REPEATABLE);
+            Set<Task> available = this.availableTasks.get(Task.Variant.REPEATABLE);
+            if (completed != null && available != null) {
+                for (int i = 0; i < this.taskUpdateLast - this.player.getEntityWorld().getGameTime() / 24000; i++) {
+                    if (!this.completedTasks.isEmpty()) {
+                        Task task = completed.stream().skip(new Random().nextInt(completed.size())).findFirst().orElse(null);
+                        if (task != null) {
+                            completed.remove(task);
+                            available.add(task);
+                        }
+                    }
+                }
+                this.taskUpdateLast = this.player.getEntityWorld().getGameTime() / 24000;
+            }
+        }
     }
 
     /**
