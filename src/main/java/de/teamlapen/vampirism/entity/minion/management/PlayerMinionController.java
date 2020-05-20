@@ -1,12 +1,16 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
+import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.logging.log4j.LogManager;
@@ -66,13 +70,13 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      * @param entity wrapper entity
      */
     @Nullable
-    public MinionData checkoutMinion(int id, int token, MinionEntity entity) {
+    public <T extends MinionData> T checkoutMinion(int id, int token, MinionEntity<T> entity) {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             int entityId = entity.getEntityId();
             RegistryKey<World> dimension = entity.world.getDimensionKey();
             if (i.checkout(entityId, dimension)) {
-                return i.data;
+                return (T) i.data;
             }
         }
         return null;
@@ -136,8 +140,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         for (INBT n : data) {
             CompoundNBT tag = (CompoundNBT) n;
             int id = tag.getInt("id");
-            MinionData d = new MinionData();
-            d.deserializeNBT(tag);
+            MinionData d = MinionData.fromNBT(tag);
             MinionInfo i = new MinionInfo(id, d);
             i.deathCooldown = tag.getInt("death_timer");
             infos[id] = i;
@@ -258,7 +261,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             if (i.deathCooldown > 0) {
                 i.deathCooldown--;
                 if (i.deathCooldown == 0) {
-                    LOGGER.info("Minion can respawn");
+                    i.data.setHealth(i.data.getMaxHealth());
+                    getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.can_respawn", i.data.getName()), true));
                 }
             }
         }
@@ -272,6 +276,14 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
                 return minions[id];
         }
         return null;
+    }
+
+    private Optional<ILordPlayer> getLord() {
+        return getLordPlayer().map(FactionPlayerHandler::get);
+    }
+
+    private Optional<PlayerEntity> getLordPlayer() {
+        return Optional.ofNullable(server.getPlayerList().getPlayerByUUID(lordID));
     }
 
 

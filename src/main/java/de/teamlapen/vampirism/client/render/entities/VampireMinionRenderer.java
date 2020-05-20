@@ -32,7 +32,7 @@ public class VampireMinionRenderer extends BipedRenderer<VampireMinionEntity, Mi
 
     @Override
     public ResourceLocation getEntityTexture(VampireMinionEntity entity) {
-        return getVampireTexture(entity.getEntityId());
+        return getVampireTexture(entity.getVampireType());
     }
 
     @Override

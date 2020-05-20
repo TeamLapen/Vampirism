@@ -640,5 +640,6 @@
   "minioncommand.vampirism.comeback": "Come back (Remote minions)",
   "minioncommand.vampirism.justfollow": "Just follow me",
   "minioncommand.vampirism.converttosaveable": "Take Gem of Binding back",
-  "minioncommand.vampirism.defendarea": "Defend area"
+  "minioncommand.vampirism.defendarea": "Defend area",
+  "text.vampirism.minion.can_respawn": "My lord, I have recovered (%s)"
 }
