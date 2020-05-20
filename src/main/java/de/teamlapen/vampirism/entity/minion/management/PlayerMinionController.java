@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
-import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2IntMap;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
@@ -16,10 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -29,22 +25,23 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     private final static Logger LOGGER = LogManager.getLogger();
     private final Random rng = new Random();
-    private final MinecraftServer server;
-    private final UUID lordID;
     @Nonnull
-    private final Int2IntMap minionToken = new Int2IntArrayMap();
+    private final MinecraftServer server;
+    @Nonnull
+    private final UUID lordID;
     private int maxMinions;
+
     @Nonnull
     private MinionInfo[] minions = new MinionInfo[0];
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    private Optional<Integer>[] minionTokens = new Optional[0];
 
     public PlayerMinionController(@Nonnull MinecraftServer server, @Nonnull UUID lordID) {
         this.server = server;
         this.lordID = lordID;
     }
 
-    public boolean canControlMoreMinions() {
-        return minions.length < maxMinions;
-    }
 
     /**
      * Mark a minion as inactive
@@ -52,8 +49,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      *
      * @param token Previously received token
      */
-    public void checkInMinion(int token) {
-        MinionInfo i = getMinionInfo(token);
+    public void checkInMinion(int id, int token) {
+        MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             i.checkin();
         }
@@ -70,8 +67,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      * @param entity wrapper entity
      */
     @Nullable
-    public MinionData checkoutMinionData(int token, MinionEntity entity) {
-        MinionInfo i = getMinionInfo(token);
+    public MinionData checkoutMinion(int id, int token, MinionEntity entity) {
+        MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             int entityId = entity.getEntityId();
             DimensionType dimension = entity.dimension;
@@ -80,6 +77,36 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             }
         }
         return null;
+    }
+
+    public Optional<Integer> claimMinionSlot(int id) {
+        if (id < minionTokens.length) {
+            if (!minionTokens[id].isPresent()) {
+                int t = rng.nextInt();
+                minionTokens[id] = Optional.of(t);
+                return minionTokens[id];
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Check {@link PlayerMinionController#hasFreeMinionSlot()}
+     *
+     * @return minion id or -1 if no free minion slot
+     */
+    public int createNewMinion(MinionData data) {
+        int i = minions.length;
+        if (i < maxMinions) {
+            MinionInfo[] n = Arrays.copyOf(minions, i + 1);
+            Optional<Integer>[] t = Arrays.copyOf(minionTokens, i + 1);
+            n[i] = new MinionInfo(i, data);
+            t[i] = Optional.empty();
+            minions = n;
+            minionTokens = t;
+            return i;
+        }
+        return -1;
     }
 
     public void contactMinions(Consumer<MinionEntity> entityConsumer) {
@@ -99,25 +126,64 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         }
     }
 
-    /**
-     * @return unique token or 0 if something failed
-     */
-    public int createNewMinion(MinionData data) {
-        int i = minions.length;
-        if (i < maxMinions) {
-            MinionInfo[] n = Arrays.copyOf(minions, i + 1);
-            n[i] = new MinionInfo(data);
-            minions = n;
-            int token = rng.nextInt();
-            minionToken.put(token, i);
-            return token;
-        }
-        return 0;
-    }
-
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
+        LOGGER.info("Deserializing");
+        this.maxMinions = nbt.getInt("max_minions");
+        ListNBT data = nbt.getList("data", 10);
+        MinionInfo[] infos = new MinionInfo[data.size()];
+        //noinspection unchecked
+        Optional<Integer>[] tokens = new Optional[data.size()];
+        for (INBT n : data) {
+            CompoundNBT tag = (CompoundNBT) n;
+            int id = tag.getInt("id");
+            MinionData d = new MinionData();
+            d.deserializeNBT(tag);
+            MinionInfo i = new MinionInfo(id, d);
+            i.deathCooldown = tag.getInt("death_timer");
+            infos[id] = i;
+            if (tag.contains("token", 99)) {
+                tokens[id] = Optional.of(tag.getInt("token"));
+            } else {
+                tokens[id] = Optional.empty();
+            }
 
+        }
+        this.minions = infos;
+        this.minionTokens = tokens;
+    }
+
+    public UUID getUUID() {
+        return this.lordID;
+    }
+
+    public Collection<Integer> getUnclaimedMinions() {
+        List<Integer> ids = new ArrayList<>();
+        for (int i = 0; i < minionTokens.length; i++) {
+            if (!minionTokens[i].isPresent()) {
+                if (!minions[i].isDead()) {
+                    ids.add(i);
+                }
+            }
+        }
+        return ids;
+
+    }
+
+    /**
+     * @return Whether a new minion can be created via {@link PlayerMinionController#createNewMinion(MinionData)}
+     */
+    public boolean hasFreeMinionSlot() {
+        return minions.length < maxMinions;
+    }
+
+    /**
+     * The controller is only saved if it has minions
+     *
+     * @return Whether the minion controller has minions.
+     */
+    public boolean hasMinions() {
+        return this.minions.length > 0;
     }
 
     /**
@@ -127,12 +193,14 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      *
      * @param token Previously received token
      */
-    public void markDeadAndRelease(int token) {
-        MinionInfo i = getMinionInfo(token);
+    public void markDeadAndReleaseMinionSlot(int id, int token) {
+        MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             i.checkin();
-            i.deathCooldown = 20 * 60 * 5;
-            minionToken.remove(token);
+            i.deathCooldown = 20;//* 60 * 5; TODO
+            if (id < minionTokens.length) {
+                minionTokens[id] = Optional.empty();
+            }
         }
     }
 
@@ -140,24 +208,50 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      * Recalls all minions.
      * Corresponding entities are removed if present.
      *
-     * @return A fresh set of tokens for all alive minions that should be used to create new entities.
+     * @return A list of minions ids that can be reclaimed
      */
     public Collection<Integer> recallMinions() {
         contactMinions(MinionEntity::recallMinion);
-        minionToken.clear();
-        Collection<Integer> newTokens = new IntArrayList(minions.length);
-        for (int i = 0; i < minions.length; i++) {
-            if (minions[i].isDead()) continue;
-            int t = rng.nextInt();
-            minionToken.put(t, i);
-            newTokens.add(t);
+        for (MinionInfo i : minions) { //TODO remove
+            if (i.isActive()) {
+                LOGGER.warn("Minion still active after recall");
+            }
         }
-        return newTokens;
+        //noinspection unchecked
+        minionTokens = new Optional[minions.length];
+        Arrays.fill(minionTokens, Optional.empty());
+        List<Integer> ids = new ArrayList<>();
+        for (int i = 0; i < minions.length; i++) {
+            if (!minions[i].isDead()) {
+                ids.add(i);
+            }
+        }
+        return ids;
     }
 
     @Override
     public CompoundNBT serializeNBT() {
-        return null;
+        LOGGER.info("Serializing");
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putInt("max_minions", maxMinions);
+        ListNBT data = new ListNBT();
+        for (MinionInfo i : minions) {
+            CompoundNBT d = i.data.serializeNBT();
+            d.putInt("death_timer", i.deathCooldown);
+            d.putInt("id", i.minionID);
+            minionTokens[i.minionID].ifPresent(t -> d.putInt("token", t));
+            data.add(d);
+        }
+        nbt.put("data", data);
+        return nbt;
+    }
+
+    public void setMaxMinions(int newCount) {
+        if (newCount > maxMinions) {
+            this.maxMinions = newCount;
+
+        }
+        //TODO
     }
 
     public void tick() {
@@ -165,22 +259,25 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             if (i.deathCooldown > 0) {
                 i.deathCooldown--;
                 if (i.deathCooldown == 0) {
-                    //TODO notify revive
+                    LOGGER.info("Minion can respawn");
                 }
             }
         }
     }
 
     @Nullable
-    private MinionInfo getMinionInfo(int token) {
-        int id = minionToken.get(token);
+    private MinionInfo getMinionInfo(int id, int token) {
+        assert minions.length == minionTokens.length;
         if (id < minions.length) {
-            return minions[id];
+            if (minionTokens[id].map(t -> t == token).orElse(false))
+                return minions[id];
         }
         return null;
     }
 
+
     private class MinionInfo {
+        final int minionID;
         @Nonnull
         final MinionData data;
         int entityId = -1;
@@ -188,7 +285,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         @Nullable
         DimensionType dimension;
 
-        private MinionInfo(@Nonnull MinionData data) {
+        private MinionInfo(int id, @Nonnull MinionData data) {
+            this.minionID = id;
             this.data = data;
         }
 
