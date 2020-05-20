@@ -2,8 +2,11 @@ package de.teamlapen.lib.lib.inventory;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -68,6 +71,30 @@ public class InventoryHelper {
             }
         }
         return LazyOptional.empty();
+    }
+
+    public static void writeInventoryToTag(CompoundNBT tag, Inventory inventory) {
+        ListNBT listnbt = new ListNBT();
+
+        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+            ItemStack itemstack = inventory.getStackInSlot(i);
+            if (!itemstack.isEmpty()) {
+                listnbt.add(itemstack.write(new CompoundNBT()));
+            }
+        }
+        tag.put("inventory", listnbt);
+    }
+
+    public static void readInventoryFromTag(CompoundNBT tag, Inventory inventory) {
+        ListNBT listnbt = tag.getList("inventory", 10);
+
+        for (int i = 0; i < listnbt.size(); ++i) {
+            ItemStack itemstack = ItemStack.read(listnbt.getCompound(i));
+            if (!itemstack.isEmpty()) {
+                inventory.addItem(itemstack);
+            }
+        }
+
     }
 
 

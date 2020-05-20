@@ -6,19 +6,40 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismEntity;
+import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
 
-public class VampireMinionEntity extends MinionEntity implements IVampire {
+public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.VampireMinionData> implements IVampire {
+    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(VampireMinionEntity.class, DataSerializers.VARINT);
+
+    static {
+        MinionData.registerDataType(VampireMinionEntity.VampireMinionData.ID, VampireMinionEntity.VampireMinionData::new);
+    }
+
+    /**
+     * Just required to execute static init
+     */
+    public static void init() {
+
+    }
+
+
     private boolean sundamageCache;
     private EnumStrength garlicCache = EnumStrength.NONE;
 
@@ -57,9 +78,32 @@ public class VampireMinionEntity extends MinionEntity implements IVampire {
         return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.world.getProfiler()));
     }
 
+    public int getVampireType() {
+        return this.dataManager.get(TYPE);
+    }
+
+    public void setVampireType(int type) {
+        if (this.minionData != null) {
+            this.minionData.type = type;
+        }
+        this.dataManager.set(TYPE, 0);
+    }
+
     @Override
     public boolean isIgnoringSundamage() {
         return this.isPotionActive(ModEffects.sunscreen);
+    }
+
+    @Override
+    protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
+        this.dataManager.set(TYPE, data.type);
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.dataManager.register(TYPE, 0);
+
     }
 
     @Override
@@ -98,5 +142,38 @@ public class VampireMinionEntity extends MinionEntity implements IVampire {
     @Override
     public boolean wantsBlood() {
         return false;
+    }
+
+    public static class VampireMinionData extends MinionData {
+        public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "vampire");
+
+        private int type;
+
+        public VampireMinionData(int maxHealth, ITextComponent name, int type) {
+            super(maxHealth, name);
+            this.type = type;
+        }
+
+        private VampireMinionData() {
+            super();
+        }
+
+        @Override
+        public void deserializeNBT(CompoundNBT nbt) {
+            super.deserializeNBT(nbt);
+            type = nbt.getInt("vampire_type");
+        }
+
+        @Override
+        public CompoundNBT serializeNBT() {
+            CompoundNBT tag = super.serializeNBT();
+            tag.putInt("vampire_type", type);
+            return tag;
+        }
+
+        @Override
+        protected ResourceLocation getDataType() {
+            return ID;
+        }
     }
 }
