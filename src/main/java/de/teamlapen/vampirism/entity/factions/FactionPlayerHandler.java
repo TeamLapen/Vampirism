@@ -393,6 +393,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
 
+    public int getMaxMinions() {
+        return currentLordLevel;
+    }
+
     private static class Storage implements Capability.IStorage<IFactionPlayerHandler> {
 
         @Override

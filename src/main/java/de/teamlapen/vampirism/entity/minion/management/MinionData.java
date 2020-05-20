@@ -22,6 +22,6 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
 
     @Override
     public CompoundNBT serializeNBT() {
-        return null;
+        return new CompoundNBT();
     }
 }
