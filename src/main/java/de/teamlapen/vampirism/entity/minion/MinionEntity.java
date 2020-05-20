@@ -14,12 +14,14 @@ import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Pose;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +33,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-public abstract class MinionEntity extends VampirismEntity implements IPlayerOverlay {
+public abstract class MinionEntity<T extends MinionData> extends VampirismEntity implements IPlayerOverlay {
     private final static Logger LOGGER = LogManager.getLogger();
 
     /**
@@ -60,7 +62,7 @@ public abstract class MinionEntity extends VampirismEntity implements IPlayerOve
     /**
      * Only valid and nonnull if playerMinionController !=null
      */
-    private MinionData minionData;
+    protected T minionData;
 
     @Nullable
     @Override
@@ -84,6 +86,11 @@ public abstract class MinionEntity extends VampirismEntity implements IPlayerOve
             this.token = token;
             getDataManager().set(LORD_ID, Optional.of(playerMinionController.getUUID()));
         });
+    }
+
+    @Override
+    public boolean getAlwaysRenderNameTagForRender() {
+        return true;
     }
 
     @Nonnull
@@ -117,8 +124,42 @@ public abstract class MinionEntity extends VampirismEntity implements IPlayerOve
             this.minionData = playerMinionController.checkoutMinion(this.minionId, this.token, this);
             if (minionData == null) {
                 this.playerMinionController = null;
+            } else {
+                this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(minionData.getMaxHealth());
+                this.setHealth(minionData.getHealth());
+                super.setCustomName(minionData.getName());
+                try {
+                    this.onMinionDataReceived(minionData);
+                } catch (ClassCastException e) {
+                    LOGGER.error("Failed to cast minion data. Maybe the correct data was not registered", e);
+                    this.remove();
+                }
             }
         }
+    }
+
+    @Override
+    public void setCustomName(@Nullable ITextComponent name) {
+        super.setCustomName(name);
+        if (minionData != null) {
+            minionData.setName(name);
+        }
+    }
+
+    @Override
+    public void setHealth(float health) {
+        super.setHealth(health);
+        if (minionData != null) {
+            minionData.setHealth(health);
+        }
+    }
+
+    /**
+     * Called when valid minion data is received on world load.
+     * Probably best to check if it is actually of the right type here
+     */
+    protected void onMinionDataReceived(@Nonnull T data) {
+
     }
 
     @Override

@@ -72,6 +72,14 @@ public class MinionWorldData extends WorldSavedData {
         return true;
     }
 
+    /**
+     * Only for debugging. Removes controller from saved data not from entities. Reload world afterwards
+     */
+    @Deprecated
+    public void purgeController(UUID lordID) {
+        controllers.remove(lordID);
+    }
+
     @Override
     public void read(CompoundNBT nbt) {
         LOGGER.info("Deserializing");
