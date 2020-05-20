@@ -86,9 +86,9 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         int k = j + 16 + 2;
 
         for (int l = 0; l < 7; ++l) {
-            this.buttons[l] = this.addButton(new CompleteButton(i + 5 + 132, k + 3, l, (button) -> {
+            this.buttons[l] = this.addButton(new CompleteButton(i + 5 + 132 - 2, k + 3, l, (button) -> {
                 if (button instanceof CompleteButton) {
-                    Task task = this.container.getAvailableTasks().get(((CompleteButton) button).getChosenItem() + this.scrolledTask);
+                    Task task = this.container.getAvailableTasks().get(((CompleteButton) button).getChosenItem() + this.scrolledTask - 1);
                     if (this.container.canCompleteTask(task)) {
                         this.container.completeTask(task);
                     }
@@ -147,7 +147,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 }
             }
             for (CompleteButton button : this.buttons) {
-                button.visible = button.getChosenItem() < this.container.getAvailableTasks().size() && this.container.canCompleteTask(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask));
+                button.visible = button.getChosenItem() < this.container.getAvailableTasks().size() && this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask) == dummy && this.container.canCompleteTask(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask - 1)) && !this.container.isCompleted(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask - 1));
             }
             for (CompleteButton button : this.buttons) {
                 button.render(mouseX, mouseY, partialTicks);
@@ -174,10 +174,10 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
     private void renderTaskToolTip(Task task, int x, int y, int mouseX, int mouseY) {
         if (task == dummy) {
-            if (mouseX >= x + 3 + 113 && mouseX < x + 3 + 113 + 16 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
+            if (mouseX >= x + 3 + 113 - 21 && mouseX < x + 3 + 113 - 21 + 16 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
                 TaskReward reward = task.getReward();
                 if (reward instanceof ItemReward) {
-                    this.renderRewardTooltip(((ItemReward) reward).getReward(), x + 3 + 113, y + 2, REWARD.getFormattedText());
+                    this.renderRewardTooltip(((ItemReward) reward).getReward(), x + 3 + 113 - 21, y + 2, REWARD.getFormattedText());
                 }
             }
             if (mouseX >= x + 3 + 3 && mouseX < x + 3 + 16 + 3 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
@@ -233,13 +233,13 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         }
 
         if (!dummy) {
-            this.font.drawString(this.font.trimStringToWidth(task.getTranslationKey(), 105), x + 4, y + 7, 3419941);//(6839882 & 16711422) >> 1 //8453920 //4226832
+            this.font.drawString(this.font.trimStringToWidth(task.getTranslationKey(), 131), x + 4, y + 7, 3419941);//(6839882 & 16711422) >> 1 //8453920 //4226832
         } else {
             TaskReward reward = task.getReward();
             if (reward instanceof ItemReward) {
                 ItemStack stack = ((ItemReward) reward).getReward();
-                this.itemRenderer.renderItemAndEffectIntoGUI(stack, x + 3 + 113, y + 2);
-                this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 113, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
+                this.itemRenderer.renderItemAndEffectIntoGUI(stack, x + 3 + 113 - 21, y + 2);
+                this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 113 - 21, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
             }
             TaskRequirement<?> requirement = task.getRequirement();
             if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
