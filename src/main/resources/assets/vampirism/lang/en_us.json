@@ -299,7 +299,7 @@
   "__comment": "skill_desc",
   "skill.vampirism.freeze.desc": "Temporarily freeze all nearby creatures",
   "skill.vampirism.blood_vision.desc": "Allows you to see entities through walls in the dark. Toggle with key.",
-  "skill.vampirism.advanced_biter.desc": "Allows you to suck blood more efficiently and stop at the right moment. Also increases you bite damage.",
+  "skill.vampirism.advanced_biter.desc": "Allows you to suck blood more efficiently and stop at the right moment. Also increases your bite damage.",
   "skill.vampirism.more_bite_damage.desc": "Deal more damage when biting",
   "skill.vampirism.less_blood_thirst.desc": "Decreases your thirst for blood",
   "skill.vampirism.vampire_forest_fog.desc": "Increase the fog distance in the Vampire Forest",
