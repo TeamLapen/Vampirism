@@ -6,48 +6,60 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 import java.util.function.Consumer;
 
-/*
-add this buttons first and render them last
+/**
+    add this buttons first and render them last and call {@link #mouseDragged(double, double, int, double, double)}
  */
 public class ScrollableListButton extends GuiButtonExt {
 
     private static final ResourceLocation MISC = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/misc.png");
-    private final int menuSize;
-    private int itemCount;
-    private int scrolled;
+    protected final int menuSize;
+    protected int itemCount;
+    protected int scrolled;
     private boolean scrollerPressed;
-    private Button[] elements;
-    private Consumer<Integer> pressConsumer;
-    private String[] desc;
+    protected final Button[] elements;
+    private final Consumer<Integer> pressConsumer;
+    private final String[] desc;
+    private final boolean alternate;
 
-    public ScrollableListButton(int xPos, int yPos, int width, int height, int itemCount, int menuSize, String[] strings, String displayString, Consumer<Integer> elementPressAction) {
-        super(xPos, yPos, width, height, displayString, button -> {
+    /**
+     *
+     * @param height if not multiple of 20 will be adjusted
+     */
+    public ScrollableListButton(int xPos, int yPos, int width, int height, int itemCount, String[] strings, String displayString, Consumer<Integer> elementPressAction, boolean alternate) {
+        super(xPos, yPos+1, width, height = (height /20) * 20, displayString, button -> {
         });
         if (strings.length < itemCount) throw new IllegalStateException("String array size must be >= itemCount");
         this.itemCount = itemCount;
-        this.menuSize = menuSize;
+        this.menuSize = height/20;
         this.visible = true;
         this.elements = new Button[menuSize];
         this.pressConsumer = elementPressAction;
         this.desc = strings;
+        this.alternate = alternate;
+        this.fillElements();
+    }
 
+    protected void fillElements() {
         for (int i = 0; i < this.elements.length; i++) {
             int finalI = i;
-            this.elements[i] = new GuiButtonExt(xPos, yPos + i * 20, width - 8, 20, "", (button -> this.pressConsumer.accept(finalI + this.scrolled)));
+            this.elements[i] = new GuiButtonExt(this.x, this.y + i * 20, width - 7, 20, "", (button -> this.pressConsumer.accept(finalI + this.scrolled)));
         }
     }
 
     @Override
     public void renderButton(int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
-            Minecraft.getInstance().textureManager.bindTexture(MISC);
-            blit(this.x + this.width - 8, this.y, this.blitOffset, 1, 0, 8, this.height, 256, 256);
-            blit(this.x + this.width - 8, this.y + this.height - 2, this.blitOffset, 1, 198, 8, 2, 256, 256);
+            this.hLine(this.x,this.x+this.width, this.y-1,alternate?0xff373737:0xff000000);
+            GuiUtils.drawContinuousTexturedBox(MISC,this.x + width-8,this.y-1,alternate ?23:0,0,9,this.height+2,9,200,2,2,2,2,this.blitOffset);
             this.renderScroller();
             this.renderListButtons(mouseX, mouseY, partialTicks);
+            if(this.elements[this.elements.length-1].visible) {
+                this.hLine(this.x,this.x+this.width, this.y + this.height,alternate? 0xffffffff:0xff000000);
+            }
         }
     }
 
@@ -71,26 +83,28 @@ public class ScrollableListButton extends GuiButtonExt {
 
     private void renderListButtons(int mouseX, int mouseY, float partialTicks) {
         for (int i = 0; i < this.elements.length; i++) {
-            this.elements[i].render(mouseX, mouseY, partialTicks);
-            String desc = this.desc[this.scrolled + i];
-            int x = this.x + (this.width - 8) / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(desc) / 2;
-            Minecraft.getInstance().fontRenderer.drawStringWithShadow(desc, x, this.y + 6 + i * 20, this.elements[i].getFGColor());
+            this.elements[i].visible = itemCount > menuSize || i < itemCount;
+            if(this.elements[i].visible) {
+                this.elements[i].render(mouseX, mouseY, partialTicks);
+                String desc = this.desc[this.scrolled + i];
+                int x = this.x + (this.width - 8) / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(desc) / 2;
+                Minecraft.getInstance().fontRenderer.drawStringWithShadow(desc, x, this.y + 6 + i * 20, this.elements[i].getFGColor());
+            }
         }
     }
 
-    private void renderScroller() {
+    protected void renderScroller() {
         Minecraft.getInstance().textureManager.bindTexture(MISC);
         int i = this.itemCount - this.menuSize;
         if (i >= 1) {
-            i += 2;
-            int k = this.height - (2 + (i - 1) * this.height / i);
-            int i1 = Math.min(this.height - 30, this.scrolled * k);
-            if (this.scrolled + 2 >= i) {
-                i1 = this.height - 30;
+            float k = (float)(this.height+3 -30)/i;
+            int i1 = Math.min(this.height+3 - 30, (int)(this.scrolled * k));
+            if (this.scrolled  >= i) {
+                i1 = this.height+3 - 30;
             }
-            blit(x + 93, y + 2 + i1, this.blitOffset, 9, 0, 6, 27, 256, 256);
+            blit(x + this.width - 7, y  + i1, this.blitOffset, (alternate?23:0)+10-1, 0, 7, 27, 256, 256);
         } else {
-            blit(x + 93, y + 2, this.blitOffset, 9 + 6, 0, 6, 27, 256, 256);
+            blit(x + this.width - 7, y , this.blitOffset, (alternate? 23:0)+ 10+ 6, 0, 7, 27, 256, 256);
         }
     }
 
