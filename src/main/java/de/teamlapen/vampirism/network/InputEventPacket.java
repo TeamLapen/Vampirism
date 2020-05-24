@@ -177,10 +177,7 @@ public class InputEventPacket implements IMessage {
                             }
                         }
                         if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
-                            //does this cause problems with addons?
-                            CompoundNBT sync = new CompoundNBT();
-                            ((SkillHandler) skillHandler).writeUpdateForClient(sync);
-                            HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
+                            HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
                         }
                         player.sendMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"));
                     });
