@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -75,7 +76,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
         ItemStack stack = new ItemStack(ModBlocks.blood_container, 1);
         if (te != null) {
             FluidStack fluid = ((BloodContainerTileEntity) te).getFluid();
-            if (!fluid.isEmpty() && fluid.getAmount() > 0) {
+            if (!fluid.isEmpty() && fluid.getAmount() >= VReference.FOOD_TO_FLUID_BLOOD) {
                 stack.setTagInfo("fluid", fluid.writeToNBT(new CompoundNBT()));
             }
         }
