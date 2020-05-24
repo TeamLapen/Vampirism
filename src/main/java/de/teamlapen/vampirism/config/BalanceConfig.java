@@ -271,7 +271,7 @@ public class BalanceConfig {
         vpSundamageNauseaMinLevel = builder.defineInRange("sundamageNauseaMinLevel", 3, 1, Integer.MAX_VALUE);
         vpSundamageWeaknessMinLevel = builder.defineInRange("sundamageWeaknessMinLevel", 2, 1, Integer.MAX_VALUE);
         vpSundamageWaterBlocks = builder.defineInRange("sundamageWaterblocks", 4, 1, 10);
-        vpFireVulnerabilityMaxMod = builder.defineInRange("fireVulnerabilityMod", 4d, 0.1, Double.MAX_VALUE);
+        vpFireVulnerabilityMaxMod = builder.defineInRange("fireVulnerabilityMod", 3d, 0.1, Double.MAX_VALUE);
         builder.pop();
 
         //Vampire actions
