@@ -204,6 +204,7 @@ public class BloodStats implements IBloodStats {
             return true;
         } else if (allowPartial) {
             bloodLevel = 0; //a is larger than the blood level, so use up as much as possible
+            changed = true;
         }
         return false;
     }
