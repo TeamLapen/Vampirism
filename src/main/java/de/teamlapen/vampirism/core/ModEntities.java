@@ -144,6 +144,7 @@ public class ModEntities {
         registry.register(prepareEntityType("converted_horse", EntityType.Builder.create(ConvertedHorseEntity::new, EntityClassification.CREATURE).size(1.3964844F, 1.6F), false));
         registry.register(prepareEntityType("vampire_minion", EntityType.Builder.create(VampireMinionEntity::new, EntityClassification.CREATURE).size(0.6f, 1.95f), false));
         VampireMinionEntity.init();
+        HunterMinionEntity.init();
         registry.register(prepareEntityType("hunter_minion", EntityType.Builder.create(HunterMinionEntity::new, EntityClassification.CREATURE).size(0.6f, 1.95f), false));
 
 

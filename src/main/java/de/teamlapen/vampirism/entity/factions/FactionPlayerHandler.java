@@ -10,9 +10,11 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModRegistries;
+import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.util.ModEventFactory;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.ScoreboardUtil;
+import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -309,6 +311,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             return false;
         }
         this.currentLordLevel = level;
+        MinionWorldData.getData(player.world).ifPresent(data -> {
+            PlayerMinionController c = data.getController(this.player.getUniqueID());
+            if (c != null) {
+                c.setMaxMinions(this.getMaxMinions());
+            }
+        });
         sync(false);
         return true;
     }

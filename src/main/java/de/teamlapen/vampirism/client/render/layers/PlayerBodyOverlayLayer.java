@@ -29,14 +29,19 @@ public class PlayerBodyOverlayLayer<T extends MinionEntity & IPlayerOverlay, M e
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ResourceLocation loc = getEntityTexture(entitylivingbaseIn);
-        GameProfile prof = entitylivingbaseIn.getOverlayPlayerProfile();
-        if (prof != null) {
-            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(prof);
-            if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                loc = Minecraft.getInstance().getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+        if(entitylivingbaseIn.shouldRenderLordSkin()){
+            GameProfile prof = entitylivingbaseIn.getOverlayPlayerProfile();
+            if (prof != null) {
+                Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(prof);
+                if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+                    loc = Minecraft.getInstance().getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+                }
+                else{
+                    loc = DefaultPlayerSkin.getDefaultSkin(prof.getId());
+                }
             }
-
         }
+
         IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(loc));
         this.getEntityModel().getBodyParts().forEach(
                 b->b.showModel=true

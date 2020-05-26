@@ -21,19 +21,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, MinionModel<HunterMinionEntity>> {
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
     private final ResourceLocation[] textures = {
             new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base2.png"),
             new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base3.png"),
             new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base4.png"),
             new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base5.png")
     };
-    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
 
     public HunterMinionRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new MinionModel<>(0.5f,false), 0.5F);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new HunterEquipmentLayer<>(this, Predicates.alwaysFalse(), entityModel -> 1));
+        this.addLayer(new HunterEquipmentLayer<>(this, Predicates.alwaysFalse(), HunterMinionEntity::getHatType));
     }
 
     @Override
@@ -45,11 +43,9 @@ public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, Mini
     }
 
 
-    //    @Override
-    //    protected ResourceLocation getEntityTexture(HunterMinion entity) {
-    //        int level = entity.getLevel();
-    //        if (level > 0) return texture;
-    //        return textures[entity.getEntityTextureType() % textures.length];
-    //    }
-    //
+        @Override
+        public ResourceLocation getEntityTexture(HunterMinionEntity entity) {
+            return textures[entity.getHunterType() % textures.length];
+        }
+
 }

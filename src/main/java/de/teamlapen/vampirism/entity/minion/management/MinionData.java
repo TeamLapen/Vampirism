@@ -23,9 +23,6 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     private final static Logger LOGGER = LogManager.getLogger();
     private final static Map<ResourceLocation, Supplier<? extends MinionData>> constructors = new HashMap<>(); //TODO maybe API
 
-    static {
-        constructors.put(new ResourceLocation(""), MinionData::new);
-    }
 
     public static void registerDataType(ResourceLocation id, Supplier<? extends MinionData> supplier) {
         constructors.put(id, supplier);

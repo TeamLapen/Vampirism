@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -33,12 +34,13 @@ public class MinionWorldData extends WorldSavedData {
         return server.getWorld(DimensionType.OVERWORLD).getSavedData().getOrCreate(() -> new MinionWorldData(server), ID);
     }
 
-    @Nullable
-    public static MinionWorldData getData(World world) {
+
+    @Nonnull
+    public static Optional<MinionWorldData> getData(World world) {
         if (world instanceof ServerWorld) {
-            return getData(((ServerWorld) world).getWorldServer());
+            return Optional.of(getData(((ServerWorld) world).getWorldServer()));
         }
-        return null;
+        return Optional.empty();
     }
 
     private final MinecraftServer server;
