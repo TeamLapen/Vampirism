@@ -87,6 +87,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         });
     }
 
+    public abstract boolean shouldRenderLordSkin();
+
     @Override
     public boolean getAlwaysRenderNameTagForRender() {
         return true;
