@@ -23,7 +23,27 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * Tokens are invalidated if minion dies or if minion is recalled
+ * Minions are represented by a {@link MinionData}. All important information except for position and similar should be stored in there.
+ * {@link MinionEntity} are merely shells for this.
+ * <p>
+ * When the player has a free minion slot {@link PlayerMinionController#createNewMinionSlot(MinionData)} can be used to reserve one.
+ * The minion slots are represented by their id (0-x). The minion slot holds the minion data and is not directly related to an entity.
+ * <p>
+ * A unclaimed minion slot (either a freshly reserved one or of a dead minion) can be claimed by a {@link MinionEntity} via {@link PlayerMinionController#claimMinionSlot(int)}.
+ * If successful, it returns a token that grants the entity access to the minion data. It should be saved with the slot id in the minion entity.
+ * Once the entity joins the world it checkout the minion data via {@link PlayerMinionController#checkoutMinion(int, int, MinionEntity)}.
+ * While the minion is checked out, the minion controller knows about the entity id and dimension and can access it when necessary. Furthermore, no other minion can access the data (noone else should have the token anyway).
+ * When the minion is unloaded it must checkin the data and save the token, so it can checkout the data on load again.
+ * <p>
+ * If the player calls the minions to them, the checkout (loaded) minions  are forced to checkin their data and are removed from the world. Then the tokens are invalidated and a fresh set of tokens is created for the new minion entities that access the same minion slots.
+ * If a minion entity is stored in an unloaded chunk, it will try to checkout the minion data/slot again once loaded. However, if the player has recalled it in the meantime (which means a new shell entity has been created, the minion entity will fail to checkout the data and remove itself from the world.
+ * <p>
+ * <p>
+ * - Recruit a new minion{@link PlayerMinionController#createNewMinionSlot(MinionData)}
+ * - Associate a entity representation (real entity, nbt saved entity, ...) with the minion slot {@link PlayerMinionController#claimMinionSlot(int)}
+ * - Checkout minion slot if entity is added to world. Can "fail" if minion has been reclaimed in the meantime. {@link PlayerMinionController#checkoutMinion(int, int, MinionEntity)}
+ * - Checkin minion slot if entity is removed from world {@link PlayerMinionController#checkInMinion(int, int)}
+ * - Release minion slot if minion dies {@link PlayerMinionController#markDeadAndReleaseMinionSlot(int, int)}
  */
 public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
@@ -51,6 +71,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      * Mark a minion as inactive
      * Don't use associated MinionData afterwards
      *
+     * @param id minion slot
      * @param token Previously received token
      */
     public void checkInMinion(int id, int token) {
@@ -61,12 +82,13 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     /**
-     * Request minion data for a previously created token. Marks the respective minion slot as active
+     * Request minion data for a previously claimed slot. Marks the respective minion slot as active
      * Returns null if
      * a) Minion already active
      * b) Minion dead
      * c) Token invalid
      *
+     * @param id minion slot
      * @param token  Previously received token
      * @param entity wrapper entity
      */
@@ -83,6 +105,12 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         return null;
     }
 
+    /**
+     * Claim a minion slot.
+     *
+     * @param id slot id
+     * @return the granted token or empty if slot either in use or not present
+     */
     public Optional<Integer> claimMinionSlot(int id) {
         if (id < minionTokens.length) {
             if (!minionTokens[id].isPresent()) {
@@ -95,11 +123,20 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     /**
+     * Contact all currently loaded (checked out) minions
+     */
+    public void contactMinions(Consumer<MinionEntity<?>> entityConsumer) {
+        for (MinionInfo m : minions) {
+            contactMinion(m, entityConsumer);
+        }
+    }
+
+    /**
      * Check {@link PlayerMinionController#hasFreeMinionSlot()}
      *
-     * @return minion id or -1 if no free minion slot
+     * @return minion slot id or -1 if no free minion slot
      */
-    public int createNewMinion(MinionData data) {
+    public int createNewMinionSlot(MinionData data) {
         int i = minions.length;
         if (i < maxMinions) {
             MinionInfo[] n = Arrays.copyOf(minions, i + 1);
@@ -113,26 +150,9 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         return -1;
     }
 
-    public void contactMinions(Consumer<MinionEntity> entityConsumer) {
-        for (MinionInfo m : minions) {
-            if (m.isActive()) {
-                assert m.dimension != null;
-                World w = DimensionManager.getWorld(server, m.dimension, false, false);
-                if (w != null) {
-                    Entity e = w.getEntityByID(m.entityId);
-                    if (e instanceof MinionEntity) {
-                        entityConsumer.accept((MinionEntity) e);
-                    } else {
-                        LOGGER.warn("Retrieved entity is not a minion entity {}", e); //TODO check and remove or adjust
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        LOGGER.info("Deserializing");
+        LOGGER.info("Deserializing");//TODO
         this.maxMinions = nbt.getInt("max_minions");
         ListNBT data = nbt.getList("data", 10);
         MinionInfo[] infos = new MinionInfo[data.size()];
@@ -156,10 +176,9 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         this.minionTokens = tokens;
     }
 
-    public UUID getUUID() {
-        return this.lordID;
-    }
-
+    /**
+     * @return A collection of currently unclaimed and non dead minion slots
+     */
     public Collection<Integer> getUnclaimedMinions() {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < minionTokens.length; i++) {
@@ -173,27 +192,23 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     }
 
+    public UUID getUUID() {
+        return this.lordID;
+    }
+
     /**
-     * @return Whether a new minion can be created via {@link PlayerMinionController#createNewMinion(MinionData)}
+     * @return Whether a new minion can be created via {@link PlayerMinionController#createNewMinionSlot(MinionData)}
      */
     public boolean hasFreeMinionSlot() {
         return minions.length < maxMinions;
     }
 
     /**
-     * The controller is only saved if it has minions
-     *
-     * @return Whether the minion controller has minions.
-     */
-    public boolean hasMinions() {
-        return this.minions.length > 0;
-    }
-
-    /**
      * Mark a minion as dead and as inactive.
+     * The minion slot is released and the token is invalidated
      * Don't use associated MinionData afterwards
-     * Token is invalidated
      *
+     * @param id Minion slot
      * @param token Previously received token
      */
     public void markDeadAndReleaseMinionSlot(int id, int token) {
@@ -208,8 +223,17 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     /**
+     * The controller is only saved if it has minions
+     *
+     * @return Whether the minion controller has minions.
+     */
+    public boolean hasMinions() {
+        return this.minions.length > 0;
+    }
+
+    /**
      * Recalls all minions.
-     * Corresponding entities are removed if present.
+     * Corresponding entities are removed if present, tokens are invalidated  and slots are released
      *
      * @return A list of minions ids that can be reclaimed
      */
@@ -234,7 +258,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     @Override
     public CompoundNBT serializeNBT() {
-        LOGGER.info("Serializing");
+        LOGGER.info("Serializing");//TODO
         CompoundNBT nbt = new CompoundNBT();
         nbt.putInt("max_minions", maxMinions);
         ListNBT data = new ListNBT();
@@ -250,11 +274,40 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     public void setMaxMinions(int newCount) {
-        if (newCount > maxMinions) {
+        assert newCount >= 0;
+        if (newCount >= maxMinions) {
             this.maxMinions = newCount;
-
+        } else {
+            LOGGER.debug("Reducing minion count from {} to {}", this.maxMinions, newCount);
+            //Iteratively remove minion entities and minion slots, starting with the last claimed one
+            while (this.minions.length > newCount) {
+                int nL = this.minions.length - 1;
+                MinionInfo m = minions[nL];
+                contactMinion(m, MinionEntity::recallMinion);
+                MinionInfo[] n = Arrays.copyOf(minions, nL);
+                Optional<Integer>[] t = Arrays.copyOf(minionTokens, nL);
+                minions = n;
+                minionTokens = t;
+            }
         }
-        //TODO
+    }
+
+    /**
+     * Contact the respective minion entity if it is currently loaded (checked out)
+     */
+    private void contactMinion(MinionInfo info, Consumer<MinionEntity<?>> entityConsumer) {
+        if (info.isActive()) {
+            assert info.dimension != null;
+            World w = DimensionManager.getWorld(server, info.dimension, false, false);
+            if (w != null) {
+                Entity e = w.getEntityByID(info.entityId);
+                if (e instanceof MinionEntity) {
+                    entityConsumer.accept((MinionEntity<?>) e);
+                } else {
+                    LOGGER.warn("Retrieved entity is not a minion entity {}", e); //TODO check and remove or adjust
+                }
+            }
+        }
     }
 
     public void tick() {

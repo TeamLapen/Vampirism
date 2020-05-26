@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.model;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.entity.MobEntity;
@@ -68,39 +69,21 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
     public void render(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         GlStateManager.pushMatrix();
-        if (this.isChild) {
-            float f = 2.0F;
-            GlStateManager.scalef(0.75F, 0.75F, 0.75F);
-            GlStateManager.translatef(0.0F, 16.0F * scale, 0.0F);
-            this.hatRim.render(scale);
-            this.hatRim2.render(scale);
-            this.hatRim3.render(scale);
-            this.hatTop.render(scale);
-            this.hatTop2.render(scale);
-            GlStateManager.popMatrix();
-            GlStateManager.pushMatrix();
-            GlStateManager.scalef(0.5F, 0.5F, 0.5F);
-            GlStateManager.translatef(0.0F, 24.0F * scale, 0.0F);
-            this.axeBlade1.render(scale);
-            this.axeBlade2.render(scale);
-            this.axeShaft.render(scale);
-            this.stake.render(scale);
-            this.stakeRight.render(scale);
-        } else {
-            if (entityIn.shouldRenderSneaking()) {
-                GlStateManager.translatef(0.0F, 0.2F, 0.0F);
-            }
-            this.hatRim.render(scale);
-            this.hatRim2.render(scale);
-            this.hatRim3.render(scale);
-            this.hatTop.render(scale);
-            this.hatTop2.render(scale);
-            this.axeBlade1.render(scale);
-            this.axeBlade2.render(scale);
-            this.axeShaft.render(scale);
-            this.stake.render(scale);
-            this.stakeRight.render(scale);
+
+        if (entityIn.shouldRenderSneaking()) {
+            GlStateManager.translatef(0.0F, 0.2F, 0.0F);
         }
+        this.hatRim.render(scale);
+        this.hatRim2.render(scale);
+        this.hatRim3.render(scale);
+        this.hatTop.render(scale);
+        this.hatTop2.render(scale);
+        this.axeBlade1.render(scale);
+        this.axeBlade2.render(scale);
+        this.axeShaft.render(scale);
+        this.stake.render(scale);
+        this.stakeRight.render(scale);
+
 
         GlStateManager.popMatrix();
     }
@@ -131,5 +114,18 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
     public void setWeapons(boolean onlyStake) {
         stakeRight.showModel = onlyStake;
         stake.showModel = axeBlade1.showModel = axeBlade2.showModel = axeShaft.showModel = !onlyStake;
+    }
+
+    public static class Minion extends HunterEquipmentModel<HunterMinionEntity> {
+        @Override
+        public void render(HunterMinionEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+            float s = entityIn.getScale();
+            float off = (1 - s) * 1.95f;
+            GlStateManager.pushMatrix();
+            GlStateManager.scalef(s, s, s);
+            GlStateManager.translatef(0.0F, off, 0.0F);
+            super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+            GlStateManager.popMatrix();
+        }
     }
 }

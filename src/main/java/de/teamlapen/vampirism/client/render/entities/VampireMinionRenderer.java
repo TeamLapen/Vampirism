@@ -19,7 +19,7 @@ public class VampireMinionRenderer extends BipedRenderer<VampireMinionEntity, Mi
     public VampireMinionRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new MinionModel<>(0F, false), 0.5F);
         textures = Minecraft.getInstance().getResourceManager().getAllResourceLocations("textures/entity/vampire", s -> s.endsWith(".png")).stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())).toArray(ResourceLocation[]::new);
-        this.addLayer(new LayerPlayerBodyOverlay<>(this));
+        this.addLayer(new LayerPlayerBodyOverlay<>(this, VampireMinionEntity::shouldRenderLordSkin));
     }
 
     public ResourceLocation getVampireTexture(int entityId) {

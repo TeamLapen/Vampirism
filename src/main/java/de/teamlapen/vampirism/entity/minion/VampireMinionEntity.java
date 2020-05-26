@@ -79,14 +79,18 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     public int getVampireType() {
-        return this.dataManager.get(TYPE);
+        return Math.max(0, this.dataManager.get(TYPE));
     }
 
     public void setVampireType(int type) {
         if (this.minionData != null) {
             this.minionData.type = type;
         }
-        this.dataManager.set(TYPE, 0);
+        this.dataManager.set(TYPE, type);
+    }
+
+    public boolean shouldRenderLordSkin() {
+        return this.getDataManager().get(TYPE) < 0;
     }
 
     @Override

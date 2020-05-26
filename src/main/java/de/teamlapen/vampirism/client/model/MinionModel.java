@@ -21,8 +21,11 @@ public class MinionModel<T extends MinionEntity> extends PlayerModel<T> {
         this.bipedHead.render(scale);
         this.bipedHeadwear.render(scale);
 
-
         GlStateManager.popMatrix();
+
+        if (!entityIn.shouldRenderLordSkin()) {
+            this.renderBody(entityIn, scale);
+        }
     }
 
     public void renderBody(T entityIn, float scale) {

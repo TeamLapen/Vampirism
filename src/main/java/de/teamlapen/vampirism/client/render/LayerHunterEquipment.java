@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 
 
 public class LayerHunterEquipment<T extends MobEntity, Q extends BipedModel<T>> extends LayerRenderer<T, Q> {
-    private final HunterEquipmentModel<T> equipmentModel = new HunterEquipmentModel<>();
+    private final HunterEquipmentModel<T> equipmentModel;
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
     private final Predicate<T> predicateOnlyStake;
     private final Function<T, Integer> functionHat;
@@ -23,9 +23,14 @@ public class LayerHunterEquipment<T extends MobEntity, Q extends BipedModel<T>> 
      * @param functionHat        Entity -> -1 to 4
      */
     public LayerHunterEquipment(IEntityRenderer<T, Q> entityRendererIn, Predicate<T> predicateOnlyStake, Function<T, Integer> functionHat) {
+        this(entityRendererIn, new HunterEquipmentModel<>(), predicateOnlyStake, functionHat);
+    }
+
+    public LayerHunterEquipment(IEntityRenderer<T, Q> entityRendererIn, HunterEquipmentModel<T> equipmentModel, Predicate<T> predicateOnlyStake, Function<T, Integer> functionHat) {
         super(entityRendererIn);
         this.predicateOnlyStake = predicateOnlyStake;
         this.functionHat = functionHat;
+        this.equipmentModel = equipmentModel;
     }
 
     @Override

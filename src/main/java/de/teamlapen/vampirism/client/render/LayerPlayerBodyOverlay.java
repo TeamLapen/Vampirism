@@ -15,6 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Overlays the body with a player skin
@@ -23,14 +24,17 @@ import java.util.Map;
 public class LayerPlayerBodyOverlay<T extends MinionEntity & IPlayerOverlay, M extends MinionModel<T>> extends LayerRenderer<T, M> {
 
     private final BipedRenderer<T, M> renderBiped;
+    private final Predicate<T> renderPredicate;
 
-    public LayerPlayerBodyOverlay(BipedRenderer<T, M> renderBiped) {
+    public LayerPlayerBodyOverlay(BipedRenderer<T, M> renderBiped, Predicate<T> renderPredicate) {
         super(renderBiped);
         this.renderBiped = renderBiped;
+        this.renderPredicate = renderPredicate;
     }
 
     @Override
     public void render(T entityIn, float p_212842_2_, float p_212842_3_, float p_212842_4_, float p_212842_5_, float p_212842_6_, float p_212842_7_, float scale) {
+        if (!renderPredicate.test(entityIn)) return;
         ResourceLocation loc = DefaultPlayerSkin.getDefaultSkinLegacy();
         GameProfile prof = entityIn.getOverlayPlayerProfile();
         if (prof != null) {
