@@ -53,7 +53,6 @@ import java.util.Random;
 @OnlyIn(Dist.CLIENT)
 public class SkillsScreen extends Screen {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills_window.png");
-    private static final ResourceLocation ACTIONBUTTON = new ResourceLocation(LIBREFERENCE.MODID, "textures/gui/misc.png");
     private final int area_min_y = -77;
     private final int skill_width = 24;
     private final List<SkillNode> skillNodes = new ArrayList<>();
@@ -110,11 +109,11 @@ public class SkillsScreen extends Screen {
                 Minecraft.getInstance().displayGuiScreen(resetGui);
             }));
             if (Helper.isVampire(minecraft.player)) {
-                this.addButton(new ImageButton((this.width - display_width) / 2 + 10 + 22, this.height / 2 + 74, 20, 20, 41, 0, 20, ACTIONBUTTON, 256, 256, (context) -> {
+                this.addButton(new ImageButton((this.width - display_width) / 2 + 10 + 22, this.height / 2 + 74, 20, 20, 72, 202, 20, BACKGROUND, 256, 256, (context) -> {
                     Minecraft.getInstance().displayGuiScreen(new AppearanceScreen());
                 }));
             }
-            this.addButton(new ImageButton((this.width - display_width) / 2 + 10, this.height / 2 + 74, 20, 20, 21, 0, 20, ACTIONBUTTON, 256, 256, (context) -> {
+            this.addButton(new ImageButton((this.width - display_width) / 2 + 10, this.height / 2 + 74, 20, 20, 52, 202, 20, BACKGROUND, 256, 256, (context) -> {
                 IPlayableFaction<?> faction = FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction();
                 Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(faction.getColor(), true));
             }));
