@@ -28,6 +28,7 @@ public class LevelCommand extends BasicCommand {
         return Commands.literal("level")
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.argument("faction", new FactionArgument())
+                        .executes(context -> setLevel(context,FactionArgument.getFaction(context, "faction"), 1, Lists.newArrayList(context.getSource().asPlayer())))
                         .then(Commands.argument("level", IntegerArgumentType.integer(0))
                                 .executes(context -> setLevel(context, FactionArgument.getFaction(context, "faction"), IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().asPlayer())))
                                 .then(Commands.argument("player", EntityArgument.entities())
