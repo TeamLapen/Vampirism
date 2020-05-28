@@ -39,6 +39,10 @@ public class ScrollableListButton extends GuiButtonExt {
         this.fillElements();
     }
 
+    public ScrollableListButton(int xPos, int yPos, int width, int height, int itemCount, String[] strings, String displayString, Consumer<Integer> elementPressAction) {
+        this(xPos, yPos, width, height, itemCount, strings, displayString, elementPressAction, false);
+    }
+
     protected void fillElements() {
         for (int i = 0; i < this.elements.length; i++) {
             int finalI = i;
