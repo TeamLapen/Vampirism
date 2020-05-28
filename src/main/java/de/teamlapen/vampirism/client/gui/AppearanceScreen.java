@@ -64,8 +64,8 @@ public class AppearanceScreen extends Screen {
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
 
-        this.eyes = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 30 + 20, 100, 100, REFERENCE.EYE_TYPE_COUNT, 5, descEye, UtilLib.translate("gui.vampirism.appearance.eyestyle"), this::eye));
-        this.fangs = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 50 + 20, 100, 80, REFERENCE.FANG_TYPE_COUNT, 4, descFang, UtilLib.translate("gui.vampirism.appearance.fangstyle"), this::fang));
+        this.eyes = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 100, REFERENCE.EYE_TYPE_COUNT, descEye, UtilLib.translate("gui.vampirism.appearance.eyestyle"), this::eye));
+        this.fangs = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 80, REFERENCE.FANG_TYPE_COUNT, descFang, UtilLib.translate("gui.vampirism.appearance.fangstyle"), this::fang));
 
         this.addButton(new GuiButtonExt(this.guiLeft + 20, this.guiTop + 30, 100, 20, UtilLib.translate("gui.vampirism.appearance.eyes"), (button -> {
             this.eyes.visible = !this.eyes.visible;
@@ -108,11 +108,14 @@ public class AppearanceScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int buttonId) {
-        if (this.fangs.mouseClicked(mouseX, mouseY, buttonId) || this.fangs.mouseClicked(mouseX, mouseY, buttonId)) {
+    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int activeButton, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+        if (this.fangs.visible && this.fangs.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, activeButton, p_mouseDragged_6_, p_mouseDragged_8_) ) {
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, buttonId);
+        if (this.eyes.visible && this.eyes.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, activeButton, p_mouseDragged_6_, p_mouseDragged_8_) ) {
+            return true;
+        }
+        return false;
     }
 
     protected void drawTitle() {
