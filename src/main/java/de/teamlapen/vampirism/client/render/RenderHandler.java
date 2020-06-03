@@ -37,6 +37,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
@@ -87,9 +88,9 @@ public class RenderHandler {
     private boolean bloodVision3Rendered = false;
     private boolean shaderWarning = false;
     private boolean showedShaderWarning = false;
-    private boolean doSaturationShader = true;
+    private final boolean doSaturationShader = true;
     private int displayHeight, displayWidth;
-    private boolean renderingBloodVision = false;
+    private final boolean renderingBloodVision = false;
     private Shader blur1, blur2, blit0, blit1, blit2, blit3;
     /**
      * Temporarily stores if the hunter disguise blend profile has been enabled. (From RenderPlayer.Pre to RenderPlayer.Post)
@@ -188,11 +189,11 @@ public class RenderHandler {
                 flag = false;
             }
             if (flag) {
-                IExtendedCreatureVampirism creature = entity instanceof CreatureEntity && entity.isAlive() ? ExtendedCreature.getUnsafe((CreatureEntity) entity) : null;
-                if (creature != null && creature.getBlood() > 0 && !creature.hasPoisonousBlood()) {
+                LazyOptional<IExtendedCreatureVampirism> opt = entity instanceof CreatureEntity && entity.isAlive() ? ExtendedCreature.getSafe(entity) : LazyOptional.empty();
+                if (opt.map(creature -> creature.getBlood() > 0 && creature.hasPoisonousBlood()).orElse(false)) {
                     renderedEntitiesWithBlood.add(event.getEntity());
 
-                } else if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::getSpecialAttributes).map(s -> s.blood_vision_garlic).orElse(false) && ((creature != null && creature.hasPoisonousBlood()) || Helper.isHunter(entity))) {
+                } else if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::getSpecialAttributes).map(s -> s.blood_vision_garlic).orElse(false) && ((opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) || Helper.isHunter(entity))) {
                     renderedEntitiesWithGarlicInfused.add(event.getEntity());
 
                 } else {
