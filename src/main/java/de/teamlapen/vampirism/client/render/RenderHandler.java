@@ -20,9 +20,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.OutlineLayerBuffer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.shader.Framebuffer;
+import net.minecraft.client.shader.Shader;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
@@ -96,7 +98,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     private ShaderGroup blurShader;
 
 
-    private boolean doSaturationShader = true;
+    private final boolean doSaturationShader = true;
     /**
      * Store the last used framebuffer size to be able to rebind shader buffer when size changes
      */
@@ -308,50 +310,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
     }
 
-    @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-        if (mc.world == null) return;
-
-        /**
-         * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
-         */
-        float partialTicks = mc.getRenderPartialTicks();
-
-
-        if (displayHeight != mc.getMainWindow().getFramebufferHeight() || displayWidth != mc.getMainWindow().getFramebufferWidth()) {
-            this.displayHeight = mc.getMainWindow().getFramebufferHeight();
-            this.displayWidth = mc.getMainWindow().getFramebufferWidth();
-            this.updateFramebufferSize(this.displayWidth, this.displayHeight);
-        }
-
-        GL11.glPushMatrix();
-        GL11.glTranslated(-this.mc.player.getPosX(), -this.mc.player.getPosY(), -this.mc.player.getPosZ());
-        GL11.glCallList(entityDisplayListId);
-        GL11.glPopMatrix();
-
-//        if (this.isRenderEntityOutlines()) {
-//            if (bloodVisionBuffer != null) {
-//                bloodVisionBuffer.finish();
-//            }
-//            this.bloodVisionShader.render(partialTicks);
-//            this.mc.getFramebuffer().bindFramebuffer(false);
-//        }
-//
-//        if (isRenderEntityOutlines()) {
-//            this.renderBloodVisionFramebuffer();
-//            RenderSystem.disableBlend();
-//            RenderSystem.disableDepthTest();
-//            RenderSystem.disableAlphaTest();
-//            RenderSystem.enableTexture();
-//            RenderSystem.matrixMode(5890);
-//            RenderSystem.pushMatrix();
-//            RenderSystem.loadIdentity();
-//            this.blurShader.render(partialTicks);
-//            RenderSystem.popMatrix();
-//        }
-
-
-    }
+    private Shader blur1, blur2, blit0;
 
     /**
      * Compiles a render list of the entitys nearby
@@ -457,8 +416,8 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
             boolean flag = true;
             if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) flag = false;
-
-            if (mc.player.getDistanceSq(entity) > VampirismConfig.BALANCE.vsBloodVisionDistSQ.get()) {
+            double dist = mc.player.getDistanceSq(entity);
+            if (dist > VampirismConfig.BALANCE.vsBloodVisionDistSQ.get()) {
                 flag = false;
             }
             if (flag) {
@@ -491,14 +450,19 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
                 int r = color >> 16 & 255;
                 int g = color >> 8 & 255;
                 int b = color & 255;
-                bloodVisionBuffer.setColor(r, g, b, 255);
+                int alpha = dist > 100 ? 50 : (int) (dist / 100d * 50d);
+                bloodVisionBuffer.setColor(r, g, b, alpha);
                 double d0 = MathHelper.lerp(event.getPartialRenderTick(), entity.lastTickPosX, entity.getPosX());
                 double d1 = MathHelper.lerp(event.getPartialRenderTick(), entity.lastTickPosY, entity.getPosY());
                 double d2 = MathHelper.lerp(event.getPartialRenderTick(), entity.lastTickPosZ, entity.getPosZ());
                 float f = MathHelper.lerp(event.getPartialRenderTick(), entity.prevRotationYaw, entity.rotationYaw);
                 renderingBloodVision = true;
                 bloodVisionFramebuffer.bindFramebuffer(false);
-                renderManager.renderEntityStatic(entity, d0 - view.x, d1 - view.y, d2 - view.z, f, event.getPartialRenderTick(), event.getMatrixStack(), bloodVisionBuffer, renderManager.getPackedLight(entity, event.getPartialRenderTick()));
+                EntityRenderer<? super Entity> entityrenderer = renderManager.getRenderer(entity);
+                entityrenderer.render(entity, f, event.getPartialRenderTick(), event.getMatrixStack(), bloodVisionBuffer, renderManager.getPackedLight(entity, event.getPartialRenderTick()));
+//                event.getMatrixStack().pop();
+//                renderManager.renderEntityStatic(entity, d0 - view.x, d1 - view.y, d2 - view.z, f, event.getPartialRenderTick(), event.getMatrixStack(), bloodVisionBuffer, renderManager.getPackedLight(entity, event.getPartialRenderTick()));
+//                event.getMatrixStack().push();
                 mc.getFramebuffer().bindFramebuffer(false);
                 renderingBloodVision = false;
 
@@ -550,35 +514,68 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
     }
 
+    @SubscribeEvent
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+        if (mc.world == null) return;
+
+        /*
+         * DO NOT USE partial ticks from event. They are bugged: https://github.com/MinecraftForge/MinecraftForge/issues/6380
+         */
+        float partialTicks = mc.getRenderPartialTicks();
+
+
+        if (displayHeight != mc.getMainWindow().getFramebufferHeight() || displayWidth != mc.getMainWindow().getFramebufferWidth()) {
+            this.displayHeight = mc.getMainWindow().getFramebufferHeight();
+            this.displayWidth = mc.getMainWindow().getFramebufferWidth();
+            this.updateFramebufferSize(this.displayWidth, this.displayHeight);
+        }
+
+        GL11.glPushMatrix();
+        GL11.glTranslated(-this.mc.player.getPosX(), -this.mc.player.getPosY(), -this.mc.player.getPosZ());
+        GL11.glCallList(entityDisplayListId);
+        GL11.glPopMatrix();
+
+        if (bloodVisionTicks > 0 && isRenderEntityOutlines()) {
+            adjustBloodVisionShaders((bloodVisionTicks + (bloodVisionTicks - lastBloodVisionTicks) * partialTicks) / (float) BLOOD_VISION_FADE_TICKS);
+            this.blurShader.render(partialTicks);
+            this.bloodVisionBuffer.finish();
+        }
+
+//        if (this.isRenderEntityOutlines()) {
+//            if (bloodVisionBuffer != null) {
+//                bloodVisionBuffer.finish();
+//            }
+//            this.bloodVisionShader.render(partialTicks);
+//            this.mc.getFramebuffer().bindFramebuffer(false);
+//        }
+//
+//        if (isRenderEntityOutlines()) {
+//            this.renderBloodVisionFramebuffer();
+//            RenderSystem.disableBlend();
+//            RenderSystem.disableDepthTest();
+//            RenderSystem.disableAlphaTest();
+//            RenderSystem.enableTexture();
+//            RenderSystem.matrixMode(5890);
+//            RenderSystem.pushMatrix();
+//            RenderSystem.loadIdentity();
+//            this.blurShader.render(partialTicks);
+//            RenderSystem.popMatrix();
+//        }
+
+
+    }
+
     private boolean isRenderEntityOutlines() {
         return this.bloodVisionTicks > 0 && this.bloodVisionShader != null && this.bloodVisionFramebuffer != null && this.blurShader != null && this.mc.player != null;
     }
 
-    private void reMakeBloodVisionShader() {
-        if (this.bloodVisionShader != null) {
-            this.bloodVisionShader.close();
-        }
-        if (this.blurShader != null) {
-            this.blurShader.close();
-        }
-        ResourceLocation resourcelocationOutline = new ResourceLocation(REFERENCE.MODID, "shaders/blood_vision_outline.json");
-        ResourceLocation resourcelocationBlur = new ResourceLocation(REFERENCE.MODID, "shaders/blank.json");
-        try {
-            this.bloodVisionShader = new ShaderGroup(this.mc.getTextureManager(), this.mc.getResourceManager(), this.mc.getFramebuffer(), resourcelocationOutline);
-            this.bloodVisionShader.createBindFramebuffers(this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight());
-            this.bloodVisionFramebuffer = this.bloodVisionShader.getFramebufferRaw("final");
-        } catch (Exception e) {
-            LOGGER.warn("Failed to load blood vision shader", e);
-            this.bloodVisionShader = null;
-            this.bloodVisionFramebuffer = null;
-        }
-        try {
-            this.blurShader = new ShaderGroup(this.mc.getTextureManager(), this.mc.getResourceManager(), this.mc.getFramebuffer(), resourcelocationBlur);
-            this.blurShader.createBindFramebuffers(this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight());
-        } catch (Exception e) {
-            LOGGER.warn("Failed to load blood vision blur shader", e);
-            this.blurShader = null;
-        }
+    private void adjustBloodVisionShaders(float progress) {
+        progress = MathHelper.clamp(progress, 0, 1);
+        //blit0.getShaderManager().getShaderUniform("ColorModulate").set((1f ), (1f ), (1f ), 1);
+        blit0.getShaderManager().getShaderUniform("ColorModulate").set((1 - 0.4F * progress), (1 - 0.5F * progress), (1 - 0.3F * progress), 1);
+        blur1.getShaderManager().getShaderUniform("Radius").set(Math.round(15 * progress) / 1F);
+        blur2.getShaderManager().getShaderUniform("Radius").set(Math.round(15 * progress) / 1F);
+
     }
 
     private void renderBloodVisionFramebuffer() {
@@ -662,6 +659,42 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         }
         if (this.bloodVisionShader != null) {
             this.bloodVisionShader.createBindFramebuffers(width, height);
+        }
+    }
+
+    private void reMakeBloodVisionShader() {
+        if (this.bloodVisionShader != null) {
+            this.bloodVisionShader.close();
+        }
+        if (this.blurShader != null) {
+            this.blurShader.close();
+        }
+        ResourceLocation resourcelocationOutline = new ResourceLocation(REFERENCE.MODID, "shaders/blood_vision_outline.json");
+        ResourceLocation resourcelocationBlur = new ResourceLocation(REFERENCE.MODID, "shaders/blank.json");
+        try {
+            this.bloodVisionShader = new ShaderGroup(this.mc.getTextureManager(), this.mc.getResourceManager(), this.mc.getFramebuffer(), resourcelocationOutline);
+            this.bloodVisionShader.createBindFramebuffers(this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight());
+            this.bloodVisionFramebuffer = this.bloodVisionShader.getFramebufferRaw("final");
+        } catch (Exception e) {
+            LOGGER.warn("Failed to load blood vision shader", e);
+            this.bloodVisionShader = null;
+            this.bloodVisionFramebuffer = null;
+        }
+        try {
+            this.blurShader = new ShaderGroup(this.mc.getTextureManager(), this.mc.getResourceManager(), this.mc.getFramebuffer(), resourcelocationBlur);
+            Framebuffer swap = this.blurShader.getFramebufferRaw("swap");
+
+            blit0 = blurShader.addShader("blit", swap, this.mc.getFramebuffer());
+            blur1 = blurShader.addShader("blur", this.mc.getFramebuffer(), swap);
+            blur1.getShaderManager().getShaderUniform("BlurDir").set(1F, 0F);
+            blur2 = blurShader.addShader("blur", swap, this.mc.getFramebuffer());
+            blur2.getShaderManager().getShaderUniform("BlurDir").set(0F, 1F);
+
+            this.blurShader.createBindFramebuffers(this.mc.getMainWindow().getFramebufferWidth(), this.mc.getMainWindow().getFramebufferHeight());
+
+        } catch (Exception e) {
+            LOGGER.warn("Failed to load blood vision blur shader", e);
+            this.blurShader = null;
         }
     }
 
