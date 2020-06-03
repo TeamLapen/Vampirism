@@ -90,7 +90,7 @@ public class RenderHandler {
     private boolean showedShaderWarning = false;
     private final boolean doSaturationShader = true;
     private int displayHeight, displayWidth;
-    private final boolean renderingBloodVision = false;
+    private boolean renderingBloodVision = false;
     private Shader blur1, blur2, blit0, blit1, blit2, blit3;
     /**
      * Temporarily stores if the hunter disguise blend profile has been enabled. (From RenderPlayer.Pre to RenderPlayer.Post)
@@ -190,7 +190,7 @@ public class RenderHandler {
             }
             if (flag) {
                 LazyOptional<IExtendedCreatureVampirism> opt = entity instanceof CreatureEntity && entity.isAlive() ? ExtendedCreature.getSafe(entity) : LazyOptional.empty();
-                if (opt.map(creature -> creature.getBlood() > 0 && creature.hasPoisonousBlood()).orElse(false)) {
+                if (opt.map(creature -> creature.getBlood() > 0 && !creature.hasPoisonousBlood()).orElse(false)) {
                     renderedEntitiesWithBlood.add(event.getEntity());
 
                 } else if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::getSpecialAttributes).map(s -> s.blood_vision_garlic).orElse(false) && ((opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) || Helper.isHunter(entity))) {
