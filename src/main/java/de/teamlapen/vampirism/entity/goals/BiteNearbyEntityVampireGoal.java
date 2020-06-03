@@ -55,12 +55,12 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
                 if (!vampire.getEntitySenses().canSee(o) || o.hasCustomName()) {
                     continue;
                 }
-
-                creature = ExtendedCreature.getUnsafe(o);
-                if (creature.canBeBitten(vampire) && !creature.hasPoisonousBlood()) {
+                if (ExtendedCreature.getSafe(o).filter(creature -> creature.canBeBitten(vampire) && !creature.hasPoisonousBlood()).map(creature -> {
+                    this.creature = creature;
+                    return true;
+                }).orElse(false)) {
                     return true;
                 }
-
             }
         }
         creature = null;

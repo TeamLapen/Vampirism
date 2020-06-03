@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.goals;
 
-import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import net.minecraft.entity.CreatureEntity;
@@ -50,9 +49,8 @@ public class MoveToBiteableVampireGoal<T extends MobEntity & IVampireMob> extend
         if (!vampire.wantsBlood()) return false;
         List<CreatureEntity> list = vampire.getEntityWorld().getEntitiesWithinAABB(CreatureEntity.class, vampire.getBoundingBox().grow(10, 3, 10), EntityPredicates.NOT_SPECTATING.and((entity) -> entity != vampire && entity.isAlive()));
         for (CreatureEntity o : list) {
-            IExtendedCreatureVampirism creature = ExtendedCreature.getUnsafe(o);
-            if (creature.canBeBitten(vampire) && !o.hasCustomName() && !creature.hasPoisonousBlood()) {
-                target = o;
+            if (ExtendedCreature.getSafe(o).map(creature -> creature.canBeBitten(vampire) && !creature.getEntity().hasCustomName() && !creature.hasPoisonousBlood()).orElse(false)) {
+                this.target = o;
                 return true;
             }
         }

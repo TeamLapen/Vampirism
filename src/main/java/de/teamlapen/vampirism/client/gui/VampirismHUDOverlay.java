@@ -44,6 +44,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -139,21 +140,21 @@ public class VampirismHUDOverlay extends ExtendedGui {
             IVampirePlayer player = VampirePlayer.get(mc.player);
             if (player.getLevel() > 0 && !mc.player.isSpectator() && !player.getActionHandler().isActionActive(VampireActions.bat)) {
                 Entity entity = ((EntityRayTraceResult) p).getEntity();
-                IBiteableEntity biteable = null;
+                LazyOptional<? extends IBiteableEntity> biteableOpt = LazyOptional.empty();
                 if (entity instanceof IBiteableEntity) {
-                    biteable = (IBiteableEntity) entity;
+                    biteableOpt = LazyOptional.of(() -> (IBiteableEntity) entity);
                 } else if (entity instanceof CreatureEntity && entity.isAlive()) {
-                    biteable = ExtendedCreature.getUnsafe((CreatureEntity) entity);
+                    biteableOpt = ExtendedCreature.getSafe(entity);
                 } else if (entity instanceof PlayerEntity) {
-                    biteable = VampirePlayer.get((PlayerEntity) entity);
+                    biteableOpt = VampirePlayer.getOpt((PlayerEntity) entity);
                 }
-                if (biteable != null && biteable.canBeBitten(player)) {
+                biteableOpt.filter(iBiteableEntity -> iBiteableEntity.canBeBitten(player)).ifPresent(biteable -> {
                     int color = 0xFF0000;
                     if (entity instanceof HunterBaseEntity || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
                         color = 0x099022;
                     renderBloodFangs(this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                     event.setCanceled(true);
-                }
+                });
             }
         } else if (p != null && p.getType() == RayTraceResult.Type.BLOCK) {
             BlockState block = Minecraft.getInstance().world.getBlockState(((BlockRayTraceResult) p).getPos());
