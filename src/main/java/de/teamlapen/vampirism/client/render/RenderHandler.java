@@ -55,16 +55,13 @@ import java.util.function.Predicate;
 @OnlyIn(Dist.CLIENT)
 public class RenderHandler implements ISelectiveResourceReloadListener {
     private static final ResourceLocation saturation1 = new ResourceLocation(REFERENCE.MODID + ":shaders/saturation1.json");
+    private static final int ENTITY_NEAR_SQ_DISTANCE = 100;
     private final Minecraft mc;
-    private OutlineLayerBuffer bloodVisionBuffer;
     private final int BLOOD_VISION_FADE_TICKS = 80;
 
     private final int VAMPIRE_BIOME_FADE_TICKS = 60;
-    private static final int ENTITY_NEAR_SQ_DISTANCE = 100;
-    private final int ENTITY_RADIUS = 100;
-    private final int ENTITY_MIN_SQ_RADIUS = 10;
     private final Logger LOGGER = LogManager.getLogger();
-
+    private OutlineLayerBuffer bloodVisionBuffer;
     private BatEntity entityBat;
     /**
      * Fog fade counter
@@ -80,20 +77,17 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     private int bloodVisionTicks = 0;
     private int lastBloodVisionTicks = 0;
     private float vampireBiomeFogDistanceMultiplier = 1;
-
     private ShaderGroup blurShader;
-
-
-    private final boolean doSaturationShader = true;
     /**
      * Store the last used framebuffer size to be able to rebind shader buffer when size changes
      */
     private int displayHeight, displayWidth;
-    private boolean renderingBloodVision = false;
+    private boolean isInsideBloodVisionRendering = false;
     /**
      * Temporarily stores if the hunter disguise blend profile has been enabled. (From RenderPlayer.Pre to RenderPlayer.Post)
      */
     private boolean hunterDisguiseEnabled;
+    private Shader blur1, blur2, blit0;
 
     public RenderHandler(Minecraft mc) {
         this.mc = mc;
@@ -106,24 +100,59 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         return VanillaResourceType.SHADERS;
     }
 
-
     @SubscribeEvent
-    public void onRenderHand(RenderHandEvent event) {
-        if (mc.player.isAlive() && VampirePlayer.get(mc.player).getActionHandler().isActionActive(VampireActions.bat)) {
-            event.setCanceled(true);
-        }
-    }
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (mc.world == null || mc.player == null || !mc.player.isAlive()) return;
+        if (event.phase == TickEvent.Phase.END) return;
+        lastBloodVisionTicks = bloodVisionTicks;
+        VampirePlayer vampire = VampirePlayer.get(mc.player);
+        //Blood vision
+        if (vampire.getSpecialAttributes().blood_vision && !VampirismConfig.CLIENT.disableBloodVisionRendering.get() && !VampirePlayer.get(mc.player).isGettingSundamage(mc.player.world)) {
 
+            if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
+                bloodVisionTicks++;
 
-
-    @SubscribeEvent
-    public void onRenderLivingPre(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> event) {
-        LivingEntity entity = event.getEntity();
-        if (entity instanceof PlayerEntity && HunterPlayer.getOpt((PlayerEntity) entity).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
-            if (this.mc.player != null && entity.getDistanceSq(this.mc.player) > 4) {
-                event.setCanceled(true);
+            }
+        } else {
+            if (bloodVisionTicks > 0) {
+                bloodVisionTicks -= 2;
+            }
+            if (vampireBiomeTicks > 10 && bloodVisionTicks == 15) {
+                bloodVisionTicks = 0;
             }
         }
+        //Vampire biome/village fog
+        if (mc.player.ticksExisted % 10 == 0) {
+            if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInVampireBiome(mc.player) || TotemTileEntity.isInsideVampireAreaCached(mc.world.getDimension(), mc.player.getPosition()))) {
+                insideFog = true;
+                vampireBiomeFogDistanceMultiplier = vampire.getSpecialAttributes().increasedVampireFogDistance ? 2 : 1;
+            } else {
+                insideFog = false;
+            }
+        }
+        if (insideFog) {
+            if (vampireBiomeTicks < VAMPIRE_BIOME_FADE_TICKS) {
+                vampireBiomeTicks++;
+            }
+        } else {
+            if (vampireBiomeTicks > 0) {
+                vampireBiomeTicks--;
+            }
+        }
+
+        //Saturation shader
+            if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
+                EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
+                boolean active = pe != null && pe.getAmplifier() >= 2;
+                GameRenderer renderer = mc.gameRenderer;
+                if (active && renderer.getShaderGroup() == null) {
+                    renderer.loadShader(saturation1);
+                } else if (!active && renderer.getShaderGroup() != null && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
+                    renderer.stopUseShader();
+                }
+            }
+
+
     }
 
     @SubscribeEvent
@@ -138,9 +167,61 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     }
 
     @SubscribeEvent
-    public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-        if (hunterDisguiseEnabled) {
-            disableProfile(Profile.HUNTER_DISGUISE);
+    public void onRenderHand(RenderHandEvent event) {
+        if (mc.player.isAlive() && VampirePlayer.get(mc.player).getActionHandler().isActionActive(VampireActions.bat)) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderLivingPost(RenderLivingEvent.Post event) {
+        if (!isInsideBloodVisionRendering && shouldRenderBloodVision()) {
+            Entity entity = event.getEntity();
+
+            boolean flag = true;
+            if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) flag = false;
+            double dist = mc.player.getDistanceSq(entity);
+            if (dist > VampirismConfig.BALANCE.vsBloodVisionDistSQ.get()) {
+                flag = false;
+            }
+            if (flag) {
+                int color;
+                LazyOptional<IExtendedCreatureVampirism> opt = entity instanceof CreatureEntity && entity.isAlive() ? ExtendedCreature.getSafe(entity) : LazyOptional.empty();
+                if (opt.map(creature -> creature.getBlood() > 0 && creature.hasPoisonousBlood()).orElse(false)) {
+                    color = 0xFF0000;
+                } else if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::getSpecialAttributes).map(s -> s.blood_vision_garlic).orElse(false) && ((opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) || Helper.isHunter(entity))) {
+                    color = 0x07FF07;
+                } else {
+                    color = 0xA0A0A0;
+                }
+                EntityRendererManager renderManager = mc.getRenderManager();
+                if (bloodVisionBuffer == null) {
+                    bloodVisionBuffer = new OutlineLayerBuffer(mc.getRenderTypeBuffers().getBufferSource());
+                }
+                int r = color >> 16 & 255;
+                int g = color >> 8 & 255;
+                int b = color & 255;
+                int alpha = (int) ((dist > ENTITY_NEAR_SQ_DISTANCE ? 50 : (dist / (double) ENTITY_NEAR_SQ_DISTANCE * 50d)) * getBloodVisionProgress(event.getPartialRenderTick()));
+                bloodVisionBuffer.setColor(r, g, b, alpha);
+                float f = MathHelper.lerp(event.getPartialRenderTick(), entity.prevRotationYaw, entity.rotationYaw);
+                isInsideBloodVisionRendering = true;
+                EntityRenderer<? super Entity> entityrenderer = renderManager.getRenderer(entity);
+                entityrenderer.render(entity, f, event.getPartialRenderTick(), event.getMatrixStack(), bloodVisionBuffer, renderManager.getPackedLight(entity, event.getPartialRenderTick()));
+                mc.getFramebuffer().bindFramebuffer(false);
+                isInsideBloodVisionRendering = false;
+
+            }
+
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderLivingPre(RenderLivingEvent.Pre<PlayerEntity, PlayerModel<PlayerEntity>> event) {
+        LivingEntity entity = event.getEntity();
+        if (entity instanceof PlayerEntity && HunterPlayer.getOpt((PlayerEntity) entity).map(HunterPlayer::getSpecialAttributes).map(HunterPlayerSpecialAttribute::isDisguised).orElse(false)) {
+            if (this.mc.player != null && entity.getDistanceSq(this.mc.player) > 4) {
+                event.setCanceled(true);
+            }
         }
     }
 
@@ -191,138 +272,11 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         }
     }
 
-
-
-    private void disableProfile(Profile profile) {
-        profile.clean();
-    }
-
-    private void enableProfile(Profile profile) {
-        profile.apply(1);
-    }
-
-    private void enableProfile(Profile profile, float progress) {
-        progress = MathHelper.clamp(progress, 0, 1);
-        profile.apply(progress);
-    }
-
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (mc.world == null || mc.player == null || !mc.player.isAlive()) return;
-        if (event.phase == TickEvent.Phase.END) return;
-        lastBloodVisionTicks = bloodVisionTicks;
-        VampirePlayer vampire = VampirePlayer.get(mc.player);
-        if (vampire.getSpecialAttributes().blood_vision && !VampirePlayer.get(mc.player).isGettingSundamage(mc.player.world)) {
-
-            if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
-                bloodVisionTicks++;
-
-            }
-        } else {
-            if (bloodVisionTicks > 0) {
-                bloodVisionTicks -= 2;
-            }
-            if (vampireBiomeTicks > 10 && bloodVisionTicks == 15) {
-                bloodVisionTicks = 0;
-            }
+    public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
+        if (hunterDisguiseEnabled) {
+            disableProfile(Profile.HUNTER_DISGUISE);
         }
-        if (mc.player.ticksExisted % 10 == 0) {
-            if ((VampirismConfig.CLIENT.renderVampireForestFog.get() || VampirismConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInVampireBiome(mc.player) || TotemTileEntity.isInsideVampireAreaCached(mc.world.getDimension(), mc.player.getPosition()))) {
-                insideFog = true;
-                vampireBiomeFogDistanceMultiplier = vampire.getSpecialAttributes().increasedVampireFogDistance ? 2 : 1;
-            } else {
-                insideFog = false;
-            }
-        }
-        if (insideFog) {
-            if (vampireBiomeTicks < VAMPIRE_BIOME_FADE_TICKS) {
-                vampireBiomeTicks++;
-            }
-        } else {
-            if (vampireBiomeTicks > 0) {
-                vampireBiomeTicks--;
-            }
-        }
-
-        if (doSaturationShader) {
-            if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
-                EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
-                boolean active = pe != null && pe.getAmplifier() >= 2;
-                GameRenderer renderer = mc.gameRenderer;
-                if (active && renderer.getShaderGroup() == null) {
-                    renderer.loadShader(saturation1);
-                } else if (!active && renderer.getShaderGroup() != null && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
-                    renderer.stopUseShader();
-                }
-            }
-        }
-
-
-
-    }
-
-    private Shader blur1, blur2, blit0;
-
-
-
-    @SubscribeEvent
-    public void onRenderLivingPost(RenderLivingEvent.Post event) {
-        if (!renderingBloodVision && shouldRenderBloodVision()) {
-            Entity entity = event.getEntity();
-
-            boolean flag = true;
-            if (entity instanceof PlayerEntity && HunterCoatItem.isFullyEquipped((PlayerEntity) entity)) flag = false;
-            double dist = mc.player.getDistanceSq(entity);
-            if (dist > VampirismConfig.BALANCE.vsBloodVisionDistSQ.get()) {
-                flag = false;
-            }
-            if (flag) {
-                int color;
-                LazyOptional<IExtendedCreatureVampirism> opt = entity instanceof CreatureEntity && entity.isAlive() ? ExtendedCreature.getSafe(entity) : LazyOptional.empty();
-                if (opt.map(creature -> creature.getBlood() > 0 && creature.hasPoisonousBlood()).orElse(false)) {
-                    renderedEntitiesWithBlood.add(event.getEntity());
-
-                } else if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::getSpecialAttributes).map(s -> s.blood_vision_garlic).orElse(false) && ((opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) || Helper.isHunter(entity))) {
-                    renderedEntitiesWithGarlicInfused.add(event.getEntity());
-
-                } else {
-                    renderedEntitiesWithoutBlood.add(event.getEntity());
-                }
-                IExtendedCreatureVampirism creature = entity instanceof CreatureEntity && entity.isAlive() ? ExtendedCreature.getUnsafe((CreatureEntity) entity) : null;
-                if (creature != null && creature.getBlood() > 0 && !creature.hasPoisonousBlood()) {
-                    color = 0xFF0000;
-
-                } else if (VampirePlayer.getOpt(mc.player).map(VampirePlayer::getSpecialAttributes).map(s -> s.blood_vision_garlic).orElse(false) && ((creature != null && creature.hasPoisonousBlood()) || Helper.isHunter(entity))) {
-                    color = 0x07FF07;
-
-                } else {
-                    color = 0xA0A0A0;
-                }
-                EntityRendererManager renderManager = mc.getRenderManager();
-                if (bloodVisionBuffer == null) {
-                    bloodVisionBuffer = new OutlineLayerBuffer(mc.getRenderTypeBuffers().getBufferSource());
-                }
-                int r = color >> 16 & 255;
-                int g = color >> 8 & 255;
-                int b = color & 255;
-                int alpha = (int) ((dist > 100 ? 50 : (dist / 100d * 50d)) * getBloodVisionProgress(event.getPartialRenderTick()));
-                bloodVisionBuffer.setColor(r, g, b, alpha);
-                float f = MathHelper.lerp(event.getPartialRenderTick(), entity.prevRotationYaw, entity.rotationYaw);
-                renderingBloodVision = true;
-                EntityRenderer<? super Entity> entityrenderer = renderManager.getRenderer(entity);
-                entityrenderer.render(entity, f, event.getPartialRenderTick(), event.getMatrixStack(), bloodVisionBuffer, renderManager.getPackedLight(entity, event.getPartialRenderTick()));
-                mc.getFramebuffer().bindFramebuffer(false);
-                renderingBloodVision = false;
-
-            }
-
-        }
-    }
-
-    @Override
-    public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate) {
-        this.reMakeBloodVisionShader();
-
     }
 
     @SubscribeEvent
@@ -348,12 +302,10 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         }
     }
 
-    private float getBloodVisionProgress(float partialTicks) {
-        return (bloodVisionTicks + (bloodVisionTicks - lastBloodVisionTicks) * partialTicks) / (float) BLOOD_VISION_FADE_TICKS;
-    }
+    @Override
+    public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate) {
+        this.reMakeBloodVisionShader();
 
-    private boolean shouldRenderBloodVision() {
-        return this.bloodVisionTicks > 0 && this.blurShader != null && this.mc.player != null;
     }
 
     private void adjustBloodVisionShaders(float progress) {
@@ -364,10 +316,21 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
     }
 
-    private void updateFramebufferSize(int width, int height) {
-        if (this.blurShader != null) {
-            this.blurShader.createBindFramebuffers(width, height);
-        }
+    private void disableProfile(Profile profile) {
+        profile.clean();
+    }
+
+    private void enableProfile(Profile profile, float progress) {
+        progress = MathHelper.clamp(progress, 0, 1);
+        profile.apply(progress);
+    }
+
+    private void enableProfile(Profile profile) {
+        profile.apply(1);
+    }
+
+    private float getBloodVisionProgress(float partialTicks) {
+        return (bloodVisionTicks + (bloodVisionTicks - lastBloodVisionTicks) * partialTicks) / (float) BLOOD_VISION_FADE_TICKS;
     }
 
     private void reMakeBloodVisionShader() {
@@ -393,6 +356,15 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         }
     }
 
+    private boolean shouldRenderBloodVision() {
+        return this.bloodVisionTicks > 0 && this.blurShader != null && this.mc.player != null;
+    }
+
+    private void updateFramebufferSize(int width, int height) {
+        if (this.blurShader != null) {
+            this.blurShader.createBindFramebuffers(width, height);
+        }
+    }
 
 
     private enum Profile {

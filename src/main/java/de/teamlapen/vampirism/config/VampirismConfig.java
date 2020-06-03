@@ -231,6 +231,7 @@ public class VampirismConfig {
         public final ForgeConfigSpec.BooleanValue renderScreenOverlay;
         public final ForgeConfigSpec.ConfigValue<String> actionOrder;
         public final ForgeConfigSpec.BooleanValue disableFovChange;
+        public final ForgeConfigSpec.BooleanValue disableBloodVisionRendering;
 
         Client(ForgeConfigSpec.Builder builder) {
             builder.comment("Client configuration settings")
@@ -253,6 +254,7 @@ public class VampirismConfig {
 
             actionOrder = builder.comment("Action Order in Select Action Screen (reset with \"\"), unnamed actions will appended").define("actionOrder", "");
             disableFovChange = builder.comment("Disable the FOV change caused by the speed buf for vampire players").define("disableFovChange", false);
+            disableBloodVisionRendering = builder.comment("Disable the effect of blood vision. It can still be unlocked and activated but does not have any effect").define("disableBloodVisionRendering", false);
 
             builder.pop();
 
