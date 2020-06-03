@@ -283,12 +283,14 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     protected void loadUpdate(CompoundNBT nbt) {
+        super.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
     }
 
     @Override
     protected void writeFullUpdate(CompoundNBT nbt) {
+        super.writeFullUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
     }

@@ -12,16 +12,29 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 public class TaskCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
-        return Commands.literal("completeTask")
+        return Commands.literal("tasks")
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
+                .then(Commands.literal("clear")
+                    .executes(context -> {
+                        return clearTasks(context.getSource().asPlayer());
+                    }))
+                .then(Commands.literal("add")
                 .then(Commands.argument("task", TaskArgument.tasks())
                         .executes(context -> {
                             return completeTask(context.getSource().asPlayer(), TaskArgument.getTask(context, "task"));
-                        }));
+                        })));
     }
 
     private static int completeTask(ServerPlayerEntity playerEntity, Task task) {
-        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(sd -> sd.getTaskManager().completeTask(task)));
+        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(player -> player.getTaskManager().completeTask(task)));
+        return 0;
+    }
+
+    private static int clearTasks(ServerPlayerEntity playerEntity) {
+        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(player -> {
+            player.getTaskManager().reset();
+            player.getTaskManager().init();
+        }));
         return 0;
     }
 

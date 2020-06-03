@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.player.tasks;
 
+import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
+import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.player.tasks.req.EntityRequirement;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.req.StatRequirement;
@@ -17,6 +19,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -24,7 +27,7 @@ public class TaskBuilder {
     private @Nullable TaskRequirement<?> requirement;
     private @Nullable TaskReward reward;
     private @Nullable IPlayableFaction<?> faction;
-    private @Nullable Supplier<Task> parentTask;
+    private @Nonnull final List<TaskUnlocker> unlocker = Lists.newArrayList();
     private @Nonnull Task.Variant variant = Task.Variant.REPEATABLE;
     private boolean useDescription = false;
 
@@ -41,8 +44,7 @@ public class TaskBuilder {
     }
 
     public TaskBuilder requireParent(@Nonnull Task parentTask) {
-        this.parentTask = () -> parentTask;
-        return this;
+        return this.requireParent(()->parentTask);
     }
 
     public TaskBuilder setUnique() {
@@ -50,8 +52,13 @@ public class TaskBuilder {
         return this;
     }
 
+    public TaskBuilder unlockedBy(TaskUnlocker unlocker) {
+        this.unlocker.add(unlocker);
+        return this;
+    }
+
     public TaskBuilder requireParent(@Nullable Supplier<Task> parentTask) {
-        this.parentTask = parentTask;
+        this.unlocker.add(new ParentUnlocker(parentTask));
         return this;
     }
 
@@ -91,11 +98,6 @@ public class TaskBuilder {
         return this;
     }
 
-    public TaskBuilder addReward(@Nonnull Consumer<PlayerEntity> onFinished) {
-        this.reward = onFinished::accept;
-        return this;
-    }
-
     public TaskBuilder addReward(@Nonnull TaskReward reward) {
         this.reward = reward;
         return this;
@@ -109,7 +111,7 @@ public class TaskBuilder {
     public Task build(ResourceLocation registryName) {
         if (requirement == null) throw new IllegalStateException("The task " + registryName + " needs a requirement");
         return new Task(this.variant, this.faction, this.requirement, this.reward == null ? player -> {
-        } : this.reward, this.parentTask, this.useDescription).setRegistryName(registryName);
+        } : this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription).setRegistryName(registryName);
     }
 
     public Task build(String modId, String name) {

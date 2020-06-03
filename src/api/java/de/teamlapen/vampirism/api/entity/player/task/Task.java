@@ -14,22 +14,22 @@ public class Task extends ForgeRegistryEntry<Task> {
 
     private final @Nonnull Variant variant;
     private final @Nullable IPlayableFaction<?> faction;
-    private final @Nullable Supplier<Task> parentTask;
     private final @Nonnull TaskRequirement<?> requirements;
     private final @Nonnull TaskReward rewards;
+    private final @Nonnull TaskUnlocker[] unlocker;
     private @Nullable String translationKey;
     private @Nullable String descKey;
     private final boolean useDescription;
     private @Nullable ITextComponent translation;
     private @Nullable ITextComponent desc;
 
-    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement<?> requirements, @Nonnull TaskReward rewards, @Nullable Supplier<Task> parentTask, boolean useDescription) {
+    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement<?> requirements, @Nonnull TaskReward rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
         this.variant = variant;
         this.faction = faction;
         this.requirements = requirements;
-        this.parentTask = parentTask;
         this.useDescription = useDescription;
         this.rewards = rewards;
+        this.unlocker = unlocker;
     }
 
     @Nonnull
@@ -52,13 +52,9 @@ public class Task extends ForgeRegistryEntry<Task> {
         return this.rewards;
     }
 
-    @Nullable
-    public Task getParentTask() {
-        return parentTask == null ? null : parentTask.get();
-    }
-
-    public boolean requireParent() {
-        return parentTask != null;
+    @Nonnull
+    public TaskUnlocker[] getUnlocker() {
+        return unlocker;
     }
 
     @Nonnull

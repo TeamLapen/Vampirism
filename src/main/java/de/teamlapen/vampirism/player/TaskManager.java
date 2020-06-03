@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
+import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskFinishedPacket;
@@ -33,7 +34,6 @@ import java.util.stream.Collectors;
 
 public class TaskManager implements ITaskManager {
     private static final Logger LOGGER = LogManager.getLogger();
-
     private final @Nonnull PlayerEntity player;
     private final @Nonnull IPlayableFaction<?> faction;
     private final @Nonnull Map<Task.Variant, Set<Task>> completedTasks = Maps.newHashMap();
@@ -69,6 +69,18 @@ public class TaskManager implements ITaskManager {
         }
     }
 
+    public boolean isTaskUnlocked(Task task) {
+        if(task.getFaction() != null && task.getFaction() != faction){
+            return false;
+        }
+        for (TaskUnlocker taskUnlocker : task.getUnlocker()) {
+            if(!taskUnlocker.isUnlocked(this.player)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * simply adds the given task to the completion list
      * or not if the task is not applicant to the {@link TaskManager#player}
@@ -77,13 +89,15 @@ public class TaskManager implements ITaskManager {
      */
     @Override
     public boolean addCompletedTask(@Nonnull Task task) {
-        if (!(this.faction.equals(task.getFaction()) || task.getFaction() == null)) return false;
-        this.completedTasks.computeIfAbsent(task.getVariant(), variant -> Sets.newHashSet()).add(task);
-        this.availableTasks.get(task.getVariant()).remove(task);
+        if (!isTaskUnlocked(task)) return false;
+        this.getCompletedTasks(task.getVariant()).add(task);
+        if(availableTasks.containsKey(task.getVariant())) {
+            this.availableTasks.get(task.getVariant()).remove(task);
+        }
         this.getStats().remove(task);
         this.getEntityStats().remove(task);
-        ModRegistries.TASKS.getValues().stream().filter(task1 -> task1.requireParent() && task == task1.getParentTask()).forEach(task1 -> this.availableTasks.computeIfAbsent(task1.getVariant(), variant -> Sets.newHashSet()).add(task1));
         this.updateStats();
+        this.updateAvailableTasks();
         return true;
     }
 
@@ -97,16 +111,16 @@ public class TaskManager implements ITaskManager {
     @Nonnull
     @Override
     public Set<Task> getCompletedTasks(Task.Variant variant) {
-        return completedTasks.getOrDefault(variant, ImmutableSet.of());
+        return this.completedTasks.computeIfAbsent(variant, variant1 -> Sets.newHashSet());
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void setCompletedTasks(@Nonnull Collection<Task> tasks) {
         this.completedTasks.clear();
-        ModRegistries.TASKS.getValues().stream().filter(task -> (faction.equals(task.getFaction()) || task.getFaction() == null) && !task.requireParent()).forEach(task1 -> this.availableTasks.computeIfAbsent(task1.getVariant(), variant -> Sets.newHashSet()).add(task1));
-        tasks.forEach(task -> this.completedTasks.computeIfAbsent(task.getVariant(), variant -> Sets.newHashSet()).add(task));
-        tasks.forEach(task -> this.availableTasks.get(task.getVariant()).remove(task));
+        tasks.forEach(task -> this.getCompletableTasks(task.getVariant()).add(task));
+        tasks.forEach(task -> this.getAvailableTasks(task.getVariant()).remove(task));
+        this.updateAvailableTasks();
     }
 
     @Override
@@ -126,12 +140,12 @@ public class TaskManager implements ITaskManager {
     @Nonnull
     @Override
     public Set<Task> getAvailableTasks(Task.Variant variant) {
-        return this.availableTasks.get(variant);
+        return this.availableTasks.computeIfAbsent(variant, variant1 -> Sets.newHashSet());
     }
 
     @Nonnull
     public Set<Task> getCompletableTasks(Task.Variant variant) {
-        return this.availableTasks.get(variant).stream().filter(this::canCompleteTask).collect(Collectors.toSet());
+        return this.getAvailableTasks(variant).stream().filter(this::canCompleteTask).collect(Collectors.toSet());
     }
 
     @Override
@@ -143,7 +157,7 @@ public class TaskManager implements ITaskManager {
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
     public boolean canCompleteTask(Task task) {
-        if (task.requireParent() && this.completedTasks.values().stream().noneMatch(task1 -> task1.contains(task.getParentTask())))
+        if (!isTaskUnlocked(task))
             return false;
         switch (task.getRequirement().getType()) {
             case STATS:
@@ -172,28 +186,31 @@ public class TaskManager implements ITaskManager {
     @Override
     public void reset() {
         this.completedTasks.clear();
-        ModRegistries.TASKS.getValues().stream().filter(task -> (faction.equals(task.getFaction()) || task.getFaction() == null) && !task.requireParent()).forEach(task1 -> this.availableTasks.computeIfAbsent(task1.getVariant(), variant -> Sets.newHashSet()).add(task1));
+        this.availableTasks.clear();
         this.stats.clear();
         this.entityStats.clear();
         this.init = true;
     }
 
+    @Override
+    public void init() {
+        this.updateAvailableTasks();
+    }
+
     public void updateTasks() {
         if (this.taskUpdateLast < this.player.getEntityWorld().getGameTime() / 24000) {
-            Set<Task> completed = this.completedTasks.get(Task.Variant.REPEATABLE);
-            Set<Task> available = this.availableTasks.get(Task.Variant.REPEATABLE);
-            if (completed != null && available != null) {
-                for (int i = 0; i < this.taskUpdateLast - this.player.getEntityWorld().getGameTime() / 24000; i++) {
-                    if (!this.completedTasks.isEmpty()) {
-                        Task task = completed.stream().skip(new Random().nextInt(completed.size())).findFirst().orElse(null);
-                        if (task != null) {
-                            completed.remove(task);
-                            available.add(task);
-                        }
+            Set<Task> completed = this.getCompletedTasks(Task.Variant.REPEATABLE);
+            Set<Task> available = this.getAvailableTasks(Task.Variant.REPEATABLE);
+            for (int i = 0; i < this.taskUpdateLast - this.player.getEntityWorld().getGameTime() / 24000; i++) {
+                if (!completed.isEmpty()) {
+                    Task task = completed.stream().skip(new Random().nextInt(completed.size())).findFirst().orElse(null);
+                    if (task != null) {
+                        completed.remove(task);
+                        available.add(task);
                     }
                 }
-                this.taskUpdateLast = this.player.getEntityWorld().getGameTime() / 24000;
             }
+            this.taskUpdateLast = this.player.getEntityWorld().getGameTime() / 24000;
         }
     }
 
@@ -241,6 +258,17 @@ public class TaskManager implements ITaskManager {
         return entityStats;
     }
 
+    @Override
+    public boolean isTaskCompleted(Task task) {
+        return this.getCompletedTasks(task.getVariant()).contains(task);
+    }
+
+    private void updateAvailableTasks() {
+        Collection<Task> tasks = ModRegistries.TASKS.getValues();
+        this.availableTasks.clear();
+        tasks.stream().filter(this::isTaskUnlocked).filter(task -> !isTaskCompleted(task)).forEach(task -> this.getAvailableTasks(task.getVariant()).add(task));
+    }
+
     public void writeNBT(CompoundNBT compoundNBT) {
         //completed tasks
         if (!this.completedTasks.isEmpty()) {
@@ -271,6 +299,7 @@ public class TaskManager implements ITaskManager {
     }
 
     public <T> void readNBT(CompoundNBT compoundNBT) {
+        this.init();
         //completed tasks
         if (compoundNBT.contains("tasks")) {
             compoundNBT.getCompound("tasks").keySet().forEach(taskId -> {

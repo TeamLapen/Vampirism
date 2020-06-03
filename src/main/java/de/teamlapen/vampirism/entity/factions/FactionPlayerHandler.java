@@ -281,7 +281,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             LOGGER.debug("Faction or Level change event canceled");
             return false;
         }
-        if(currentFaction != null) {
+        if (this.currentFaction != null && faction != this.currentFaction) {
             this.currentFaction.getPlayerCapability(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().reset());
         }
         if (faction == null) {
@@ -303,6 +303,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             this.setLordLevel(newLordLevel, false);
         }
         notifyFaction(old, oldLevel);
+        if(faction != null && faction != old) {
+            faction.getPlayerCapability(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().init());
+        }
         sync(!Objects.equals(old, currentFaction));
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel);

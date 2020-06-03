@@ -398,6 +398,7 @@
   "container.hunter": "Hunter",
   "container.hunter_table": "Hunter Table",
   "container.huntertrainer": "Hunter Trainer",
+  "container.vampirism.taskmaster": "Task Master",
   "__comment": "container/tileentity/screen_text",
   "text.vampirism.skills.gui_title": "Your skills",
   "text.vampirism.skills.points_left": "%d skill point(s) left",
