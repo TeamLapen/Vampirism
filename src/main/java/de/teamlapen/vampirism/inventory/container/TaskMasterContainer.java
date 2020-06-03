@@ -5,9 +5,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.player.tasks.ParentUnlocker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -48,11 +50,20 @@ public class TaskMasterContainer extends Container {
         return possibleTasks.contains(task);
     }
 
+    private boolean isParentTask(Task parent, Task child) {
+        for (TaskUnlocker taskUnlocker : child.getUnlocker()) {
+            if(taskUnlocker instanceof ParentUnlocker && ((ParentUnlocker)taskUnlocker).getParent().get() == parent) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void completeTask(Task task) {
         this.taskManager.completeTask(task);
         this.completed.add(task);
         this.possibleTasks.removeIf(task1 -> !taskManager.canCompleteTask(task1));
-        this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task1 -> task1.requireParent() && task == task1.getParentTask()).filter(task1 -> task1.getVariant() == this.variant).collect(Collectors.toList()));
+        this.availableTasks.addAll(this.taskManager.getAvailableTasks(Task.Variant.REPEATABLE).stream().filter(task1 -> !this.availableTasks.contains(task1)).collect(Collectors.toList()));
     }
 
     public boolean isCompleted(Task task) {

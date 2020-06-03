@@ -33,5 +33,9 @@ public interface ITaskManager {
 
     void reset();
 
+    void init();
+
     void applyRewards(Task task);
+
+    boolean isTaskCompleted(Task task);
 }

@@ -26,6 +26,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.tuple.Triple;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -147,7 +148,16 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 }
             }
             for (CompleteButton button : this.buttons) {
-                button.visible = button.getChosenItem() < this.container.getAvailableTasks().size() && this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask) == dummy && this.container.canCompleteTask(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask - 1)) && !this.container.isCompleted(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask - 1));
+                try {
+                    button.visible = button.getChosenItem() < this.container.getAvailableTasks().size() && this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask) == dummy && this.container.canCompleteTask(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask - 1)) && !this.container.isCompleted(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask - 1));
+                }catch (ArrayIndexOutOfBoundsException e) {
+                    button.visible = false;
+                    try {
+                        LogManager.getLogger().info(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask) == dummy);
+                    }catch (ArrayIndexOutOfBoundsException e1){
+                        LogManager.getLogger().info(button.getChosenItem() + this.scrolledTask);
+                    }
+                }
             }
             for (CompleteButton button : this.buttons) {
                 button.render(mouseX, mouseY, partialTicks);
@@ -233,7 +243,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         }
 
         if (!dummy) {
-            this.font.drawString(this.font.trimStringToWidth(task.getTranslationKey(), 131), x + 4, y + 7, 3419941);//(6839882 & 16711422) >> 1 //8453920 //4226832
+            this.font.drawString(this.font.trimStringToWidth(task.getTranslation().getFormattedText(), 131), x + 4, y + 7, 3419941);//(6839882 & 16711422) >> 1 //8453920 //4226832
         } else {
             TaskReward reward = task.getReward();
             if (reward instanceof ItemReward) {
@@ -332,7 +342,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                         this.container.getAvailableTasks().add(this.openedTask + 1, dummy);
                     } else {
                         this.isOpen = false;
-                        if (this.container.getAvailableTasks().size() < this.scrolledTask + 7) {
+                        if (this.container.getAvailableTasks().size() < this.scrolledTask + 7 && this.scrolledTask != 0) {
                             this.scrolledTask--;
                         }
                     }
