@@ -2,11 +2,15 @@ package de.teamlapen.vampirism.util;
 
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
+import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModVillage;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 
@@ -32,5 +36,15 @@ public class HunterVillageData implements IVillageFactionData {
             this.captureEntityEntries = Lists.newArrayList(new CaptureEntityEntry(ModEntities.hunter, 10), new CaptureEntityEntry(ModEntities.advanced_hunter, 2));
         }
         return this.captureEntityEntries;
+    }
+
+    @Override
+    public Block getTotemTopBlock() {
+        return ModBlocks.totem_top_vampirism_hunter;
+    }
+
+    @Override
+    public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
+        return ModEntities.task_master_hunter;
     }
 }

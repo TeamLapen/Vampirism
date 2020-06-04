@@ -46,5 +46,7 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.dummy_creature, DummyRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.vampire_minion, VampireMinionRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_minion, HunterMinionRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.task_master_vampire, VampireTaskMasterRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.task_master_hunter, HunterTaskMasterRenderer::new);
     }
 }

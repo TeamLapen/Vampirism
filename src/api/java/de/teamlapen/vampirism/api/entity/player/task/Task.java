@@ -8,22 +8,50 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 public class Task extends ForgeRegistryEntry<Task> {
 
-    private final @Nonnull Variant variant;
-    private final @Nullable IPlayableFaction<?> faction;
-    private final @Nonnull TaskRequirement<?> requirements;
-    private final @Nonnull TaskReward rewards;
-    private final @Nonnull TaskUnlocker[] unlocker;
-    private @Nullable String translationKey;
-    private @Nullable String descKey;
+    @Nonnull
+    private final Variant variant;
+    @Nullable
+    private final IPlayableFaction<?> faction;
+    @Nonnull
+    private final TaskRequirement requirements;
+    @Nonnull
+    private final TaskReward rewards;
+    @Nonnull
+    private final TaskUnlocker[] unlocker;
     private final boolean useDescription;
-    private @Nullable ITextComponent translation;
-    private @Nullable ITextComponent desc;
+    @Nullable
+    private String translationKey;
+    @Nullable
+    private ITextComponent translation;
+    @Nullable
+    private String descKey;
+    @Nullable
+    private ITextComponent desc;
 
-    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement<?> requirements, @Nonnull TaskReward rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
+    /**
+     * translation keys used for a task are
+     * <p>
+     *  - {@code task.<registryname>}
+     *  <p>
+     *  if needed:
+     *  <p>
+     *  - {@code task.<registryname>.req.<requirementname>}
+     *  <p>
+     *  - {@code task.<registryname>.reward}
+     *  <p>
+     *  - {@code task.<registryname>.desc}
+     *
+     * @param variant        the task variant
+     * @param faction        the faction that can complete the task. if {@code null} all faction are able to complete the task
+     * @param requirements   the requirements to acquire the task completion
+     * @param rewards        the rewards upon task completion
+     * @param unlocker       the unlocker to unlock the task for completion
+     * @param useDescription whether the task should display a description of not
+     */
+    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement requirements, @Nonnull TaskReward rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
         this.variant = variant;
         this.faction = faction;
         this.requirements = requirements;
@@ -32,9 +60,8 @@ public class Task extends ForgeRegistryEntry<Task> {
         this.unlocker = unlocker;
     }
 
-    @Nonnull
-    public Variant getVariant() {
-        return variant;
+    public boolean isUnique() {
+        return variant == Variant.UNIQUE;
     }
 
     @Nullable
@@ -43,7 +70,7 @@ public class Task extends ForgeRegistryEntry<Task> {
     }
 
     @Nonnull
-    public TaskRequirement<?> getRequirement() {
+    public TaskRequirement getRequirement() {
         return this.requirements;
     }
 
@@ -82,6 +109,13 @@ public class Task extends ForgeRegistryEntry<Task> {
     }
 
     public enum Variant {
-        REPEATABLE, UNIQUE
+        /**
+         * tasks that can be completed multiple times
+         */
+        REPEATABLE,
+        /**
+         * task that can only be completed once
+         */
+        UNIQUE
     }
 }

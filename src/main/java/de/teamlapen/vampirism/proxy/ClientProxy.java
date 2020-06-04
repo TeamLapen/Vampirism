@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
@@ -10,8 +11,7 @@ import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.client.render.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
+import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
@@ -255,10 +255,11 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void handleTaskStatusPacket(TaskStatusPacket msg) {
         Container container = Minecraft.getInstance().player.openContainer;
-        if (msg.containerId == container.windowId && container instanceof TaskMasterContainer) {
-            ((TaskMasterContainer) container).setPossibleTasks(msg.possibleTasks);
+        if (msg.containerId == container.windowId && container instanceof TaskBoardContainer) {
+            msg.visibleTasks.addAll(msg.notAcceptedTasks);
+            msg.visibleTasks.addAll(msg.completableTasks);
+            ((TaskBoardContainer)container).init(msg.completableTasks, (List<Task>)msg.visibleTasks, msg.notAcceptedTasks,msg.completedRequirements, msg.taskBoardId);
         }
-        FactionPlayerHandler.getOpt(Minecraft.getInstance().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().setCompletedTasks(msg.completedTasks)));
     }
 
 }

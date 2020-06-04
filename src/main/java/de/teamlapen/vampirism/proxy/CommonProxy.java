@@ -5,7 +5,7 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.network.AppearancePacket;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.TaskFinishedPacket;
+import de.teamlapen.vampirism.network.TaskActionPacket;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import de.teamlapen.vampirism.player.skills.SkillTreeManager;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -44,11 +44,19 @@ public abstract class CommonProxy implements IProxy {
     }
 
     @Override
-    public void handleTaskFinishedPacket(TaskFinishedPacket msg, PlayerEntity playerEntity) {
+    public void handleTaskActionPacket(TaskActionPacket msg, PlayerEntity playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
-            factionPlayer.getTaskManager().addCompletedTask(msg.task);
-            factionPlayer.getTaskManager().removeRequirements(msg.task);
-            factionPlayer.getTaskManager().applyRewards(msg.task);
+            switch (msg.action){
+                case COMPLETE:
+                    factionPlayer.getTaskManager().completeTask(msg.entityId, msg.task);
+                    break;
+                case ACCEPT:
+                    factionPlayer.getTaskManager().acceptTask(msg.entityId, msg.task);
+                    break;
+                case ABORT:
+                    factionPlayer.getTaskManager().abortTask(msg.entityId, msg.task);
+                    break;
+            }
         }));
     }
 }

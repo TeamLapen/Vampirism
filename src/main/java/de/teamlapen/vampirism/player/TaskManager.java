@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
@@ -10,21 +9,18 @@ import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.TaskFinishedPacket;
+import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
+import de.teamlapen.vampirism.network.TaskStatusPacket;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.NonNullFunction;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,48 +29,130 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TaskManager implements ITaskManager {
+    @Nonnull
     private static final Logger LOGGER = LogManager.getLogger();
-    private final @Nonnull PlayerEntity player;
-    private final @Nonnull IPlayableFaction<?> faction;
-    private final @Nonnull Map<Task.Variant, Set<Task>> completedTasks = Maps.newHashMap();
-    private final @Nonnull Map<Task.Variant, Set<Task>> availableTasks = Maps.newHashMap();
-    private final @Nonnull Map<Task, Map<ResourceLocation, Integer>> stats = Maps.newHashMap();
-    private final @Nonnull Map<Task, Map<EntityType<?>, Integer>> entityStats = Maps.newHashMap();
-    private boolean init;
-    private long taskUpdateLast;
-
-    public TaskManager(@Nonnull PlayerEntity player, @Nonnull IPlayableFaction<?> faction) {
-        this.faction = faction;
-        this.player = player;
-        this.reset();
-    }
+    @Nonnull
+    private static final UUID UNIQUE_TASKS = UUID.fromString("e2c6068a-8f0e-4d5b-822a-38ad6ecf98c9");
+    @Nonnull
+    private final IPlayableFaction<?> faction;
+    @Nonnull
+    private final ServerPlayerEntity player;
 
     @Nonnull
-    public static Set<Task> getTasks(PlayerEntity player, NonNullFunction<? super ITaskManager, Set<Task>> mapper) {
-        return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(mapper).orElse(ImmutableSet.of());
+    private final IFactionPlayer<?> factionPlayer;
+
+    @Nonnull
+    private final Set<Task> completedTasks = new HashSet<>();
+    @Nonnull
+    private final Map<UUID, Set<Task>> tasks = new HashMap<>();
+    @Nonnull
+    private final Map<UUID, Integer> lessTasks = new HashMap<>();
+
+    @Nonnull
+    private final Map<UUID, Set<Task>> acceptedTasks = new HashMap<>();
+
+    @Nonnull
+    private final Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> stats = Maps.newHashMap();
+
+    public TaskManager(@Nonnull IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
+        this.faction = faction;
+        this.player = (ServerPlayerEntity) factionPlayer.getRepresentingPlayer();
+        this.factionPlayer = factionPlayer;
+    }
+
+    // interface -------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void completeTask(UUID taskBoardId, @Nonnull Task task) {
+        UUID tmpId = task.isUnique() ? UNIQUE_TASKS : taskBoardId;
+        if (!canCompleteTask(taskBoardId, task)) return;
+        if (task.getRequirement().isHasStatBasedReq()) {
+            this.stats.get(tmpId).remove(task);
+        }
+        this.acceptedTasks.get(tmpId).remove(task);
+        this.completedTasks.add(task);
+        this.tasks.get(tmpId).remove(task);
+        if (!task.isUnique()) {
+            this.lessTasks.compute(taskBoardId, (id, value) -> value == null ? 1 : value + 1);
+        }
+        this.removeRequirements(task);
+        this.applyRewards(task);
+        this.updateTaskMasterScreen(taskBoardId);
+    }
+
+    @Override
+    public void acceptTask(UUID taskBoardId, @Nonnull Task task) {
+        this.acceptedTasks.compute(task.isUnique() ? UNIQUE_TASKS : taskBoardId, (id, tasks) -> {
+            if (tasks == null) {
+                return Sets.newHashSet(task);
+            } else {
+                tasks.add(task);
+                return tasks;
+            }
+        });
+        this.updateTaskMasterScreen(taskBoardId);
+    }
+
+    @Override
+    public void abortTask(UUID taskBoardId, @Nonnull Task task) {
+        this.acceptedTasks.compute(task.isUnique() ? UNIQUE_TASKS : taskBoardId, (id, tasks) -> {
+            if (tasks != null) {
+                tasks.remove(task);
+                this.stats.computeIfPresent(taskBoardId, (entityId1, tasks1) -> {
+                    tasks1.remove(task);
+                    return tasks1;
+                });
+            }
+            return tasks;
+        });
+    }
+
+    @Override
+    public void openTaskMasterScreen(UUID taskBoardId) {
+        Set<Task> selectedTasks = new HashSet<>(getTasks(taskBoardId));
+        selectedTasks.addAll(getUniqueTasks());
+        this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks);
+    }
+
+    @Override
+    public void updateTaskMasterScreen(UUID taskBoardId) {
+        Set<Task> selectedTasks = new HashSet<>(this.getTasks(taskBoardId));
+        selectedTasks.addAll(getUniqueTasks());
+        this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks);
+    }
+
+    @Override
+    public boolean hasAvailableTasks(UUID taskBoardId) {
+        return !(getTasks(taskBoardId).isEmpty() && getUniqueTasks().isEmpty());
     }
 
     /**
-     * completes task and informs the other Dist about the completion
+     * syncs all shown task for a specific task board to the client
      */
-    @Override
-    public void completeTask(@Nonnull Task task) {
-        if (addCompletedTask(task)) {
-            this.removeRequirements(task);
-            if (player.world.isRemote()) {
-                VampirismMod.dispatcher.sendToServer(new TaskFinishedPacket(task));
-            } else {
-                VampirismMod.dispatcher.sendTo(new TaskFinishedPacket(task), (ServerPlayerEntity) player);
-            }
+    private void updateClient(UUID taskBoardId, @Nonnull Map<Task, Map<ResourceLocation, Integer>> requirements, @Nonnull Set<Task> completable, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Set<Task> available) {
+        if (player.openContainer instanceof TaskBoardContainer) {
+            VampirismMod.dispatcher.sendTo(new TaskStatusPacket(completable, available, notAcceptedTasks, requirements, player.openContainer.windowId, taskBoardId), player);
         }
     }
 
-    public boolean isTaskUnlocked(Task task) {
-        if(task.getFaction() != null && task.getFaction() != faction){
-            return false;
-        }
+    // task filter -----------------------------------------------------------------------------------------------------
+
+    /**
+     * @param task the task that should be checked
+     * @return whether the task's faction is applicant to the taskManager's {@link #faction}
+     */
+    private boolean matchesFaction(@Nonnull Task task) {
+        return task.getFaction() == this.faction || task.getFaction() == null;
+    }
+
+    /**
+     * @param task the task that should be checked
+     * @return whether the task is unlocked my the player or not
+     */
+    public boolean isTaskUnlocked(@Nonnull Task task) {
+        if (!matchesFaction(task)) return false;
         for (TaskUnlocker taskUnlocker : task.getUnlocker()) {
-            if(!taskUnlocker.isUnlocked(this.player)){
+            if (!taskUnlocker.isUnlocked(this.factionPlayer)) {
                 return false;
             }
         }
@@ -82,253 +160,412 @@ public class TaskManager implements ITaskManager {
     }
 
     /**
-     * simply adds the given task to the completion list
-     * or not if the task is not applicant to the {@link TaskManager#player}
-     *
-     * @return if the task got added
+     * @param task the task that should be checked
+     * @return whether the task can be completed or not
      */
-    @Override
-    public boolean addCompletedTask(@Nonnull Task task) {
-        if (!isTaskUnlocked(task)) return false;
-        this.getCompletedTasks(task.getVariant()).add(task);
-        if(availableTasks.containsKey(task.getVariant())) {
-            this.availableTasks.get(task.getVariant()).remove(task);
-        }
-        this.getStats().remove(task);
-        this.getEntityStats().remove(task);
-        this.updateStats();
-        this.updateAvailableTasks();
-        return true;
-    }
-
-    @Override
-    public void removeRequirements(@Nonnull Task task) {
-        if (task.getRequirement().getType().equals(TaskRequirement.Type.ITEMS)) {
-            this.player.inventory.clearMatchingItems(itemStack -> itemStack.getItem() == task.getRequirement().getStat(), task.getRequirement().getAmount());
-        }
-    }
-
-    @Nonnull
-    @Override
-    public Set<Task> getCompletedTasks(Task.Variant variant) {
-        return this.completedTasks.computeIfAbsent(variant, variant1 -> Sets.newHashSet());
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void setCompletedTasks(@Nonnull Collection<Task> tasks) {
-        this.completedTasks.clear();
-        tasks.forEach(task -> this.getCompletableTasks(task.getVariant()).add(task));
-        tasks.forEach(task -> this.getAvailableTasks(task.getVariant()).remove(task));
-        this.updateAvailableTasks();
-    }
-
-    @Override
-    public void applyRewards(Task task) {
-        task.getReward().applyReward(this.player);
-    }
-
-    @Override
-    public boolean hasAvailableTasks(Task.Variant variant) {
-        this.updateTasks();
-        return !this.availableTasks.isEmpty() && this.availableTasks.get(variant) != null && !this.availableTasks.get(variant).isEmpty();
-    }
-
-    /**
-     * returns {@link TaskManager#availableTasks} and initiate the Stats on first call
-     */
-    @Nonnull
-    @Override
-    public Set<Task> getAvailableTasks(Task.Variant variant) {
-        return this.availableTasks.computeIfAbsent(variant, variant1 -> Sets.newHashSet());
-    }
-
-    @Nonnull
-    public Set<Task> getCompletableTasks(Task.Variant variant) {
-        return this.getAvailableTasks(variant).stream().filter(this::canCompleteTask).collect(Collectors.toSet());
-    }
-
-    @Override
-    @Nonnull
-    public IPlayableFaction<?> getFaction() {
-        return faction;
-    }
-
-    @SuppressWarnings("SuspiciousMethodCalls")
-    @Override
-    public boolean canCompleteTask(Task task) {
+    public boolean canCompleteTask(UUID taskBoardId, @Nonnull Task task) {
         if (!isTaskUnlocked(task))
             return false;
-        switch (task.getRequirement().getType()) {
-            case STATS:
-                if (this.player.getEntityWorld().isRemote()) return false;
-                if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())) < this.getStats().get(task).get(task.getRequirement().getStat()) + task.getRequirement().getAmount())
-                    return false;
-                break;
-            case ENTITY:
-                if (this.player.getEntityWorld().isRemote()) return false;
-                if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat())) < this.getEntityStats().get(task).get(task.getRequirement().getStat()) + task.getRequirement().getAmount())
-                    return false;
-                break;
-            case ITEMS:
-                ItemStack stack = ((ItemRequirement) task.getRequirement()).getItemStack();
-                if (this.player.inventory.count(stack.getItem()) < stack.getCount()) return false;
-                break;
-            case BOOLEAN:
-                if (!(Boolean) task.getRequirement().getStat()) return false;
-                break;
-            default:
+        for (TaskRequirement.Requirement<?> requirement : task.getRequirement().getAll()) {
+            if (!checkStat(taskBoardId, task, requirement)) {
                 return false;
+            }
         }
         return true;
     }
+
+    /**
+     * checks if the task has been accepted by the player at the given task board or not
+     *
+     * @param taskBoardId the id of the task board
+     * @param task        the task that should be checked
+     * @return whether the task is accepted or not
+     */
+    private boolean isTaskNotAccepted(UUID taskBoardId, @Nonnull Task task) {
+        return !this.acceptedTasks.getOrDefault(task.isUnique() ? UNIQUE_TASKS : taskBoardId, Collections.emptySet()).contains(task);
+    }
+
+    @Override
+    public boolean isTaskCompleted(@Nonnull Task task) {
+        return this.completedTasks.contains(task);
+    }
+
+    // task actions ----------------------------------------------------------------------------------------------------
+
+    /**
+     * remove the task's requirements from the player
+     */
+    public void removeRequirements(@Nonnull Task task) {
+        task.getRequirement().removeRequirement(this.factionPlayer);
+    }
+
+    /**
+     * applies the reward of the given task
+     */
+    public void applyRewards(@Nonnull Task task) {
+        task.getReward().applyReward(this.factionPlayer);
+    }
+
+    // general ---------------------------------------------------------------------------------------------------------
 
     @Override
     public void reset() {
         this.completedTasks.clear();
-        this.availableTasks.clear();
         this.stats.clear();
-        this.entityStats.clear();
-        this.init = true;
-    }
-
-    @Override
-    public void init() {
-        this.updateAvailableTasks();
-    }
-
-    public void updateTasks() {
-        if (this.taskUpdateLast < this.player.getEntityWorld().getGameTime() / 24000) {
-            Set<Task> completed = this.getCompletedTasks(Task.Variant.REPEATABLE);
-            Set<Task> available = this.getAvailableTasks(Task.Variant.REPEATABLE);
-            for (int i = 0; i < this.taskUpdateLast - this.player.getEntityWorld().getGameTime() / 24000; i++) {
-                if (!completed.isEmpty()) {
-                    Task task = completed.stream().skip(new Random().nextInt(completed.size())).findFirst().orElse(null);
-                    if (task != null) {
-                        completed.remove(task);
-                        available.add(task);
-                    }
-                }
-            }
-            this.taskUpdateLast = this.player.getEntityWorld().getGameTime() / 24000;
-        }
+        this.tasks.clear();
+        this.completedTasks.clear();
+        this.acceptedTasks.clear();
+        this.lessTasks.clear();
     }
 
     /**
-     * cannot be called in constructor, because player is not constructed yet
+     * updates the task list once per day ({@link #updateTaskLists()}
      */
-    private void updateStats() {
-        for (Set<Task> tasks : this.availableTasks.values()) {
-            for (Task task : tasks) {
-                if (this.getStats().containsKey(task) || this.getEntityStats().containsKey(task)) continue;
-                switch (task.getRequirement().getType()) {
-                    case STATS:
-                        if (!player.getEntityWorld().isRemote()) {
-                            this.getStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((ResourceLocation) task.getRequirement().getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())));
-                        }
-                        break;
-                    case ENTITY:
-                        if (!player.getEntityWorld().isRemote()) {
-                            this.getEntityStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((EntityType<?>) task.getRequirement().getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat())));
-                        }
-                        break;
-                    default:
-                }
-            }
+    public void tick() {
+        if (this.player.getEntityWorld().getGameTime() % 24000 == 0) {
+            this.updateTaskLists();
         }
-        this.getStats().entrySet().removeIf(entry -> !this.availableTasks.get(entry.getKey().getVariant()).contains(entry.getKey()));
-        this.getEntityStats().entrySet().removeIf(entry -> !this.availableTasks.get(entry.getKey().getVariant()).contains(entry.getKey()));
-    }
-
-    @Nonnull
-    private Map<Task, Map<ResourceLocation, Integer>> getStats() {
-        if (this.init) {
-            this.init = false;
-            this.updateStats();
-        }
-        return stats;
-    }
-
-    @Nonnull
-    private Map<Task, Map<EntityType<?>, Integer>> getEntityStats() {
-        if (this.init) {
-            this.init = false;
-            this.updateStats();
-        }
-        return entityStats;
     }
 
     @Override
-    public boolean isTaskCompleted(Task task) {
-        return this.getCompletedTasks(task.getVariant()).contains(task);
+    public void updateTaskLists() {
+        for (Map.Entry<UUID, Set<Task>> entrySet : this.tasks.entrySet()) {
+            if (entrySet.getKey() == UNIQUE_TASKS) continue;
+            Set<Task> accepted = this.acceptedTasks.get(entrySet.getKey());
+            if (accepted == null || accepted.isEmpty()) {
+                tasks.get(entrySet.getKey()).clear();
+                continue;
+            }
+            entrySet.getValue().removeIf(task -> !accepted.contains(task));
+        }
     }
 
-    private void updateAvailableTasks() {
-        Collection<Task> tasks = ModRegistries.TASKS.getValues();
-        this.availableTasks.clear();
-        tasks.stream().filter(this::isTaskUnlocked).filter(task -> !isTaskCompleted(task)).forEach(task -> this.getAvailableTasks(task.getVariant()).add(task));
+    @Override
+    public void resetTaskLists() {
+        this.acceptedTasks.clear();
+        this.lessTasks.clear();
+        this.updateTaskLists();
     }
 
-    public void writeNBT(CompoundNBT compoundNBT) {
+    // task methods ----------------------------------------------------------------------------------------------------
+
+    /**
+     * gets all visible tasks for a task board
+     * <p>
+     * locks task that are no longer unlocked
+     * if there are to less tasks already chosen, add new task
+     *
+     * @param taskBoardId the id of the task board
+     * @return all visible tasks for the task board
+     */
+    private Set<Task> getTasks(UUID taskBoardId) {
+        Set<Task> selectedTasks = this.tasks.getOrDefault(taskBoardId, new HashSet<>());
+        if (!selectedTasks.isEmpty()) {
+            this.removeLockedTasks(taskBoardId, selectedTasks);
+        }
+        int neededTaskAmount = VampirismConfig.BALANCE.taskMasterTaskAmount.get() - lessTasks.getOrDefault(taskBoardId, 0);
+        if (selectedTasks.size() < neededTaskAmount) {
+            List<Task> tasks = new ArrayList<>(ModRegistries.TASKS.getValues());
+            Collections.shuffle(tasks);
+            selectedTasks.addAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.isUnique()).filter(this::isTaskUnlocked).limit(neededTaskAmount - selectedTasks.size()).collect(Collectors.toList()));
+        }
+        this.tasks.put(taskBoardId, selectedTasks);
+        this.updateStats(taskBoardId, selectedTasks);
+        return selectedTasks;
+    }
+
+    /**
+     * gets all visible unique tasks
+     * <p>
+     * locks task that are no longer unlocked
+     *
+     * @return all visible unique tasks
+     */
+    private Set<Task> getUniqueTasks() {
+        Set<Task> uniqueTasks = this.tasks.getOrDefault(UNIQUE_TASKS, new HashSet<>());
+        if (!uniqueTasks.isEmpty()) {
+            this.removeLockedTasks(UNIQUE_TASKS, uniqueTasks);
+        }
+        uniqueTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(this::matchesFaction).filter(Task::isUnique).filter(task -> !this.completedTasks.contains(task)).filter(this::isTaskUnlocked).collect(Collectors.toSet()));
+        this.tasks.put(UNIQUE_TASKS, uniqueTasks);
+        this.updateStats(UNIQUE_TASKS, uniqueTasks);
+        return uniqueTasks;
+    }
+
+    /**
+     * removes all completable tasks from the given task set and returns the removed tasks
+     *
+     * @param taskBoardId the id of the task board
+     * @param tasks       the tasks to be filtered
+     * @return all completable tasks from the given task set
+     */
+    private Set<Task> reduceToCompletableTasks(UUID taskBoardId, @Nonnull Set<Task> tasks) {
+        Set<Task> completable = tasks.stream().filter(task -> canCompleteTask(taskBoardId, task)).collect(Collectors.toSet());
+        tasks.removeAll(completable);
+        return completable;
+    }
+
+    /**
+     * removes all not accepted tasks from the given task set and returns the not accepted tasks
+     *
+     * @param taskBoardId the id of the task board
+     * @param tasks       the tasks to be filtered
+     * @return all not accepted tasks from the given task set
+     */
+    private Set<Task> reduceToNotAcceptedTasks(UUID taskBoardId, @Nonnull Set<Task> tasks) {
+        Set<Task> notAccepted = tasks.stream().filter(task -> isTaskNotAccepted(taskBoardId, task)).collect(Collectors.toSet());
+        tasks.removeAll(notAccepted);
+        return notAccepted;
+    }
+
+    /**
+     * returns all completed task requirements for the given tasks for the specific task board
+     *
+     * @param taskBoardId the id of the task board
+     * @param tasks       the task for which the requirements are needed
+     * @return map of completed requirement per task
+     */
+    @Nonnull
+    public Map<Task, Map<ResourceLocation, Integer>> getCompletedRequirements(UUID taskBoardId, @Nonnull Set<Task> tasks) {
+        Map<Task, Map<ResourceLocation, Integer>> completedRequirements = Maps.newHashMap();
+        tasks.forEach(task -> {
+            Map<ResourceLocation, Integer> completed = getCompletedRequirements(taskBoardId, task);
+            if (!completed.isEmpty()) {
+                completedRequirements.put(task, completed);
+            }
+        });
+        return completedRequirements;
+    }
+
+    /**
+     * returns all completed task requirements for the given task for the specific task board
+     *
+     * @param taskBoardId the id of the task board
+     * @param task        the task to be checked
+     * @return a list of all task requirements
+     */
+    private Map<ResourceLocation, Integer> getCompletedRequirements(UUID taskBoardId, @Nonnull Task task) {
+        Map<ResourceLocation, Integer> completed = Maps.newHashMap();
+        for (TaskRequirement.Requirement<?> requirement : task.getRequirement().getAll()) {
+            completed.put(requirement.getId(), getStat(taskBoardId, task, requirement));
+        }
+        return completed;
+    }
+
+    /**
+     * removes all no longer unlocked task from the specific task board
+     *
+     * @param taskBoardId the id of the task board
+     * @param tasks       the task to be checked
+     */
+    private void removeLockedTasks(UUID taskBoardId, @Nonnull Collection<Task> tasks) {
+        tasks.removeIf(task -> {
+            if (!this.isTaskUnlocked(task)) {
+                this.stats.getOrDefault(taskBoardId, Collections.emptyMap()).remove(task);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    /**
+     * checks if the requirement is completed
+     *
+     * @param taskBoardId the id of the task board
+     * @param task        the task of the requirement
+     * @param requirement the requirement to check
+     * @return if the requirement is completed
+     */
+    private boolean checkStat(UUID taskBoardId, @Nonnull Task task, @Nonnull TaskRequirement.Requirement<?> requirement) {
+        return getStat(taskBoardId, task, requirement) >= requirement.getAmount(this.factionPlayer);
+    }
+
+    private int getStat(UUID taskBoardId, @Nonnull Task task, @Nonnull TaskRequirement.Requirement<?> requirement) {
+        if (task.isUnique()) {
+            taskBoardId = UNIQUE_TASKS;
+        }
+        if (isTaskNotAccepted(taskBoardId, task)) return 0;
+        int neededStat = 0;
+        int actualStat = 0;
+        switch (requirement.getType()) {
+            case STATS:
+                actualStat = this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer)));
+                neededStat = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
+                break;
+            case ENTITY:
+                actualStat = this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer)));
+                neededStat = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
+                break;
+            case ENTITY_TAG:
+                //noinspection unchecked
+                for (EntityType<?> type : ((Tag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getAllElements()) {
+                    actualStat += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
+                }
+                neededStat = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
+                break;
+            case ITEMS:
+                ItemStack stack = ((ItemRequirement) requirement).getItemStack();
+                neededStat = stack.getCount();
+                actualStat = this.player.inventory.count(stack.getItem());
+                break;
+            case BOOLEAN:
+                if (!(Boolean) requirement.getStat(this.factionPlayer)) return 0;
+                return 1;
+        }
+        return Math.min(requirement.getAmount(this.factionPlayer) - (neededStat - actualStat), requirement.getAmount(this.factionPlayer));
+    }
+
+    /**
+     * updated the saved stat target for the tasks of the task board
+     *
+     * @param taskBoardId the id of the task board
+     * @param tasks       the tasks to be updated
+     */
+    private void updateStats(UUID taskBoardId, @Nonnull Collection<Task> tasks) {
+        tasks.forEach(task -> updateStats(taskBoardId, task));
+    }
+
+    /**
+     * updated the saved stat target for the task of the task board
+     *
+     * @param taskBoardId the id of the task board
+     * @param task        the task to be updated
+     */
+    private void updateStats(UUID taskBoardId, @Nonnull Task task) {
+        if (isTaskNotAccepted(taskBoardId, task)) return;
+        if (!task.getRequirement().isHasStatBasedReq()) return;
+        Map<Task, Map<ResourceLocation, Integer>> taskStats = this.stats.getOrDefault(task.isUnique() ? UNIQUE_TASKS : taskBoardId, new HashMap<>());
+        Map<ResourceLocation, Integer> reqStats = taskStats.getOrDefault(task, new HashMap<>());
+        for (TaskRequirement.Requirement<?> requirement : task.getRequirement().getAll()) {
+            switch (requirement.getType()) {
+                case STATS:
+                    reqStats.putIfAbsent(requirement.getId(), this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer))));
+                    break;
+                case ENTITY:
+                    reqStats.putIfAbsent(requirement.getId(), this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer))));
+                    break;
+                case ENTITY_TAG:
+                    int amount = 0;
+                    //noinspection unchecked
+                    for (EntityType<?> type : ((Tag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getAllElements()) {
+                        amount += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
+                    }
+                    reqStats.putIfAbsent(requirement.getId(), amount);
+                    break;
+                default:
+            }
+        }
+        taskStats.put(task, reqStats);
+        this.stats.put(task.isUnique() ? UNIQUE_TASKS : taskBoardId, taskStats);
+    }
+
+    // save/load -------------------------------------------------------------------------------------------------------
+
+    public void writeNBT(@Nonnull CompoundNBT compoundNBT) {
         //completed tasks
         if (!this.completedTasks.isEmpty()) {
             CompoundNBT tasksNBT = new CompoundNBT();
-            this.completedTasks.forEach((variant, tasks) -> tasks.forEach(task -> tasksNBT.putBoolean(task.getRegistryName().toString(), true)));
+            this.completedTasks.forEach((task) -> tasksNBT.putBoolean(Objects.requireNonNull(task.getRegistryName()).toString(), true));
+            compoundNBT.put("completedTasks", tasksNBT);
+        }
+        //tasks
+        if (!this.tasks.isEmpty()) {
+            CompoundNBT tasksNBT = new CompoundNBT();
+            this.tasks.forEach((entityId, tasks) -> {
+                CompoundNBT entityIdNBT = new CompoundNBT();
+                tasks.forEach(task -> entityIdNBT.putBoolean(Objects.requireNonNull(task.getRegistryName()).toString(), true));
+                tasksNBT.put(entityId.toString(), entityIdNBT);
+            });
             compoundNBT.put("tasks", tasksNBT);
+        }
+        //less tasks
+        if (!this.lessTasks.isEmpty()) {
+            CompoundNBT tasksNBT = new CompoundNBT();
+            this.lessTasks.forEach((entityId, tasks) -> tasksNBT.putInt(entityId.toString(), tasks));
+            compoundNBT.put("lessTasks", tasksNBT);
+        }
+        //accepted tasks
+        if (!this.acceptedTasks.isEmpty()) {
+            CompoundNBT tasksNBT = new CompoundNBT();
+            this.acceptedTasks.forEach((entityId, tasks) -> {
+                CompoundNBT entityIdNBT = new CompoundNBT();
+                tasks.forEach(task -> entityIdNBT.putBoolean(Objects.requireNonNull(task.getRegistryName()).toString(), true));
+                tasksNBT.put(entityId.toString(), entityIdNBT);
+            });
+            compoundNBT.put("acceptedTasks", tasksNBT);
         }
         //stats
         if (!this.stats.isEmpty()) {
             CompoundNBT stats = new CompoundNBT();
-            this.stats.forEach((task, requirementStats) -> {
-                CompoundNBT statsNBT = new CompoundNBT();
-                requirementStats.forEach((resourceLocation, amount) -> statsNBT.putInt(resourceLocation.toString(), amount));
-                stats.put(task.getRegistryName().toString(), statsNBT);
+            this.stats.forEach((entity, tasks) -> {
+                CompoundNBT tasksNBT = new CompoundNBT();
+                tasks.forEach((task, requirements) -> {
+                    CompoundNBT taskNBT = new CompoundNBT();
+                    requirements.forEach((requirement, amount) -> taskNBT.putInt(requirement.toString(), amount));
+                    taskNBT.put(Objects.requireNonNull(task.getRegistryName()).toString(), taskNBT);
+                });
+                stats.put(entity.toString(), tasksNBT);
             });
             compoundNBT.put("stats", stats);
         }
-        //entities
-        if (!this.entityStats.isEmpty()) {
-            CompoundNBT entity = new CompoundNBT();
-            this.entityStats.forEach((task, requirementStats) -> {
-                CompoundNBT statsNBT = new CompoundNBT();
-                requirementStats.forEach((entityType, amount) -> statsNBT.putInt(entityType.getRegistryName().toString(), amount));
-                entity.put(task.getRegistryName().toString(), statsNBT);
-            });
-            compoundNBT.put("entities", entity);
-        }
     }
 
-    public <T> void readNBT(CompoundNBT compoundNBT) {
-        this.init();
+    public void readNBT(@Nonnull CompoundNBT compoundNBT) {
         //completed tasks
-        if (compoundNBT.contains("tasks")) {
-            compoundNBT.getCompound("tasks").keySet().forEach(taskId -> {
+        if (compoundNBT.contains("completedTasks")) {
+            compoundNBT.getCompound("completedTasks").keySet().forEach(taskId -> {
                 Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
                 if (task != null) {
-                    this.addCompletedTask(task);
+                    this.completedTasks.add(task);
                 }
+            });
+        }
+        //tasks
+        if (compoundNBT.contains("tasks")) {
+            compoundNBT.getCompound("tasks").keySet().forEach(taskBoardId -> {
+                CompoundNBT entityIdNBT = compoundNBT.getCompound("tasks").getCompound(taskBoardId);
+                Set<Task> tasks = new HashSet<>();
+                entityIdNBT.keySet().forEach((taskId -> {
+                    Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
+                    if (task != null) {
+                        tasks.add(task);
+                    }
+                }));
+                this.tasks.put(UUID.fromString(taskBoardId), tasks);
+            });
+        }
+        //less tasks
+        if (compoundNBT.contains("lessTasks")) {
+            CompoundNBT lessTasksNBT = compoundNBT.getCompound("lessTasks");
+            lessTasksNBT.keySet().forEach(taskBoardId -> this.lessTasks.put(UUID.fromString(taskBoardId), lessTasksNBT.getInt(taskBoardId)));
+        }
+        //accepted tasks
+        if (compoundNBT.contains("acceptedTasks")) {
+            compoundNBT.getCompound("acceptedTasks").keySet().forEach(taskBoardId -> {
+                CompoundNBT entityIdNBT = compoundNBT.getCompound("acceptedTasks").getCompound(taskBoardId);
+                Set<Task> tasks = new HashSet<>();
+                entityIdNBT.keySet().forEach((taskId -> {
+                    Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
+                    if (task != null) {
+                        tasks.add(task);
+                    }
+                }));
+                this.acceptedTasks.put(UUID.fromString(taskBoardId), tasks);
             });
         }
         //stats
         if (compoundNBT.contains("stats")) {
-            CompoundNBT tasks = compoundNBT.getCompound("stats");
-            tasks.keySet().forEach(taskId -> {
-                Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
-                if (task != null) {
-                    this.stats.put(task, Maps.newHashMap());
-                    tasks.getCompound(taskId).keySet().forEach(stat -> this.stats.computeIfAbsent(task, task1 -> Maps.newHashMap()).put(new ResourceLocation(stat), tasks.getCompound(taskId).getInt(stat)));
-                }
-            });
-        }
-        //entities
-        if (compoundNBT.contains("entities")) {
-            CompoundNBT tasks = compoundNBT.getCompound("entities");
-            tasks.keySet().forEach(taskId -> {
-                Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
-                if (task != null) {
-                    this.entityStats.put(task, Maps.newHashMap());
-                    tasks.getCompound(taskId).keySet().forEach(stat -> this.entityStats.computeIfAbsent(task, task1 -> Maps.newHashMap()).put(ForgeRegistries.ENTITIES.getValue(new ResourceLocation(stat)), tasks.getCompound(taskId).getInt(stat)));
-                }
+            CompoundNBT stats = compoundNBT.getCompound("stats");
+            stats.keySet().forEach(taskBoardId -> {
+                CompoundNBT entityIdNBT = stats.getCompound(taskBoardId);
+                Map<Task, Map<ResourceLocation, Integer>> tasks = new HashMap<>();
+                entityIdNBT.keySet().forEach((task) -> {
+                    CompoundNBT taskNBT = entityIdNBT.getCompound(task);
+                    Map<ResourceLocation, Integer> requirements = new HashMap<>();
+                    taskNBT.keySet().forEach((requirementId) -> requirements.put(new ResourceLocation(requirementId), taskNBT.getInt(requirementId)));
+                    tasks.put(ModRegistries.TASKS.getValue(new ResourceLocation(task)), requirements);
+                });
+                this.stats.put(UUID.fromString(taskBoardId), tasks);
             });
         }
     }

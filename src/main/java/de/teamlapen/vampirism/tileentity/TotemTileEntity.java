@@ -5,12 +5,12 @@ import com.google.common.collect.Maps;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
-import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
-import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
+import de.teamlapen.vampirism.api.entity.*;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.api.world.ITotem;
 import de.teamlapen.vampirism.blocks.TotemBaseBlock;
@@ -19,6 +19,9 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.FactionVillagerProfession;
+import de.teamlapen.vampirism.entity.TaskMasterEntity;
+import de.teamlapen.vampirism.entity.VampirismEntity;
+import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.AggressiveVillagerEntity;
@@ -543,6 +546,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             else {
                 if (this.controllingFaction != null && time % 512 == 0) {
                     int beds = (int) ((ServerWorld) world).getPointOfInterestManager().func_219146_b(pointOfInterestType -> pointOfInterestType.equals(PointOfInterestType.HOME), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.ANY).count();
+                    boolean spawnTaskMaster = RNG.nextInt(6) == 0;
                     if (this.world.getEntitiesWithinAABB(VillagerEntity.class, this.getVillageArea().grow(20)).size() < Math.min(beds, VampirismConfig.BALANCE.viMaxVillagerRespawn.get())) {
                         boolean isConverted = this.controllingFaction == VReference.VAMPIRE_FACTION && RNG.nextBoolean();
                         if (isConverted) {
@@ -550,6 +554,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         } else {
                             this.spawnVillagerDefault(this.controllingFaction == VReference.HUNTER_FACTION);
                         }
+                    }else {
+                        spawnTaskMaster = true;
+                    }
+                    if(spawnTaskMaster && this.world.getEntitiesWithinAABB(VampirismEntity.class, this.getVillageArea(), entity -> entity instanceof ITaskMasterEntity).isEmpty()) {
+                        this.spawnTaskMaster();
                     }
                     int defenderNumMax = Math.min(6, this.village.getComponents().size() / 5);
                     List<? extends MobEntity> guards = this.world.getEntitiesWithinAABB(this.controllingFaction.getVillageData().getGuardSuperClass(), this.getVillageArea());
@@ -890,6 +899,15 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         newEntity.setUniqueId(MathHelper.getRandomUUID());
         if (replaceOld) oldEntity.remove();
         return this.world.addEntity(newEntity);
+    }
+
+    private void spawnTaskMaster() {
+        EntityType<? extends ITaskMasterEntity> entity = this.controllingFaction.getVillageData().getTaskMasterEntity();
+        if(entity != null) {
+            ITaskMasterEntity newEntity = entity.create(this.world);
+            newEntity.setHome(this.getVillageAreaReduced());
+            UtilLib.spawnEntityInWorld(this.world, this.getVillageAreaReduced(), (Entity) newEntity, 25, Lists.newArrayList(), SpawnReason.EVENT);
+        }
     }
 
     public void updateTrainer(boolean toDummy) {

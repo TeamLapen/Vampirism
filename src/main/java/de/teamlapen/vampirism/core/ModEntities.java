@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.vampire.*;
+import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
 import net.minecraft.util.ResourceLocation;
@@ -228,6 +229,7 @@ public class ModEntities {
             }
         });
     }
+
 
     public static Set<EntityType<?>> getAllEntities(){
         return ImmutableSet.copyOf(ALL_ENTITIES);

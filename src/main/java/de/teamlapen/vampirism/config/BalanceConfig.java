@@ -24,6 +24,7 @@ public class BalanceConfig {
     public final ForgeConfigSpec.IntValue hunterTentMaxSpawn;
     public final ForgeConfigSpec.DoubleValue crossbowDamageMult;
     public final ForgeConfigSpec.IntValue vampireDungeonWeight;
+    public final ForgeConfigSpec.IntValue taskMasterTaskAmount;
 
     public final ForgeConfigSpec.DoubleValue eaHealthThreshold;
     public final ForgeConfigSpec.IntValue eaInvisibilityCooldown;
@@ -171,6 +172,7 @@ public class BalanceConfig {
         hunterTentMaxSpawn = builder.comment("Maximum number of hunters that can spawn at one tent per day").defineInRange("hunterTentMaxSpawn", 4, 0, 20);
         crossbowDamageMult = builder.comment("The base damage dealt by crossbow arrows is multiplied by this").defineInRange("crossbowDamageMult", 1, 0.2, 5);
         vampireDungeonWeight = builder.comment("Weight of the dungeon room. Vanilla is 8").defineInRange("vampireDungeonWeight", 2, 0, Integer.MAX_VALUE);
+        taskMasterTaskAmount = builder.comment("Maximum amount of task shown at a taskmaster, except unique tasks").defineInRange("taskMasterTaskAmount", 4,1, Integer.MAX_VALUE);
 
         builder.pop();
 
