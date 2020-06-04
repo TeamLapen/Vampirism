@@ -20,12 +20,19 @@ import javax.annotation.Nonnull;
 public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
 
     private static final Logger LOGGER = LogManager.getLogger(VampirismPlayer.class);
+    /**
+     * {@code @Nonnull} on server, otherwise {@code null}
+     */
     private final TaskManager taskManager;
     protected final PlayerEntity player;
 
     public VampirismPlayer(PlayerEntity player) {
         this.player = player;
-        this.taskManager = new TaskManager(player, this.getFaction());
+        if(!player.getEntityWorld().isRemote()) {
+            this.taskManager = new TaskManager(this, this.getFaction());
+        }else {
+            this.taskManager = null;
+        }
     }
 
 
@@ -34,6 +41,9 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
         return VampirismAPI.getFactionPlayerHandler(player).map(handler -> handler.getCurrentLevel(getFaction())).orElse(0);
     }
 
+    /**
+     * null on client & @Nonnull on server
+     */
     @Nonnull
     @Override
     public TaskManager getTaskManager() {
@@ -69,6 +79,13 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
             return false;
         }
         return player.getEntityWorld().isRemote;
+    }
+
+    @Override
+    public void onUpdate() {
+        if(!isRemote()) {
+            this.taskManager.tick();
+        }
     }
 
 
@@ -112,7 +129,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
      * @param nbt
      */
     protected void loadUpdate(CompoundNBT nbt) {
-        this.taskManager.readNBT(nbt);
     }
 
 
@@ -132,7 +148,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
      * @param nbt
      */
     protected void writeFullUpdate(CompoundNBT nbt) {
-        this.taskManager.writeNBT(nbt);
     }
 
     private void copyFrom(PlayerEntity old) {

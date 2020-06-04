@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
-import net.minecraft.entity.player.PlayerEntity;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 
 @FunctionalInterface
 public interface TaskUnlocker {
 
-    boolean isUnlocked(PlayerEntity playerEntity);
+    boolean isUnlocked(IFactionPlayer<?> playerEntity);
 }

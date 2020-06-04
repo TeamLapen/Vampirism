@@ -1,6 +1,10 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
+import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 
@@ -11,8 +15,8 @@ public interface IVillageFactionData {
 
     IVillageFactionData INSTANCE = new IVillageFactionData() {
         @Override
-        public List<CaptureEntityEntry> getCaptureEntries() {
-            return Collections.emptyList();
+        public Class<? extends MobEntity> getGuardSuperClass() {
+            return MobEntity.class;
         }
 
         @Override
@@ -21,14 +25,28 @@ public interface IVillageFactionData {
         }
 
         @Override
-        public Class<? extends MobEntity> getGuardSuperClass() {
-            return MobEntity.class;
+        public List<CaptureEntityEntry> getCaptureEntries() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public Block getTotemTopBlock() {
+            return Blocks.AIR;
+        }
+
+        @Override
+        public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
+            return null;
         }
     };
 
-    List<CaptureEntityEntry> getCaptureEntries();
+    Class<? extends MobEntity> getGuardSuperClass();
 
     VillagerProfession getFactionVillageProfession();
 
-    Class<? extends MobEntity> getGuardSuperClass();
+    List<CaptureEntityEntry> getCaptureEntries();
+
+    Block getTotemTopBlock();
+
+    EntityType<? extends ITaskMasterEntity> getTaskMasterEntity();
 }

@@ -663,6 +663,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void onUpdate() {
         World world = player.getEntityWorld();
         world.getProfiler().startSection("vampirism_vampirePlayer");
+        super.onUpdate();
         int level = getLevel();
         if (level > 0) {
             if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 0) {

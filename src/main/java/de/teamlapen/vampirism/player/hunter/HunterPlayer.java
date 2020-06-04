@@ -164,6 +164,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     public void loadData(CompoundNBT compound) {
+        super.loadData(compound);
         actionHandler.loadFromNbt(compound);
         skillHandler.loadFromNbt(compound);
     }
@@ -235,6 +236,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     @Override
     public void onUpdate() {
         player.getEntityWorld().getProfiler().startSection("vampirism_hunterPlayer");
+        super.onUpdate();
         int level = getLevel();
         if (!isRemote()) {
             if (level > 0) {
@@ -269,6 +271,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     public void saveData(CompoundNBT compound) {
+        super.saveData(compound);
         actionHandler.saveToNbt(compound);
         skillHandler.saveToNbt(compound);
     }

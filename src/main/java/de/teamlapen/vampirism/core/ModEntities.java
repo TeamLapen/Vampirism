@@ -181,6 +181,8 @@ public class ModEntities {
         GlobalEntityTypeAttributes.put(villager_converted, ConvertedVillagerEntity.getAttributeBuilder().create());
         GlobalEntityTypeAttributes.put(hunter_minion, HunterMinionEntity.getAttributeBuilder().create());
         GlobalEntityTypeAttributes.put(vampire_minion, VampireMinionEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(task_master_hunter, HunterTaskMasterEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(task_master_vampire, VampireTaskMasterEntity.getAttributeBuilder().create());
 
     }
 
@@ -203,6 +205,7 @@ public class ModEntities {
             }
         });
     }
+
 
     public static Set<EntityType<?>> getAllEntities(){
         return ImmutableSet.copyOf(ALL_ENTITIES);

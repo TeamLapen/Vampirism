@@ -118,7 +118,7 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> creditsPages = new ArrayList<>();
         String lang = VampLib.proxy.getActiveLanguage();
-        String credits = "§lDeveloper:§r\nMaxanier\nChaterpaul\n§lThanks to:§r\nMistadon\nwildbill22\n1LiterZinalco\nAlis\ndimensionpainter\nS_olace\nPiklach\n\n§lTranslators:§r\n§b" + lang + "§r\n" + translateComponent("text.vampirism.translators").getString();
+        String credits = "§lDeveloper:§r\nMaxanier\nCheaterpaul\n§lThanks to:§r\nMistadon\nwildbill22\n1LiterZinalco\nAlis\ndimensionpainter\nS_olace\nPiklach\n\n§lTranslators:§r\n§b" + lang + "§r\n" + translateComponent("text.vampirism.translators").getString();
         creditsPages.addAll(PageHelper.pagesForLongText(translateComponent(credits)));
         entries.put(new ResourceLocation(base + "credits"), new EntryText(creditsPages, translateComponent(base + "credits")));
         links.putAll(entries);

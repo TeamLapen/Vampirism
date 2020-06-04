@@ -1,9 +1,14 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
-import net.minecraft.entity.player.PlayerEntity;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 
 @FunctionalInterface
 public interface TaskReward {
 
-    void applyReward(PlayerEntity player);
+    /**
+     * applies the reward to the player upon task completion
+     *
+     * @param player the player which completed the task
+     */
+    void applyReward(IFactionPlayer<?> player);
 }
