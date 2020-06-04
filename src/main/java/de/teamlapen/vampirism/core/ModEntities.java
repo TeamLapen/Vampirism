@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
 import de.teamlapen.vampirism.entity.vampire.*;
+import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -228,5 +229,11 @@ public class ModEntities {
                 mapping.remap(ModEntities.hunter_imob);
             }
         });
+    }
+
+    static void handleEntityAssignment() {
+        TotemTileEntity.registerTaskMaster(task_master_hunter, VReference.HUNTER_FACTION);
+        TotemTileEntity.registerTaskMaster(task_master_vampire, VReference.VAMPIRE_FACTION);
+        TotemTileEntity.addCaptureEntities();
     }
 }

@@ -7,10 +7,13 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
+import de.teamlapen.vampirism.api.entity.IFactionMob;
 import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.api.world.ITotem;
 import de.teamlapen.vampirism.blocks.TotemBaseBlock;
@@ -19,6 +22,9 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.FactionVillagerProfession;
+import de.teamlapen.vampirism.entity.TaskMasterEntity;
+import de.teamlapen.vampirism.entity.VampirismEntity;
+import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.AggressiveVillagerEntity;
@@ -88,6 +94,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
      * saves the position
      */
     private static final Map<StructureStart, BlockPos> totemPositions = Maps.newHashMap();
+    private static final Map<IPlayableFaction<?>, EntityType<? extends VampirismEntity>> taskMaster = Maps.newHashMap();
 
     public static boolean isInsideVampireAreaCached(Dimension dimension, BlockPos blockPos) {
         if (vampireVillages.containsKey(dimension)) {
@@ -545,6 +552,11 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         } else {
                             this.spawnVillagerDefault(this.controllingFaction == VReference.HUNTER_FACTION);
                         }
+                    }else {
+                        spawnTaskMaster = true;
+                    }
+                    if(spawnTaskMaster && this.world.getEntitiesWithinAABB(VampirismEntity.class, this.getVillageArea(), entity -> entity instanceof TaskMasterEntity).isEmpty()) {
+                        this.spawnTaskMaster();
                     }
                     int defenderNumMax = Math.min(6, this.village.getComponents().size() / 5);
                     List<? extends MobEntity> guards = this.world.getEntitiesWithinAABB(this.controllingFaction.getVillageData().getGuardSuperClass(), this.getVillageArea());
@@ -893,6 +905,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         return this.world.addEntity(newEntity);
     }
 
+    private void spawnTaskMaster() {
+        EntityType<? extends VampirismEntity> entity = taskMaster.get(this.controllingFaction);
+        VampirismEntity newEntity = entity.create(this.world);
+        newEntity.setHome(this.getVillageAreaReduced());
+        UtilLib.spawnEntityInWorld(this.world, this.getVillageAreaReduced(), newEntity, 25, Lists.newArrayList(), SpawnReason.EVENT);
+    }
+
     public void updateTrainer(boolean toDummy) {
         List<Entity> trainer;
         EntityType<?> entityType;
@@ -915,6 +934,10 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     //accessors for other classes --------------------------------------------------------------------------------------
+
+    public static <T extends VampirismEntity & TaskMasterEntity & IFactionMob> void registerTaskMaster(EntityType<T> entity, IPlayableFaction<?> faction){
+        taskMaster.put(faction, entity);
+    }
 
     private float getStrength(LivingEntity entity) {
         if (entity instanceof PlayerEntity)
