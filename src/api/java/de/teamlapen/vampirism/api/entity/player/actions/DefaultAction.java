@@ -1,26 +1,15 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-import javax.annotation.Nonnull;
-
 /**
  * Default implementation for an action
  */
 public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegistryEntry<IAction> implements IAction {
-    private final IPlayableFaction<T> faction;
     private ITextComponent name;
-
-    /**
-     * @param faction
-     */
-    public DefaultAction(IPlayableFaction<T> faction) {
-        this.faction = faction;
-    }
 
     /**
      * Can be overridden to check additional requirements
@@ -33,19 +22,13 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
     public IAction.PERM canUse(IFactionPlayer player) {
         if (!isEnabled())
             return IAction.PERM.DISABLED;
-        if (faction.getFactionPlayerInterface().isInstance(player)) {
+        if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
             //noinspection unchecked
             return (canBeUsedBy((T) player) ? IAction.PERM.ALLOWED : IAction.PERM.DISALLOWED);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + faction.getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
         }
 
-    }
-
-    @Nonnull
-    @Override
-    public IPlayableFaction getFaction() {
-        return faction;
     }
 
     @Override
@@ -66,11 +49,11 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
 
     @Override
     public boolean onActivated(IFactionPlayer player) {
-        if (faction.getFactionPlayerInterface().isInstance(player)) {
+        if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
             //noinspection unchecked
             return activate((T) player);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + faction.getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
         }
     }
 
