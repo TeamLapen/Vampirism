@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.player.skills;
 
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -34,10 +36,15 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
      * @param customDescription If false a generic "unlocks action" string is used
      */
     public ActionSkill(ResourceLocation id, IAction action, boolean customDescription) {
-        super(action.getFaction());
         this.action = action;
         this.setRegistryName(id);
         this.customDescription = customDescription;
+    }
+
+    @Nonnull
+    @Override
+    public IPlayableFaction getFaction() {
+        return action.getFaction();
     }
 
     public ResourceLocation getActionID() {
