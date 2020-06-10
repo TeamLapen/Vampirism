@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -24,10 +25,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
     private Consumer<T> deactivate = (T player) -> {
     };
     private String translationKey = null;
-
-    public VampirismSkill(IPlayableFaction<T> faction) {
-        super(faction);
-    }
 
     @Override
     public ITextComponent getDescription() {
@@ -85,7 +82,6 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
          * @param desc Enable description using the default unlocalized key
          */
         public SimpleHunterSkill(ResourceLocation id, boolean desc) {
-            super(VReference.HUNTER_FACTION);
             this.setRegistryName(id);
             if (desc) this.setHasDefaultDescription();
         }
@@ -93,6 +89,12 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
         @Deprecated
         public SimpleHunterSkill(String id, boolean desc) {
             this(new ResourceLocation(REFERENCE.MODID, id), desc);
+        }
+
+        @Nonnull
+        @Override
+        public IPlayableFaction getFaction() {
+            return VReference.HUNTER_FACTION;
         }
     }
 
@@ -111,9 +113,14 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
          * @param desc Enable description using the default unlocalized key
          */
         public SimpleVampireSkill(ResourceLocation id, boolean desc) {
-            super(VReference.VAMPIRE_FACTION);
             this.setRegistryName(id);
             if (desc) setHasDefaultDescription();
+        }
+
+        @Nonnull
+        @Override
+        public IPlayableFaction getFaction() {
+            return VReference.VAMPIRE_FACTION;
         }
     }
 }

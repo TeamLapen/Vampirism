@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -9,7 +8,6 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -18,20 +16,9 @@ import java.util.*;
 public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegistryEntry<ISkill> implements ISkill {
 
     private final Map<IAttribute, AttributeModifier> attributeModifierMap = new HashMap<>();
-    private final IPlayableFaction<T> faction;
     private int renderRow;
     private int renderColumn;
     private String translationKey;
-
-    protected DefaultSkill(IPlayableFaction<T> faction) {
-        this.faction = faction;
-    }
-
-    @Nonnull
-    @Override
-    public IPlayableFaction getFaction() {
-        return faction;
-    }
 
     @Override
     public int getRenderColumn() {
@@ -52,11 +39,11 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     public final void onDisable(IFactionPlayer player) {
         removeAttributesModifiersFromEntity(player.getRepresentingPlayer());
         player.getActionHandler().relockActions(getActions());
-        if (faction.getFactionPlayerInterface().isInstance(player)) {
+        if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
             //noinspection unchecked
             onDisabled((T) player);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + faction.getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
         }
     }
 
@@ -65,11 +52,11 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
         applyAttributesModifiersToEntity(player.getRepresentingPlayer());
 
         player.getActionHandler().unlockActions(getActions());
-        if (faction.getFactionPlayerInterface().isInstance(player)) {
+        if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
             //noinspection unchecked
             onEnabled((T) player);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + faction.getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
         }
     }
 
