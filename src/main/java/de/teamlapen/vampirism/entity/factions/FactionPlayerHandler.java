@@ -266,6 +266,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     public boolean setFactionAndLevel(IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
         IPlayableFaction<? extends IFactionPlayer<?>> old = currentFaction;
         int oldLevel = currentLevel;
+        int newLordLevel = this.currentLordLevel;
+
         if (currentFaction != null && (!currentFaction.equals(faction) || level == 0)) {
             if (!currentFaction.getPlayerCapability(player).map(IFactionPlayer::canLeaveFaction).orElse(false)) {
                 LOGGER.info("You cannot leave faction {}, it is prevented by respective mod", currentFaction.getID());
@@ -283,17 +285,20 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (faction == null) {
             currentFaction = null;
             currentLevel = 0;
-            currentLordLevel = 0;
+            newLordLevel = 0;
         } else {
             currentFaction = faction;
             currentLevel = level;
             if (currentLevel != currentFaction.getHighestReachableLevel()) {
-                currentLordLevel = 0;
+                newLordLevel = 0;
             }
         }
         if (currentLevel == 0) {
             currentFaction = null;
-            currentLordLevel = 0;
+            newLordLevel = 0;
+        }
+        if (currentLordLevel != newLordLevel) {
+            this.setLordLevel(newLordLevel, false);
         }
         notifyFaction(old, oldLevel);
         sync(!Objects.equals(old, currentFaction));
@@ -307,6 +312,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Override
     public boolean setLordLevel(int level) {
+        return this.setLordLevel(level, true);
+    }
+
+    private boolean setLordLevel(int level, boolean sync) {
         if (currentFaction == null || currentLevel != currentFaction.getHighestReachableLevel()) {
             return false;
         }
@@ -320,7 +329,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
                 c.setMaxMinions(this.getMaxMinions());
             }
         });
-        sync(false);
+        if (sync) sync(false);
         return true;
     }
 
