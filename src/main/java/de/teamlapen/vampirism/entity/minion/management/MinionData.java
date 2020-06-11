@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
-import de.teamlapen.lib.lib.inventory.InventoryHelper;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +24,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         constructors.put(id, supplier);
     }
 
+    @Nonnull
     public static MinionData fromNBT(CompoundNBT nbt) {
         ResourceLocation dataType = new ResourceLocation(nbt.getString("data_type"));
         Supplier<? extends MinionData> c = constructors.get(dataType);
@@ -37,7 +38,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         return d;
     }
 
-    private final Inventory inventory = new Inventory(10);
+    private final MinionInventory inventory;
     private float health;
     private int maxHealth;
     private ITextComponent name;
@@ -45,20 +46,22 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     @Nullable
     private MinionTask currentTask;
 
-    protected MinionData(int maxHealth, ITextComponent name) {
+    protected MinionData(int maxHealth, ITextComponent name, int invSize) {
         this.health = maxHealth;
         this.maxHealth = maxHealth;
         this.name = name;
         this.currentTask = new MinionTask(MinionTask.Type.FOLLOW);
+        this.inventory = new MinionInventory(invSize);
     }
 
     protected MinionData() {
-
+        this.inventory = new MinionInventory();
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        InventoryHelper.readInventoryFromTag(nbt, inventory);
+        inventory.read(nbt.getList("inv", 10));
+        inventory.setAvailableSize(nbt.getInt("inv_size"));
         health = nbt.getFloat("health");
         maxHealth = nbt.getInt("max_health");
         name = ITextComponent.Serializer.fromJson(nbt.getString("name"));
@@ -69,6 +72,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     public MinionTask getCurrentTask() {
         return currentTask;
     }
+
 
     public void setCurrentTask(@Nullable MinionTask currentTask) {
         this.currentTask = currentTask;
@@ -82,9 +86,10 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         this.health = health;
     }
 
-    public Inventory getInventory() {
+    public MinionInventory getInventory() {
         return inventory;
     }
+
 
     public int getMaxHealth() {
         return maxHealth;
@@ -103,9 +108,15 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
+    public final CompoundNBT serializeNBT() {
         CompoundNBT tag = new CompoundNBT();
-        InventoryHelper.writeInventoryToTag(tag, inventory);
+        serializeNBT(tag);
+        return tag;
+    }
+
+    public void serializeNBT(CompoundNBT tag) {
+        tag.putInt("inv_size", inventory.getAvailableSize());
+        tag.put("inv", inventory.write(new ListNBT()));
         tag.putFloat("health", health);
         tag.putFloat("max_health", maxHealth);
         tag.putString("name", ITextComponent.Serializer.toJson(name));
@@ -113,7 +124,6 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         if (currentTask != null) {
             tag.put("task", currentTask.serializeNBT());
         }
-        return tag;
     }
 
     protected ResourceLocation getDataType() {

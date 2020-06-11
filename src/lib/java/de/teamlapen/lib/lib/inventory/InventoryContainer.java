@@ -1,6 +1,7 @@
 package de.teamlapen.lib.lib.inventory;
 
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -10,8 +11,12 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 
@@ -90,16 +95,20 @@ public abstract class InventoryContainer extends Container {
         return result;
     }
 
-    protected void addPlayerSlots(PlayerInventory playerInventory) {
+    protected void addPlayerSlots(PlayerInventory playerInventory, int baseX, int baseY) {
         int i;
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, baseX + j * 18, baseY + i * 18));
             }
         }
         for (i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
+            this.addSlot(new Slot(playerInventory, i, baseX + i * 18, baseY + 58));
         }
+    }
+
+    protected void addPlayerSlots(PlayerInventory playerInventory) {
+        this.addPlayerSlots(playerInventory, 8, 84);
     }
 
     public static class SelectorSlot extends Slot {
@@ -120,6 +129,15 @@ public abstract class InventoryContainer extends Container {
         public boolean isItemValid(ItemStack stack) {
             return info.validate(stack);
         }
+
+
+        @Nullable
+        @OnlyIn(Dist.CLIENT)
+        @Override
+        public Pair<ResourceLocation, ResourceLocation> func_225517_c_() {
+            return info.background;
+        }
+
     }
 
 
@@ -129,13 +147,19 @@ public abstract class InventoryContainer extends Container {
         public final int yDisplay;
         public final int stackLimit;
         public final boolean inverted;
+        /**
+         * Pair of atlas and texture id
+         */
+        @Nullable
+        public final Pair<ResourceLocation, ResourceLocation>  background;
 
-        public SelectorInfo(Either<Ingredient, Predicate<ItemStack>> ingredient, int x, int y, boolean inverted, int limit) {
+        public SelectorInfo(Either<Ingredient, Predicate<ItemStack>> ingredient, int x, int y, boolean inverted, int limit, @Nullable Pair<ResourceLocation, ResourceLocation>  background) {
             this.ingredient = ingredient;
             this.xDisplay = x;
             this.yDisplay = y;
             this.stackLimit = limit;
             this.inverted = inverted;
+            this.background = background;
         }
 
         public SelectorInfo(Ingredient ingredient, int x, int y) {
@@ -147,11 +171,11 @@ public abstract class InventoryContainer extends Container {
         }
 
         public SelectorInfo(Ingredient ingredient, int x, int y, boolean inverted, int stackLimit) {
-            this(Either.left(ingredient), x, y, inverted, stackLimit);
+            this(Either.left(ingredient), x, y, inverted, stackLimit, null);
         }
 
         public SelectorInfo(Ingredient ingredient, int x, int y, int stackLimit) {
-            this(Either.left(ingredient), x, y, false, stackLimit);
+            this(Either.left(ingredient), x, y, false, stackLimit, null);
         }
 
         public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y) {
@@ -163,11 +187,15 @@ public abstract class InventoryContainer extends Container {
         }
 
         public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y, boolean inverted, int stackLimit) {
-            this(Either.right(ingredient), x, y, inverted, stackLimit);
+            this(Either.right(ingredient), x, y, inverted, stackLimit, null);
+        }
+
+        public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation>  background) {
+            this(Either.right(ingredient), x, y, inverted, stackLimit, background);
         }
 
         public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y, int stackLimit) {
-            this(Either.right(ingredient), x, y, false, stackLimit);
+            this(Either.right(ingredient), x, y, false, stackLimit, null);
         }
 
         public boolean validate(ItemStack s) {

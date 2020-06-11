@@ -43,15 +43,10 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     private final IWorldPosCallable worldPos;
     private final HunterPlayer hunterPlayer;
     private final PlayerEntity player;
-    private CraftingInventory craftMatrix = new CraftingInventory(this, 4, 4);
-    private CraftResultInventory craftResult = new CraftResultInventory();
+    private final CraftingInventory craftMatrix = new CraftingInventory(this, 4, 4);
+    private final CraftResultInventory craftResult = new CraftResultInventory();
     private boolean missingLava = false;
     private boolean prevMissingLava = false;
-
-    @Deprecated
-    public WeaponTableContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, IWorldPosCallable.DUMMY);
-    }
 
     public WeaponTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
         super(ModContainer.weapon_table, id);

@@ -6,8 +6,8 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 
 
 public class MinionModel<T extends MinionEntity>  extends PlayerModel<T> {
-    public MinionModel(float modelSize, boolean smallArmsIn) {
-        super(modelSize, smallArmsIn);
+    public MinionModel(float modelSize) {
+        super(modelSize, false);
     }
 
     @Override

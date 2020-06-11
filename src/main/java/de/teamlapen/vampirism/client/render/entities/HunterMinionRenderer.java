@@ -11,6 +11,8 @@ import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,9 +31,10 @@ public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, Mini
     };
 
     public HunterMinionRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new MinionModel<>(0.5f,false), 0.5F);
+        super(renderManagerIn, new MinionModel<>(0.5f), 0.5F);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
         this.addLayer(new HunterEquipmentLayer<>(this, Predicates.alwaysFalse(), HunterMinionEntity::getHatType));
+        this.addLayer(new BipedArmorLayer<>(this,new BipedModel<>(0.5f),new BipedModel<>(1f)));
     }
 
     @Override

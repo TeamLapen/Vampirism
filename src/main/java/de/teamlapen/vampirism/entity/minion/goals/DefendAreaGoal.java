@@ -26,7 +26,7 @@ public class DefendAreaGoal extends TargetGoal {
         super(entity, false);
         this.entity = entity;
         this.setMutexFlags(EnumSet.of(Goal.Flag.TARGET));
-        this.predicate = new EntityPredicate().setCustomPredicate(entity.getAttackPredicate(true)).setUseInvisibilityCheck().setDistance(60);
+        this.predicate = new EntityPredicate().setCustomPredicate(e -> entity.getAttackPredicate(true).test(e)).setUseInvisibilityCheck().setDistance(60);
     }
 
 

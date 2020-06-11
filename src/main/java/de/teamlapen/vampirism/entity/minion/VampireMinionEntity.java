@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.minion;
 
+import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -7,11 +8,13 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismEntity;
+import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.minion.goals.DefendAreaGoal;
 import de.teamlapen.vampirism.entity.minion.goals.FollowLordGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
+import de.teamlapen.vampirism.entity.minion.management.MinionTask;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityType;
@@ -19,9 +22,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
@@ -30,13 +30,14 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 
 public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.VampireMinionData> implements IVampire {
-    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(VampireMinionEntity.class, DataSerializers.VARINT);
 
     static {
         MinionData.registerDataType(VampireMinionEntity.VampireMinionData.ID, VampireMinionEntity.VampireMinionData::new);
+        MinionTask.init();
     }
 
     /**
@@ -71,19 +72,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(2, new OpenDoorGoal(this, true));
-        this.goalSelector.addGoal(3, new RestrictSunVampireGoal<>(this));
-
-        this.goalSelector.addGoal(4, new FollowLordGoal(this, 1.1, 5, 10));
-
-        this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 20F, 0.6F));
-        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new DefendAreaGoal(this));
+    public void activateTask(MinionTask.Type type) {
 
     }
 
@@ -103,18 +92,15 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     public int getVampireType() {
-        return Math.max(0, this.dataManager.get(TYPE));
+        return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
     }
 
     public void setVampireType(int type) {
-        if (this.minionData != null) {
-            this.minionData.type = type;
-        }
-        this.dataManager.set(TYPE, type);
+        getMinionData().ifPresent(d -> d.type = type);
     }
 
     public boolean shouldRenderLordSkin() {
-        return this.getDataManager().get(TYPE) < 0;
+        return this.getMinionData().map(d -> d.type).orElse(0) < 0;
     }
 
     @Override
@@ -124,15 +110,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Override
     protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
-        this.dataManager.set(TYPE, data.type);
     }
 
-    @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(TYPE, 0);
-
-    }
 
     @Override
     public void livingTick() {
@@ -163,6 +142,29 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
+    public List<MinionTask.Type> getAvailableTasks() {
+        return Lists.newArrayList(MinionTask.Type.FOLLOW, MinionTask.Type.DEFEND_AREA, MinionTask.Type.STAY);
+    }
+
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new ForceLookEntityGoal<>(this));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(2, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(3, new RestrictSunVampireGoal<>(this));
+
+        this.goalSelector.addGoal(4, new FollowLordGoal(this, 1.1, 5, 10));
+
+        this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 20F, 0.6F));
+        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
+
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new DefendAreaGoal(this));
+
+    }
+
+    @Override
     public boolean useBlood(int amt, boolean allowPartial) {
         return false;
     }
@@ -178,7 +180,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         private int type;
 
         public VampireMinionData(int maxHealth, ITextComponent name, int type) {
-            super(maxHealth, name);
+            super(maxHealth, name, 9);
             this.type = type;
         }
 
@@ -193,10 +195,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public CompoundNBT serializeNBT() {
-            CompoundNBT tag = super.serializeNBT();
+        public void serializeNBT(CompoundNBT tag) {
+            super.serializeNBT(tag);
             tag.putInt("vampire_type", type);
-            return tag;
         }
 
         @Override

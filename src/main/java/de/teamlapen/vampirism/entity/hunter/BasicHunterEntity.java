@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
-import de.teamlapen.vampirism.entity.goals.LookAtTrainerHunterGoal;
+import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
@@ -50,12 +50,13 @@ import net.minecraft.world.gen.feature.structure.Structures;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 
 /**
  * Exists in {@link BasicHunterEntity#MAX_LEVEL}+1 different levels
  */
-public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter, LookAtTrainerHunterGoal.ITrainer, AttackRangedCrossbowGoal.IAttackWithCrossbow, IEntityActionUser {
+public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter, ForceLookEntityGoal.TaskOwner, AttackRangedCrossbowGoal.IAttackWithCrossbow, IEntityActionUser {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> WATCHED_ID = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
@@ -140,10 +141,10 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return targetAngle;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public PlayerEntity getTrainee() {
-        return trainee;
+    public Optional<PlayerEntity> getForceLookTarget() {
+        return Optional.ofNullable(trainee);
     }
 
 
@@ -466,7 +467,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
         //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
-        this.goalSelector.addGoal(3, new LookAtTrainerHunterGoal<>(this));
+        this.goalSelector.addGoal(3, new ForceLookEntityGoal<>(this));
         this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> false));
         this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7, 50));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
