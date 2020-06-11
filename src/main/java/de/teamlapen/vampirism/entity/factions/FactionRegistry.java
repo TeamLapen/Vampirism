@@ -79,7 +79,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public PlayableFaction[] getPlayableFactions() {
+    public PlayableFaction<?>[] getPlayableFactions() {
         return playableFactions;
     }
 
@@ -90,7 +90,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public Predicate<LivingEntity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction) {
+    public Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction) {
         int key = 0;
         if (otherFaction != null) {
             int id = otherFaction.hashCode();

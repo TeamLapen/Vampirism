@@ -41,7 +41,7 @@ public interface IFactionRegistry {
     /**
      * @return All playable factions after post init
      */
-    IPlayableFaction[] getPlayableFactions();
+    IPlayableFaction<?>[] getPlayableFactions();
 
     /**
      * Get a cached or create a predicate which selects all other faction entities
@@ -50,7 +50,7 @@ public interface IFactionRegistry {
      * @param ignoreDisguise If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
      * @return
      */
-    Predicate<LivingEntity> getPredicate(IFaction thisFaction, boolean ignoreDisguise);
+    Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean ignoreDisguise);
 
     /**
      * Get a cached or create a predicate which selects entities from other factions.
@@ -63,7 +63,7 @@ public interface IFactionRegistry {
      * @param otherFaction   If this is not null, only entities of this faction are selected.
      * @return
      */
-    Predicate<LivingEntity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction);
+    Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction);
 
     /**
      * Create and registerAdvancements a non playable faction. Has to be called during InterModEnqueueEvent

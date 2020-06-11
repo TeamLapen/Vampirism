@@ -5,12 +5,14 @@ import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
+import de.teamlapen.vampirism.entity.minion.management.MinionTask;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,6 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 
 public abstract class MinionEntity<T extends MinionData> extends VampirismEntity implements IPlayerOverlay {
@@ -62,6 +65,15 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      */
     protected T minionData;
 
+    /**
+     * Predicate that checks that target is not affiliated with the lord
+     */
+    private final Predicate<LivingEntity> hardAttackPredicate;
+    /**
+     * Predicate that checks if the target should be attacked based on its faction
+     */
+    private final Predicate<LivingEntity> softAttackPredicate;
+
     @Nullable
     @Override
     public GameProfile getOverlayPlayerProfile() {
@@ -73,8 +85,24 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return skinProfile;
     }
 
-    protected MinionEntity(EntityType<? extends VampirismEntity> type, World world) {
+    protected MinionEntity(EntityType<? extends VampirismEntity> type, World world, Predicate<LivingEntity> attackPredicate) {
         super(type, world);
+        this.softAttackPredicate = attackPredicate;
+        this.hardAttackPredicate = livingEntity -> {
+            boolean flag1 = getLordOpt().map(ILordPlayer::getPlayer).filter(entity -> entity == livingEntity).isPresent(); //Don't attack lord
+            boolean flag2 = livingEntity instanceof MinionEntity && ((MinionEntity<?>) livingEntity).getLordID().filter(id -> getLordID().map(id2 -> id == id2).orElse(false)).isPresent(); //Don't attack other minions of lord
+            return !flag1 && !flag2;
+        };
+    }
+
+    /**
+     * Return
+     *
+     * @param onlyShould If true only hostile (factionwise) entities are targeted otherwise anything that is not affiliated with the lord is targeted
+     * @return a predicate that checks if the target should be attacked
+     */
+    public Predicate<LivingEntity> getAttackPredicate(boolean onlyShould) {
+        return onlyShould ? this.hardAttackPredicate.and(this.softAttackPredicate) : this.hardAttackPredicate;
     }
 
     public void claimMinionSlot(int id, @Nonnull PlayerMinionController controller) {
@@ -118,6 +146,10 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
+    public Optional<MinionTask> getCurrentTask() {
+        return minionData != null ? Optional.ofNullable(minionData.getCurrentTask()) : Optional.empty();
+    }
+
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
@@ -145,6 +177,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         if (minionData != null) {
             minionData.setName(name);
         }
+    }
+
+    @Override
+    public void setAttackTarget(@Nullable LivingEntity entitylivingbaseIn) {
+        if (entitylivingbaseIn == null || hardAttackPredicate.test(entitylivingbaseIn))
+            super.setAttackTarget(entitylivingbaseIn);
     }
 
     @Override
