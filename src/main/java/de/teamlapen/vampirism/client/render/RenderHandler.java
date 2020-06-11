@@ -47,6 +47,7 @@ import net.minecraftforge.resource.VanillaResourceType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
@@ -57,11 +58,13 @@ import java.util.function.Predicate;
 public class RenderHandler implements ISelectiveResourceReloadListener {
     private static final ResourceLocation saturation1 = new ResourceLocation(REFERENCE.MODID + ":shaders/saturation1.json");
     private static final int ENTITY_NEAR_SQ_DISTANCE = 100;
+    @Nonnull
     private final Minecraft mc;
     private final int BLOOD_VISION_FADE_TICKS = 80;
 
     private final int VAMPIRE_BIOME_FADE_TICKS = 60;
     private final Logger LOGGER = LogManager.getLogger();
+    @Nullable
     private OutlineLayerBuffer bloodVisionBuffer;
     private BatEntity entityBat;
     /**
@@ -78,6 +81,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     private int bloodVisionTicks = 0;
     private int lastBloodVisionTicks = 0;
     private float vampireBiomeFogDistanceMultiplier = 1;
+    @Nullable
     private ShaderGroup blurShader;
     /**
      * Store the last used framebuffer size to be able to rebind shader buffer when size changes
@@ -88,9 +92,10 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
      * Temporarily stores if the hunter disguise blend profile has been enabled. (From RenderPlayer.Pre to RenderPlayer.Post)
      */
     private boolean hunterDisguiseEnabled;
+    @Nullable
     private Shader blur1, blur2, blit0;
 
-    public RenderHandler(Minecraft mc) {
+    public RenderHandler(@Nonnull Minecraft mc) {
         this.mc = mc;
 
     }
@@ -142,16 +147,16 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         }
 
         //Saturation shader
-            if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
-                EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
-                boolean active = pe != null && pe.getAmplifier() >= 2;
-                GameRenderer renderer = mc.gameRenderer;
-                if (active && renderer.getShaderGroup() == null) {
-                    renderer.loadShader(saturation1);
-                } else if (!active && renderer.getShaderGroup() != null && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
-                    renderer.stopUseShader();
-                }
+        if (mc.player != null && mc.player.getRNG().nextInt(10) == 3) {
+            EffectInstance pe = mc.player.getActivePotionEffect(ModEffects.saturation);
+            boolean active = pe != null && pe.getAmplifier() >= 2;
+            GameRenderer renderer = mc.gameRenderer;
+            if (active && renderer.getShaderGroup() == null) {
+                renderer.loadShader(saturation1);
+            } else if (!active && renderer.getShaderGroup() != null && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
+                renderer.stopUseShader();
             }
+        }
 
 
     }
@@ -169,7 +174,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
 
     @SubscribeEvent
     public void onRenderHand(RenderHandEvent event) {
-        if (mc.player.isAlive() && VampirePlayer.get(mc.player).getActionHandler().isActionActive(VampireActions.bat)) {
+        if (mc.player != null && mc.player.isAlive() && VampirePlayer.get(mc.player).getActionHandler().isActionActive(VampireActions.bat)) {
             event.setCanceled(true);
         }
     }
@@ -304,7 +309,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         if (shouldRenderBloodVision()) {
             adjustBloodVisionShaders(getBloodVisionProgress(partialTicks));
             this.blurShader.render(partialTicks);
-            this.bloodVisionBuffer.finish();
+            if (this.bloodVisionBuffer != null) this.bloodVisionBuffer.finish();
         }
     }
 
@@ -315,6 +320,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
     }
 
     private void adjustBloodVisionShaders(float progress) {
+        if (blit0 == null || blur1 == null || blur2 == null) return;
         progress = MathHelper.clamp(progress, 0, 1);
         blit0.getShaderManager().getShaderUniform("ColorModulate").set((1 - 0.4F * progress), (1 - 0.5F * progress), (1 - 0.3F * progress), 1);
         blur1.getShaderManager().getShaderUniform("Radius").set(Math.round(15 * progress) / 1F);
