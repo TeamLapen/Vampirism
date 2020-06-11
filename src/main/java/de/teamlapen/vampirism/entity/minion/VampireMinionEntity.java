@@ -2,15 +2,22 @@ package de.teamlapen.vampirism.entity.minion;
 
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismEntity;
+import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
+import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
+import de.teamlapen.vampirism.entity.minion.goals.DefendAreaGoal;
+import de.teamlapen.vampirism.entity.minion.goals.FollowLordGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -44,7 +51,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     private EnumStrength garlicCache = EnumStrength.NONE;
 
     public VampireMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
-        super(type, world);
+        super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true, true, true, false, null));
     }
 
     @Override
@@ -61,6 +68,23 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     @Override
     public LivingEntity getRepresentingEntity() {
         return this;
+    }
+
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(2, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(3, new RestrictSunVampireGoal<>(this));
+
+        this.goalSelector.addGoal(4, new FollowLordGoal(this, 1.1, 5, 10));
+
+        this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 20F, 0.6F));
+        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
+
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new DefendAreaGoal(this));
+
     }
 
     @Nonnull

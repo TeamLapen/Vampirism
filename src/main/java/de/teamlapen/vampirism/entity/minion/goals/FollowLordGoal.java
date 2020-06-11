@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.minion.goals;
 
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import de.teamlapen.vampirism.entity.minion.management.MinionTask;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,7 +21,7 @@ import java.util.Optional;
 public class FollowLordGoal extends Goal {
 
 
-    protected final MinionEntity entity;
+    protected final MinionEntity<?> entity;
     protected final IWorldReader world;
     private final double followSpeed;
     private final PathNavigator navigator;
@@ -30,7 +31,7 @@ public class FollowLordGoal extends Goal {
     private int timeToRecalcPath;
     private float oldWaterCost;
 
-    public FollowLordGoal(MinionEntity entity, double followSpeedIn, float minDistIn, float maxDistIn) {
+    public FollowLordGoal(MinionEntity<?> entity, double followSpeedIn, float minDistIn, float maxDistIn) {
         this.entity = entity;
         this.world = entity.world;
         this.followSpeed = followSpeedIn;
@@ -50,10 +51,11 @@ public class FollowLordGoal extends Goal {
     }
 
     public boolean shouldContinueExecuting() {
-        return !this.navigator.noPath() && this.entity.getDistanceSq(this.lord.getPlayer()) > (double) (this.maxDist * this.maxDist);
+        return !this.navigator.noPath() && this.entity.getDistanceSq(this.lord.getPlayer()) > (double) (this.maxDist * this.maxDist) && this.entity.getCurrentTask().filter(task -> task.type == MinionTask.Type.FOLLOW).isPresent();
     }
 
     public boolean shouldExecute() {
+        if (!this.entity.getCurrentTask().filter(task -> task.type == MinionTask.Type.FOLLOW).isPresent()) return false;
         Optional<ILordPlayer> lord = this.entity.getLordOpt();
         if (!lord.isPresent()) {
             return false;
@@ -76,7 +78,8 @@ public class FollowLordGoal extends Goal {
         this.entity.getLookController().setLookPositionWithEntity(player, 10.0F, (float) this.entity.getVerticalFaceSpeed());
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
-            if (!this.navigator.tryMoveToEntityLiving(player, this.followSpeed)) {
+            boolean flag = this.navigator.tryMoveToEntityLiving(player, this.followSpeed);
+            if (!flag || this.entity.getRNG().nextInt(8) == 0) {
                 if (!(this.entity.getDistanceSq(player) < 144.0D)) {
                     int i = MathHelper.floor(player.getPosX()) - 2;
                     int j = MathHelper.floor(player.getPosZ()) - 2;
