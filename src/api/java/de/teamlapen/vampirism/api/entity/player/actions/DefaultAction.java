@@ -10,7 +10,15 @@ import javax.annotation.Nonnull;
  * Default implementation for an action
  */
 public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegistryEntry<IAction> implements IAction {
+    private final IPlayableFaction<T> faction;
     private String translationKey;
+
+    /**
+     * @param faction
+     */
+    public DefaultAction(IPlayableFaction<T> faction) {
+        this.faction = faction;
+    }
 
     /**
      * Can be overridden to check additional requirements
@@ -23,13 +31,19 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
     public IAction.PERM canUse(IFactionPlayer player) {
         if (!isEnabled())
             return IAction.PERM.DISABLED;
-        if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
+        if (faction.getFactionPlayerInterface().isInstance(player)) {
             //noinspection unchecked
             return (canBeUsedBy((T) player) ? IAction.PERM.ALLOWED : IAction.PERM.DISALLOWED);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + faction.getFactionPlayerInterface());
         }
 
+    }
+
+    @Nonnull
+    @Override
+    public IPlayableFaction getFaction() {
+        return faction;
     }
 
     @Override
@@ -44,11 +58,11 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
 
     @Override
     public boolean onActivated(IFactionPlayer player) {
-        if (this.getFaction().getFactionPlayerInterface().isInstance(player)) {
+        if (faction.getFactionPlayerInterface().isInstance(player)) {
             //noinspection unchecked
             return activate((T) player);
         } else {
-            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + faction.getFactionPlayerInterface());
         }
     }
 
