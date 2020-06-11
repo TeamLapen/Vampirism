@@ -37,7 +37,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         return d;
     }
 
-    private final Inventory inventory = new Inventory(10);
+    private final Inventory inventory = new Inventory(15); //Size must be 6+ (9,16 or 25). See {@link MinionContainer}
     private float health;
     private int maxHealth;
     private ITextComponent name;

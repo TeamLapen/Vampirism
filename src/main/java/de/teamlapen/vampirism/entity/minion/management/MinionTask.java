@@ -53,7 +53,7 @@ public class MinionTask implements INBTSerializable<CompoundNBT> {
     @Override
     public final CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
-        nbt.putString("id", type.toString());
+        nbt.putString("id", type.ID.toString());
         toNBT(nbt);
         return nbt;
     }

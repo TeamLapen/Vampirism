@@ -19,6 +19,7 @@ public class ModContainer {
     public static final ContainerType<WeaponTableContainer> weapon_table = getNull();
     public static final ContainerType<AltarInfusionContainer> altar_infusion = getNull();
     public static final ContainerType<BloodGrinderContainer> blood_grinder = getNull();
+    public static final ContainerType<MinionContainer> minion = getNull();
 
     static void registerContainer(IForgeRegistry<ContainerType<?>> registry) {
         registry.register(new ContainerType<>(HunterTrainerContainer::new).setRegistryName(REFERENCE.MODID, "hunter_trainer"));
@@ -29,5 +30,6 @@ public class ModContainer {
         registry.register(new ContainerType<>(new WeaponTableContainer.Factory()).setRegistryName(REFERENCE.MODID, "weapon_table"));
         registry.register(new ContainerType<>(AltarInfusionContainer::new).setRegistryName(REFERENCE.MODID, "altar_infusion"));
         registry.register(new ContainerType<>(BloodGrinderContainer::new).setRegistryName(REFERENCE.MODID, "blood_grinder"));
+        registry.register(new ContainerType<>(new MinionContainer.Factory()).setRegistryName(REFERENCE.MODID, "minion"));
     }
 }
