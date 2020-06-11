@@ -9,15 +9,11 @@ import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-/**
- * 1.14
- *
- * @author maxanier
- */
 public class MinionData implements INBTSerializable<CompoundNBT> {
 
     private final static Logger LOGGER = LogManager.getLogger();
@@ -46,10 +42,14 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     private int maxHealth;
     private ITextComponent name;
 
+    @Nullable
+    private MinionTask currentTask;
+
     protected MinionData(int maxHealth, ITextComponent name) {
         this.health = maxHealth;
         this.maxHealth = maxHealth;
         this.name = name;
+        this.currentTask = new MinionTask(MinionTask.Type.FOLLOW);
     }
 
     protected MinionData() {
@@ -62,6 +62,16 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         health = nbt.getFloat("health");
         maxHealth = nbt.getInt("max_health");
         name = ITextComponent.Serializer.fromJson(nbt.getString("name"));
+        currentTask = nbt.contains("task", 10) ? MinionTask.createFromNBT(nbt.getCompound("task")) : null;
+    }
+
+    @Nullable
+    public MinionTask getCurrentTask() {
+        return currentTask;
+    }
+
+    public void setCurrentTask(@Nullable MinionTask currentTask) {
+        this.currentTask = currentTask;
     }
 
     public float getHealth() {
@@ -94,13 +104,15 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
 
     @Override
     public CompoundNBT serializeNBT() {
-
         CompoundNBT tag = new CompoundNBT();
         InventoryHelper.writeInventoryToTag(tag, inventory);
         tag.putFloat("health", health);
         tag.putFloat("max_health", maxHealth);
         tag.putString("name", ITextComponent.Serializer.toJson(name));
         tag.putString("data_type", getDataType().toString());
+        if (currentTask != null) {
+            tag.put("task", currentTask.serializeNBT());
+        }
         return tag;
     }
 
