@@ -3,6 +3,9 @@ package de.teamlapen.vampirism.items;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -25,6 +28,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +36,7 @@ import java.util.UUID;
 /**
  * Base class for all hunter only armor tileInventory
  */
-public abstract class VampirismHunterArmor extends ArmorItem {
+public abstract class VampirismHunterArmor extends ArmorItem implements IFactionExclusiveItem {
     protected static final UUID[] VAMPIRISM_ARMOR_MODIFIER = new UUID[]{UUID.fromString("f0b9a417-0cec-4629-8623-053cd0feec3c"), UUID.fromString("e54474a9-62a0-48ee-baaf-7efddca3d711"), UUID.fromString("ac0c33f4-ebbf-44fe-9be3-a729f7633329"), UUID.fromString("8839e157-d576-4cff-bf34-0a788131fe0f")};
 
 
@@ -73,6 +77,12 @@ public abstract class VampirismHunterArmor extends ArmorItem {
                 player.addPotionEffect(new EffectInstance(ModEffects.poison, 20, 1));
             }
         }
+    }
+
+    @Override
+    @Nonnull
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.HUNTER_FACTION;
     }
 
     /**

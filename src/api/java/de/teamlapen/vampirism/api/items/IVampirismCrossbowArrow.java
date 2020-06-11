@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.api.items;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -8,7 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public interface IVampirismCrossbowArrow<T extends AbstractArrowEntity & IEntityCrossbowArrow> {
+import javax.annotation.Nonnull;
+
+public interface IVampirismCrossbowArrow<T extends AbstractArrowEntity & IEntityCrossbowArrow> extends IFactionExclusiveItem {
 
     T createEntity(ItemStack stack, World world, PlayerEntity player, double heightOffset, double centerOffset, boolean rightHand);
 
@@ -18,4 +22,9 @@ public interface IVampirismCrossbowArrow<T extends AbstractArrowEntity & IEntity
 
     void onHitEntity(ItemStack arrow, LivingEntity entity, IEntityCrossbowArrow arrowEntity, Entity shootingEntity);
 
+    @Nonnull
+    @Override
+    default IFaction<?> getExclusiveFaction() {
+        return VReference.HUNTER_FACTION;
+    }
 }
