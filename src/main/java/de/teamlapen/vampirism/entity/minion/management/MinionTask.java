@@ -5,6 +5,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -31,6 +33,7 @@ public class MinionTask implements INBTSerializable<CompoundNBT> {
     @Nullable
     public static MinionTask createFromNBT(CompoundNBT nbt) {
         ResourceLocation id = new ResourceLocation(nbt.getString("id"));
+        assert constructors.size() > 0 : "Minion task init has not been called";
         if (constructors.containsKey(id)) {
             MinionTask t = constructors.get(id).get();
             t.fromNBT(nbt);
@@ -50,12 +53,8 @@ public class MinionTask implements INBTSerializable<CompoundNBT> {
         fromNBT(nbt);
     }
 
-    @Override
-    public final CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
-        nbt.putString("id", type.toString());
-        toNBT(nbt);
-        return nbt;
+    public static ITextComponent getNameOfTask(Type t) {
+        return new TranslationTextComponent("minioncommand." + t.ID.getNamespace() + "." + t.ID.getPath());
     }
 
     protected void fromNBT(CompoundNBT tag) {
@@ -64,6 +63,14 @@ public class MinionTask implements INBTSerializable<CompoundNBT> {
 
     protected void toNBT(CompoundNBT tag) {
 
+    }
+
+    @Override
+    public final CompoundNBT serializeNBT() {
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putString("id", type.ID.toString());
+        toNBT(nbt);
+        return nbt;
     }
 
     public enum Type {

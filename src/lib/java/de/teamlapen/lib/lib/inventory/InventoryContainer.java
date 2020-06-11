@@ -1,5 +1,6 @@
 package de.teamlapen.lib.lib.inventory;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -10,11 +11,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 public abstract class InventoryContainer extends Container {
@@ -92,16 +97,20 @@ public abstract class InventoryContainer extends Container {
         return result;
     }
 
-    protected void addPlayerSlots(PlayerInventory playerInventory) {
+    protected void addPlayerSlots(PlayerInventory playerInventory, int baseX, int baseY) {
         int i;
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, baseX + j * 18, baseY + i * 18));
             }
         }
         for (i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
+            this.addSlot(new Slot(playerInventory, i, baseX + i * 18, baseY + 58));
         }
+    }
+
+    protected void addPlayerSlots(PlayerInventory playerInventory) {
+        this.addPlayerSlots(playerInventory, 8, 84);
     }
 
     public static class SelectorSlot extends Slot {
@@ -122,63 +131,80 @@ public abstract class InventoryContainer extends Container {
         public boolean isItemValid(ItemStack stack) {
             return info.validate(stack);
         }
+
+
+        @Nullable
+        @OnlyIn(Dist.CLIENT)
+        @Override
+        public Pair<ResourceLocation, ResourceLocation> getBackground() {
+            return info.background;
+        }
+
     }
 
 
     public static class SelectorInfo {
-        public final Function<ItemStack, Boolean> predicate;
+        public final Predicate<ItemStack> predicate;
         public final int xDisplay;
         public final int yDisplay;
         public final int stackLimit;
         public final boolean inverted;
+        /**
+         * Pair of atlas and texture id
+         */
+        @Nullable
+        public final Pair<ResourceLocation, ResourceLocation> background;
 
-        public SelectorInfo(Function<ItemStack, Boolean> predicate, int x, int y, boolean inverted, int limit) {
+        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y, boolean inverted, int limit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
             this.predicate = predicate;
             this.xDisplay = x;
             this.yDisplay = y;
             this.stackLimit = limit;
             this.inverted = inverted;
+            this.background = background;
         }
 
         public SelectorInfo(Item item, int x, int y) {
-            this(item, x, y, false, 64);
+            this(item, x, y, false, 64, null);
         }
 
 
-        public SelectorInfo(Item item, int x, int y, boolean inverted, int stackLimit) {
-            this(itemStack -> item.equals(itemStack.getItem()), x, y, inverted, stackLimit);
+        public SelectorInfo(Item item, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
+            this(itemStack -> item.equals(itemStack.getItem()), x, y, inverted, stackLimit, background);
         }
 
-        public SelectorInfo(LazyOptional<Collection<Item>> lazyItemCollection, int x, int y, boolean inverted, int stackLimit) {
-            this(itemStack -> lazyItemCollection.map(list -> list.contains(itemStack.getItem())).orElse(false), x, y, inverted, stackLimit);
+        public SelectorInfo(LazyOptional<Collection<Item>> lazyItemCollection, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
+            this(itemStack -> lazyItemCollection.map(list -> list.contains(itemStack.getItem())).orElse(false), x, y, inverted, stackLimit, background);
         }
 
         public SelectorInfo(ITag<Item> tag, int x, int y) {
-            this(tag, x, y, false, 64);
+            this(tag, x, y, false, 64, null);
         }
 
 
-        public SelectorInfo(ITag<Item> tag, int x, int y, boolean inverted, int stackLimit) {
-            this(itemStack -> tag.contains(itemStack.getItem()) || tag.getAllElements().isEmpty(), x, y, inverted, stackLimit);
+        public SelectorInfo(ITag<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
+            this(itemStack -> tag.contains(itemStack.getItem()) || tag.getAllElements().isEmpty(), x, y, inverted, stackLimit, background);
         }
 
 
-        public SelectorInfo(Function<ItemStack, Boolean> predicate, int x, int y) {
+        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y) {
             this(predicate, x, y, false);
         }
 
-        public SelectorInfo(Function<ItemStack, Boolean> predicate, int x, int y, boolean inverted) {
-            this(predicate, x, y, inverted, 64);
+        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y, boolean inverted) {
+            this(predicate, x, y, inverted, 64, null);
         }
 
 
-        public SelectorInfo(Function<ItemStack, Boolean> predicate, int x, int y, int stackLimit) {
-            this(predicate, x, y, false, stackLimit);
+        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y, int stackLimit, @Nullable Pair<ResourceLocation, ResourceLocation> background) {
+            this(predicate, x, y, false, stackLimit, background);
         }
 
         public boolean validate(ItemStack s) {
-            boolean result = predicate.apply(s);
+            boolean result = predicate.test(s);
             return result != inverted;
         }
+
+
     }
 }

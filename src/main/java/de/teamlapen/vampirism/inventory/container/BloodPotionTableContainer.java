@@ -31,7 +31,7 @@ import java.util.*;
  * Table to create blood potions
  */
 public class BloodPotionTableContainer extends InventoryContainer {
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModItems.vampire_blood_bottle, 115, 55, false, 1), new SelectorInfo(ModItems.vampire_blood_bottle, 137, 55, false, 1), new SelectorInfo(ModTags.Items.GARLIC, 126, 14), new SelectorInfo(getSpecialIngredient(ModTags.Items.GARLIC, ModItems.vampire_blood_bottle), 101, 22, true, 64)};
+    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(ModItems.vampire_blood_bottle, 115, 55, false, 1, null), new SelectorInfo(ModItems.vampire_blood_bottle, 137, 55, false, 1, null), new SelectorInfo(ModTags.Items.GARLIC, 126, 14), new SelectorInfo(getSpecialIngredient(ModTags.Items.GARLIC, ModItems.vampire_blood_bottle), 101, 22, true, 64, null)};
 
     private static LazyOptional<Collection<Item>> getSpecialIngredient(ITag<Item> tag, Item... items) {
         return LazyOptional.of(() -> {
@@ -59,11 +59,6 @@ public class BloodPotionTableContainer extends InventoryContainer {
         this.addPlayerSlots(playerInventory);
     }
 
-
-    @Deprecated
-    public BloodPotionTableContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, IWorldPosCallable.DUMMY);
-    }
 
     /**
      * @return If requirements met and not currently crafting

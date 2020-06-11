@@ -49,11 +49,6 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     private boolean missingLava = false;
     private boolean prevMissingLava = false;
 
-    @Deprecated
-    public WeaponTableContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, IWorldPosCallable.DUMMY);
-    }
-
     public WeaponTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
         super(ModContainer.weapon_table, id);
         this.worldPos = worldPosCallable;
