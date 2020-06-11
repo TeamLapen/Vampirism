@@ -4,10 +4,12 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.HunterActionTrigger;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
@@ -20,16 +22,23 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTier;
 import net.minecraft.util.DamageSource;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
  */
-public class StakeItem extends VampirismItemWeapon implements IVampireFinisher {
+public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, IFactionExclusiveItem {
     private final static String regName = "stake";
 
     public StakeItem() {
         super(regName, ItemTier.WOOD, 1, -1, new Properties().group(VampirismMod.creativeTab));
+    }
+
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.HUNTER_FACTION;
     }
 
 

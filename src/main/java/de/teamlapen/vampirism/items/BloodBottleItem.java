@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -32,7 +34,7 @@ import javax.annotation.Nonnull;
  * Currently the only thing that can interact with the players bloodstats.
  * Can only store blood in {@link BloodBottleItem#capacity} tenth units.
  */
-public class BloodBottleItem extends VampirismItem {
+public class BloodBottleItem extends VampirismItem implements IFactionExclusiveItem {
 
     public static final int AMOUNT = 9;
     private static final String name = "blood_bottle";
@@ -66,6 +68,12 @@ public class BloodBottleItem extends VampirismItem {
             stack.setDamage(9);
             list.add(stack);
         }
+    }
+
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.VAMPIRE_FACTION;
     }
 
     @Nonnull

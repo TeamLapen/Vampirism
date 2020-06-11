@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.client.model.CloakModel;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
@@ -23,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -31,7 +35,7 @@ import java.util.List;
  *
  * @author cheaterpaul
  */
-public class VampireCloakItem extends ArmorItem {
+public class VampireCloakItem extends ArmorItem implements IFactionExclusiveItem {
 
     private final String registeredName = "vampire_cloak";
     private final EnumCloakColor color;
@@ -61,6 +65,12 @@ public class VampireCloakItem extends ArmorItem {
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s/%s_%s", registeredName, registeredName,
                 color.getName() + ".png");
+    }
+
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.VAMPIRE_FACTION;
     }
 
     @Override
