@@ -10,6 +10,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.Objects;
+
 @OnlyIn(Dist.CLIENT)
 public class MinionScreen extends ContainerScreen<MinionContainer> {
 
@@ -17,7 +19,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
 
 
     public MinionScreen(MinionContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
-        super(screenContainer, inv, titleIn);
+        super(Objects.requireNonNull(screenContainer), inv, titleIn);
         this.xSize = 196;
         this.ySize = 191;
     }

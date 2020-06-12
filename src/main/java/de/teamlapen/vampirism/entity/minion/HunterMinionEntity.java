@@ -14,9 +14,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -26,8 +23,6 @@ import javax.annotation.Nonnull;
 
 public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMinionData> implements IHunter {
 
-    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(HunterMinionEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> HAT = EntityDataManager.createKey(HunterMinionEntity.class, DataSerializers.VARINT);
 
 
     static {
@@ -53,25 +48,20 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     public int getHatType() {
-        return this.getDataManager().get(HAT);
+        return this.getMinionData().map(d -> d.hat).orElse(0);
     }
 
     public void setHatType(int type) {
-        if (this.minionData != null) {
-            this.minionData.hat = type;
-        }
-        this.getDataManager().set(HAT, type);
+        this.getMinionData().ifPresent(d -> d.hat = type);
     }
 
     public int getHunterType() {
-        return Math.max(0, getDataManager().get(TYPE));
+        return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
     }
 
     public void setHunterType(int type) {
-        if (this.minionData != null) {
-            this.minionData.type = type;
-        }
-        this.getDataManager().set(TYPE, type);
+        assert type > 0;
+        this.getMinionData().ifPresent(d -> d.type = type);
     }
 
     @Override
@@ -91,21 +81,13 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     public boolean shouldRenderLordSkin() {
-        return this.getDataManager().get(TYPE) < 0;
+        return getMinionData().map(d -> d.type).orElse(0) < 0;
     }
 
     @Override
     protected void onMinionDataReceived(@Nonnull HunterMinionData data) {
-        this.getDataManager().set(TYPE, data.type);
-        this.getDataManager().set(HAT, data.hat);
     }
 
-    @Override
-    protected void registerData() {
-        super.registerData();
-        this.getDataManager().register(TYPE, 0);
-        this.getDataManager().register(HAT, -1);
-    }
 
     public static class HunterMinionData extends MinionData {
         public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter");
@@ -114,7 +96,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         private int hat;
 
         public HunterMinionData(int maxHealth, ITextComponent name, int type, int hat) {
-            super(maxHealth, name);
+            super(maxHealth, name, 9);
             this.type = type;
             this.hat = hat;
         }
@@ -131,11 +113,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public CompoundNBT serializeNBT() {
-            CompoundNBT tag = super.serializeNBT();
+        public void serializeNBT(CompoundNBT tag) {
+            super.serializeNBT(tag);
             tag.putInt("hunter_type", type);
             tag.putInt("hunter_hat", hat);
-            return tag;
         }
 
         @Override

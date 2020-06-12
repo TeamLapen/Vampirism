@@ -19,9 +19,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
@@ -33,7 +30,6 @@ import javax.annotation.Nonnull;
 
 
 public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.VampireMinionData> implements IVampire {
-    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(VampireMinionEntity.class, DataSerializers.VARINT);
 
     static {
         MinionData.registerDataType(VampireMinionEntity.VampireMinionData.ID, VampireMinionEntity.VampireMinionData::new);
@@ -103,18 +99,15 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     public int getVampireType() {
-        return Math.max(0, this.dataManager.get(TYPE));
+        return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
     }
 
     public void setVampireType(int type) {
-        if (this.minionData != null) {
-            this.minionData.type = type;
-        }
-        this.dataManager.set(TYPE, type);
+        getMinionData().ifPresent(d -> d.type = type);
     }
 
     public boolean shouldRenderLordSkin() {
-        return this.getDataManager().get(TYPE) < 0;
+        return this.getMinionData().map(d -> d.type).orElse(0) < 0;
     }
 
     @Override
@@ -124,15 +117,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     @Override
     protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
-        this.dataManager.set(TYPE, data.type);
     }
 
-    @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(TYPE, 0);
-
-    }
 
     @Override
     public void livingTick() {
@@ -178,7 +164,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         private int type;
 
         public VampireMinionData(int maxHealth, ITextComponent name, int type) {
-            super(maxHealth, name);
+            super(maxHealth, name, 9);
             this.type = type;
         }
 
@@ -193,10 +179,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public CompoundNBT serializeNBT() {
-            CompoundNBT tag = super.serializeNBT();
+        public void serializeNBT(CompoundNBT tag) {
+            super.serializeNBT(tag);
             tag.putInt("vampire_type", type);
-            return tag;
         }
 
         @Override
