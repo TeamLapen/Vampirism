@@ -37,14 +37,11 @@ dependencies {
             name: "forge",
             version: "${project.minecraft_version}-${project.forge_version}"
     ])
-    compileOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}:api") //API for compile
-    runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}") //Full for runtime
-    compile fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}")
-
-    //runtimeOnly fg.deobf("curse.maven:angel-of-vengeance:2810906")
-    //deobfCompile 'mcp.mobius.waila:Waila:' + config.waila_version
-    //deobfCompile 'Waila:Waila:1.7.1_1.11.2' //Backup Waila on curseforge
-
+    //Don't export dependencies to pom as their deobfuscated version would be used which cannot be found in dependent projects
+    compileOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}:api") //API for compile (not POM)
+    runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}") //Full for runtime (not POM)
+    compileOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //for compile (not POM)
+    runtimeOnly fg.deobf("de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}") //for runtime (not POM)
 
 }
 
