@@ -5,9 +5,9 @@ import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 
 
-public class MinionModel<T extends MinionEntity> extends PlayerModel<T> {
-    public MinionModel(float p_i46304_1_, boolean p_i46304_2_) {
-        super(p_i46304_1_, p_i46304_2_);
+public class MinionModel<T extends MinionEntity<?>> extends PlayerModel<T> {
+    public MinionModel(float p_i46304_1_) {
+        super(p_i46304_1_, false);
     }
 
     @Override
@@ -20,21 +20,19 @@ public class MinionModel<T extends MinionEntity> extends PlayerModel<T> {
         GlStateManager.translatef(0.0F, off, 0.0F);
         this.bipedHead.render(scale);
         this.bipedHeadwear.render(scale);
-
-        GlStateManager.popMatrix();
-
         if (!entityIn.shouldRenderLordSkin()) {
-            this.renderBody(entityIn, scale);
+            this.renderBodyUnscaled(entityIn, scale);
         }
+        GlStateManager.popMatrix();
     }
 
-    public void renderBody(T entityIn, float scale) {
-        float s = entityIn.getScale();
-        float off = (1 - s) * 1.95f;
-
-        GlStateManager.pushMatrix();
-        GlStateManager.scalef(s, s, s);
-        GlStateManager.translatef(0.0F, off, 0.0F);
+    public void renderBodyUnscaled(T entityIn, float scale) {
+//        float s = entityIn.getScale();
+//        float off = (1 - s) * 1.95f;
+//
+//        GlStateManager.pushMatrix();
+//        GlStateManager.scalef(s, s, s);
+//        GlStateManager.translatef(0.0F, off, 0.0F);
         this.bipedBody.render(scale);
         this.bipedRightArm.render(scale);
         this.bipedLeftArm.render(scale);
@@ -46,7 +44,7 @@ public class MinionModel<T extends MinionEntity> extends PlayerModel<T> {
         this.bipedRightArmwear.render(scale);
         this.bipedBodyWear.render(scale);
 
-
-        GlStateManager.popMatrix();
+//
+//        GlStateManager.popMatrix();
     }
 }

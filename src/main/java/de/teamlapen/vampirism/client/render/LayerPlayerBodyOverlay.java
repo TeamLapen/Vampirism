@@ -21,7 +21,7 @@ import java.util.function.Predicate;
  * Overlays the body with a player skin
  */
 @OnlyIn(Dist.CLIENT)
-public class LayerPlayerBodyOverlay<T extends MinionEntity & IPlayerOverlay, M extends MinionModel<T>> extends LayerRenderer<T, M> {
+public class LayerPlayerBodyOverlay<T extends MinionEntity<?> & IPlayerOverlay, M extends MinionModel<T>> extends LayerRenderer<T, M> {
 
     private final BipedRenderer<T, M> renderBiped;
     private final Predicate<T> renderPredicate;
@@ -52,7 +52,7 @@ public class LayerPlayerBodyOverlay<T extends MinionEntity & IPlayerOverlay, M e
 
         GlStateManager.setProfile(GlStateManager.Profile.PLAYER_SKIN);
 
-        this.renderBiped.getEntityModel().renderBody(entityIn, scale);
+        this.renderBiped.getEntityModel().renderBodyUnscaled(entityIn, scale);
 
 
         GlStateManager.unsetProfile(GlStateManager.Profile.PLAYER_SKIN);

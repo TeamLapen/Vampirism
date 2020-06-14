@@ -21,7 +21,7 @@ public class MinionInventory implements IInventory {
     private int availableSize;
 
     public MinionInventory(int availableSize) {
-        assert availableSize == 9 || availableSize == 16 || availableSize == 25; //See {@link MinionContainer}
+        assert availableSize == 9 || availableSize == 12 || availableSize == 15; //See {@link MinionContainer}
         this.availableSize = availableSize;
     }
 
@@ -47,10 +47,26 @@ public class MinionInventory implements IInventory {
         return availableSize;
     }
 
-    public MinionInventory setAvailableSize(int newSize) {
-        assert newSize == 9 || availableSize == 16 || availableSize == 25;
-        this.availableSize = newSize;
-        return this;
+    public void read(ListNBT nbtTagListIn) {
+        this.inventory.clear();
+        this.inventoryArmor.clear();
+        this.inventoryHands.clear();
+
+        for (int i = 0; i < nbtTagListIn.size(); ++i) {
+            CompoundNBT compoundnbt = nbtTagListIn.getCompound(i);
+            int j = compoundnbt.getByte("Slot") & 255;
+            ItemStack itemstack = ItemStack.read(compoundnbt);
+            if (!itemstack.isEmpty()) {
+                if (j < this.inventoryHands.size()) {
+                    this.inventoryHands.set(j, itemstack);
+                } else if (j >= 10 && j < this.inventoryArmor.size() + 10) {
+                    this.inventoryArmor.set(j - 10, itemstack);
+                } else if (j >= 20 && j < this.inventory.size() + 20) {
+                    this.inventory.set(j - 20, itemstack);
+                }
+            }
+        }
+
     }
 
     public NonNullList<ItemStack> getInventoryArmor() {
@@ -112,26 +128,10 @@ public class MinionInventory implements IInventory {
 
     }
 
-    public void read(ListNBT nbtTagListIn) {
-        this.inventory.clear();
-        this.inventoryArmor.clear();
-        this.inventoryHands.clear();
-
-        for (int i = 0; i < nbtTagListIn.size(); ++i) {
-            CompoundNBT compoundnbt = nbtTagListIn.getCompound(i);
-            int j = compoundnbt.getByte("Slot") & 255;
-            ItemStack itemstack = ItemStack.read(compoundnbt);
-            if (!itemstack.isEmpty()) {
-                if (j < this.inventoryHands.size()) {
-                    this.inventoryHands.set(j, itemstack);
-                } else if (j >= 10 && j < this.inventoryArmor.size() + 10) {
-                    this.inventoryArmor.set(j - 100, itemstack);
-                } else if (j >= 20 && j < this.inventory.size() + 20) {
-                    this.inventory.set(j - 20, itemstack);
-                }
-            }
-        }
-
+    public MinionInventory setAvailableSize(int newSize) {
+        assert newSize == 9 || availableSize == 12 || availableSize == 15;
+        this.availableSize = newSize;
+        return this;
     }
 
     @Nonnull

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionInventory;
 import de.teamlapen.vampirism.entity.minion.management.MinionTask;
@@ -29,7 +30,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -38,12 +39,13 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
 
-public abstract class MinionEntity<T extends MinionData> extends VampirismEntity implements IPlayerOverlay, IFactionEntity, ISyncable {
+public abstract class MinionEntity<T extends MinionData> extends VampirismEntity implements IPlayerOverlay, IFactionEntity, ISyncable, ForceLookEntityGoal.TaskOwner {
     private final static Logger LOGGER = LogManager.getLogger();
     private final static NonNullList<ItemStack> EMPTY_LIST = NonNullList.create();
 
@@ -76,6 +78,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     protected T minionData;
 
     /**
+     * Holds the interacting player while the MinionContainer is open
+     */
+    @Nullable
+    private PlayerEntity interactingPlayer;
+
+    /**
      * Predicate that checks that target is not affiliated with the lord
      */
     private final Predicate<LivingEntity> hardAttackPredicate;
@@ -93,6 +101,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             return !flag1 && !flag2;
         };
     }
+
+    public abstract void activateTask(MinionTask.Type type);
 
     @Nonnull
     @Override
@@ -129,6 +139,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     public Iterable<ItemStack> getHeldEquipment() {
         return getInventory().map(MinionInventory::getInventoryHands).orElse(EMPTY_LIST);
     }
+
+    public abstract List<MinionTask.Type> getAvailableTasks();
 
     @Override
     public LivingEntity getRepresentingEntity() {
@@ -185,6 +197,21 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     public Optional<MinionTask> getCurrentTask() {
         return minionData != null ? Optional.ofNullable(minionData.getCurrentTask()) : Optional.empty();
+    }
+
+    /**
+     * @return Return player (lord) if they are currently interacting with this minion
+     */
+    @Nonnull
+    public Optional<PlayerEntity> getForceLookTarget() {
+        return Optional.ofNullable(interactingPlayer);
+    }
+
+    /**
+     * Set/Reset currently interacting player
+     */
+    public void setInteractingPlayer(@Nullable PlayerEntity player) {
+        this.interactingPlayer = player;
     }
 
     @Nonnull
@@ -362,7 +389,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     protected boolean processInteract(PlayerEntity player, Hand hand) {
         if (this.getLordOpt().filter(p -> p.getPlayer().equals(player)).isPresent()) {
             if (player instanceof ServerPlayerEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslationTextComponent("container.minion")), buf -> buf.writeVarInt(this.getEntityId()));
+                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), this.getMinionData().map(MinionData::getName).orElse(new StringTextComponent("Minion"))), buf -> buf.writeVarInt(this.getEntityId()));
                 return true;
             }
         }

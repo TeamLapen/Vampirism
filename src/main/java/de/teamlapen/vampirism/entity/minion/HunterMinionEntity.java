@@ -1,13 +1,16 @@
 package de.teamlapen.vampirism.entity.minion;
 
+import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.entity.VampirismEntity;
+import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.entity.minion.goals.DefendAreaGoal;
 import de.teamlapen.vampirism.entity.minion.goals.FollowLordGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
+import de.teamlapen.vampirism.entity.minion.management.MinionTask;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -19,6 +22,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 
 public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMinionData> implements IHunter {
@@ -27,6 +31,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     static {
         MinionData.registerDataType(HunterMinionData.ID, HunterMinionData::new);
+        MinionTask.init();
     }
 
 
@@ -65,8 +70,23 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
+    public void activateTask(MinionTask.Type type) {
+
+    }
+
+    public boolean shouldRenderLordSkin() {
+        return getMinionData().map(d -> d.type).orElse(0) < 0;
+    }
+
+    @Override
+    public List<MinionTask.Type> getAvailableTasks() {
+        return Lists.newArrayList(MinionTask.Type.DEFEND_AREA, MinionTask.Type.FOLLOW, MinionTask.Type.STAY);
+    }
+
+    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new ForceLookEntityGoal<>(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(2, new OpenDoorGoal(this, true));
 
@@ -78,10 +98,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new DefendAreaGoal(this));
 
-    }
-
-    public boolean shouldRenderLordSkin() {
-        return getMinionData().map(d -> d.type).orElse(0) < 0;
     }
 
     @Override

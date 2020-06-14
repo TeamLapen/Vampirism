@@ -4,19 +4,20 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.player.PlayerEntity;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.EnumSet;
+import java.util.Optional;
 
 /**
  * Makes the hunter trainer look at his trainee
  */
-public class LookAtTrainerHunterGoal<T extends MobEntity & LookAtTrainerHunterGoal.ITrainer> extends LookAtGoal {
+public class ForceLookEntityGoal<T extends MobEntity & ForceLookEntityGoal.TaskOwner> extends LookAtGoal {
     private final T theTrainer;
 
     /**
      * @param theTrainer Has to be instance of ITrainer
      */
-    public LookAtTrainerHunterGoal(T theTrainer) {
+    public ForceLookEntityGoal(T theTrainer) {
         super(theTrainer, PlayerEntity.class, 8.0F);
         this.theTrainer = theTrainer;
         this.setMutexFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
@@ -26,23 +27,18 @@ public class LookAtTrainerHunterGoal<T extends MobEntity & LookAtTrainerHunterGo
      * Returns whether the EntityAIBase should begin execution.
      */
     public boolean shouldExecute() {
-        if (this.theTrainer.getTrainee() != null) {
-            this.closestEntity = this.theTrainer.getTrainee();
-            return true;
-        } else {
-            return false;
-        }
+        return this.theTrainer.getForceLookTarget().map(t -> this.closestEntity = t).isPresent();
     }
 
 
     /**
-     * Interface used by {@link LookAtTrainerHunterGoal}
+     * Interface used by {@link ForceLookEntityGoal}
      */
-    public interface ITrainer {
+    public interface TaskOwner {
         /**
          * @return The player currently being trained or null
          */
-        @Nullable
-        PlayerEntity getTrainee();
+        @Nonnull
+        Optional<PlayerEntity> getForceLookTarget();
     }
 }
