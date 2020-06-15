@@ -108,7 +108,9 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityCheckSpawn(LivingSpawnEvent.CheckSpawn event) {
-        BlockState blockState = event.getWorld().getBlockState(new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down());
+        BlockPos pos = new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down();
+        if (!event.getWorld().isBlockLoaded(pos)) return;
+        BlockState blockState = event.getWorld().getBlockState(pos);
         Block b = blockState.getBlock();
         boolean deny = false;
         CastleBricksBlock.EnumVariant v = null;
