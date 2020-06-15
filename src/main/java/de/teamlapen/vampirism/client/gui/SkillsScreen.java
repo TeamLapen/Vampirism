@@ -37,6 +37,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -55,8 +56,8 @@ public class SkillsScreen extends Screen {
     private final int area_min_y = -77;
     private final int skill_width = 24;
     private final List<SkillNode> skillNodes = new ArrayList<>();
-    private int display_width = 256;
-    private int display_height = 202;
+    private final int display_width = 256;
+    private final int display_height = 202;
     private int area_min_x = 0;
     private int area_max_x = 0;
     private int area_max_y;
@@ -71,6 +72,8 @@ public class SkillsScreen extends Screen {
 
     public SkillsScreen() {
         super(new TranslationTextComponent("screen.vampirism.skills"));
+        this.width = display_width;
+        this.height = display_height;
     }
 
     @Override
@@ -177,6 +180,8 @@ public class SkillsScreen extends Screen {
         }
 
         this.renderBackground();
+
+
         this.drawSkills(mouseX, mouseY, partialTicks);
         RenderSystem.disableLighting();
         RenderSystem.disableDepthTest();
@@ -246,6 +251,13 @@ public class SkillsScreen extends Screen {
         int l = (this.height - this.display_height) / 2;
         int i1 = k + 16;
         int j1 = l + 17;
+
+        //Limit render area
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        double scale = minecraft.getMainWindow().getGuiScaleFactor();
+        GL11.glScissor((int) (k * scale), (int) (l * scale),
+                (int) (display_width * scale), (int) (display_height * scale));
+
         this.setBlitOffset(0);
         RenderSystem.depthFunc(518);
         RenderSystem.pushMatrix();
@@ -320,8 +332,6 @@ public class SkillsScreen extends Screen {
                 } else if (unlockstate == 1) {
                     color = 0xff009900;
                 }
-
-
                 this.hLine(xs, xp, yp, color);
                 this.vLine(xs, ys - 11, yp, color);
                 if (ys > yp) {
@@ -352,7 +362,7 @@ public class SkillsScreen extends Screen {
                 int minX = elements[0].getRenderColumn() * skill_width - offsetX;
                 int maxX = elements[elements.length - 1].getRenderColumn() * skill_width - offsetX;
                 int y = elements[0].getRenderRow() * skill_width - offsetY;
-                if (maxX >= -24 && y >= -24 && (float) minX <= 224.0F * this.zoomOut && (float) y <= 155.0F * this.zoomOut) {
+                if (maxX >= -skill_width && y >= -skill_width && (float) minX <= 224.0F * this.zoomOut && (float) y <= 155.0F * this.zoomOut) {
                     RenderSystem.enableBlend();
                     this.fillGradient(minX - 1, y - 1, maxX + 23, y + 23, 0xFF9B9DA1, 0xFF9B9DA1);
                     RenderSystem.disableBlend();
@@ -364,7 +374,7 @@ public class SkillsScreen extends Screen {
                 int x = skill.getRenderColumn() * skill_width - offsetX;
                 int y = skill.getRenderRow() * skill_width - offsetY;
 
-                if (x >= -24 && y >= -24 && (float) x <= 224.0F * this.zoomOut && (float) y <= 155.0F * this.zoomOut) {
+                if (x >= -skill_width && y >= -skill_width && (float) x <= 224.0F * this.zoomOut && (float) y <= 155.0F * this.zoomOut) {
                     int unlockstate = skillHandler.isSkillEnabled(skill) ? 0 : skillHandler.isNodeEnabled(node) ? -1 : skillHandler.canSkillBeEnabled(skill) == ISkillHandler.Result.OK ? 1 : 2;
 
                     if (unlockstate == 0) {
@@ -458,6 +468,8 @@ public class SkillsScreen extends Screen {
         RenderSystem.enableDepthTest();
         RenderSystem.enableLighting();
         RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+
     }
 
     private int findHorizontalNodeCenter(SkillNode node) {
