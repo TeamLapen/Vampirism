@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.entity.VampirismEntity;
@@ -195,8 +196,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    public Optional<MinionTask> getCurrentTask() {
-        return minionData != null ? Optional.ofNullable(minionData.getCurrentTask()) : Optional.empty();
+    public Optional<IMinionTask.IMinionTaskDesc> getCurrentTask() {
+        return minionData != null ? Optional.ofNullable(minionData.getCurrentTaskDesc()) : Optional.empty();
     }
 
     /**

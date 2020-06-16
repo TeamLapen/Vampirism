@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
+import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
@@ -43,14 +45,14 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     private int maxHealth;
     private ITextComponent name;
 
+
     @Nullable
-    private MinionTask currentTask;
+    private IMinionTask.IMinionTaskDesc activeTaskDesc;
 
     protected MinionData(int maxHealth, ITextComponent name, int invSize) {
         this.health = maxHealth;
         this.maxHealth = maxHealth;
         this.name = name;
-        this.currentTask = new MinionTask(MinionTask.Type.FOLLOW);
         this.inventory = new MinionInventory(invSize);
     }
 
@@ -65,18 +67,23 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         health = nbt.getFloat("health");
         maxHealth = nbt.getInt("max_health");
         name = ITextComponent.Serializer.fromJson(nbt.getString("name"));
-        currentTask = nbt.contains("task", 10) ? MinionTask.createFromNBT(nbt.getCompound("task")) : null;
+        if (nbt.contains("task", 10)) {
+            CompoundNBT task = nbt.getCompound("task");
+            ResourceLocation id = new ResourceLocation(task.getString("id"));
+            IMinionTask<?> activeTask = ModRegistries.MINION_TASKS.getValue(id);
+            if (activeTask != null) {
+                activeTaskDesc = activeTask.readFromNBT(task);
+            } else {
+                LOGGER.error("Saved minion task does not exist anymore {}", id);
+            }
+        }
     }
 
     @Nullable
-    public MinionTask getCurrentTask() {
-        return currentTask;
+    public IMinionTask.IMinionTaskDesc getCurrentTaskDesc() {
+        return activeTaskDesc;
     }
 
-
-    public void setCurrentTask(@Nullable MinionTask currentTask) {
-        this.currentTask = currentTask;
-    }
 
     public float getHealth() {
         return health;
@@ -121,8 +128,11 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         tag.putFloat("max_health", maxHealth);
         tag.putString("name", ITextComponent.Serializer.toJson(name));
         tag.putString("data_type", getDataType().toString());
-        if (currentTask != null) {
-            tag.put("task", currentTask.serializeNBT());
+        if (activeTaskDesc != null) {
+            CompoundNBT task = new CompoundNBT();
+            task.putString("id", activeTaskDesc.getTask().getRegistryName().toString());
+            activeTaskDesc.writeToNBT(task);
+            tag.put("task", task);
         }
     }
 
