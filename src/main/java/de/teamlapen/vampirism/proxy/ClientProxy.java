@@ -61,12 +61,15 @@ public class ClientProxy extends CommonProxy {
     private final static Logger LOGGER = LogManager.getLogger(ClientProxy.class);
 
     private VampirismHUDOverlay overlay;
-    private ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
+    private final ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
 
     public ClientProxy() {
         RenderHandler renderHandler = new RenderHandler(Minecraft.getInstance());
         MinecraftForge.EVENT_BUS.register(renderHandler);
-        ((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(renderHandler);
+        //Minecraft.instance is null during runData.
+        //noinspection ConstantConditions
+        if (Minecraft.getInstance() != null)
+            ((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(renderHandler); // Must be added before initial resource manager load
     }
 
     @Override
@@ -170,7 +173,6 @@ public class ClientProxy extends CommonProxy {
     private void registerSubscriptions() {
         overlay = new VampirismHUDOverlay(Minecraft.getInstance());
         MinecraftForge.EVENT_BUS.register(overlay);
-
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
         MinecraftForge.EVENT_BUS.register(new ScreenEventHandler());
     }
