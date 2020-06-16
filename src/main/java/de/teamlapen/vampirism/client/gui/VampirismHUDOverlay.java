@@ -181,10 +181,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
             float progress = VampirePlayer.getOpt(mc.player).map(VampirePlayer::getFeedProgress).orElse(0f);
             if (progress > 0) {
-                RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+                GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 if (progress <= 1.0F) {
-                    int x = this.mc.getMainWindow().getScaledWidth() / 2 - 8;
-                    int y = this.mc.getMainWindow().getScaledHeight() / 2 - 7 + 16;
+                    int x = this.mc.mainWindow.getScaledWidth() / 2 - 8;
+                    int y = this.mc.mainWindow.getScaledHeight() / 2 - 7 + 16;
                     this.mc.getTextureManager().bindTexture(icons);
 
                     int l = (int) (progress * 14.0F) + 2;
