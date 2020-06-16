@@ -32,6 +32,8 @@
     }
   },
   "lava": 5,
-  "skill": [],
+  "skill": [
+    "vampirism:enhanced_weapons"
+  ],
   "level": 1
 }
