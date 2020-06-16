@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.player.skills;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Collection;
 
@@ -11,7 +12,6 @@ import java.util.Collection;
  */
 public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     private final IAction action;
-    private final boolean customDescription;
 
     @Deprecated
     public ActionSkill(String id, IAction action) {
@@ -37,7 +37,12 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
         super(action.getFaction());
         this.action = action;
         this.setRegistryName(id);
-        this.customDescription = customDescription;
+        if (customDescription) {
+            this.setHasDefaultDescription();
+        } else {
+            this.setDescription(() -> new TranslationTextComponent("text.vampirism.skill.unlocks_action"));
+
+        }
     }
 
     public ResourceLocation getActionID() {
