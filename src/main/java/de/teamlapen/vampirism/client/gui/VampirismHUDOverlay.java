@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -39,6 +40,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.GameType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -171,6 +173,26 @@ public class VampirismHUDOverlay extends ExtendedGui {
                         });
                     }
                 }
+            }
+        }
+        //Render blood feed progress
+        GameSettings gamesettings = this.mc.gameSettings;
+        if (gamesettings.thirdPersonView == 0 && this.mc.playerController.getCurrentGameType() != GameType.SPECTATOR) {
+
+            float progress = VampirePlayer.getOpt(mc.player).map(VampirePlayer::getFeedProgress).orElse(0f);
+            if (progress > 0) {
+                RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+                if (progress <= 1.0F) {
+                    int x = this.mc.getMainWindow().getScaledWidth() / 2 - 8;
+                    int y = this.mc.getMainWindow().getScaledHeight() / 2 - 7 + 16;
+                    this.mc.getTextureManager().bindTexture(icons);
+
+                    int l = (int) (progress * 14.0F) + 2;
+
+                    this.blit(x, y, 0, 19, 16, 2);
+                    this.blit(x, y, 16, 19, l, 2);
+                }
+
             }
         }
     }
