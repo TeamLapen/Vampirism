@@ -4,26 +4,24 @@ import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.VampirismEntity;
-import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
-import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
-import de.teamlapen.vampirism.entity.minion.goals.DefendAreaGoal;
-import de.teamlapen.vampirism.entity.minion.goals.FollowLordGoal;
 import de.teamlapen.vampirism.entity.minion.management.MinionData;
-import de.teamlapen.vampirism.entity.minion.management.MinionTask;
+import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -40,7 +38,6 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     static {
         MinionData.registerDataType(VampireMinionEntity.VampireMinionData.ID, VampireMinionEntity.VampireMinionData::new);
-        MinionTask.init();
     }
 
     /**
@@ -54,12 +51,12 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     private boolean sundamageCache;
     private EnumStrength garlicCache = EnumStrength.NONE;
 
-    public VampireMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
-        super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true, true, true, false, null));
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return BasicVampireEntity.getAttributeBuilder();
     }
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VampirismEntity.getAttributeBuilder().createMutableAttribute(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+    public VampireMinionEntity(EntityType<? extends VampirismEntity> type, World world) {
+        super(type, world, VampirismAPI.factionRegistry().getPredicate(VReference.VAMPIRE_FACTION, true, true, true, false, null).or(e -> !(e instanceof IFactionEntity) && e instanceof IMob && !(e instanceof ZombieEntity)));
     }
 
 
@@ -79,10 +76,6 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return this;
     }
 
-    @Override
-    public void activateTask(MinionTask.Type type) {
-
-    }
 
     @Nonnull
     @Override
@@ -99,17 +92,17 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.world.getProfiler()));
     }
 
-    @Override
-    public List<MinionTask.Type> getAvailableTasks() {
-        return Lists.newArrayList(MinionTask.Type.FOLLOW, MinionTask.Type.DEFEND_AREA, MinionTask.Type.STAY);
-    }
-
     public int getVampireType() {
         return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
     }
 
     public void setVampireType(int type) {
         getMinionData().ifPresent(d -> d.type = type);
+    }
+
+    @Override
+    public List<IMinionTask<?>> getAvailableTasks() {
+        return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.stay, MinionTasks.defend_area);
     }
 
     @Override
@@ -121,6 +114,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
     }
 
+    public boolean shouldRenderLordSkin() {
+        return this.getMinionData().map(d -> d.type).orElse(0) < 0;
+    }
 
     @Override
     public void livingTick() {
@@ -150,25 +146,11 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         super.livingTick();
     }
 
-    public boolean shouldRenderLordSkin() {
-        return this.getMinionData().map(d -> d.type).orElse(0) < 0;
-    }
-
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new ForceLookEntityGoal<>(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(2, new OpenDoorGoal(this, true));
+        super.registerGoals();
         this.goalSelector.addGoal(3, new RestrictSunVampireGoal<>(this));
 
-        this.goalSelector.addGoal(4, new FollowLordGoal(this, 1.1, 5, 10));
-
-        this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 20F, 0.6F));
-        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new DefendAreaGoal(this));
 
     }
 

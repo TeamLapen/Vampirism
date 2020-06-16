@@ -62,7 +62,7 @@ public class MinionWorldData extends WorldSavedData {
             return controllers.get(id);
         } else {
             PlayerMinionController c = new PlayerMinionController(server, id);
-            c.setMaxMinions(lord.getMaxMinions());
+            c.setMaxMinions(lord.getCurrentFaction(), lord.getMaxMinions());
             controllers.put(id, c);
             return c;
         }

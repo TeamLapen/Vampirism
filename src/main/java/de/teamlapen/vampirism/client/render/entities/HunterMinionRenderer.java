@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.render.entities;
 
-import com.google.common.base.Predicates;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.client.model.MinionModel;
 import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
@@ -11,6 +10,7 @@ import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -31,7 +31,7 @@ public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, Mini
     public HunterMinionRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new MinionModel<>(0.5f), 0.5F);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new HunterEquipmentLayer<>(this, Predicates.alwaysFalse(), HunterMinionEntity::getHatType));
+        this.addLayer(new HunterEquipmentLayer<>(this, hunterMinionEntity -> hunterMinionEntity.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL : HunterEquipmentModel.StakeType.NONE, HunterMinionEntity::getHatType));
         this.addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5f), new BipedModel<>(1f)));
     }
 
@@ -47,5 +47,4 @@ public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, Mini
         matrixStackIn.scale(s, s, s);
         //matrixStackIn.translate(0,off,0f);
     }
-
 }

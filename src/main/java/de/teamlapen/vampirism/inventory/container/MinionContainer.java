@@ -3,11 +3,14 @@ package de.teamlapen.vampirism.inventory.container;
 import com.google.common.base.Predicates;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
+import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
-import de.teamlapen.vampirism.entity.minion.management.MinionInventory;
-import de.teamlapen.vampirism.entity.minion.management.MinionTask;
+import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.network.ActivateMinionTaskPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -17,7 +20,6 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.fml.network.IContainerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +35,7 @@ public class MinionContainer extends InventoryContainer {
 
     @Nullable
     public static MinionContainer create(int id, PlayerInventory playerInventory, MinionEntity<?> minionEntity) {
-        Optional<MinionInventory> minionInv = minionEntity.getInventory();
+        Optional<IMinionInventory> minionInv = minionEntity.getInventory();
         return minionInv.map(inv -> new MinionContainer(id, playerInventory, minionEntity, inv, inv.getAvailableSize(), createSelectors(minionEntity, inv.getAvailableSize()))).orElse(null);
     }
 
@@ -57,22 +59,28 @@ public class MinionContainer extends InventoryContainer {
 
     private final MinionEntity<?> minionEntity;
     @Nonnull
-    private final MinionTask.Type[] availableTasks;
-    private final IntReferenceHolder taskToActivate;
+    private final IMinionTask<?>[] availableTasks;
+    @Nullable
+    private final IMinionTask<?> previousTask;
+    @Nullable
+    private IMinionTask<?> taskToActivate;
+
     private final int extraSlots;
 
     public MinionContainer(int id, PlayerInventory playerInventory, MinionEntity<?> minionEntity, @Nonnull IInventory inventory, int extraSlots, SelectorInfo... selectorInfos) {
         super(ModContainer.minion, id, playerInventory, IWorldPosCallable.of(minionEntity.world, minionEntity.getPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
-        this.availableTasks = this.minionEntity.getAvailableTasks().toArray(new MinionTask.Type[0]);
+        this.availableTasks = this.minionEntity.getAvailableTasks().toArray(new IMinionTask[0]);
         this.minionEntity.setInteractingPlayer(playerInventory.player);
         this.addPlayerSlots(playerInventory, 27, 103);
-        this.taskToActivate = trackInt(IntReferenceHolder.single());
-        this.taskToActivate.set(this.minionEntity.getCurrentTask().map(t -> {
-            LOGGER.info("Active task {}", t.type);
-            return this.minionEntity.getAvailableTasks().indexOf(t.type);
-        }).orElse(-1));
+        this.previousTask = this.minionEntity.getCurrentTask().map(IMinionTask.IMinionTaskDesc::getTask).orElse(null);
+
+    }
+
+    @Override
+    public boolean canInteractWith(PlayerEntity playerIn) {
+        return minionEntity.isAlive();
     }
 
     @Override
@@ -81,7 +89,7 @@ public class MinionContainer extends InventoryContainer {
     }
 
     @Nonnull
-    public MinionTask.Type[] getAvailableTasks() {
+    public IMinionTask<?>[] getAvailableTasks() {
         return availableTasks;
     }
 
@@ -89,20 +97,38 @@ public class MinionContainer extends InventoryContainer {
         return extraSlots;
     }
 
-    public int getTaskToActivate() {
-        return taskToActivate.get();
+    public Optional<IMinionTask<?>> getPreviousTask() {
+        return Optional.ofNullable(previousTask);
     }
 
-    public void setTaskToActivate(int taskToActivate) {
-        assert taskToActivate < availableTasks.length;
-        if (taskToActivate >= availableTasks.length) return;
-        this.taskToActivate.set(taskToActivate);
+    @Nonnull
+    public IMinionTask<?> getSelectedTask() {
+        return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask : MinionTasks.stay);
     }
 
     @Override
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
+        if (this.minionEntity.world.isRemote()) {
+            sendTaskToActivate();
+        }
         minionEntity.setInteractingPlayer(null);
+    }
+
+    public void setTaskToActivate(int id) {
+        assert id >= 0 && id < availableTasks.length;
+        //noinspection ConstantConditions
+        if (id >= 0 && id < availableTasks.length) {
+            this.taskToActivate = availableTasks[id];
+        }
+    }
+
+    private void sendTaskToActivate() {
+        if (taskToActivate != null && taskToActivate != previousTask) {
+            minionEntity.getMinionId().ifPresent(id ->
+                    VampirismMod.dispatcher.sendToServer(new ActivateMinionTaskPacket(id, this.taskToActivate.getRegistryName()))
+            );
+        }
     }
 
     public static class Factory implements IContainerFactory<MinionContainer> {

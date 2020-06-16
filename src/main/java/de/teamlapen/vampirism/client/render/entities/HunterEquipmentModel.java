@@ -7,7 +7,16 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.MobEntity;
 
 public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
-    private ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, hatTop2, hatRim2, hatRim3;
+    private final ModelRenderer hatTop;
+    private final ModelRenderer hatRim;
+    private final ModelRenderer axeShaft;
+    private final ModelRenderer axeBlade1;
+    private final ModelRenderer axeBlade2;
+    private final ModelRenderer stake;
+    private final ModelRenderer stakeRight;
+    private final ModelRenderer hatTop2;
+    private final ModelRenderer hatRim2;
+    private final ModelRenderer hatRim3;
 
     public HunterEquipmentModel() {
         super(0, 0, 64, 64);
@@ -87,9 +96,9 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
         stakeRight.copyModelAngles(this.bipedRightArm);
     }
 
-    public void setWeapons(boolean onlyStake) {
-        stakeRight.showModel = onlyStake;
-        stake.showModel = axeBlade1.showModel = axeBlade2.showModel = axeShaft.showModel = !onlyStake;
+    public void setWeapons(StakeType type) {
+        stakeRight.showModel = type == StakeType.ONLY;
+        stake.showModel = axeBlade1.showModel = axeBlade2.showModel = axeShaft.showModel = type == StakeType.FULL;
     }
 
 
@@ -101,5 +110,10 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
     @Override
     protected Iterable<ModelRenderer> getHeadParts() {
         return Iterables.concat(super.getHeadParts(), ImmutableList.of(this.hatRim, this.hatRim2, this.hatRim3, this.hatTop, this.hatTop2));
+    }
+
+
+    public enum StakeType {
+        NONE, ONLY, FULL
     }
 }

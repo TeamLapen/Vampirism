@@ -175,7 +175,7 @@ public class ModEntities {
         GlobalEntityTypeAttributes.put(vampire_baron, VampireBaronEntity.getAttributeBuilder().create());
         GlobalEntityTypeAttributes.put(villager_angry, AggressiveVillagerEntity.getAttributeBuilder().create());
         GlobalEntityTypeAttributes.put(villager_converted, ConvertedVillagerEntity.getAttributeBuilder().create());
-        GlobalEntityTypeAttributes.put(hunter_minion, VampirismEntity.getAttributeBuilder().create());
+        GlobalEntityTypeAttributes.put(hunter_minion, HunterMinionEntity.getAttributeBuilder().create());
         GlobalEntityTypeAttributes.put(vampire_minion, VampireMinionEntity.getAttributeBuilder().create());
 
     }
