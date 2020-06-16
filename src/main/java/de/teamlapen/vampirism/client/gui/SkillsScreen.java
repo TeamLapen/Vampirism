@@ -420,6 +420,7 @@ public class SkillsScreen extends Screen {
             }
         }
 
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
         RenderSystem.disableDepthTest();
         RenderSystem.enableBlend();
@@ -439,6 +440,8 @@ public class SkillsScreen extends Screen {
         //Draw information for selected skill
         selected = newselected;
         if (selected != null) {
+            RenderSystem.pushMatrix();
+            RenderSystem.translated(0, 0, 1); //Render tooltips in front of buttons
             int m2MouseX = mouseX + 12;
             int m2MouseY = mouseY - 4;
 
@@ -462,13 +465,13 @@ public class SkillsScreen extends Screen {
             } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
                 this.font.drawStringWithShadow(I18n.format("text.vampirism.skill.unlock_parent_first"), m2MouseX, m2MouseY + height_desc + 3, 0xFFA32228);
             }
+            RenderSystem.popMatrix();
         }
 
 
         RenderSystem.enableDepthTest();
         RenderSystem.enableLighting();
         RenderHelper.disableStandardItemLighting();
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
     }
 
