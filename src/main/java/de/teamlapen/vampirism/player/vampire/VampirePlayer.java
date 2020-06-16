@@ -87,6 +87,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
     private final static String KEY_VISION = "vision";
     private final static String KEY_VICTIM_ID = "feed_victim";
+    private final static int FEED_TIMER = 20;
     @CapabilityInject(IVampirePlayer.class)
     public static Capability<IVampirePlayer> CAP = getNull();
 
@@ -401,6 +402,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     public int getFangType() {
         return fangType;
+    }
+
+    /**
+     * @return 0-1f
+     */
+    public float getFeedProgress() {
+        return feedBiteTickCounter / (float) FEED_TIMER;
     }
 
     /**
@@ -732,7 +740,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     sync(syncPacket, syncToAll);
                 }
 
-                if (feed_victim != -1 && feedBiteTickCounter++ >= 20) {
+                if (feed_victim != -1 && feedBiteTickCounter++ >= FEED_TIMER) {
                     updateFeeding();
                     feedBiteTickCounter = 0;
                 }
@@ -754,16 +762,23 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 ticksInSun = 0;
             }
 
-            if (feed_victim != -1 && feedBiteTickCounter++ >= 5) {
+            if (feed_victim != -1 && feedBiteTickCounter++ % 5 == 0) {
                 Entity e = VampirismMod.proxy.getMouseOverEntity();
                 if (e == null || e.getEntityId() != feed_victim) {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
+                    feedBiteTickCounter = 0;
+                    feed_victim = -1;
                     return;
                 }
-                feedBiteTickCounter = 0;
+                if (feedBiteTickCounter >= FEED_TIMER) {
+                    feedBiteTickCounter = 0;
+                }
             }
             VampirismMod.proxy.handleSleepClient(player);
 
+        }
+        if (feed_victim == -1) {
+            feedBiteTickCounter = 0;
         }
         world.getProfiler().endSection();
     }
