@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.tile.InventoryTileEntity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.container.BloodGrinderContainer;
 import net.minecraft.entity.item.ItemEntity;
@@ -15,6 +16,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -47,8 +49,8 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
     //Used to provide ItemHandler compatibility
-    private IItemHandler itemHandler;
-    private LazyOptional<IItemHandler> itemHandlerOptional;
+    private final IItemHandler itemHandler;
+    private final LazyOptional<IItemHandler> itemHandlerOptional;
 
     public BloodGrinderTileEntity() {
         super(ModTiles.grinder, 1, BloodGrinderContainer.SELECTOR_INFOS);
@@ -166,6 +168,7 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
                         if (filled >= 0.9f * blood) {
                             ItemStack extractedStack = itemHandler.extractItem(slot, 1, false);
                             handler.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
+                            this.world.playSound(null, this.getPos(), ModSounds.grinder, SoundCategory.BLOCKS, 0.5f, 0.7f);
                             this.cooldownProcess = MathHelper.clamp(20 * filled / VReference.FOOD_TO_FLUID_BLOOD, 20, 100);
                         }
                     });
