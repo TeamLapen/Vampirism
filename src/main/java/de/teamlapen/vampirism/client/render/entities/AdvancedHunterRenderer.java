@@ -28,7 +28,7 @@ public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity, 
 
     public AdvancedHunterRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
-        this.addLayer(new HunterEquipmentLayer<>(this, Predicates.alwaysFalse(), AdvancedHunterEntity::getHunterType));
+        this.addLayer(new HunterEquipmentLayer<>(this, h -> HunterEquipmentModel.StakeType.FULL, AdvancedHunterEntity::getHunterType));
         this.addLayer(new CloakLayer<>(this, textureCloak, Predicates.alwaysTrue()));
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new PlayerFaceOverlayLayer<>(this));

@@ -87,9 +87,9 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
         stakeRight.copyModelAngles(this.bipedRightArm);
     }
 
-    public void setWeapons(boolean onlyStake) {
-        stakeRight.showModel = onlyStake;
-        stake.showModel = axeBlade1.showModel = axeBlade2.showModel = axeShaft.showModel = !onlyStake;
+    public void setWeapons(StakeType type) {
+        stakeRight.showModel = type == StakeType.ONLY;
+        stake.showModel = axeBlade1.showModel = axeBlade2.showModel = axeShaft.showModel = type == StakeType.FULL;
     }
 
 
@@ -101,5 +101,10 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
     @Override
     protected Iterable<ModelRenderer> getHeadParts() {
         return Iterables.concat(super.getHeadParts(), ImmutableList.of(this.hatRim, this.hatRim2, this.hatRim3, this.hatTop, this.hatTop2));
+    }
+
+
+    public enum StakeType {
+        NONE, ONLY, FULL
     }
 }

@@ -22,7 +22,7 @@ public class HunterTrainerRenderer extends BipedRenderer<MobEntity, BasicHunterM
 
     public HunterTrainerRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
-        this.addLayer(new HunterEquipmentLayer<>(this, Predicates.alwaysTrue(), entityModel -> 1));
+        this.addLayer(new HunterEquipmentLayer<>(this, h-> HunterEquipmentModel.StakeType.ONLY, entityModel -> 1));
         this.addLayer(new CloakLayer<>(this, textureCloak, Predicates.alwaysTrue()));
     }
 

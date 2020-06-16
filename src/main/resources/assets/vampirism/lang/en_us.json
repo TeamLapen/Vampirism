@@ -639,11 +639,15 @@
   "minioncommand.vampirism.attackhostile": "Attack hostile including player",
   "minioncommand.vampirism.collectblood": "Collect blood",
   "minioncommand.vampirism.defendlord": "Defend lord",
-  "minioncommand.vampirism.stay": "Stay here",
+  "minion_task.vampirism.stay": "Stay here",
   "minioncommand.vampirism.comeback": "Come back (Remote minions)",
-  "minioncommand.vampirism.follow": "Follow",
+  "minion_task.vampirism.follow_lord": "Follow",
   "minioncommand.vampirism.converttosaveable": "Take Gem of Binding back",
-  "minioncommand.vampirism.defend_area": "Defend area",
+  "minion_task.vampirism.defend_area": "Defend area",
+  "minion_task.vampirism.collect_hunter_items": "Collect resources",
+  "minion_task.vampirism.collect_hunter_items.start": "I will head out and search for resources",
   "minioncommand.vampirism.none": "None",
-  "text.vampirism.minion.can_respawn": "My lord, I have recovered (%s)"
+  "text.vampirism.minion.can_respawn": "My lord, I have recovered (%s)",
+  "text.vampirism.minion.died": "My lord, I have died (%s)",
+  "text.vampirism.name": "Name: "
 }

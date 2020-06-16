@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
+import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.entity.action.EntityActions;
+import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
@@ -106,6 +108,12 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterEntities(RegistryEvent.Register<EntityType<?>> event) {
         ModEntities.registerEntities(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterMinionTasks(RegistryEvent.Register<IMinionTask<?>> event) {
+
+        MinionTasks.register(event.getRegistry());
     }
 
     @SubscribeEvent

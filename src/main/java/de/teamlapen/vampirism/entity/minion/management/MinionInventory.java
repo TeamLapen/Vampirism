@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
 import com.google.common.collect.ImmutableList;
+import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 
-public class MinionInventory implements IInventory {
+public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion.IMinionInventory {
 
     private final NonNullList<ItemStack> inventory = NonNullList.withSize(25, ItemStack.EMPTY);
     private final NonNullList<ItemStack> inventoryHands = NonNullList.withSize(2, ItemStack.EMPTY);
@@ -36,15 +36,28 @@ public class MinionInventory implements IInventory {
 
     }
 
+
+    @Override
+    public void addItemStack(@Nonnull ItemStack stack) {
+
+        while (!stack.isEmpty()) {
+            int slot = InventoryHelper.getFirstSuitableSlotToAdd(inventory, stack, this.getInventoryStackLimit());
+            if (slot == -1) {
+                break;
+            }
+            int oldSize = stack.getCount();
+            InventoryHelper.addStackToSlotWithoutCheck(this, slot + 6 /*access main inventory*/, stack);
+            if (stack.getCount() >= oldSize) {
+                break;
+            }
+        }
+    }
+
     @Nonnull
     @Override
     public ItemStack decrStackSize(int index, int count) {
         ItemStack s = getStackInSlot(index);
         return !s.isEmpty() && count > 0 ? s.split(count) : ItemStack.EMPTY;
-    }
-
-    public int getAvailableSize() {
-        return availableSize;
     }
 
     public void read(ListNBT nbtTagListIn) {
@@ -69,12 +82,14 @@ public class MinionInventory implements IInventory {
 
     }
 
-    public NonNullList<ItemStack> getInventoryArmor() {
-        return inventoryArmor;
+    @Override
+    public int getAvailableSize() {
+        return availableSize;
     }
 
-    public NonNullList<ItemStack> getInventoryHands() {
-        return inventoryHands;
+    @Override
+    public NonNullList<ItemStack> getInventoryArmor() {
+        return inventoryArmor;
     }
 
     @Override
@@ -126,6 +141,11 @@ public class MinionInventory implements IInventory {
     @Override
     public void markDirty() {
 
+    }
+
+    @Override
+    public NonNullList<ItemStack> getInventoryHands() {
+        return inventoryHands;
     }
 
     public MinionInventory setAvailableSize(int newSize) {

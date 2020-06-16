@@ -29,7 +29,7 @@ public class BasicHunterRenderer extends BipedRenderer<BasicHunterEntity, BasicH
 
     public BasicHunterRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
-        this.addLayer(new HunterEquipmentLayer<>(this, entity -> entity.getLevel() < 2 || entity.isCrossbowInMainhand(), entity -> entity.getLevel() == 0 ? entity.getEntityTextureType() % textures.length : -1));
+        this.addLayer(new HunterEquipmentLayer<>(this, entity -> (entity.getLevel() < 2 || entity.isCrossbowInMainhand()) ? HunterEquipmentModel.StakeType.ONLY : HunterEquipmentModel.StakeType.FULL, entity -> entity.getLevel() == 0 ? entity.getEntityTextureType() % textures.length : -1));
         this.addLayer(new CloakLayer<>(this, textureCloak, entity -> entity.getLevel() > 0));
     }
 

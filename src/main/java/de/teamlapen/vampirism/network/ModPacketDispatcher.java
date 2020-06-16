@@ -23,5 +23,6 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
         dispatcher.registerMessage(nextID(), OpenVampireBookPacket.class, OpenVampireBookPacket::encode, OpenVampireBookPacket::decode, OpenVampireBookPacket::handle);
         dispatcher.registerMessage(nextID(), BloodValuePacket.class, BloodValuePacket::encode, BloodValuePacket::decode, BloodValuePacket::handle);
         dispatcher.registerMessage(nextID(), PlayEventPacket.class, PlayEventPacket::encode, PlayEventPacket::decode, PlayEventPacket::handle);
+        dispatcher.registerMessage(nextID(), ActivateMinionTaskPacket.class, ActivateMinionTaskPacket::encode, ActivateMinionTaskPacket::decode, ActivateMinionTaskPacket::handle);
     }
 }

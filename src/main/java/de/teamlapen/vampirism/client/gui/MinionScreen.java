@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.client.gui.ScrollableListButton;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.entity.minion.management.MinionTask;
+import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.inventory.container.MinionContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -75,9 +75,9 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
         super.init();
         this.appearanceButton = this.addButton(new ImageButton(this.guiLeft + 4, this.guiTop + 19, 20, 20, 236, 0, 20, GUI_TEXTURE, this::onConfigurePressed));
         this.lockActionButton = this.addButton(new LockIconButton(this.guiLeft + 99, this.guiTop + 19, this::toggleActionLock));
-        String[] taskNames = Arrays.stream(container.getAvailableTasks()).map(MinionTask::getNameOfTask).map(ITextComponent::getFormattedText).toArray(String[]::new);
+        String[] taskNames = Arrays.stream(container.getAvailableTasks()).map(IMinionTask::getName).map(ITextComponent::getFormattedText).toArray(String[]::new);
 
-        this.taskList = this.addButton(new ScrollableListButton(this.guiLeft + 119, this.guiTop + 19 + 19, 87, Math.min(80, 20 * taskNames.length), taskNames.length, taskNames, "", this::selectTask, false));
+        this.taskList = this.addButton(new ScrollableListButton(this.guiLeft + 119, this.guiTop + 19 + 19, 87, Math.min(60, 20 * taskNames.length), taskNames.length, taskNames, "", this::selectTask, false));
         this.taskList.visible = false;
         this.taskButton = this.addButton(new ExtendedButton(this.guiLeft + 119, this.guiTop + 19, 88, 20, getActiveTaskName(), (button -> {
             this.taskList.visible = !this.taskList.visible;
@@ -100,8 +100,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     private String getActiveTaskName() {
-        int i = container.getTaskToActivate();
-        return i >= 0 && i < container.getAvailableTasks().length ? MinionTask.getNameOfTask(container.getAvailableTasks()[i]).getFormattedText() : UtilLib.translate("minioncommand.vampirism.none");
+       return container.getSelectedTask().getName().getFormattedText();
     }
 
     private void onConfigurePressed(Button b) {
@@ -109,6 +108,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     private void selectTask(int id) {
+        this.taskList.visible = false;
         this.container.setTaskToActivate(id);
         this.taskButton.setMessage(getActiveTaskName());
     }

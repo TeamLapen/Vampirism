@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.entity.minion.goals;
 
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
-import de.teamlapen.vampirism.entity.minion.management.MinionTask;
+import de.teamlapen.vampirism.entity.minion.management.DefendAreaTask;
+import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -32,10 +33,10 @@ public class DefendAreaGoal extends TargetGoal {
 
     @Override
     public boolean shouldExecute() {
-        return entity.getCurrentTask().filter(task -> task.type == MinionTask.Type.DEFEND_AREA && ((MinionTask.DefendArea) task).getCenter() != null).map(task -> {
-                    BlockPos newCenter = ((MinionTask.DefendArea) task).getCenter();
+        return entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.defend_area && ((DefendAreaTask.Desc) task).center != null).map(task -> {
+                    BlockPos newCenter = ((DefendAreaTask.Desc) task).center;
                     if (bb == null || center == null || !center.equals(newCenter)) {
-                        this.bb = new AxisAlignedBB(newCenter).grow(((MinionTask.DefendArea) task).getRadius());
+                        this.bb = new AxisAlignedBB(newCenter).grow(((DefendAreaTask.Desc) task).distance);
                         this.center = newCenter;
                     }
 

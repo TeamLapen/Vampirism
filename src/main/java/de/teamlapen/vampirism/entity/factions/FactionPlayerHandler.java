@@ -287,7 +287,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         } else {
             currentFaction = faction;
             currentLevel = level;
-            if (currentLevel != currentFaction.getHighestReachableLevel()) {
+            if (currentLevel != currentFaction.getHighestReachableLevel() || currentFaction != old) {
                 newLordLevel = 0;
             }
         }
@@ -313,17 +313,15 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private boolean setLordLevel(int level, boolean sync) {
-        if (currentFaction == null || currentLevel != currentFaction.getHighestReachableLevel()) {
+        if (level > 0 && (currentFaction == null || currentLevel != currentFaction.getHighestReachableLevel() || level > currentFaction.getHighestLordLevel())) {
             return false;
         }
-        if (level > currentFaction.getHighestLordLevel()) {
-            return false;
-        }
+
         this.currentLordLevel = level;
         MinionWorldData.getData(player.world).ifPresent(data -> {
             PlayerMinionController c = data.getController(this.player.getUniqueID());
             if (c != null) {
-                c.setMaxMinions(this.getMaxMinions());
+                c.setMaxMinions(this.currentFaction, this.getMaxMinions());
             }
         });
         if (sync) sync(false);
