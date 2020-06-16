@@ -65,5 +65,11 @@
     "sounds": [
       "vampirism:fx/boiling"
     ]
+  },
+  "grinder": {
+    "category": "block",
+    "sounds": [
+      "vampirism:fx/grinder"
+    ]
   }
 }
