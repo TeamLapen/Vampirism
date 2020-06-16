@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
+import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.tileentity.BloodContainerTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
@@ -9,7 +10,6 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -39,12 +39,14 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
      * Stores a fluid level -> fluid model array
      * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)} )}
      */
-    public static final IBakedModel[] FLUID_MODELS = new IBakedModel[FLUID_LEVELS];
+    public static final IBakedModel[] BLOOD_FLUID_MODELS = new IBakedModel[FLUID_LEVELS];
+    public static final IBakedModel[] IMPURE_BLOOD_FLUID_MODELS = new IBakedModel[FLUID_LEVELS];
+
     private final static ItemOverrideList overrideList = new CustomItemOverride();
 
 
     private final IBakedModel baseModel;
-    private Fluid fluid;
+    private boolean impure;
     private int fluidLevel = 0;
     private boolean item;
 
@@ -54,7 +56,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
 
     public BakedBloodContainerModel(IBakedModel baseModel, FluidStack stack) {
         this.baseModel = baseModel;
-        this.fluid = stack.getFluid();
+        this.impure = stack.getFluid().equals(ModFluids.impure_blood);
         this.fluidLevel = MathHelper.clamp(stack.getAmount() / BloodContainerTileEntity.LEVEL_AMOUNT, 1, FLUID_LEVELS) - 1;
         item = true;
     }
@@ -84,12 +86,13 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
 
         if (!item) {
             Integer level = extraData.getData(BloodContainerTileEntity.FLUID_LEVEL_PROP);
-            if (level != null && level > 0 && level <= FLUID_LEVELS) {
-                quads.addAll(FLUID_MODELS[level - 1].getQuads(state, side, rand));
+            Boolean impure = extraData.getData(BloodContainerTileEntity.FLUID_IMPURE);
+            if (impure != null && level != null && level > 0 && level <= FLUID_LEVELS) {
+                quads.addAll((impure ? IMPURE_BLOOD_FLUID_MODELS[level - 1] : BLOOD_FLUID_MODELS[level - 1]).getQuads(state, side, rand));
             }
         } else {
             {
-                quads.addAll(FLUID_MODELS[fluidLevel].getQuads(state, side, rand));
+                quads.addAll((impure ? IMPURE_BLOOD_FLUID_MODELS[fluidLevel] : BLOOD_FLUID_MODELS[fluidLevel]).getQuads(state, side, rand));
             }
         }
         return quads;

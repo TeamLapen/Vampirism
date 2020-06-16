@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
@@ -24,6 +25,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -32,6 +36,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Tileentity container that can store liquids.
@@ -123,6 +128,18 @@ public class BloodContainerBlock extends VampirismBlockContainer {
                 if (tile instanceof BloodContainerTileEntity) {
                     ((BloodContainerTileEntity) tile).setFluidStack(fluid);
                 }
+            }
+
+        }
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        if (stack.hasTag() && stack.getTag().contains("fluid")) {
+            CompoundNBT nbt = stack.getTag().getCompound("fluid");
+            FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+            if (fluid != null) {
+                tooltip.add(new TranslationTextComponent(fluid.getTranslationKey()).appendText(": ").appendText(fluid.getAmount() + "mB").applyTextStyle(TextFormatting.DARK_RED));
             }
 
         }

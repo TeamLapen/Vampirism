@@ -33,13 +33,15 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
     public static final int LEVEL_AMOUNT = BloodBottleItem.AMOUNT * VReference.FOOD_TO_FLUID_BLOOD;
     public static final int CAPACITY = LEVEL_AMOUNT * 14;
     public static final ModelProperty<Integer> FLUID_LEVEL_PROP = new ModelProperty<>();
+    public static final ModelProperty<Boolean> FLUID_IMPURE = new ModelProperty<>();
+
     private int lastSyncedAmount = Integer.MIN_VALUE;
     private IModelData modelData;
 
 
     public BloodContainerTileEntity() {
         super(ModTiles.blood_container);
-        this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.blood.isEquivalentTo(fluidStack.getFluid())).setListener(this);
+        this.tank = new FluidTankWithListener(CAPACITY, fluidStack -> ModFluids.blood.isEquivalentTo(fluidStack.getFluid()) || ModFluids.impure_blood.isEquivalentTo(fluidStack.getFluid())).setListener(this);
 
     }
 
@@ -110,7 +112,7 @@ public class BloodContainerTileEntity extends net.minecraftforge.fluids.capabili
             float amount = fluid.getAmount() / (float) BloodContainerTileEntity.LEVEL_AMOUNT;
             l = (amount > 0 && amount < 1) ? 1 : (int) amount;
         }
-        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).build();
+        modelData = new ModelDataMap.Builder().withInitial(FLUID_LEVEL_PROP, l).withInitial(FLUID_IMPURE, fluid.getFluid().equals(ModFluids.impure_blood)).build();
         if (refresh) ModelDataManager.requestModelDataRefresh(this);
     }
 

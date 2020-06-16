@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Either;
 import de.teamlapen.vampirism.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.blocks.WeaponTableBlock;
@@ -8,9 +9,11 @@ import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.renderer.model.BlockModel;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.IUnbakedModel;
 import net.minecraft.client.renderer.model.ModelRotation;
@@ -20,6 +23,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -39,12 +43,23 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void onModelBakeEvent(ModelBakeEvent event) {
-
+        /*
+         * Not really a clean solution but it works
+         * Bake the each model, then replace the fluid texture with impure blood, then bake it again.
+         * Use {@link BakedBloodContainerModel} to render to appropriate one
+         */
         try {
             for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
                 ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "block/blood_container/fluid_" + (x + 1));
                 IUnbakedModel model = event.getModelLoader().getModelOrMissing(loc);
-                BakedBloodContainerModel.FLUID_MODELS[x] = model.bakeModel(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, loc);
+                BakedBloodContainerModel.BLOOD_FLUID_MODELS[x] = model.bakeModel(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, loc);
+                if (model instanceof BlockModel) {
+                    ((BlockModel) model).textures.put("fluid", Either.left(ForgeHooksClient.getBlockMaterial(ModFluids.impure_blood.getAttributes().getStillTexture())));
+                    BakedBloodContainerModel.IMPURE_BLOOD_FLUID_MODELS[x] = model.bakeModel(event.getModelLoader(), ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, loc);
+                } else {
+                    LOGGER.error("Cannot apply impure blood texture to blood container model {}", model);
+                    BakedBloodContainerModel.IMPURE_BLOOD_FLUID_MODELS[x] = BakedBloodContainerModel.BLOOD_FLUID_MODELS[x];
+                }
             }
             Map<ResourceLocation, IBakedModel> registry = event.getModelRegistry();
             ArrayList<ResourceLocation> modelLocations = Lists.newArrayList();
