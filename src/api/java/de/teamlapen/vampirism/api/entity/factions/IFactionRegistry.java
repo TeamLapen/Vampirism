@@ -78,7 +78,20 @@ public interface IFactionRegistry {
     <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral);
 
     /**
-     * Use {@link IFactionRegistry#registerPlayableFaction(ResourceLocation, Class, Color, boolean, NonNullSupplier, int, int)} instead
+     * Create and registerAdvancements a non playable faction. Has to be called during InterModEnqueueEvent
+     *
+     * @param id              Faction id e.g. for level command
+     * @param entityInterface Interface all entities implement
+     * @param color           Color e.g. for level rendering
+     * @param villageFactionData       village capture related utility class (if null will gets filled with dummy)
+     * @param <T>             Interface all entities implement
+     * @return The created faction
+     */
+    @ThreadSafeAPI
+    <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, @Nullable IVillageFactionData villageFactionData);
+
+    /**
+     * Use {@link IFactionRegistry#registerPlayableFaction(ResourceLocation, Class, Color, boolean, NonNullSupplier, int, int, IVillageFactionData)} instead
      * <p>
      * Create and registerAdvancements a playable faction. Has to be called during InterModEnqueueEvent
      *
@@ -87,7 +100,7 @@ public interface IFactionRegistry {
      * @param color                    Color e.g. for level rendering
      * @param playerCapabilitySupplier The capability which is attached to all players
      * @param highestLevel             The highest reachable player level
-     * @param <T>                      nterface all entities or (the given capability for players)  implement
+     * @param <T>                      Interface all entities or (the given capability for players)  implement
      * @return The created faction
      */
     @Deprecated
@@ -103,9 +116,10 @@ public interface IFactionRegistry {
      * @param playerCapabilitySupplier The capability which is attached to all players
      * @param highestLevel             The highest reachable player level
      * @param highestLordLevel         The highest reachable lord level or 0 if no lord
-     * @param <T>                      nterface all entities or (the given capability for players)  implement
+     * @param villageFactionData       village capture related utility class (if null will gets filled with dummy)
+     * @param <T>                      Interface all entities or (the given capability for players)  implement
      * @return The created faction
      */
     @ThreadSafeAPI
-    <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel);
+    <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, IVillageFactionData villageFactionData);
 }

@@ -154,9 +154,9 @@ public class ModBlocks {
         registry.register(prepareRegister(new TentBlock()));
         registry.register(prepareRegister(new TentMainBlock()));
         registry.register(prepareRegister(new TotemBaseBlock()));
-        registry.register(prepareRegister(new TotemTopBlock()));
-        registry.register(prepareRegister(new TotemTopBlock(REFERENCE.HUNTER_PLAYER_KEY)));
-        registry.register(prepareRegister(new TotemTopBlock(REFERENCE.VAMPIRE_PLAYER_KEY)));
+        registry.register(prepareRegister(new TotemTopBlock().setRegistryName(REFERENCE.MODID, "totem_top")));
+        registry.register(prepareRegister(new TotemTopBlock(REFERENCE.HUNTER_PLAYER_KEY).setRegistryName(REFERENCE.MODID,"totem_top_vampirism_hunter")));
+        registry.register(prepareRegister(new TotemTopBlock(REFERENCE.VAMPIRE_PLAYER_KEY).setRegistryName(REFERENCE.MODID,"totem_top_vampirism_vampire")));
         registry.register(prepareRegister(vampire_orchid));
         registry.register(prepareRegister(new WeaponTableBlock()));
     }

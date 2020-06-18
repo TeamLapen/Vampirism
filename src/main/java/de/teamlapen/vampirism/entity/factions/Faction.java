@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.factions.IVillageFactionData;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -9,6 +10,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 
@@ -30,12 +32,15 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
      */
     private int integerId;
     private TextFormatting chatColor;
+    @Nonnull
+    private IVillageFactionData villageFactionData;
 
-    Faction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral) {
+    Faction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, @Nonnull IVillageFactionData villageFactionData) {
         this.id = id;
         this.entityInterface = entityInterface;
         this.color = color;
         this.hostileTowardsNeutral = hostileTowardsNeutral;
+        this.villageFactionData = villageFactionData;
         integerId = nextId++;
     }
 
@@ -98,6 +103,11 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         this.translationKey = unlocalizedName;
         this.translationKeyPlural = unlocalizedNamePlural;
         return this;
+    }
+
+    @Override
+    public IVillageFactionData getVillageData() {
+        return villageFactionData;
     }
 
     @Override

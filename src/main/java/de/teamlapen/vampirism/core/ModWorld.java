@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
+
+import de.teamlapen.vampirism.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.ASMHooks;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -12,9 +14,7 @@ import de.teamlapen.vampirism.util.SRGNAMES;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomBlockState;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CampfireBlock;
-import net.minecraft.block.PaneBlock;
+import net.minecraft.block.*;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.GenerationSettings;
@@ -30,6 +30,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -153,7 +154,7 @@ public class ModWorld {
         buildings.get("snowy_zombie").add(Pair.of(singleJigsawPiece("village/snowy/houses/hunter_trainer", snowyZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
         buildings.get("taiga_zombie").add(Pair.of(singleJigsawPiece("village/taiga/houses/hunter_trainer", taigaZombieProcessor), VampirismConfig.BALANCE.viHunterTrainerWeight.get()));
         //totem JigsawPiece
-        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.BALANCE.viTotemPreSetPercentage.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top_vampirism_hunter.getDefaultState(), ModBlocks.totem_top_vampirism_vampire.getDefaultState())));
+        StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.BALANCE.viTotemPreSetPercentage.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, Arrays.stream(TotemTopBlock.getTotems()).map(Block::getDefaultState).toArray(BlockState[]::new))));
         StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.getDefaultState());
         JigsawPiece totem = singleJigsawPiece("village/totem", Lists.newArrayList(totemProcessor, totemTopBlock), JigsawPattern.PlacementBehaviour.RIGID);
         //add totem to all village JigsawPattern lists

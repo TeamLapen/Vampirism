@@ -4,10 +4,7 @@ import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,9 +32,8 @@ import java.util.Map;
  * <p>
  * Has both model renderer (with color/tint) and TESR (used for beam)
  */
-public class TotemTopBlock extends VampirismBlockContainer {
+public class TotemTopBlock extends ContainerBlock {
     private static final VoxelShape shape = makeShape();
-    private final static String regName = "totem_top";
     private static final Map<ResourceLocation, TotemTopBlock> factionTotems = Maps.newHashMap();
 
     public static TotemTopBlock getTotem(ResourceLocation faction) {
@@ -58,7 +54,7 @@ public class TotemTopBlock extends VampirismBlockContainer {
 
     @Deprecated
     public TotemTopBlock() {
-        super(regName, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
+        super(Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
         this.faction = new ResourceLocation("none");
         factionTotems.put(this.faction, this);
     }
@@ -67,7 +63,7 @@ public class TotemTopBlock extends VampirismBlockContainer {
      * @param faction faction must be faction registryname;
      */
     public TotemTopBlock(ResourceLocation faction) {
-        super(regName + "_" + faction.getNamespace() + "_" + faction.getPath(), Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
+        super(Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
         this.faction = faction;
         factionTotems.put(this.faction, this);
     }

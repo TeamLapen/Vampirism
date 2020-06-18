@@ -10,7 +10,20 @@ import javax.annotation.Nonnull;
  * Default implementation for an action
  */
 public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegistryEntry<IAction> implements IAction {
+    private final IPlayableFaction<T> faction; //TODO 1.16 remove
     private String translationKey;
+
+    /**
+     * @param faction
+     */
+    @Deprecated
+    public DefaultAction(IPlayableFaction<T> faction) { //TODO 1.16 remove
+        this.faction = faction;
+    }
+
+    public DefaultAction() {
+        this.faction = null;
+    }
 
     /**
      * Can be overridden to check additional requirements
@@ -30,6 +43,12 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends ForgeRegis
             throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + this.getFaction().getFactionPlayerInterface());
         }
 
+    }
+
+    @Nonnull
+    @Override
+    public IPlayableFaction getFaction() {
+        return faction;
     }
 
     @Override
