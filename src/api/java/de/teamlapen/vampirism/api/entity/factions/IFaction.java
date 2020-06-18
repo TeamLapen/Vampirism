@@ -61,4 +61,11 @@ public interface IFaction<T extends IFactionEntity> {
      * @return The same instance
      */
     IFaction<T> setTranslationKeys(String name, String plural);
+
+    /**
+     * Gets Village Totem related utility class
+     *
+     * @return the village data class
+     */
+    IVillageFactionData getVillageData();
 }

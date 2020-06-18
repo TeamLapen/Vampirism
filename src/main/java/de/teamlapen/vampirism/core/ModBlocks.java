@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.render.VampirismItemStackTESR;
@@ -16,7 +15,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
-
 import java.util.Set;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -154,9 +152,9 @@ public class ModBlocks {
         registry.register(prepareRegister(new TentBlock()));
         registry.register(prepareRegister(new TentMainBlock()));
         registry.register(prepareRegister(new TotemBaseBlock()));
-        registry.register(prepareRegister(new TotemTopBlock()));
-        registry.register(prepareRegister(new TotemTopBlock(REFERENCE.HUNTER_PLAYER_KEY)));
-        registry.register(prepareRegister(new TotemTopBlock(REFERENCE.VAMPIRE_PLAYER_KEY)));
+        registry.register(prepareRegister(new TotemTopBlock().setRegistryName(REFERENCE.MODID, "totem_top")));
+        registry.register(prepareRegister(new TotemTopBlock(REFERENCE.HUNTER_PLAYER_KEY).setRegistryName(REFERENCE.MODID, "totem_top_vampirism_hunter")));
+        registry.register(prepareRegister(new TotemTopBlock(REFERENCE.VAMPIRE_PLAYER_KEY).setRegistryName(REFERENCE.MODID, "totem_top_vampirism_vampire")));
         registry.register(prepareRegister(vampire_orchid));
         registry.register(prepareRegister(new WeaponTableBlock()));
     }
