@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.world.gen.util;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.util.Pair;
 
 import de.teamlapen.vampirism.core.ModFeatures;
 import net.minecraft.block.BlockState;
@@ -15,6 +13,7 @@ import net.minecraft.world.gen.feature.template.IStructureProcessorType;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.RuleStructureProcessor;
 import net.minecraft.world.gen.feature.template.Template;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +40,7 @@ public class RandomStructureProcessor extends RuleStructureProcessor {
         for(RandomBlockState ruleEntry : this.rules) {
             if (ruleEntry.test(blockInfo.state, blockstate, random)) {
                 Pair<BlockState, CompoundNBT> pair = ruleEntry.getOutput();
-                return new Template.BlockInfo(blockInfo.pos, pair.getFirst(), pair.getSecond());
+                return new Template.BlockInfo(blockInfo.pos, pair.getKey(), pair.getValue());
             }
         }
 
