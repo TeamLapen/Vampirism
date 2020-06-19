@@ -195,7 +195,7 @@ public class ShapedWeaponTableRecipe implements ICraftingRecipe, IWeaponTableRec
                     skills[i] = ModRegistries.SKILLS.getValue(new ResourceLocation(buffer.readString(32767)));
                 }
             }
-            return new ShapedWeaponTableRecipe(recipeId, group, height, width, ingredients, itemstack, level, skills, lava);
+            return new ShapedWeaponTableRecipe(recipeId, group, width, height, ingredients, itemstack, level, skills, lava);
         }
 
         @Override
