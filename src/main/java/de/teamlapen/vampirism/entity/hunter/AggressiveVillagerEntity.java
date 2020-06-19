@@ -25,6 +25,7 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -92,6 +93,11 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     @Override
     public ICaptureAttributes getCaptureInfo() {
         return villageAttributes;
+    }
+
+    @Override
+    protected ITextComponent func_225513_by_() {
+        return this.getType().getName(); //Don't use profession as part of the translation key
     }
 
     @Nullable

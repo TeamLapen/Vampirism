@@ -130,6 +130,7 @@
   "text.vampirism.i_am_busy_right_now": "I’m busy right now",
   "text.vampirism.crossbow.not_loaded": "Not loaded",
   "text.vampirism.crossbow.loaded_arrow_count": "Loaded %s arrows",
+  "text.vampirism.blood.poisonous": "Poisonous blood",
   "itemGroup.vampirism": "Vampirism",
   "death.attack.sun": "%1$s did not like the sun",
   "death.attack.garlic": "%1$s was poisoned by garlic",
