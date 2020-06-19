@@ -10,12 +10,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
@@ -30,6 +25,7 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -112,9 +108,15 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     public void func_213770_a(@Nonnull ServerWorld serverWorldIn) { //resetBrain
     }
 
+    @Override
+    public ITextComponent getDisplayName() {
+        return this.hasCustomName() ? getCustomName() : this.getType().getName(); //Don't consider profession for translation key
+    }
+
     //Village capture---------------------------------------------------------------------------------------------------
     @Nullable
     private ICaptureAttributes villageAttributes;
+
     @Override
     public void stopVillageAttackDefense() {
         VillagerEntity villager = EntityType.VILLAGER.create(this.world);
