@@ -76,7 +76,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
         this.lockActionButton = this.addButton(new LockIconButton(this.guiLeft + 99, this.guiTop + 19, this::toggleActionLock));
         String[] taskNames = Arrays.stream(container.getAvailableTasks()).map(IMinionTask::getName).map(ITextComponent::getFormattedText).toArray(String[]::new);
 
-        this.taskList = this.addButton(new ScrollableListButton(this.guiLeft + 119, this.guiTop + 19 + 19, 87, Math.min(80, 20 * taskNames.length), taskNames.length, taskNames, "", this::selectTask, false));
+        this.taskList = this.addButton(new ScrollableListButton(this.guiLeft + 119, this.guiTop + 19 + 19, 87, Math.min(60, 20 * taskNames.length), taskNames.length, taskNames, "", this::selectTask, false));
         this.taskList.visible = false;
         this.taskButton = this.addButton(new GuiButtonExt(this.guiLeft + 119, this.guiTop + 19, 88, 20, getActiveTaskName(), (button -> {
             this.taskList.visible = !this.taskList.visible;
@@ -108,6 +108,7 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     private void selectTask(int id) {
+        this.taskList.visible = false;
         this.container.setTaskToActivate(id);
         this.taskButton.setMessage(getActiveTaskName());
     }

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
+import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
 import de.teamlapen.vampirism.client.render.LayerCloak;
 import de.teamlapen.vampirism.client.render.LayerHunterEquipment;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
@@ -28,7 +29,7 @@ public class BasicHunterRenderer extends BipedRenderer<BasicHunterEntity, BasicH
 
     public BasicHunterRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
-        this.addLayer(new LayerHunterEquipment<>(this, entity -> entity.getLevel() < 2 || entity.isCrossbowInMainhand(), entity -> entity.getLevel() == 0 ? entity.getEntityTextureType() % 4 : -1));
+        this.addLayer(new LayerHunterEquipment<>(this, entity -> (entity.getLevel() < 2 || entity.isCrossbowInMainhand()) ? HunterEquipmentModel.StakeType.ONLY : HunterEquipmentModel.StakeType.FULL, entity -> entity.getLevel() == 0 ? entity.getEntityTextureType() % 4 : -1));
         this.addLayer(new LayerCloak<>(this, texture, entity -> entity.getLevel() > 0));
 
     }

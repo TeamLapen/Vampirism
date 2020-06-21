@@ -9,26 +9,26 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 
 public class LayerHunterEquipment<T extends MobEntity, Q extends BipedModel<T>> extends LayerRenderer<T, Q> {
     private final HunterEquipmentModel<T> equipmentModel;
     private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
-    private final Predicate<T> predicateOnlyStake;
+    private final Function<T, HunterEquipmentModel.StakeType> predicateStake;
     private final Function<T, Integer> functionHat;
+
 
     /**
      * @param predicateOnlyStake True if axe should not be rendered
      * @param functionHat        Entity -> -1 to 4
      */
-    public LayerHunterEquipment(IEntityRenderer<T, Q> entityRendererIn, Predicate<T> predicateOnlyStake, Function<T, Integer> functionHat) {
-        this(entityRendererIn, new HunterEquipmentModel<>(), predicateOnlyStake, functionHat);
+    public LayerHunterEquipment(IEntityRenderer<T, Q> entityRendererIn, Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, Integer> functionHat) {
+        this(entityRendererIn, new HunterEquipmentModel<>(), predicateStake, functionHat);
     }
 
-    public LayerHunterEquipment(IEntityRenderer<T, Q> entityRendererIn, HunterEquipmentModel<T> equipmentModel, Predicate<T> predicateOnlyStake, Function<T, Integer> functionHat) {
+    public LayerHunterEquipment(IEntityRenderer<T, Q> entityRendererIn, HunterEquipmentModel<T> equipmentModel, Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, Integer> functionHat) {
         super(entityRendererIn);
-        this.predicateOnlyStake = predicateOnlyStake;
+        this.predicateStake = predicateStake;
         this.functionHat = functionHat;
         this.equipmentModel = equipmentModel;
     }
@@ -38,7 +38,7 @@ public class LayerHunterEquipment<T extends MobEntity, Q extends BipedModel<T>> 
         if (!t.isInvisible()) {
             bindTexture(textureExtra);
             equipmentModel.setHat(functionHat.apply(t));
-            equipmentModel.setWeapons(predicateOnlyStake.test(t));
+            equipmentModel.setWeapons(predicateStake.apply(t));
             this.getEntityModel().setModelAttributes(equipmentModel);
             this.equipmentModel.setLivingAnimations(t, p_212842_2_, p_212842_3_, p_212842_4_);
             this.equipmentModel.render(t, p_212842_2_, p_212842_3_, p_212842_5_, p_212842_6_, p_212842_7_, p_212842_8_);

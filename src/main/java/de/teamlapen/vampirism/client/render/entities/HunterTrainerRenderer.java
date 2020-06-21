@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import com.google.common.base.Predicates;
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
+import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
 import de.teamlapen.vampirism.client.render.LayerCloak;
 import de.teamlapen.vampirism.client.render.LayerHunterEquipment;
 import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
@@ -19,7 +20,7 @@ public class HunterTrainerRenderer extends BipedRenderer<HunterTrainerEntity, Ba
 
     public HunterTrainerRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
-        this.addLayer(new LayerHunterEquipment<>(this, Predicates.alwaysTrue(), entityModel -> 1));
+        this.addLayer(new LayerHunterEquipment<>(this, h -> HunterEquipmentModel.StakeType.ONLY, entityModel -> 1));
         this.addLayer(new LayerCloak<>(this, texture, Predicates.alwaysTrue()));
 
     }

@@ -321,7 +321,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         MinionWorldData.getData(player.world).ifPresent(data -> {
             PlayerMinionController c = data.getController(this.player.getUniqueID());
             if (c != null) {
-                c.setMaxMinions(this.getMaxMinions());
+                c.setMaxMinions(this.currentFaction, this.getMaxMinions());
             }
         });
         if (sync) sync(false);

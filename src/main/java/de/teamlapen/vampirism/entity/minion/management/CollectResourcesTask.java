@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +36,8 @@ public class CollectResourcesTask extends DefaultMinionTask<Desc> {
         if (minion != null) {
             minion.recallMinion();
         }
+        if (lord != null)
+            lord.sendStatusMessage(new TranslationTextComponent("minion_task.vampirism.collect_hunter_items.start"), true);
         return new Desc(this, this.coolDown);
     }
 

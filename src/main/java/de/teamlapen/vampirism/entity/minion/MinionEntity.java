@@ -34,6 +34,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -294,6 +295,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     public void onDeath(@Nonnull DamageSource p_70645_1_) {
         super.onDeath(p_70645_1_);
         if (this.playerMinionController != null) {
+            this.getLordOpt().map(ILordPlayer::getPlayer).ifPresent(p -> p.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.died", this.getDisplayName()), true));
             this.playerMinionController.markDeadAndReleaseMinionSlot(minionId, token);
             this.playerMinionController = null;
         }
@@ -395,7 +397,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     protected boolean processInteract(PlayerEntity player, Hand hand) {
         if (this.getLordOpt().filter(p -> p.getPlayer().equals(player)).isPresent()) {
             if (player instanceof ServerPlayerEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), this.getMinionData().map(MinionData::getName).orElse(new StringTextComponent("Minion"))), buf -> buf.writeVarInt(this.getEntityId()));
+                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslationTextComponent("text.vampirism.name").appendSibling(this.getMinionData().map(MinionData::getName).orElse(new StringTextComponent("Minion")))), buf -> buf.writeVarInt(this.getEntityId()));
             }
             return true;
         }
@@ -427,7 +429,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(2, new OpenDoorGoal(this, true));
 
-        this.goalSelector.addGoal(4, new FollowLordGoal(this, 1.1, 5, 10));
+        this.goalSelector.addGoal(4, new FollowLordGoal(this, 1.1));
 
         this.goalSelector.addGoal(9, new MoveToTaskCenterGoal(this));
         this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 20F, 0.6F));

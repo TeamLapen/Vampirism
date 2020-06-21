@@ -46,7 +46,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
                 break;
             }
             int oldSize = stack.getCount();
-            InventoryHelper.addStackToSlotWithoutCheck(this, slot, stack);
+            InventoryHelper.addStackToSlotWithoutCheck(this, slot + 6 /*access main inventory*/, stack);
             if (stack.getCount() >= oldSize) {
                 break;
             }

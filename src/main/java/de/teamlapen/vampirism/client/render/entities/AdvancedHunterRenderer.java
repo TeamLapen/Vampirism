@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.render.entities;
 
 import com.google.common.base.Predicates;
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
+import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
 import de.teamlapen.vampirism.client.render.LayerCloak;
 import de.teamlapen.vampirism.client.render.LayerHunterEquipment;
 import de.teamlapen.vampirism.client.render.LayerPlayerFaceOverlay;
@@ -25,7 +26,7 @@ public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity, 
 
     public AdvancedHunterRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
-        this.addLayer(new LayerHunterEquipment<>(this, Predicates.alwaysFalse(), AdvancedHunterEntity::getHunterType));
+        this.addLayer(new LayerHunterEquipment<>(this, h -> HunterEquipmentModel.StakeType.FULL, AdvancedHunterEntity::getHunterType));
         this.addLayer(new LayerCloak<>(this, texture, Predicates.alwaysTrue()));
 
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {

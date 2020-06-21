@@ -1,5 +1,8 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
@@ -59,6 +62,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     @Nonnull
     private final UUID lordID;
     private int maxMinions;
+    @Nullable
+    private IPlayableFaction<?> faction;
 
     @Nonnull
     private MinionInfo[] minions = new MinionInfo[0];
@@ -167,10 +172,16 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             LOGGER.warn("Cannot create minion because type does not exist");
         } else {
             MinionEntity<?> m = type.create(p.getEntityWorld());
-            m.claimMinionSlot(id, this);
-            m.copyLocationAndAnglesFrom(p);
-            p.world.addEntity(m);
-            activateTask(id, MinionTasks.stay);
+            if (faction == null || faction.isEntityOfFaction(m)) {
+                LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
+                m.remove();
+            } else {
+                m.claimMinionSlot(id, this);
+                m.copyLocationAndAnglesFrom(p);
+                p.world.addEntity(m);
+                activateTask(id, MinionTasks.stay);
+            }
+
         }
     }
 
@@ -196,6 +207,12 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         LOGGER.info("Deserializing");//TODO
+        IFaction<?> f = VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(nbt.getString("faction")));
+        if (!(f instanceof IPlayableFaction)) {
+            this.maxMinions = 0;
+            return;
+        }
+        this.faction = (IPlayableFaction<?>) f;
         this.maxMinions = nbt.getInt("max_minions");
         ListNBT data = nbt.getList("data", 10);
         MinionInfo[] infos = new MinionInfo[data.size()];
@@ -205,7 +222,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             CompoundNBT tag = (CompoundNBT) n;
             int id = tag.getInt("id");
             MinionData d = MinionData.fromNBT(tag);
-            ResourceLocation entityTypeID = new ResourceLocation(nbt.getString("entity_type"));
+            ResourceLocation entityTypeID = new ResourceLocation(tag.getString("entity_type"));
             if (!ForgeRegistries.ENTITIES.containsKey(entityTypeID)) {
                 LOGGER.warn("Cannot find saved minion type {}. Aborting controller load", entityTypeID);
                 this.minions = new MinionInfo[0];
@@ -315,6 +332,9 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         LOGGER.info("Serializing");//TODO
         CompoundNBT nbt = new CompoundNBT();
         nbt.putInt("max_minions", maxMinions);
+        if (faction != null) {
+            nbt.putString("faction", faction.getID().toString());
+        }
         ListNBT data = new ListNBT();
         for (MinionInfo i : minions) {
             CompoundNBT d = i.data.serializeNBT();
@@ -328,20 +348,31 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         return nbt;
     }
 
-    public void setMaxMinions(int newCount) {
+    public void setMaxMinions(@Nullable IPlayableFaction<?> faction, int newCount) {
         assert newCount >= 0;
-        if (newCount >= maxMinions) {
-            this.maxMinions = newCount;
+        if (this.faction != null && faction != this.faction) {
+            LOGGER.warn("Changing player minion controller faction");
+            contactMinions(MinionEntity::recallMinion);
+            minions = new MinionInfo[0];
+            //noinspection unchecked
+            minionTokens = new Optional[0];
+            this.faction = faction;
+            this.maxMinions = this.faction == null ? 0 : newCount;
         } else {
-            LOGGER.debug("Reducing minion count from {} to {}", this.maxMinions, newCount);
-            //Iteratively remove minion entities and minion slots, starting with the last claimed one
-            while (this.minions.length > newCount) {
-                int nL = this.minions.length - 1;
-                contactMinion(nL, MinionEntity::recallMinion);
-                MinionInfo[] n = Arrays.copyOf(minions, nL);
-                Optional<Integer>[] t = Arrays.copyOf(minionTokens, nL);
-                minions = n;
-                minionTokens = t;
+            this.faction = faction;
+            if (newCount >= maxMinions) {
+                this.maxMinions = newCount;
+            } else {
+                LOGGER.debug("Reducing minion count from {} to {}", this.maxMinions, newCount);
+                //Iteratively remove minion entities and minion slots, starting with the last claimed one
+                while (this.minions.length > newCount) {
+                    int nL = this.minions.length - 1;
+                    contactMinion(nL, MinionEntity::recallMinion);
+                    MinionInfo[] n = Arrays.copyOf(minions, nL);
+                    Optional<Integer>[] t = Arrays.copyOf(minionTokens, nL);
+                    minions = n;
+                    minionTokens = t;
+                }
             }
         }
     }
