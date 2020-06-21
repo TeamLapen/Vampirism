@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -38,7 +39,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     /**
      * Fake skill which represents the cancel button
      */
-    private static IAction fakeAction = new DefaultVampireAction() {
+    private static final IAction fakeAction = new DefaultVampireAction() {
         @Override
         public boolean activate(IVampirePlayer vampire) {
             return true;
@@ -96,8 +97,9 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
             saveActionOrder();
         }
     }
+
     private IActionHandler actionHandler;
-    private boolean editActions;
+    private final boolean editActions;
 
     public SelectActionScreen(Color backgroundColor, boolean edit) {
         super(backgroundColor, new TranslationTextComponent("selectAction"));
@@ -222,8 +224,8 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     }
 
     @Override
-    protected String getUnlocalizedName(IAction item) {
-        return item.getTranslationKey();
+    protected ITextComponent getName(IAction item) {
+        return new TranslationTextComponent(item.getTranslationKey());
     }
 
     @Override

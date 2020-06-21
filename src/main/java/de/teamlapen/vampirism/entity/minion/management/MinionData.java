@@ -47,6 +47,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
 
     @Nonnull
     private IMinionTask.IMinionTaskDesc activeTaskDesc;
+    private boolean taskLocked;
 
     protected MinionData(int maxHealth, ITextComponent name, int invSize) {
         this.health = maxHealth;
@@ -83,6 +84,10 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
                 LOGGER.error("Saved minion task does not exist anymore {}", id);
             }
         }
+    }
+
+    public boolean isTaskLocked() {
+        return taskLocked;
     }
 
     public <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc oldDesc, IMinionTask.IMinionTaskDesc newDesc) {

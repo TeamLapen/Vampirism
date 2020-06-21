@@ -19,8 +19,8 @@ public class LayerHunterEquipment<T extends MobEntity, Q extends BipedModel<T>> 
 
 
     /**
-     * @param predicateOnlyStake True if axe should not be rendered
-     * @param functionHat        Entity -> -1 to 4
+     * @param predicateStake True if axe should not be rendered
+     * @param functionHat    Entity -> -2 to 4
      */
     public LayerHunterEquipment(IEntityRenderer<T, Q> entityRendererIn, Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, Integer> functionHat) {
         this(entityRendererIn, new HunterEquipmentModel<>(), predicateStake, functionHat);

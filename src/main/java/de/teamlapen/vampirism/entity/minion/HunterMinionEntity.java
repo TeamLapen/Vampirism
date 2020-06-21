@@ -15,6 +15,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -25,8 +26,6 @@ import java.util.List;
 
 
 public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMinionData> implements IHunter {
-
-
 
     static {
         MinionData.registerDataType(HunterMinionData.ID, HunterMinionData::new);
@@ -51,7 +50,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     public int getHatType() {
-        return this.getMinionData().map(d -> d.hat).orElse(0);
+        return this.getItemStackFromSlot(EquipmentSlotType.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -2;
     }
 
     public void setHatType(int type) {

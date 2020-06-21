@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import net.minecraft.entity.Entity;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Minions are represented by a {@link MinionData}. All important information except for position and similar should be stored in there.
@@ -76,18 +78,22 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         this.lordID = lordID;
     }
 
+    public static List<IMinionTask<?>> getAvailableTasks(ILordPlayer player) {
+        return ModRegistries.MINION_TASKS.getValues().stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
+    }
+
     public void activateTask(int minionID, IMinionTask<?> task) {
         if (minionID >= minions.length) {
             LOGGER.warn("Trying to activate a task for a non-existent minion {}", minionID);
         } else {
-            @Nullable
-            IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(minions[minionID]).orElse(null), minions[minionID].data.getInventory());
-            if (desc == null) {
-                getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
+            if (minionID < 0) {
+                for (MinionInfo i : minions) {
+                    if (!i.data.isTaskLocked()) {
+                        activateTask(i, task);
+                    }
+                }
             } else {
-                MinionData d = this.minions[minionID].data;
-                d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
-                this.contactMinion(minionID, MinionEntity::onTaskChanged);
+                activateTask(minions[minionID], task);
             }
         }
     }
@@ -167,6 +173,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     public void createMinionEntityAtPlayer(int id, PlayerEntity p) {
+        assert id >= 0;
         EntityType<? extends MinionEntity<?>> type = minions[id].minionType;
         if (type == null) {
             LOGGER.warn("Cannot create minion because type does not exist");
@@ -325,6 +332,18 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             }
         }
         return ids;
+    }
+
+    private void activateTask(MinionInfo info, IMinionTask<?> task) {
+        @Nullable
+        IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data.getInventory());
+        if (desc == null) {
+            getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
+        } else {
+            MinionData d = info.data;
+            d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
+            this.contactMinion(info.minionID, MinionEntity::onTaskChanged);
+        }
     }
 
     @Override

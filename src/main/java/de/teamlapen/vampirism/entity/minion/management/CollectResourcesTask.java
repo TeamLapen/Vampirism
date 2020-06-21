@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.lib.util.WeightedRandomItem;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.DefaultMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -44,6 +47,11 @@ public class CollectResourcesTask extends DefaultMinionTask<Desc> {
     @Override
     public void deactivateTask(Desc desc) {
 
+    }
+
+    @Override
+    public boolean isAvailable(IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
+        return VReference.HUNTER_FACTION == faction;
     }
 
     @Override
