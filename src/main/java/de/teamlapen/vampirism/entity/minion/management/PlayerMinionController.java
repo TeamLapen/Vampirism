@@ -1,19 +1,24 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
+import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
+import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -66,12 +71,37 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         this.lordID = lordID;
     }
 
+    public void activateTask(int minionID, IMinionTask<?> task) {
+        if (minionID >= minions.length) {
+            LOGGER.warn("Trying to activate a task for a non-existent minion {}", minionID);
+        } else {
+            @Nullable
+            IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(minions[minionID]).orElse(null), minions[minionID].data.getInventory());
+            if (desc == null) {
+                getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
+            } else {
+                MinionData d = this.minions[minionID].data;
+                d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
+                this.contactMinion(minionID, MinionEntity::onTaskChanged);
+            }
+        }
+    }
+
+    /**
+     * Contact the minion entity for the given slot if loaded
+     */
+    public void contactMinion(int slot, Consumer<MinionEntity<?>> entityConsumer) {
+        if (slot < minions.length) {
+            getMinionEntity(minions[slot]).ifPresent(entityConsumer);
+        }
+    }
+
 
     /**
      * Mark a minion as inactive
      * Don't use associated MinionData afterwards
      *
-     * @param id minion slot
+     * @param id    minion slot
      * @param token Previously received token
      */
     public void checkInMinion(int id, int token) {
@@ -127,7 +157,20 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      */
     public void contactMinions(Consumer<MinionEntity<?>> entityConsumer) {
         for (MinionInfo m : minions) {
-            contactMinion(m, entityConsumer);
+            getMinionEntity(m).ifPresent(entityConsumer);
+        }
+    }
+
+    public void createMinionEntityAtPlayer(int id, PlayerEntity p) {
+        EntityType<? extends MinionEntity<?>> type = minions[id].minionType;
+        if (type == null) {
+            LOGGER.warn("Cannot create minion because type does not exist");
+        } else {
+            MinionEntity<?> m = type.create(p.getEntityWorld());
+            m.claimMinionSlot(id, this);
+            m.copyLocationAndAnglesFrom(p);
+            p.world.addEntity(m);
+            activateTask(id, MinionTasks.stay);
         }
     }
 
@@ -136,12 +179,12 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      *
      * @return minion slot id or -1 if no free minion slot
      */
-    public int createNewMinionSlot(MinionData data) {
+    public int createNewMinionSlot(MinionData data, EntityType<? extends MinionEntity<?>> minionType) {
         int i = minions.length;
         if (i < maxMinions) {
             MinionInfo[] n = Arrays.copyOf(minions, i + 1);
             Optional<Integer>[] t = Arrays.copyOf(minionTokens, i + 1);
-            n[i] = new MinionInfo(i, data);
+            n[i] = new MinionInfo(i, data, minionType);
             t[i] = Optional.empty();
             minions = n;
             minionTokens = t;
@@ -162,7 +205,18 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             CompoundNBT tag = (CompoundNBT) n;
             int id = tag.getInt("id");
             MinionData d = MinionData.fromNBT(tag);
-            MinionInfo i = new MinionInfo(id, d);
+            ResourceLocation entityTypeID = new ResourceLocation(nbt.getString("entity_type"));
+            if (!ForgeRegistries.ENTITIES.containsKey(entityTypeID)) {
+                LOGGER.warn("Cannot find saved minion type {}. Aborting controller load", entityTypeID);
+                this.minions = new MinionInfo[0];
+                //noinspection unchecked
+                this.minionTokens = new Optional[0];
+                return;
+            }
+
+            EntityType type = ForgeRegistries.ENTITIES.getValue(entityTypeID);
+
+            MinionInfo i = new MinionInfo(id, d, type);
             i.deathCooldown = tag.getInt("death_timer");
             infos[id] = i;
             if (tag.contains("token", 99)) {
@@ -197,7 +251,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     /**
-     * @return Whether a new minion can be created via {@link PlayerMinionController#createNewMinionSlot(MinionData)}
+     * @return Whether a new minion can be created via {@link PlayerMinionController#createNewMinionSlot(MinionData, EntityType)}
      */
     public boolean hasFreeMinionSlot() {
         return minions.length < maxMinions;
@@ -266,6 +320,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             CompoundNBT d = i.data.serializeNBT();
             d.putInt("death_timer", i.deathCooldown);
             d.putInt("id", i.minionID);
+            if (i.minionType != null) d.putString("entity_type", i.minionType.getRegistryName().toString());
             minionTokens[i.minionID].ifPresent(t -> d.putInt("token", t));
             data.add(d);
         }
@@ -282,30 +337,11 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             //Iteratively remove minion entities and minion slots, starting with the last claimed one
             while (this.minions.length > newCount) {
                 int nL = this.minions.length - 1;
-                MinionInfo m = minions[nL];
-                contactMinion(m, MinionEntity::recallMinion);
+                contactMinion(nL, MinionEntity::recallMinion);
                 MinionInfo[] n = Arrays.copyOf(minions, nL);
                 Optional<Integer>[] t = Arrays.copyOf(minionTokens, nL);
                 minions = n;
                 minionTokens = t;
-            }
-        }
-    }
-
-    /**
-     * Contact the respective minion entity if it is currently loaded (checked out)
-     */
-    private void contactMinion(MinionInfo info, Consumer<MinionEntity<?>> entityConsumer) {
-        if (info.isActive()) {
-            assert info.dimension != null;
-            World w = DimensionManager.getWorld(server, info.dimension, false, false);
-            if (w != null) {
-                Entity e = w.getEntityByID(info.entityId);
-                if (e instanceof MinionEntity) {
-                    entityConsumer.accept((MinionEntity<?>) e);
-                } else {
-                    LOGGER.warn("Retrieved entity is not a minion entity {}", e); //TODO check and remove or adjust
-                }
             }
         }
     }
@@ -318,7 +354,35 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
                     i.data.setHealth(i.data.getMaxHealth());
                     getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.can_respawn", i.data.getName()), true));
                 }
+            } else {
+                IMinionTask.IMinionTaskDesc taskDesc = i.data.getCurrentTaskDesc();
+                tickTask(taskDesc.getTask(), taskDesc, i);
             }
+        }
+    }
+
+    private Optional<MinionEntity<?>> getMinionEntity(MinionInfo info) {
+        if (info.isActive()) {
+            assert info.dimension != null;
+            World w = DimensionManager.getWorld(server, info.dimension, false, false);
+            if (w != null) {
+                Entity e = w.getEntityByID(info.entityId);
+                if (e instanceof MinionEntity) {
+                    return Optional.of((MinionEntity<?>) e);
+                } else {
+                    LOGGER.warn("Retrieved entity is not a minion entity {}", e); //TODO check and remove or adjust
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    private <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void tickTask(T task, IMinionTask.IMinionTaskDesc desc, MinionInfo info) {
+        if (info.isActive()) {
+            task.tickActive((Q) desc, () -> getMinionEntity(info).map(m -> (IMinionEntity) m), info.data.getInventory());
+        } else {
+            task.tickBackground((Q) desc, info.data.getInventory());
+
         }
     }
 
@@ -345,14 +409,17 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         final int minionID;
         @Nonnull
         final MinionData data;
+        @Nullable
+        final EntityType<? extends MinionEntity<?>> minionType;
         int entityId = -1;
         int deathCooldown = 0;
         @Nullable
         DimensionType dimension;
 
-        private MinionInfo(int id, @Nonnull MinionData data) {
+        private MinionInfo(int id, @Nonnull MinionData data, @Nullable EntityType<? extends MinionEntity<?>> minionType) {
             this.minionID = id;
             this.data = data;
+            this.minionType = minionType;
         }
 
         void checkin() {

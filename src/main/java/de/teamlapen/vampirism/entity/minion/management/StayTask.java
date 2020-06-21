@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
-
 import de.teamlapen.vampirism.api.entity.minion.DefaultMinionTask;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionInventory;
@@ -12,18 +11,16 @@ import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 
-import static de.teamlapen.vampirism.entity.minion.management.DefendAreaTask.Desc;
+
+public class StayTask extends DefaultMinionTask<StayTask.Desc> {
 
 
-public class DefendAreaTask extends DefaultMinionTask<Desc> {
-
-
+    @Nullable
     @Override
     public Desc activateTask(@Nullable PlayerEntity lord, @Nullable IMinionEntity minion, IMinionInventory inventory) {
         BlockPos pos = minion != null ? minion.getRepresentingEntity().getPosition() : (lord != null ? lord.getPosition() : null);
-        return pos == null ? null : new Desc(pos, 10);
+        return pos == null ? null : new Desc(pos);
     }
-
 
     @Override
     public void deactivateTask(Desc desc) {
@@ -32,30 +29,27 @@ public class DefendAreaTask extends DefaultMinionTask<Desc> {
 
     @Override
     public Desc readFromNBT(CompoundNBT nbt) {
-        BlockPos pos = NBTUtil.readBlockPos(nbt.getCompound("center"));
-        int dist = nbt.getInt("radius");
-        return new Desc(pos, dist);
+        BlockPos pos = NBTUtil.readBlockPos(nbt.getCompound("pos"));
+        return new Desc(pos);
     }
 
     public static class Desc implements IMinionTask.IMinionTaskDesc {
+        public final BlockPos position;
 
-        public final BlockPos center;
-        public final int distance;
-
-        public Desc(BlockPos center, int distance) {
-            this.center = center;
-            this.distance = distance;
+        public Desc(BlockPos pos) {
+            this.position = pos;
         }
+
 
         @Override
         public IMinionTask<?> getTask() {
-            return MinionTasks.defend_area;
+            return MinionTasks.stay;
         }
 
         @Override
         public void writeToNBT(CompoundNBT nbt) {
-            nbt.put("center", NBTUtil.writeBlockPos(center));
-            nbt.putInt("radius", distance);
+            nbt.put("pos", NBTUtil.writeBlockPos(position));
         }
     }
+
 }

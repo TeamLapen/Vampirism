@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.entity.minion.goals;
 
-import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import de.teamlapen.vampirism.entity.minion.management.DefendAreaTask;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.minion.management.StayTask;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
@@ -18,57 +19,57 @@ import java.util.EnumSet;
 import java.util.Optional;
 
 
-public class FollowLordGoal extends Goal {
+public class MoveToTaskCenterGoal extends Goal {
 
-
-    protected final MinionEntity<?> entity;
     protected final IWorldReader world;
-    private final double followSpeed;
+    private final MinionEntity<?> entity;
     private final PathNavigator navigator;
-    private final float maxDist;
-    private final float minDist;
-    protected ILordPlayer lord;
+    private BlockPos target;
     private int timeToRecalcPath;
     private float oldWaterCost;
 
-    public FollowLordGoal(MinionEntity<?> entity, double followSpeedIn, float minDistIn, float maxDistIn) {
+    public MoveToTaskCenterGoal(MinionEntity<?> entity) {
         this.entity = entity;
-        this.world = entity.world;
-        this.followSpeed = followSpeedIn;
+        this.world = entity.getEntityWorld();
         this.navigator = entity.getNavigator();
-        this.minDist = minDistIn;
-        this.maxDist = maxDistIn;
-        this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Flag.JUMP));
+
+        this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Flag.JUMP));
         if (!(entity.getNavigator() instanceof GroundPathNavigator) && !(entity.getNavigator() instanceof FlyingPathNavigator)) {
-            throw new IllegalArgumentException("Unsupported mob type for FollowLordGoal");
+            throw new IllegalArgumentException("Unsupported mob type for MoveToTaskCenterGoal");
         }
+    }
+
+    public Optional<BlockPos> getTargetPos() {
+        return entity.getCurrentTask().map(desc -> {
+            if (desc.getTask() == MinionTasks.defend_area) {
+                return ((DefendAreaTask.Desc) desc).center;
+            } else if (desc.getTask() == MinionTasks.stay) {
+                return ((StayTask.Desc) desc).position;
+            }
+            return null;
+        });
+
+
     }
 
     @Override
     public void resetTask() {
-        this.lord = null;
+        this.target = null;
         this.navigator.clearPath();
         this.entity.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        return !this.navigator.noPath() && this.entity.getDistanceSq(this.lord.getPlayer()) > (double) (this.maxDist * this.maxDist) && this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.follow_lord).isPresent();
+        return !this.navigator.noPath() && super.shouldContinueExecuting();
     }
 
     @Override
     public boolean shouldExecute() {
-        if (!this.entity.getCurrentTask().filter(task -> task.getTask() == MinionTasks.follow_lord).isPresent())
-            return false;
-        Optional<ILordPlayer> lord = this.entity.getLordOpt();
-        if (!lord.isPresent()) {
-            return false;
-        } else if (lord.get().getPlayer().getDistanceSq(entity) < (double) (this.minDist * this.minDist)) {
-            return false;
-        } else {
-            this.lord = lord.get();
-            return true;
-        }
+        return getTargetPos().map(t -> {
+            this.target = t;
+            return entity.getDistanceSq(target.getX(), target.getY(), target.getZ()) > 4;
+        }).orElse(false);
     }
 
     @Override
@@ -78,18 +79,18 @@ public class FollowLordGoal extends Goal {
         this.entity.setPathPriority(PathNodeType.WATER, 0.0F);
     }
 
+
     @Override
     public void tick() {
-        PlayerEntity player = lord.getPlayer();
-        this.entity.getLookController().setLookPositionWithEntity(player, 10.0F, (float) this.entity.getVerticalFaceSpeed());
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
-            boolean flag = this.navigator.tryMoveToEntityLiving(player, this.followSpeed);
+
+            boolean flag = this.navigator.tryMoveToXYZ(target.getX(), target.getY(), target.getZ(), 1);
             if (!flag || this.entity.getRNG().nextInt(8) == 0) {
-                if (!(this.entity.getDistanceSq(player) < 144.0D)) {
-                    int i = MathHelper.floor(player.posX) - 2;
-                    int j = MathHelper.floor(player.posZ) - 2;
-                    int k = MathHelper.floor(player.getBoundingBox().minY);
+                if (!(this.entity.getDistanceSq(target.getX(), target.getY(), target.getZ()) < 144.0D)) {
+                    int i = MathHelper.floor(target.getX()) - 2;
+                    int j = MathHelper.floor(target.getZ()) - 2;
+                    int k = MathHelper.floor(target.getY());
 
                     for (int l = 0; l <= 4; ++l) {
                         for (int i1 = 0; i1 <= 4; ++i1) {
@@ -105,7 +106,6 @@ public class FollowLordGoal extends Goal {
 
             }
         }
-
     }
 
     protected boolean canTeleportToBlock(BlockPos pos) {
@@ -113,4 +113,3 @@ public class FollowLordGoal extends Goal {
         return blockstate.canEntitySpawn(this.world, pos, this.entity.getType()) && this.world.isAirBlock(pos.up()) && this.world.isAirBlock(pos.up(2));
     }
 }
-

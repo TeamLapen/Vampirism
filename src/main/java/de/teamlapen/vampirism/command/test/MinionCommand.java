@@ -69,14 +69,11 @@ public class MinionCommand extends BasicCommand {
             if (controller.hasFreeMinionSlot()) {
 
                 if (fph.getCurrentFaction() == faction) {
-                    int id = controller.createNewMinionSlot(data);
+                    int id = controller.createNewMinionSlot(data, type);
                     if (id < 0) {
                         throw fail.create("Failed to get new minion slot");
                     }
-                    MinionEntity<T> m = type.create(p.getEntityWorld());
-                    m.claimMinionSlot(id, controller);
-                    m.copyLocationAndAnglesFrom(p);
-                    p.world.addEntity(m);
+                    controller.createMinionEntityAtPlayer(id, p);
                 } else {
                     throw fail.create("Wrong faction");
                 }
@@ -100,10 +97,7 @@ public class MinionCommand extends BasicCommand {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
             Collection<Integer> ids = controller.recallMinions();
             for (Integer id : ids) {
-                VampireMinionEntity m = ModEntities.vampire_minion.create(p.getEntityWorld());
-                m.claimMinionSlot(id, controller);
-                m.copyLocationAndAnglesFrom(p);
-                p.world.addEntity(m);
+                controller.createMinionEntityAtPlayer(id, p);
             }
         } else {
             throw fail.create("Can't have minions");
@@ -120,10 +114,7 @@ public class MinionCommand extends BasicCommand {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
             Collection<Integer> ids = controller.getUnclaimedMinions();
             for (Integer id : ids) {
-                VampireMinionEntity m = ModEntities.vampire_minion.create(p.getEntityWorld());
-                m.claimMinionSlot(id, controller);
-                m.copyLocationAndAnglesFrom(p);
-                p.world.addEntity(m);
+                controller.createMinionEntityAtPlayer(id, p);
             }
 
         } else {

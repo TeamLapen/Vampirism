@@ -11,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -46,7 +45,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     private ITextComponent name;
 
 
-    @Nullable
+    @Nonnull
     private IMinionTask.IMinionTaskDesc activeTaskDesc;
 
     protected MinionData(int maxHealth, ITextComponent name, int invSize) {
@@ -54,10 +53,17 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         this.maxHealth = maxHealth;
         this.name = name;
         this.inventory = new MinionInventory(invSize);
+        this.activeTaskDesc = new IMinionTask.NoDesc(MinionTasks.nothing);
     }
 
     protected MinionData() {
         this.inventory = new MinionInventory();
+        this.activeTaskDesc = new IMinionTask.NoDesc(MinionTasks.nothing);
+    }
+
+    @Nonnull
+    public IMinionTask.IMinionTaskDesc getCurrentTaskDesc() {
+        return activeTaskDesc;
     }
 
     @Override
@@ -79,9 +85,9 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         }
     }
 
-    @Nullable
-    public IMinionTask.IMinionTaskDesc getCurrentTaskDesc() {
-        return activeTaskDesc;
+    public <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc oldDesc, IMinionTask.IMinionTaskDesc newDesc) {
+        oldTask.deactivateTask((Q) oldDesc);
+        this.activeTaskDesc = newDesc;
     }
 
 
