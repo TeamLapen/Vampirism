@@ -27,9 +27,13 @@ public class HunterEquipmentLayer<T extends MobEntity, Q extends BipedModel<T>> 
     private final Function<T, HunterEquipmentModel.StakeType> predicateStake;
     private final Function<T, Integer> functionHat;
 
-    public HunterEquipmentLayer(IEntityRenderer<T, Q> entityRendererIn, Function<T, HunterEquipmentModel.StakeType> predicateStakee, Function<T, Integer> functionHat) {
+    /**
+     * @param predicateStake entity -> Type of equipment that should be rendered
+     * @param functionHat entity -> -2 to 4
+     */
+    public HunterEquipmentLayer(IEntityRenderer<T, Q> entityRendererIn, Function<T, HunterEquipmentModel.StakeType> predicateStake, Function<T, Integer> functionHat) {
         super(entityRendererIn);
-        this.predicateStake = predicateStakee;
+        this.predicateStake = predicateStake;
         this.functionHat = functionHat;
     }
 

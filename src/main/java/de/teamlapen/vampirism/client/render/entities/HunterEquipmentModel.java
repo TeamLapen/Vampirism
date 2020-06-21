@@ -65,7 +65,7 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
     }
 
     public void setHat(int hatType) {
-        hatRim.showModel = hatTop.showModel = hatType <= 0;
+        hatRim.showModel = hatTop.showModel = hatType <= 0 && hatType > -2;
         hatTop2.showModel = hatRim2.showModel = hatType == 1;
         hatRim3.showModel = hatType >= 2;
 

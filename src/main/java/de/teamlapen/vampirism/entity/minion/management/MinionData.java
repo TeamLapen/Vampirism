@@ -47,6 +47,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
 
     @Nonnull
     private IMinionTask.IMinionTaskDesc activeTaskDesc;
+    private boolean taskLocked;
 
     protected MinionData(int maxHealth, ITextComponent name, int invSize) {
         this.health = maxHealth;
@@ -73,6 +74,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         health = nbt.getFloat("health");
         maxHealth = nbt.getInt("max_health");
         name = ITextComponent.Serializer.fromJson(nbt.getString("name"));
+        taskLocked = nbt.getBoolean("locked");
         if (nbt.contains("task", 10)) {
             CompoundNBT task = nbt.getCompound("task");
             ResourceLocation id = new ResourceLocation(task.getString("id"));
@@ -82,6 +84,26 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
             } else {
                 LOGGER.error("Saved minion task does not exist anymore {}", id);
             }
+        }
+    }
+
+    public boolean isTaskLocked() {
+        return taskLocked;
+    }
+
+    public void serializeNBT(CompoundNBT tag) {
+        tag.putInt("inv_size", inventory.getAvailableSize());
+        tag.put("inv", inventory.write(new ListNBT()));
+        tag.putFloat("health", health);
+        tag.putFloat("max_health", maxHealth);
+        tag.putString("name", ITextComponent.Serializer.toJson(name));
+        tag.putString("data_type", getDataType().toString());
+        tag.putBoolean("locked", taskLocked);
+        if (activeTaskDesc != null) {
+            CompoundNBT task = new CompoundNBT();
+            task.putString("id", activeTaskDesc.getTask().getRegistryName().toString());
+            activeTaskDesc.writeToNBT(task);
+            tag.put("task", task);
         }
     }
 
@@ -127,19 +149,8 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         return tag;
     }
 
-    public void serializeNBT(CompoundNBT tag) {
-        tag.putInt("inv_size", inventory.getAvailableSize());
-        tag.put("inv", inventory.write(new ListNBT()));
-        tag.putFloat("health", health);
-        tag.putFloat("max_health", maxHealth);
-        tag.putString("name", ITextComponent.Serializer.toJson(name));
-        tag.putString("data_type", getDataType().toString());
-        if (activeTaskDesc != null) {
-            CompoundNBT task = new CompoundNBT();
-            task.putString("id", activeTaskDesc.getTask().getRegistryName().toString());
-            activeTaskDesc.writeToNBT(task);
-            tag.put("task", task);
-        }
+    public boolean setTaskLocked(boolean locked) {
+        return this.taskLocked = locked;
     }
 
     protected ResourceLocation getDataType() {

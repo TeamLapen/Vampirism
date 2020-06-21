@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.client.gui.SelectMinionTaskScreen;
 import de.teamlapen.vampirism.client.gui.SelectActionScreen;
 import de.teamlapen.vampirism.client.gui.SkillsScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -51,15 +52,16 @@ public class ModKeys {
     private static final String BLOOD_POTION_CRAFTING = "keys.vampirism.blood_potion_crafting";
     private static final String ACTIVATE_ACTION1 = "keys.vampirism.action1";
     private static final String ACTIVATE_ACTION2 = "keys.vampirism.action2";
+    private static final String MINION_TASK = "keys.vampirism.minion_task";
 
-    private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
-    private static KeyBinding ACTION = new KeyBinding(TOGGLE_ACTIONS, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);//Middle Mouse -98
-    private static KeyBinding SKILL = new KeyBinding(SELECT_SKILLS, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
-    private static KeyBinding VISION = new KeyBinding(SWITCH_VISION, KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
-    private static KeyBinding BLOOD_POTION = new KeyBinding(BLOOD_POTION_CRAFTING, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_B, CATEGORY);
-    private static KeyBinding ACTION1 = new KeyBinding(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
-    private static KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
-
+    private static final KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
+    private static final KeyBinding ACTION = new KeyBinding(TOGGLE_ACTIONS, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);//Middle Mouse -98
+    private static final KeyBinding SKILL = new KeyBinding(SELECT_SKILLS, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
+    private static final KeyBinding VISION = new KeyBinding(SWITCH_VISION, KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
+    private static final KeyBinding BLOOD_POTION = new KeyBinding(BLOOD_POTION_CRAFTING, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_B, CATEGORY);
+    private static final KeyBinding ACTION1 = new KeyBinding(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
+    private static final KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
+    private static final KeyBinding MINION = new KeyBinding(MINION_TASK, KeyConflictContext.IN_GAME, InputMappings.INPUT_INVALID, CATEGORY);
 
     @Nonnull
     public static KeyBinding getKeyBinding(@Nonnull KEY key) {
@@ -78,6 +80,8 @@ public class ModKeys {
                 return ACTION1;
             case ACTION2:
                 return ACTION2;
+            case MINION:
+                return MINION;
             default:
                 LOGGER.error("Keybinding {} does not exist", key);
                 return ACTION;
@@ -93,6 +97,7 @@ public class ModKeys {
         ClientRegistry.registerKeyBinding(BLOOD_POTION);
         ClientRegistry.registerKeyBinding(ACTION1);
         ClientRegistry.registerKeyBinding(ACTION2);
+        ClientRegistry.registerKeyBinding(MINION);
     }
 
     private boolean suckKeyDown = false;
@@ -145,6 +150,10 @@ public class ModKeys {
             if (player.isAlive()) {
                 FactionPlayerHandler.getOpt(player).ifPresent(factionHandler -> factionHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> toggleBoundAction(factionPlayer, factionHandler.getBoundAction2())));
             }
+        } else if (keyPressed == KEY.MINION) {
+            if (FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
+                Minecraft.getInstance().displayGuiScreen(new SelectMinionTaskScreen());
+            }
         }
         if (suckKeyDown && !SUCK.isKeyDown()) {
             suckKeyDown = false;
@@ -156,20 +165,22 @@ public class ModKeys {
      * @return the KeyBinding that is currently pressed
      */
     private KEY getPressedKeyBinding() {
-        if (SUCK.isPressed()) {
+        if (SUCK.isKeyDown()) {
             return KEY.SUCK;
-        } else if (ACTION.isPressed()) {
+        } else if (ACTION.isKeyDown()) {
             return KEY.ACTION;
-        } else if (SKILL.isPressed()) {
+        } else if (SKILL.isKeyDown()) {
             return KEY.SKILL;
-        } else if (VISION.isPressed()) {
+        } else if (VISION.isKeyDown()) {
             return KEY.VISION;
-        } else if (BLOOD_POTION.isPressed()) {
+        } else if (BLOOD_POTION.isKeyDown()) {
             return KEY.BLOOD_POTION;
-        } else if (ACTION1.isPressed() && ACTION1.getKeyModifier().isActive(null)) {
+        } else if (ACTION1.isKeyDown()) {
             return KEY.ACTION1;
-        } else if (ACTION2.isPressed() && ACTION2.getKeyModifier().isActive(null)) {
+        } else if (ACTION2.isKeyDown()) {
             return KEY.ACTION2;
+        } else if (MINION.isKeyDown()) {
+            return KEY.MINION;
         }
         return KEY.UNKNOWN;
     }
@@ -191,6 +202,6 @@ public class ModKeys {
     }
 
     public enum KEY {
-        SUCK, UNKNOWN, ACTION, SKILL, VISION, BLOOD_POTION, ACTION1, ACTION2
+        SUCK, UNKNOWN, ACTION, SKILL, VISION, BLOOD_POTION, ACTION1, ACTION2, MINION
     }
 }

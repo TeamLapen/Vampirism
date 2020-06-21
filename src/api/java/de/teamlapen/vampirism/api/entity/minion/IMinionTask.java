@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.api.entity.minion;
 
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
@@ -21,6 +23,10 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc> extends IFor
     void deactivateTask(T desc);
 
     ITextComponent getName();
+
+    default boolean isAvailable(IPlayableFaction<?> faction, @Nullable ILordPlayer player) {
+        return true;
+    }
 
     T readFromNBT(CompoundNBT nbt);
 

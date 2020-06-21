@@ -10,7 +10,8 @@ import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
-import de.teamlapen.vampirism.network.ActivateMinionTaskPacket;
+import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.SelectMinionTaskPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -65,6 +66,9 @@ public class MinionContainer extends InventoryContainer {
     @Nullable
     private IMinionTask<?> taskToActivate;
 
+    private final boolean previousTaskLocked;
+    private boolean taskLocked;
+
     private final int extraSlots;
 
     public MinionContainer(int id, PlayerInventory playerInventory, MinionEntity<?> minionEntity, @Nonnull IInventory inventory, int extraSlots, SelectorInfo... selectorInfos) {
@@ -75,6 +79,7 @@ public class MinionContainer extends InventoryContainer {
         this.minionEntity.setInteractingPlayer(playerInventory.player);
         this.addPlayerSlots(playerInventory, 27, 103);
         this.previousTask = this.minionEntity.getCurrentTask().map(IMinionTask.IMinionTaskDesc::getTask).orElse(null);
+        this.previousTaskLocked = this.taskLocked = this.minionEntity.isTaskLocked();
 
     }
 
@@ -106,11 +111,19 @@ public class MinionContainer extends InventoryContainer {
         return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask : MinionTasks.stay);
     }
 
+    public boolean isTaskLocked() {
+        return taskLocked;
+    }
+
+    public void setTaskLocked(boolean taskLocked) {
+        this.taskLocked = taskLocked;
+    }
+
     @Override
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         if (this.minionEntity.world.isRemote()) {
-            sendTaskToActivate();
+            sendChanges();
         }
         minionEntity.setInteractingPlayer(null);
     }
@@ -123,11 +136,14 @@ public class MinionContainer extends InventoryContainer {
         }
     }
 
-    private void sendTaskToActivate() {
+    private void sendChanges() {
         if (taskToActivate != null && taskToActivate != previousTask) {
             minionEntity.getMinionId().ifPresent(id ->
-                    VampirismMod.dispatcher.sendToServer(new ActivateMinionTaskPacket(id, this.taskToActivate.getRegistryName()))
+                    VampirismMod.dispatcher.sendToServer(new SelectMinionTaskPacket(id, this.taskToActivate.getRegistryName()))
             );
+        }
+        if (previousTaskLocked != taskLocked) {
+            minionEntity.getMinionId().ifPresent(id -> VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLE_LOCK_MINION_TASK, "" + id)));
         }
     }
 

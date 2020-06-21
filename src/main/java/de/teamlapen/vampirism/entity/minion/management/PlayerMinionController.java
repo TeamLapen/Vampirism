@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import net.minecraft.entity.Entity;
@@ -29,6 +30,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Minions are represented by a {@link MinionData}. All important information except for position and similar should be stored in there.
@@ -76,18 +79,22 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         this.lordID = lordID;
     }
 
+    public static List<IMinionTask<?>> getAvailableTasks(ILordPlayer player) {
+        return ModRegistries.MINION_TASKS.getValues().stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
+    }
+
     public void activateTask(int minionID, IMinionTask<?> task) {
         if (minionID >= minions.length) {
             LOGGER.warn("Trying to activate a task for a non-existent minion {}", minionID);
         } else {
-            @Nullable
-            IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(minions[minionID]).orElse(null), minions[minionID].data.getInventory());
-            if (desc == null) {
-                getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
+            if (minionID < 0) {
+                for (MinionInfo i : minions) {
+                    if (!i.data.isTaskLocked()) {
+                        activateTask(i, task);
+                    }
+                }
             } else {
-                MinionData d = this.minions[minionID].data;
-                d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
-                this.contactMinion(minionID, MinionEntity::onTaskChanged);
+                activateTask(minions[minionID], task);
             }
         }
     }
@@ -148,7 +155,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      */
     public Optional<Integer> claimMinionSlot(int id) {
         if (id < minionTokens.length) {
-            if (!minionTokens[id].isPresent()) {
+            if (!minionTokens[id].isPresent() && !minions[id].isDead()) {
                 int t = rng.nextInt();
                 minionTokens[id] = Optional.of(t);
                 return minionTokens[id];
@@ -167,6 +174,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     public void createMinionEntityAtPlayer(int id, PlayerEntity p) {
+        assert id >= 0;
         EntityType<? extends MinionEntity<?>> type = minions[id].minionType;
         if (type == null) {
             LOGGER.warn("Cannot create minion because type does not exist");
@@ -263,6 +271,27 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     }
 
+    /**
+     * Allow interacting with the minion data directly regardless of checkout.
+     * DO NOT use to get references of the data or anything inside.
+     */
+    public <T> Optional<T> contactMinionData(int id, Function<MinionData, T> function) {
+        if (id >= 0 && id < minions.length) {
+            return Optional.of(function.apply(minions[id].data));
+        }
+        return Optional.empty();
+    }
+
+    public Collection<Integer> getCallableMinions() {
+        List<Integer> ids = new ArrayList<>();
+        for (int i = 0; i < minions.length; i++) {
+            if (!minions[i].isDead()) {
+                ids.add(i);
+            }
+        }
+        return ids;
+    }
+
     public UUID getUUID() {
         return this.lordID;
     }
@@ -286,7 +315,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             i.checkin();
-            i.deathCooldown = 20;//* 60 * 5; TODO
+            i.deathCooldown = 60 * 5; //TODO
             if (id < minionTokens.length) {
                 minionTokens[id] = Optional.empty();
             }
@@ -303,28 +332,58 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     /**
+     * Recall the given minion. Corresponding entity is removed if present, token is invalidated and slot is released.
+     *
+     * @return If minion can be reclaimed (isAlive)
+     */
+    public boolean recallMinion(int id) {
+        if (id >= 0 && id < minions.length) {
+            return recallMinion(minions[id]);
+        }
+        return false;
+    }
+
+    /**
      * Recalls all minions.
      * Corresponding entities are removed if present, tokens are invalidated  and slots are released
      *
      * @return A list of minions ids that can be reclaimed
      */
     public Collection<Integer> recallMinions() {
-        contactMinions(MinionEntity::recallMinion);
-        for (MinionInfo i : minions) { //TODO remove
-            if (i.isActive()) {
-                LOGGER.warn("Minion still active after recall");
-            }
-        }
-        //noinspection unchecked
-        minionTokens = new Optional[minions.length];
-        Arrays.fill(minionTokens, Optional.empty());
-        List<Integer> ids = new ArrayList<>();
-        for (int i = 0; i < minions.length; i++) {
-            if (!minions[i].isDead()) {
-                ids.add(i);
+        List<Integer> ids = new ArrayList<>(minions.length);
+        for (MinionInfo minion : minions) {
+            if (recallMinion(minion)) {
+                ids.add(minion.minionID);
             }
         }
         return ids;
+    }
+
+    /**
+     * Recall the given minion. Corresponding entity is removed if present, token is invalidated and slot is released.
+     *
+     * @return If minion can be reclaimed (isAlive)
+     */
+    private boolean recallMinion(MinionInfo i) {
+        contactMinion(i.minionID, MinionEntity::recallMinion);
+        if (i.isActive()) {
+            LOGGER.warn("Minion still active after recall");//TODO remove
+        }
+        minionTokens[i.minionID] = Optional.empty();
+        return !i.isDead();
+
+    }
+
+    private void activateTask(MinionInfo info, IMinionTask<?> task) {
+        @Nullable
+        IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data.getInventory());
+        if (desc == null) {
+            getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
+        } else {
+            MinionData d = info.data;
+            d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
+            this.contactMinion(info.minionID, MinionEntity::onTaskChanged);
+        }
     }
 
     @Override

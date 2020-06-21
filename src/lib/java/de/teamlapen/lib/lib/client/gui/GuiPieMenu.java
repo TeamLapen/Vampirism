@@ -169,7 +169,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         if (selectedElement == -1) {
             this.drawUnselectedCenter(cX, cY);
         } else {
-            String name = UtilLib.translate(getUnlocalizedName(elements.get(selectedElement)));
+            String name = getName(elements.get(selectedElement)).getFormattedText();
             int tx = cX - minecraft.fontRenderer.getStringWidth(name) / 2;
             int ty = this.height / 7;
             minecraft.fontRenderer.drawStringWithShadow(name, tx, ty, Color.WHITE.getRGB());
@@ -245,7 +245,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         return selectedElement;
     }
 
-    protected abstract String getUnlocalizedName(T item);
+    protected abstract ITextComponent getName(T item);
 
     protected void onElementSelected(T id) {
 
