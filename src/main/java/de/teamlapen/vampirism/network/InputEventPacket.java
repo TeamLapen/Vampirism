@@ -13,6 +13,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.minion.MinionEntity;
+import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.inventory.container.BloodPotionTableContainer;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
@@ -21,6 +23,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
@@ -30,15 +33,20 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -60,6 +68,8 @@ public class InputEventPacket implements IMessage {
     public static final String BASICHUNTERLEVELUP = "bl";
     public static final String DRINK_BLOOD_BLOCK = "db";
     public static final String NAME_ITEM = "ni";
+    public static final String SELECT_CALL_MINION = "sm";
+    public static final String TOGGLE_LOCK_MINION_TASK = "lt";
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String SPLIT = "&";
@@ -237,6 +247,29 @@ public class InputEventPacket implements IMessage {
                         stack.setDisplayName(new StringTextComponent(name));
                     }
                     break;
+                case SELECT_CALL_MINION:
+                    FactionPlayerHandler.getOpt(ctx.getSender()).ifPresent(fp -> {
+                        PlayerMinionController controller = MinionWorldData.getData(ctx.getSender().server).getOrCreateController(fp);
+                        Collection<Integer> ids = controller.getCallableMinions();
+                        List<Pair<Integer, ITextComponent>> minions = new ArrayList<>(ids.size());
+                        ids.forEach(id -> controller.contactMinionData(id, data -> data.getName().deepCopy()).ifPresent(n -> minions.add(Pair.of(id, n))));
+                        VampirismMod.dispatcher.sendTo(new RequestMinionSelectPacket(RequestMinionSelectPacket.Action.CALL, minions), ctx.getSender());
+                    });
+                    break;
+                case TOGGLE_LOCK_MINION_TASK:
+                    try {
+                        int id = Integer.parseInt(msg.param);
+                        FactionPlayerHandler.getOpt(ctx.getSender()).ifPresent(fp -> {
+                            PlayerMinionController controller = MinionWorldData.getData(ctx.getSender().server).getOrCreateController(fp);
+                            controller.contactMinionData(id, data -> data.setTaskLocked(!data.isTaskLocked()));
+                            controller.contactMinion(id, MinionEntity::onTaskChanged);
+
+                        });
+                    } catch (NumberFormatException e) {
+                        LOGGER.error("Receiving invalid param {} for {}", msg.param, msg.action);
+                    }
+                    break;
+
             }
             ctx.setPacketHandled(true);
         });

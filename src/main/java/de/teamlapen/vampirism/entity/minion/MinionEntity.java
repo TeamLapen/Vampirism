@@ -171,6 +171,10 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
+    public boolean isTaskLocked() {
+        return minionData != null && minionData.isTaskLocked();
+    }
+
     public void claimMinionSlot(int id, @Nonnull PlayerMinionController controller) {
         assert minionId == 0;
         controller.claimMinionSlot(id).ifPresent(token -> {

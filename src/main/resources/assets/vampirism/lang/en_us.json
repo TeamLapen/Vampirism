@@ -649,5 +649,8 @@
   "minioncommand.vampirism.none": "None",
   "text.vampirism.minion.can_respawn": "My lord, I have recovered (%s)",
   "text.vampirism.minion.died": "My lord, I have died (%s)",
-  "text.vampirism.name": "Name: "
+  "text.vampirism.name": "Name: ",
+  "text.vampirism.minion.call_single": "Call single",
+  "text.vampirism.minion.call_all": "Call all",
+  "text.vampirism.minion.respawn": "Respawn dead"
 }

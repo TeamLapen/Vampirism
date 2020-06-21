@@ -18,7 +18,7 @@ public interface IMinionEntity extends IFactionEntity {
     Optional<Integer> getMinionId();
 
     /**
-     * DON't use
+     * DON't call as slot is not freed
      * Called to remove entity from world on call from lord.
      * Does checkin minion
      */
