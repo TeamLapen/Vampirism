@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,4 +26,7 @@ public interface ITotem {
     void updateTrainer(boolean toDummy);
 
     EntityType<? extends MobEntity> getCaptureEntityForFaction(IFaction<?> faction);
+
+    World getWorld();
+
 }

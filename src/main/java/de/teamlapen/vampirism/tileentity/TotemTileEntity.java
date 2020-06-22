@@ -30,6 +30,7 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionSanguinareEffect;
 import de.teamlapen.vampirism.util.ModEventFactory;
+import de.teamlapen.vampirism.world.TotemUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -89,22 +90,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
      * saves the position
      */
     private static final Map<StructureStart, BlockPos> totemPositions = Maps.newHashMap();
-    /**
-     * weighted entitylist for capture entity spawn based on Faction
-     * setup once
-     */
-    private static final Map<IFaction, List<CaptureEntityEntry>> captureEntities = Maps.newHashMap();
-
-    public static void registerCaptureEntities(IFaction faction, List<CaptureEntityEntry> entries) {
-        captureEntities.compute(faction, (faction1, list) -> {
-            if(list == null) {
-                return entries;
-            }else {
-                list.addAll(entries);
-                return list;
-            }
-        });
-    }
 
     public static boolean isInsideVampireAreaCached(Dimension dimension, BlockPos blockPos) {
         if (vampireVillages.containsKey(dimension)) {
@@ -808,7 +793,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
     @Override
     public EntityType<? extends MobEntity> getCaptureEntityForFaction(IFaction<?> faction) {
-        return WeightedRandom.getRandomItem(RNG, captureEntities.get(faction)).getEntity();
+        return WeightedRandom.getRandomItem(RNG, TotemUtils.getCaptureEntries(faction)).getEntity();
     }
 
     private boolean spawnVillagerReplace(MobEntity oldEntity, boolean poisonousBlood, boolean replaceOld) {
@@ -857,7 +842,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 this.spawnVillagerDefault(true);
             }
             for (VillagerEntity villager : villagerEntities) {
-                if (FactionVillagerProfession.getProfessions().contains(villager.getVillagerData().getProfession())) {
+                if (TotemUtils.getProfessions().contains(villager.getVillagerData().getProfession())) {
                     villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
                 }
                 if (villager.isPotionActive(ModEffects.sanguinare))
@@ -880,7 +865,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             }
         } else if (VReference.VAMPIRE_FACTION.equals(this.capturingFaction)) {
             for (VillagerEntity villager : villagerEntities) {
-                if (FactionVillagerProfession.getProfessions().contains(villager.getVillagerData().getProfession())) {
+                if (TotemUtils.getProfessions().contains(villager.getVillagerData().getProfession())) {
                     villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
                 }
                 ExtendedCreature.getSafe(villager).ifPresent(e -> e.setPoisonousBlood(false));

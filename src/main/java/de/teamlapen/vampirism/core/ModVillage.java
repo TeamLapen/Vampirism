@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.entity.FactionVillagerProfession;
 import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -33,8 +35,18 @@ public class ModVillage {
     public static final Schedule converted_default = getNull();
 
     static void registerProfessions(IForgeRegistry<VillagerProfession> registry) {
-        VillagerProfession vampire_expert = new FactionVillagerProfession("vampire_expert", vampire_faction, ImmutableSet.of(), ImmutableSet.of()).setRegistryName(REFERENCE.MODID, "vampire_expert");
-        VillagerProfession hunter_expert = new FactionVillagerProfession("hunter_expert", hunter_faction, ImmutableSet.of(), ImmutableSet.of()).setRegistryName(REFERENCE.MODID, "hunter_expert");
+        VillagerProfession vampire_expert = new FactionVillagerProfession("vampire_expert", vampire_faction, ImmutableSet.of(), ImmutableSet.of()){
+            @Override
+            public IFaction getFaction() {
+                return VReference.VAMPIRE_FACTION;
+            }
+        }.setRegistryName(REFERENCE.MODID, "vampire_expert");
+        VillagerProfession hunter_expert = new FactionVillagerProfession("hunter_expert", hunter_faction, ImmutableSet.of(), ImmutableSet.of()){
+            @Override
+            public IFaction getFaction() {
+                return VReference.HUNTER_FACTION;
+            }
+        }.setRegistryName(REFERENCE.MODID, "hunter_expert");
         registry.register(vampire_expert);
         registry.register(hunter_expert);
         VillagerTrades.VILLAGER_DEFAULT_TRADES.computeIfAbsent(hunter_expert, trades -> new Int2ObjectOpenHashMap<>()).putAll(getHunterTrades());
