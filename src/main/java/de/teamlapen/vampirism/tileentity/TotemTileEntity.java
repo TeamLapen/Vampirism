@@ -872,13 +872,13 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 }
             }
 
-        }else if(VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
+        } else if(VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
                 for (VillagerEntity villager : villagerEntities) {
                     if (villager.isPotionActive(ModEffects.sanguinare))
                         villager.removePotionEffect(ModEffects.sanguinare);
                     if (fullConvert) {
                         if (villager instanceof ConvertedVillagerEntity) {
-                            this.spawnVillagerReplaceForced(villager, true, true);
+                            this.spawnVillagerReplaceForced(villager, this.capturingFaction == VReference.HUNTER_FACTION, true);
                         }
                     }
                 }
