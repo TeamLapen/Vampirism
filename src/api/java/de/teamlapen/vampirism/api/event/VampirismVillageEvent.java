@@ -48,6 +48,10 @@ public abstract class VampirismVillageEvent extends Event {
         return totem.getVillageAreaReduced();
     }
 
+    public World getWorld() {
+        return totem.getWorld();
+    }
+
     /**
      * Fired when a new villager will be spawned.
      * Deny if none should spawn, allow and set villager if you own villager should spawn.
