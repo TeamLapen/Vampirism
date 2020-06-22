@@ -4,7 +4,6 @@ import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -18,13 +17,13 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 
-public class InstructMinionPacket implements IMessage {
+public class SelectMinionTaskPacket implements IMessage {
     private static final Logger LOGGER = LogManager.getLogger();
     public final static ResourceLocation RECALL = new ResourceLocation(REFERENCE.MODID, "recall");
     public final static ResourceLocation RESPAWN = new ResourceLocation(REFERENCE.MODID, "respawn");
 
 
-    public static void handle(final InstructMinionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final SelectMinionTaskPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> FactionPlayerHandler.getOpt(ctx.getSender()).ifPresent(fp -> {
             PlayerMinionController controller = MinionWorldData.getData(ctx.getSender().server).getOrCreateController(fp);
@@ -35,8 +34,9 @@ public class InstructMinionPacket implements IMessage {
                         controller.createMinionEntityAtPlayer(id, ctx.getSender());
                     }
                 } else {
-                    controller.contactMinion(msg.minionID, MinionEntity::recallMinion);
-                    controller.createMinionEntityAtPlayer(msg.minionID, ctx.getSender());
+                    if (controller.recallMinion(msg.minionID)) {
+                        controller.createMinionEntityAtPlayer(msg.minionID, ctx.getSender());
+                    }
                 }
             } else if (RESPAWN.equals(msg.taskID)) {
                 Collection<Integer> ids = controller.getUnclaimedMinions();
@@ -59,19 +59,19 @@ public class InstructMinionPacket implements IMessage {
         ctx.setPacketHandled(true);
     }
 
-    static void encode(InstructMinionPacket msg, PacketBuffer buf) {
+    static void encode(SelectMinionTaskPacket msg, PacketBuffer buf) {
         buf.writeVarInt(msg.minionID);
         buf.writeResourceLocation(msg.taskID);
     }
 
-    static InstructMinionPacket decode(PacketBuffer buf) {
-        return new InstructMinionPacket(buf.readVarInt(), buf.readResourceLocation());
+    static SelectMinionTaskPacket decode(PacketBuffer buf) {
+        return new SelectMinionTaskPacket(buf.readVarInt(), buf.readResourceLocation());
     }
 
     public final int minionID;
     public final ResourceLocation taskID;
 
-    public InstructMinionPacket(int minionID, ResourceLocation taskID) {
+    public SelectMinionTaskPacket(int minionID, ResourceLocation taskID) {
         assert minionID >= -1;
         this.minionID = minionID;
         this.taskID = taskID;

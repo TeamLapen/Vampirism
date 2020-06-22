@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -154,7 +155,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      */
     public Optional<Integer> claimMinionSlot(int id) {
         if (id < minionTokens.length) {
-            if (!minionTokens[id].isPresent()) {
+            if (!minionTokens[id].isPresent() && !minions[id].isDead()) {
                 int t = rng.nextInt();
                 minionTokens[id] = Optional.of(t);
                 return minionTokens[id];
@@ -270,6 +271,27 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     }
 
+    /**
+     * Allow interacting with the minion data directly regardless of checkout.
+     * DO NOT use to get references of the data or anything inside.
+     */
+    public <T> Optional<T> contactMinionData(int id, Function<MinionData, T> function) {
+        if (id >= 0 && id < minions.length) {
+            return Optional.of(function.apply(minions[id].data));
+        }
+        return Optional.empty();
+    }
+
+    public Collection<Integer> getCallableMinions() {
+        List<Integer> ids = new ArrayList<>();
+        for (int i = 0; i < minions.length; i++) {
+            if (!minions[i].isDead()) {
+                ids.add(i);
+            }
+        }
+        return ids;
+    }
+
     public UUID getUUID() {
         return this.lordID;
     }
@@ -293,7 +315,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             i.checkin();
-            i.deathCooldown = 20;//* 60 * 5; TODO
+            i.deathCooldown = 60 * 5; //TODO
             if (id < minionTokens.length) {
                 minionTokens[id] = Optional.empty();
             }
@@ -310,28 +332,46 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     /**
+     * Recall the given minion. Corresponding entity is removed if present, token is invalidated and slot is released.
+     *
+     * @return If minion can be reclaimed (isAlive)
+     */
+    public boolean recallMinion(int id) {
+        if (id >= 0 && id < minions.length) {
+            return recallMinion(minions[id]);
+        }
+        return false;
+    }
+
+    /**
      * Recalls all minions.
      * Corresponding entities are removed if present, tokens are invalidated  and slots are released
      *
      * @return A list of minions ids that can be reclaimed
      */
     public Collection<Integer> recallMinions() {
-        contactMinions(MinionEntity::recallMinion);
-        for (MinionInfo i : minions) { //TODO remove
-            if (i.isActive()) {
-                LOGGER.warn("Minion still active after recall");
-            }
-        }
-        //noinspection unchecked
-        minionTokens = new Optional[minions.length];
-        Arrays.fill(minionTokens, Optional.empty());
-        List<Integer> ids = new ArrayList<>();
-        for (int i = 0; i < minions.length; i++) {
-            if (!minions[i].isDead()) {
-                ids.add(i);
+        List<Integer> ids = new ArrayList<>(minions.length);
+        for (MinionInfo minion : minions) {
+            if (recallMinion(minion)) {
+                ids.add(minion.minionID);
             }
         }
         return ids;
+    }
+
+    /**
+     * Recall the given minion. Corresponding entity is removed if present, token is invalidated and slot is released.
+     *
+     * @return If minion can be reclaimed (isAlive)
+     */
+    private boolean recallMinion(MinionInfo i) {
+        contactMinion(i.minionID, MinionEntity::recallMinion);
+        if (i.isActive()) {
+            LOGGER.warn("Minion still active after recall");//TODO remove
+        }
+        minionTokens[i.minionID] = Optional.empty();
+        return !i.isDead();
+
     }
 
     private void activateTask(MinionInfo info, IMinionTask<?> task) {

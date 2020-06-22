@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.client.gui.GiveMinionTaskScreen;
 import de.teamlapen.vampirism.client.gui.SelectActionScreen;
+import de.teamlapen.vampirism.client.gui.SelectMinionTaskScreen;
 import de.teamlapen.vampirism.client.gui.SkillsScreen;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
@@ -61,7 +61,7 @@ public class ModKeys {
     private static final KeyBinding BLOOD_POTION = new KeyBinding(BLOOD_POTION_CRAFTING, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_B, CATEGORY);
     private static final KeyBinding ACTION1 = new KeyBinding(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_1, CATEGORY);
     private static final KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_2, CATEGORY);
-    private static final KeyBinding MINION = new KeyBinding(MINION_TASK, KeyConflictContext.IN_GAME, KeyModifier.ALT, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);
+    private static final KeyBinding MINION = new KeyBinding(MINION_TASK, KeyConflictContext.IN_GAME, InputMappings.INPUT_INVALID, CATEGORY);
 
 
     @Nonnull
@@ -153,7 +153,7 @@ public class ModKeys {
             }
         } else if (keyPressed == KEY.MINION) {
             if (FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
-                Minecraft.getInstance().displayGuiScreen(new GiveMinionTaskScreen());
+                Minecraft.getInstance().displayGuiScreen(new SelectMinionTaskScreen());
             }
         }
         if (suckKeyDown && !SUCK.isKeyDown()) {
@@ -166,21 +166,21 @@ public class ModKeys {
      * @return the KeyBinding that is currently pressed
      */
     private KEY getPressedKeyBinding() {
-        if (SUCK.isPressed()) {
+        if (SUCK.isKeyDown()) {
             return KEY.SUCK;
-        } else if (ACTION.isPressed() && ACTION.getKeyModifier().isActive(KeyConflictContext.GUI)) {
+        } else if (ACTION.isKeyDown()) {
             return KEY.ACTION;
-        } else if (SKILL.isPressed()) {
+        } else if (SKILL.isKeyDown()) {
             return KEY.SKILL;
-        } else if (VISION.isPressed()) {
+        } else if (VISION.isKeyDown()) {
             return KEY.VISION;
-        } else if (BLOOD_POTION.isPressed()) {
+        } else if (BLOOD_POTION.isKeyDown()) {
             return KEY.BLOOD_POTION;
-        } else if (ACTION1.isPressed() && ACTION1.getKeyModifier().isActive(null)) {
+        } else if (ACTION1.isKeyDown()) {
             return KEY.ACTION1;
-        } else if (ACTION2.isPressed() && ACTION2.getKeyModifier().isActive(null)) {
+        } else if (ACTION2.isKeyDown()) {
             return KEY.ACTION2;
-        } else if (MINION.isPressed() && MINION.getKeyModifier().isActive(null)) {
+        } else if (MINION.isKeyDown()) {
             return KEY.MINION;
         }
         return KEY.UNKNOWN;

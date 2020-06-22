@@ -111,6 +111,10 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         if (editActions && key == GLFW.GLFW_KEY_ESCAPE) {
             onClose();
             return true;
+        } else if (key == GLFW.GLFW_KEY_SPACE) {
+            if (FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getLordLevel).orElse(0) > 0) {
+                this.minecraft.displayGuiScreen(new SelectMinionTaskScreen());
+            }
         }
         if (getSelectedElement() >= 0) {
             if (elements.get(getSelectedElement()) == fakeAction) {
@@ -135,10 +139,18 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         return super.keyPressed(key, scancode, modifiers);
     }
 
+
     @Override
     public boolean keyReleased(int key, int scancode, int modifiers) {
-        if (editActions && getMenuKeyBinding().matchesKey(key, scancode)) return false;
-        return super.keyReleased(key, scancode, modifiers);
+        if (!editActions) {
+            if (ModKeys.getKeyBinding(ModKeys.KEY.MINION).matchesKey(key, scancode) || ModKeys.getKeyBinding(ModKeys.KEY.ACTION).matchesKey(key, scancode)) {
+                onClose();
+                if (getSelectedElement() >= 0) {
+                    this.onElementSelected(elements.get(getSelectedElement()));
+                }
+            }
+        }
+        return false;
     }
 
     @Override
