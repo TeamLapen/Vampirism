@@ -182,13 +182,19 @@ public abstract class VampirismVillageEvent extends Event {
      * if result is {@link Result#DENY} the Vanilla code is skipped
      */
     @HasResult
-    public static class VillagerCaptureFinish extends VampirismVillageEvent {
+    public static class VillagerCaptureFinish extends VillagerCaptureFinishParent.Pre { //TODO binary compatible remove
+        public VillagerCaptureFinish(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+            super(totem,villagerIn,forced);
+        }
+    }
+
+    public static class VillagerCaptureFinishParent extends VampirismVillageEvent {
 
         private final @Nonnull
         List<VillagerEntity> villager;
         private final boolean forced;
 
-        public VillagerCaptureFinish(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+        public VillagerCaptureFinishParent(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
             super(totem);
             villager = villagerIn;
             this.forced = forced;
@@ -208,6 +214,18 @@ public abstract class VampirismVillageEvent extends Event {
 
         public boolean isForced() {
             return forced;
+        }
+
+        public static class Post extends VillagerCaptureFinishParent {
+            public Post(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+                super(totem, villagerIn, forced);
+            }
+        }
+
+        public static class Pre extends VillagerCaptureFinishParent {
+            public Pre(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+                super(totem, villagerIn, forced);
+            }
         }
     }
 

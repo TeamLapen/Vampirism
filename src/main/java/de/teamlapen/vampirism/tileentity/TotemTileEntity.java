@@ -825,7 +825,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
     private void updateCreaturesOnCapture(boolean fullConvert) {
         List<VillagerEntity> villagerEntities = this.world.getEntitiesWithinAABB(VillagerEntity.class, getVillageArea());
-        if(ModEventFactory.fireVillagerCaptureEvent(this,villagerEntities,fullConvert)) {
+        if(ModEventFactory.fireVillagerCaptureEventPre(this,villagerEntities,fullConvert)) {
             return;
         }
         if (VReference.HUNTER_FACTION.equals(this.capturingFaction)) {
@@ -892,11 +892,14 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 }
         }
 
+        villagerEntities = this.world.getEntitiesWithinAABB(VillagerEntity.class, getVillageArea());
+
         for (VillagerEntity villager : villagerEntities) {
-            if (TotemUtils.getProfessions().contains(villager.getVillagerData().getProfession())) {
+            if (villager.getVillagerData().getProfession() instanceof FactionVillagerProfession) {
                 villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.NONE));
             }
         }
+        ModEventFactory.fireVillagerCaptureEventPost(this,villagerEntities, fullConvert);
     }
 
     private boolean spawnEntity(MobEntity newEntity) {

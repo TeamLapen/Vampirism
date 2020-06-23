@@ -24,10 +24,14 @@ import java.util.List;
 
 public class ModEventFactory {
 
-    public static boolean fireVillagerCaptureEvent(@Nonnull ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+    public static boolean fireVillagerCaptureEventPre(@Nonnull ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
         VampirismVillageEvent.VillagerCaptureFinish event = new VampirismVillageEvent.VillagerCaptureFinish(totem,villagerIn, forced);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getResult().equals(Event.Result.DENY);
+    }
+
+    public static void fireVillagerCaptureEventPost(@Nonnull ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
+        MinecraftForge.EVENT_BUS.post(new VampirismVillageEvent.VillagerCaptureFinishParent.Post(totem, villagerIn, forced));
     }
 
     public static VillagerEntity fireSpawnNewVillagerEvent(@Nonnull ITotem totem, @Nullable MobEntity oldEntity, @Nonnull VillagerEntity newEntity, boolean replaceOld, boolean converted) {
