@@ -170,6 +170,9 @@ public class ModEntities {
     static void registerSpawnEntries(){
         TotemUtils.addCaptureEntry(VReference.HUNTER_FACTION, Lists.newArrayList(new TotemTileEntity.CaptureEntityEntry(ModEntities.hunter, 10), new TotemTileEntity.CaptureEntityEntry(ModEntities.advanced_hunter, 2)));
         TotemUtils.addCaptureEntry(VReference.VAMPIRE_FACTION, Lists.newArrayList(new TotemTileEntity.CaptureEntityEntry(ModEntities.vampire, 10), new TotemTileEntity.CaptureEntityEntry(ModEntities.advanced_vampire, 2)));
+
+        TotemUtils.setGuardEntityClass(VReference.HUNTER_FACTION, HunterBaseEntity.class);
+        TotemUtils.setGuardEntityClass(VReference.VAMPIRE_FACTION, VampireBaseEntity.class);
     }
 
     private static Biome[] getZombieBiomes() {

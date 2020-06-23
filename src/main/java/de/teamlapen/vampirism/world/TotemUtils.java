@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.world;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.entity.FactionVillagerProfession;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 
 import java.util.Collection;
@@ -19,45 +19,22 @@ public class TotemUtils {
      * weighted entitylist for capture entity spawn based on Faction
      * setup once
      */
-    private static final Map<IFaction, List<TotemTileEntity.CaptureEntityEntry>> captureEntities = Maps.newHashMap();
+    private static Map<IFaction, List<TotemTileEntity.CaptureEntityEntry>> captureEntities;
+
+    /**
+     * mapping from faction to basic village guard super class
+     */
+    private static Map<IFaction, Class<? extends MobEntity>> guardEntities;
 
     /**
      * mapping from faction to villageprofession
      */
-    private static final Map<IFaction, FactionVillagerProfession> professions = Maps.newHashMap();
+    private static Map<IFaction, FactionVillagerProfession> professions;
 
-    /**
-     * temporary storage
-     */
-    private static final Set<FactionVillagerProfession> professionsTmp = Sets.newHashSet();
-
-    /**
-     * add entries before {@link InterModProcessEvent}
-     */
-    public static void addCaptureEntry(IFaction faction, List<TotemTileEntity.CaptureEntityEntry> entries) {
-        captureEntities.compute(faction, ((iFaction, captureEntityEntries) -> {
-            if(captureEntityEntries == null) {
-                return entries;
-            }else {
-                captureEntityEntries.addAll(entries);
-                return captureEntityEntries;
-            }
-        }));
-
-        professionsTmp.forEach(profession -> professions.put(profession.getFaction(), profession));
-        professionsTmp.clear();
-    }
+    private static Tmp temporaryStorage = new Tmp();
 
     public static List<TotemTileEntity.CaptureEntityEntry> getCaptureEntries(IFaction faction) {
         return captureEntities.get(faction);
-    }
-
-    public static void processEntries() {
-        captureEntities.replaceAll((f, v) -> ImmutableList.copyOf(captureEntities.get(f)));
-    }
-
-    public static void addProfession(FactionVillagerProfession profession) {
-        professionsTmp.add(profession);
     }
 
     public static Collection<FactionVillagerProfession> getProfessions() {
@@ -66,5 +43,51 @@ public class TotemUtils {
 
     public static FactionVillagerProfession getProfession(IFaction faction) {
         return professions.get(faction);
+    }
+
+    public static Class<? extends MobEntity> getGuardClass(IFaction faction) {
+        return guardEntities.getOrDefault(faction, MobEntity.class);
+    }
+
+
+
+    public static void processEntries() {
+        captureEntities = ImmutableMap.copyOf(temporaryStorage.captureEntities);
+
+        ImmutableMap.Builder<IFaction, FactionVillagerProfession> builder = ImmutableMap.builder();
+        temporaryStorage.professions.forEach(profession -> builder.put(profession.getFaction(), profession));
+        professions = builder.build();
+
+        guardEntities = ImmutableMap.copyOf(temporaryStorage.guards);
+
+        temporaryStorage = null;
+    }
+
+    /**
+     * add entries before {@link InterModProcessEvent}
+     */
+    public static void addCaptureEntry(IFaction faction, List<TotemTileEntity.CaptureEntityEntry> entries) {
+        temporaryStorage.captureEntities.computeIfAbsent(faction, f -> Lists.newArrayList()).addAll(entries);
+
+    }
+
+    /**
+     * add entries before {@link InterModProcessEvent}
+     */
+    public static void addProfession(FactionVillagerProfession profession) {
+        temporaryStorage.professions.add(profession);
+    }
+
+    /**
+     * add entries before {@link InterModProcessEvent}
+     */
+    public static void setGuardEntityClass(IFaction faction, Class<? extends MobEntity> clazz) {
+        temporaryStorage.guards.put(faction, clazz);
+    }
+
+    private static class Tmp {
+        private final Set<FactionVillagerProfession> professions = Sets.newHashSet();
+        private final Map<IFaction, List<TotemTileEntity.CaptureEntityEntry>> captureEntities = Maps.newHashMap();
+        private final Map<IFaction, Class<? extends MobEntity>> guards = Maps.newHashMap();
     }
 }

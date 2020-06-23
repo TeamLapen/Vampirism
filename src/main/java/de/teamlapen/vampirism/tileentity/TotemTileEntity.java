@@ -36,7 +36,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BushBlock;
 import net.minecraft.entity.*;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.player.PlayerEntity;
@@ -386,7 +385,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     private boolean spawnVillagerDefault(boolean poisonousBlood) {
         VillagerEntity newVillager  = EntityType.VILLAGER.create(this.world);
         ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
-        newVillager = ModEventFactory.fireSpawnNewVillagerEvent(this,null, newVillager, false,poisonousBlood);
+        newVillager = ModEventFactory.fireSpawnNewVillagerEvent(this,null, newVillager, false, poisonousBlood);
         return spawnEntity(newVillager);
     }
 
@@ -540,8 +539,8 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             else {
                 if (this.controllingFaction != null && time % 512 == 0) {
                     int beds = (int) ((ServerWorld) world).getPointOfInterestManager().func_219146_b(pointOfInterestType -> pointOfInterestType.equals(PointOfInterestType.HOME), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.ANY).count();
-                    if (this.world.getEntitiesWithinAABB(AbstractVillagerEntity.class, this.getVillageArea().grow(20)).size() < Math.min(beds, VampirismConfig.BALANCE.viMaxVillagerRespawn.get())) {
-                        boolean isConverted = this.controllingFaction != VReference.HUNTER_FACTION && RNG.nextBoolean();
+                    if (this.world.getEntitiesWithinAABB(VillagerEntity.class, this.getVillageArea().grow(20)).size() < Math.min(beds, VampirismConfig.BALANCE.viMaxVillagerRespawn.get())) {
+                        boolean isConverted = this.controllingFaction == VReference.VAMPIRE_FACTION && RNG.nextBoolean();
                         if (isConverted) {
                             this.spawnVillagerVampire();
                         } else {
@@ -549,12 +548,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         }
                     }
                     int defenderNumMax = Math.min(6, this.village.getComponents().size() / 5);
-                    List<? extends MobEntity> guards = Lists.newArrayList();
-                    if (VReference.HUNTER_FACTION.equals(this.controllingFaction)) {
-                        guards = this.world.getEntitiesWithinAABB(HunterBaseEntity.class, this.getVillageArea());
-                    } else if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
-                        guards = this.world.getEntitiesWithinAABB(VampireBaseEntity.class, this.getVillageArea());
-                    }
+                    List<? extends MobEntity> guards = this.world.getEntitiesWithinAABB(TotemUtils.getGuardClass(this.controllingFaction), this.getVillageArea());
                     if (defenderNumMax > guards.size()) {
                         EntityType<? extends MobEntity> entityType = getCaptureEntityForFaction(this.controllingFaction);
                         this.spawnEntity(entityType.create(this.world));
