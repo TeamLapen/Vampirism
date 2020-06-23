@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
-import de.teamlapen.vampirism.world.TotemUtils;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
@@ -56,7 +55,6 @@ public class RegistryManager implements IInitListener {
                 ModEntities.registerConvertibles();
                 ModEntities.registerSpawns();
                 ModEntities.registerCustomExtendedCreatures();
-                ModEntities.registerSpawnEntries();
                 ModItems.registerCraftingRecipes();
                 ModAdvancements.registerAdvancements();
                 ModCommands.registerArgumentTypes();
@@ -70,7 +68,6 @@ public class RegistryManager implements IInitListener {
                 break;
             case PROCESS_IMC:
                 ModBiomes.addFeatures();
-                TotemUtils.processEntries();
                 break;
             default:
                 break;

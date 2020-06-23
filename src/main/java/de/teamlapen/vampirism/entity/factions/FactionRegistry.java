@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.*;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -122,32 +119,40 @@ public class FactionRegistry implements IFactionRegistry {
             predicate = new PredicateFaction(thisFaction, player, mob, neutralPlayer, ignoreDisguise, otherFaction);
             predicateMap.put(key, predicate);
         }
-//        VampirismMod.log.t("%s,%b,%b,%b,%s", thisFaction, player, mob, neutralPlayer, otherFaction);
-//        VampirismMod.log.t("%s", k);
-//        VampirismMod.log.t("%s", predicate);
         return predicate;
     }
 
     @Override
     public <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral) {
+        return registerFaction(id, entityInterface, color, hostileTowardsNeutral, null);
+    }
+
+    @Override
+    public <T extends IFactionEntity> IFaction registerFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, @Nullable IVillageFactionData villageFactionData) {
         if (!UtilLib.isNonNull(id, entityInterface)) {
             throw new IllegalArgumentException("[Vampirism]Parameter for faction cannot be null");
         }
-        Faction<T> f = new Faction<>(id, entityInterface, color, hostileTowardsNeutral);
+        Faction<T> f = new Faction<>(id, entityInterface, color, hostileTowardsNeutral, villageFactionData == null ? IVillageFactionData.INSTANCE: villageFactionData);
         addFaction(f);
         return f;
     }
 
     @Override
     public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
+        return registerPlayableFaction(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel,null);
+    }
+
+    @Override
+    public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, @Nullable IVillageFactionData villageFactionData) {
         if (!UtilLib.isNonNull(id, entityInterface, playerCapabilitySupplier)) {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
 
-        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel);
+        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, villageFactionData == null ? IVillageFactionData.INSTANCE: villageFactionData);
         addFaction(f);
         return f;
     }
+
 
     @ThreadSafeAPI
     private void addFaction(Faction faction) {

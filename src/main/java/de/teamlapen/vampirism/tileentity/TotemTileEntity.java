@@ -30,7 +30,6 @@ import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionSanguinareEffect;
 import de.teamlapen.vampirism.util.ModEventFactory;
-import de.teamlapen.vampirism.world.TotemUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -548,7 +547,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         }
                     }
                     int defenderNumMax = Math.min(6, this.village.getComponents().size() / 5);
-                    List<? extends MobEntity> guards = this.world.getEntitiesWithinAABB(TotemUtils.getGuardClass(this.controllingFaction), this.getVillageArea());
+                    List<? extends MobEntity> guards = this.world.getEntitiesWithinAABB(this.controllingFaction.getVillageData().getGuardSuperClass(), this.getVillageArea());
                     if (defenderNumMax > guards.size()) {
                         EntityType<? extends MobEntity> entityType = getCaptureEntityForFaction(this.controllingFaction);
                         this.spawnEntity(entityType.create(this.world));
@@ -712,19 +711,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         }
     }
 
-    public static class CaptureEntityEntry extends WeightedRandom.Item {
-        private final EntityType<? extends MobEntity> entity;
-
-        public CaptureEntityEntry(EntityType<? extends MobEntity> entity, int itemWeightIn) {
-            super(itemWeightIn);
-            this.entity = entity;
-        }
-
-        public EntityType<? extends MobEntity> getEntity() {
-            return entity;
-        }
-    }
-
     private enum CAPTURE_PHASE {
         PHASE_1_NEUTRAL, PHASE_1_OPPOSITE, PHASE_2
     }
@@ -787,7 +773,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
 
     @Override
     public EntityType<? extends MobEntity> getCaptureEntityForFaction(IFaction<?> faction) {
-        return WeightedRandom.getRandomItem(RNG, TotemUtils.getCaptureEntries(faction)).getEntity();
+        return WeightedRandom.getRandomItem(RNG, faction.getVillageData().getCaptureEntries()).getEntity();
     }
 
     private boolean spawnVillagerReplace(MobEntity oldEntity, boolean poisonousBlood, boolean replaceOld) {

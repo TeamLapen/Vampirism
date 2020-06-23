@@ -13,9 +13,7 @@ import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
 import de.teamlapen.vampirism.entity.vampire.*;
-import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.world.TotemUtils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.passive.*;
@@ -165,14 +163,6 @@ public class ModEntities {
         EntitySpawnPlacementRegistry.register(hunter, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HunterBaseEntity::spawnPredicateHunter);
         EntitySpawnPlacementRegistry.register(villager_angry, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
         EntitySpawnPlacementRegistry.register(villager_converted, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
-    }
-
-    static void registerSpawnEntries(){
-        TotemUtils.addCaptureEntry(VReference.HUNTER_FACTION, Lists.newArrayList(new TotemTileEntity.CaptureEntityEntry(ModEntities.hunter, 10), new TotemTileEntity.CaptureEntityEntry(ModEntities.advanced_hunter, 2)));
-        TotemUtils.addCaptureEntry(VReference.VAMPIRE_FACTION, Lists.newArrayList(new TotemTileEntity.CaptureEntityEntry(ModEntities.vampire, 10), new TotemTileEntity.CaptureEntityEntry(ModEntities.advanced_vampire, 2)));
-
-        TotemUtils.setGuardEntityClass(VReference.HUNTER_FACTION, HunterBaseEntity.class);
-        TotemUtils.setGuardEntityClass(VReference.VAMPIRE_FACTION, VampireBaseEntity.class);
     }
 
     private static Biome[] getZombieBiomes() {
