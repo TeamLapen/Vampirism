@@ -84,17 +84,24 @@ public abstract class GuiPieMenu<T> extends Screen {
 
     @Override
     public boolean keyReleased(int key, int scancode, int modifiers) {
-        if (getMenuKeyBinding().matchesKey(key, scancode)) {
-            onClose();
-            if (selectedElement >= 0) {
-                this.onElementSelected(elements.get(selectedElement));
-            }
+        if (!isKeyBindingStillPressed()) {
+            this.selectedAndClose();
+            return true;
         }
         return false;
     }
 
     @Override
     public boolean mouseScrolled(double p_mouseScrolled_1_, double p_mouseScrolled_3_, double p_mouseScrolled_5_) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseReleased(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) {
+        if (!isKeyBindingStillPressed()) {
+            this.selectedAndClose();
+            return true;
+        }
         return false;
     }
 
@@ -182,6 +189,10 @@ public abstract class GuiPieMenu<T> extends Screen {
         }
     }
 
+    protected boolean isKeyBindingStillPressed() {
+        return getMenuKeyBinding().isKeyDown();
+    }
+
     protected void afterIconDraw(T element, int x, int y) {
 
     }
@@ -222,6 +233,13 @@ public abstract class GuiPieMenu<T> extends Screen {
      * @return the menu key binding set in the game settings
      */
     protected abstract KeyBinding getMenuKeyBinding();
+
+    protected void selectedAndClose() {
+        onClose();
+        if (selectedElement >= 0) {
+            this.onElementSelected(elements.get(selectedElement));
+        }
+    }
 
     protected int getSelectedElement() {
         return selectedElement;
