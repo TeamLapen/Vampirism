@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 
@@ -24,6 +26,11 @@ public interface IVillageFactionData {
         public List<CaptureEntityEntry> getCaptureEntries() {
             return ImmutableList.of();
         }
+
+        @Override
+        public Block getTotemTopBlock() {
+            return Blocks.AIR;
+        }
     };
 
     Class<? extends MobEntity> getGuardSuperClass();
@@ -31,4 +38,6 @@ public interface IVillageFactionData {
     VillagerProfession getFactionVillageProfession();
 
     List<CaptureEntityEntry> getCaptureEntries();
+
+    Block getTotemTopBlock();
 }
