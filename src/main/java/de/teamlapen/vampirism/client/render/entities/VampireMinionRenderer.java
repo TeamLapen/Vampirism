@@ -47,4 +47,8 @@ public class VampireMinionRenderer extends BipedRenderer<VampireMinionEntity, Mi
         super.renderLayers(entity, p_177093_2_, p_177093_3_, p_177093_4_, p_177093_5_, p_177093_6_, p_177093_7_, p_177093_8_);
         GlStateManager.popMatrix();
     }
+
+    public int getTextureLength() {
+        return this.textures.length;
+    }
 }

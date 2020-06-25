@@ -4,8 +4,12 @@ import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.inventory.container.*;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class ModScreens {
+
     @SuppressWarnings("RedundantTypeArguments")
     public static void registerScreens() {
         ScreenManager.<HunterTableContainer, HunterTableScreen>registerFactory(ModContainer.hunter_table, HunterTableScreen::new);
@@ -17,5 +21,7 @@ public class ModScreens {
         ScreenManager.<AltarInfusionContainer, AltarInfusionScreen>registerFactory(ModContainer.altar_infusion, AltarInfusionScreen::new);
         ScreenManager.<BloodGrinderContainer, BloodGrinderScreen>registerFactory(ModContainer.blood_grinder, BloodGrinderScreen::new);
         ScreenManager.<MinionContainer, MinionScreen>registerFactory(ModContainer.minion, MinionScreen::new);
+
     }
+
 }

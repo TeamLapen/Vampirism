@@ -55,8 +55,8 @@ public class SkillsScreen extends Screen {
     private final int area_min_y = -77;
     private final int skill_width = 24;
     private final List<SkillNode> skillNodes = new ArrayList<>();
-    private int display_width = 256;
-    private int display_height = 202;
+    private final int display_width = 256;
+    private final int display_height = 202;
     private int area_min_x = 0;
     private int area_max_x = 0;
     private int area_max_y;
@@ -107,9 +107,13 @@ public class SkillsScreen extends Screen {
                 }, new TranslationTextComponent("gui.vampirism.reset_skills.title"), new TranslationTextComponent("gui.vampirism.reset_skills." + (test ? "desc_test" : "desc")));
                 Minecraft.getInstance().displayGuiScreen(resetGui);
             }));
-            this.addButton(new ImageButton((this.width - display_width) / 2 + 10, this.height / 2 + 74, 20, 20, 0, 0, 20, ACTIONBUTTON, 20, 40, (context) -> {
-
-                IPlayableFaction faction = FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction();
+            if (Helper.isVampire(minecraft.player)) {
+                this.addButton(new ImageButton((this.width - display_width) / 2 + 10 + 22, this.height / 2 + 74, 20, 20, 72, 202, 20, BACKGROUND, 256, 256, (context) -> {
+                    Minecraft.getInstance().displayGuiScreen(new VampirePlayerAppearanceScreen());
+                }));
+            }
+            this.addButton(new ImageButton((this.width - display_width) / 2 + 10, this.height / 2 + 74, 20, 20, 52, 202, 20, BACKGROUND, 256, 256, (context) -> {
+                IPlayableFaction<?> faction = FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentFaction();
                 Minecraft.getInstance().displayGuiScreen(new SelectActionScreen(faction.getColor(), true));
             }));
 

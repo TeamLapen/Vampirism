@@ -149,7 +149,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private boolean glowingEyes = true;
     private int ticksInSun = 0;
     private boolean wasDead = false;
-    private List<IVampireVision> unlockedVisions = new ArrayList<>();
+    private final List<IVampireVision> unlockedVisions = new ArrayList<>();
     private IVampireVision activatedVision = null;
 
     private int feed_victim = -1;
@@ -1051,6 +1051,15 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             return continue_feeding;
         }
         return false;
+    }
+
+    public void setSkinData(int... data) {
+        if (data.length > 0) {
+            this.setFangType(data[0]);
+            if (data.length > 1) {
+                this.setEyeType(data[1]);
+            }
+        }
     }
 
     /**

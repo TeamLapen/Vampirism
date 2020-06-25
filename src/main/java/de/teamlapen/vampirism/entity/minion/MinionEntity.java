@@ -45,6 +45,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -448,7 +450,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    protected Optional<T> getMinionData() {
+    public Optional<T> getMinionData() {
         return Optional.ofNullable(minionData);
     }
 
@@ -486,6 +488,10 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
                 this.handleLoadedMinionData(minionData);
             }
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void openAppearanceScreen() {
     }
 
     @Override

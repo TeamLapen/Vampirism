@@ -156,4 +156,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     protected ResourceLocation getDataType() {
         return new ResourceLocation("");
     }
+
+    public void setMinionTypeData(int... data) {
+    }
 }
