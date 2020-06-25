@@ -38,6 +38,6 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
     }
 
     private void skin(int type) {
-        this.entity.setVampireType(this.skinType = type - 1);
+        this.entity.setVampireType(this.skinType = type);
     }
 }

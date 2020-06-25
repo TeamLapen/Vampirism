@@ -26,10 +26,10 @@ public class ScrollableListButton extends GuiButtonExt {
     private final String[] desc;
     private final boolean alternate;
 
-    public ScrollableListButton(int xPos, int yPos, int width, int shownItems, int itemCount, @Nullable String[] strings, String displayString, Consumer<Integer> elementPressAction, boolean alternate) {
-        super(xPos, yPos + 1, width, shownItems * 20, displayString, button -> {
+    public ScrollableListButton(int xPos, int yPos, int width, int shownItems, int maxItemCount, @Nullable String[] strings, String displayString, Consumer<Integer> elementPressAction, boolean alternate) {
+        super(xPos, yPos + 1, width, Math.min(shownItems, maxItemCount) * 20, displayString, button -> {
         });
-        this.itemCount = itemCount;
+        this.itemCount = maxItemCount;
         this.menuSize = shownItems;
         this.visible = true;
         this.elements = new Button[menuSize];

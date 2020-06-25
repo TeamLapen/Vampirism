@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.render.entities.HunterMinionRenderer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.network.AppearancePacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,7 +33,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     protected void init() {
         super.init();
 
-        this.addList(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 5, ((HunterMinionRenderer) Minecraft.getInstance().getRenderManager().getRenderer(this.entity)).getTextureLength() + 1, null, UtilLib.translate("gui.vampirism.minion_appearance.skin"), this::skin, false));
+        this.addList(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 5, HunterMinionRenderer.TEXTURE_COUNT, null, UtilLib.translate("gui.vampirism.minion_appearance.skin"), this::skin, false));
         this.addList(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 3, 3, null, UtilLib.translate("gui.vampirism.minion_appearance.hat"), this::hat, false));
 
         this.skinType = this.entity.getHunterType();
@@ -46,6 +45,6 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     }
 
     private void skin(int type) {
-        this.entity.setHunterType(this.skinType = type - 1);
+        this.entity.setHunterType(this.skinType = type);
     }
 }

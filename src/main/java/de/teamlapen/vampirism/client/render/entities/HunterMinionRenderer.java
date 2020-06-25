@@ -23,12 +23,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, MinionModel<HunterMinionEntity>> {
-    private final ResourceLocation[] textures = {
+    private static final ResourceLocation[] textures = {
             new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base2.png"),
             new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base3.png"),
             new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base4.png"),
             new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base5.png")
     };
+
+    public static final int TEXTURE_COUNT = textures.length;
 
     public HunterMinionRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new MinionModel<>(0.5f), 0.5F);
