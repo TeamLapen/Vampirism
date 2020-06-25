@@ -17,23 +17,21 @@ import java.util.EnumSet;
  *
  * @author maxanier
  */
-public class AttackRangedCrossbowGoal extends Goal {
-    private final VampirismEntity entity;
+public class AttackRangedCrossbowGoal<T extends VampirismEntity & AttackRangedCrossbowGoal.IAttackWithCrossbow> extends Goal {
+    private final T entity;
     private final double moveSpeedAmp;
     private final float maxAttackDistance;
     /**
      * Probably the same as entity, but is not guaranteed
      */
-    private final IAttackWithCrossbow attacker;
-    private int attackCooldown;
+    private final int attackCooldown;
     private int seeTime;
     private int strafingTime;
     private boolean strafingClockwise, strafingBackwards;
     private int attackTime;
 
-    public AttackRangedCrossbowGoal(VampirismEntity entity, IAttackWithCrossbow attacker, double speedAmplifier, int delay, float maxDistance) {
+    public AttackRangedCrossbowGoal(T entity, double speedAmplifier, int delay, float maxDistance) {
         this.entity = entity;
-        this.attacker = attacker;
         this.moveSpeedAmp = speedAmplifier;
         this.attackCooldown = delay;
         this.maxAttackDistance = maxDistance * maxDistance;
@@ -45,23 +43,23 @@ public class AttackRangedCrossbowGoal extends Goal {
         super.resetTask();
         this.seeTime = 0;
         this.attackTime = -1;
-        attacker.stopTargeting();
+        entity.stopTargeting();
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && attacker.isCrossbowInMainhand();
+        return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && entity.isCrossbowInMainhand();
     }
 
     @Override
     public boolean shouldExecute() {
-        return this.entity.getAttackTarget() != null && attacker.isCrossbowInMainhand();
+        return this.entity.getAttackTarget() != null && entity.isCrossbowInMainhand();
     }
 
     @Override
     public void startExecuting() {
         super.startExecuting();
-        attacker.startTargeting();
+        entity.startTargeting();
 
     }
 
@@ -126,7 +124,7 @@ public class AttackRangedCrossbowGoal extends Goal {
     }
 
     protected void attackWithCrossbow(LivingEntity target) {
-        ItemStack arrows = attacker.getArrowStackForAttack(target);
+        ItemStack arrows = entity.getArrowStackForAttack(target);
         CrossbowArrowEntity entityArrow = CrossbowArrowEntity.createWithShooter(entity.getEntityWorld(), entity, 0, 0.3F, !entity.isLeftHanded(), arrows);
         double sx = target.getPosX() - entityArrow.getPosX();
         double sy = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - entityArrow.getPosY();

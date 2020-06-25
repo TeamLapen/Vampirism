@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.client.render.layers.HunterEquipmentLayer;
 import de.teamlapen.vampirism.client.render.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
@@ -41,10 +42,21 @@ public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, Mini
     }
 
     @Override
+    public void render(HunterMinionEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        if (entityIn.isSwingingArms()) {
+            this.entityModel.rightArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
+        } else {
+            this.entityModel.rightArmPose = BipedModel.ArmPose.ITEM;
+        }
+        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+    }
+
+    @Override
     protected void preRenderCallback(HunterMinionEntity entityIn, MatrixStack matrixStackIn, float partialTickTime) {
         float s = entityIn.getScale();
         //float off = (1 - s) * 1.95f;
         matrixStackIn.scale(s, s, s);
         //matrixStackIn.translate(0,off,0f);
     }
+
 }
