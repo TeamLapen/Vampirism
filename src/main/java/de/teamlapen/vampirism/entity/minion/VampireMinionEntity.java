@@ -221,8 +221,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
         @Override
         public void setMinionTypeData(int... data) {
-            if (data.length >= 1) {
+            if (data.length >= 2) {
                 this.type = data[0];
+                this.useLordSkin = data[1] == 1;
             }
         }
     }

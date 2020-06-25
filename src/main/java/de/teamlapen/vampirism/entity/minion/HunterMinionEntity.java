@@ -230,11 +230,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
         @Override
         public void setMinionTypeData(int... data) {
-            if (data.length > 0) {
+            if (data.length >= 3) {
                 type = data[0];
-                if (data.length > 1) {
-                    hat = data[1];
-                }
+                hat = data[1];
+                useLordSkin = data[2] == 1;
             }
         }
     }
