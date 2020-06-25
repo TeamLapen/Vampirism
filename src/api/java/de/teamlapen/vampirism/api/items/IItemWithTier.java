@@ -33,12 +33,17 @@ public interface IItemWithTier {
     String getBaseRegName();
 
     enum TIER implements IStringSerializable {
-        NORMAL, ENHANCED, ULTIMATE;
+        NORMAL("normal"), ENHANCED("enhanced"), ULTIMATE("ultimate");
 
+        private final String name;
+
+        TIER(String name) {
+            this.name = name;
+        }
 
         @Override
         public String getName() {
-            return name().toLowerCase();
+            return name;
         }
     }
 

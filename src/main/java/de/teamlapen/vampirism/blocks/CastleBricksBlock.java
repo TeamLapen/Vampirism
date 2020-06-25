@@ -54,14 +54,20 @@ public class CastleBricksBlock extends VampirismBlock {
 
 
     public enum EnumVariant implements IStringSerializable {
-        DARK_BRICK(),
-        PURPLE_BRICK(),
-        DARK_BRICK_BLOODY(),
-        NORMAL_BRICK(),
-        DARK_STONE();
+        DARK_BRICK("dark_brick"),
+        PURPLE_BRICK("purple_brick"),
+        DARK_BRICK_BLOODY("dark_brick_bloody"),
+        NORMAL_BRICK("normal_brick"),
+        DARK_STONE("dark_stone");
+
+        private final String name;
+
+        EnumVariant(String name) {
+            this.name = name;
+        }
 
         public String getName() {
-            return name().toLowerCase();
+            return this.name;
         }
     }
 }
