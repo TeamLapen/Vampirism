@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.command.test;
 
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -34,13 +35,16 @@ public class MinionCommand extends BasicCommand {
         return Commands.literal("minion")
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_CHEAT))
                 .then(Commands.literal("spawnNew")
-                        .then(Commands.literal("vampire").executes(context -> spawnNewVampireMinion(context.getSource(), "Minion", -1))
-                                .then(Commands.argument("name", StringArgumentType.string()).executes(context -> spawnNewVampireMinion(context.getSource(), StringArgumentType.getString(context, "name"), -1))
-                                        .then(Commands.argument("type", IntegerArgumentType.integer(-1, IBasicVampire.TYPES)).executes(context -> spawnNewVampireMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"))))))
-                        .then(Commands.literal("hunter").executes(context -> spawnNewHunterMinion(context.getSource(), "Minion", -1, 0))
-                                .then(Commands.argument("name", StringArgumentType.string()).executes(context -> spawnNewHunterMinion(context.getSource(), StringArgumentType.getString(context, "name"), -1, 0))
-                                        .then(Commands.argument("type", IntegerArgumentType.integer(-1, IBasicHunter.TYPES)).executes(context -> spawnNewHunterMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), 0))
-                                                .then(Commands.argument("hat", IntegerArgumentType.integer(-1, 3)).executes(context -> spawnNewHunterMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), IntegerArgumentType.getInteger(context, "hat")))))
+                        .then(Commands.literal("vampire").executes(context -> spawnNewVampireMinion(context.getSource(), "Minion", -1, false))
+                                .then(Commands.argument("name", StringArgumentType.string()).executes(context -> spawnNewVampireMinion(context.getSource(), StringArgumentType.getString(context, "name"), -1, false))
+                                        .then(Commands.argument("type", IntegerArgumentType.integer(-1, IBasicVampire.TYPES)).executes(context -> spawnNewVampireMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), false))
+                                                .then(Commands.argument("use_lord_skin", BoolArgumentType.bool()).executes(context -> spawnNewVampireMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), BoolArgumentType.getBool(context, "use_lord_skin")))))))
+                        .then(Commands.literal("hunter").executes(context -> spawnNewHunterMinion(context.getSource(), "Minion", -1, 0, false))
+                                .then(Commands.argument("name", StringArgumentType.string()).executes(context -> spawnNewHunterMinion(context.getSource(), StringArgumentType.getString(context, "name"), -1, 0, false))
+                                        .then(Commands.argument("type", IntegerArgumentType.integer(-1, IBasicHunter.TYPES)).executes(context -> spawnNewHunterMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), 0, false))
+                                                .then(Commands.argument("hat", IntegerArgumentType.integer(-1, 3)).executes(context -> spawnNewHunterMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), IntegerArgumentType.getInteger(context, "hat"), false))
+                                                        .then(Commands.argument("use_lord_skin", BoolArgumentType.bool()).executes(context -> spawnNewHunterMinion(context.getSource(), StringArgumentType.getString(context, "name"), IntegerArgumentType.getInteger(context, "type"), IntegerArgumentType.getInteger(context, "hat"), BoolArgumentType.getBool(context, "use_lord_skin")))))
+                                        )
                                 )
                         )
                 )
@@ -51,13 +55,13 @@ public class MinionCommand extends BasicCommand {
     }
 
 
-    private static int spawnNewVampireMinion(CommandSource ctx, String name, int type) throws CommandSyntaxException {
-        VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(20, new StringTextComponent(name).applyTextStyle(VReference.VAMPIRE_FACTION.getChatColor()), type);
+    private static int spawnNewVampireMinion(CommandSource ctx, String name, int type, boolean useLordSkin) throws CommandSyntaxException {
+        VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(20, new StringTextComponent(name).applyTextStyle(VReference.VAMPIRE_FACTION.getChatColor()), type, useLordSkin);
         return spawnNewMinion(ctx, VReference.VAMPIRE_FACTION, data, ModEntities.vampire_minion);
     }
 
-    private static int spawnNewHunterMinion(CommandSource ctx, String name, int type, int hat) throws CommandSyntaxException {
-        HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(20, new StringTextComponent(name).applyTextStyle(VReference.HUNTER_FACTION.getChatColor()), type, hat);
+    private static int spawnNewHunterMinion(CommandSource ctx, String name, int type, int hat, boolean useLordSkin) throws CommandSyntaxException {
+        HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(20, new StringTextComponent(name).applyTextStyle(VReference.HUNTER_FACTION.getChatColor()), type, hat, useLordSkin);
         return spawnNewMinion(ctx, VReference.HUNTER_FACTION, data, ModEntities.hunter_minion);
     }
 
