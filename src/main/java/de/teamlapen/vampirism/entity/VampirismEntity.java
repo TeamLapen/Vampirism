@@ -12,14 +12,12 @@ import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MoveTowardsRestrictionGoal;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -79,39 +77,6 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     public VampirismEntity(EntityType<? extends VampirismEntity> type, World world) {
         super(type, world);
         moveTowardsRestriction = new MoveTowardsRestrictionGoal(this, 1.0F);
-    }
-
-    public boolean attackEntityAsMob(Entity entity) {
-        float f = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
-        int i = 0;
-
-        if (entity instanceof LivingEntity) {
-            f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((LivingEntity) entity).getCreatureAttribute());
-            i += EnchantmentHelper.getKnockbackModifier(this);
-        }
-
-        boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), f);
-
-        if (flag) {
-            if (i > 0) {
-                entity.addVelocity(-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F, 0.1D, MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F);
-                this.setMotion(this.getMotion().mul(0.6D, 1D, 0.6D));
-            }
-
-            int j = EnchantmentHelper.getFireAspectModifier(this);
-
-            if (j > 0) {
-                entity.setFire(j * 4);
-            }
-
-            this.applyEnchantments(this, entity);
-
-            if (entity instanceof LivingEntity) {
-                this.attackedEntityAsMob((LivingEntity) entity);
-            }
-        }
-
-        return flag;
     }
 
     @Override
@@ -209,11 +174,6 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
         }
     }
 
-    /**
-     * Called after an EntityLivingBase has been attacked as mob
-     */
-    protected void attackedEntityAsMob(LivingEntity entity) {
-    }
 
     @Override
     protected boolean canDropLoot() {

@@ -25,6 +25,7 @@ public class MinionTasks {
     public final static DefendAreaTask defend_area = getNull();
     public final static SimpleMinionTask follow_lord = getNull();
     public final static CollectResourcesTask collect_hunter_items = getNull();
+    public final static SimpleMinionTask protect_lord = getNull();
 
     public static void register(IForgeRegistry<IMinionTask<?>> registry) {
         registry.register(new StayTask().setRegistryName(REFERENCE.MODID, "stay"));
@@ -37,5 +38,6 @@ public class MinionTasks {
                 return false;
             }
         }.setRegistryName(REFERENCE.MODID, "nothing"));
+        registry.register(new SimpleMinionTask().setRegistryName(REFERENCE.MODID, "protect_lord"));
     }
 }

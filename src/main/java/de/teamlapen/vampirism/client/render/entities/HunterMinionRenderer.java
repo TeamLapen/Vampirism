@@ -55,5 +55,13 @@ public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, Mini
         GlStateManager.popMatrix();
     }
 
-
+    @Override
+    public void doRender(HunterMinionEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        if (entity.isSwingingArms()) {
+            this.entityModel.rightArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
+        } else {
+            this.entityModel.rightArmPose = BipedModel.ArmPose.ITEM;
+        }
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+    }
 }
