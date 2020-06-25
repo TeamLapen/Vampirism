@@ -64,6 +64,7 @@ public class HunterEquipmentModel<T extends MobEntity> extends BipedModel<T> {
         super.setVisible(false);
     }
 
+    //TODO 1.16 maybe migrate hat type to enum or similar
     public void setHat(int hatType) {
         hatRim.showModel = hatTop.showModel = hatType <= 0 && hatType > -2;
         hatTop2.showModel = hatRim2.showModel = hatType == 1;

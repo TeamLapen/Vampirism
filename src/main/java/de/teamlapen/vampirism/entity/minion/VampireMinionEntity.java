@@ -81,6 +81,11 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return garlicCache;
     }
 
+    public void setUseLordSkin(boolean useLordSkin) {
+        this.getMinionData().ifPresent(d -> d.useLordSkin = useLordSkin);
+    }
+
+
     @Override
     public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
@@ -96,7 +101,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     public boolean shouldRenderLordSkin() {
-        return this.getMinionData().map(d -> d.type).orElse(0) < 0;
+        return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
     }
 
     @Override
@@ -173,10 +178,12 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "vampire");
 
         private int type;
+        private boolean useLordSkin;
 
-        public VampireMinionData(int maxHealth, ITextComponent name, int type) {
+        public VampireMinionData(int maxHealth, ITextComponent name, int type, boolean useLordSkin) {
             super(maxHealth, name, 9);
             this.type = type;
+            this.useLordSkin = useLordSkin;
         }
 
         private VampireMinionData() {
@@ -187,12 +194,14 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         public void deserializeNBT(CompoundNBT nbt) {
             super.deserializeNBT(nbt);
             type = nbt.getInt("vampire_type");
+            useLordSkin = nbt.getBoolean("use_lord_skin");
         }
 
         @Override
         public void serializeNBT(CompoundNBT tag) {
             super.serializeNBT(tag);
             tag.putInt("vampire_type", type);
+            tag.putBoolean("use_lord_skin", useLordSkin);
         }
 
         @Override
