@@ -66,7 +66,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     private final int MAX_LEVEL = 3;
     private final MeleeAttackGoal attackMelee;
-    private final AttackRangedCrossbowGoal attackRange;
+    private final AttackRangedCrossbowGoal<BasicHunterEntity> attackRange;
 
     /**
      * Player currently being trained otherwise null
@@ -87,7 +87,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.setDontDropEquipment();
 
         this.attackMelee = new MeleeAttackGoal(this, 1.0, false);
-        this.attackRange = new AttackRangedCrossbowGoal(this, this, 0.6, 60, 20);
+        this.attackRange = new AttackRangedCrossbowGoal<>(this, 0.6, 60, 20);
         this.updateCombatTask();
         entitytier = EntityActionTier.Medium;
         entityclass = EntityClassType.getRandomClass(this.getRNG());
