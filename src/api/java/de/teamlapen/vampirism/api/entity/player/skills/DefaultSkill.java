@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -17,7 +17,7 @@ import java.util.*;
  */
 public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegistryEntry<ISkill> implements ISkill {
 
-    private final Map<IAttribute, AttributeModifier> attributeModifierMap = new HashMap<>();
+    private final Map<Attribute, AttributeModifier> attributeModifierMap = new HashMap<>();
     private final IPlayableFaction<T> faction;
     private int renderRow;
     private int renderColumn;
@@ -73,7 +73,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
         }
     }
 
-    public DefaultSkill<T> registerAttributeModifier(IAttribute attribute, String uuid, double amount, AttributeModifier.Operation operation) {
+    public DefaultSkill<T> registerAttributeModifier(Attribute attribute, String uuid, double amount, AttributeModifier.Operation operation) {
         AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), this.getRegistryName().toString(), amount, operation);
         this.attributeModifierMap.put(attribute, attributemodifier);
         return this;
@@ -110,13 +110,13 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     }
 
     private void applyAttributesModifiersToEntity(PlayerEntity player) {
-        for (Map.Entry<IAttribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
-            IAttributeInstance iattributeinstance = player.getAttributes().getAttributeInstance(entry.getKey());
+        for (Map.Entry<Attribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
+            ModifiableAttributeInstance iattributeinstance = player.getAttribute(entry.getKey());
 
             if (iattributeinstance != null) {
                 AttributeModifier attributemodifier = entry.getValue();
                 iattributeinstance.removeModifier(attributemodifier);
-                iattributeinstance.applyModifier(new AttributeModifier(attributemodifier.getID(), this.getRegistryName().toString(), attributemodifier.getAmount(), attributemodifier.getOperation()));
+                iattributeinstance.func_233769_c_(new AttributeModifier(attributemodifier.getID(), this.getRegistryName().toString(), attributemodifier.getAmount(), attributemodifier.getOperation()));
             }
         }
     }
@@ -133,8 +133,8 @@ public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegist
     }
 
     private void removeAttributesModifiersFromEntity(PlayerEntity player) {
-        for (Map.Entry<IAttribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
-            IAttributeInstance iattributeinstance = player.getAttributes().getAttributeInstance(entry.getKey());
+        for (Map.Entry<Attribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
+            ModifiableAttributeInstance iattributeinstance = player.getAttribute(entry.getKey());
 
             if (iattributeinstance != null) {
                 iattributeinstance.removeModifier(entry.getValue());

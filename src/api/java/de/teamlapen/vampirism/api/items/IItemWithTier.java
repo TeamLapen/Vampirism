@@ -18,7 +18,7 @@ public interface IItemWithTier {
     default void addTierInformation(List<ITextComponent> tooltip) {
         TIER t = getVampirismTier();
         if (t != TIER.NORMAL) {
-            tooltip.add(new TranslationTextComponent("item.vampirism.item.tier." + t.getName().toLowerCase()).applyTextStyle(TextFormatting.AQUA));
+            tooltip.add(new TranslationTextComponent("item.vampirism.item.tier." + t.func_176610_l()/*getNAme*/.toLowerCase()).func_240699_a_(TextFormatting.AQUA)/*applyTextStyle*/);
         }
     }
 
@@ -41,8 +41,10 @@ public interface IItemWithTier {
             this.name = name;
         }
 
+
+        /*getName*/
         @Override
-        public String getName() {
+        public String func_176610_l() {
             return name;
         }
     }

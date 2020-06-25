@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.brain.schedule.Schedule;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.fluid.Fluid;
@@ -184,5 +185,10 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onMissingMappingEntityTypes(RegistryEvent.MissingMappings<EntityType<?>> event) {
         ModEntities.fixMapping(event);
+    }
+
+    @SubscribeEvent
+    public void onRegisterAttributes(RegistryEvent.Register<Attribute> event) {
+        ModAttributes.registerAttributes(event.getRegistry());
     }
 }

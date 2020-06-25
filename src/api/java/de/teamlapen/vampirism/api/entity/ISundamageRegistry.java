@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.api.entity;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.dimension.DimensionType;
 
 import javax.annotation.Nonnull;
 

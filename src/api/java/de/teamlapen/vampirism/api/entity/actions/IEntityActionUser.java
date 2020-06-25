@@ -5,16 +5,16 @@ import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 
 import java.util.List;
 
 public interface IEntityActionUser extends IAdjustableLevel, IFactionEntity {
 
     static <T extends LivingEntity & IEntityActionUser> void applyAttributes(T entity) {
-        entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(entity.getEntityClass().getHealthModifier());
-        entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(entity.getEntityClass().getDamageModifier());
-        entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(entity.getEntityClass().getSpeedModifier());
+        entity.getAttribute(Attributes.field_233818_a_/*MAX_HEALTH*/).func_233769_c_(entity.getEntityClass().getHealthModifier()); /*Apply modifier and add to uuid map?*/
+        entity.getAttribute(Attributes.field_233823_f_/*ATTACK_DAMAGE*/).func_233769_c_(entity.getEntityClass().getDamageModifier());
+        entity.getAttribute(Attributes.field_233821_d_/*MOVEMENT_SPEED*/).func_233769_c_(entity.getEntityClass().getSpeedModifier());
     }
 
     /**

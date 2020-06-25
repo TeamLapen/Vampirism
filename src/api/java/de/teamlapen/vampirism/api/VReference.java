@@ -8,8 +8,6 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.PlantType;
@@ -23,25 +21,11 @@ public class VReference {
      * One blood in the players blood stats represents this amount of mB fluid blood
      */
     public static final int FOOD_TO_FLUID_BLOOD = 100;
-    /**
-     * Attribute which defines sundamage. Registered for all IVampire mobs as well as the EntityPlayer.
-     * Applied every 2 seconds if in sun
-     */
-    public final static IAttribute sunDamage = (new RangedAttribute(null, "vampirism.sundamage", 0.0D, 0.0D, 1000D));
-    /**
-     * Allows modifying the blood exhaustion. Is multiplied with with the value calculated (from movement etc.).
-     * Registered for EntityPlayer
-     */
-    public final static IAttribute bloodExhaustion = (new RangedAttribute(null, "vampirism.blood_exhaustion", 1.0, 0.0, 10)).setShouldWatch(true);
-    /**
-     * Allows modifying bite damage.
-     * Registered for EntityPlayer
-     */
-    public final static IAttribute biteDamage = (new RangedAttribute(null, "vampirism.bite_damage", 0.0, 0.0, 100));
+
     /**
      * Plant type for plants that grow on cursed earth;
      */
-    public static final PlantType VAMPIRE_PLANT_TYPE = PlantType.create("VAMPIRISM_VAMPIRE");
+    public static final PlantType VAMPIRE_PLANT_TYPE = PlantType.get("vampirism_vampire");
     public static final DamageSource SUNDAMAGE = new DamageSource("sun").setDamageBypassesArmor().setMagicDamage();
     public static final DamageSource VAMPIRE_ON_FIRE = new DamageSource("vampire_on_fire").setDamageBypassesArmor().setMagicDamage();
     public static final DamageSource VAMPIRE_IN_FIRE = new DamageSource("vampire_in_fire").setMagicDamage();
