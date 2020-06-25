@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.gui;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.platform.GlStateManager;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
@@ -11,6 +12,7 @@ import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -19,13 +21,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
@@ -39,6 +41,8 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     private static final ITextComponent SUBMIT = new TranslationTextComponent("gui.vampirism.taskmaster.complete_task");
     private static final ITextComponent REQUIREMENT = new TranslationTextComponent("gui.vampirism.taskmaster.requirement").applyTextStyle(TextFormatting.UNDERLINE);
     private static final ITextComponent REWARD = new TranslationTextComponent("gui.vampirism.taskmaster.reward").applyTextStyle(TextFormatting.UNDERLINE);
+    private static final ItemStack SKULLITEM = new ItemStack(Blocks.SKELETON_SKULL);
+    private static final ItemStack PAPER = new ItemStack(Items.PAPER);
     @SuppressWarnings("ConstantConditions")
     private final Task dummy = new Task(Task.Variant.UNIQUE, null, null, null, null, false) {
         @Nonnull
@@ -62,7 +66,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         @Nonnull
         @Override
         public String getTranslationKey() {
-            return "";
+            return TaskMasterScreen.this.container.getAvailableTasks().get(TaskMasterScreen.this.openedTask).getTranslationKey();
         }
     };
 
@@ -132,17 +136,11 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             this.renderScroller(i + 60, j - 1, tasks);
             int i1 = 0;
 
-            Triple<Task, Integer, Integer> tooltips = null;
             for (Task task : tasks) {
                 if (tasks.size() > 7 && (i1 < this.scrolledTask || i1 >= 7 + this.scrolledTask)) {
                     ++i1;
                 } else {
                     this.renderTask(task, i - 1 + 17, k - 4, mouseX, mouseY);
-                    if (mouseX > i - 1 && mouseX < i - 1 + 139 && mouseY > k && mouseY < k + 21) {
-                        if (!(this.isOpen && ((mouseY - (j - 4 + 21)) / 21) + this.scrolledTask == this.openedTask + 1)) {
-                            tooltips = Triple.of(task, i - 1, k);
-                        }
-                    }
                     k += 21;
                     ++i1;
                 }
@@ -188,13 +186,12 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 TaskReward reward = task.getReward();
                 if (reward instanceof ItemReward) {
                     this.renderRewardTooltip(((ItemReward) reward).getReward(), x + 3 + 113 - 21, y + 2, REWARD.getFormattedText());
+                } else {
+                    this.renderRewardTooltip(task,x + 3 + 113 - 21, y + 2);
                 }
             }
             if (mouseX >= x + 3 + 3 && mouseX < x + 3 + 16 + 3 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
-                TaskRequirement<?> requirement = task.getRequirement();
-                if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
-                    this.renderRewardTooltip(((ItemRequirement) requirement).getItemStack(), x + 3 + 3, y + 2, REQUIREMENT.getFormattedText());
-                }
+                this.renderRequirementTool(task, x + 3 + 3, y + 2);
             }
         } else {
             List<String> toolTips = this.toolTips.computeIfAbsent(task, task1 -> Lists.newArrayList());
@@ -241,6 +238,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         } else {
             blit(x, y, this.blitOffset, 16, 187 + offset, 137, Math.min(64 + 54 + 99 - (y), 21), 325, 256);
         }
+        RenderHelper.enableGUIStandardItemLighting();
 
         if (!dummy) {
             this.font.drawString(this.font.trimStringToWidth(task.getTranslation().getFormattedText(), 131), x + 4, y + 7, 3419941);//(6839882 & 16711422) >> 1 //8453920 //4226832
@@ -250,16 +248,51 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 ItemStack stack = ((ItemReward) reward).getReward();
                 this.itemRenderer.renderItemAndEffectIntoGUI(stack, x + 3 + 113 - 21, y + 2);
                 this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 113 - 21, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
+            }else{
+                this.itemRenderer.renderItemAndEffectIntoGUI(PAPER,x + 3 + 113 - 21, y + 2);
             }
             TaskRequirement<?> requirement = task.getRequirement();
             if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
                 ItemStack stack = ((ItemRequirement) requirement).getItemStack();
                 this.itemRenderer.renderItemAndEffectIntoGUI(stack, x + 3 + 3, y + 2);
                 this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 3, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
+            } else if(requirement.getType().equals(TaskRequirement.Type.ENTITY)) {
+                this.itemRenderer.renderItemAndEffectIntoGUI(SKULLITEM, x + 3 + 3, y + 2);
+            } else {
+                this.itemRenderer.renderItemAndEffectIntoGUI(PAPER,x + 3 + 3, y + 2);
             }
         }
+    }
 
-        RenderHelper.enableGUIStandardItemLighting();
+    private void renderRequirementTool(Task task, int x, int y) {
+        TaskRequirement<?> requirement = task.getRequirement();
+        if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
+            this.renderRewardTooltip(((ItemRequirement) requirement).getItemStack(), x,y, REQUIREMENT.getFormattedText());
+        }else if(requirement.getType().equals(TaskRequirement.Type.ENTITY)) {
+            this.renderEntitySkull(x,y, (EntityType<?>)requirement.getStat(), requirement.getAmount());
+        }else {
+            this.renderDefaultRequirementToolTip(task, x,y);
+        }
+    }
+
+    private void renderDefaultRequirementToolTip(Task task, int x, int y) {
+        List<String> tooltips = Lists.newArrayList();
+        tooltips.add(REQUIREMENT.getFormattedText());
+        tooltips.add(UtilLib.translate(task.getTranslationKey() + ".requirement"));
+        this.renderTooltip(tooltips, x, y, this.font);
+    }
+
+    private void renderEntitySkull(int x, int y, EntityType<?> entity, int amount) {
+        List<String> tooltips = Lists.newArrayList();
+        tooltips.add(REQUIREMENT.getFormattedText());
+        tooltips.add(entity.getName().getFormattedText() + " " + amount);
+        this.renderTooltip(tooltips, x, y, this.font);
+    }
+
+    private void renderRewardTooltip(Task task, int x, int y) {
+        List<String> tooltips = Lists.newArrayList(REWARD.getFormattedText());
+        tooltips.add(UtilLib.translate(task.getTranslationKey() + ".reward"));
+        this.renderTooltip(tooltips, x, y, this.font);
     }
 
     private void renderRewardTooltip(ItemStack stack, int x, int y, String text) {
