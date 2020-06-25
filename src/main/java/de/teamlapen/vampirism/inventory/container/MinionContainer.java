@@ -21,6 +21,8 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.IContainerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -126,6 +128,11 @@ public class MinionContainer extends InventoryContainer {
             sendChanges();
         }
         minionEntity.setInteractingPlayer(null);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void openConfigurationScreen() {
+        this.minionEntity.openAppearanceScreen();
     }
 
     public void setTaskToActivate(int id) {

@@ -18,7 +18,7 @@ public class HelperLib {
      *
      * @param entity
      */
-    public static void sync(Entity entity) {
+    public static <T extends Entity & ISyncable> void sync(T entity) {
         if (!entity.getEntityWorld().isRemote) {
             IMessage m = UpdateEntityPacket.create(entity);
             VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
@@ -32,7 +32,7 @@ public class HelperLib {
      *
      * @param entity
      */
-    public static void sync(Entity entity, CompoundNBT data) {
+    public static <T extends Entity & ISyncable> void sync(T entity, CompoundNBT data) {
         if (!entity.getEntityWorld().isRemote) {
             IMessage m = UpdateEntityPacket.create(entity, data);
             VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);

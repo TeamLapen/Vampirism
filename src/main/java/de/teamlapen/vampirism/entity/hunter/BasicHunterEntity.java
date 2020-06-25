@@ -17,7 +17,6 @@ import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
-import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
@@ -66,7 +65,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> WATCHED_ID = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
 
     private static final ITextComponent name = new TranslationTextComponent("container.hunter");
 
@@ -273,20 +272,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.getDataManager().register(LEVEL, -1);
-        this.getDataManager().register(SWINGING_ARMS, false);
-        this.getDataManager().register(WATCHED_ID, 0);
-    }
-
-    @Override
-    public void attackVillage(ICaptureAttributes attributes) {
-        this.villageAttributes = attributes;
-        this.attack = true;
-    }
-
-    @Override
     protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //proccessInteract
         if (tryCureSanguinare(player)) return ActionResultType.SUCCESS;
         int hunterLevel = HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0);
@@ -307,6 +292,21 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             return ActionResultType.SUCCESS;
         }
         return super.func_230254_b_(player, hand);
+    }
+
+    @Override
+    public void attackVillage(ICaptureAttributes attributes) {
+        this.villageAttributes = attributes;
+        this.attack = true;
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.getDataManager().register(LEVEL, -1);
+        this.getDataManager().register(SWINGING_ARMS, false);
+        this.getDataManager().register(WATCHED_ID, 0);
+        this.getDataManager().register(TYPE, -1);
     }
 
     @Override
@@ -333,8 +333,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             }
         });
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, true, true));
-        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.field_236381_q_)));
-        //Also check the priority of tasks that are dynamically added. See top of class
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.field_236381_q_)));        //Also check the priority of tasks that are dynamically added. See top of class
     }
 
     private int getWatchedId() {
@@ -493,5 +492,6 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         int l = Math.max(getLevel(), 0);
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * l);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
     }
 }

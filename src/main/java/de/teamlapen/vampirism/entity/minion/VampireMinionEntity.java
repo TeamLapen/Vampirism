@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.client.gui.VampireMinionAppearanceScreen;
 import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.entity.DamageHandler;
@@ -17,6 +18,7 @@ import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -27,9 +29,12 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -106,8 +111,10 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         getMinionData().ifPresent(d -> d.type = type);
     }
 
-    public void setUseLordSkin(boolean useLordSkin) {
-        this.getMinionData().ifPresent(d -> d.useLordSkin = useLordSkin);
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void openAppearanceScreen() {
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new VampireMinionAppearanceScreen(this)));
     }
 
     @Override
@@ -119,8 +126,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
     }
 
-    public boolean shouldRenderLordSkin() {
-        return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
+    public void setUseLordSkin(boolean useLordSkin) {
+        this.getMinionData().ifPresent(d -> d.useLordSkin = useLordSkin);
     }
 
     @Override
@@ -170,13 +177,17 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return false;
     }
 
+    public boolean shouldRenderLordSkin() {
+        return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
+    }
+
     public static class VampireMinionData extends MinionData {
         public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "vampire");
 
         private int type;
         private boolean useLordSkin;
 
-        public VampireMinionData(int maxHealth, ITextComponent name, int type, boolean useLordSkin) {
+        public VampireMinionData(int maxHealth, String name, int type, boolean useLordSkin) {
             super(maxHealth, name, 9);
             this.type = type;
             this.useLordSkin = useLordSkin;
@@ -201,8 +212,22 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
+        public IFormattableTextComponent getFormattedName() {
+            return super.getFormattedName().mergeStyle(VReference.VAMPIRE_FACTION.getChatColor());
+        }
+
+        @Override
         protected ResourceLocation getDataType() {
             return ID;
+        }
+
+        @Override
+        public void handleMinionAppearanceConfig(String newName, int... data) {
+            this.setName(newName);
+            if (data.length >= 2) {
+                this.type = data[0];
+                this.useLordSkin = data[1] == 1;
+            }
         }
     }
 }

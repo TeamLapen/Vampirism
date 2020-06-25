@@ -5,7 +5,8 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +18,8 @@ import java.util.function.Supplier;
 
 public class MinionData implements INBTSerializable<CompoundNBT> {
 
+
+    public final static int MAX_NAME_LENGTH = 15;
     private final static Logger LOGGER = LogManager.getLogger();
     private final static Map<ResourceLocation, Supplier<? extends MinionData>> constructors = new HashMap<>(); //TODO maybe API
 
@@ -42,14 +45,14 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     private final MinionInventory inventory;
     private float health;
     private int maxHealth;
-    private ITextComponent name;
+    private String name;
 
 
     @Nonnull
     private IMinionTask.IMinionTaskDesc activeTaskDesc;
     private boolean taskLocked;
 
-    protected MinionData(int maxHealth, ITextComponent name, int invSize) {
+    protected MinionData(int maxHealth, String name, int invSize) {
         this.health = maxHealth;
         this.maxHealth = maxHealth;
         this.name = name;
@@ -68,7 +71,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         inventory.setAvailableSize(nbt.getInt("inv_size"));
         health = nbt.getFloat("health");
         maxHealth = nbt.getInt("max_health");
-        name = ITextComponent.Serializer.getComponentFromJson(nbt.getString("name"));
+        name = nbt.getString("name");
         taskLocked = nbt.getBoolean("locked");
         if (nbt.contains("task", 10)) {
             CompoundNBT task = nbt.getCompound("task");
@@ -91,24 +94,12 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         return taskLocked;
     }
 
-    public void serializeNBT(CompoundNBT tag) {
-        tag.putInt("inv_size", inventory.getAvailableSize());
-        tag.put("inv", inventory.write(new ListNBT()));
-        tag.putFloat("health", health);
-        tag.putFloat("max_health", maxHealth);
-        tag.putString("name", ITextComponent.Serializer.toJson(name));
-        tag.putString("data_type", getDataType().toString());
-        tag.putBoolean("locked", taskLocked);
-        if (activeTaskDesc != null) {
-            CompoundNBT task = new CompoundNBT();
-            task.putString("id", activeTaskDesc.getTask().getRegistryName().toString());
-            activeTaskDesc.writeToNBT(task);
-            tag.put("task", task);
-        }
+    public IFormattableTextComponent getFormattedName() {
+        return new StringTextComponent(name);
     }
 
-    public boolean setTaskLocked(boolean locked) {
-        return this.taskLocked = locked;
+    public String getName() {
+        return name;
     }
 
 
@@ -133,12 +124,27 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         this.maxHealth = maxHealth;
     }
 
-    public ITextComponent getName() {
-        return name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setName(ITextComponent name) {
-        this.name = name;
+    public void handleMinionAppearanceConfig(String name, int... data) {
+    }
+
+    public void serializeNBT(CompoundNBT tag) {
+        tag.putInt("inv_size", inventory.getAvailableSize());
+        tag.put("inv", inventory.write(new ListNBT()));
+        tag.putFloat("health", health);
+        tag.putFloat("max_health", maxHealth);
+        tag.putString("name", name);
+        tag.putString("data_type", getDataType().toString());
+        tag.putBoolean("locked", taskLocked);
+        if (activeTaskDesc != null) {
+            CompoundNBT task = new CompoundNBT();
+            task.putString("id", activeTaskDesc.getTask().getRegistryName().toString());
+            activeTaskDesc.writeToNBT(task);
+            tag.put("task", task);
+        }
     }
 
     @Override
@@ -148,12 +154,16 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         return tag;
     }
 
-    public <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc oldDesc, IMinionTask.IMinionTaskDesc newDesc) {
-        oldTask.deactivateTask((Q) oldDesc);
-        this.activeTaskDesc = newDesc;
+    public boolean setTaskLocked(boolean locked) {
+        return this.taskLocked = locked;
     }
 
     protected ResourceLocation getDataType() {
         return new ResourceLocation("");
+    }
+
+    public <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc oldDesc, IMinionTask.IMinionTaskDesc newDesc) {
+        oldTask.deactivateTask((Q) oldDesc);
+        this.activeTaskDesc = newDesc;
     }
 }

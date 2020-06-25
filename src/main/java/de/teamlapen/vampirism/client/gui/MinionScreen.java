@@ -65,10 +65,9 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
-        this.font.func_243246_a(mStack, title, 26, 6.0F, 0x404040);
-        this.font.func_243246_a(mStack, new TranslationTextComponent("gui.vampirism.minion.active_task"), 119, 10.0F, 0x404040);
-
+    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+        this.taskList.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+        return super.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
     }
 
     @Override
@@ -84,6 +83,13 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
         this.taskButton = this.addButton(new ExtendedButton(this.guiLeft + 119, this.guiTop + 19, 88, 20, getActiveTaskName(), (button -> {
             this.taskList.visible = !this.taskList.visible;
         })));
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
+        this.font.func_243246_a(mStack, title, 5, 6.0F, 0x404040);
+        this.font.func_243246_a(mStack, new TranslationTextComponent("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
+
     }
 
     @Override
