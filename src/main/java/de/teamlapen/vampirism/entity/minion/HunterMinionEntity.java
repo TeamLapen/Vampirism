@@ -91,10 +91,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
     }
 
-    public boolean shouldRenderLordSkin() {
-        return getMinionData().map(d -> d.type).orElse(0) < 0;
-    }
-
     @Override
     public void startTargeting() {
         this.setSwingingArms(true);
@@ -103,6 +99,11 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @Override
     public void stopTargeting() {
         this.setSwingingArms(false);
+    }
+
+    public void setHatType(int type) {
+        assert type >= -2;
+        this.getMinionData().ifPresent(d -> d.hat = type);
     }
 
     @Override
@@ -114,17 +115,21 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         return this.getItemStackFromSlot(EquipmentSlotType.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -2;
     }
 
-    public void setHatType(int type) {
-        this.getMinionData().ifPresent(d -> d.hat = type);
+    public void setHunterType(int type) {
+        assert type >= 0;
+        this.getMinionData().ifPresent(d -> d.type = type);
     }
 
     public int getHunterType() {
         return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
     }
 
-    public void setHunterType(int type) {
-        assert type > 0;
-        this.getMinionData().ifPresent(d -> d.type = type);
+    public void setUseLordSkin(boolean useLordSkin) {
+        this.getMinionData().ifPresent(d -> d.useLordSkin = useLordSkin);
+    }
+
+    public boolean shouldRenderLordSkin() {
+        return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
     }
 
     @Override
@@ -174,11 +179,13 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
         private int type;
         private int hat;
+        private boolean useLordSkin;
 
-        public HunterMinionData(int maxHealth, ITextComponent name, int type, int hat) {
+        public HunterMinionData(int maxHealth, ITextComponent name, int type, int hat, boolean useLordSkin) {
             super(maxHealth, name, 9);
             this.type = type;
             this.hat = hat;
+            this.useLordSkin = useLordSkin;
         }
 
         private HunterMinionData() {
@@ -190,6 +197,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             super.deserializeNBT(nbt);
             type = nbt.getInt("hunter_type");
             hat = nbt.getInt("hunter_hat");
+            useLordSkin = nbt.getBoolean("use_lord_skin");
         }
 
         @Override
@@ -197,6 +205,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             super.serializeNBT(tag);
             tag.putInt("hunter_type", type);
             tag.putInt("hunter_hat", hat);
+            tag.putBoolean("use_lord_skin", useLordSkin);
         }
 
         @Override
