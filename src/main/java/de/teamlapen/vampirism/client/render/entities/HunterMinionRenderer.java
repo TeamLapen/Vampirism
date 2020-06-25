@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.client.render.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -25,15 +26,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, MinionModel<HunterMinionEntity>> {
-    private final ResourceLocation[] textures = {
-            new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base2.png"),
-            new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base3.png"),
-            new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base4.png"),
-            new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base5.png")
-    };
+    private final ResourceLocation[] textures;
 
     public HunterMinionRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new MinionModel<>(0.5f), 0.5F);
+        textures = Minecraft.getInstance().getResourceManager().getAllResourceLocations("textures/entity/hunter", s -> s.endsWith(".png")).stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())).toArray(ResourceLocation[]::new);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
         this.addLayer(new HunterEquipmentLayer<>(this, hunterMinionEntity -> hunterMinionEntity.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty() ? HunterEquipmentModel.StakeType.FULL : HunterEquipmentModel.StakeType.NONE, HunterMinionEntity::getHatType));
         this.addLayer(new BipedArmorLayer<>(this,new BipedModel<>(0.5f),new BipedModel<>(1f)));
@@ -58,8 +55,12 @@ public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, Mini
     }
 
     @Override
-        public ResourceLocation getEntityTexture(HunterMinionEntity entity) {
-            return textures[entity.getHunterType() % textures.length];
-        }
+    public ResourceLocation getEntityTexture(HunterMinionEntity entity) {
+        return textures[entity.getHunterType() % textures.length];
+    }
+
+    public int getTextureLength() {
+        return this.textures.length;
+    }
 
 }

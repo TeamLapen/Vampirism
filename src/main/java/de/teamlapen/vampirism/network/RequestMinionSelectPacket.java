@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.network.IMessage;
-import de.teamlapen.vampirism.client.gui.SelectMinionScreen;
-import net.minecraft.client.Minecraft;
+import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -17,7 +16,7 @@ public class RequestMinionSelectPacket implements IMessage {
 
     public static void handle(final RequestMinionSelectPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> Minecraft.getInstance().displayGuiScreen(new SelectMinionScreen(msg.action, msg.minions)));
+        ctx.enqueueWork(() -> VampirismMod.proxy.handleRequestMinionSelect(msg.action, msg.minions));
         ctx.setPacketHandled(true);
     }
 

@@ -25,5 +25,6 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
         dispatcher.registerMessage(nextID(), PlayEventPacket.class, PlayEventPacket::encode, PlayEventPacket::decode, PlayEventPacket::handle);
         dispatcher.registerMessage(nextID(), SelectMinionTaskPacket.class, SelectMinionTaskPacket::encode, SelectMinionTaskPacket::decode, SelectMinionTaskPacket::handle);
         dispatcher.registerMessage(nextID(), RequestMinionSelectPacket.class, RequestMinionSelectPacket::encode, RequestMinionSelectPacket::decode, RequestMinionSelectPacket::handle);
+        dispatcher.registerMessage(nextID(), AppearancePacket.class, AppearancePacket::encode, AppearancePacket::decode, AppearancePacket::handle);
     }
 }

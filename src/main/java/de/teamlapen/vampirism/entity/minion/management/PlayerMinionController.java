@@ -442,7 +442,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
                 i.deathCooldown--;
                 if (i.deathCooldown == 0) {
                     i.data.setHealth(i.data.getMaxHealth());
-                    getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.can_respawn", i.data.getName()), true));
+                    getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.can_respawn", i.data.getFormattedName()), true));
                 }
             } else {
                 IMinionTask.IMinionTaskDesc taskDesc = i.data.getCurrentTaskDesc();

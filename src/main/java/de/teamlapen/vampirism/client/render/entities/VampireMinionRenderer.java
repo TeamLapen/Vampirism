@@ -45,4 +45,8 @@ public class VampireMinionRenderer extends BipedRenderer<VampireMinionEntity, Mi
         matrixStackIn.scale(s,s,s);
         //matrixStackIn.translate(0,off,0f);
     }
+
+    public int getTextureLength() {
+        return this.textures.length;
+    }
 }

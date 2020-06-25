@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.client.gui.HunterMinionAppearanceScreen;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismEntity;
@@ -14,6 +15,7 @@ import de.teamlapen.vampirism.entity.minion.management.MinionData;
 import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -28,6 +30,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -179,6 +183,12 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void openAppearanceScreen() {
+        Minecraft.getInstance().displayGuiScreen(new HunterMinionAppearanceScreen(this));
+    }
+
     public static class HunterMinionData extends MinionData {
         public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter");
 
@@ -186,7 +196,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         private int hat;
         private boolean useLordSkin;
 
-        public HunterMinionData(int maxHealth, ITextComponent name, int type, int hat, boolean useLordSkin) {
+        public HunterMinionData(int maxHealth, String name, int type, int hat, boolean useLordSkin) {
             super(maxHealth, name, 9);
             this.type = type;
             this.hat = hat;
@@ -216,6 +226,21 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         @Override
         protected ResourceLocation getDataType() {
             return ID;
+        }
+
+        @Override
+        public ITextComponent getFormattedName() {
+            return super.getFormattedName().applyTextStyle(VReference.HUNTER_FACTION.getChatColor());
+        }
+
+        @Override
+        public void handleMinionAppearanceConfig(String newName, int... data) {
+            this.setName(newName);
+            if (data.length >= 3) {
+                type = data[0];
+                hat = data[1];
+                useLordSkin = data[2] == 1;
+            }
         }
     }
 }

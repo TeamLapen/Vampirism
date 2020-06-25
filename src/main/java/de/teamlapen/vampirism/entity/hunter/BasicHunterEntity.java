@@ -60,7 +60,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> WATCHED_ID = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
 
     private static final ITextComponent name = new TranslationTextComponent("container.hunter");
 
@@ -294,6 +294,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.getDataManager().register(LEVEL, -1);
         this.getDataManager().register(SWINGING_ARMS, false);
         this.getDataManager().register(WATCHED_ID, 0);
+        this.getDataManager().register(TYPE, -1);
     }
 
     @Override

@@ -252,7 +252,7 @@ public class InputEventPacket implements IMessage {
                         PlayerMinionController controller = MinionWorldData.getData(ctx.getSender().server).getOrCreateController(fp);
                         Collection<Integer> ids = controller.getCallableMinions();
                         List<Pair<Integer, ITextComponent>> minions = new ArrayList<>(ids.size());
-                        ids.forEach(id -> controller.contactMinionData(id, data -> data.getName().deepCopy()).ifPresent(n -> minions.add(Pair.of(id, n))));
+                        ids.forEach(id -> controller.contactMinionData(id, data -> data.getFormattedName().deepCopy()).ifPresent(n -> minions.add(Pair.of(id, n))));
                         VampirismMod.dispatcher.sendTo(new RequestMinionSelectPacket(RequestMinionSelectPacket.Action.CALL, minions), ctx.getSender());
                     });
                     break;

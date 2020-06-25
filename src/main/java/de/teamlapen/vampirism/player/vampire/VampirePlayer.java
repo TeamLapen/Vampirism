@@ -1060,6 +1060,15 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return false;
     }
 
+    public void setSkinData(int... data) {
+        if (data.length > 0) {
+            this.setFangType(data[0]);
+            if (data.length > 1) {
+                this.setEyeType(data[1]);
+            }
+        }
+    }
+
     /**
      * Handle blood which could not be filled into the blood stats
      *
