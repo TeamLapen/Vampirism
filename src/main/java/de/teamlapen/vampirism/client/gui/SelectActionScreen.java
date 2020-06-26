@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Gui which is used to select vampire actions
@@ -273,7 +274,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
      */
     private void updateElements() {
         elements.clear();
-        elements.addAll(getActionOrdered(Lists.newArrayList(actionHandler.getUnlockedActions())));
+        elements.addAll(getActionOrdered(((List<IAction>)actionHandler.getUnlockedActions()).stream().filter(action -> action.showInSelectAction(minecraft.player)).collect(Collectors.toList())));
         elements.add(fakeAction);
     }
 }

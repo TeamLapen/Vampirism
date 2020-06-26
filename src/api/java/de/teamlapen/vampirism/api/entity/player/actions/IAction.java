@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -37,6 +38,10 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
     boolean onActivated(IFactionPlayer player);
+
+    default boolean showInSelectAction(PlayerEntity player) {
+        return true;
+    }
 
     enum PERM {
         ALLOWED, DISABLED, NOT_UNLOCKED, DISALLOWED, COOLDOWN//Cooldown should not be used by the skill itself, but only by the {@link IActionHandler}
