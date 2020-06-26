@@ -17,7 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -52,8 +52,8 @@ public class AlchemicalCauldronRecipeBuilder {
         return new AlchemicalCauldronRecipeBuilder(item, count);
     }
 
-    public AlchemicalCauldronRecipeBuilder withIngredient(Tag<Item> tag) {
-        this.ingredient = Ingredient.fromTag(tag);
+    public AlchemicalCauldronRecipeBuilder withFluid(ITag<Item> tag) {
+        this.fluid = Either.left(Ingredient.fromTag(tag));
         return this;
     }
 
@@ -77,8 +77,8 @@ public class AlchemicalCauldronRecipeBuilder {
         return this;
     }
 
-    public AlchemicalCauldronRecipeBuilder withFluid(Tag<Item> tag) {
-        this.fluid = Either.left(Ingredient.fromTag(tag));
+    public AlchemicalCauldronRecipeBuilder withIngredient(ITag<Item> tag) {
+        this.ingredient = Ingredient.fromTag(tag);
         return this;
     }
 
@@ -137,17 +137,17 @@ public class AlchemicalCauldronRecipeBuilder {
     }
 
     public static class Result implements IFinishedRecipe {
-        private ResourceLocation id;
-        private String group;
-        private Ingredient ingredient;
-        private Either<Ingredient, FluidStack> fluid;
-        private ItemStack result;
-        private ISkill[] skills;
-        private int reqLevel;
-        private int cookTimeIn;
-        private float exp;
-        private Advancement.Builder advancementBuilder;
-        private ResourceLocation advancementId;
+        private final ResourceLocation id;
+        private final String group;
+        private final Ingredient ingredient;
+        private final Either<Ingredient, FluidStack> fluid;
+        private final ItemStack result;
+        private final ISkill[] skills;
+        private final int reqLevel;
+        private final int cookTimeIn;
+        private final float exp;
+        private final Advancement.Builder advancementBuilder;
+        private final ResourceLocation advancementId;
 
         public Result(@Nonnull ResourceLocation idIn, @Nonnull String groupIn, @Nonnull Ingredient ingredientIn, @Nonnull Either<Ingredient, FluidStack> fluidIn, @Nonnull ItemStack resultIn, @Nonnull ISkill[] skillsIn, int reqLevelIn, int cookTimeIn, float exp, Advancement.Builder advancementBuilderIn, ResourceLocation advancementId) {
             this.id = idIn;

@@ -17,7 +17,7 @@ import net.minecraft.data.ShapelessRecipeBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 
@@ -61,7 +61,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     @Override
-    public ShapelessWeaponTableRecipeBuilder addIngredient(Tag<Item> tagIn) {
+    public ShapelessWeaponTableRecipeBuilder addIngredient(ITag<Item> tagIn) {
         return (ShapelessWeaponTableRecipeBuilder) super.addIngredient(tagIn);
     }
 

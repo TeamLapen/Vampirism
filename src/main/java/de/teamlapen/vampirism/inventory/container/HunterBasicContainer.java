@@ -16,7 +16,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
@@ -45,7 +45,7 @@ public class HunterBasicContainer extends InventoryContainer {
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         if (entity == null) return false;
-        return new Vec3d(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()).distanceTo(new Vec3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())) < 5;
+        return new Vector3d(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()).distanceTo(new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())) < 5;
     }
 
     public boolean canLevelUp() {

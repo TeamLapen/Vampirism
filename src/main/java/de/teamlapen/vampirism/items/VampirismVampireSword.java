@@ -26,7 +26,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.FloatNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -111,7 +111,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
             if (VampirePlayer.getOpt((PlayerEntity) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.sword_finisher)).orElse(false)) {
                 DamageSource dmg = DamageSource.causePlayerDamage((PlayerEntity) attacker).setDamageBypassesArmor();
                 target.attackEntityFrom(dmg, 10000F);
-                Vec3d center = new Vec3d(target.getPosition());
+                Vector3d center = new Vector3d(target.getPosition());
                 center.add(0, target.getHeight() / 2d, 0);
                 ModParticles.spawnParticlesServer(target.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
             }
@@ -287,19 +287,19 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @OnlyIn(Dist.CLIENT)
     private void spawnChargedParticle(LivingEntity player, boolean mainHand) {
-        Vec3d mainPos = UtilLib.getItemPosition(player, mainHand);
+        Vector3d mainPos = UtilLib.getItemPosition(player, mainHand);
         for (int j = 0; j < 3; ++j) {
-            Vec3d pos = mainPos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
+            Vector3d pos = mainPos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
             ModParticles.spawnParticleClient(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.9F + 0.1F)), true, pos.x + (player.getRNG().nextFloat() - 0.5D) * 0.1D, pos.y + (player.getRNG().nextFloat() - 0.5D) * 0.1D, pos.z + (player.getRNG().nextFloat() - 0.5D) * 0.1D, new ResourceLocation("minecraft", "glitter_1")), pos.x, pos.y, pos.z);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     private void spawnChargingParticle(LivingEntity player, boolean mainHand) {
-        Vec3d pos = UtilLib.getItemPosition(player, mainHand);
+        Vector3d pos = UtilLib.getItemPosition(player, mainHand);
         if (player.getSwingProgress(1f) > 0f) return;
         pos = pos.add((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
-        Vec3d playerPos = new Vec3d((player).getPosX(), (player).getPosY() + player.getEyeHeight() - 0.2f, (player).getPosZ());
+        Vector3d playerPos = new Vector3d((player).getPosX(), (player).getPosY() + player.getEyeHeight() - 0.2f, (player).getPosZ());
         ModParticles.spawnParticleClient(player.getEntityWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (player.getRNG().nextFloat() * 0.6F + 0.1F)), true, pos.x, pos.y, pos.z), playerPos.x, playerPos.y, playerPos.z);
     }
 

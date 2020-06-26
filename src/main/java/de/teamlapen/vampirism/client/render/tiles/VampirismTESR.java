@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.client.render.tiles;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.blocks.VampirismBlockContainer;
 import net.minecraft.block.HorizontalBlock;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

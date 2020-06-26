@@ -22,7 +22,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 import javax.annotation.Nullable;
 
@@ -53,7 +53,7 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
     @Override
     public boolean canInteractWith(PlayerEntity player) {
         if (entity == null) return false;
-        return new Vec3d(player.getPosX(), player.getPosY(), player.getPosZ()).distanceTo(new Vec3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())) < 5;
+        return new Vector3d(player.getPosX(), player.getPosY(), player.getPosZ()).distanceTo(new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())) < 5;
     }
 
     /**

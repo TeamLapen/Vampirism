@@ -26,7 +26,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
@@ -142,7 +142,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     @Override
     public boolean isWithinHomeDistance(double x, double y, double z) {
         if (home != null) {
-            return home.contains(new Vec3d(x, y, z));
+            return home.contains(new Vector3d(x, y, z));
         }
         return true;
     }

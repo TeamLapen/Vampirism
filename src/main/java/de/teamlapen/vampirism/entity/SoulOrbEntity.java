@@ -22,7 +22,7 @@ import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -138,7 +138,7 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         this.prevPosZ = this.getPosZ();
 
         if (this.areEyesInFluid(FluidTags.WATER)) {
-            Vec3d vec3d = this.getMotion();
+            Vector3d vec3d = this.getMotion();
             this.setMotion(vec3d.x * (double) 0.99F, Math.min(vec3d.y + (double) 5.0E-4F, 0.06F), vec3d.z * (double) 0.99F);
         } else if (!this.hasNoGravity()) {
             this.setMotion(this.getMotion().add(0.0D, -0.03D, 0.0D));
@@ -158,7 +158,7 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
         }
 
         if (this.player != null) {
-            Vec3d vec3d = new Vec3d(this.player.getPosX() - this.getPosX(), this.player.getPosY() + (double) this.player.getEyeHeight() / 2.0D - this.getPosY(), this.player.getPosZ() - this.getPosZ());
+            Vector3d vec3d = new Vector3d(this.player.getPosX() - this.getPosX(), this.player.getPosY() + (double) this.player.getEyeHeight() / 2.0D - this.getPosY(), this.player.getPosZ() - this.getPosZ());
             double d1 = vec3d.lengthSquared();
             if (d1 < 64.0D) {
                 double d2 = 1.0D - Math.sqrt(d1) / 8.0D;

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.goals;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
@@ -36,7 +36,7 @@ public abstract class FleeGoal extends Goal {
     @Override
     public boolean shouldExecute() {
         if (!shouldFlee()) return false;
-        Vec3d vec3 = this.findPossibleShelter();
+        Vector3d vec3 = this.findPossibleShelter();
 
         if (vec3 == null) {
             return false;
@@ -56,7 +56,7 @@ public abstract class FleeGoal extends Goal {
 
     protected abstract boolean shouldFlee();
 
-    private Vec3d findPossibleShelter() {
+    private Vector3d findPossibleShelter() {
         Random random = this.theCreature.getRNG();
         BlockPos blockpos = new BlockPos(this.theCreature.getPosX(), this.theCreature.getBoundingBox().minY, this.theCreature.getPosZ());
 
@@ -68,7 +68,7 @@ public abstract class FleeGoal extends Goal {
 
                     if (!theCreature.isWithinHomeDistanceFromPosition(blockpos1)) continue;
                 }
-                return new Vec3d(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ());
+                return new Vector3d(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ());
             }
         }
 

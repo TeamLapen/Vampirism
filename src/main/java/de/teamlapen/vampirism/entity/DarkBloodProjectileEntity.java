@@ -18,7 +18,7 @@ import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -132,6 +132,24 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        if (this.world.isRemote) {
+            Vector3d center = this.getPositionVector();
+            ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getCollisionBorderSize(), this.rand);
+
+            if (this.ticksExisted % 3 == 0) {
+                ModParticles.spawnParticleClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
+            }
+
+        } else {
+            if (this.ticksExisted > 300) {
+                this.remove();
+            }
+        }
+    }
+
+    @Override
     protected void onImpact(RayTraceResult result) {
         if (!this.world.isRemote) {
             if (initialNoClip && this.ticksExisted > 20) {
@@ -173,30 +191,12 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
 
                 }
             }
-            Vec3d center = result.getHitVec();
+            Vector3d center = result.getHitVec();
             ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_1"), 7, 0xA01010, 0.2F), center.x, center.y, center.z, 40, 1, 1, 1, 0);
             ModParticles.spawnParticlesServer(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_6"), 10, 0x700505), center.x, center.y, center.z, 15, 1, 1, 1, 0);
 
 
             this.remove();
-        }
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        if (this.world.isRemote) {
-            Vec3d center = this.getPositionVector();
-            ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getCollisionBorderSize(), this.rand);
-
-            if (this.ticksExisted % 3 == 0) {
-                ModParticles.spawnParticleClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xC01010, 0.4F), center.x, center.y, center.z);
-            }
-
-        } else {
-            if (this.ticksExisted > 300) {
-                this.remove();
-            }
         }
     }
 }

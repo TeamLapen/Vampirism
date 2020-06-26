@@ -28,10 +28,10 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.*;
@@ -132,7 +132,7 @@ public class TentBlock extends VampirismBlock {
         if (entityIn.isShiftKeyDown()) {
             super.onLanded(worldIn, entityIn);
         } else {
-            Vec3d vec3d = entityIn.getMotion();
+            Vector3d vec3d = entityIn.getMotion();
             if (vec3d.y < 0.0D) {
                 double d0 = entityIn instanceof LivingEntity ? 1.0D : 0.8D;
                 entityIn.setMotion(vec3d.x, -vec3d.y * (double)0.33F * d0, vec3d.z);

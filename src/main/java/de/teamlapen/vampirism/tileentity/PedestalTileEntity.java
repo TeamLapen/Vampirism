@@ -15,7 +15,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -42,7 +42,7 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
      */
     private int chargingTicks;
     private int bloodStored = 0;
-    private int chargeRate = 30;
+    private final int chargeRate = 30;
     @Nonnull
     private ItemStack internalStack;
 
@@ -255,7 +255,7 @@ public class PedestalTileEntity extends TileEntity implements ITickableTileEntit
 
     @OnlyIn(Dist.CLIENT)
     private void spawnChargedParticle() {
-        Vec3d pos = new Vec3d(this.getPos()).add(0.5, 0.8, 0.5);
+        Vector3d pos = new Vector3d(this.getPos()).add(0.5, 0.8, 0.5);
         ModParticles.spawnParticleClient(getWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20);
         ModParticles.spawnParticleClient(getWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.pos.getX() + 0.80, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20);
         ModParticles.spawnParticleClient(getWorld(), new FlyingBloodParticleData(ModParticles.flying_blood, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, new ResourceLocation("minecraft", "glitter_1")), this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.80);

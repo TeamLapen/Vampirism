@@ -16,7 +16,7 @@ import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 
@@ -34,7 +34,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     private int lava = 1;
     private ISkill[] skills;
     private int level = 1;
-    private JsonObject extraNbt;
+    private final JsonObject extraNbt;
 
     public ShapedWeaponTableRecipeBuilder(IItemProvider item, int count, @Nullable JsonObject extraNbt) {
         super(item, count);
@@ -69,7 +69,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     @Override
-    public ShapedWeaponTableRecipeBuilder key(Character p_200469_1_, Tag<Item> p_200469_2_) {
+    public ShapedWeaponTableRecipeBuilder key(Character p_200469_1_, ITag<Item> p_200469_2_) {
         return (ShapedWeaponTableRecipeBuilder) super.key(p_200469_1_, p_200469_2_);
     }
 

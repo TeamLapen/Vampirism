@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.DarkBloodProjectileEntity;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class DarkProjectileEntityAction<T extends CreatureEntity & IEntityActionUser> extends VampireEntityAction<T> implements IInstantAction<T> {
 
@@ -20,7 +20,7 @@ public class DarkProjectileEntityAction<T extends CreatureEntity & IEntityAction
     public boolean activate(T entity) {
         LivingEntity shooter = entity.getRepresentingEntity();
 
-        Vec3d vec3dd = new Vec3d(entity.getAttackTarget().getPosX() - entity.getPosX(), entity.getAttackTarget().getPosY() - entity.getPosY(), entity.getAttackTarget().getPosZ() - entity.getPosZ());
+        Vector3d vec3dd = new Vector3d(entity.getAttackTarget().getPosX() - entity.getPosX(), entity.getAttackTarget().getPosY() - entity.getPosY(), entity.getAttackTarget().getPosZ() - entity.getPosZ());
         vec3dd.normalize();
 
         DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(shooter.getEntityWorld(), shooter.getPosX() + vec3dd.x * 1.0f, shooter.getPosY() + shooter.getEyeHeight() * 0.9f, shooter.getPosZ() + vec3dd.z * 1.0f, vec3dd.x, vec3dd.y, vec3dd.z);
@@ -38,7 +38,7 @@ public class DarkProjectileEntityAction<T extends CreatureEntity & IEntityAction
 
     @Override
     public int getWeight(CreatureEntity entity) {
-        double distanceToTarget = new Vec3d(entity.getPosX(), entity.getPosY(), entity.getPosZ()).subtract(entity.getAttackTarget().getPosX(), entity.getAttackTarget().getPosY(), entity.getAttackTarget().getPosZ()).length();
+        double distanceToTarget = new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ()).subtract(entity.getAttackTarget().getPosX(), entity.getAttackTarget().getPosY(), entity.getAttackTarget().getPosZ()).length();
         if (distanceToTarget > 20) {
             return 3;
         } else if (distanceToTarget > 12) {

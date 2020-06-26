@@ -15,7 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
@@ -208,7 +208,7 @@ public class BloodPotionTableContainer extends InventoryContainer {
         return bottle;
     }
 
-    private static Ingredient getSpecialIngredient(Tag<Item> tag, Item... items) {
+    private static Ingredient getSpecialIngredient(ITag<Item> tag, Item... items) {
         Collection<Item> d = tag.getAllElements();
         d.addAll(Arrays.asList(items));
         return Ingredient.fromStacks(d.stream().map(ItemStack::new).collect(Collectors.toList()).toArray(new ItemStack[0]));

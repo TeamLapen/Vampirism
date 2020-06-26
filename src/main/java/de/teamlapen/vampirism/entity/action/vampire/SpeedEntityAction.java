@@ -10,7 +10,7 @@ import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.UUID;
 
@@ -42,7 +42,7 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
 
     @Override
     public int getWeight(CreatureEntity entity) {
-        double distanceToTarget = new Vec3d(entity.getPosX(), entity.getPosY(), entity.getPosZ()).subtract(entity.getAttackTarget().getPosX(), entity.getAttackTarget().getPosY(), entity.getAttackTarget().getPosZ()).length();
+        double distanceToTarget = new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ()).subtract(entity.getAttackTarget().getPosX(), entity.getAttackTarget().getPosY(), entity.getAttackTarget().getPosZ()).length();
         if (distanceToTarget > 10) {
             return 3;
         } else if (distanceToTarget > 5) {

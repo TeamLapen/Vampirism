@@ -33,7 +33,9 @@ import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -51,10 +53,10 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
@@ -1105,11 +1107,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             UtilLib.spawnParticles(player.world, ParticleTypes.CRIT, entity.getPosX(), entity.getPosY(), entity.getPosZ(), player.getPosX() - entity.getPosX(), player.getPosY() - entity.getPosY(), player.getPosZ() - entity.getPosZ(), 10, 1);
         }
         for (int j = 0; j < 16; ++j) {
-            Vec3d vec3 = new Vec3d((player.getRNG().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+            Vector3d vec3 = new Vector3d((player.getRNG().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
             vec3 = vec3.rotatePitch(-player.rotationPitch * (float) Math.PI / 180F);
             vec3 = vec3.rotateYaw(-player.rotationYaw * (float) Math.PI / 180F);
             double d0 = (double) (-player.getRNG().nextFloat()) * 0.6D - 0.3D;
-            Vec3d vec31 = new Vec3d(((double) player.getRNG().nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
+            Vector3d vec31 = new Vector3d(((double) player.getRNG().nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
             vec31 = vec31.rotatePitch(-player.rotationPitch * (float) Math.PI / 180.0F);
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
             vec31 = vec31.add(player.getPosX(), player.getPosY() + (double) player.getEyeHeight(), player.getPosZ());

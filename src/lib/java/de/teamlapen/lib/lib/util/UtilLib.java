@@ -25,6 +25,8 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector2f;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
@@ -94,7 +96,7 @@ public class UtilLib {
         double x = player.prevPosX + (player.getPosX() - player.prevPosX) * scale;
         double y = player.prevPosY + (player.getPosY() - player.prevPosY) * scale + 1.62D;
         double z = player.prevPosZ + (player.getPosZ() - player.prevPosZ) * scale;
-        Vec3d vector1 = new Vec3d(x, y, z);
+        Vector3d vector1 = new Vector3d(x, y, z);
         float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
         float cosPitch = -MathHelper.cos(-pitch * 0.017453292F);
@@ -108,7 +110,7 @@ public class UtilLib {
             distance = restriction;
         }
 
-        Vec3d vector2 = vector1.add(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
+        Vector3d vector2 = vector1.add(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
         return player.getEntityWorld().rayTraceBlocks(new RayTraceContext(vector1, vector2, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player));
     }
 
@@ -165,10 +167,10 @@ public class UtilLib {
      * @return Absolute position in the world
      */
     public static @Nonnull
-    Vec3d getItemPosition(LivingEntity entity, boolean mainHand) {
+    Vector3d getItemPosition(LivingEntity entity, boolean mainHand) {
         boolean left = (mainHand ? entity.getPrimaryHand() : entity.getPrimaryHand().opposite()) == HandSide.LEFT;
         boolean firstPerson = entity instanceof PlayerEntity && ((PlayerEntity) entity).isUser() && Minecraft.getInstance().gameSettings.thirdPersonView == 0;
-        Vec3d dir = firstPerson ? entity.getForward() : Vec3d.fromPitchYaw(new Vec2f(entity.rotationPitch, entity.renderYawOffset));
+        Vector3d dir = firstPerson ? entity.getForward() : Vector3d.fromPitchYaw(new Vector2f(entity.rotationPitch, entity.renderYawOffset));
         dir = dir.rotateYaw((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
         return dir.add(entity.getPosX(), entity.getPosY() + entity.getEyeHeight(), entity.getPosZ());
 
@@ -412,8 +414,8 @@ public class UtilLib {
         if (alsoRaytrace && !entity.canEntityBeSeen(target)) {
             return false;
         }
-        Vec3d look1 = new Vec3d(-Math.sin(entity.rotationYawHead / 180 * Math.PI), 0, Math.cos(entity.rotationYawHead / 180 * Math.PI));
-        Vec3d dist = new Vec3d(target.getPosX() - entity.getPosX(), 0, target.getPosZ() - entity.getPosZ());
+        Vector3d look1 = new Vector3d(-Math.sin(entity.rotationYawHead / 180 * Math.PI), 0, Math.cos(entity.rotationYawHead / 180 * Math.PI));
+        Vector3d dist = new Vector3d(target.getPosX() - entity.getPosX(), 0, target.getPosZ() - entity.getPosZ());
         //look1.yCoord = 0;
         look1 = look1.normalize();
         dist = dist.normalize();

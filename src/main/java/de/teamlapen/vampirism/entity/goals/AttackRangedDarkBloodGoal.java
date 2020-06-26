@@ -7,7 +7,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.EnumSet;
 
@@ -16,11 +16,11 @@ public class AttackRangedDarkBloodGoal extends Goal {
 
     protected final VampireBaronEntity entity;
     private int attackTime;
-    private int attackCooldown;
+    private final int attackCooldown;
     private int seeTime;
-    private int maxAttackDistance;
-    private float directDamage;
-    private float indirectDamage;
+    private final int maxAttackDistance;
+    private final float directDamage;
+    private final float indirectDamage;
 
     public AttackRangedDarkBloodGoal(VampireBaronEntity entity, int cooldown, int maxDistance, float damage, float indirectDamage) {
         this.entity = entity;
@@ -85,7 +85,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
      * Spawns the dark blood entity heading towards the target entity
      */
     protected void attack(LivingEntity target) {
-        Vec3d vec3d = target.getPositionVector().add(0, target.getHeight() * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
+        Vector3d vec3d = target.getPositionVector().add(0, target.getHeight() * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
 
         DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.getEntityWorld(), entity.getPosX() + vec3d.x * 0.3f, entity.getPosY() + entity.getEyeHeight() * 0.9f, entity.getPosZ() + vec3d.z * 0.3f, vec3d.x, vec3d.y, vec3d.z);
         projectile.shootingEntity = entity;

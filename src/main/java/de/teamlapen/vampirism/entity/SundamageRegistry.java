@@ -6,9 +6,9 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.dimension.DimensionType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,11 +22,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 public class SundamageRegistry implements ISundamageRegistry {
     private static final Logger LOGGER = LogManager.getLogger(SundamageRegistry.class);
-    private HashMap<DimensionType, Boolean> sundamageDims = new HashMap<>();
-    private HashMap<DimensionType, Boolean> sundamageConfiguredDims = new HashMap<>();
-    private Set<ResourceLocation> noSundamageBiomesIDs = new CopyOnWriteArraySet<>();
-    private Set<ResourceLocation> noSundamageConfiguredBiomesIDs = new CopyOnWriteArraySet<>();
-    private Set<Class> noSundamageBiomes = new CopyOnWriteArraySet<>();
+    private final HashMap<DimensionType, Boolean> sundamageDims = new HashMap<>();
+    private final HashMap<DimensionType, Boolean> sundamageConfiguredDims = new HashMap<>();
+    private final Set<ResourceLocation> noSundamageBiomesIDs = new CopyOnWriteArraySet<>();
+    private final Set<ResourceLocation> noSundamageConfiguredBiomesIDs = new CopyOnWriteArraySet<>();
+    private final Set<Class> noSundamageBiomes = new CopyOnWriteArraySet<>();
 
     public SundamageRegistry() {
         sundamageDims.put(DimensionType.OVERWORLD, true);

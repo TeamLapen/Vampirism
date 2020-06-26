@@ -10,7 +10,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -75,7 +75,7 @@ public class BiteNearbyEntityVampireGoal<T extends MobEntity & IVampireMob> exte
     @Override
     public void tick() {
         CreatureEntity e = creature.getEntity();
-        vampire.lookAt(EntityAnchorArgument.Type.EYES, new Vec3d(e.getPosX(), e.getPosY() + (double) e.getEyeHeight(), e.getPosZ()));
+        vampire.lookAt(EntityAnchorArgument.Type.EYES, new Vector3d(e.getPosX(), e.getPosY() + (double) e.getEyeHeight(), e.getPosZ()));
 
 
         timer--;

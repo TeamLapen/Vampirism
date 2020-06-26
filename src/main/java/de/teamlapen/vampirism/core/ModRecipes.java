@@ -8,7 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
@@ -60,7 +60,7 @@ public class ModRecipes {
         liquidColors.put(item, color);
     }
 
-    public static void registerLiquidColor(Tag<Item> items, int color) {
+    public static void registerLiquidColor(ITag<Item> items, int color) {
         items.getAllElements().forEach(item -> liquidColors.put(item, color));
     }
 

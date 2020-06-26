@@ -8,11 +8,11 @@ import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vector3f;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -27,7 +27,7 @@ public class CoffinTESR extends VampirismTESR<CoffinTileEntity> {
     private final int maxLidPos = 61;
     private final CoffinModel model;
     private final ResourceLocation[] textures = new ResourceLocation[DyeColor.values().length];
-    private Logger LOGGER = LogManager.getLogger();
+    private final Logger LOGGER = LogManager.getLogger();
 
     public CoffinTESR(TileEntityRendererDispatcher dispatcher) {
         super(dispatcher);

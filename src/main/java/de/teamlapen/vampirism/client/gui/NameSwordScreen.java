@@ -1,16 +1,15 @@
 package de.teamlapen.vampirism.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.network.InputEventPacket;
+import net.minecraft.client.AbstractOption;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.OptionButton;
-import net.minecraft.client.settings.AbstractOption;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;

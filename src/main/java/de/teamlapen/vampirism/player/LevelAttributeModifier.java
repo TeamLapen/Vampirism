@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.player;
 
 import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +20,7 @@ public class LevelAttributeModifier {
 
     private final static Logger LOGGER = LogManager.getLogger(LevelAttributeModifier.class);
 
-    private static final Map<IAttribute, UUID> modifiers = new HashMap<>();
+    private static final Map<Attribute, UUID> modifiers = new HashMap<>();
 
     static {
         modifiers.put(SharedMonsterAttributes.ATTACK_DAMAGE, UUID.fromString("7600D8C4-3517-40BE-8CB1-359D46705A0F"));
@@ -36,7 +36,7 @@ public class LevelAttributeModifier {
      * @param attribute
      * @param uuid
      */
-    public static void registerModdedAttributeModifier(IAttribute attribute, UUID uuid) {
+    public static void registerModdedAttributeModifier(Attribute attribute, UUID uuid) {
         modifiers.put(attribute, uuid);
     }
 
@@ -51,7 +51,7 @@ public class LevelAttributeModifier {
      * @param operation   The operation applied to the attribute
      * @param evenIntOnly If the modifier should be rounded to an even integer
      */
-    public static void applyModifier(PlayerEntity player, IAttribute attribute, String name, int level, int lcap, double max, double type, AttributeModifier.Operation operation, boolean evenIntOnly) {
+    public static void applyModifier(PlayerEntity player, Attribute attribute, String name, int level, int lcap, double max, double type, AttributeModifier.Operation operation, boolean evenIntOnly) {
         UUID mod = modifiers.get(attribute);
         if (mod == null) {
             LOGGER.warn("Cannot modify {}, no modifier is registered", attribute);
@@ -97,7 +97,7 @@ public class LevelAttributeModifier {
      * @param attribute the attribute whose UUID you need
      * @return the UUID of the given attribute
      */
-    public static UUID getUUID(IAttribute attribute) {
+    public static UUID getUUID(Attribute attribute) {
         return modifiers.get(attribute);
     }
 }
