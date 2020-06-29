@@ -6,10 +6,13 @@ import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.command.arguments.ActionArgument;
+import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 /**
@@ -39,6 +42,11 @@ public class BindActionCommand extends BasicCommand {
 
     private static int help(CommandContext<CommandSource> context) {
         context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.help"), false);
+        StringBuilder b = new StringBuilder();
+        for (ResourceLocation key : ModRegistries.ACTIONS.getKeys()) {
+            b.append(key.toString()).append(" ");
+        }
+        context.getSource().sendFeedback(new StringTextComponent(b.toString()), false);
         return 0;
     }
 
