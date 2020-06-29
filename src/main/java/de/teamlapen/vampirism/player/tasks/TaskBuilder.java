@@ -77,17 +77,6 @@ public class TaskBuilder {
         return this;
     }
 
-    public TaskBuilder addRequirement(@Nonnull Supplier<Boolean> supplier) {
-        this.requirement = new TaskRequirement<Boolean>() {
-            @Nonnull
-            @Override
-            public Boolean getStat() {
-                return supplier.get();
-            }
-        };
-        return this;
-    }
-
     public TaskBuilder addRequirement(@Nonnull TaskRequirement<?> requirement) {
         this.requirement = requirement;
         return this;

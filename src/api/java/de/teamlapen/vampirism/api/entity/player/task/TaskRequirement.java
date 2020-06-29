@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.task;
 
 import javax.annotation.Nonnull;
 
+@FunctionalInterface
 public interface TaskRequirement<T> {
 
     @Nonnull
