@@ -125,6 +125,11 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         return unlockedActions.contains(action);
     }
 
+    @Override
+    public boolean isActionOnCooldown(IAction action) {
+        return cooldownTimers.containsKey(action.getRegistryName());
+    }
+
     /**
      * Should only be called by the corresponding Capability instance
      **/

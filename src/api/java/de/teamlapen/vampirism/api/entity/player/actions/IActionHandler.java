@@ -54,6 +54,8 @@ public interface IActionHandler<T extends IActionPlayer> {
     boolean isActionActive(ResourceLocation id);
 
     boolean isActionUnlocked(IAction action);
+    
+    boolean isActionOnCooldown(IAction action);
 
     /**
      * Locks the given actions again
