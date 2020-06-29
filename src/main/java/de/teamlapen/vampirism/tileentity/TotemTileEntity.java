@@ -579,7 +579,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                         }
                     }
                     if (!flag) {
-                        ModEventFactory.fireReplaceVillageBlockEvent(this,world, b, pos);
+                        ModEventFactory.fireReplaceVillageBlockEvent(this, b, pos);
                     }
                 }
             }
@@ -615,7 +615,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.othertotem"), true);
             return false;
         }
-        VampirismVillageEvent.InitiateCapture event = new VampirismVillageEvent.InitiateCapture(this,world, faction);
+        VampirismVillageEvent.InitiateCapture event = new VampirismVillageEvent.InitiateCapture(this, faction);
         MinecraftForge.EVENT_BUS.post(event);
         if(event.getResult().equals(Event.Result.DENY)) {
             player.sendStatusMessage(new TranslationTextComponent(event.getMessage()), true);
@@ -893,7 +893,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
         return this.world.addEntity(newEntity);
     }
 
-    @Override
     public void updateTrainer(boolean toDummy) {
         List<Entity> trainer;
         EntityType<?> entityType;

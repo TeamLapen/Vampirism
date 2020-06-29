@@ -40,12 +40,12 @@ public class ModEventFactory {
         return event.getNewVillager();
     }
 
-    public static void fireReplaceVillageBlockEvent(@Nonnull ITotem totem, @Nonnull World world, @Nonnull BlockState b, @Nonnull BlockPos pos) {
-        VampirismVillageEvent.ReplaceBlock event = new VampirismVillageEvent.ReplaceBlock(totem,world, b, pos);
+    public static void fireReplaceVillageBlockEvent(@Nonnull ITotem totem, @Nonnull BlockState b, @Nonnull BlockPos pos) {
+        VampirismVillageEvent.ReplaceBlock event = new VampirismVillageEvent.ReplaceBlock(totem, b, pos);
         MinecraftForge.EVENT_BUS.post(event);
     }
 
-    public static void fireUpdateBoundingBoxEvent(@Nonnull ITotem totem, @Nonnull MutableBoundingBox bb) {
+    public static void fireUpdateBoundingBoxEvent(@Nonnull ITotem totem, @Nonnull MutableBoundingBox bb) { //TODO 1.16 remove
         VampirismVillageEvent.UpdateBoundingBox event = new VampirismVillageEvent.UpdateBoundingBox(totem,bb);
         MinecraftForge.EVENT_BUS.post(event);
     }

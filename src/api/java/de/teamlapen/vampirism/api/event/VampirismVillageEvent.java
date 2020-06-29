@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public abstract class VampirismVillageEvent extends Event {
 
 
@@ -40,7 +41,7 @@ public abstract class VampirismVillageEvent extends Event {
 
     @Nonnull
     public AxisAlignedBB getVillageArea() {
-        return totem.getVillageArea();
+        return this.totem.getVillageArea();
     }
 
     @Nonnull
@@ -49,7 +50,11 @@ public abstract class VampirismVillageEvent extends Event {
     }
 
     public World getWorld() {
-        return totem.getWorld();
+        return this.totem.getWorld();
+    }
+
+    public ITotem getTotem() {
+        return totem;
     }
 
     /**
@@ -182,16 +187,17 @@ public abstract class VampirismVillageEvent extends Event {
      * if result is {@link Result#DENY} the Vanilla code is skipped
      */
     @HasResult
-    public static class VillagerCaptureFinish extends VillagerCaptureFinishParent.Pre { //TODO binary compatible remove
+    public static class VillagerCaptureFinish extends VillagerCaptureFinishParent.Pre { //TODO 1.16 remove
         public VillagerCaptureFinish(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
             super(totem,villagerIn,forced);
         }
     }
 
-    public static class VillagerCaptureFinishParent extends VampirismVillageEvent {
+    @HasResult
+    public static class VillagerCaptureFinishParent extends VampirismVillageEvent {//TODO 1.16 rename
 
-        private final @Nonnull
-        List<VillagerEntity> villager;
+        @Nonnull
+        private final List<VillagerEntity> villager;
         private final boolean forced;
 
         public VillagerCaptureFinishParent(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
@@ -201,15 +207,11 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         /**
-         * @returns all {@link VillagerEntity} that are in the village boundingBox
+         * @return all {@link VillagerEntity} that are in the village boundingBox
          */
         @Nonnull
         public List<VillagerEntity> getVillager() {
             return villager;
-        }
-
-        public void updateTrainer(boolean toDummy) {
-            this.totem.updateTrainer(toDummy);
         }
 
         public boolean isForced() {
@@ -232,7 +234,8 @@ public abstract class VampirismVillageEvent extends Event {
     /**
      * Fired when a new Capture Entity should be spawned
      */
-    public static class SpawnCaptureEntity extends VampirismVillageEvent {
+    @Deprecated
+    public static class SpawnCaptureEntity extends VampirismVillageEvent {//TODO 1.16 remove
 
         private EntityType<? extends MobEntity> entity;
 
@@ -243,15 +246,13 @@ public abstract class VampirismVillageEvent extends Event {
         /**
          * set the Entity to spawn
          *
-         * @param {@link ResourceLocation}
-         *               of the entity
          */
         public void setEntity(EntityType<? extends MobEntity> entity) {
             this.entity = entity;
         }
 
         /**
-         * @returns {@link ResourceLocation} of the capture entity which should be spawned
+         * @return {@link EntityType<?>} of the capture entity which should be spawned
          */
         @Nullable
         public EntityType<? extends MobEntity> getEntity() {
@@ -266,30 +267,19 @@ public abstract class VampirismVillageEvent extends Event {
      */
     public static class ReplaceBlock extends VampirismVillageEvent {
 
-        private final @Nonnull
-        World world;
-        private final @Nonnull
-        BlockState state;
-        private final @Nonnull
-        BlockPos pos;
+        @Nonnull
+        private final BlockState state;
+        @Nonnull
+        private final BlockPos pos;
 
-        public ReplaceBlock(ITotem totem, @Nonnull World world, @Nonnull BlockState b, @Nonnull BlockPos pos) {
+        public ReplaceBlock(ITotem totem, @Nonnull BlockState b, @Nonnull BlockPos pos) {
             super(totem);
-            this.world = world;
             this.state = b;
             this.pos = pos;
         }
 
         /**
-         * @returns the world of the block
-         */
-        @Nonnull
-        public World getWorld() {
-            return world;
-        }
-
-        /**
-         * @returns blockstate of the block to be replaced
+         * @return blockstate of the block to be replaced
          */
         @Nonnull
         public BlockState getState() {
@@ -297,7 +287,7 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         /**
-         * @returns the position of the block
+         * @return the position of the block
          */
         @Nonnull
         public BlockPos getBlockPos() {
@@ -313,25 +303,17 @@ public abstract class VampirismVillageEvent extends Event {
     @HasResult
     public static class InitiateCapture extends VampirismVillageEvent {
 
-        private final @Nonnull
-        World world;
-        private final @Nonnull
-        IFaction<?> capturingFaction;
+        @Nonnull
+        private final IFaction<?> capturingFaction;
         private String message;
 
-        public InitiateCapture(ITotem totem, @Nonnull World world, @Nonnull IFaction<?> capturingFaction) {
+        public InitiateCapture(ITotem totem, @Nonnull IFaction<?> capturingFaction) {
             super(totem);
-            this.world = world;
             this.capturingFaction = capturingFaction;
         }
 
-        @Nonnull
-        public World getWorld() {
-            return world;
-        }
-
         /**
-         * @returns capturing faction
+         * @return capturing faction
          */
         @Override
         @Nonnull
@@ -351,10 +333,10 @@ public abstract class VampirismVillageEvent extends Event {
     /**
      * fired when the village area is updated (used for vampire fog rendering & sundamage)
      */
-    public static class UpdateBoundingBox extends VampirismVillageEvent {
+    public static class UpdateBoundingBox extends VampirismVillageEvent { //TODO 1.16 remove
 
-        private final @Nonnull
-        MutableBoundingBox bb;
+        @Nonnull
+        private final MutableBoundingBox bb;
 
         public UpdateBoundingBox(ITotem totem, @Nonnull MutableBoundingBox bb) {
             super(totem);
@@ -362,7 +344,7 @@ public abstract class VampirismVillageEvent extends Event {
         }
 
         /**
-         * @returns bounding box of the village
+         * @return the bounding box of the village
          */
         @Nonnull
         public MutableBoundingBox getBoundingBox() {

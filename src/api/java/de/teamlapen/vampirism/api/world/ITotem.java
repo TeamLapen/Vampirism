@@ -23,8 +23,6 @@ public interface ITotem {
     @Nonnull
     AxisAlignedBB getVillageAreaReduced();
 
-    void updateTrainer(boolean toDummy);
-
     EntityType<? extends MobEntity> getCaptureEntityForFaction(IFaction<?> faction);
 
     World getWorld();

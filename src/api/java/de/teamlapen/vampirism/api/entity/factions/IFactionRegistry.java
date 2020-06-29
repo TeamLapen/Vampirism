@@ -83,6 +83,7 @@ public interface IFactionRegistry {
      * @param id              Faction id e.g. for level command
      * @param entityInterface Interface all entities implement
      * @param color           Color e.g. for level rendering
+     * @param villageFactionData       village capture related utility class (if null will gets filled with dummy)
      * @param <T>             Interface all entities implement
      * @return The created faction
      */
@@ -111,8 +112,8 @@ public interface IFactionRegistry {
      * @param color                    Color e.g. for level rendering
      * @param playerCapabilitySupplier The capability which is attached to all players
      * @param highestLevel             The highest reachable player level
-     * @param <T>                      Interface all entities or (the given capability for players)  implement
      * @param villageFactionData       village capture related utility class (if null will gets filled with dummy)
+     * @param <T>                      Interface all entities or (the given capability for players)  implement
      * @return The created faction
      */
     @ThreadSafeAPI
