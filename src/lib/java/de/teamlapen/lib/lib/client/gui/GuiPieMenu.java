@@ -270,7 +270,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         // Draw the cicle image
         this.minecraft.getTextureManager().bindTexture(backgroundTex);
-        RenderSystem.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
+        RenderSystem.color4f(backgroundColor.getRed() / 256f, backgroundColor.getGreen() /256f, backgroundColor.getBlue() / 256f, BGT);
 
 
         Tessellator tessellator = Tessellator.getInstance();
@@ -319,7 +319,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         // Draw
         this.minecraft.getTextureManager().bindTexture(centerTex);
-        RenderSystem.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
+        RenderSystem.color4f(backgroundColor.getRed() / 256f, backgroundColor.getGreen() / 256f, backgroundColor.getBlue() / 256f, BGT);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -346,7 +346,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         // Draw
         this.minecraft.getTextureManager().bindTexture(centerTex);
-        RenderSystem.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
+        RenderSystem.color4f(backgroundColor.getRed() / 256f, backgroundColor.getGreen() / 256f, backgroundColor.getBlue() / 256f, BGT);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
