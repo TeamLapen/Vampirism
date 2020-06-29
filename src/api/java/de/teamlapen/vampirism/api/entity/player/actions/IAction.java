@@ -39,7 +39,7 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
      */
     boolean onActivated(IFactionPlayer player);
 
-    default boolean showInSelectAction(PlayerEntity player) {
+    default boolean showInSelectAction() {
         return true;
     }
 

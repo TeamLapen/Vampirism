@@ -187,9 +187,15 @@ public abstract class VampirismVillageEvent extends Event {
      * if result is {@link Result#DENY} the Vanilla code is skipped
      */
     @HasResult
+    @Deprecated
     public static class VillagerCaptureFinish extends VillagerCaptureFinishParent.Pre { //TODO 1.16 remove
         public VillagerCaptureFinish(ITotem totem, @Nonnull List<VillagerEntity> villagerIn, boolean forced) {
             super(totem,villagerIn,forced);
+        }
+
+        @Nonnull
+        public AxisAlignedBB getAffectedArea() {
+            return this.getVillageArea();
         }
     }
 
@@ -294,6 +300,11 @@ public abstract class VampirismVillageEvent extends Event {
             return pos;
         }
 
+        @Nonnull
+        public IFaction<?> getFaction() {
+            return this.getControllingFaction();
+        }
+
     }
 
     /**
@@ -333,6 +344,7 @@ public abstract class VampirismVillageEvent extends Event {
     /**
      * fired when the village area is updated (used for vampire fog rendering & sundamage)
      */
+    @Deprecated
     public static class UpdateBoundingBox extends VampirismVillageEvent { //TODO 1.16 remove
 
         @Nonnull

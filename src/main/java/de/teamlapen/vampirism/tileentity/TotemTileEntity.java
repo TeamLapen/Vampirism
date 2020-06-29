@@ -76,7 +76,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 
 @ParametersAreNonnullByDefault
-public class TotemTileEntity extends TileEntity implements ITickableTileEntity, ITotem {//TODO 1.14 add village events
+public class TotemTileEntity extends TileEntity implements ITickableTileEntity, ITotem {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Random RNG = new Random();
     private static final ResourceLocation nonFactionTotem = new ResourceLocation("none");
@@ -382,7 +382,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     private boolean spawnVillagerDefault(boolean poisonousBlood) {
-        VillagerEntity newVillager  = EntityType.VILLAGER.create(this.world);
+        VillagerEntity newVillager = EntityType.VILLAGER.create(this.world);
         ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(poisonousBlood));
         newVillager = ModEventFactory.fireSpawnNewVillagerEvent(this,null, newVillager, false, poisonousBlood);
         return spawnEntity(newVillager);

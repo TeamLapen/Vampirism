@@ -274,7 +274,8 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
      */
     private void updateElements() {
         elements.clear();
-        elements.addAll(getActionOrdered(((List<IAction>)actionHandler.getUnlockedActions()).stream().filter(action -> action.showInSelectAction(minecraft.player)).collect(Collectors.toList())));
+        //noinspection unchecked
+        elements.addAll(getActionOrdered(((List<IAction>)actionHandler.getUnlockedActions()).stream().filter(IAction::showInSelectAction).collect(Collectors.toList())));
         elements.add(fakeAction);
     }
 }
