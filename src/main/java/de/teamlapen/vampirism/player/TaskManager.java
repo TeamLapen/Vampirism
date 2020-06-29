@@ -91,9 +91,7 @@ public class TaskManager implements ITaskManager {
     public boolean addCompletedTask(@Nonnull Task task) {
         if (!isTaskUnlocked(task)) return false;
         this.getCompletedTasks(task.getVariant()).add(task);
-        if(availableTasks.containsKey(task.getVariant())) {
-            this.availableTasks.get(task.getVariant()).remove(task);
-        }
+        this.getAvailableTasks(task.getVariant()).remove(task);
         this.getStats().remove(task);
         this.getEntityStats().remove(task);
         this.updateStats();
