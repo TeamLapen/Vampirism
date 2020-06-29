@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
 
+import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.network.AppearancePacket;
 import de.teamlapen.vampirism.player.skills.SkillTree;
@@ -35,7 +36,8 @@ public abstract class CommonProxy implements IProxy {
                 vampire.setSkinData(msg.data);
             });
         } else if (entity instanceof MinionEntity<?>) {
-            ((MinionEntity<?>) entity).getMinionData().ifPresent(minionData -> minionData.setMinionTypeData(msg.data));
+            ((MinionEntity<?>) entity).getMinionData().ifPresent(minionData -> minionData.handleMinionAppearanceConfig(msg.name, msg.data));
+            HelperLib.sync((MinionEntity<?>) entity);
         }
     }
 }

@@ -196,7 +196,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         private int hat;
         private boolean useLordSkin;
 
-        public HunterMinionData(int maxHealth, ITextComponent name, int type, int hat, boolean useLordSkin) {
+        public HunterMinionData(int maxHealth, String name, int type, int hat, boolean useLordSkin) {
             super(maxHealth, name, 9);
             this.type = type;
             this.hat = hat;
@@ -229,7 +229,13 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public void setMinionTypeData(int... data) {
+        public ITextComponent getFormattedName() {
+            return super.getFormattedName().applyTextStyle(VReference.HUNTER_FACTION.getChatColor());
+        }
+
+        @Override
+        public void handleMinionAppearanceConfig(String newName, int... data) {
+            this.setName(newName);
             if (data.length >= 3) {
                 type = data[0];
                 hat = data[1];

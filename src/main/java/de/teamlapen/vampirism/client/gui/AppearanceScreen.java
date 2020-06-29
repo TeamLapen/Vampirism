@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.lib.client.gui.ScrollableListButton;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 import java.util.List;
 
@@ -59,21 +57,6 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         }
     }
 
-    /**
-     * add list and button to open it the the gui
-     * <p>
-     * call inside {@link #init()}
-     *
-     * @return parameter button.
-     */
-    protected Button addList(ScrollableListButton button) {
-        this.buttons.add(button);
-        this.addButton(new GuiButtonExt(button.x, button.y - 20, button.getWidth() + 1, 20, button.getMessage(), (button1 -> {
-            this.buttons.forEach(button2 -> button2.visible = button2 == button && !button2.visible);
-        })));
-        button.visible = false;
-        return this.addButton(button);
-    }
 
     @Override
     protected void init() {

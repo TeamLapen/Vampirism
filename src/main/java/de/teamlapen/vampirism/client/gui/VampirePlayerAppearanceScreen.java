@@ -10,11 +10,13 @@ import de.teamlapen.vampirism.network.AppearancePacket;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 import java.awt.*;
 
@@ -27,6 +29,10 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
 
     private int fangType;
     private int eyeType;
+    private ScrollableListButton eyeList;
+    private ScrollableListButton fangList;
+    private Button eyeButton;
+    private Button fangButton;
 
 
     public VampirePlayerAppearanceScreen() {
@@ -35,7 +41,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
 
     @Override
     public void onClose() {
-        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getEntityId(), fangType, eyeType));
+        VampirismMod.dispatcher.sendToServer(new AppearancePacket(this.entity.getEntityId(), "", fangType, eyeType));
         super.onClose();
     }
 
@@ -44,11 +50,20 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         super.init();
         this.color = FactionPlayerHandler.getOpt(Minecraft.getInstance().player).map(FactionPlayerHandler::getCurrentFaction).map(IPlayableFaction::getColor).orElse(Color.gray).getRGBColorComponents(null);
 
-        this.addList(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 5, REFERENCE.EYE_TYPE_COUNT, null, UtilLib.translate("gui.vampirism.appearance.eyes"), this::eye, false));
-        this.addList(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 4, REFERENCE.FANG_TYPE_COUNT, null, UtilLib.translate("gui.vampirism.appearance.fangs"), this::fang, false));
-
         this.fangType = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getFangType).orElse(0);
         this.eyeType = VampirePlayer.getOpt(this.minecraft.player).map(VampirePlayer::getEyeType).orElse(0);
+
+        this.eyeList = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 30 + 19, 99, 5, REFERENCE.EYE_TYPE_COUNT, null, UtilLib.translate("gui.vampirism.appearance.eye"), this::eye, false));
+        this.fangList = this.addButton(new ScrollableListButton(this.guiLeft + 20, this.guiTop + 50 + 19, 99, 4, REFERENCE.FANG_TYPE_COUNT, null, UtilLib.translate("gui.vampirism.appearance.fang"), this::fang, false));
+        this.eyeButton = this.addButton(new GuiButtonExt(eyeList.x, eyeList.y - 20, eyeList.getWidth() + 1, 20, "", (b) -> {
+            this.setEyeListVisibility(!eyeList.visible);
+        }));
+        this.fangButton = this.addButton(new GuiButtonExt(fangList.x, fangList.y - 20, fangList.getWidth() + 1, 20, "", (b) -> {
+            this.setFangListVisibility(!fangList.visible);
+        }));
+        this.setEyeListVisibility(false);
+        this.setFangListVisibility(false);
+
     }
 
     @Override
@@ -62,11 +77,26 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<PlayerEntity
         VampirePlayer.getOpt(this.minecraft.player).ifPresent(vampire -> {
             vampire.setEyeType(this.eyeType = eyeType);
         });
+        setEyeListVisibility(false);
     }
 
     private void fang(int fangType) {
         VampirePlayer.getOpt(this.minecraft.player).ifPresent(vampire -> {
             vampire.setFangType(this.fangType = fangType);
         });
+        setFangListVisibility(false);
+    }
+
+    private void setEyeListVisibility(boolean show) {
+        eyeButton.setMessage(eyeList.getMessage() + " " + (eyeType + 1));
+        this.eyeList.visible = show;
+        this.fangButton.visible = !show;
+        if (show) this.fangList.visible = false;
+    }
+
+    private void setFangListVisibility(boolean show) {
+        fangButton.setMessage(fangList.getMessage() + " " + (fangType + 1));
+        this.fangList.visible = show;
+        if (show) this.eyeList.visible = false;
     }
 }

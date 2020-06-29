@@ -64,8 +64,8 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(title.getFormattedText(), 26, 6.0F, 0x404040);
-        this.font.drawString(UtilLib.translate("gui.vampirism.minion.active_task"), 119, 10.0F, 0x404040);
+        this.font.drawString(title.getFormattedText(), 5, 6.0F, 0x404040);
+        this.font.drawString(UtilLib.translate("gui.vampirism.minion.active_task"), 120, 10.0F, 0x404040);
 
     }
 

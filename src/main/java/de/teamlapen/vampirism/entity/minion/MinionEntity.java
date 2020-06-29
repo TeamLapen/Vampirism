@@ -325,11 +325,10 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         HelperLib.sync(this);
     }
 
-    @Override
-    public void setCustomName(@Nullable ITextComponent name) {
-        super.setCustomName(name);
+    public void changeMinionName(String name) {
         if (minionData != null) {
-            minionData.setName(name);
+            this.minionData.setName(name);
+            super.setCustomName(this.minionData.getFormattedName());
         }
     }
 
@@ -367,6 +366,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             this.playerMinionController.markDeadAndReleaseMinionSlot(minionId, token);
             this.playerMinionController = null;
         }
+    }
+
+    @Override
+    public void setCustomName(@Nullable ITextComponent name) {
+        //NOP
     }
 
     @Override
@@ -466,7 +470,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     protected boolean processInteract(PlayerEntity player, Hand hand) {
         if (this.getLordOpt().filter(p -> p.getPlayer().equals(player)).isPresent()) {
             if (player instanceof ServerPlayerEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslationTextComponent("text.vampirism.name").appendSibling(this.getMinionData().map(MinionData::getName).orElse(new StringTextComponent("Minion")))), buf -> buf.writeVarInt(this.getEntityId()));
+                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslationTextComponent("text.vampirism.name").appendSibling(this.getMinionData().map(MinionData::getFormattedName).orElse(new StringTextComponent("Minion")))), buf -> buf.writeVarInt(this.getEntityId()));
             }
             return true;
         }
@@ -516,7 +520,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     private void handleLoadedMinionData(@Nonnull T data) {
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(data.getMaxHealth());
         this.setHealth(data.getHealth());
-        super.setCustomName(data.getName());
+        super.setCustomName(data.getFormattedName());
         try {
             this.onMinionDataReceived(data);
         } catch (ClassCastException e) {

@@ -190,7 +190,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         private int type;
         private boolean useLordSkin;
 
-        public VampireMinionData(int maxHealth, ITextComponent name, int type, boolean useLordSkin) {
+        public VampireMinionData(int maxHealth, String name, int type, boolean useLordSkin) {
             super(maxHealth, name, 9);
             this.type = type;
             this.useLordSkin = useLordSkin;
@@ -215,12 +215,18 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
+        public ITextComponent getFormattedName() {
+            return super.getFormattedName().applyTextStyle(VReference.VAMPIRE_FACTION.getChatColor());
+        }
+
+        @Override
         protected ResourceLocation getDataType() {
             return ID;
         }
 
         @Override
-        public void setMinionTypeData(int... data) {
+        public void handleMinionAppearanceConfig(String newName, int... data) {
+            this.setName(newName);
             if (data.length >= 2) {
                 this.type = data[0];
                 this.useLordSkin = data[1] == 1;
