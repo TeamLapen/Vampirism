@@ -7,15 +7,19 @@ import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
+import de.teamlapen.vampirism.items.StakeItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
@@ -31,6 +35,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -157,6 +162,18 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     renderBloodFangs(this.mc.mainWindow.getScaledWidth(), this.mc.mainWindow.getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                     event.setCanceled(true);
                 });
+            }
+            IHunterPlayer hunterPlayer = HunterPlayer.get(mc.player);
+            if(hunterPlayer.getLevel() > 0 && !mc.player.isSpectator() && hunterPlayer.getRepresentingPlayer().getHeldItemMainhand().getItem() == ModItems.stake) {
+                Entity entity = ((EntityRayTraceResult) p).getEntity();
+                if (entity instanceof LivingEntity && entity instanceof IVampireMob) {
+                    if (StakeItem.canKillInstant((LivingEntity) entity, mc.player)) {
+                        if(((LivingEntity)entity).getHealth() > 0) {
+                            this.renderStakeInstantKill(this.mc.mainWindow.getScaledWidth(),this.mc.mainWindow.getScaledHeight());
+                            event.setCanceled(true);
+                        }
+                    }
+                }
             }
         } else if (p != null && p.getType() == RayTraceResult.Type.BLOCK) {
             BlockState block = Minecraft.getInstance().world.getBlockState(((BlockRayTraceResult) p).getPos());
@@ -452,6 +469,20 @@ public class VampirismHUDOverlay extends ExtendedGui {
         GlStateManager.color4f(1F, 1F, 1F, 1F);
         GL11.glDisable(GL11.GL_BLEND);
 
+    }
+
+    private void renderStakeInstantKill(int width, int height) {
+        if(this.mc.gameSettings.thirdPersonView == 0 && this.mc.playerController.getCurrentGameType() != GameType.SPECTATOR) {
+            GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            this.mc.textureManager.bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+            GlStateManager.color4f(158f/256,0,0,1);
+            this.blit((width - 15) / 2, (height - 15) / 2, 0, 0, 15, 15);
+            int j = height / 2 - 7 + 16;
+            int k = width / 2 - 8;
+            this.blit(k, j, 68, 94, 16, 16);
+            this.blit(k, j, 36, 94, 16, 4);
+            this.blit(k, j, 52, 94, 17, 4);
+        }
     }
 
     /**
