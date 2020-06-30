@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.minion;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
@@ -21,14 +22,18 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -161,6 +166,36 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     @Override
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
+        if (!this.world.isRemote() && isLord(player) && minionData != null) {
+            ItemStack heldItem = player.getHeldItem(hand);
+            if (heldItem.getItem() == ModItems.hunter_minion_upgrade1) {
+                if (this.minionData.level < 1) {
+                    this.minionData.setLevel(1);
+                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"), false);
+                    HelperLib.sync(this);
+                } else {
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"), false);
+                }
+                return ActionResultType.SUCCESS;
+            } else if (heldItem.getItem() == ModItems.hunter_minion_upgrade2) {
+                if (this.minionData.level < 2) {
+                    this.minionData.setLevel(2);
+                    if (!player.abilities.isCreativeMode) heldItem.shrink(1);
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_upgrade"), false);
+                    HelperLib.sync(this);
+                } else {
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.hunter_minion.equipment_wrong"), false);
+                }
+
+                return ActionResultType.SUCCESS;
+            }
+        }
+        return super.func_230254_b_(player, hand);
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
         meleeGoal = new MeleeAttackGoal(this, 1.0D, false);
@@ -190,12 +225,14 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         private int type;
         private int hat;
         private boolean useLordSkin;
+        private int level;
 
-        public HunterMinionData(int maxHealth, String name, int type, int hat, boolean useLordSkin) {
-            super(maxHealth, name, 9);
+        public HunterMinionData(String name, int type, int hat, boolean useLordSkin) {
+            super(name, 9);
             this.type = type;
             this.hat = hat;
             this.useLordSkin = useLordSkin;
+            this.level = 0;
         }
 
         private HunterMinionData() {
@@ -207,6 +244,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             super.deserializeNBT(nbt);
             type = nbt.getInt("hunter_type");
             hat = nbt.getInt("hunter_hat");
+            level = nbt.getInt("level");
             useLordSkin = nbt.getBoolean("use_lord_skin");
         }
 
@@ -230,7 +268,19 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             super.serializeNBT(tag);
             tag.putInt("hunter_type", type);
             tag.putInt("hunter_hat", hat);
+            tag.putInt("level", level);
             tag.putBoolean("use_lord_skin", useLordSkin);
+        }
+
+        /**
+         * @param level 0, 1 or 2
+         * @return If the new level is higher than the old
+         */
+        public boolean setLevel(int level) {
+            boolean levelup = level > this.level;
+            this.level = level;
+            this.getInventory().setAvailableSize(level == 1 ? 12 : (level == 2 ? 15 : 9));
+            return levelup;
         }
 
         @Override

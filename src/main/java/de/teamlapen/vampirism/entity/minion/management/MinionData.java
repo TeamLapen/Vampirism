@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.minion.management;
 
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
+import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -44,7 +45,6 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
 
     private final MinionInventory inventory;
     private float health;
-    private int maxHealth;
     private String name;
 
 
@@ -52,9 +52,8 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     private IMinionTask.IMinionTaskDesc activeTaskDesc;
     private boolean taskLocked;
 
-    protected MinionData(int maxHealth, String name, int invSize) {
-        this.health = maxHealth;
-        this.maxHealth = maxHealth;
+    protected MinionData(String name, int invSize) {
+        this.health = getMaxHealth();
         this.name = name;
         this.inventory = new MinionInventory(invSize);
         this.activeTaskDesc = new IMinionTask.NoDesc(MinionTasks.nothing);
@@ -70,7 +69,6 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         inventory.read(nbt.getList("inv", 10));
         inventory.setAvailableSize(nbt.getInt("inv_size"));
         health = nbt.getFloat("health");
-        maxHealth = nbt.getInt("max_health");
         name = nbt.getString("name");
         taskLocked = nbt.getBoolean("locked");
         if (nbt.contains("task", 10)) {
@@ -107,11 +105,7 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     }
 
     public int getMaxHealth() {
-        return maxHealth;
-    }
-
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
+        return VampirismConfig.BALANCE.miBaseHealth.get();
     }
 
     public String getName() {
@@ -140,7 +134,6 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         tag.putInt("inv_size", inventory.getAvailableSize());
         tag.put("inv", inventory.write(new ListNBT()));
         tag.putFloat("health", health);
-        tag.putFloat("max_health", maxHealth);
         tag.putString("name", name);
         tag.putString("data_type", getDataType().toString());
         tag.putBoolean("locked", taskLocked);

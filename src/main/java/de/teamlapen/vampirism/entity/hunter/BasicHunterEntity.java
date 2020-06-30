@@ -13,10 +13,14 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
+import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
@@ -24,6 +28,7 @@ import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
+import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.goal.*;
@@ -69,6 +74,14 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     private static final ITextComponent name = new TranslationTextComponent("container.hunter");
 
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampirismEntity.getAttributeBuilder()
+                .createMutableAttribute(SharedMonsterAttributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH)
+                .createMutableAttribute(SharedMonsterAttributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE)
+                .createMutableAttribute(SharedMonsterAttributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
+    }
+
+
     private final int MAX_LEVEL = 3;
     private final MeleeAttackGoal attackMelee;
     private final AttackRangedCrossbowGoal<BasicHunterEntity> attackRange;
@@ -113,6 +126,12 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public boolean canDespawn(double distanceToClosestPlayer) {
         return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
+    }
+
+    @Override
+    public void attackVillage(ICaptureAttributes attributes) {
+        this.villageAttributes = attributes;
+        this.attack = true;
     }
 
     @Override
@@ -235,19 +254,42 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.setSwingingArms(false);
     }
 
-    @Override
-    public int suggestLevel(Difficulty d) {
-        switch (this.rand.nextInt(5)) {
-            case 0:
-                return (int) (d.minPercLevel / 100F * MAX_LEVEL);
-            case 1:
-                return (int) (d.avgPercLevel / 100F * MAX_LEVEL);
-            case 2:
-                return (int) (d.maxPercLevel / 100F * MAX_LEVEL);
-            default:
-                return this.rand.nextInt(MAX_LEVEL + 1);
-        }
+    /**
+     * Assumes preconditions as been met. Checks conditions but does not give feedback to user
+     *
+     * @param lord
+     */
+    public void convertToMinion(PlayerEntity lord) {
+        FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
+            if (fph.getMaxMinions() > 0) {
+                MinionWorldData.getData(lord.world).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+                    if (controller.hasFreeMinionSlot()) {
+                        if (fph.getCurrentFaction() == this.getFaction()) {
+                            HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false);
+                            int id = controller.createNewMinionSlot(data, ModEntities.hunter_minion);
+                            if (id < 0) {
+                                LOGGER.error("Failed to get minion slot");
+                                return;
+                            }
+                            HunterMinionEntity minion = ModEntities.hunter_minion.create(this.world);
+                            minion.claimMinionSlot(id, controller);
+                            minion.copyLocationAndAnglesFrom(this);
+                            minion.markAsConverted();
+                            controller.activateTask(0, MinionTasks.stay);
+                            this.world.addEntity(minion);
+                            this.remove();
 
+                        } else {
+                            LOGGER.warn("Wrong faction for minion");
+                        }
+                    } else {
+                        LOGGER.warn("No free slot");
+                    }
+                });
+            } else {
+                LOGGER.error("Can't have minions");
+            }
+        });
     }
 
     @Override
@@ -263,13 +305,30 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return 6 + getLevel();
     }
 
-    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
-        return VampirismEntity.getAttributeBuilder()
-                .createMutableAttribute(SharedMonsterAttributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH)
-                .createMutableAttribute(SharedMonsterAttributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE)
-                .createMutableAttribute(SharedMonsterAttributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
+    @Override
+    public int suggestLevel(Difficulty d) {
+        switch (this.rand.nextInt(6)) {
+            case 0:
+                return (int) (d.minPercLevel / 100F * MAX_LEVEL);
+            case 1:
+                return (int) (d.avgPercLevel / 100F * MAX_LEVEL);
+            case 2:
+                return (int) (d.maxPercLevel / 100F * MAX_LEVEL);
+            default:
+                return this.rand.nextInt(MAX_LEVEL + 1);
+        }
+
     }
 
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.getDataManager().register(LEVEL, -1);
+        this.getDataManager().register(SWINGING_ARMS, false);
+        this.getDataManager().register(WATCHED_ID, 0);
+        this.getDataManager().register(TYPE, -1);
+    }
 
     @Override
     protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //proccessInteract
@@ -286,27 +345,39 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                         player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"), Util.DUMMY_UUID);
                     }
                 } else if (hunterLevel > 0) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"), Util.DUMMY_UUID);
+                    FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
+                        if (fph.getMaxMinions() > 0) {
+                            ItemStack heldItem = player.getHeldItem(hand);
+
+                            if (this.getLevel() > 0) {
+                                if (heldItem.getItem() == ModItems.hunter_minion_equipment) {
+                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.unavailable"), true);
+                                }
+                            } else {
+                                boolean freeSlot = MinionWorldData.getData(player.world).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
+                                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.available"), false);
+                                if (heldItem.getItem() == ModItems.hunter_minion_equipment) {
+                                    if (!freeSlot) {
+                                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.no_free_slot"), false);
+                                    } else {
+                                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.start_serving"), false);
+                                        convertToMinion(player);
+                                        if (!player.abilities.isCreativeMode) heldItem.shrink(1);
+                                    }
+                                } else if (freeSlot) {
+                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.require_equipment", UtilLib.translate(ModItems.hunter_minion_equipment.getTranslationKey())), false);
+                                }
+                            }
+                        } else {
+                            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"), false);
+                        }
+                    });
                 }
+
             }
             return ActionResultType.SUCCESS;
         }
         return super.func_230254_b_(player, hand);
-    }
-
-    @Override
-    public void attackVillage(ICaptureAttributes attributes) {
-        this.villageAttributes = attributes;
-        this.attack = true;
-    }
-
-    @Override
-    protected void registerData() {
-        super.registerData();
-        this.getDataManager().register(LEVEL, -1);
-        this.getDataManager().register(SWINGING_ARMS, false);
-        this.getDataManager().register(WATCHED_ID, 0);
-        this.getDataManager().register(TYPE, -1);
     }
 
     @Override

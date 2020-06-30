@@ -469,6 +469,17 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return this.playerMinionController != null;
     }
 
+    @Override
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
+        if (isLord(player)) {
+            if (player instanceof ServerPlayerEntity) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslationTextComponent("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(new StringTextComponent("Minion")))), buf -> buf.writeVarInt(this.getEntityId()));
+            }
+            return ActionResultType.SUCCESS;
+        }
+        return super.func_230254_b_(player, hand);
+    }
+
     /**
      * Called when valid minion data is received on world load.
      * Can  be called client and server side
@@ -477,15 +488,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     }
 
-    @Override
-    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
-        if (this.getLordOpt().filter(p -> p.getPlayer().equals(player)).isPresent()) {
-            if (player instanceof ServerPlayerEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this), new TranslationTextComponent("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(new StringTextComponent("Minion")))), buf -> buf.writeVarInt(this.getEntityId()));
-            }
-            return ActionResultType.SUCCESS;
-        }
-        return super.func_230254_b_(player, hand);
+    protected boolean isLord(PlayerEntity p) {
+        return this.getLordID().map(id -> id.equals(p.getUniqueID())).orElse(false);
     }
 
     @Override
@@ -533,7 +537,7 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     private void handleLoadedMinionData(@Nonnull T data) {
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(data.getMaxHealth());
-        this.setHealth(data.getHealth());
+        super.setHealth(data.getHealth());
         super.setCustomName(data.getFormattedName());
         try {
             this.onMinionDataReceived(data);
