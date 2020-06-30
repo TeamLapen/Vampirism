@@ -173,7 +173,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         }
     }
 
-    public void createMinionEntityAtPlayer(int id, PlayerEntity p) {
+    @Nullable
+    public MinionEntity<?> createMinionEntityAtPlayer(int id, PlayerEntity p) {
         assert id >= 0;
         EntityType<? extends MinionEntity<?>> type = minions[id].minionType;
         if (type == null) {
@@ -188,9 +189,11 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
                 m.copyLocationAndAnglesFrom(p);
                 p.world.addEntity(m);
                 activateTask(id, MinionTasks.stay);
+                return m;
             }
 
         }
+        return null;
     }
 
     /**
