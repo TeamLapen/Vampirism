@@ -90,18 +90,9 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         return activeTaskDesc;
     }
 
-    public boolean isTaskLocked() {
-        return taskLocked;
-    }
-
     public IFormattableTextComponent getFormattedName() {
         return new StringTextComponent(name);
     }
-
-    public String getName() {
-        return name;
-    }
-
 
     public float getHealth() {
         return health;
@@ -115,7 +106,6 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         return inventory;
     }
 
-
     public int getMaxHealth() {
         return maxHealth;
     }
@@ -124,11 +114,26 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         this.maxHealth = maxHealth;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
     public void handleMinionAppearanceConfig(String name, int... data) {
+    }
+
+    public boolean isTaskLocked() {
+        return taskLocked;
+    }
+
+    @Override
+    public final CompoundNBT serializeNBT() {
+        CompoundNBT tag = new CompoundNBT();
+        serializeNBT(tag);
+        return tag;
     }
 
     public void serializeNBT(CompoundNBT tag) {
@@ -147,23 +152,16 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         }
     }
 
-    @Override
-    public final CompoundNBT serializeNBT() {
-        CompoundNBT tag = new CompoundNBT();
-        serializeNBT(tag);
-        return tag;
-    }
-
     public boolean setTaskLocked(boolean locked) {
         return this.taskLocked = locked;
-    }
-
-    protected ResourceLocation getDataType() {
-        return new ResourceLocation("");
     }
 
     public <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc oldDesc, IMinionTask.IMinionTaskDesc newDesc) {
         oldTask.deactivateTask((Q) oldDesc);
         this.activeTaskDesc = newDesc;
+    }
+
+    protected ResourceLocation getDataType() {
+        return new ResourceLocation("");
     }
 }

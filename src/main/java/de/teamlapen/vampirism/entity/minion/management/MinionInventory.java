@@ -29,14 +29,6 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         this(9);
     }
 
-    public void clear() {
-        for (List<ItemStack> list : this.allInventories) {
-            list.clear();
-        }
-
-    }
-
-
     @Override
     public void addItemStack(@Nonnull ItemStack stack) {
 
@@ -53,6 +45,13 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         }
     }
 
+    public void clear() {
+        for (List<ItemStack> list : this.allInventories) {
+            list.clear();
+        }
+
+    }
+
     @Nonnull
     @Override
     public ItemStack decrStackSize(int index, int count) {
@@ -65,15 +64,36 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return availableSize;
     }
 
-    public MinionInventory setAvailableSize(int newSize) {
-        assert newSize == 9 || availableSize == 12 || availableSize == 15;
-        this.availableSize = newSize;
-        return this;
+    @Override
+    public NonNullList<ItemStack> getInventoryHands() {
+        return inventoryHands;
     }
 
     @Override
     public NonNullList<ItemStack> getInventoryArmor() {
         return inventoryArmor;
+    }
+
+    public void read(ListNBT nbtTagListIn) {
+        this.inventory.clear();
+        this.inventoryArmor.clear();
+        this.inventoryHands.clear();
+
+        for (int i = 0; i < nbtTagListIn.size(); ++i) {
+            CompoundNBT compoundnbt = nbtTagListIn.getCompound(i);
+            int j = compoundnbt.getByte("Slot") & 255;
+            ItemStack itemstack = ItemStack.read(compoundnbt);
+            if (!itemstack.isEmpty()) {
+                if (j < this.inventoryHands.size()) {
+                    this.inventoryHands.set(j, itemstack);
+                } else if (j >= 10 && j < this.inventoryArmor.size() + 10) {
+                    this.inventoryArmor.set(j - 10, itemstack);
+                } else if (j >= 20 && j < this.inventory.size() + 20) {
+                    this.inventory.set(j - 20, itemstack);
+                }
+            }
+        }
+
     }
 
     @Override
@@ -127,31 +147,10 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
 
     }
 
-    @Override
-    public NonNullList<ItemStack> getInventoryHands() {
-        return inventoryHands;
-    }
-
-    public void read(ListNBT nbtTagListIn) {
-        this.inventory.clear();
-        this.inventoryArmor.clear();
-        this.inventoryHands.clear();
-
-        for (int i = 0; i < nbtTagListIn.size(); ++i) {
-            CompoundNBT compoundnbt = nbtTagListIn.getCompound(i);
-            int j = compoundnbt.getByte("Slot") & 255;
-            ItemStack itemstack = ItemStack.read(compoundnbt);
-            if (!itemstack.isEmpty()) {
-                if (j < this.inventoryHands.size()) {
-                    this.inventoryHands.set(j, itemstack);
-                } else if (j >= 10 && j < this.inventoryArmor.size() + 10) {
-                    this.inventoryArmor.set(j - 10, itemstack);
-                } else if (j >= 20 && j < this.inventory.size() + 20) {
-                    this.inventory.set(j - 20, itemstack);
-                }
-            }
-        }
-
+    public MinionInventory setAvailableSize(int newSize) {
+        assert newSize == 9 || availableSize == 12 || availableSize == 15;
+        this.availableSize = newSize;
+        return this;
     }
 
     @Nonnull

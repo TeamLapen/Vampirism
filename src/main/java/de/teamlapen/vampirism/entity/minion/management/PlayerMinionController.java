@@ -57,6 +57,11 @@ import java.util.stream.Collectors;
 public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     private final static Logger LOGGER = LogManager.getLogger();
+
+    public static List<IMinionTask<?>> getAvailableTasks(ILordPlayer player) {
+        return ModRegistries.MINION_TASKS.getValues().stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
+    }
+
     private final Random rng = new Random();
     @Nonnull
     private final MinecraftServer server;
@@ -65,7 +70,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     private int maxMinions;
     @Nullable
     private IPlayableFaction<?> faction;
-
     @Nonnull
     private MinionInfo[] minions = new MinionInfo[0];
     @SuppressWarnings("unchecked")
@@ -75,10 +79,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     public PlayerMinionController(@Nonnull MinecraftServer server, @Nonnull UUID lordID) {
         this.server = server;
         this.lordID = lordID;
-    }
-
-    public static List<IMinionTask<?>> getAvailableTasks(ILordPlayer player) {
-        return ModRegistries.MINION_TASKS.getValues().stream().filter(t -> t.isAvailable(player.getLordFaction(), player)).collect(Collectors.toList());
     }
 
     public void activateTask(int minionID, IMinionTask<?> task) {
@@ -96,16 +96,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             }
         }
     }
-
-    /**
-     * Contact the minion entity for the given slot if loaded
-     */
-    public void contactMinion(int slot, Consumer<MinionEntity<?>> entityConsumer) {
-        if (slot < minions.length) {
-            getMinionEntity(minions[slot]).ifPresent(entityConsumer);
-        }
-    }
-
 
     /**
      * Mark a minion as inactive
@@ -128,7 +118,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
      * b) Minion dead
      * c) Token invalid
      *
-     * @param id minion slot
+     * @param id     minion slot
      * @param token  Previously received token
      * @param entity wrapper entity
      */
@@ -163,11 +153,11 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     /**
-     * Contact all currently loaded (checked out) minions
+     * Contact the minion entity for the given slot if loaded
      */
-    public void contactMinions(Consumer<MinionEntity<?>> entityConsumer) {
-        for (MinionInfo m : minions) {
-            getMinionEntity(m).ifPresent(entityConsumer);
+    public void contactMinion(int slot, Consumer<MinionEntity<?>> entityConsumer) {
+        if (slot < minions.length) {
+            getMinionEntity(minions[slot]).ifPresent(entityConsumer);
         }
     }
 
@@ -180,6 +170,38 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             return Optional.of(function.apply(minions[id].data));
         }
         return Optional.empty();
+    }
+
+    /**
+     * Contact all currently loaded (checked out) minions
+     */
+    public void contactMinions(Consumer<MinionEntity<?>> entityConsumer) {
+        for (MinionInfo m : minions) {
+            getMinionEntity(m).ifPresent(entityConsumer);
+        }
+    }
+
+    @Nullable
+    public MinionEntity<?> createMinionEntityAtPlayer(int id, PlayerEntity p) {
+        assert id >= 0;
+        EntityType<? extends MinionEntity<?>> type = minions[id].minionType;
+        if (type == null) {
+            LOGGER.warn("Cannot create minion because type does not exist");
+        } else {
+            MinionEntity<?> m = type.create(p.getEntityWorld());
+            if (faction == null || faction.isEntityOfFaction(m)) {
+                LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
+                m.remove();
+            } else {
+                m.claimMinionSlot(id, this);
+                m.copyLocationAndAnglesFrom(p);
+                p.world.addEntity(m);
+                activateTask(id, MinionTasks.stay);
+                return m;
+            }
+
+        }
+        return null;
     }
 
     /**
@@ -244,6 +266,20 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         this.minionTokens = tokens;
     }
 
+    public Collection<Integer> getCallableMinions() {
+        List<Integer> ids = new ArrayList<>();
+        for (int i = 0; i < minions.length; i++) {
+            if (!minions[i].isDead()) {
+                ids.add(i);
+            }
+        }
+        return ids;
+    }
+
+    public UUID getUUID() {
+        return this.lordID;
+    }
+
     /**
      * @return A collection of currently unclaimed and non dead minion slots
      */
@@ -260,43 +296,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     }
 
-    @Nullable
-    public MinionEntity<?> createMinionEntityAtPlayer(int id, PlayerEntity p) {
-        assert id >= 0;
-        EntityType<? extends MinionEntity<?>> type = minions[id].minionType;
-        if (type == null) {
-            LOGGER.warn("Cannot create minion because type does not exist");
-        } else {
-            MinionEntity<?> m = type.create(p.getEntityWorld());
-            if (faction == null || faction.isEntityOfFaction(m)) {
-                LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
-                m.remove();
-            } else {
-                m.claimMinionSlot(id, this);
-                m.copyLocationAndAnglesFrom(p);
-                p.world.addEntity(m);
-                activateTask(id, MinionTasks.stay);
-                return m;
-            }
-
-        }
-        return null;
-    }
-
-    public Collection<Integer> getCallableMinions() {
-        List<Integer> ids = new ArrayList<>();
-        for (int i = 0; i < minions.length; i++) {
-            if (!minions[i].isDead()) {
-                ids.add(i);
-            }
-        }
-        return ids;
-    }
-
-    public UUID getUUID() {
-        return this.lordID;
-    }
-
     /**
      * @return Whether a new minion can be created via {@link PlayerMinionController#createNewMinionSlot(MinionData, EntityType)}
      */
@@ -305,11 +304,20 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
     }
 
     /**
+     * The controller is only saved if it has minions
+     *
+     * @return Whether the minion controller has minions.
+     */
+    public boolean hasMinions() {
+        return this.minions.length > 0;
+    }
+
+    /**
      * Mark a minion as dead and as inactive.
      * The minion slot is released and the token is invalidated
      * Don't use associated MinionData afterwards
      *
-     * @param id Minion slot
+     * @param id    Minion slot
      * @param token Previously received token
      */
     public void markDeadAndReleaseMinionSlot(int id, int token) {
@@ -321,15 +329,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
                 minionTokens[id] = Optional.empty();
             }
         }
-    }
-
-    /**
-     * The controller is only saved if it has minions
-     *
-     * @return Whether the minion controller has minions.
-     */
-    public boolean hasMinions() {
-        return this.minions.length > 0;
     }
 
     /**
@@ -358,33 +357,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
             }
         }
         return ids;
-    }
-
-    /**
-     * Recall the given minion. Corresponding entity is removed if present, token is invalidated and slot is released.
-     *
-     * @return If minion can be reclaimed (isAlive)
-     */
-    private boolean recallMinion(MinionInfo i) {
-        contactMinion(i.minionID, MinionEntity::recallMinion);
-        if (i.isActive()) {
-            LOGGER.warn("Minion still active after recall");//TODO remove
-        }
-        minionTokens[i.minionID] = Optional.empty();
-        return !i.isDead();
-
-    }
-
-    private void activateTask(MinionInfo info, IMinionTask<?> task) {
-        @Nullable
-        IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data.getInventory());
-        if (desc == null) {
-            getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
-        } else {
-            MinionData d = info.data;
-            d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
-            this.contactMinion(info.minionID, MinionEntity::onTaskChanged);
-        }
     }
 
     @Override
@@ -452,6 +424,26 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         }
     }
 
+    private void activateTask(MinionInfo info, IMinionTask<?> task) {
+        @Nullable
+        IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data.getInventory());
+        if (desc == null) {
+            getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
+        } else {
+            MinionData d = info.data;
+            d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
+            this.contactMinion(info.minionID, MinionEntity::onTaskChanged);
+        }
+    }
+
+    private Optional<ILordPlayer> getLord() {
+        return getLordPlayer().map(FactionPlayerHandler::get);
+    }
+
+    private Optional<PlayerEntity> getLordPlayer() {
+        return Optional.ofNullable(server.getPlayerList().getPlayerByUUID(lordID));
+    }
+
     private Optional<MinionEntity<?>> getMinionEntity(MinionInfo info) {
         if (info.isActive()) {
             assert info.dimension != null;
@@ -468,15 +460,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         return Optional.empty();
     }
 
-    private <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void tickTask(T task, IMinionTask.IMinionTaskDesc desc, MinionInfo info) {
-        if (info.isActive()) {
-            task.tickActive((Q) desc, () -> getMinionEntity(info).map(m -> m), info.data.getInventory());
-        } else {
-            task.tickBackground((Q) desc, info.data.getInventory());
-
-        }
-    }
-
     @Nullable
     private MinionInfo getMinionInfo(int id, int token) {
         assert minions.length == minionTokens.length;
@@ -487,14 +470,29 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         return null;
     }
 
-    private Optional<ILordPlayer> getLord() {
-        return getLordPlayer().map(FactionPlayerHandler::get);
+    /**
+     * Recall the given minion. Corresponding entity is removed if present, token is invalidated and slot is released.
+     *
+     * @return If minion can be reclaimed (isAlive)
+     */
+    private boolean recallMinion(MinionInfo i) {
+        contactMinion(i.minionID, MinionEntity::recallMinion);
+        if (i.isActive()) {
+            LOGGER.warn("Minion still active after recall");//TODO remove
+        }
+        minionTokens[i.minionID] = Optional.empty();
+        return !i.isDead();
+
     }
 
-    private Optional<PlayerEntity> getLordPlayer() {
-        return Optional.ofNullable(server.getPlayerList().getPlayerByUUID(lordID));
-    }
+    private <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void tickTask(T task, IMinionTask.IMinionTaskDesc desc, MinionInfo info) {
+        if (info.isActive()) {
+            task.tickActive((Q) desc, () -> getMinionEntity(info).map(m -> m), info.data.getInventory());
+        } else {
+            task.tickBackground((Q) desc, info.data.getInventory());
 
+        }
+    }
 
     private class MinionInfo {
         final int minionID;

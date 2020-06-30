@@ -40,10 +40,14 @@ import java.util.List;
 
 public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMinionData> implements IHunter, AttackRangedCrossbowGoal.IAttackWithCrossbow {
 
+    /**
+     * Used for holding a crossbow
+     */
+    private static final DataParameter<Boolean> RAISED_ARM = EntityDataManager.createKey(MinionEntity.class, DataSerializers.BOOLEAN);
+
     static {
         MinionData.registerDataType(HunterMinionData.ID, HunterMinionData::new);
     }
-
 
     /**
      * Just required to execute static init
@@ -55,11 +59,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return BasicHunterEntity.getAttributeBuilder();
     }
-
-    /**
-     * Used for holding a crossbow
-     */
-    private static final DataParameter<Boolean> RAISED_ARM = EntityDataManager.createKey(MinionEntity.class, DataSerializers.BOOLEAN);
 
     private boolean crossbowTask = false;
     private AttackRangedCrossbowGoal<HunterMinionEntity> crossbowGoal;
@@ -73,6 +72,34 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     @Override
     public ItemStack getArrowStackForAttack(LivingEntity target) {
         return new ItemStack(ModItems.crossbow_arrow_normal);
+    }
+
+    @Override
+    public List<IMinionTask<?>> getAvailableTasks() {
+        return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.defend_area, MinionTasks.stay, MinionTasks.collect_hunter_items);
+    }
+
+    public int getHatType() {
+        return this.getItemStackFromSlot(EquipmentSlotType.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -2;
+    }
+
+    public void setHatType(int type) {
+        assert type >= -2;
+        this.getMinionData().ifPresent(d -> d.hat = type);
+    }
+
+    public int getHunterType() {
+        return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
+    }
+
+    public void setHunterType(int type) {
+        assert type >= 0;
+        this.getMinionData().ifPresent(d -> d.type = type);
+    }
+
+    @Override
+    public LivingEntity getRepresentingEntity() {
+        return this;
     }
 
     @Override
@@ -96,6 +123,20 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void openAppearanceScreen() {
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new HunterMinionAppearanceScreen(this)));
+    }
+
+    public void setUseLordSkin(boolean useLordSkin) {
+        this.getMinionData().ifPresent(d -> d.useLordSkin = useLordSkin);
+    }
+
+    public boolean shouldRenderLordSkin() {
+        return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
+    }
+
     @Override
     public void startTargeting() {
         this.setSwingingArms(true);
@@ -106,47 +147,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         this.setSwingingArms(false);
     }
 
-    public int getHunterType() {
-        return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
-    }
-
     @Override
-    public LivingEntity getRepresentingEntity() {
-        return this;
-    }
-
-    public int getHatType() {
-        return this.getItemStackFromSlot(EquipmentSlotType.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -2;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void openAppearanceScreen() {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().displayGuiScreen(new HunterMinionAppearanceScreen(this)));
-    }
-
-    public void setHatType(int type) {
-        assert type >= -2;
-        this.getMinionData().ifPresent(d -> d.hat = type);
-    }
-
-    public void setHunterType(int type) {
-        assert type >= 0;
-        this.getMinionData().ifPresent(d -> d.type = type);
-    }
-
-
-    public void setUseLordSkin(boolean useLordSkin) {
-        this.getMinionData().ifPresent(d -> d.useLordSkin = useLordSkin);
-    }
-
-    @Override
-    public List<IMinionTask<?>> getAvailableTasks() {
-        return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.defend_area, MinionTasks.stay, MinionTasks.collect_hunter_items);
-    }
-
-    public boolean shouldRenderLordSkin() {
-        return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
+    protected void onMinionDataReceived(@Nonnull HunterMinionData data) {
+        super.onMinionDataReceived(data);
+        this.updateAttackGoal();
     }
 
     @Override
@@ -180,12 +184,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
     }
 
-    @Override
-    protected void onMinionDataReceived(@Nonnull HunterMinionData data) {
-        super.onMinionDataReceived(data);
-        this.updateAttackGoal();
-    }
-
     public static class HunterMinionData extends MinionData {
         public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter");
 
@@ -213,19 +211,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public void serializeNBT(CompoundNBT tag) {
-            super.serializeNBT(tag);
-            tag.putInt("hunter_type", type);
-            tag.putInt("hunter_hat", hat);
-            tag.putBoolean("use_lord_skin", useLordSkin);
-        }
-
-        @Override
-        protected ResourceLocation getDataType() {
-            return ID;
-        }
-
-        @Override
         public IFormattableTextComponent getFormattedName() {
             return super.getFormattedName().mergeStyle(VReference.HUNTER_FACTION.getChatColor());
         }
@@ -238,6 +223,19 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
                 hat = data[1];
                 useLordSkin = data[2] == 1;
             }
+        }
+
+        @Override
+        public void serializeNBT(CompoundNBT tag) {
+            super.serializeNBT(tag);
+            tag.putInt("hunter_type", type);
+            tag.putInt("hunter_hat", hat);
+            tag.putBoolean("use_lord_skin", useLordSkin);
+        }
+
+        @Override
+        protected ResourceLocation getDataType() {
+            return ID;
         }
     }
 }
