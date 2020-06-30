@@ -148,7 +148,7 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
     }
 
     public MinionInventory setAvailableSize(int newSize) {
-        assert newSize == 9 || availableSize == 12 || availableSize == 15;
+        assert newSize == 9 || newSize == 12 || newSize == 15;
         this.availableSize = newSize;
         return this;
     }
