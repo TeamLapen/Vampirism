@@ -39,6 +39,15 @@ public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, Mini
         this.addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5f), new BipedModel<>(1f)));
     }
 
+    @Override
+    public void doRender(HunterMinionEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        if (entity.isSwingingArms()) {
+            this.entityModel.rightArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
+        } else {
+            this.entityModel.rightArmPose = BipedModel.ArmPose.ITEM;
+        }
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+    }
 
     @Override
     protected ResourceLocation getEntityTexture(HunterMinionEntity entity) {
@@ -55,15 +64,5 @@ public class HunterMinionRenderer extends BipedRenderer<HunterMinionEntity, Mini
         GlStateManager.translatef(0.0F, off, 0.0F);
         super.renderLayers(entity, p_177093_2_, p_177093_3_, p_177093_4_, p_177093_5_, p_177093_6_, p_177093_7_, p_177093_8_);
         GlStateManager.popMatrix();
-    }
-
-    @Override
-    public void doRender(HunterMinionEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        if (entity.isSwingingArms()) {
-            this.entityModel.rightArmPose = BipedModel.ArmPose.CROSSBOW_HOLD;
-        } else {
-            this.entityModel.rightArmPose = BipedModel.ArmPose.ITEM;
-        }
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 }

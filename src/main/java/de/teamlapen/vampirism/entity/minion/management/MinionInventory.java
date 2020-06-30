@@ -29,14 +29,6 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         this(9);
     }
 
-    public void clear() {
-        for (List<ItemStack> list : this.allInventories) {
-            list.clear();
-        }
-
-    }
-
-
     @Override
     public void addItemStack(@Nonnull ItemStack stack) {
 
@@ -53,11 +45,33 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         }
     }
 
+    public void clear() {
+        for (List<ItemStack> list : this.allInventories) {
+            list.clear();
+        }
+
+    }
+
     @Nonnull
     @Override
     public ItemStack decrStackSize(int index, int count) {
         ItemStack s = getStackInSlot(index);
         return !s.isEmpty() && count > 0 ? s.split(count) : ItemStack.EMPTY;
+    }
+
+    @Override
+    public int getAvailableSize() {
+        return availableSize;
+    }
+
+    @Override
+    public NonNullList<ItemStack> getInventoryHands() {
+        return inventoryHands;
+    }
+
+    @Override
+    public NonNullList<ItemStack> getInventoryArmor() {
+        return inventoryArmor;
     }
 
     public void read(ListNBT nbtTagListIn) {
@@ -80,16 +94,6 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
             }
         }
 
-    }
-
-    @Override
-    public int getAvailableSize() {
-        return availableSize;
-    }
-
-    @Override
-    public NonNullList<ItemStack> getInventoryArmor() {
-        return inventoryArmor;
     }
 
     @Override
@@ -141,11 +145,6 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
     @Override
     public void markDirty() {
 
-    }
-
-    @Override
-    public NonNullList<ItemStack> getInventoryHands() {
-        return inventoryHands;
     }
 
     public MinionInventory setAvailableSize(int newSize) {

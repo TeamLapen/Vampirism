@@ -41,6 +41,12 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     @Override
+    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+        this.taskList.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+        return super.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+    }
+
+    @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
@@ -70,9 +76,18 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     }
 
     @Override
-    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-        this.taskList.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
-        return super.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+    protected void init() {
+        super.init();
+        this.appearanceButton = this.addButton(new ImageButton(this.guiLeft + 4, this.guiTop + 19, 20, 20, 236, 0, 20, GUI_TEXTURE, this::onConfigurePressed));
+        this.lockActionButton = this.addButton(new LockIconButton(this.guiLeft + 99, this.guiTop + 19, this::toggleActionLock));
+        this.lockActionButton.setLocked(this.container.isTaskLocked());
+        String[] taskNames = Arrays.stream(container.getAvailableTasks()).map(IMinionTask::getName).map(ITextComponent::getFormattedText).toArray(String[]::new);
+
+        this.taskList = this.addButton(new ScrollableListButton(this.guiLeft + 119, this.guiTop + 19 + 19, 87, Math.min(3, taskNames.length), taskNames.length, taskNames, "", this::selectTask, false));
+        this.taskList.visible = false;
+        this.taskButton = this.addButton(new GuiButtonExt(this.guiLeft + 119, this.guiTop + 19, 88, 20, getActiveTaskName(), (button -> {
+            this.taskList.visible = !this.taskList.visible;
+        })));
     }
 
     @Override
@@ -95,19 +110,8 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
 
     }
 
-    @Override
-    protected void init() {
-        super.init();
-        this.appearanceButton = this.addButton(new ImageButton(this.guiLeft + 4, this.guiTop + 19, 20, 20, 236, 0, 20, GUI_TEXTURE, this::onConfigurePressed));
-        this.lockActionButton = this.addButton(new LockIconButton(this.guiLeft + 99, this.guiTop + 19, this::toggleActionLock));
-        this.lockActionButton.setLocked(this.container.isTaskLocked());
-        String[] taskNames = Arrays.stream(container.getAvailableTasks()).map(IMinionTask::getName).map(ITextComponent::getFormattedText).toArray(String[]::new);
-
-        this.taskList = this.addButton(new ScrollableListButton(this.guiLeft + 119, this.guiTop + 19 + 19, 87, Math.min(3, taskNames.length), taskNames.length, taskNames, "", this::selectTask, false));
-        this.taskList.visible = false;
-        this.taskButton = this.addButton(new GuiButtonExt(this.guiLeft + 119, this.guiTop + 19, 88, 20, getActiveTaskName(), (button -> {
-            this.taskList.visible = !this.taskList.visible;
-        })));
+    private void onConfigurePressed(Button b) {
+        container.openConfigurationScreen();
     }
 
     private void selectTask(int id) {
@@ -119,9 +123,5 @@ public class MinionScreen extends ContainerScreen<MinionContainer> {
     private void toggleActionLock(Button b) {
         lockActionButton.setLocked(!lockActionButton.isLocked());
         container.setTaskLocked(lockActionButton.isLocked());
-    }
-
-    private void onConfigurePressed(Button b) {
-        container.openConfigurationScreen();
     }
 }

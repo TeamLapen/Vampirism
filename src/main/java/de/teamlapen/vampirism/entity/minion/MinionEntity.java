@@ -63,25 +63,33 @@ import java.util.function.Predicate;
 
 
 public abstract class MinionEntity<T extends MinionData> extends VampirismEntity implements IPlayerOverlay, ISyncable, ForceLookEntityGoal.TaskOwner, de.teamlapen.vampirism.api.entity.minion.IMinionEntity, IEntityAdditionalSpawnData {
-    private final static Logger LOGGER = LogManager.getLogger();
-    private final static NonNullList<ItemStack> EMPTY_LIST = NonNullList.create();
-
     /**
      * Store the uuid of the lord. Should not be null when joining the world
      */
     protected static final DataParameter<Optional<UUID>> LORD_ID = EntityDataManager.createKey(MinionEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-
-
+    private final static Logger LOGGER = LogManager.getLogger();
+    private final static NonNullList<ItemStack> EMPTY_LIST = NonNullList.create();
+    private final static int CONVERT_DURATION = 20;
+    /**
+     * Predicate that checks that target is not affiliated with the lord
+     */
+    private final Predicate<LivingEntity> hardAttackPredicate;
+    /**
+     * Predicate that checks if the target should be attacked based on its faction
+     */
+    private final Predicate<LivingEntity> softAttackPredicate;
     /**
      * Only available server side.
      * Should be available on world join
      */
     @Nullable
     protected PlayerMinionController playerMinionController;
-
+    /**
+     * Only valid and nonnull if playerMinionController !=null
+     */
+    protected T minionData;
     @Nullable
     private GameProfile skinProfile;
-
     /**
      * Only valid if playerMinionController !=null
      */
@@ -91,30 +99,14 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      */
     private int token;
     /**
-     * Only valid and nonnull if playerMinionController !=null
-     */
-    protected T minionData;
-
-    private final static int CONVERT_DURATION = 20;
-    /**
      * If >0 the conversion animation is running. Set on server side and synced with the spawn packet, afterwards its decreased on both server and client side. Not stored to NBT
      */
     private int convertCounter;
-
     /**
      * Holds the interacting player while the MinionContainer is open
      */
     @Nullable
     private PlayerEntity interactingPlayer;
-
-    /**
-     * Predicate that checks that target is not affiliated with the lord
-     */
-    private final Predicate<LivingEntity> hardAttackPredicate;
-    /**
-     * Predicate that checks if the target should be attacked based on its faction
-     */
-    private final Predicate<LivingEntity> softAttackPredicate;
 
     protected MinionEntity(EntityType<? extends VampirismEntity> type, World world, @Nonnull Predicate<LivingEntity> attackPredicate) {
         super(type, world);
@@ -176,28 +168,37 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return flag;
     }
 
+    public void changeMinionName(String name) {
+        if (minionData != null) {
+            this.minionData.setName(name);
+            super.setCustomName(this.minionData.getFormattedName());
+        }
+    }
+
+    public void claimMinionSlot(int id, @Nonnull PlayerMinionController controller) {
+        assert minionId == 0;
+        controller.claimMinionSlot(id).ifPresent(token -> {
+            playerMinionController = controller;
+            minionId = id;
+            this.token = token;
+            getDataManager().set(LORD_ID, Optional.of(playerMinionController.getUUID()));
+        });
+    }
+
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public boolean getAlwaysRenderNameTagForRender() {
+        return true;
+    }
+
     @Nonnull
     @Override
     public Iterable<ItemStack> getArmorInventoryList() {
         return getInventory().map(IMinionInventory::getInventoryArmor).orElse(EMPTY_LIST);
-    }
-
-    @Nullable
-    @Override
-    public GameProfile getOverlayPlayerProfile() {
-        if (skinProfile == null) {
-            this.getLordID().ifPresent(id -> {
-                skinProfile = new GameProfile(id, "Dummy");
-                PlayerSkinHelper.updateGameProfileAsync(skinProfile, (profile) -> this.skinProfile = profile);
-            });
-        }
-        return skinProfile;
-    }
-
-    public abstract List<IMinionTask<?>> getAvailableTasks();
-
-    public int getAvailableInvSize() {
-        return 9; //TODO integrate with minion data maybe via data parameter as required client side
     }
 
     /**
@@ -210,9 +211,23 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return onlyShould ? this.hardAttackPredicate.and(this.softAttackPredicate) : this.hardAttackPredicate;
     }
 
+    public int getAvailableInvSize() {
+        return 9; //TODO integrate with minion data maybe via data parameter as required client side
+    }
+
+    public abstract List<IMinionTask<?>> getAvailableTasks();
+
     @Override
     public Optional<IMinionTask.IMinionTaskDesc> getCurrentTask() {
         return minionData != null ? Optional.of(minionData.getCurrentTaskDesc()) : Optional.empty();
+    }
+
+    /**
+     * @return Return player (lord) if they are currently interacting with this minion
+     */
+    @Nonnull
+    public Optional<PlayerEntity> getForceLookTarget() {
+        return Optional.ofNullable(interactingPlayer);
     }
 
     @Nonnull
@@ -229,33 +244,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return Optional.empty();
     }
 
-
-    @Override
-    public LivingEntity getRepresentingEntity() {
-        return this;
-    }
-
-    public boolean isTaskLocked() {
-        return minionData != null && minionData.isTaskLocked();
-    }
-
-    public void claimMinionSlot(int id, @Nonnull PlayerMinionController controller) {
-        assert minionId == 0;
-        controller.claimMinionSlot(id).ifPresent(token -> {
-            playerMinionController = controller;
-            minionId = id;
-            this.token = token;
-            getDataManager().set(LORD_ID, Optional.of(playerMinionController.getUUID()));
-        });
-    }
-
-    public abstract boolean shouldRenderLordSkin();
-
-    @Override
-    public boolean getAlwaysRenderNameTagForRender() {
-        return true;
-    }
-
     @Nonnull
     @Override
     public ItemStack getItemStackFromSlot(@Nonnull EquipmentSlotType slotIn) {
@@ -270,14 +258,39 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    @Override
     @Nonnull
     public Optional<ILordPlayer> getLordOpt() {
         return Optional.ofNullable(getLord());
+    }
+
+    public Optional<T> getMinionData() {
+        return Optional.ofNullable(minionData);
+    }
+
+    @Override
+    public Optional<Integer> getMinionId() {
+        return this.minionData == null ? Optional.empty() : Optional.of(minionId);
+    }
+
+    @Nullable
+    @Override
+    public GameProfile getOverlayPlayerProfile() {
+        if (skinProfile == null) {
+            this.getLordID().ifPresent(id -> {
+                skinProfile = new GameProfile(id, "Dummy");
+                PlayerSkinHelper.updateGameProfileAsync(skinProfile, (profile) -> this.skinProfile = profile);
+            });
+        }
+        return skinProfile;
+    }
+
+    @Override
+    public LivingEntity getRepresentingEntity() {
+        return this;
+    }
+
+    public float getScale() {
+        return 0.8f + convertCounter / (float) CONVERT_DURATION * 0.2f;
     }
 
     @Nonnull
@@ -286,28 +299,20 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return super.getSize(p_213305_1_).scale(getScale());
     }
 
-    public float getScale() {
-        return 0.8f + convertCounter / (float) CONVERT_DURATION * 0.2f;
+    public boolean isTaskLocked() {
+        return minionData != null && minionData.isTaskLocked();
     }
 
     @Override
-    public Optional<Integer> getMinionId() {
-        return this.minionData == null ? Optional.empty() : Optional.of(minionId);
-    }
-
-    /**
-     * @return Return player (lord) if they are currently interacting with this minion
-     */
-    @Nonnull
-    public Optional<PlayerEntity> getForceLookTarget() {
-        return Optional.ofNullable(interactingPlayer);
-    }
-
-    /**
-     * Set/Reset currently interacting player
-     */
-    public void setInteractingPlayer(@Nullable PlayerEntity player) {
-        this.interactingPlayer = player;
+    public void livingTick() {
+        super.livingTick();
+        if (convertCounter > 0) {
+            convertCounter--;
+        }
+        if (!this.world.isRemote && !this.isValid() && this.isAlive()) {
+            LOGGER.warn("Minion without lord.");
+            this.remove();
+        }
     }
 
     @Override
@@ -326,41 +331,18 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    public void onTaskChanged() {
-        HelperLib.sync(this);
-    }
-
-    public void changeMinionName(String name) {
-        if (minionData != null) {
-            this.minionData.setName(name);
-            super.setCustomName(this.minionData.getFormattedName());
-        }
-    }
-
-    @Override
-    public void setAttackTarget(@Nullable LivingEntity entitylivingbaseIn) {
-        if (entitylivingbaseIn == null || hardAttackPredicate.test(entitylivingbaseIn))
-            super.setAttackTarget(entitylivingbaseIn);
-    }
-
-    @Override
-    public void setHealth(float health) {
-        super.setHealth(health);
-        if (minionData != null) {
-            minionData.setHealth(health);
-        }
+    /**
+     * Call server side before adding entity to the world.
+     * Once spawned the entity will perform the conversion animation on client side.
+     */
+    public void markAsConverted() {
+        convertCounter = CONVERT_DURATION;
     }
 
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
         checkoutMinionData();
-    }
-
-    @Override
-    @Deprecated
-    public void recallMinion() {
-        this.remove();
     }
 
     @Override
@@ -373,9 +355,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    @Override
-    public void setCustomName(@Nullable ITextComponent name) {
-        //NOP
+    public void onTaskChanged() {
+        HelperLib.sync(this);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void openAppearanceScreen() {
     }
 
     @Override
@@ -395,15 +380,14 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    public void setItemStackToSlot(@Nonnull EquipmentSlotType slotIn, @Nonnull ItemStack stack) {
-        if (minionData == null) return;
-        switch (slotIn.getSlotType()) {
-            case HAND:
-                getInventory().map(IMinionInventory::getInventoryHands).ifPresent(i -> i.set(slotIn.getIndex(), stack));
-                break;
-            case ARMOR:
-                getInventory().map(IMinionInventory::getInventoryArmor).ifPresent(i -> i.set(slotIn.getIndex(), stack));
-        }
+    public void readSpawnData(PacketBuffer additionalData) {
+        convertCounter = additionalData.readVarInt();
+    }
+
+    @Override
+    @Deprecated
+    public void recallMinion() {
+        this.remove();
     }
 
     @Override
@@ -416,23 +400,45 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    @Nullable
-    protected ILordPlayer getLord() {
-        return this.getLordID().map(this.world::getPlayerByUuid).filter(PlayerEntity::isAlive).map(FactionPlayerHandler::get).orElse(null);
+    @Override
+    public void setAttackTarget(@Nullable LivingEntity entitylivingbaseIn) {
+        if (entitylivingbaseIn == null || hardAttackPredicate.test(entitylivingbaseIn))
+            super.setAttackTarget(entitylivingbaseIn);
     }
-
-    protected Optional<UUID> getLordID() {
-        return this.getDataManager().get(LORD_ID);
-    }
-
-
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.getDataManager().register(LORD_ID, Optional.empty());
-
+    public void setCustomName(@Nullable ITextComponent name) {
+        //NOP
     }
+
+    @Override
+    public void setHealth(float health) {
+        super.setHealth(health);
+        if (minionData != null) {
+            minionData.setHealth(health);
+        }
+    }
+
+    /**
+     * Set/Reset currently interacting player
+     */
+    public void setInteractingPlayer(@Nullable PlayerEntity player) {
+        this.interactingPlayer = player;
+    }
+
+    @Override
+    public void setItemStackToSlot(@Nonnull EquipmentSlotType slotIn, @Nonnull ItemStack stack) {
+        if (minionData == null) return;
+        switch (slotIn.getSlotType()) {
+            case HAND:
+                getInventory().map(IMinionInventory::getInventoryHands).ifPresent(i -> i.set(slotIn.getIndex(), stack));
+                break;
+            case ARMOR:
+                getInventory().map(IMinionInventory::getInventoryArmor).ifPresent(i -> i.set(slotIn.getIndex(), stack));
+        }
+    }
+
+    public abstract boolean shouldRenderLordSkin();
 
     @Override
     public void writeAdditional(CompoundNBT nbt) {
@@ -442,10 +448,6 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             nbt.putInt("minion_id", minionId);
             nbt.putInt("minion_token", token);
         }
-    }
-
-    protected boolean isValid() {
-        return this.playerMinionController != null;
     }
 
     @Override
@@ -459,8 +461,22 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    public Optional<T> getMinionData() {
-        return Optional.ofNullable(minionData);
+    @Override
+    public void writeSpawnData(PacketBuffer buffer) {
+        buffer.writeVarInt(convertCounter);
+    }
+
+    @Nullable
+    protected ILordPlayer getLord() {
+        return this.getLordID().map(this.world::getPlayerByUuid).filter(PlayerEntity::isAlive).map(FactionPlayerHandler::get).orElse(null);
+    }
+
+    protected Optional<UUID> getLordID() {
+        return this.getDataManager().get(LORD_ID);
+    }
+
+    protected boolean isValid() {
+        return this.playerMinionController != null;
     }
 
     /**
@@ -482,25 +498,11 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return false;
     }
 
-    /**
-     * Checkout the minion data from the playerMinionController (if available).
-     * Call as early as possible but only if being added to world
-     * Can be called from different locations. Only executes if not checkout already.
-     * Happens either in {@link Entity#onAddedToWorld()} or if tracking starts before during {@link MinionEntity#writeFullUpdateToNBT(CompoundNBT)}
-     */
-    private void checkoutMinionData() {
-        if (playerMinionController != null && minionData == null) {
-            this.minionData = playerMinionController.checkoutMinion(this.minionId, this.token, this);
-            if (minionData == null) {
-                this.playerMinionController = null;
-            } else {
-                this.handleLoadedMinionData(minionData);
-            }
-        }
-    }
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.getDataManager().register(LORD_ID, Optional.empty());
 
-    @OnlyIn(Dist.CLIENT)
-    public void openAppearanceScreen() {
     }
 
     @Override
@@ -522,6 +524,23 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
 
     }
 
+    /**
+     * Checkout the minion data from the playerMinionController (if available).
+     * Call as early as possible but only if being added to world
+     * Can be called from different locations. Only executes if not checkout already.
+     * Happens either in {@link Entity#onAddedToWorld()} or if tracking starts before during {@link MinionEntity#writeFullUpdateToNBT(CompoundNBT)}
+     */
+    private void checkoutMinionData() {
+        if (playerMinionController != null && minionData == null) {
+            this.minionData = playerMinionController.checkoutMinion(this.minionId, this.token, this);
+            if (minionData == null) {
+                this.playerMinionController = null;
+            } else {
+                this.handleLoadedMinionData(minionData);
+            }
+        }
+    }
+
     private void handleLoadedMinionData(@Nonnull T data) {
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(data.getMaxHealth());
         this.setHealth(data.getHealth());
@@ -532,35 +551,5 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             LOGGER.error("Failed to cast minion data. Maybe the correct data was not registered", e);
             this.remove();
         }
-    }
-
-    @Override
-    public void livingTick() {
-        super.livingTick();
-        if (convertCounter > 0) {
-            convertCounter--;
-        }
-        if (!this.world.isRemote && !this.isValid() && this.isAlive()) {
-            LOGGER.warn("Minion without lord.");
-            this.remove();
-        }
-    }
-
-    /**
-     * Call server side before adding entity to the world.
-     * Once spawned the entity will perform the conversion animation on client side.
-     */
-    public void markAsConverted() {
-        convertCounter = CONVERT_DURATION;
-    }
-
-    @Override
-    public void readSpawnData(PacketBuffer additionalData) {
-        convertCounter = additionalData.readVarInt();
-    }
-
-    @Override
-    public void writeSpawnData(PacketBuffer buffer) {
-        buffer.writeVarInt(convertCounter);
     }
 }
