@@ -53,11 +53,6 @@ public class BloodPotionTableContainer extends InventoryContainer {
     }
 
 
-    @Deprecated
-    public BloodPotionTableContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, IWorldPosCallable.DUMMY);
-    }
-
     /**
      * @return If requirements met and not currently crafting
      */

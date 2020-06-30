@@ -37,6 +37,7 @@ public class ModCommands {
                             .then(FangCommand.register())
                             .then(GlowingEyeCommand.register())
                             .then(LevelCommand.register())
+                            .then(LordCommand.register())
                             .then(LevelUpCommand.register())
             );
         }
@@ -65,7 +66,9 @@ public class ModCommands {
                             .then(SetSwordTrainedCommand.register())
                             .then(SpawnTestAnimalCommand.register())
                             .then(HealCommand.register())
-                            .then(CaptureVillageCommand.register()));
+                            .then(CaptureVillageCommand.register())
+                            .then(MinionCommand.register())
+            );
         }
     }
 

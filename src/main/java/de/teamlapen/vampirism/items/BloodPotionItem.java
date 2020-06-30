@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import de.teamlapen.vampirism.util.Helper;
@@ -18,13 +21,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * Item blood potion
  */
-public class BloodPotionItem extends VampirismItem {
+public class BloodPotionItem extends VampirismItem implements IFactionExclusiveItem {
     private final static String regName = "blood_potion";
 
     public BloodPotionItem() {
@@ -38,6 +42,12 @@ public class BloodPotionItem extends VampirismItem {
         if (VampirismMod.proxy.getClientPlayer() != null && VampirismMod.proxy.getClientPlayer().isAlive()) {
             BloodPotions.addTooltip(stack, tooltip, HunterPlayer.get(VampirismMod.proxy.getClientPlayer()));
         }
+    }
+
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.HUNTER_FACTION;
     }
 
     @Override

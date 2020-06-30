@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.entity.converted.ConvertedCreatureEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedHorseEntity;
 import de.teamlapen.vampirism.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.entity.hunter.*;
+import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.entity.special.DraculaHalloweenEntity;
 import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
@@ -43,5 +45,7 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(DarkBloodProjectileEntity.class, DarkBloodProjectileRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SoulOrbEntity.class, manager -> new SoulOrbRenderer(manager, Minecraft.getInstance().getItemRenderer()));
         RenderingRegistry.registerEntityRenderingHandler(DummyHunterTrainerEntity.class, DummyHunterTrainerRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(VampireMinionEntity.class, VampireMinionRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(HunterMinionEntity.class, HunterMinionRenderer::new);
     }
 }

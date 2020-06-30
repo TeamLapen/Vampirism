@@ -154,10 +154,7 @@ public class UpdateEntityPacket implements IMessage {
      * @param data   Should be loadable by the entity
      * @return
      */
-    public static UpdateEntityPacket create(Entity entity, CompoundNBT data) {
-        if (!(entity instanceof ISyncable)) {
-            throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
-        }
+    public static <T extends Entity & ISyncable> UpdateEntityPacket create(T entity, CompoundNBT data) {
         UpdateEntityPacket packet = new UpdateEntityPacket();
         packet.id = entity.getEntityId();
         packet.data = data;

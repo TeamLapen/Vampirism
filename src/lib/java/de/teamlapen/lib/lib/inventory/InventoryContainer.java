@@ -12,7 +12,8 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IWorldPosCallable;
 
 import javax.annotation.Nonnull;
-import java.util.function.Function;
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 
 public abstract class InventoryContainer extends Container {
@@ -90,16 +91,20 @@ public abstract class InventoryContainer extends Container {
         return result;
     }
 
-    protected void addPlayerSlots(PlayerInventory playerInventory) {
+    protected void addPlayerSlots(PlayerInventory playerInventory, int baseX, int baseY) {
         int i;
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, baseX + j * 18, baseY + i * 18));
             }
         }
         for (i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
+            this.addSlot(new Slot(playerInventory, i, baseX + i * 18, baseY + 58));
         }
+    }
+
+    protected void addPlayerSlots(PlayerInventory playerInventory) {
+        this.addPlayerSlots(playerInventory, 8, 84);
     }
 
     public static class SelectorSlot extends Slot {
@@ -120,22 +125,31 @@ public abstract class InventoryContainer extends Container {
         public boolean isItemValid(ItemStack stack) {
             return info.validate(stack);
         }
+
+        @Nullable
+        @Override
+        public String getSlotTexture() {
+            return info.background;
+        }
     }
 
 
     public static class SelectorInfo {
-        public final Either<Ingredient, Function<ItemStack, Boolean>> ingredient;
+        public final Either<Ingredient, Predicate<ItemStack>> ingredient;
         public final int xDisplay;
         public final int yDisplay;
         public final int stackLimit;
         public final boolean inverted;
+        @Nullable
+        public final String background;
 
-        public SelectorInfo(Either<Ingredient, Function<ItemStack, Boolean>> ingredient, int x, int y, boolean inverted, int limit) {
+        public SelectorInfo(Either<Ingredient, Predicate<ItemStack>> ingredient, int x, int y, boolean inverted, int limit, @Nullable String background) {
             this.ingredient = ingredient;
             this.xDisplay = x;
             this.yDisplay = y;
             this.stackLimit = limit;
             this.inverted = inverted;
+            this.background = background;
         }
 
         public SelectorInfo(Ingredient ingredient, int x, int y) {
@@ -147,31 +161,35 @@ public abstract class InventoryContainer extends Container {
         }
 
         public SelectorInfo(Ingredient ingredient, int x, int y, boolean inverted, int stackLimit) {
-            this(Either.left(ingredient), x, y, inverted, stackLimit);
+            this(Either.left(ingredient), x, y, inverted, stackLimit, null);
         }
 
         public SelectorInfo(Ingredient ingredient, int x, int y, int stackLimit) {
-            this(Either.left(ingredient), x, y, false, stackLimit);
+            this(Either.left(ingredient), x, y, false, stackLimit, null);
         }
 
-        public SelectorInfo(Function<ItemStack, Boolean> ingredient, int x, int y) {
+        public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y) {
             this(ingredient, x, y, false);
         }
 
-        public SelectorInfo(Function<ItemStack, Boolean> ingredient, int x, int y, boolean inverted) {
+        public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y, boolean inverted) {
             this(ingredient, x, y, inverted, 64);
         }
 
-        public SelectorInfo(Function<ItemStack, Boolean> ingredient, int x, int y, boolean inverted, int stackLimit) {
-            this(Either.right(ingredient), x, y, inverted, stackLimit);
+        public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y, boolean inverted, int stackLimit) {
+            this(Either.right(ingredient), x, y, inverted, stackLimit, null);
         }
 
-        public SelectorInfo(Function<ItemStack, Boolean> ingredient, int x, int y, int stackLimit) {
-            this(Either.right(ingredient), x, y, false, stackLimit);
+        public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y, boolean inverted, int stackLimit, @Nullable String background) {
+            this(Either.right(ingredient), x, y, inverted, stackLimit, background);
+        }
+
+        public SelectorInfo(Predicate<ItemStack> ingredient, int x, int y, int stackLimit) {
+            this(Either.right(ingredient), x, y, false, stackLimit, null);
         }
 
         public boolean validate(ItemStack s) {
-            boolean result = ingredient.map(ingredient -> ingredient.test(s) || ingredient.hasNoMatchingItems(), function -> function.apply(s));
+            boolean result = ingredient.map(ingredient -> ingredient.test(s) || ingredient.hasNoMatchingItems(), function -> function.test(s));
             return result != inverted;
         }
     }

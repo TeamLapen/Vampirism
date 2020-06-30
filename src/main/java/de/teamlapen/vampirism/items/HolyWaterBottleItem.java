@@ -2,12 +2,16 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -15,7 +19,7 @@ import java.util.List;
  * HolyWaterBottle
  * Exists in different tiers and as splash versions.
  */
-public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier {
+public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier, IFactionExclusiveItem {
 
     public static final String regName = "holy_water_bottle";
     private final TIER tier;
@@ -39,6 +43,12 @@ public class HolyWaterBottleItem extends VampirismItem implements IItemWithTier 
     @Override
     public String getBaseRegName() {
         return regName;
+    }
+
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.HUNTER_FACTION;
     }
 
     /**

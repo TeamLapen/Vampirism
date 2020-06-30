@@ -14,28 +14,16 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
-import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
-import de.teamlapen.vampirism.entity.goals.BiteNearbyEntityVampireGoal;
-import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
-import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
-import de.teamlapen.vampirism.entity.goals.FollowAdvancedVampireGoal;
-import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
-import de.teamlapen.vampirism.entity.goals.MoveToBiteableVampireGoal;
-import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
+import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
+import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.BreakDoorGoal;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -48,6 +36,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -65,6 +54,7 @@ import javax.annotation.Nullable;
 public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampire, IEntityActionUser {
 
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 2;
     private final int ANGRY_TICKS_PER_ATTACK = 120;
     private int bloodtimer = 100;
@@ -177,18 +167,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void readAdditional(CompoundNBT tagCompund) {
-        super.readAdditional(tagCompund);
-        if (tagCompund.contains("level")) {
-            setLevel(tagCompund.getInt("level"));
-        }
-        if (tagCompund.contains("attack")) {
-            this.attack = tagCompund.getBoolean("attack");
-        }
-
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
-        }
+    public int getEntityTextureType() {
+        int i = getDataManager().get(TYPE);
+        return Math.max(i, 0);
     }
 
     @Override
@@ -227,13 +208,10 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putInt("level", getLevel());
-        nbt.putBoolean("attack", this.attack);
-        nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
-        if (this.entityActionHandler != null) {
-            this.entityActionHandler.write(nbt);
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        if (getDataManager().get(TYPE) == -1) {
+            getDataManager().set(TYPE, this.getRNG().nextInt(TYPES));
         }
     }
 
@@ -265,9 +243,21 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        getDataManager().register(LEVEL, -1);
+    public void readAdditional(CompoundNBT tagCompund) {
+        super.readAdditional(tagCompund);
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
+        }
+        if (tagCompund.contains("attack")) {
+            this.attack = tagCompund.getBoolean("attack");
+        }
+        if (tagCompund.contains("type")) {
+            int t = tagCompund.getInt("type");
+            getDataManager().set(TYPE, t < TYPES && t >= 0 ? t : -1);
+        }
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
+        }
     }
 
     @Override
@@ -302,7 +292,27 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_SPEED);
     }
-    //IMob -------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void writeAdditional(CompoundNBT nbt) {
+        super.writeAdditional(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putInt("type", getEntityTextureType());
+        nbt.putBoolean("attack", this.attack);
+        nbt.putInt("entityclasstype", EntityClassType.getID(this.entityclass));
+        if (this.entityActionHandler != null) {
+            this.entityActionHandler.write(nbt);
+        }
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        getDataManager().register(LEVEL, -1);
+        getDataManager().register(TYPE, -1);
+    }
+
+//IMob -------------------------------------------------------------------------------------------------------------
 
     @Override
     protected EntityType<?> getIMobTypeOpt(boolean iMob) {
@@ -389,5 +399,52 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public boolean isDefendingVillage() {
         return villageAttributes != null && !attack;
+    }
+
+    /**
+     * Assumes preconditions as been met. Checks conditions but does not give feedback to user
+     *
+     * @param lord
+     */
+    public void convertToMinion(PlayerEntity lord) {
+        FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
+            if (fph.getMaxMinions() > 0) {
+                MinionWorldData.getData(lord.world).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+                    if (controller.hasFreeMinionSlot()) {
+                        if (fph.getCurrentFaction() == this.getFaction()) {
+                            VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData((int) this.getMaxHealth(), "Minion", this.getEntityTextureType(), false);
+                            int id = controller.createNewMinionSlot(data, ModEntities.vampire_minion);
+                            if (id < 0) {
+                                LOGGER.error("Failed to get minion slot");
+                                return;
+                            }
+                            VampireMinionEntity minion = ModEntities.vampire_minion.create(this.world);
+                            minion.claimMinionSlot(id, controller);
+                            minion.copyLocationAndAnglesFrom(this);
+                            minion.markAsConverted();
+                            controller.activateTask(0, MinionTasks.stay);
+                            this.world.addEntity(minion);
+                            this.remove();
+
+                        } else {
+                            LOGGER.warn("Wrong faction for minion");
+                        }
+                    } else {
+                        LOGGER.warn("No free slot");
+                    }
+                });
+
+
+            } else {
+                LOGGER.error("Can't have minions");
+            }
+        });
+
+    }
+
+    @Override
+    protected boolean processInteract(PlayerEntity player, Hand hand) {
+        convertToMinion(player);
+        return true;
     }
 }

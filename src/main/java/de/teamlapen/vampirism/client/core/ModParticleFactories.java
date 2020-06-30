@@ -7,7 +7,10 @@ import de.teamlapen.vampirism.client.render.particle.HalloweenParticle;
 import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class ModParticleFactories {
 
     public static void registerFactories() {

@@ -32,7 +32,12 @@ public class PlayerSkinHelper {
                 callback.accept(input);
             } else if (SkullTileEntity.profileCache != null && SkullTileEntity.sessionService != null) {
                 THREAD_POOL.submit(() -> {
-                    GameProfile gameprofile = SkullTileEntity.profileCache.getGameProfileForUsername(input.getName()); //This might create race conditions with other game profile updates. Maybe this has to be moved to the main thread
+                    GameProfile gameprofile;
+                    if (input.getId() == null) {
+                        gameprofile = SkullTileEntity.profileCache.getGameProfileForUsername(input.getName()); //This might create race conditions with other game profile updates. Maybe this has to be moved to the main thread
+                    } else {
+                        gameprofile = SkullTileEntity.profileCache.getProfileByUUID(input.getId());
+                    }
 
                     if (gameprofile == null) {
                         gameprofile = input;

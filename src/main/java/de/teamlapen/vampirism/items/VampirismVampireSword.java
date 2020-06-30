@@ -3,7 +3,9 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
@@ -38,7 +40,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class VampirismVampireSword extends VampirismItemWeapon implements IBloodChargeable {
+public abstract class VampirismVampireSword extends VampirismItemWeapon implements IBloodChargeable, IFactionExclusiveItem {
 
 
     public static final String DO_NOT_NAME_STRING = "DO_NOT_NAME";
@@ -70,6 +72,12 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         if (Minecraft.getInstance().player != null && !Helper.isVampire(Minecraft.getInstance().player)) {
             tooltip.add(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.VAMPIRE_FACTION.getNamePlural()));
         }
+    }
+
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.VAMPIRE_FACTION;
     }
 
     @Override

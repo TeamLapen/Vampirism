@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import com.mojang.authlib.GameProfile;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -14,7 +13,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import de.teamlapen.vampirism.util.IPlayerFace;
+import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.client.Minecraft;
@@ -22,13 +21,7 @@ import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.OpenDoorGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -54,7 +47,7 @@ import javax.annotation.Nullable;
 /**
  * Advanced hunter. Is strong. Represents supporters
  */
-public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerFace, IEntityActionUser {
+public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerOverlay, IEntityActionUser {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.VARINT);
     private static final DataParameter<String> NAME = EntityDataManager.createKey(AdvancedHunterEntity.class, DataSerializers.STRING);
@@ -155,7 +148,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @OnlyIn(Dist.CLIENT)
     @Nullable
     @Override
-    public GameProfile getPlayerFaceProfile() {
+    public GameProfile getOverlayPlayerProfile() {
         if (this.facePlayerProfile == null) {
             String name = getTextureName();
             if (name == null) return null;

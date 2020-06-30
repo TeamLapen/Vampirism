@@ -11,10 +11,10 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class BloodGrinderContainer extends InventoryContainer {
-    private static final Function<ItemStack, Boolean> canProcess = stack -> BloodConversionRegistry.canBeConverted(stack.getItem());
+    private static final Predicate<ItemStack> canProcess = stack -> BloodConversionRegistry.canBeConverted(stack.getItem());
     public static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[]{new SelectorInfo(canProcess, 80, 34)};
 
     @Deprecated
