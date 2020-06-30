@@ -65,11 +65,6 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         this.activeTaskDesc = new IMinionTask.NoDesc(MinionTasks.nothing);
     }
 
-    @Nonnull
-    public IMinionTask.IMinionTaskDesc getCurrentTaskDesc() {
-        return activeTaskDesc;
-    }
-
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         inventory.read(nbt.getList("inv", 10));
@@ -90,19 +85,14 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
         }
     }
 
-    public boolean isTaskLocked() {
-        return taskLocked;
+    @Nonnull
+    public IMinionTask.IMinionTaskDesc getCurrentTaskDesc() {
+        return activeTaskDesc;
     }
 
     public ITextComponent getFormattedName() {
         return new StringTextComponent(name);
     }
-
-    public <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc oldDesc, IMinionTask.IMinionTaskDesc newDesc) {
-        oldTask.deactivateTask((Q) oldDesc);
-        this.activeTaskDesc = newDesc;
-    }
-
 
     public float getHealth() {
         return health;
@@ -115,7 +105,6 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     public MinionInventory getInventory() {
         return inventory;
     }
-
 
     public int getMaxHealth() {
         return maxHealth;
@@ -136,19 +125,15 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
     public void handleMinionAppearanceConfig(String name, int... data) {
     }
 
+    public boolean isTaskLocked() {
+        return taskLocked;
+    }
+
     @Override
     public final CompoundNBT serializeNBT() {
         CompoundNBT tag = new CompoundNBT();
         serializeNBT(tag);
         return tag;
-    }
-
-    public boolean setTaskLocked(boolean locked) {
-        return this.taskLocked = locked;
-    }
-
-    protected ResourceLocation getDataType() {
-        return new ResourceLocation("");
     }
 
     public void serializeNBT(CompoundNBT tag) {
@@ -165,5 +150,18 @@ public class MinionData implements INBTSerializable<CompoundNBT> {
             activeTaskDesc.writeToNBT(task);
             tag.put("task", task);
         }
+    }
+
+    public boolean setTaskLocked(boolean locked) {
+        return this.taskLocked = locked;
+    }
+
+    public <Q extends IMinionTask.IMinionTaskDesc, T extends IMinionTask<Q>> void switchTask(T oldTask, IMinionTask.IMinionTaskDesc oldDesc, IMinionTask.IMinionTaskDesc newDesc) {
+        oldTask.deactivateTask((Q) oldDesc);
+        this.activeTaskDesc = newDesc;
+    }
+
+    protected ResourceLocation getDataType() {
+        return new ResourceLocation("");
     }
 }

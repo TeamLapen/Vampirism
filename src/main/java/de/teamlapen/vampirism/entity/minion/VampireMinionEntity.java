@@ -69,31 +69,14 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
     }
 
+    @Override
+    public List<IMinionTask<?>> getAvailableTasks() {
+        return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.stay, MinionTasks.defend_area);
+    }
 
     @Override
     public LivingEntity getRepresentingEntity() {
         return this;
-    }
-
-
-    @Nonnull
-    @Override
-    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forcerefresh) {
-        if (forcerefresh) {
-            garlicCache = Helper.getGarlicStrength(this, iWorld);
-        }
-        return garlicCache;
-    }
-
-    public void setUseLordSkin(boolean useLordSkin) {
-        this.getMinionData().ifPresent(d -> d.useLordSkin = useLordSkin);
-    }
-
-
-    @Override
-    public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
-        if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.world.getProfiler()));
     }
 
     public int getVampireType() {
@@ -104,22 +87,24 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         getMinionData().ifPresent(d -> d.type = type);
     }
 
-    public boolean shouldRenderLordSkin() {
-        return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
+    @Nonnull
+    @Override
+    public EnumStrength isGettingGarlicDamage(IWorld iWorld, boolean forcerefresh) {
+        if (forcerefresh) {
+            garlicCache = Helper.getGarlicStrength(this, iWorld);
+        }
+        return garlicCache;
+    }
+
+    @Override
+    public boolean isGettingSundamage(IWorld iWorld, boolean forceRefresh) {
+        if (!forceRefresh) return sundamageCache;
+        return (sundamageCache = Helper.gettingSundamge(this, iWorld, this.world.getProfiler()));
     }
 
     @Override
     public boolean isIgnoringSundamage() {
         return this.isPotionActive(ModEffects.sunscreen);
-    }
-
-    @Override
-    protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
-    }
-
-    @Override
-    public List<IMinionTask<?>> getAvailableTasks() {
-        return Lists.newArrayList(MinionTasks.follow_lord, MinionTasks.stay, MinionTasks.defend_area);
     }
 
     @Override
@@ -150,6 +135,34 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         super.livingTick();
     }
 
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void openAppearanceScreen() {
+        Minecraft.getInstance().displayGuiScreen(new VampireMinionAppearanceScreen(this));
+    }
+
+    public void setUseLordSkin(boolean useLordSkin) {
+        this.getMinionData().ifPresent(d -> d.useLordSkin = useLordSkin);
+    }
+
+    public boolean shouldRenderLordSkin() {
+        return this.getMinionData().map(d -> d.useLordSkin).orElse(false);
+    }
+
+    @Override
+    public boolean useBlood(int amt, boolean allowPartial) {
+        return false;
+    }
+
+    @Override
+    public boolean wantsBlood() {
+        return false;
+    }
+
+    @Override
+    protected void onMinionDataReceived(@Nonnull VampireMinionData data) {
+    }
+
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
@@ -166,22 +179,6 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         this.goalSelector.addGoal(3, new RestrictSunVampireGoal<>(this));
 
 
-    }
-
-    @Override
-    public boolean useBlood(int amt, boolean allowPartial) {
-        return false;
-    }
-
-    @Override
-    public boolean wantsBlood() {
-        return false;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void openAppearanceScreen() {
-        Minecraft.getInstance().displayGuiScreen(new VampireMinionAppearanceScreen(this));
     }
 
     public static class VampireMinionData extends MinionData {
@@ -208,20 +205,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void serializeNBT(CompoundNBT tag) {
-            super.serializeNBT(tag);
-            tag.putInt("vampire_type", type);
-            tag.putBoolean("use_lord_skin", useLordSkin);
-        }
-
-        @Override
         public ITextComponent getFormattedName() {
             return super.getFormattedName().applyTextStyle(VReference.VAMPIRE_FACTION.getChatColor());
-        }
-
-        @Override
-        protected ResourceLocation getDataType() {
-            return ID;
         }
 
         @Override
@@ -231,6 +216,18 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
                 this.type = data[0];
                 this.useLordSkin = data[1] == 1;
             }
+        }
+
+        @Override
+        public void serializeNBT(CompoundNBT tag) {
+            super.serializeNBT(tag);
+            tag.putInt("vampire_type", type);
+            tag.putBoolean("use_lord_skin", useLordSkin);
+        }
+
+        @Override
+        protected ResourceLocation getDataType() {
+            return ID;
         }
     }
 }
