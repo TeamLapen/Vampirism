@@ -46,35 +46,7 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (!attacker.getEntityWorld().isRemote) {
             if (target instanceof IVampireMob) {
-                boolean instaKillFromBehind = false;
-                boolean instaKillLowHealth = false;
-                if (attacker instanceof PlayerEntity && attacker.isAlive()) {
-                    @Nullable IFactionPlayer factionPlayer = FactionPlayerHandler.get((PlayerEntity) attacker).getCurrentFactionPlayer().orElse(null);
-                    if (factionPlayer != null && factionPlayer.getFaction().equals(VReference.HUNTER_FACTION)) {
-                        ISkillHandler skillHandler = factionPlayer.getSkillHandler();
-                        if (skillHandler.isSkillEnabled(HunterSkills.stake2)) {
-                            instaKillFromBehind = true;
-                        }
-                        if (skillHandler.isSkillEnabled(HunterSkills.stake1)) {
-                            instaKillLowHealth = true;
-                        }
-                    }
-                } else if (attacker instanceof IAdvancedHunter) {
-                    instaKillLowHealth = true;// make more out of this
-                }
-                boolean instaKill = false;
-                if (instaKillFromBehind && !UtilLib.canReallySee(target, attacker, true)) {
-                    if (!(VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get() && target instanceof PlayerEntity) && target.getMaxHealth() < VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get()) {
-                        instaKill = true;
-                    }
-                } else if (instaKillLowHealth && target.getHealth() <= (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * target.getMaxHealth())) {
-                    if (!VampirismConfig.BALANCE.hsInstantKill1FromBehind.get() || !UtilLib.canReallySee(target, attacker, true)) {
-                        instaKill = true;
-                    }
-
-                }
-
-                if (instaKill) {
+                if (canKillInstant(target, attacker)) {
                     DamageSource dmg = attacker instanceof PlayerEntity ? DamageSource.causePlayerDamage((PlayerEntity) attacker) : DamageSource.causeMobDamage(attacker);
                     dmg = dmg.setDamageBypassesArmor();
                     target.attackEntityFrom(dmg, 10000F);
@@ -87,5 +59,35 @@ public class StakeItem extends VampirismItemWeapon implements IVampireFinisher, 
         }
 
         return super.hitEntity(stack, target, attacker);
+    }
+
+    public static boolean canKillInstant(LivingEntity target, LivingEntity attacker) {
+        boolean instaKillFromBehind = false;
+        boolean instaKillLowHealth = false;
+        if (attacker instanceof PlayerEntity && attacker.isAlive()) {
+            @Nullable IFactionPlayer factionPlayer = FactionPlayerHandler.get((PlayerEntity) attacker).getCurrentFactionPlayer().orElse(null);
+            if (factionPlayer != null && factionPlayer.getFaction().equals(VReference.HUNTER_FACTION)) {
+                ISkillHandler skillHandler = factionPlayer.getSkillHandler();
+                if (skillHandler.isSkillEnabled(HunterSkills.stake2)) {
+                    instaKillFromBehind = true;
+                }
+                if (skillHandler.isSkillEnabled(HunterSkills.stake1)) {
+                    instaKillLowHealth = true;
+                }
+            }
+        } else if (attacker instanceof IAdvancedHunter) {
+            instaKillLowHealth = true;// make more out of this
+        }
+        if (instaKillFromBehind && !UtilLib.canReallySee(target, attacker, true)) {
+            if (!(VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get() && target instanceof PlayerEntity) && target.getMaxHealth() < VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get()) {
+                return true;
+            }
+        } else if (instaKillLowHealth && target.getHealth() <= (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * target.getMaxHealth())) {
+            if (!VampirismConfig.BALANCE.hsInstantKill1FromBehind.get() || !UtilLib.canReallySee(target, attacker, true)) {
+                return true;
+            }
+
+        }
+        return false;
     }
 }
