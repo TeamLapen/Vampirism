@@ -14,9 +14,13 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
+import de.teamlapen.vampirism.entity.minion.VampireMinionEntity;
+import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.util.SharedMonsterAttributes;
+import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -244,32 +248,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> difficulty == net.minecraft.world.Difficulty.HARD));//Only break doors on hard difficulty
-        this.tasks_avoidHunter = new AvoidEntityGoal<>(this, CreatureEntity.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION));
-        this.goalSelector.addGoal(2, this.tasks_avoidHunter);
-        this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
-        this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
-        this.goalSelector.addGoal(4, new AttackMeleeNoSunGoal(this, 1.0, false));
-        this.goalSelector.addGoal(5, new BiteNearbyEntityVampireGoal<>(this));
-        this.goalSelector.addGoal(6, new FollowAdvancedVampireGoal(this, 1.0));
-        this.goalSelector.addGoal(7, new MoveToBiteableVampireGoal<>(this, 0.75));
-        this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.6, true, 600, () -> false));
-        this.goalSelector.addGoal(9, new RandomWalkingGoal(this, 0.7));
-        this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 20F, 0.6F));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
-        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
-
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(4, new AttackVillageGoal<>(this));
-        this.targetSelector.addGoal(4, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
-        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.field_236381_q_)));
-    }
-
-    @Override
     public void writeAdditional(CompoundNBT nbt) {
         super.writeAdditional(nbt);
         nbt.putInt("level", getLevel());
@@ -383,6 +361,47 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
     }
 
+    /**
+     * Assumes preconditions as been met. Checks conditions but does not give feedback to user
+     *
+     * @param lord
+     */
+    public void convertToMinion(PlayerEntity lord) {
+        FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
+            if (fph.getMaxMinions() > 0) {
+                MinionWorldData.getData(lord.world).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+                    if (controller.hasFreeMinionSlot()) {
+                        if (fph.getCurrentFaction() == this.getFaction()) {
+                            VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData((int) this.getMaxHealth(), "Minion", this.getEntityTextureType(), false);
+                            int id = controller.createNewMinionSlot(data, ModEntities.vampire_minion);
+                            if (id < 0) {
+                                LOGGER.error("Failed to get minion slot");
+                                return;
+                            }
+                            VampireMinionEntity minion = ModEntities.vampire_minion.create(this.world);
+                            minion.claimMinionSlot(id, controller);
+                            minion.copyLocationAndAnglesFrom(this);
+                            minion.markAsConverted();
+                            controller.activateTask(0, MinionTasks.stay);
+                            this.world.addEntity(minion);
+                            this.remove();
+
+                        } else {
+                            LOGGER.warn("Wrong faction for minion");
+                        }
+                    } else {
+                        LOGGER.warn("No free slot");
+                    }
+                });
+
+
+            } else {
+                LOGGER.error("Can't have minions");
+            }
+        });
+
+    }
+
     @Override
     public boolean isAttackingVillage() {
         return villageAttributes != null && attack;
@@ -391,5 +410,31 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public boolean isDefendingVillage() {
         return villageAttributes != null && !attack;
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> difficulty == net.minecraft.world.Difficulty.HARD));//Only break doors on hard difficulty
+        this.tasks_avoidHunter = new AvoidEntityGoal<>(this, CreatureEntity.class, 10, 1.0, 1.1, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION));
+        this.goalSelector.addGoal(2, this.tasks_avoidHunter);
+        this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
+        this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
+        this.goalSelector.addGoal(4, new AttackMeleeNoSunGoal(this, 1.0, false));
+        this.goalSelector.addGoal(5, new BiteNearbyEntityVampireGoal<>(this));
+        this.goalSelector.addGoal(6, new FollowAdvancedVampireGoal(this, 1.0));
+        this.goalSelector.addGoal(7, new MoveToBiteableVampireGoal<>(this, 0.75));
+        this.goalSelector.addGoal(8, new MoveThroughVillageGoal(this, 0.6, true, 600, () -> false));
+        this.goalSelector.addGoal(9, new RandomWalkingGoal(this, 0.7));
+        this.goalSelector.addGoal(10, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 20F, 0.6F));
+        this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
+        this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
+
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(4, new AttackVillageGoal<>(this));
+        this.targetSelector.addGoal(4, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.field_236381_q_)));
     }
 }

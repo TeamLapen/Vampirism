@@ -260,7 +260,8 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
 
     }
 
-    public void createMinionEntityAtPlayer(int id, PlayerEntity p) {
+    @Nullable
+    public MinionEntity<?> createMinionEntityAtPlayer(int id, PlayerEntity p) {
         assert id >= 0;
         EntityType<? extends MinionEntity<?>> type = minions[id].minionType;
         if (type == null) {
@@ -275,9 +276,11 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
                 m.copyLocationAndAnglesFrom(p);
                 p.world.addEntity(m);
                 activateTask(id, MinionTasks.stay);
+                return m;
             }
 
         }
+        return null;
     }
 
     public Collection<Integer> getCallableMinions() {
@@ -357,18 +360,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         return ids;
     }
 
-    private void activateTask(MinionInfo info, IMinionTask<?> task) {
-        @Nullable
-        IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data.getInventory());
-        if (desc == null) {
-            getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
-        } else {
-            MinionData d = info.data;
-            d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
-            this.contactMinion(info.minionID, MinionEntity::onTaskChanged);
-        }
-    }
-
     /**
      * Recall the given minion. Corresponding entity is removed if present, token is invalidated and slot is released.
      *
@@ -382,6 +373,18 @@ public class PlayerMinionController implements INBTSerializable<CompoundNBT> {
         minionTokens[i.minionID] = Optional.empty();
         return !i.isDead();
 
+    }
+
+    private void activateTask(MinionInfo info, IMinionTask<?> task) {
+        @Nullable
+        IMinionTask.IMinionTaskDesc desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data.getInventory());
+        if (desc == null) {
+            getLordPlayer().ifPresent(player -> player.sendStatusMessage(new TranslationTextComponent("text.vampirism.minion.could_not_activate"), false));
+        } else {
+            MinionData d = info.data;
+            d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
+            this.contactMinion(info.minionID, MinionEntity::onTaskChanged);
+        }
     }
 
     @Override

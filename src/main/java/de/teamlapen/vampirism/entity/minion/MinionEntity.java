@@ -34,6 +34,8 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -49,6 +51,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,7 +64,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 
-public abstract class MinionEntity<T extends MinionData> extends VampirismEntity implements IPlayerOverlay, ISyncable, ForceLookEntityGoal.TaskOwner, de.teamlapen.vampirism.api.entity.minion.IMinionEntity {
+public abstract class MinionEntity<T extends MinionData> extends VampirismEntity implements IPlayerOverlay, ISyncable, ForceLookEntityGoal.TaskOwner, de.teamlapen.vampirism.api.entity.minion.IMinionEntity, IEntityAdditionalSpawnData {
     private final static Logger LOGGER = LogManager.getLogger();
     private final static NonNullList<ItemStack> EMPTY_LIST = NonNullList.create();
 
@@ -93,6 +96,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
      * Only valid and nonnull if playerMinionController !=null
      */
     protected T minionData;
+
+    private final static int CONVERT_DURATION = 20;
+    /**
+     * If >0 the conversion animation is running. Set on server side and synced with the spawn packet, afterwards its decreased on both server and client side. Not stored to NBT
+     */
+    private int convertCounter;
 
     /**
      * Holds the interacting player while the MinionContainer is open
@@ -205,12 +214,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return Optional.empty();
     }
 
-    /**
-     * @return Return player (lord) if they are currently interacting with this minion
-     */
-    @Nonnull
-    public Optional<PlayerEntity> getForceLookTarget() {
-        return Optional.ofNullable(interactingPlayer);
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     public boolean isTaskLocked() {
@@ -247,8 +253,12 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    public Optional<T> getMinionData() {
-        return Optional.ofNullable(minionData);
+    /**
+     * @return Return player (lord) if they are currently interacting with this minion
+     */
+    @Nonnull
+    public Optional<PlayerEntity> getForceLookTarget() {
+        return Optional.ofNullable(interactingPlayer);
     }
 
     @Override
@@ -263,13 +273,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return super.getSize(p_213305_1_).scale(getScale());
     }
 
-    @Override
-    public void livingTick() {
-        super.livingTick();
-        if (!this.world.isRemote && !this.isValid() && this.isAlive()) {
-            LOGGER.warn("Minion without lord.");
-            this.remove();
-        }
+    public Optional<T> getMinionData() {
+        return Optional.ofNullable(minionData);
     }
 
     @Override
@@ -311,13 +316,19 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     public float getScale() {
-        return 0.8f;
+        return 0.8f + convertCounter / (float) CONVERT_DURATION * 0.2f;
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-        checkoutMinionData();
+    public void livingTick() {
+        super.livingTick();
+        if (convertCounter > 0) {
+            convertCounter--;
+        }
+        if (!this.world.isRemote && !this.isValid() && this.isAlive()) {
+            LOGGER.warn("Minion without lord.");
+            this.remove();
+        }
     }
 
     @Override
@@ -334,6 +345,20 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
+    /**
+     * Call server side before adding entity to the world.
+     * Once spawned the entity will perform the conversion animation on client side.
+     */
+    public void markAsConverted() {
+        convertCounter = CONVERT_DURATION;
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        checkoutMinionData();
+    }
+
     @Override
     public void onDeath(@Nonnull DamageSource p_70645_1_) {
         super.onDeath(p_70645_1_);
@@ -344,18 +369,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    @Override
-    @Deprecated
-    public void recallMinion() {
-        this.remove();
-    }
-
     public void onTaskChanged() {
         HelperLib.sync(this);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void openAppearanceScreen() {
     }
 
     @Override
@@ -405,9 +420,8 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         return this.getDataManager().get(LORD_ID);
     }
 
-    @Override
-    public void setCustomName(@Nullable ITextComponent name) {
-        //NOP
+    @OnlyIn(Dist.CLIENT)
+    public void openAppearanceScreen() {
     }
 
     @Override
@@ -435,11 +449,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
         }
     }
 
-    /**
-     * Set/Reset currently interacting player
-     */
-    public void setInteractingPlayer(@Nullable PlayerEntity player) {
-        this.interactingPlayer = player;
+    @Override
+    public void readSpawnData(PacketBuffer additionalData) {
+        convertCounter = additionalData.readVarInt();
     }
 
     /**
@@ -479,10 +491,9 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.getDataManager().register(LORD_ID, Optional.empty());
-
+    @Deprecated
+    public void recallMinion() {
+        this.remove();
     }
 
     @Override
@@ -514,5 +525,29 @@ public abstract class MinionEntity<T extends MinionData> extends VampirismEntity
             LOGGER.error("Failed to cast minion data. Maybe the correct data was not registered", e);
             this.remove();
         }
+    }
+
+    @Override
+    public void setCustomName(@Nullable ITextComponent name) {
+        //NOP
+    }
+
+    /**
+     * Set/Reset currently interacting player
+     */
+    public void setInteractingPlayer(@Nullable PlayerEntity player) {
+        this.interactingPlayer = player;
+    }
+
+    @Override
+    public void writeSpawnData(PacketBuffer buffer) {
+        buffer.writeVarInt(convertCounter);
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.getDataManager().register(LORD_ID, Optional.empty());
+
     }
 }
