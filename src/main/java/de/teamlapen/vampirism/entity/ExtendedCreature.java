@@ -43,12 +43,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @CapabilityInject(IExtendedCreatureVampirism.class)
     public static Capability<IExtendedCreatureVampirism> CAP = getNull();
 
-    /**
-     * Must check if {@link Entity#isAlive()} before calling this
-     */
-    public static IExtendedCreatureVampirism getUnsafe(CreatureEntity mob) {
-        return mob.getCapability(CAP, null).orElseThrow(() -> new IllegalStateException("Cannot get ExtendedCreature from EntityCreature " + mob));
-    }
 
     public static LazyOptional<IExtendedCreatureVampirism> getSafe(Entity mob) {
         return mob.getCapability(CAP);
@@ -62,9 +56,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     static <Q extends CreatureEntity> ICapabilityProvider createNewCapability(final Q creature) {
         return new ICapabilitySerializable<CompoundNBT>() {
 
-            Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.entityRegistry().getCustomExtendedCreatureConstructor(creature);
-            IExtendedCreatureVampirism inst = constructor == null ? new ExtendedCreature(creature) : constructor.apply(creature);
-            LazyOptional<IExtendedCreatureVampirism> opt = LazyOptional.of(() -> inst);
+            final Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.entityRegistry().getCustomExtendedCreatureConstructor(creature);
+            final IExtendedCreatureVampirism inst = constructor == null ? new ExtendedCreature(creature) : constructor.apply(creature);
+            final LazyOptional<IExtendedCreatureVampirism> opt = LazyOptional.of(() -> inst);
 
 
             @Override

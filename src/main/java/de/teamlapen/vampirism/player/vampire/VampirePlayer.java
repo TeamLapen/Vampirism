@@ -87,6 +87,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
     private final static String KEY_VISION = "vision";
     private final static String KEY_VICTIM_ID = "feed_victim";
+    private final static int FEED_TIMER = 20;
     @CapabilityInject(IVampirePlayer.class)
     public static Capability<IVampirePlayer> CAP = getNull();
 
@@ -295,8 +296,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (((IBiteableEntity) entity).canBeBitten(this)) return BITE_TYPE.SUCK_BLOOD;
         }
         if (entity instanceof CreatureEntity && entity.isAlive()) {
-            if (ExtendedCreature.getUnsafe((CreatureEntity) entity).canBeBitten(this)) {
-                if (ExtendedCreature.getUnsafe((CreatureEntity) entity).hasPoisonousBlood()) {
+            LazyOptional<IExtendedCreatureVampirism> opt = ExtendedCreature.getSafe(entity);
+            if (opt.map(creature -> creature.canBeBitten(this)).orElse(false)) {
+                if (opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
                     return BITE_TYPE.HUNTER_CREATURE;
                 }
                 return BITE_TYPE.SUCK_BLOOD_CREATURE;
@@ -400,6 +402,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     public int getFangType() {
         return fangType;
+    }
+
+    /**
+     * @return 0-1f
+     */
+    public float getFeedProgress() {
+        return feedBiteTickCounter / (float) FEED_TIMER;
     }
 
     /**
@@ -731,7 +740,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     sync(syncPacket, syncToAll);
                 }
 
-                if (feed_victim != -1 && feedBiteTickCounter++ >= 20) {
+                if (feed_victim != -1 && feedBiteTickCounter++ >= FEED_TIMER) {
                     updateFeeding();
                     feedBiteTickCounter = 0;
                 }
@@ -753,16 +762,23 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 ticksInSun = 0;
             }
 
-            if (feed_victim != -1 && feedBiteTickCounter++ >= 5) {
+            if (feed_victim != -1 && feedBiteTickCounter++ % 5 == 0) {
                 Entity e = VampirismMod.proxy.getMouseOverEntity();
                 if (e == null || e.getEntityId() != feed_victim) {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
+                    feedBiteTickCounter = 0;
+                    feed_victim = -1;
                     return;
                 }
-                feedBiteTickCounter = 0;
+                if (feedBiteTickCounter >= FEED_TIMER) {
+                    feedBiteTickCounter = 0;
+                }
             }
             VampirismMod.proxy.handleSleepClient(player);
 
+        }
+        if (feed_victim == -1) {
+            feedBiteTickCounter = 0;
         }
         world.getProfiler().endSection();
     }
@@ -1024,10 +1040,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         float saturationMod = IBloodStats.HIGH_SATURATION;
         boolean continue_feeding = true;
         if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_CREATURE && entity.isAlive()) {
-            IExtendedCreatureVampirism extendedCreature = ExtendedCreature.getUnsafe((CreatureEntity) entity);
-            blood = extendedCreature.onBite(this);
-            saturationMod = extendedCreature.getBloodSaturation();
-            if (isAdvancedBiter() && extendedCreature.getBlood() == 1) {
+            LazyOptional<IExtendedCreatureVampirism> opt = ExtendedCreature.getSafe(entity);
+            blood = opt.map(creature -> creature.onBite(this)).orElse(0);
+            saturationMod = opt.map(IBiteableEntity::getBloodSaturation).orElse(0f);
+            if (isAdvancedBiter() && opt.map(IExtendedCreatureVampirism::getBlood).orElse(0) == 1) {
                 continue_feeding = false;
             }
         } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_PLAYER || feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {

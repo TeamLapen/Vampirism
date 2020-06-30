@@ -37,4 +37,10 @@ public class BloodGrinderScreen extends ContainerScreen<BloodGrinderContainer> {
         this.font.drawString(title.getFormattedText(), 8, 6, 0x404040);
         this.font.drawString(UtilLib.translate("container.inventory"), 8, this.ySize - 94, 0x404040);
     }
+
+    @Override
+    public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
+        this.renderBackground();
+        super.render(p_render_1_, p_render_2_, p_render_3_);
+    }
 }

@@ -9,6 +9,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -32,7 +33,7 @@ public class InjectionItem extends VampirismItem {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (type == TYPE.SANGUINARE) {
-            playerIn.sendStatusMessage(new StringTextComponent("Please use a ").appendSibling(ModBlocks.med_chair.getNameTextComponent()), false);
+            playerIn.sendStatusMessage(new StringTextComponent("Please use a ").appendSibling(new TranslationTextComponent(ModBlocks.med_chair.getTranslationKey())), false);
         }
         return new ActionResult<>(ActionResultType.PASS, stack);
     }

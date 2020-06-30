@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_table.png");
-    private IWorldPosCallable worldPos;
+    private final IWorldPosCallable worldPos;
 
     public HunterTableScreen(HunterTableContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name) {
         this(inventorySlotsIn, playerInventory, name, IWorldPosCallable.DUMMY);
@@ -33,6 +33,7 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
 

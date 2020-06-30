@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -65,16 +64,16 @@ public class HunterSkills {
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", true).setDescription(() -> new TranslationTextComponent("skill.vampirism.blood_potion_less_bad.desc")).setTranslationKey("skill.vampirism.blood_potion_less_bad"));
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_portable_crafting", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("blood_potion_table", true));
-        registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", false));
-        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_armor", false));
+        registry.register(new VampirismSkill.SimpleHunterSkill("double_crossbow", true));
+        registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_armor", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_crossbow", false));
         registry.register(new VampirismSkill.SimpleHunterSkill("enhanced_weapons", false));
         registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed", false).registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", VampirismConfig.BALANCE.hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed_advanced", false).registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", VampirismConfig.BALANCE.hsMajorAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        registry.register(new ActionSkill<IHunterPlayer>("hunter_awareness", HunterActions.awareness_hunter));
+        registry.register(new VampirismSkill.SimpleHunterSkill("hunter_attack_speed_advanced", true).registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", VampirismConfig.BALANCE.hsMajorAttackSpeedModifier.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new ActionSkill<IHunterPlayer>("hunter_awareness", HunterActions.awareness_hunter, true));
         registry.register(new ActionSkill<IHunterPlayer>("hunter_disguise", HunterActions.disguise_hunter, true));
         registry.register(new VampirismSkill.SimpleHunterSkill("purified_garlic", true));
         registry.register(new VampirismSkill.SimpleHunterSkill("stake1", false)
@@ -87,11 +86,11 @@ public class HunterSkills {
                 }));
         registry.register(new VampirismSkill.SimpleHunterSkill("stake2", false)
                 .setDescription(() -> {
-                    StringTextComponent desc = null;
+                    ITextComponent desc = null;
                     if (VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get()) {
-                        new TranslationTextComponent("skill.vampirism.stake2.desc_npc", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
+                        desc = new TranslationTextComponent("skill.vampirism.stake2.desc_npc", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
                     } else {
-                        new TranslationTextComponent("skill.vampirism.stake2.desc_all", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
+                        desc = new TranslationTextComponent("skill.vampirism.stake2.desc_all", VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get());
 
                     }
                     return desc;

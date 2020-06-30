@@ -24,6 +24,7 @@ import de.teamlapen.vampirism.util.HalloweenSpecial;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -40,11 +41,13 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.GameType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -140,21 +143,21 @@ public class VampirismHUDOverlay extends ExtendedGui {
             IVampirePlayer player = VampirePlayer.get(mc.player);
             if (player.getLevel() > 0 && !mc.player.isSpectator() && !player.getActionHandler().isActionActive(VampireActions.bat)) {
                 Entity entity = ((EntityRayTraceResult) p).getEntity();
-                IBiteableEntity biteable = null;
+                LazyOptional<? extends IBiteableEntity> biteableOpt = LazyOptional.empty();
                 if (entity instanceof IBiteableEntity) {
-                    biteable = (IBiteableEntity) entity;
+                    biteableOpt = LazyOptional.of(() -> (IBiteableEntity) entity);
                 } else if (entity instanceof CreatureEntity && entity.isAlive()) {
-                    biteable = ExtendedCreature.getUnsafe((CreatureEntity) entity);
+                    biteableOpt = ExtendedCreature.getSafe(entity);
                 } else if (entity instanceof PlayerEntity) {
-                    biteable = VampirePlayer.get((PlayerEntity) entity);
+                    biteableOpt = VampirePlayer.getOpt((PlayerEntity) entity);
                 }
-                if (biteable != null && biteable.canBeBitten(player)) {
+                biteableOpt.filter(iBiteableEntity -> iBiteableEntity.canBeBitten(player)).ifPresent(biteable -> {
                     int color = 0xFF0000;
                     if (entity instanceof HunterBaseEntity || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
                         color = 0x099022;
                     renderBloodFangs(this.mc.mainWindow.getScaledWidth(), this.mc.mainWindow.getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                     event.setCanceled(true);
-                }
+                });
             }
         } else if (p != null && p.getType() == RayTraceResult.Type.BLOCK) {
             BlockState block = Minecraft.getInstance().world.getBlockState(((BlockRayTraceResult) p).getPos());
@@ -171,6 +174,26 @@ public class VampirismHUDOverlay extends ExtendedGui {
                         });
                     }
                 }
+            }
+        }
+        //Render blood feed progress
+        GameSettings gamesettings = this.mc.gameSettings;
+        if (gamesettings.thirdPersonView == 0 && this.mc.playerController.getCurrentGameType() != GameType.SPECTATOR) {
+
+            float progress = VampirePlayer.getOpt(mc.player).map(VampirePlayer::getFeedProgress).orElse(0f);
+            if (progress > 0) {
+                GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+                if (progress <= 1.0F) {
+                    int x = this.mc.mainWindow.getScaledWidth() / 2 - 8;
+                    int y = this.mc.mainWindow.getScaledHeight() / 2 - 7 + 16;
+                    this.mc.getTextureManager().bindTexture(icons);
+
+                    int l = (int) (progress * 14.0F) + 2;
+
+                    this.blit(x, y, 0, 19, 16, 2);
+                    this.blit(x, y, 16, 19, l, 2);
+                }
+
             }
         }
     }

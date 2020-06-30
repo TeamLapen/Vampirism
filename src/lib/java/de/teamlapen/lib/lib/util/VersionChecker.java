@@ -261,26 +261,33 @@ public class VersionChecker implements Runnable {
      */
     public static class Version implements Comparable<Version> {
 
-        static Version from(ArtifactVersion version) {
-            String extra = null;
-            String qualifier = version.getQualifier();
-            TYPE type = TYPE.RELEASE;
-            if (qualifier.contains("alpha")) {
-                type = TYPE.ALPHA;
-                int i = qualifier.indexOf('+');
-                if (i != -1) {
-                    extra = qualifier.substring(i + 1);
+        static Version from(@Nonnull ArtifactVersion version) {
+            try {
+                String extra = null;
+                String qualifier = version.getQualifier();
+                TYPE type = TYPE.RELEASE;
+                if (qualifier != null) {
+                    if (qualifier.contains("alpha")) {
+                        type = TYPE.ALPHA;
+                        int i = qualifier.indexOf('+');
+                        if (i != -1) {
+                            extra = qualifier.substring(i + 1);
+                        }
+                    } else if (qualifier.contains("beta")) {
+                        type = TYPE.BETA;
+                        int i = qualifier.indexOf('.', qualifier.indexOf("beta"));
+                        if (i != -1) {
+                            extra = qualifier.substring(i + 1);
+                        }
+                    } else if (qualifier.contains("test")) {
+                        type = TYPE.TEST;
+                    }
                 }
-            } else if (qualifier.contains("beta")) {
-                type = TYPE.BETA;
-                int i = qualifier.indexOf('.', qualifier.indexOf("beta"));
-                if (i != -1) {
-                    extra = qualifier.substring(i + 1);
-                }
-            } else if (qualifier.contains("test")) {
-                type = TYPE.TEST;
+                return new Version(version.toString(), version.getMajorVersion(), version.getMinorVersion(), version.getIncrementalVersion(), type, extra);
+            } catch (Exception e) {
+                LOGGER.error("Parsing version failed", e);
+                return new Version("unknown", 0, 0, 0, TYPE.ALPHA, null);
             }
-            return new Version(version.toString(), version.getMajorVersion(), version.getMinorVersion(), version.getIncrementalVersion(), type, extra);
         }
 
         static Version parse(String s) {

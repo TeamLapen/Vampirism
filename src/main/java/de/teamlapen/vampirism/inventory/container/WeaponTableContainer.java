@@ -71,7 +71,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
         return isWithinUsableDistance(this.worldPos, playerIn, ModBlocks.weapon_table);
     }
 
