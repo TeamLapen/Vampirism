@@ -187,8 +187,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         private int type;
         private boolean useLordSkin;
 
-        public VampireMinionData(int maxHealth, String name, int type, boolean useLordSkin) {
-            super(maxHealth, name, 9);
+        public VampireMinionData(String name, int type, boolean useLordSkin) {
+            super(name, 9);
             this.type = type;
             this.useLordSkin = useLordSkin;
         }

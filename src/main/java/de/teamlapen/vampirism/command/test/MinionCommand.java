@@ -56,12 +56,12 @@ public class MinionCommand extends BasicCommand {
 
 
     private static int spawnNewVampireMinion(CommandSource ctx, String name, int type, boolean useLordSkin) throws CommandSyntaxException {
-        VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(20, name, type, useLordSkin);
+        VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(name, type, useLordSkin);
         return spawnNewMinion(ctx, VReference.VAMPIRE_FACTION, data, ModEntities.vampire_minion);
     }
 
     private static int spawnNewHunterMinion(CommandSource ctx, String name, int type, int hat, boolean useLordSkin) throws CommandSyntaxException {
-        HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(20, name, type, hat, useLordSkin);
+        HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(name, type, hat, useLordSkin);
         return spawnNewMinion(ctx, VReference.HUNTER_FACTION, data, ModEntities.hunter_minion);
     }
 

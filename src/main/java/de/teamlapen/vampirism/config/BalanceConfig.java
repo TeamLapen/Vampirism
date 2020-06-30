@@ -142,6 +142,8 @@ public class BalanceConfig {
     public final ForgeConfigSpec.DoubleValue vaHalfInvulnerableThreshold;
     public final ForgeConfigSpec.BooleanValue vaHalfInvulnerableEnabled;
 
+    public final ForgeConfigSpec.IntValue miBaseHealth;
+
 
     BalanceConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("A ton of options which allow you to balance the mod to your desire");
@@ -315,6 +317,9 @@ public class BalanceConfig {
         vaHalfInvulnerableEnabled = builder.define("halfInvulnerableEnabled", true);
         builder.pop();
 
+        builder.push("minions");
+        miBaseHealth = builder.comment("Base health of normal minion").defineInRange("baseHealth", 20, 1, Integer.MAX_VALUE);
+        builder.pop();
 
         builder.pop();
 

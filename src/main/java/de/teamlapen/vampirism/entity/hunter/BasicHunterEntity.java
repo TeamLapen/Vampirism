@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -11,10 +12,14 @@ import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
+import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
@@ -22,6 +27,7 @@ import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.world.MinionWorldData;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.PatrollerEntity;
@@ -108,6 +114,44 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public boolean canDespawn(double distanceToClosestPlayer) {
         return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
+    }
+
+    /**
+     * Assumes preconditions as been met. Checks conditions but does not give feedback to user
+     *
+     * @param lord
+     */
+    public void convertToMinion(PlayerEntity lord) {
+        FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
+            if (fph.getMaxMinions() > 0) {
+                MinionWorldData.getData(lord.world).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+                    if (controller.hasFreeMinionSlot()) {
+                        if (fph.getCurrentFaction() == this.getFaction()) {
+                            HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false);
+                            int id = controller.createNewMinionSlot(data, ModEntities.hunter_minion);
+                            if (id < 0) {
+                                LOGGER.error("Failed to get minion slot");
+                                return;
+                            }
+                            HunterMinionEntity minion = ModEntities.hunter_minion.create(this.world);
+                            minion.claimMinionSlot(id, controller);
+                            minion.copyLocationAndAnglesFrom(this);
+                            minion.markAsConverted();
+                            controller.activateTask(0, MinionTasks.stay);
+                            this.world.addEntity(minion);
+                            this.remove();
+
+                        } else {
+                            LOGGER.warn("Wrong faction for minion");
+                        }
+                    } else {
+                        LOGGER.warn("No free slot");
+                    }
+                });
+            } else {
+                LOGGER.error("Can't have minions");
+            }
+        });
     }
 
     @Override
@@ -232,7 +276,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Override
     public int suggestLevel(Difficulty d) {
-        switch (this.rand.nextInt(5)) {
+        switch (this.rand.nextInt(6)) {
             case 0:
                 return (int) (d.minPercLevel / 100F * MAX_LEVEL);
             case 1:
@@ -273,8 +317,35 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                         player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"));
                     }
                 } else if (hunterLevel > 0) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"));
+                    FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
+                        if (fph.getMaxMinions() > 0) {
+                            ItemStack heldItem = player.getHeldItem(hand);
+
+                            if (this.getLevel() > 0) {
+                                if (heldItem.getItem() == ModItems.hunter_minion_equipment) {
+                                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.unavailable"));
+                                }
+                            } else {
+                                boolean freeSlot = MinionWorldData.getData(player.world).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
+                                player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.available"));
+                                if (heldItem.getItem() == ModItems.hunter_minion_equipment) {
+                                    if (!freeSlot) {
+                                        player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.no_free_slot"));
+                                    } else {
+                                        player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.start_serving"));
+                                        convertToMinion(player);
+                                        if (!player.abilities.isCreativeMode) heldItem.shrink(1);
+                                    }
+                                } else if (freeSlot) {
+                                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.require_equipment", UtilLib.translate(ModItems.hunter_minion_equipment.getTranslationKey())));
+                                }
+                            }
+                        } else {
+                            player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"));
+                        }
+                    });
                 }
+
             }
             return true;
         }
