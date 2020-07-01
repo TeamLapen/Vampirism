@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -8,6 +9,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -16,9 +18,26 @@ import java.util.*;
 public abstract class DefaultSkill<T extends IFactionPlayer> extends ForgeRegistryEntry<ISkill> implements ISkill {
 
     private final Map<IAttribute, AttributeModifier> attributeModifierMap = new HashMap<>();
+    @Nullable
+    private final IPlayableFaction<T> faction;//TODO 1.16 remove
     private int renderRow;
     private int renderColumn;
     private String translationKey;
+
+    @Deprecated
+    protected DefaultSkill(IPlayableFaction<T> faction) {//TODO 1.16 remove
+        this.faction = faction;
+    }
+
+    public DefaultSkill() {
+        this.faction = null;
+    }
+
+    @Nullable
+    @Override
+    public IPlayableFaction getFaction() {
+        return faction;
+    }
 
     @Override
     public int getRenderColumn() {

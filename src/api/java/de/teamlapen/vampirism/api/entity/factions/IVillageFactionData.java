@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
-import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 
+import java.util.Collections;
 import java.util.List;
 
 public interface IVillageFactionData {
@@ -24,7 +24,7 @@ public interface IVillageFactionData {
 
         @Override
         public List<CaptureEntityEntry> getCaptureEntries() {
-            return ImmutableList.of();
+            return Collections.emptyList();
         }
 
         @Override

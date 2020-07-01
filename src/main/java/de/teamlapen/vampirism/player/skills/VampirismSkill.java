@@ -26,6 +26,14 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
     };
     private String translationKey = null;
 
+    @Deprecated
+    public VampirismSkill(IPlayableFaction<T> faction) {//TODO 1.16 remove
+        super(faction);
+    }
+
+    public VampirismSkill() {
+    }
+
     @Override
     public ITextComponent getDescription() {
         return description.get();
