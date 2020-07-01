@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.tasks.reward;
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -15,9 +16,9 @@ public class ItemReward implements TaskReward {
     }
 
     @Override
-    public void applyReward(PlayerEntity player) {
-        if (!player.addItemStackToInventory(this.reward.copy())) {
-            player.dropItem(this.reward.copy(), true);
+    public void applyReward(IFactionPlayer<?> player) {
+        if (!player.getRepresentingPlayer().addItemStackToInventory(this.reward.copy())) {
+            player.getRepresentingPlayer().dropItem(this.reward.copy(), true);
         }
     }
 

@@ -46,9 +46,7 @@ public abstract class CommonProxy implements IProxy {
     @Override
     public void handleTaskFinishedPacket(TaskFinishedPacket msg, PlayerEntity playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
-            factionPlayer.getTaskManager().addCompletedTask(msg.task);
-            factionPlayer.getTaskManager().removeRequirements(msg.task);
-            factionPlayer.getTaskManager().applyRewards(msg.task);
+            factionPlayer.getTaskManager().completeTask(msg.task);
         }));
     }
 }

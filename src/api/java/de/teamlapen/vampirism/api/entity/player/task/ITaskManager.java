@@ -18,18 +18,27 @@ public interface ITaskManager {
     Set<Task> getAvailableTasks(Task.Variant variant);
 
     @Nonnull
+    Set<Task> getAvailableTasks();
+
+    @Nonnull
     Set<Task> getCompletedTasks(Task.Variant variant);
 
     @Nonnull
+    Set<Task> getCompletedTasks();
+
+    @Nonnull
     Set<Task> getCompletableTasks(Task.Variant variant);
+
+    @Nonnull
+    Set<Task> getCompletableTasks();
+
+    void updateClient();
 
     boolean canCompleteTask(Task task);
 
     void removeRequirements(@Nonnull Task task);
 
     IPlayableFaction<?> getFaction();
-
-    void setCompletedTasks(@Nonnull Collection<Task> tasks);
 
     void reset();
 

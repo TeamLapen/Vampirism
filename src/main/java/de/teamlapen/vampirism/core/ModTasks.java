@@ -21,23 +21,29 @@ import static de.teamlapen.vampirism.player.tasks.TaskBuilder.builder;
 @SuppressWarnings("unused")
 @ObjectHolder(REFERENCE.MODID)
 public class ModTasks {
+
+    public static final Task vampire_killer1 = getNull();
+    public static final Task vampire_killer2 = getNull();
+
     public static void registerTasks(IForgeRegistry<Task> registry) {
 
         //general tasks
-        registry.register(builder().unlockedBy((playerEntity -> FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(d -> {
-            return d.getLevel() == d.getFaction().getHighestReachableLevel();
-        }).orElse(false))).addRequirement(new ItemStack(ModItems.item_garlic)).addReward(playerEntity -> FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> {
-            if(factionPlayerHandler.getLordLevel() == 0) {
-                factionPlayerHandler.setLordLevel(1);
-            }
-        })).enableDescription().build("lord"));
+//        registry.register(builder().unlockedBy((playerEntity -> FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(d -> {
+//            return d.getLevel() == d.getFaction().getHighestReachableLevel();
+//        }).orElse(false))).addRequirement(new ItemStack(ModItems.item_garlic)).addReward(playerEntity -> FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> {
+//            if(factionPlayerHandler.getLordLevel() == 0) {
+//                factionPlayerHandler.setLordLevel(1);
+//            }
+//        })).enableDescription().build("lord"));
 
-        //vampire tasks
-        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(ModEntities.hunter, 20).addReward(new ItemStack(ModItems.pure_blood_1)).build("hunter_killer"));
-        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(ModEntities.advanced_hunter, 5).addReward(new ItemStack(ModItems.pure_blood_3)).build("advanced_hunter_killer"));
+//        //vampire tasks
+//        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(ModEntities.hunter, 20).addReward(new ItemStack(ModItems.pure_blood_1)).build("hunter_killer"));
+//        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(ModEntities.advanced_hunter, 5).addReward(new ItemStack(ModItems.pure_blood_3)).build("advanced_hunter_killer"));
 
         //hunter tasks
-        registry.register(builder().withFaction(VReference.HUNTER_FACTION).addRequirement(ModEntities.vampire, 20).addReward(new ItemStack(ModItems.holy_water_bottle_normal)).build("vampire_killer"));
-        registry.register(builder().withFaction(VReference.HUNTER_FACTION).addRequirement(ModEntities.advanced_vampire, 5).addReward(new ItemStack(ModItems.armor_of_swiftness_feet_normal)).build("advanced_vampire_killer"));
+        registry.register(builder().withFaction(VReference.HUNTER_FACTION).addRequirement(ModEntities.vampire, 1).addReward(new ItemStack(ModItems.holy_water_bottle_normal)).build("vampire_killer1"));
+        registry.register(builder().withFaction(VReference.HUNTER_FACTION).addRequirement(ModEntities.advanced_vampire, 1).addReward(new ItemStack(ModItems.armor_of_swiftness_feet_normal)).build("advanced_vampire_killer1"));
+        registry.register(builder().withFaction(VReference.HUNTER_FACTION).requireParent(()-> vampire_killer1).addRequirement(ModEntities.vampire, 1).addReward(new ItemStack(ModItems.armor_of_swiftness_feet_normal)).build("vampire_killer2"));
+        registry.register(builder().withFaction(VReference.HUNTER_FACTION).requireParent(()->vampire_killer2).addRequirement(ModEntities.vampire, 1).addReward(new ItemStack(ModItems.armor_of_swiftness_feet_normal)).build("vampire_killer3"));
     }
 }
