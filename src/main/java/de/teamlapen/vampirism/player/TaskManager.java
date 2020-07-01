@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
@@ -11,8 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.TaskFinishedPacket;
+import de.teamlapen.vampirism.network.TaskStatusPacket;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,21 +19,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.NonNullFunction;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class TaskManager implements ITaskManager {
-    private static final Logger LOGGER = LogManager.getLogger();
-    private final @Nonnull PlayerEntity player;
     private final @Nonnull IPlayableFaction<?> faction;
+    private final @Nonnull ServerPlayerEntity player;
+    private final @Nonnull IFactionPlayer<?> factionPlayer;
     private final @Nonnull Map<Task.Variant, Set<Task>> completedTasks = Maps.newHashMap();
     private final @Nonnull Map<Task.Variant, Set<Task>> availableTasks = Maps.newHashMap();
     private final @Nonnull Map<Task, Map<ResourceLocation, Integer>> stats = Maps.newHashMap();
@@ -43,15 +36,11 @@ public class TaskManager implements ITaskManager {
     private boolean init;
     private long taskUpdateLast;
 
-    public TaskManager(@Nonnull PlayerEntity player, @Nonnull IPlayableFaction<?> faction) {
+    public TaskManager(IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
-        this.player = player;
+        this.player = (ServerPlayerEntity)factionPlayer.getRepresentingPlayer();
+        this.factionPlayer = factionPlayer;
         this.reset();
-    }
-
-    @Nonnull
-    public static Set<Task> getTasks(PlayerEntity player, NonNullFunction<? super ITaskManager, Set<Task>> mapper) {
-        return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(mapper).orElse(ImmutableSet.of());
     }
 
     /**
@@ -61,12 +50,13 @@ public class TaskManager implements ITaskManager {
     public void completeTask(@Nonnull Task task) {
         if (addCompletedTask(task)) {
             this.removeRequirements(task);
-            if (player.world.isRemote()) {
-                VampirismMod.dispatcher.sendToServer(new TaskFinishedPacket(task));
-            } else {
-                VampirismMod.dispatcher.sendTo(new TaskFinishedPacket(task), (ServerPlayerEntity) player);
-            }
+            this.applyRewards(task);
+            this.updateClient();
         }
+    }
+
+    public void updateClient() {
+        VampirismMod.dispatcher.sendTo(new TaskStatusPacket(getCompletableTasks(), getCompletedTasks(), getAvailableTasks(),player.openContainer.windowId), (ServerPlayerEntity) player);
     }
 
     public boolean isTaskUnlocked(Task task) {
@@ -74,7 +64,7 @@ public class TaskManager implements ITaskManager {
             return false;
         }
         for (TaskUnlocker taskUnlocker : task.getUnlocker()) {
-            if(!taskUnlocker.isUnlocked(this.player)){
+            if(!taskUnlocker.isUnlocked(this.factionPlayer)){
                 return false;
             }
         }
@@ -94,8 +84,8 @@ public class TaskManager implements ITaskManager {
         this.getAvailableTasks(task.getVariant()).remove(task);
         this.getStats().remove(task);
         this.getEntityStats().remove(task);
-        this.updateStats();
         this.updateAvailableTasks();
+        this.updateStats();
         return true;
     }
 
@@ -112,18 +102,15 @@ public class TaskManager implements ITaskManager {
         return this.completedTasks.computeIfAbsent(variant, variant1 -> Sets.newHashSet());
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Nonnull
     @Override
-    public void setCompletedTasks(@Nonnull Collection<Task> tasks) {
-        this.completedTasks.clear();
-        tasks.forEach(task -> this.getCompletableTasks(task.getVariant()).add(task));
-        tasks.forEach(task -> this.getAvailableTasks(task.getVariant()).remove(task));
-        this.updateAvailableTasks();
+    public Set<Task> getCompletedTasks() {
+        return this.completedTasks.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
     }
 
     @Override
     public void applyRewards(Task task) {
-        task.getReward().applyReward(this.player);
+        task.getReward().applyReward(this.factionPlayer);
     }
 
     @Override
@@ -142,6 +129,19 @@ public class TaskManager implements ITaskManager {
     }
 
     @Nonnull
+    @Override
+    public Set<Task> getAvailableTasks() {
+        return this.availableTasks.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+    }
+
+    @Override
+    @Nonnull
+    public Set<Task> getCompletableTasks() {
+        return this.availableTasks.values().stream().flatMap(Collection::stream).filter(this::canCompleteTask).collect(Collectors.toSet());
+    }
+
+    @Override
+    @Nonnull
     public Set<Task> getCompletableTasks(Task.Variant variant) {
         return this.getAvailableTasks(variant).stream().filter(this::canCompleteTask).collect(Collectors.toSet());
     }
@@ -159,13 +159,13 @@ public class TaskManager implements ITaskManager {
             return false;
         switch (task.getRequirement().getType()) {
             case STATS:
-                if (this.player.getEntityWorld().isRemote()) return false;
-                if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())) < this.getStats().get(task).get(task.getRequirement().getStat()) + task.getRequirement().getAmount())
+                if (this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())) < this.getStats().get(task).get(task.getRequirement().getStat()) + task.getRequirement().getAmount())
                     return false;
                 break;
             case ENTITY:
-                if (this.player.getEntityWorld().isRemote()) return false;
-                if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat())) < this.getEntityStats().get(task).get(task.getRequirement().getStat()) + task.getRequirement().getAmount())
+                int d = this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat()));
+                int f = this.getEntityStats().get(task).get(task.getRequirement().getStat()) + task.getRequirement().getAmount();
+                if (d < f)
                     return false;
                 break;
             case ITEMS:
@@ -221,14 +221,10 @@ public class TaskManager implements ITaskManager {
                 if (this.getStats().containsKey(task) || this.getEntityStats().containsKey(task)) continue;
                 switch (task.getRequirement().getType()) {
                     case STATS:
-                        if (!player.getEntityWorld().isRemote()) {
-                            this.getStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((ResourceLocation) task.getRequirement().getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())));
-                        }
+                        this.getStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((ResourceLocation) task.getRequirement().getStat(), this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())));
                         break;
                     case ENTITY:
-                        if (!player.getEntityWorld().isRemote()) {
-                            this.getEntityStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((EntityType<?>) task.getRequirement().getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat())));
-                        }
+                        this.getEntityStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((EntityType<?>) task.getRequirement().getStat(), this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat())));
                         break;
                     default:
                 }

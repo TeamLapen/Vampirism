@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.blocks.TentBlock;
@@ -245,9 +246,8 @@ public class ClientProxy extends CommonProxy {
     public void handleTaskStatusPacket(TaskStatusPacket msg) {
         Container container = Minecraft.getInstance().player.openContainer;
         if (msg.containerId == container.windowId && container instanceof TaskMasterContainer) {
-            ((TaskMasterContainer) container).setPossibleTasks(msg.possibleTasks);
+            ((TaskMasterContainer)container).init(msg.possibleTasks,msg.completedTasks, (List<Task>)msg.unlockedTask);
         }
-        FactionPlayerHandler.getOpt(Minecraft.getInstance().player).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> factionPlayer.getTaskManager().setCompletedTasks(msg.completedTasks)));
     }
 
 }

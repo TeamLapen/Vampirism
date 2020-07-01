@@ -1,33 +1,44 @@
 package de.teamlapen.vampirism.inventory.container;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
-import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.core.ModContainer;
-import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.player.tasks.ParentUnlocker;
+import de.teamlapen.vampirism.network.TaskFinishedPacket;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.util.NonNullFunction;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 
 public class TaskMasterContainer extends Container {
 
-    private final @Nonnull ITaskManager taskManager;
-    private final @Nonnull Task.Variant variant;
-    private @Nonnull Set<Task> possibleTasks = ImmutableSet.of();
-    private @Nonnull Set<Task> completed = Sets.newHashSet();
-    private @Nonnull List<Task> availableTasks;
+    private @Nonnull Task.Variant variant;
+    /**
+     * all tasks that can be completed by the player
+     */
+    private @Nonnull Set<Task> possibleTasks = Sets.newHashSet();
+    /**
+     * all tasks that have been completed and should not be displayed
+     */
+    private @Nonnull Set<Task> completedTasks = Sets.newHashSet();
+    /**
+     * all tasks that should be displayed in the {@link de.teamlapen.vampirism.client.gui.TaskMasterScreen}
+     */
+    private @Nonnull List<Task> unlockedTasks = Lists.newArrayList();
+    private @Nonnull PlayerEntity player;
+    private @Nonnull TextFormatting factionColor;
 
     @Deprecated
     public TaskMasterContainer(int id, PlayerInventory playerInventory) {
@@ -37,8 +48,21 @@ public class TaskMasterContainer extends Container {
     public TaskMasterContainer(int id, PlayerInventory playerInventory, @Nonnull Task.Variant variant) {
         super(ModContainer.task_master, id);
         this.variant = variant;
-        this.taskManager = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get().getTaskManager();
-        this.availableTasks = Lists.newArrayList(taskManager.getAvailableTasks(variant));
+        this.player = playerInventory.player;
+        this.factionColor = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFaction).map(IFaction::getChatColor).orElse(TextFormatting.RESET);
+    }
+
+    /**
+     * @param possibleTasks updated possibleTasks
+     * @param completedTasks updated completedTasks
+     * @param unlockedTasks updated unlockedTasks
+     */
+    public void init(@Nonnull Set<Task> possibleTasks,@Nonnull Set<Task> completedTasks, @Nonnull List<Task> unlockedTasks) {
+        this.possibleTasks.clear();
+        this.possibleTasks.addAll(possibleTasks);
+        this.completedTasks.clear();
+        this.completedTasks.addAll(completedTasks);
+        this.unlockedTasks.addAll(unlockedTasks.stream().filter(task -> !this.unlockedTasks.contains(task)).sorted((task1, task2) -> (this.possibleTasks.contains(task1) && !this.possibleTasks.contains(task2)) || (!possibleTasks.contains(task1) && !this.completedTasks.contains(task1) && this.completedTasks.contains(task2)) ? -1 : 0).collect(Collectors.toList()));
     }
 
     @Override
@@ -47,50 +71,42 @@ public class TaskMasterContainer extends Container {
     }
 
     public boolean canCompleteTask(Task task) {
-        return possibleTasks.contains(task);
-    }
-
-    private boolean isParentTask(Task parent, Task child) {
-        for (TaskUnlocker taskUnlocker : child.getUnlocker()) {
-            if(taskUnlocker instanceof ParentUnlocker && ((ParentUnlocker)taskUnlocker).getParent().get() == parent) {
-                return true;
-            }
-        }
-        return false;
+        return this.possibleTasks.contains(task);
     }
 
     public void completeTask(Task task) {
-        this.taskManager.completeTask(task);
-        this.completed.add(task);
-        this.possibleTasks.removeIf(task1 -> !taskManager.canCompleteTask(task1));
-        this.availableTasks.addAll(this.taskManager.getAvailableTasks(Task.Variant.REPEATABLE).stream().filter(task1 -> !this.availableTasks.contains(task1)).collect(Collectors.toList()));
+        if(this.canCompleteTask(task)) {
+            VampirismMod.dispatcher.sendToServer(new TaskFinishedPacket(task));
+            this.completedTasks.add(task);
+            this.possibleTasks.remove(task);
+        }
     }
 
     public boolean isCompleted(Task task) {
-        return this.completed.contains(task);
+        return this.completedTasks.contains(task);
     }
 
     public int size() {
-        return this.possibleTasks.size();
+        return this.unlockedTasks.size();
     }
 
     @Nonnull
-    public List<Task> getAvailableTasks() {
-        return this.availableTasks;
+    public Set<Task> getPossibleTasks() {
+        return possibleTasks;
     }
 
-    public void setPossibleTasks(@Nonnull Set<Task> possibleTasks) {
-        this.possibleTasks = possibleTasks;
-        this.sortTasks();
+    @Nonnull
+    public Set<Task> getCompletedTasks() {
+        return completedTasks;
     }
 
+    @Nonnull
+    public List<Task> getUnlockedTasks() {
+        return unlockedTasks;
+    }
+
+    @Nonnull
     public TextFormatting getFactionColor() {
-        return this.taskManager.getFaction().getChatColor();
+        return factionColor;
     }
-
-    private void sortTasks() {
-        this.availableTasks = Lists.newArrayList(taskManager.getAvailableTasks(variant));
-        this.availableTasks.sort((task1, task2) -> (possibleTasks.contains(task1) && !possibleTasks.contains(task2)) || (!possibleTasks.contains(task1) && !completed.contains(task1) && completed.contains(task2)) ? -1 : 0);
-    }
-
 }

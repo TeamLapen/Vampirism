@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.network;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
@@ -10,6 +11,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -17,11 +20,13 @@ public class TaskStatusPacket implements IMessage {
 
     public final Set<Task> possibleTasks;
     public final Set<Task> completedTasks;
+    public final Collection<Task> unlockedTask;
     public final int containerId;
 
-    public TaskStatusPacket(Set<Task> possibleTasks, Set<Task> completedTasks, int containerId) {
+    public TaskStatusPacket(Set<Task> possibleTasks, Set<Task> completedTasks, Collection<Task> unlockedTask, int containerId) {
         this.possibleTasks = possibleTasks;
         this.completedTasks = completedTasks;
+        this.unlockedTask = unlockedTask;
         this.containerId = containerId;
     }
 
@@ -29,24 +34,31 @@ public class TaskStatusPacket implements IMessage {
         buf.writeVarInt(msg.containerId);
         buf.writeVarInt(msg.possibleTasks.size());
         buf.writeVarInt(msg.completedTasks.size());
+        buf.writeVarInt(msg.unlockedTask.size());
         msg.possibleTasks.forEach(res -> buf.writeString(res.getRegistryName().toString()));
         msg.completedTasks.forEach(res -> buf.writeString(res.getRegistryName().toString()));
+        msg.unlockedTask.forEach(res -> buf.writeString(res.getRegistryName().toString()));
     }
 
     static TaskStatusPacket decode(@Nonnull PacketBuffer buf) {
         int containerId = buf.readVarInt();
         int taskSize = buf.readVarInt();
         int completeSize = buf.readVarInt();
-        Set<Task> res = Sets.newHashSet();
+        int unlockedSize = buf.readVarInt();
+        Set<Task> possible = Sets.newHashSet();
         for (int i = 0; i < taskSize; i++) {
-            res.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
+            possible.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
         }
-        Set<Task> res2 = Sets.newHashSet();
+        Set<Task> completed = Sets.newHashSet();
         for (int i = 0; i < completeSize; i++) {
-            res2.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
+            completed.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
+        }
+        List<Task> unlocked = Lists.newArrayList();
+        for (int i = 0; i < unlockedSize; i++) {
+            unlocked.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
         }
 
-        return new TaskStatusPacket(res, res2, containerId);
+        return new TaskStatusPacket(possible, completed,unlocked, containerId);
     }
 
     public static void handle(final TaskStatusPacket msg, @Nonnull Supplier<NetworkEvent.Context> contextSupplier) {

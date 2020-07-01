@@ -48,25 +48,25 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         @Nonnull
         @Override
         public TaskReward getReward() {
-            return TaskMasterScreen.this.container.getAvailableTasks().get(TaskMasterScreen.this.openedTask).getReward();
+            return TaskMasterScreen.this.container.getUnlockedTasks().get(TaskMasterScreen.this.openedTask).getReward();
         }
 
         @Nonnull
         @Override
         public TaskRequirement<?> getRequirement() {
-            return TaskMasterScreen.this.container.getAvailableTasks().get(TaskMasterScreen.this.openedTask).getRequirement();
+            return TaskMasterScreen.this.container.getUnlockedTasks().get(TaskMasterScreen.this.openedTask).getRequirement();
         }
 
         @Nullable
         @Override
         public IPlayableFaction<?> getFaction() {
-            return TaskMasterScreen.this.container.getAvailableTasks().get(TaskMasterScreen.this.openedTask).getFaction();
+            return TaskMasterScreen.this.container.getUnlockedTasks().get(TaskMasterScreen.this.openedTask).getFaction();
         }
 
         @Nonnull
         @Override
         public String getTranslationKey() {
-            return TaskMasterScreen.this.container.getAvailableTasks().get(TaskMasterScreen.this.openedTask).getTranslationKey();
+            return TaskMasterScreen.this.container.getUnlockedTasks().get(TaskMasterScreen.this.openedTask).getTranslationKey();
         }
     };
 
@@ -93,7 +93,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         for (int l = 0; l < 7; ++l) {
             this.buttons[l] = this.addButton(new CompleteButton(i + 5 + 132 - 2, k + 3, l, (button) -> {
                 if (button instanceof CompleteButton) {
-                    Task task = this.container.getAvailableTasks().get(((CompleteButton) button).getChosenItem() + this.scrolledTask - 1);
+                    Task task = this.container.getUnlockedTasks().get(((CompleteButton) button).getChosenItem() + this.scrolledTask - 1);
                     if (this.container.canCompleteTask(task)) {
                         this.container.completeTask(task);
                     }
@@ -122,7 +122,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     public void render(int mouseX, int mouseY, float partialTicks) {
         this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
-        Collection<Task> tasks = this.container.getAvailableTasks();
+        Collection<Task> tasks = this.container.getUnlockedTasks();
         if (!tasks.isEmpty()) {
             int i = (this.width - this.xSize) / 2;
             int j = (this.height - this.ySize) / 2;
@@ -147,11 +147,11 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             }
             for (CompleteButton button : this.buttons) {
                 try {
-                    button.visible = button.getChosenItem() < this.container.getAvailableTasks().size() && this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask) == dummy && this.container.canCompleteTask(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask - 1)) && !this.container.isCompleted(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask - 1));
+                    button.visible = button.getChosenItem() < this.container.getUnlockedTasks().size() && this.container.getUnlockedTasks().get(button.getChosenItem() + this.scrolledTask) == dummy && this.container.canCompleteTask(this.container.getUnlockedTasks().get(button.getChosenItem() + this.scrolledTask - 1)) && !this.container.isCompleted(this.container.getUnlockedTasks().get(button.getChosenItem() + this.scrolledTask - 1));
                 }catch (ArrayIndexOutOfBoundsException e) {
                     button.visible = false;
                     try {
-                        LogManager.getLogger().info(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask) == dummy);
+                        LogManager.getLogger().info(this.container.getUnlockedTasks().get(button.getChosenItem() + this.scrolledTask) == dummy);
                     }catch (ArrayIndexOutOfBoundsException e1){
                         LogManager.getLogger().info(button.getChosenItem() + this.scrolledTask);
                     }
@@ -229,7 +229,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         boolean dummy = task == this.dummy;
         int offset = dummy ? 63 : 0;
         if (dummy && this.isOpen) {
-            task = this.container.getAvailableTasks().get(this.openedTask);
+            task = this.container.getUnlockedTasks().get(this.openedTask);
         }
         if (this.container.isCompleted(task)) {
             blit(x, y, this.blitOffset, 16, 208 + offset, 137, 21, 325, 256);
@@ -328,7 +328,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollAmount) {
-        int i = this.container.getAvailableTasks().size();
+        int i = this.container.getUnlockedTasks().size();
         if (this.isTaskListTooLong(i)) {
             int j = i - 7;
             this.scrolledTask = (int) ((double) this.scrolledTask - scrollAmount);
@@ -340,7 +340,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
     @Override
     public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int buttonId, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-        int i = this.container.getAvailableTasks().size();
+        int i = this.container.getUnlockedTasks().size();
         if (this.mouseOnScroller) {
             int j = this.guiTop + 18;
             int k = j + 144;
@@ -359,32 +359,32 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         this.mouseOnScroller = false;
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        if (this.isTaskListTooLong(this.container.getAvailableTasks().size()) && mouseX > (double) (i + 154) && mouseX < (double) (i + 160) && mouseY > (double) (j + 17) && mouseY <= (double) (j + 166)) {
+        if (this.isTaskListTooLong(this.container.getUnlockedTasks().size()) && mouseX > (double) (i + 154) && mouseX < (double) (i + 160) && mouseY > (double) (j + 17) && mouseY <= (double) (j + 166)) {
             this.mouseOnScroller = true;
         }
         if (mouseX > i + 17 && mouseX < i + 136 + 17 && mouseY > j - 4 + 21 && mouseY < j + 168 - 4) {
             int num = ((int) (mouseY - (j - 4 + 21)) / 21) + this.scrolledTask;
             if (this.isOpen) {
                 if (this.openedTask + 1 != num) {
-                    this.container.getAvailableTasks().remove(this.openedTask + 1);
+                    this.container.getUnlockedTasks().remove(this.openedTask + 1);
                     if (num > this.openedTask) {
                         num--;
                     }
-                    if (num < this.container.getAvailableTasks().size() && num != this.openedTask) {
+                    if (num < this.container.getUnlockedTasks().size() && num != this.openedTask) {
                         this.openedTask = num;
-                        this.container.getAvailableTasks().add(this.openedTask + 1, dummy);
+                        this.container.getUnlockedTasks().add(this.openedTask + 1, dummy);
                     } else {
                         this.isOpen = false;
-                        if (this.container.getAvailableTasks().size() < this.scrolledTask + 7 && this.scrolledTask != 0) {
+                        if (this.container.getUnlockedTasks().size() < this.scrolledTask + 7 && this.scrolledTask != 0) {
                             this.scrolledTask--;
                         }
                     }
                 }
             } else {
-                if (num < this.container.getAvailableTasks().size()) {
+                if (num < this.container.getUnlockedTasks().size()) {
                     this.isOpen = true;
                     this.openedTask = num;
-                    this.container.getAvailableTasks().add(this.openedTask + 1, dummy);
+                    this.container.getUnlockedTasks().add(this.openedTask + 1, dummy);
                 }
             }
         }
@@ -406,7 +406,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
         @Override
         public void renderToolTip(int mouseX, int mouseY) {
-            if (this.isHovered && TaskMasterScreen.this.container.getAvailableTasks().size() > this.chosenItem + TaskMasterScreen.this.scrolledTask) {
+            if (this.isHovered && TaskMasterScreen.this.container.getUnlockedTasks().size() > this.chosenItem + TaskMasterScreen.this.scrolledTask) {
                 TaskMasterScreen.this.renderTooltip(SUBMIT.getFormattedText(), mouseX, mouseY);
             }
         }
