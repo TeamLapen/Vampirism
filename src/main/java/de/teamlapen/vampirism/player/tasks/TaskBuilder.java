@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.player.tasks.req.EntityRequirement;
+import de.teamlapen.vampirism.player.tasks.req.EntityTypeRequirement;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.req.StatRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
@@ -14,6 +15,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -62,32 +64,37 @@ public class TaskBuilder {
         return this;
     }
 
-    public TaskBuilder addRequirement(@Nonnull EntityType<?> entityType, int amount) {
+    public TaskBuilder setRequirement(@Nonnull EntityType<?> entityType, int amount) {
         this.requirement = new EntityRequirement(entityType, amount);
         return this;
     }
 
-    public <T extends IForgeRegistryEntry<?>> TaskBuilder addRequirement(@Nonnull ResourceLocation stat, int amount) {
+    public TaskBuilder setRequirement(@Nonnull Tag<EntityType<?>> entityType, int amount) {
+        this.requirement = new EntityTypeRequirement(entityType, amount);
+        return this;
+    }
+
+    public <T extends IForgeRegistryEntry<?>> TaskBuilder setRequirement(@Nonnull ResourceLocation stat, int amount) {
         this.requirement = new StatRequirement(stat, amount);
         return this;
     }
 
-    public TaskBuilder addRequirement(@Nonnull ItemStack itemStack) {
+    public TaskBuilder setRequirement(@Nonnull ItemStack itemStack) {
         this.requirement = new ItemRequirement(itemStack);
         return this;
     }
 
-    public TaskBuilder addRequirement(@Nonnull TaskRequirement<?> requirement) {
+    public TaskBuilder setRequirement(@Nonnull TaskRequirement<?> requirement) {
         this.requirement = requirement;
         return this;
     }
 
-    public TaskBuilder addReward(@Nonnull ItemStack reward) {
+    public TaskBuilder setReward(@Nonnull ItemStack reward) {
         this.reward = new ItemReward(reward);
         return this;
     }
 
-    public TaskBuilder addReward(@Nonnull TaskReward reward) {
+    public TaskBuilder setReward(@Nonnull TaskReward reward) {
         this.reward = reward;
         return this;
     }

@@ -35,6 +35,10 @@ public interface TaskRequirement<T> {
          */
         ENTITY,
         /**
+         * based on {@link net.minecraft.stats.Stats.ENTITY_KILLED} stat increased, but for multiple entities.
+         */
+        ENTITY_TYPE,
+        /**
          * based on boolean supplier
          */
         BOOLEAN

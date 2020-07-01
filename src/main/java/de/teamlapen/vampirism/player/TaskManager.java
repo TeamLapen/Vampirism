@@ -13,13 +13,13 @@ import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.network.TaskStatusPacket;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -31,8 +31,7 @@ public class TaskManager implements ITaskManager {
     private final @Nonnull IFactionPlayer<?> factionPlayer;
     private final @Nonnull Map<Task.Variant, Set<Task>> completedTasks = Maps.newHashMap();
     private final @Nonnull Map<Task.Variant, Set<Task>> availableTasks = Maps.newHashMap();
-    private final @Nonnull Map<Task, Map<ResourceLocation, Integer>> stats = Maps.newHashMap();
-    private final @Nonnull Map<Task, Map<EntityType<?>, Integer>> entityStats = Maps.newHashMap();
+    private final @Nonnull Map<TaskRequirement<?>, Pair<Integer,Task>> stats = Maps.newHashMap();
     private boolean init;
     private long taskUpdateLast;
 
@@ -56,7 +55,7 @@ public class TaskManager implements ITaskManager {
     }
 
     public void updateClient() {
-        VampirismMod.dispatcher.sendTo(new TaskStatusPacket(getCompletableTasks(), getCompletedTasks(), getAvailableTasks(),player.openContainer.windowId), (ServerPlayerEntity) player);
+        VampirismMod.dispatcher.sendTo(new TaskStatusPacket(getCompletableTasks(), getCompletedTasks(), getAvailableTasks(),player.openContainer.windowId), player);
     }
 
     public boolean isTaskUnlocked(Task task) {
@@ -82,8 +81,7 @@ public class TaskManager implements ITaskManager {
         if (!isTaskUnlocked(task)) return false;
         this.getCompletedTasks(task.getVariant()).add(task);
         this.getAvailableTasks(task.getVariant()).remove(task);
-        this.getStats().remove(task);
-        this.getEntityStats().remove(task);
+        this.stats.remove(task.getRequirement());
         this.updateAvailableTasks();
         this.updateStats();
         return true;
@@ -152,20 +150,29 @@ public class TaskManager implements ITaskManager {
         return faction;
     }
 
-    @SuppressWarnings("SuspiciousMethodCalls")
     @Override
     public boolean canCompleteTask(Task task) {
         if (!isTaskUnlocked(task))
             return false;
         switch (task.getRequirement().getType()) {
             case STATS:
-                if (this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())) < this.getStats().get(task).get(task.getRequirement().getStat()) + task.getRequirement().getAmount())
+                if (this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())) < this.stats.get(task.getRequirement()).getLeft() + task.getRequirement().getAmount())
                     return false;
                 break;
             case ENTITY:
-                int d = this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat()));
-                int f = this.getEntityStats().get(task).get(task.getRequirement().getStat()) + task.getRequirement().getAmount();
-                if (d < f)
+                int actualStat = this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat()));
+                int neededStat = this.stats.get(task.getRequirement()).getLeft() + task.getRequirement().getAmount();
+                if (actualStat < neededStat)
+                    return false;
+                break;
+            case ENTITY_TYPE:
+                int actualStats = 0;
+                //noinspection unchecked
+                for(EntityType<?> type : ((Tag<EntityType<?>>) task.getRequirement().getStat()).getAllElements()) {
+                    actualStats += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
+                }
+                int neededStats = this.stats.get(task.getRequirement()).getLeft() + task.getRequirement().getAmount();
+                if (actualStats < neededStats)
                     return false;
                 break;
             case ITEMS:
@@ -186,13 +193,13 @@ public class TaskManager implements ITaskManager {
         this.completedTasks.clear();
         this.availableTasks.clear();
         this.stats.clear();
-        this.entityStats.clear();
         this.init = true;
     }
 
     @Override
     public void init() {
         this.updateAvailableTasks();
+        this.updateStats();
     }
 
     public void updateTasks() {
@@ -218,38 +225,26 @@ public class TaskManager implements ITaskManager {
     private void updateStats() {
         for (Set<Task> tasks : this.availableTasks.values()) {
             for (Task task : tasks) {
-                if (this.getStats().containsKey(task) || this.getEntityStats().containsKey(task)) continue;
+                if (this.stats.containsKey(task.getRequirement())) continue;
                 switch (task.getRequirement().getType()) {
                     case STATS:
-                        this.getStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((ResourceLocation) task.getRequirement().getStat(), this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())));
+                        this.stats.put(task.getRequirement(), Pair.of(this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())),task));
                         break;
                     case ENTITY:
-                        this.getEntityStats().computeIfAbsent(task, task1 -> Maps.newHashMap()).put((EntityType<?>) task.getRequirement().getStat(), this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat())));
+                        this.stats.put(task.getRequirement(), Pair.of(this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat())),task));
+                        break;
+                    case ENTITY_TYPE:
+                        int amount = 0;
+                        //noinspection unchecked
+                        for(EntityType<?> type : ((Tag<EntityType<?>>) task.getRequirement()).getAllElements()) {
+                            amount += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
+                        }
+                        this.stats.put(task.getRequirement(), Pair.of(amount,task));
                         break;
                     default:
                 }
             }
         }
-        this.getStats().entrySet().removeIf(entry -> !this.availableTasks.get(entry.getKey().getVariant()).contains(entry.getKey()));
-        this.getEntityStats().entrySet().removeIf(entry -> !this.availableTasks.get(entry.getKey().getVariant()).contains(entry.getKey()));
-    }
-
-    @Nonnull
-    private Map<Task, Map<ResourceLocation, Integer>> getStats() {
-        if (this.init) {
-            this.init = false;
-            this.updateStats();
-        }
-        return stats;
-    }
-
-    @Nonnull
-    private Map<Task, Map<EntityType<?>, Integer>> getEntityStats() {
-        if (this.init) {
-            this.init = false;
-            this.updateStats();
-        }
-        return entityStats;
     }
 
     @Override
@@ -273,27 +268,13 @@ public class TaskManager implements ITaskManager {
         //stats
         if (!this.stats.isEmpty()) {
             CompoundNBT stats = new CompoundNBT();
-            this.stats.forEach((task, requirementStats) -> {
-                CompoundNBT statsNBT = new CompoundNBT();
-                requirementStats.forEach((resourceLocation, amount) -> statsNBT.putInt(resourceLocation.toString(), amount));
-                stats.put(task.getRegistryName().toString(), statsNBT);
-            });
+            this.stats.forEach((taskRequirement, statPair) -> stats.putInt(statPair.getRight().getRegistryName().toString(), statPair.getLeft()));
             compoundNBT.put("stats", stats);
-        }
-        //entities
-        if (!this.entityStats.isEmpty()) {
-            CompoundNBT entity = new CompoundNBT();
-            this.entityStats.forEach((task, requirementStats) -> {
-                CompoundNBT statsNBT = new CompoundNBT();
-                requirementStats.forEach((entityType, amount) -> statsNBT.putInt(entityType.getRegistryName().toString(), amount));
-                entity.put(task.getRegistryName().toString(), statsNBT);
-            });
-            compoundNBT.put("entities", entity);
         }
     }
 
     public <T> void readNBT(CompoundNBT compoundNBT) {
-        this.init();
+        this.updateAvailableTasks();
         //completed tasks
         if (compoundNBT.contains("tasks")) {
             compoundNBT.getCompound("tasks").keySet().forEach(taskId -> {
@@ -309,19 +290,7 @@ public class TaskManager implements ITaskManager {
             tasks.keySet().forEach(taskId -> {
                 Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
                 if (task != null) {
-                    this.stats.put(task, Maps.newHashMap());
-                    tasks.getCompound(taskId).keySet().forEach(stat -> this.stats.computeIfAbsent(task, task1 -> Maps.newHashMap()).put(new ResourceLocation(stat), tasks.getCompound(taskId).getInt(stat)));
-                }
-            });
-        }
-        //entities
-        if (compoundNBT.contains("entities")) {
-            CompoundNBT tasks = compoundNBT.getCompound("entities");
-            tasks.keySet().forEach(taskId -> {
-                Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
-                if (task != null) {
-                    this.entityStats.put(task, Maps.newHashMap());
-                    tasks.getCompound(taskId).keySet().forEach(stat -> this.entityStats.computeIfAbsent(task, task1 -> Maps.newHashMap()).put(ForgeRegistries.ENTITIES.getValue(new ResourceLocation(stat)), tasks.getCompound(taskId).getInt(stat)));
+                    this.stats.put(task.getRequirement(), Pair.of(tasks.getInt(taskId),task));
                 }
             });
         }
