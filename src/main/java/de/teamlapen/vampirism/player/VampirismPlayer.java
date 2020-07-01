@@ -81,6 +81,13 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
         return player.getEntityWorld().isRemote;
     }
 
+    @Override
+    public void onUpdate() {
+        if(!isRemote()) {
+            this.taskManager.update();
+        }
+    }
+
 
     @Override
     public final void loadUpdateFromNBT(CompoundNBT nbt) {
