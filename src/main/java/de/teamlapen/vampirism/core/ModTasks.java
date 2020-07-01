@@ -1,19 +1,10 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.stats.Stats;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
-
-import java.time.temporal.ValueRange;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 import static de.teamlapen.vampirism.player.tasks.TaskBuilder.builder;
@@ -41,9 +32,13 @@ public class ModTasks {
 //        registry.register(builder().withFaction(VReference.VAMPIRE_FACTION).addRequirement(ModEntities.advanced_hunter, 5).addReward(new ItemStack(ModItems.pure_blood_3)).build("advanced_hunter_killer"));
 
         //hunter tasks
-        registry.register(builder().withFaction(VReference.HUNTER_FACTION).addRequirement(ModEntities.vampire, 1).addReward(new ItemStack(ModItems.holy_water_bottle_normal)).build("vampire_killer1"));
-        registry.register(builder().withFaction(VReference.HUNTER_FACTION).addRequirement(ModEntities.advanced_vampire, 1).addReward(new ItemStack(ModItems.armor_of_swiftness_feet_normal)).build("advanced_vampire_killer1"));
-        registry.register(builder().withFaction(VReference.HUNTER_FACTION).requireParent(()-> vampire_killer1).addRequirement(ModEntities.vampire, 1).addReward(new ItemStack(ModItems.armor_of_swiftness_feet_normal)).build("vampire_killer2"));
-        registry.register(builder().withFaction(VReference.HUNTER_FACTION).requireParent(()->vampire_killer2).addRequirement(ModEntities.vampire, 1).addReward(new ItemStack(ModItems.armor_of_swiftness_feet_normal)).build("vampire_killer3"));
+        registry.register(builder().setReward(new ItemStack(ModItems.vampire_fang)).setRequirement(new ItemStack(ModItems.human_heart)).build("vampire_killer1"));
+        registry.register(builder().requireParent(()->vampire_killer1).setReward(new ItemStack(ModItems.human_heart)).setRequirement(new ItemStack(ModItems.vampire_fang)).build("vampire_killer2"));
+        registry.register(builder().requireParent(()->vampire_killer2).setReward(new ItemStack(ModItems.vampire_fang)).setRequirement(new ItemStack(ModItems.human_heart)).build("vampire_killer3"));
+
+//        registry.register(builder().withFaction(VReference.HUNTER_FACTION).addRequirement(ModEntities.vampire, 1).addReward(new ItemStack(ModItems.holy_water_bottle_normal)).build("vampire_killer1"));
+//        registry.register(builder().withFaction(VReference.HUNTER_FACTION).addRequirement(ModEntities.advanced_vampire, 1).addReward(new ItemStack(ModItems.armor_of_swiftness_feet_normal)).build("advanced_vampire_killer1"));
+//        registry.register(builder().withFaction(VReference.HUNTER_FACTION).requireParent(()-> vampire_killer1).addRequirement(ModEntities.vampire, 1).addReward(new ItemStack(ModItems.armor_of_swiftness_feet_normal)).build("vampire_killer2"));
+//        registry.register(builder().withFaction(VReference.HUNTER_FACTION).requireParent(()->vampire_killer2).addRequirement(ModEntities.vampire, 1).addReward(new ItemStack(ModItems.armor_of_swiftness_feet_normal)).build("vampire_killer3"));
     }
 }
