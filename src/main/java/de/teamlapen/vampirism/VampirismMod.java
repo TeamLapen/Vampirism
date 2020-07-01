@@ -227,6 +227,7 @@ public class VampirismMod {
         if (event.includeServer()) {
             gen.addProvider(new VampirismBlockTagProvider(gen));
             gen.addProvider(new VampirismItemTagProvider(gen));
+            gen.addProvider(new VampirismEntityTagProvider(gen));
         }
     }
 
