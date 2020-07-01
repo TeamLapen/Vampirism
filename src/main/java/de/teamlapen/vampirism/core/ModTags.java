@@ -2,8 +2,10 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
@@ -39,6 +41,19 @@ public class ModTags {
 
         private static Tag<Item> tag(String name) {
             return new ItemTags.Wrapper(new ResourceLocation(REFERENCE.MODID, name));
+        }
+    }
+
+    public static class Entities {
+        public static final Tag<EntityType<?>> HUNTER = tag("hunter");
+        public static final Tag<EntityType<?>> VAMPIRE = tag("vampire");
+
+        private static Tag<EntityType<?>> tag(String domain, String name) {
+            return new EntityTypeTags.Wrapper(new ResourceLocation(domain,name));
+        }
+
+        private static Tag<EntityType<?>> tag(String name) {
+            return new EntityTypeTags.Wrapper(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 }

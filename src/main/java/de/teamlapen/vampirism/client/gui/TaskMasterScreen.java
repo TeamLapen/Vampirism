@@ -22,6 +22,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -212,6 +213,9 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                         toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entity_req").appendText(":").getFormattedText());
                         toolTips.add(paragraph.shallowCopy().appendSibling(((EntityType<?>) requirement.getStat()).getName()).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
                         break;
+                    case ENTITY_TYPE:
+                        toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entitytype_req").appendText(":").getFormattedText());
+                        toolTips.add(paragraph.shallowCopy().appendSibling(new TranslationTextComponent(((Tag<EntityType<?>>)requirement.getStat()).getId().toString())).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
                 }
                 if (task.useDescription()) {
                     toolTips.add(task.getDescription().getFormattedText());
@@ -252,14 +256,19 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 this.itemRenderer.renderItemAndEffectIntoGUI(PAPER,x + 3 + 113 - 21, y + 2);
             }
             TaskRequirement<?> requirement = task.getRequirement();
-            if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
-                ItemStack stack = ((ItemRequirement) requirement).getItemStack();
-                this.itemRenderer.renderItemAndEffectIntoGUI(stack, x + 3 + 3, y + 2);
-                this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 3, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
-            } else if(requirement.getType().equals(TaskRequirement.Type.ENTITY)) {
-                this.itemRenderer.renderItemAndEffectIntoGUI(SKULLITEM, x + 3 + 3, y + 2);
-            } else {
-                this.itemRenderer.renderItemAndEffectIntoGUI(PAPER,x + 3 + 3, y + 2);
+            switch (task.getRequirement().getType()) {
+                case ITEMS:
+                    ItemStack stack = ((ItemRequirement) requirement).getItemStack();
+                    this.itemRenderer.renderItemAndEffectIntoGUI(stack, x + 3 + 3, y + 2);
+                    this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 3, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
+                    break;
+                case ENTITY:
+                case ENTITY_TYPE:
+                    this.itemRenderer.renderItemAndEffectIntoGUI(SKULLITEM, x + 3 + 3, y + 2);
+                    break;
+                default:
+                    this.itemRenderer.renderItemAndEffectIntoGUI(PAPER,x + 3 + 3, y + 2);
+                    break;
             }
         }
     }

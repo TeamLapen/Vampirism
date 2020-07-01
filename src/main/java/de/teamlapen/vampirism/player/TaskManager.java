@@ -19,10 +19,12 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Set;
+import java.util.Map;
+import java.util.Collection;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class TaskManager implements ITaskManager {
@@ -31,8 +33,7 @@ public class TaskManager implements ITaskManager {
     private final @Nonnull IFactionPlayer<?> factionPlayer;
     private final @Nonnull Map<Task.Variant, Set<Task>> completedTasks = Maps.newHashMap();
     private final @Nonnull Map<Task.Variant, Set<Task>> availableTasks = Maps.newHashMap();
-    private final @Nonnull Map<TaskRequirement<?>, Pair<Integer,Task>> stats = Maps.newHashMap();
-    private boolean init;
+    private final @Nonnull Map<Task, Integer> stats = Maps.newHashMap();
     private long taskUpdateLast;
 
     public TaskManager(IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
@@ -81,9 +82,8 @@ public class TaskManager implements ITaskManager {
         if (!isTaskUnlocked(task)) return false;
         this.getCompletedTasks(task.getVariant()).add(task);
         this.getAvailableTasks(task.getVariant()).remove(task);
-        this.stats.remove(task.getRequirement());
+        this.stats.remove(task);
         this.updateAvailableTasks();
-        this.updateStats();
         return true;
     }
 
@@ -156,12 +156,12 @@ public class TaskManager implements ITaskManager {
             return false;
         switch (task.getRequirement().getType()) {
             case STATS:
-                if (this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())) < this.stats.get(task.getRequirement()).getLeft() + task.getRequirement().getAmount())
+                if (this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())) < this.stats.get(task) + task.getRequirement().getAmount())
                     return false;
                 break;
             case ENTITY:
                 int actualStat = this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat()));
-                int neededStat = this.stats.get(task.getRequirement()).getLeft() + task.getRequirement().getAmount();
+                int neededStat = this.stats.get(task) + task.getRequirement().getAmount();
                 if (actualStat < neededStat)
                     return false;
                 break;
@@ -171,7 +171,7 @@ public class TaskManager implements ITaskManager {
                 for(EntityType<?> type : ((Tag<EntityType<?>>) task.getRequirement().getStat()).getAllElements()) {
                     actualStats += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                 }
-                int neededStats = this.stats.get(task.getRequirement()).getLeft() + task.getRequirement().getAmount();
+                int neededStats = this.stats.get(task) + task.getRequirement().getAmount();
                 if (actualStats < neededStats)
                     return false;
                 break;
@@ -193,13 +193,11 @@ public class TaskManager implements ITaskManager {
         this.completedTasks.clear();
         this.availableTasks.clear();
         this.stats.clear();
-        this.init = true;
     }
 
     @Override
     public void init() {
         this.updateAvailableTasks();
-        this.updateStats();
     }
 
     public void updateTasks() {
@@ -225,21 +223,21 @@ public class TaskManager implements ITaskManager {
     private void updateStats() {
         for (Set<Task> tasks : this.availableTasks.values()) {
             for (Task task : tasks) {
-                if (this.stats.containsKey(task.getRequirement())) continue;
+                if (this.stats.containsKey(task)) continue;
                 switch (task.getRequirement().getType()) {
                     case STATS:
-                        this.stats.put(task.getRequirement(), Pair.of(this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())),task));
+                        this.stats.put(task, this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) task.getRequirement().getStat())));
                         break;
                     case ENTITY:
-                        this.stats.put(task.getRequirement(), Pair.of(this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat())),task));
+                        this.stats.put(task, this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) task.getRequirement().getStat())));
                         break;
                     case ENTITY_TYPE:
                         int amount = 0;
                         //noinspection unchecked
-                        for(EntityType<?> type : ((Tag<EntityType<?>>) task.getRequirement()).getAllElements()) {
+                        for(EntityType<?> type : ((Tag<EntityType<?>>) task.getRequirement().getStat()).getAllElements()) {
                             amount += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                         }
-                        this.stats.put(task.getRequirement(), Pair.of(amount,task));
+                        this.stats.put(task, amount);
                         break;
                     default:
                 }
@@ -256,6 +254,7 @@ public class TaskManager implements ITaskManager {
         Collection<Task> tasks = ModRegistries.TASKS.getValues();
         this.availableTasks.clear();
         tasks.stream().filter(this::isTaskUnlocked).filter(task -> !isTaskCompleted(task)).forEach(task -> this.getAvailableTasks(task.getVariant()).add(task));
+        this.updateStats();
     }
 
     public void writeNBT(CompoundNBT compoundNBT) {
@@ -268,7 +267,7 @@ public class TaskManager implements ITaskManager {
         //stats
         if (!this.stats.isEmpty()) {
             CompoundNBT stats = new CompoundNBT();
-            this.stats.forEach((taskRequirement, statPair) -> stats.putInt(statPair.getRight().getRegistryName().toString(), statPair.getLeft()));
+            this.stats.forEach((task, statAmount) -> stats.putInt(task.getRegistryName().toString(), statAmount));
             compoundNBT.put("stats", stats);
         }
     }
@@ -290,7 +289,7 @@ public class TaskManager implements ITaskManager {
             tasks.keySet().forEach(taskId -> {
                 Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
                 if (task != null) {
-                    this.stats.put(task.getRequirement(), Pair.of(tasks.getInt(taskId),task));
+                    this.stats.put(task, tasks.getInt(taskId));
                 }
             });
         }
