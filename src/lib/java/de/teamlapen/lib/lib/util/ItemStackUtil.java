@@ -45,4 +45,8 @@ public class ItemStackUtil {
         if (stackA.getDamage() != stackB.getDamage()) return false;
         return ItemStack.areItemStackTagsEqual(stackA, stackB);
     }
+
+    public static boolean stackEqualExact(ItemStack stack1, ItemStack stack2) {
+        return stack1.getItem() == stack2.getItem() && ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
 }

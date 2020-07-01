@@ -10,10 +10,7 @@ import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
-import de.teamlapen.vampirism.network.BloodValuePacket;
-import de.teamlapen.vampirism.network.OpenVampireBookPacket;
-import de.teamlapen.vampirism.network.PlayEventPacket;
-import de.teamlapen.vampirism.network.SkillTreePacket;
+import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import net.minecraft.block.Block;
@@ -36,15 +33,18 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 
 import static de.teamlapen.vampirism.blocks.TentBlock.FACING;
@@ -58,7 +58,7 @@ public class ClientProxy extends CommonProxy {
     private final static Logger LOGGER = LogManager.getLogger(ClientProxy.class);
 
     private VampirismHUDOverlay overlay;
-    private ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
+    private final ClientSkillTreeManager skillTreeManager = new ClientSkillTreeManager();
 
     @Override
     public void displayNameSwordScreen(ItemStack stack) {
@@ -231,5 +231,10 @@ public class ClientProxy extends CommonProxy {
             }
 
         });
+    }
+
+    @Override
+    public void handleRequestMinionSelect(RequestMinionSelectPacket.Action action, List<Pair<Integer, ITextComponent>> minions) {
+        Minecraft.getInstance().displayGuiScreen(new SelectMinionScreen(action, minions));
     }
 }

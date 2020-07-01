@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import com.mojang.authlib.GameProfile;
-
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -14,25 +13,16 @@ import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
-import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
-import de.teamlapen.vampirism.entity.goals.FleeGarlicVampireGoal;
-import de.teamlapen.vampirism.entity.goals.FleeSunVampireGoal;
-import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
-import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
+import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
-import de.teamlapen.vampirism.util.IPlayerFace;
+import de.teamlapen.vampirism.util.IPlayerOverlay;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.goal.BreakDoorGoal;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -57,7 +47,7 @@ import javax.annotation.Nullable;
 /**
  * Advanced vampire. Is strong. Represents supporters
  */
-public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerFace, IEntityActionUser {
+public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerOverlay, IEntityActionUser {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.VARINT);
     private static final DataParameter<String> NAME = EntityDataManager.createKey(AdvancedVampireEntity.class, DataSerializers.STRING);
@@ -167,7 +157,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @OnlyIn(Dist.CLIENT)
     @Nullable
     @Override
-    public GameProfile getPlayerFaceProfile() {
+    public GameProfile getOverlayPlayerProfile() {
         if (this.facePlayerProfile == null) {
             String name = getTextureName();
             if (name == null) return null;

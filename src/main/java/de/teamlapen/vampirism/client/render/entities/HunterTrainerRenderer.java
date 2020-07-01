@@ -1,6 +1,10 @@
 package de.teamlapen.vampirism.client.render.entities;
 
+import com.google.common.base.Predicates;
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
+import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
+import de.teamlapen.vampirism.client.render.LayerCloak;
+import de.teamlapen.vampirism.client.render.LayerHunterEquipment;
 import de.teamlapen.vampirism.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.BipedRenderer;
@@ -13,10 +17,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class HunterTrainerRenderer extends BipedRenderer<HunterTrainerEntity, BasicHunterModel<HunterTrainerEntity>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
 
-    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
 
     public HunterTrainerRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new BasicHunterModel(), 0.5F);
+        super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
+        this.addLayer(new LayerHunterEquipment<>(this, h -> HunterEquipmentModel.StakeType.ONLY, entityModel -> 1));
+        this.addLayer(new LayerCloak<>(this, texture, Predicates.alwaysTrue()));
+
     }
 
     @Override
@@ -34,11 +40,4 @@ public class HunterTrainerRenderer extends BipedRenderer<HunterTrainerEntity, Ba
         super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 4);
     }
 
-    @Override
-    protected void renderModel(HunterTrainerEntity entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float partTicks) {
-        super.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, partTicks);
-        bindTexture(textureExtra);
-        getEntityModel().renderHat(partTicks, 1);
-
-    }
 }

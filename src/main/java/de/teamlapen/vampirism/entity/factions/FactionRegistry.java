@@ -22,11 +22,12 @@ import java.util.function.Predicate;
 import static net.minecraft.world.biome.Biome.LOGGER;
 
 
+@SuppressWarnings("rawtypes")
 public class FactionRegistry implements IFactionRegistry {
     private List<Faction> temp = new CopyOnWriteArrayList<>(); //Copy on write is costly, but we only expect very few elements anyway
     private Faction[] allFactions;
     private PlayableFaction[] playableFactions;
-    private Map<Integer, Predicate<LivingEntity>> predicateMap = new HashMap<>();
+    private final Map<Integer, Predicate<LivingEntity>> predicateMap = new HashMap<>();
 
     /**
      * Finishes registrations during InterModProcessEvent
@@ -75,7 +76,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public PlayableFaction[] getPlayableFactions() {
+    public PlayableFaction<?>[] getPlayableFactions() {
         return playableFactions;
     }
 
@@ -86,7 +87,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public Predicate<LivingEntity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction) {
+    public Predicate<LivingEntity> getPredicate(IFaction<?> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction<?> otherFaction) {
         int key = 0;
         if (otherFaction != null) {
             int id = otherFaction.hashCode();
@@ -138,21 +139,21 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
-        return registerPlayableFaction(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel,null);
-    }
-
-    @Override
-    public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, @Nullable IVillageFactionData villageFactionData) {
+    public <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel, int highestLordLevel, @Nullable IVillageFactionData villageFactionData) {
         if (!UtilLib.isNonNull(id, entityInterface, playerCapabilitySupplier)) {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
 
-        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, villageFactionData == null ? IVillageFactionData.INSTANCE: villageFactionData);
+        PlayableFaction<T> f = new PlayableFaction<>(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, highestLordLevel, villageFactionData == null ? IVillageFactionData.INSTANCE: villageFactionData);
         addFaction(f);
         return f;
     }
 
+    @ThreadSafeAPI
+    @Override
+    public <T extends IFactionPlayer<?>> IPlayableFaction<T> registerPlayableFaction(ResourceLocation id, Class<T> entityInterface, Color color, boolean hostileTowardsNeutral, NonNullSupplier<Capability<T>> playerCapabilitySupplier, int highestLevel) {
+        return registerPlayableFaction(id, entityInterface, color, hostileTowardsNeutral, playerCapabilitySupplier, highestLevel, 0, null);
+    }
 
     @ThreadSafeAPI
     private void addFaction(Faction faction) {

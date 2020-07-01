@@ -21,14 +21,14 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 
-public class FactionArgument implements ArgumentType<IPlayableFaction> {
+public class FactionArgument implements ArgumentType<IPlayableFaction<?>> {
     private static final Collection<String> EXAMPLES = Arrays.asList("vampirism:vampire", "vampirism:hunter");
 
     private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((id) -> new TranslationTextComponent("command.vampirism.argument.faction.notfound", id));
     private static final DynamicCommandExceptionType FACTION_NOT_PLAYABLE = new DynamicCommandExceptionType((id) -> new TranslationTextComponent("command.vampirism.argument.faction.notplayable", id));
 
-    public static IPlayableFaction<IFactionPlayer> getFaction(CommandContext<CommandSource> context, String id) throws CommandSyntaxException {
-        return (IPlayableFaction) context.getArgument(id, IFaction.class);
+    public static IPlayableFaction<IFactionPlayer<?>> getFaction(CommandContext<CommandSource> context, String id) throws CommandSyntaxException {
+        return (IPlayableFaction<IFactionPlayer<?>>) context.getArgument(id, IFaction.class);
     }
 
     public static FactionArgument factionArgument() {
@@ -46,7 +46,7 @@ public class FactionArgument implements ArgumentType<IPlayableFaction> {
     }
 
     @Override
-    public IPlayableFaction parse(StringReader reader) throws CommandSyntaxException {
+    public IPlayableFaction<IFactionPlayer<?>> parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation id = ResourceLocation.read(reader);
         IFaction faction = VampirismAPI.factionRegistry().getFactionByID(id);
         if (faction == null) throw FACTION_NOT_FOUND.create(id);

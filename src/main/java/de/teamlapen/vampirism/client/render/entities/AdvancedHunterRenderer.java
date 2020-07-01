@@ -1,6 +1,10 @@
 package de.teamlapen.vampirism.client.render.entities;
 
+import com.google.common.base.Predicates;
 import de.teamlapen.vampirism.client.model.BasicHunterModel;
+import de.teamlapen.vampirism.client.model.HunterEquipmentModel;
+import de.teamlapen.vampirism.client.render.LayerCloak;
+import de.teamlapen.vampirism.client.render.LayerHunterEquipment;
 import de.teamlapen.vampirism.client.render.LayerPlayerFaceOverlay;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
@@ -18,14 +22,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity, BasicHunterModel<AdvancedHunterEntity>> {
     private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
-    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
 
 
     public AdvancedHunterRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
+        this.addLayer(new LayerHunterEquipment<>(this, h -> HunterEquipmentModel.StakeType.FULL, AdvancedHunterEntity::getHunterType));
+        this.addLayer(new LayerCloak<>(this, texture, Predicates.alwaysTrue()));
+
         if (VampirismConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new LayerPlayerFaceOverlay<>(this));
-
         }
     }
 
@@ -39,13 +44,4 @@ public class AdvancedHunterRenderer extends BipedRenderer<AdvancedHunterEntity, 
         super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 4);
     }
 
-    @Override
-    protected void renderModel(AdvancedHunterEntity entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float partTicks) {
-
-        super.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, partTicks);
-        bindTexture(textureExtra);
-        getEntityModel().renderHat(partTicks, entitylivingbaseIn.getHunterType());
-        getEntityModel().renderWeapons(partTicks, false);
-
-    }
 }

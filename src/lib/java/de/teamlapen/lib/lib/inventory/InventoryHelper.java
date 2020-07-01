@@ -1,11 +1,16 @@
 package de.teamlapen.lib.lib.inventory;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.util.LazyOptional;
@@ -70,5 +75,81 @@ public class InventoryHelper {
         return LazyOptional.empty();
     }
 
+    public static void writeInventoryToTag(CompoundNBT tag, Inventory inventory) {
+        ListNBT listnbt = new ListNBT();
+
+        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+            ItemStack itemstack = inventory.getStackInSlot(i);
+            if (!itemstack.isEmpty()) {
+                listnbt.add(itemstack.write(new CompoundNBT()));
+            }
+        }
+        tag.put("inventory", listnbt);
+    }
+
+    public static void readInventoryFromTag(CompoundNBT tag, Inventory inventory) {
+        ListNBT listnbt = tag.getList("inventory", 10);
+
+        for (int i = 0; i < listnbt.size(); ++i) {
+            ItemStack itemstack = ItemStack.read(listnbt.getCompound(i));
+            if (!itemstack.isEmpty()) {
+                inventory.addItem(itemstack);
+            }
+        }
+
+    }
+
+    public static boolean canMergeStacks(ItemStack stack1, ItemStack stack2, int invLimit) {
+        return !stack1.isEmpty() && ItemStackUtil.stackEqualExact(stack1, stack2) && stack1.isStackable() && stack1.getCount() < stack1.getMaxStackSize() && stack1.getCount() < invLimit;
+    }
+
+    /**
+     * Try add stack to given slot. Tries to merge. DOES NOT check mergeability
+     *
+     * @param inv
+     * @param slot
+     * @param addStack is Modified to remove the added items
+     */
+    public static void addStackToSlotWithoutCheck(IInventory inv, int slot, ItemStack addStack) {
+
+        int newCount = addStack.getCount();
+        ItemStack existingStack = inv.getStackInSlot(slot);
+
+
+        int oldCount = existingStack.getCount();
+
+        int addAmount = Math.min(newCount, Math.min(inv.getInventoryStackLimit() - oldCount, addStack.getMaxStackSize() - oldCount));
+        if (addAmount == 0) {
+            return;
+        }
+        if (existingStack.isEmpty()) {
+            //If stack in inventory is empty, add a 0 count stack with the item and nbt information. It will be grown afterwards
+            existingStack = addStack.copy();
+            existingStack.setCount(0);
+            if (addStack.hasTag()) {
+                existingStack.setTag(addStack.getTag().copy());
+            }
+
+            inv.setInventorySlotContents(slot, existingStack);
+        }
+        existingStack.grow(addAmount);
+        addStack.shrink(addAmount);
+    }
+
+    public static int getFirstSuitableSlotToAdd(NonNullList<ItemStack> inventory, ItemStack stack, int invLimit) {
+        if (!stack.isDamaged() && stack.isStackable()) {
+            for (int i = 0; i < inventory.size(); ++i) {
+                if (InventoryHelper.canMergeStacks(inventory.get(i), stack, invLimit)) {
+                    return i;
+                }
+            }
+        }
+        for (int i = 0; i < inventory.size(); ++i) {
+            if (inventory.get(i).isEmpty()) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
 }

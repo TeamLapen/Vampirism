@@ -14,6 +14,8 @@ public class REFERENCE {
     public static final String FORGE_VERSION_MIN = "14.23.1.2554";
     public static final int HIGHEST_VAMPIRE_LEVEL = 14;
     public static final int HIGHEST_HUNTER_LEVEL = 14;
+    public static final int HIGHEST_VAMPIRE_LORD = 5;
+    public static final int HIGHEST_HUNTER_LORD = 5;
     public static final String FORGE_VERSION = "@FVERSION@";
     public static final String VERSION_UPDATE_FILE = "https://maxanier.de/projects/vampirism/versions.json";
     public static final String SUPPORTER_FILE = "http://maxanier.de/projects/vampirism/supporters.json";
@@ -38,6 +40,7 @@ public class REFERENCE {
     public final static ResourceLocation VAMPIRE_PLAYER_KEY = new ResourceLocation(MODID, "vampire");
     public final static ResourceLocation HUNTER_PLAYER_KEY = new ResourceLocation(MODID, "hunter");
     public final static ResourceLocation EXTENDED_CREATURE_KEY = new ResourceLocation(MODID, "iextendedcreature");
+    public final static ResourceLocation WORLD_CAP_KEY = new ResourceLocation(MODID, "world");
     public final static ResourceLocation VAMPIRISM_VILLAGE_KEY_NEW = new ResourceLocation(MODID, "ivv");
     public static ArtifactVersion VERSION = new DefaultArtifactVersion("0.0.0");
 

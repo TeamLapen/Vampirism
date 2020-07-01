@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * Basic sword for vampire hunters
  */
-public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem, IFactionSlayerItem, IVampireFinisher {
+public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem, IFactionSlayerItem, IVampireFinisher, IFactionExclusiveItem {
 
 
     public VampirismHunterWeapon(String regName, IItemTier material, int attackDamage, float attackSpeed, Properties props) {
@@ -51,6 +52,12 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
         }
     }
 
+
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.HUNTER_FACTION;
+    }
 
     @Nullable
     @Override

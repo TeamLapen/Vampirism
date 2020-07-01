@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
-import de.teamlapen.vampirism.entity.goals.LookAtTrainerHunterGoal;
+import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
 import de.teamlapen.vampirism.player.VampirismPlayer;
@@ -25,12 +25,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Hunter Trainer which allows Hunter players to level up
  */
-public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrainerHunterGoal.ITrainer, ICaptureIgnore {
+public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEntityGoal.TaskOwner, ICaptureIgnore {
     private static final ITextComponent name = new TranslationTextComponent("container.huntertrainer");
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private PlayerEntity trainee;
@@ -56,12 +57,12 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
     }
 
     /**
-     * @return The player which has the trainings gui open. Can be null
+     * @return The player which has the trainings gui open.
      */
-    @Nullable
+    @Nonnull
     @Override
-    public PlayerEntity getTrainee() {
-        return trainee;
+    public Optional<PlayerEntity> getForceLookTarget() {
+        return Optional.ofNullable(trainee);
     }
 
     @Override
@@ -138,7 +139,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
         super.registerGoals();
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0, false));
-        this.goalSelector.addGoal(5, new LookAtTrainerHunterGoal<>(this));
+        this.goalSelector.addGoal(5, new ForceLookEntityGoal<>(this));
         this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
         this.goalSelector.addGoal(9, new LookAtGoal(this, VampireBaseEntity.class, 17F));

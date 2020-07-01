@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.items.IFactionExclusiveItem;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -12,14 +15,22 @@ import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 
+import javax.annotation.Nonnull;
+
 /**
  * Item for the garlic plant
  */
-public class GarlicItem extends VampirismItem implements IPlantable {
+public class GarlicItem extends VampirismItem implements IPlantable, IFactionExclusiveItem {
     private final static String regName = "item_garlic";
 
     public GarlicItem() {
         super(regName, new Properties().group(VampirismMod.creativeTab));
+    }
+
+    @Nonnull
+    @Override
+    public IFaction<?> getExclusiveFaction() {
+        return VReference.HUNTER_FACTION;
     }
 
     @Override

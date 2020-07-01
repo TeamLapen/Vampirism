@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.render;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.teamlapen.vampirism.util.IPlayerFace;
+import de.teamlapen.vampirism.util.IPlayerOverlay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -20,7 +20,7 @@ import java.util.Map;
  * Renders an overlay over the entities face
  */
 @OnlyIn(Dist.CLIENT)
-public class LayerPlayerFaceOverlay<T extends MobEntity & IPlayerFace, M extends BipedModel<T>> extends LayerRenderer<T, M> {
+public class LayerPlayerFaceOverlay<T extends MobEntity & IPlayerOverlay, M extends BipedModel<T>> extends LayerRenderer<T, M> {
 
     private final BipedRenderer<T, M> renderBiped;
 
@@ -32,13 +32,15 @@ public class LayerPlayerFaceOverlay<T extends MobEntity & IPlayerFace, M extends
     @Override
     public void render(T entityIn, float p_212842_2_, float p_212842_3_, float p_212842_4_, float p_212842_5_, float p_212842_6_, float p_212842_7_, float scale) {
         ResourceLocation loc = DefaultPlayerSkin.getDefaultSkinLegacy();
-        GameProfile prof = entityIn.getPlayerFaceProfile();
+        GameProfile prof = entityIn.getOverlayPlayerProfile();
         if (prof != null) {
             Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(prof);
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                 loc = Minecraft.getInstance().getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
             }
 
+        } else {
+            return;
         }
 
         renderBiped.bindTexture(loc);

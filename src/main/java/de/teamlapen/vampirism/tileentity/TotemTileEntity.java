@@ -227,7 +227,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                 player.sendStatusMessage(new TranslationTextComponent("text.vampirism.village.totem_destroy.fail_other_faction"), true);
                 return false;
             }
-        }else {
+        } else {
             return this.capturingFaction == null && this.controllingFaction == null;
         }
     }

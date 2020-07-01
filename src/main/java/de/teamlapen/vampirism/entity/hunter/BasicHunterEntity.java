@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -12,31 +13,24 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
 import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
-import de.teamlapen.vampirism.entity.goals.LookAtTrainerHunterGoal;
+import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
+import de.teamlapen.vampirism.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.entity.minion.management.PlayerMinionController;
+import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterBasicContainer;
 import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.OpenDoorGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
+import de.teamlapen.vampirism.world.MinionWorldData;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -64,20 +58,23 @@ import net.minecraft.world.gen.feature.structure.Structures;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 
 /**
  * Exists in {@link BasicHunterEntity#MAX_LEVEL}+1 different levels
  */
-public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter, LookAtTrainerHunterGoal.ITrainer, AttackRangedCrossbowGoal.IAttackWithCrossbow, IEntityActionUser {
+public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter, ForceLookEntityGoal.TaskOwner, AttackRangedCrossbowGoal.IAttackWithCrossbow, IEntityActionUser {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> WATCHED_ID = EntityDataManager.createKey(BasicHunterEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(BasicVampireEntity.class, DataSerializers.VARINT);
+
     private static final ITextComponent name = new TranslationTextComponent("container.hunter");
 
     private final int MAX_LEVEL = 3;
     private final MeleeAttackGoal attackMelee;
-    private final AttackRangedCrossbowGoal attackRange;
+    private final AttackRangedCrossbowGoal<BasicHunterEntity> attackRange;
 
     /**
      * Player currently being trained otherwise null
@@ -97,7 +94,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.setDontDropEquipment();
 
         this.attackMelee = new MeleeAttackGoal(this, 1.0, false);
-        this.attackRange = new AttackRangedCrossbowGoal(this, this, 0.6, 60, 20);
+        this.attackRange = new AttackRangedCrossbowGoal<>(this, 0.6, 60, 20);
         this.updateCombatTask();
         entitytier = EntityActionTier.Medium;
         entityclass = EntityClassType.getRandomClass(this.getRNG());
@@ -118,6 +115,44 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public boolean canDespawn(double distanceToClosestPlayer) {
         return super.canDespawn(distanceToClosestPlayer) && getHome() != null;
+    }
+
+    /**
+     * Assumes preconditions as been met. Checks conditions but does not give feedback to user
+     *
+     * @param lord
+     */
+    public void convertToMinion(PlayerEntity lord) {
+        FactionPlayerHandler.getOpt(lord).ifPresent(fph -> {
+            if (fph.getMaxMinions() > 0) {
+                MinionWorldData.getData(lord.world).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+                    if (controller.hasFreeMinionSlot()) {
+                        if (fph.getCurrentFaction() == this.getFaction()) {
+                            HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false);
+                            int id = controller.createNewMinionSlot(data, ModEntities.hunter_minion);
+                            if (id < 0) {
+                                LOGGER.error("Failed to get minion slot");
+                                return;
+                            }
+                            HunterMinionEntity minion = ModEntities.hunter_minion.create(this.world);
+                            minion.claimMinionSlot(id, controller);
+                            minion.copyLocationAndAnglesFrom(this);
+                            minion.markAsConverted();
+                            controller.activateTask(0, MinionTasks.stay);
+                            this.world.addEntity(minion);
+                            this.remove();
+
+                        } else {
+                            LOGGER.warn("Wrong faction for minion");
+                        }
+                    } else {
+                        LOGGER.warn("No free slot");
+                    }
+                });
+            } else {
+                LOGGER.error("Can't have minions");
+            }
+        });
     }
 
     @Override
@@ -151,10 +186,10 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return targetAngle;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public PlayerEntity getTrainee() {
-        return trainee;
+    public Optional<PlayerEntity> getForceLookTarget() {
+        return Optional.ofNullable(trainee);
     }
 
 
@@ -241,27 +276,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void readAdditional(CompoundNBT tagCompund) {
-        super.readAdditional(tagCompund);
-        if (tagCompund.contains("level")) {
-            setLevel(tagCompund.getInt("level"));
-        }
-
-        if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
-            this.setLeftHanded(true);
-            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.basic_crossbow));
-        } else {
-            this.setLeftHanded(false);
-            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
-        }
-        this.updateCombatTask();
-        if (tagCompund.contains("attack")) {
-            this.attack = tagCompund.getBoolean("attack");
-        }
-
-        if (entityActionHandler != null) {
-            entityActionHandler.read(tagCompund);
-        }
+    public int getEntityTextureType() {
+        return getDataManager().get(TYPE);
     }
 
     @Override
@@ -276,7 +292,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     @Override
     public int suggestLevel(Difficulty d) {
-        switch (this.rand.nextInt(5)) {
+        switch (this.rand.nextInt(6)) {
             case 0:
                 return (int) (d.minPercLevel / 100F * MAX_LEVEL);
             case 1:
@@ -290,14 +306,10 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putInt("level", getLevel());
-        nbt.putBoolean("crossbow", isCrossbowInMainhand());
-        nbt.putBoolean("attack", attack);
-        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
-        if (entityActionHandler != null) {
-            entityActionHandler.write(nbt);
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        if (getDataManager().get(TYPE) == -1) {
+            getDataManager().set(TYPE, this.getRNG().nextInt(TYPES));
         }
     }
 
@@ -321,8 +333,35 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                         player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"));
                     }
                 } else if (hunterLevel > 0) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"));
+                    FactionPlayerHandler.getOpt(player).ifPresent(fph -> {
+                        if (fph.getMaxMinions() > 0) {
+                            ItemStack heldItem = player.getHeldItem(hand);
+
+                            if (this.getLevel() > 0) {
+                                if (heldItem.getItem() == ModItems.hunter_minion_equipment) {
+                                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.unavailable"));
+                                }
+                            } else {
+                                boolean freeSlot = MinionWorldData.getData(player.world).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
+                                player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.available"));
+                                if (heldItem.getItem() == ModItems.hunter_minion_equipment) {
+                                    if (!freeSlot) {
+                                        player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.no_free_slot"));
+                                    } else {
+                                        player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.start_serving"));
+                                        convertToMinion(player);
+                                        if (!player.abilities.isCreativeMode) heldItem.shrink(1);
+                                    }
+                                } else if (freeSlot) {
+                                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.minion.require_equipment", UtilLib.translate(ModItems.hunter_minion_equipment.getTranslationKey())));
+                                }
+                            }
+                        } else {
+                            player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"));
+                        }
+                    });
                 }
+
             }
             return true;
         }
@@ -350,7 +389,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
         //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
-        this.goalSelector.addGoal(3, new LookAtTrainerHunterGoal<>(this));
+        this.goalSelector.addGoal(3, new ForceLookEntityGoal<>(this));
         this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> false));
         this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7, 50));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
@@ -396,6 +435,47 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     private void updateWatchedId(int id) {
         getDataManager().set(WATCHED_ID, id);
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT tagCompund) {
+        super.readAdditional(tagCompund);
+        if (tagCompund.contains("level")) {
+            setLevel(tagCompund.getInt("level"));
+        }
+
+        if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
+            this.setLeftHanded(true);
+            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(ModItems.basic_crossbow));
+        } else {
+            this.setLeftHanded(false);
+            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+        }
+        this.updateCombatTask();
+        if (tagCompund.contains("attack")) {
+            this.attack = tagCompund.getBoolean("attack");
+        }
+        if (tagCompund.contains("type")) {
+            int t = tagCompund.getInt("type");
+            getDataManager().set(TYPE, t < TYPES && t >= 0 ? t : -1);
+        }
+
+        if (entityActionHandler != null) {
+            entityActionHandler.read(tagCompund);
+        }
+    }
+
+    @Override
+    public void writeAdditional(CompoundNBT nbt) {
+        super.writeAdditional(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putBoolean("crossbow", isCrossbowInMainhand());
+        nbt.putBoolean("attack", attack);
+        nbt.putInt("type", getEntityTextureType());
+        nbt.putInt("entityclasstype", EntityClassType.getID(entityclass));
+        if (entityActionHandler != null) {
+            entityActionHandler.write(nbt);
+        }
     }
 
     //Entityactions ----------------------------------------------------------------------------------------------------
