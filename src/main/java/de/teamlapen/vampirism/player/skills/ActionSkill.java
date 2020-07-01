@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.player.skills;
 
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -34,7 +36,6 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
      * @param customDescription If false a generic "unlocks action" string is used
      */
     public ActionSkill(ResourceLocation id, IAction action, boolean customDescription) {
-        super(action.getFaction());
         this.action = action;
         this.setRegistryName(id);
         if (customDescription) {
@@ -43,6 +44,12 @@ public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
             this.setDescription(() -> new TranslationTextComponent("text.vampirism.skill.unlocks_action"));
 
         }
+    }
+
+    @Nonnull
+    @Override
+    public IPlayableFaction getFaction() {
+        return action.getFaction();
     }
 
     public ResourceLocation getActionID() {

@@ -249,7 +249,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         // Draw the cicle image
         this.minecraft.getTextureManager().bindTexture(backgroundTex);
-        GlStateManager.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
+        GlStateManager.color4f(backgroundColor.getRed() / 256f, backgroundColor.getGreen() / 256f, backgroundColor.getBlue() / 256f, BGT);
         GlStateManager.begin(GL11.GL_QUADS);
         GlStateManager.texCoord2f(1F, 1F);
         GlStateManager.vertex3f(BGS / 2, BGS / 2, this.blitOffset);
@@ -297,7 +297,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         // Draw
         this.minecraft.getTextureManager().bindTexture(centerTex);
-        GlStateManager.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
+        GlStateManager.color4f(backgroundColor.getRed() / 256f, backgroundColor.getGreen() / 256f, backgroundColor.getBlue() / 256f, BGT);
         GlStateManager.begin(GL11.GL_QUADS);
         GlStateManager.texCoord2f(0.5F, 1F);
         GlStateManager.vertex3f(CS / 2, CS / 2, this.blitOffset);
@@ -324,7 +324,7 @@ public abstract class GuiPieMenu<T> extends Screen {
 
         // Draw
         this.minecraft.getTextureManager().bindTexture(centerTex);
-        GlStateManager.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
+        GlStateManager.color4f(backgroundColor.getRed() / 256f, backgroundColor.getGreen() / 256f, backgroundColor.getBlue() / 256f, BGT);
         GlStateManager.begin(GL11.GL_QUADS);
         GlStateManager.texCoord2f(1F, 1F);
         GlStateManager.vertex3f(CS / 2, CS / 2, this.blitOffset);
