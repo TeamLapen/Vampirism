@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.api.entity;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
 import javax.annotation.Nonnull;
@@ -53,7 +54,7 @@ public interface ISundamageRegistry {
      * @param dim
      * @return
      */
-    boolean getSundamageInDim(DimensionType dim);
+    boolean getSundamageInDim(RegistryKey<World> dim);
 
     /**
      * Checks if the given entity could receive sun damage at its current position.
@@ -67,5 +68,5 @@ public interface ISundamageRegistry {
      * @param dimension
      * @param sundamage
      */
-    void specifySundamageForDim(DimensionType dimension, boolean sundamage);
+    void specifySundamageForDim(RegistryKey<World> dimension, boolean sundamage);
 }

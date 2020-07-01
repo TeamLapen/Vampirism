@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import com.mojang.authlib.GameProfile;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -16,11 +17,12 @@ import de.teamlapen.vampirism.entity.goals.*;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.PlayerSkinHelper;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +37,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.Structures;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -242,12 +244,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         return iMob ? ModEntities.advanced_vampire_imob : ModEntities.advanced_vampire;
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.updateEntityAttributes();
 
-    }
 
     @Override
     protected void registerData() {
@@ -271,12 +268,31 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         return entityActionHandler;
     }
 
-    protected void updateEntityAttributes() {
-        int l = Math.max(getLevel(), 0);
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH + BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPEED);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(13);
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampireBaseEntity.getAttributeBuilder()
+                .func_233815_a_(SharedMonsterAttributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH)
+                .func_233815_a_(SharedMonsterAttributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE)
+                .func_233815_a_(SharedMonsterAttributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_SPEED)
+                .func_233815_a_(SharedMonsterAttributes.FOLLOW_RANGE, 13);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> difficulty == net.minecraft.world.Difficulty.HARD));//Only break doors on hard difficulty
+        this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
+        this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
+        this.goalSelector.addGoal(3, new FleeGarlicVampireGoal(this, 0.9, false));
+        this.goalSelector.addGoal(4, new AttackMeleeNoSunGoal(this, 1.0, false));
+        this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.9, 25));
+        this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 13F));
+        this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
+        this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
+
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.field_236381_q_)));
     }
 
     public static class IMob extends AdvancedVampireEntity implements net.minecraft.entity.monster.IMob {
@@ -320,23 +336,12 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         this.villageAttributes = null;
     }
 
-    @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(1, new BreakDoorGoal(this, (difficulty) -> difficulty == net.minecraft.world.Difficulty.HARD));//Only break doors on hard difficulty
-        this.goalSelector.addGoal(2, new RestrictSunVampireGoal<>(this));
-        this.goalSelector.addGoal(3, new FleeSunVampireGoal<>(this, 0.9, false));
-        this.goalSelector.addGoal(3, new FleeGarlicVampireGoal(this, 0.9, false));
-        this.goalSelector.addGoal(4, new AttackMeleeNoSunGoal(this, 1.0, false));
-        this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.9, 25));
-        this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 13F));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, HunterBaseEntity.class, 17F));
-        this.goalSelector.addGoal(11, new LookRandomlyGoal(this));
+    protected void updateEntityAttributes() {
+        LOGGER.warn("MISSING UPDATE ATTRIBUTES"); //TODO 1.16
+        int l = Math.max(getLevel(), 0);
+//        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue( + BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
+//        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue( + BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
 
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> Structures.VILLAGE.isPositionInStructure(living.world, living.getPosition())));
     }
 
     @Override

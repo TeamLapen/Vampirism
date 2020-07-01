@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -21,6 +22,7 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -112,32 +114,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         return super.getClassification(forSpawnCount);
     }
 
-    @Override
-    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
-        if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
-            if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
-                return false;
-            if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
-                if (worldIn.getDimension().isDaytime() && rand.nextInt(5) != 0) {
-                    return false;
-                }
-                if (this.world.isBlockPresent(getPosition()) && worldIn instanceof ServerWorld) {
-                    BlockPos nearestVillage = ((ServerWorld) worldIn).findNearestStructure("Village", getPosition(), 1, false);
-                    if (nearestVillage != null && nearestVillage.withinDistance(getPosition(), 50)) {
-                        if (getRNG().nextInt(60) != 0) {
-                            return false;
-                        }
-                    }
-                }
-                if (spawnRestriction.level >= SpawnRestriction.SPECIAL.level) {
-                    if (!getCanSpawnHereRestricted(worldIn)) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return super.canSpawn(worldIn, spawnReasonIn);
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampirismEntity.getAttributeBuilder().func_233815_a_(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     @Override
@@ -181,31 +159,31 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public void livingTick() {
-        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
-            isGettingGarlicDamage(world, true);
-        }
-        if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(world, true);
-        }
-        if (!world.isRemote) {
-            if (isGettingSundamage(world) && ticksExisted % 40 == 11) {
-                double dmg = getAttribute(VReference.sunDamage).getValue();
-                if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
-            }
-            if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), this.ticksExisted);
-            }
-        }
-        if (!this.world.isRemote) {
-            if (isAlive() && isInWater()) {
-                setAir(300);
-                if (ticksExisted % 16 == 4) {
-                    addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
+    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
+        if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
+            if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE)
+                return false;
+            if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
+                if (worldIn.getBrightness(func_233580_cy_()) > 0.5 && rand.nextInt(5) != 0) {
+                    return false;
+                }
+                if (this.world.isBlockPresent(func_233580_cy_()) && worldIn instanceof ServerWorld) {
+                    BlockPos nearestVillage = ((ServerWorld) worldIn).findNearestStructure("Village", func_233580_cy_(), 1, false);
+                    if (nearestVillage != null && nearestVillage.withinDistance(func_233580_cy_(), 50)) {
+                        if (getRNG().nextInt(60) != 0) {
+                            return false;
+                        }
+                    }
+                }
+                if (spawnRestriction.level >= SpawnRestriction.SPECIAL.level) {
+                    if (!getCanSpawnHereRestricted(worldIn)) {
+                        return false;
+                    }
                 }
             }
         }
-        super.livingTick();
+
+        return super.canSpawn(worldIn, spawnReasonIn);
     }
 
     @Override
@@ -262,10 +240,33 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+    public void livingTick() {
+        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
+            isGettingGarlicDamage(world, true);
+        }
+        if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
+            isGettingSundamage(world, true);
+        }
+        if (!world.isRemote) {
+            if (isGettingSundamage(world) && ticksExisted % 40 == 11) {
+                double dmg = getAttribute(ModAttributes.sundamage).getValue();
+                if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
+            }
+            if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), this.ticksExisted);
+            }
+        }
+        if (!this.world.isRemote) {
+            if (isAlive() && isInWater()) {
+                setAir(300);
+                if (ticksExisted % 16 == 4) {
+                    addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
+                }
+            }
+        }
+        super.livingTick();
     }
+
 
     @Override
     protected void registerGoals() {
@@ -278,9 +279,9 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
      */
     private boolean getCanSpawnHereRestricted(IWorld iWorld) {
-        boolean vampireBiome = ModBiomes.vampire_forest.equals(iWorld.getBiome(this.getPosition()));
+        boolean vampireBiome = ModBiomes.vampire_forest.equals(iWorld.getBiome(this.func_233580_cy_()));
         if (!vampireBiome) return isLowLightLevel(iWorld);
-        BlockState iblockstate = iWorld.getBlockState((new BlockPos(this)).down());
+        BlockState iblockstate = iWorld.getBlockState((this.func_233580_cy_()).down());
         return ModBlocks.cursed_earth.equals(iblockstate.getBlock());
     }
 

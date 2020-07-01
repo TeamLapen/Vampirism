@@ -6,16 +6,13 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
@@ -40,10 +37,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
         double posX = shooter.getPosX() - Math.sin(yaw) * centerOffset;
         double posZ = shooter.getPosZ() + Math.cos(yaw) * centerOffset;
         CrossbowArrowEntity entityArrow = new CrossbowArrowEntity(world, posX, shooter.getPosY() + (double) shooter.getEyeHeight() - 0.10000000149011612D + heightOffset, posZ, arrow);
-        entityArrow.shootingEntity = shooter.getUniqueID();
-        if (shooter instanceof PlayerEntity) {
-            entityArrow.pickupStatus = AbstractArrowEntity.PickupStatus.ALLOWED;
-        }
+        entityArrow.setShooter(shooter);
         return entityArrow;
     }
 
@@ -98,7 +92,7 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
             if (ignoreHurtTimer && living.hurtResistantTime > 0) {
                 living.hurtResistantTime = 0;
             }
-            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityByUuid(this.shootingEntity) : null);
+            ((IVampirismCrossbowArrow) item).onHitEntity(arrowStack, living, this, func_234616_v_());
         }
     }
 
@@ -107,15 +101,14 @@ public class CrossbowArrowEntity extends AbstractArrowEntity implements IEntityC
         return arrowStack;
     }
 
+
     @Override
-    protected void onHit(RayTraceResult raytraceResultIn) {
-        if (raytraceResultIn.getType() == RayTraceResult.Type.BLOCK) {
-            Item item = arrowStack.getItem();
-            if (item instanceof IVampirismCrossbowArrow) {
-                ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, ((BlockRayTraceResult) raytraceResultIn).getPos(), this, this.shootingEntity == null ? this : this.world instanceof ServerWorld ? ((ServerWorld) this.world).getEntityByUuid(this.shootingEntity) : null);
-            }
+    protected void func_230299_a_(BlockRayTraceResult blockRayTraceResult) { //onHitBlock
+        Item item = arrowStack.getItem();
+        if (item instanceof IVampirismCrossbowArrow) {
+            ((IVampirismCrossbowArrow) item).onHitBlock(arrowStack, (blockRayTraceResult).getPos(), this, func_234616_v_());
         }
-        super.onHit(raytraceResultIn);
+        super.func_230299_a_(blockRayTraceResult);
     }
 
     @Override

@@ -4,11 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.world.loot.*;
+import net.minecraft.loot.*;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.*;
-import net.minecraft.world.storage.loot.conditions.LootConditionManager;
-import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -57,14 +54,6 @@ public class ModLootTables {
         return ImmutableSet.copyOf(LOOT_TABLES);
     }
 
-    static void registerLootFunctions() {
-        LootFunctionManager.registerFunction(new AddBookNbt.Serializer());
-        LootFunctionManager.registerFunction(new SetItemBloodCharge.Serializer());
-        LootFunctionManager.registerFunction(new SetMetaBasedOnLevel.Serializer());
-        LootConditionManager.registerCondition(new StakeCondition.Serializer());
-        LootConditionManager.registerCondition(new AdjustableLevelCondition.Serializer());
-        LootConditionManager.registerCondition(new TentSpawnerCondition.Serializer());
-    }
 
     @SubscribeEvent
     public static void onLootLoad(LootTableLoadEvent event) {

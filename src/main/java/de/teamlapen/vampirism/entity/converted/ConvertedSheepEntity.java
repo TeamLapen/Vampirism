@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.core.ModEntities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.SheepEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -12,19 +13,17 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.IShearable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * {@link IConvertedCreature} for sheep
  * Allows converted sheep to be sheared
  */
-public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> implements IShearable {
+public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> implements net.minecraftforge.common.IForgeShearable {
 
 
     private final static DataParameter<Byte> COAT = EntityDataManager.createKey(ConvertedSheepEntity.class, DataSerializers.BYTE);
@@ -64,12 +63,12 @@ public class ConvertedSheepEntity extends ConvertedCreatureEntity<SheepEntity> i
     }
 
     @Override
-    public boolean isShearable(@Nonnull ItemStack item, IWorldReader world, BlockPos pos) {
+    public boolean isShearable(@Nonnull ItemStack item, World world, BlockPos pos) {
         return !getSheared() && !isChild();
     }
 
     @Override
-    public List<ItemStack> onSheared(ItemStack item, IWorld world, BlockPos pos, int fortune) {
+    public List<ItemStack> onSheared(@Nullable PlayerEntity player, ItemStack item, World world, BlockPos pos, int fortune) {
         java.util.List<ItemStack> ret = new java.util.ArrayList<>();
         if (!world.isRemote()) {
             this.setSheared(true);

@@ -1,13 +1,12 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.teamlapen.vampirism.blocks.VampirismBlockContainer;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -26,7 +25,7 @@ abstract class VampirismTESR<T extends TileEntity> extends TileEntityRenderer<T>
 
     /**
      * Rotates the block to fit the enum facing.
-     * ONLY CALL THIS IF THE BLOCK HAS A {@link VampirismBlockContainer#FACING} PROPERTY
+     * ONLY CALL THIS IF THE BLOCK HAS A {@link HorizontalBlock#HORIZONTAL_FACING} PROPERTY
      *
      * @param tile
      */

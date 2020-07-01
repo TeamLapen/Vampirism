@@ -3,7 +3,8 @@ package de.teamlapen.lib.lib.entity;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.world.DimensionType;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.TickEvent;
 
@@ -13,7 +14,7 @@ import net.minecraftforge.event.TickEvent;
  */
 public interface IPlayerEventListener {
 
-    void onChangedDimension(DimensionType from, DimensionType to);
+    void onChangedDimension(RegistryKey<World> from, RegistryKey<World> to);
 
     void onDeath(DamageSource src);
 

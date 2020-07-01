@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.LogUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.DimensionType;
+import net.minecraft.world.storage.FolderName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +31,7 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
     private final Supplier<Map<ResourceLocation, Integer>> getCalculatedValues;
     private final String name;
     private final String modId;
+    private final FolderName worldSubFolder;
 
     public BloodValueLoaderDynamic(@Nonnull String modIdIn, @Nonnull String nameIn, @Nonnull BiConsumer<Map<ResourceLocation, Integer>, Integer> consumerIn, @Nullable ResourceLocation multiplierNameIn, @Nonnull Consumer<Map<ResourceLocation, Integer>> addCalculatedValuesIn, @Nonnull Supplier<Map<ResourceLocation, Integer>> getCalculatedValuesIn) {
         super(nameIn, consumerIn, multiplierNameIn);
@@ -38,11 +39,12 @@ public class BloodValueLoaderDynamic extends BloodValueLoader {
         this.getCalculatedValues = getCalculatedValuesIn;
         this.name = nameIn;
         this.modId = modIdIn;
+        this.worldSubFolder = new FolderName(modId);
         LOADER.add(this);
     }
 
     public void onServerStarting(MinecraftServer server) {
-        bloodValueWorldFile = new File(new File(server.getWorld(DimensionType.field_235999_c_/*OVERWORLD*/).getSaveHandler().getWorldDirectory(), modId), "calculated-" + name + "-blood-values.txt");
+        bloodValueWorldFile = new File(server.func_240776_a_(worldSubFolder).toFile(), "calculated-" + name + "-blood-values.txt");
         if (bloodValueWorldFile.exists()) {
             loadDynamicBloodValues(bloodValueWorldFile);
         }

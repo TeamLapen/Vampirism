@@ -3,20 +3,24 @@ package de.teamlapen.vampirism.world.loot;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.tileentity.TentTileEntity;
-import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.loot.ILootSerializer;
+import net.minecraft.loot.LootConditionType;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
-
-import javax.annotation.Nonnull;
 
 
 public class TentSpawnerCondition implements ILootCondition {
 
     private final static TentSpawnerCondition INSTANCE = new TentSpawnerCondition();
+
+    @Override
+    public LootConditionType func_230419_b_() {
+        return ModLoot.is_tent_spawner;
+    }
 
     @Override
     public boolean test(LootContext lootContext) {
@@ -31,21 +35,20 @@ public class TentSpawnerCondition implements ILootCondition {
         return () -> INSTANCE;
     }
 
-    public static class Serializer extends ILootCondition.AbstractSerializer<TentSpawnerCondition> {
 
-        public Serializer() {
-            super(new ResourceLocation(REFERENCE.MODID, "is_tent_spawner"), TentSpawnerCondition.class);
-        }
+    public static class Serializer implements ILootSerializer<TentSpawnerCondition> {
 
-        @Nonnull
+
         @Override
-        public TentSpawnerCondition deserialize(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
+        public TentSpawnerCondition func_230423_a_(JsonObject json, JsonDeserializationContext context) {
             return INSTANCE;
         }
 
         @Override
-        public void serialize(@Nonnull JsonObject json, @Nonnull TentSpawnerCondition value, @Nonnull JsonSerializationContext context) {
+        public void func_230424_a_(JsonObject json, TentSpawnerCondition value, JsonSerializationContext context) {
 
         }
+
+
     }
 }

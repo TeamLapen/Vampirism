@@ -9,17 +9,18 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.dimension.EndDimension;
+import net.minecraft.world.DimensionType;
 
 import java.util.UUID;
 
@@ -58,7 +59,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().world) && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getHeldItemMainhand().getItem()) && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().world) == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getEntityWorld().dimension instanceof EndDimension));
+        return !vampire.isGettingSundamage(vampire.getRepresentingEntity().world) && !ModItems.umbrella.equals(vampire.getRepresentingEntity().getHeldItemMainhand().getItem()) && vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().world) == EnumStrength.NONE && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (VampirismConfig.SERVER.batModeInEnd.get() || !(vampire.getRepresentingPlayer().getEntityWorld().func_234922_V_() == DimensionType.field_236001_e_));
     }
 
     @Override
@@ -93,7 +94,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         float mult = newMax / oldMax;
         float newHealth = mult * oldHealth;
         player.setHealth(newHealth);
-        if (!player.onGround) {
+        if (!player.func_233570_aj_()/*onGround*/) {
             player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 20, 100, false, false));
         }
         //player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 0, false, false));
@@ -111,16 +112,16 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
         if (vampire.isGettingSundamage(vampire.getRepresentingEntity().world) && !vampire.isRemote()) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_day"));
+            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_day"), Util.field_240973_b_);
             return true;
         } else if (ModItems.umbrella.equals(vampire.getRepresentingEntity().getHeldItemMainhand().getItem()) && !vampire.isRemote()) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_umbrella"));
+            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_umbrella"), Util.field_240973_b_);
             return true;
         } else if (vampire.isGettingGarlicDamage(vampire.getRepresentingEntity().world) != EnumStrength.NONE && !vampire.isRemote()) {
-            vampire.getRepresentingEntity().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_garlic"));
+            vampire.getRepresentingEntity().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_garlic"), Util.field_240973_b_);
             return true;
-        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getEntityWorld().dimension instanceof EndDimension) {
-            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_end"));
+        } else if (!VampirismConfig.SERVER.batModeInEnd.get() && vampire.getRepresentingPlayer().getEntityWorld().func_234922_V_() == DimensionType.field_236001_e_) {
+            vampire.getRepresentingPlayer().sendMessage(new TranslationTextComponent("text.vampirism.cant_fly_end"), Util.field_240973_b_);
             return true;
         } else return vampire.getRepresentingPlayer().isInWater();
     }
@@ -135,9 +136,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     private void setModifier(PlayerEntity player, boolean enabled) {
         if (enabled) {
 
-            IAttributeInstance health = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
+            ModifiableAttributeInstance health = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
             if (health.getModifier(healthModifierUUID) == null) {
-                health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -VampirismConfig.BALANCE.vaBatHealthReduction.get(), AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(false));
+                health.func_233769_c_(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -VampirismConfig.BALANCE.vaBatHealthReduction.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
 
             player.abilities.allowFlying = true;
@@ -147,7 +148,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else {
 
             // Health modifier
-            IAttributeInstance health = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
+            ModifiableAttributeInstance health = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
             AttributeModifier m = health.getModifier(healthModifierUUID);
             if (m != null) {
                 health.removeModifier(m);

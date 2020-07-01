@@ -1,7 +1,12 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.villager.IVillagerType;
 import net.minecraft.util.DamageSource;
@@ -9,10 +14,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.StructureStart;
-
-import javax.annotation.Nullable;
 
 /**
  * Villager extended with the ability to attack and some other things
@@ -20,8 +21,7 @@ import javax.annotation.Nullable;
 public class VampirismVillagerEntity extends VillagerEntity {
 
     protected boolean peaceful = false;
-    protected @Nullable
-    StructureStart cachedVillage;
+
     /**
      * A timer which reaches 0 every 70 to 120 ticks
      */
@@ -85,12 +85,12 @@ public class VampirismVillagerEntity extends VillagerEntity {
         return (peaceful || worldIn.getDifficulty() != Difficulty.PEACEFUL) && super.canSpawn(worldIn, spawnReasonIn);
     }
 
-    @Nullable
-    public StructureStart getVillage() {
-        if (cachedVillage == StructureStart.DUMMY)
-            return null;
-        return cachedVillage;
-    }
+//    @Nullable
+//    public StructureStart getVillage() {
+//        if (cachedVillage == StructureStart.DUMMY)
+//            return null;
+//        return cachedVillage;
+//    }
 
     @Override
     public void livingTick() {
@@ -107,10 +107,8 @@ public class VampirismVillagerEntity extends VillagerEntity {
         }
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VillagerEntity.func_234551_eU_().func_233814_a_(SharedMonsterAttributes.ATTACK_DAMAGE);
     }
 
     @Override
@@ -118,11 +116,6 @@ public class VampirismVillagerEntity extends VillagerEntity {
         super.updateAITasks();
         if (--this.randomTickDivider <= 0) {
             this.randomTickDivider = 200;
-            if (Structure.VILLAGE.isPositionInStructure(this.world, this.getPosition())) {
-                this.cachedVillage = Structure.VILLAGE.getStart(this.world, this.getPosition(), false);
-            } else {
-                this.cachedVillage = null;
-            }
         }
     }
 }

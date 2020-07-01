@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.AbstractSpawner;
+import net.minecraft.world.spawner.WorldEntitySpawner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -179,12 +180,11 @@ public class SimpleSpawnerLogic<T extends Entity> {
                     }
 
                     if (limitType != null) {
-                        int total = ((ServerWorld) this.world).countEntities().getInt(limitType);
-                        total = total * UtilLib.countPlayerLoadedChunks(this.world) / MOB_COUNT_DIV;
-                        if (total > limitType.getMaxNumberOfCreature()) {
+                        WorldEntitySpawner.EntityDensityManager densityManager = ((ServerWorld) this.world).getChunkProvider().func_241101_k_();
+                        if (!densityManager.func_234991_a_(limitType))
                             this.resetTimer();
-                            break;
-                        }
+                        break;
+
                     }
 
                     if (UtilLib.spawnEntityInWorld(this.world, getSpawningBox(), entity, 1, Collections.emptyList(), SpawnReason.SPAWNER)) {

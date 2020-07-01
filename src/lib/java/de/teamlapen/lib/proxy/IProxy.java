@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 
 public interface IProxy {
@@ -40,10 +39,5 @@ public interface IProxy {
 
     default void handleUpdateEntityPacket(UpdateEntityPacket msg) {
     }
-
-    /**
-     * Uses font rendere on client side to wrap the given string to the given width
-     */
-    List<String> listFormattedStringToWidth(String str, int wrapWidth);
 
 }

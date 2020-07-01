@@ -13,7 +13,9 @@ import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.items.HunterCoatItem;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -232,11 +234,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return 20 + 5 * getLevel();
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.updateEntityAttributes(false);
-    }
 
     @Override
     protected void registerData() {
@@ -261,19 +258,28 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
 
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampireBaseEntity.getAttributeBuilder()
+                .func_233815_a_(SharedMonsterAttributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH)
+                .func_233815_a_(SharedMonsterAttributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE)
+                .func_233815_a_(SharedMonsterAttributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED)
+                .func_233815_a_(SharedMonsterAttributes.FOLLOW_RANGE, 5);
+    }
+
     protected void updateEntityAttributes(boolean aggressive) {
-        if (aggressive) {
-            this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20D);
-            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
-                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getLevel())));
-        } else {
-            this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5D);
-            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
-                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()) / 3);
-        }
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-                .setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+        LOGGER.warn("Missing ATTRIBUTES"); //TODO 1.16
+//        if (aggressive) {
+//            this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20D);
+//            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
+//                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getLevel())));
+//        } else {
+//            this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5D);
+//            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
+//                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()) / 3);
+//        }
+//        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+//        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
+//                .setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
     }
 
     private boolean isLowerLevel(LivingEntity player) {

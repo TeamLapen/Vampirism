@@ -1,6 +1,7 @@
 package de.teamlapen.lib.lib.tile;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -82,8 +83,8 @@ public abstract class InventoryTileEntity extends LockableTileEntity implements 
     }
 
     @Override
-    public void read(CompoundNBT tagCompound) {
-        super.read(tagCompound);
+    public void func_230337_a_(BlockState state, CompoundNBT tagCompound) {
+        super.func_230337_a_(state, tagCompound);
         inventorySlots.clear();
         ItemStackHelper.loadAllItems(tagCompound, this.inventorySlots);
 

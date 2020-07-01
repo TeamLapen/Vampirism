@@ -3,7 +3,8 @@ package de.teamlapen.lib.lib.network;
 import de.teamlapen.lib.network.IMessage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.DimensionType;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
@@ -64,7 +65,7 @@ public abstract class AbstractPacketDispatcher {
     /**
      * Sends a message to everyone within a certain range of the coordinates in the same dimension.
      */
-    public final void sendToAllAround(IMessage message, DimensionType dimension, double x, double y, double z,
+    public final void sendToAllAround(IMessage message, RegistryKey<World> dimension, double x, double y, double z,
 
                                       double range) {
         sendToAllAround(message, new PacketDistributor.TargetPoint(x, y, z,

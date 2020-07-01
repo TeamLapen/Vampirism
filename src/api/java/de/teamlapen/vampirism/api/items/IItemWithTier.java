@@ -47,6 +47,10 @@ public interface IItemWithTier {
         public String func_176610_l() {
             return name;
         }
+
+        public String getName() {
+            return this.func_176610_l();
+        }
     }
 
 }

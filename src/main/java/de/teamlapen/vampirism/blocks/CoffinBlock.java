@@ -26,7 +26,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.*;
-import net.minecraftforge.common.extensions.IForgeDimension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -64,7 +63,7 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     public CoffinBlock() {
-        super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.2f));
+        super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.2f).notSolid());
         this.setDefaultState(this.getStateContainer().getBaseState().with(BedBlock.OCCUPIED, Boolean.FALSE).with(PART, CoffinPart.FOOT).with(HORIZONTAL_FACING, Direction.NORTH));
 
     }
@@ -123,11 +122,6 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isNormalCube(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
-        return false;
-    }
-
-    @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         Direction enumfacing = state.get(HORIZONTAL_FACING);
 
@@ -167,7 +161,7 @@ public class CoffinBlock extends VampirismBlockContainer {
             if (state.get(PART) != CoffinPart.HEAD) {
                 pos = pos.offset(state.get(HORIZONTAL_FACING));
                 state = worldIn.getBlockState(pos);
-                if (state.getBlock() != this) {
+                if (!state.isIn(this)) {
                     return ActionResultType.SUCCESS;
                 }
             }
@@ -177,33 +171,30 @@ public class CoffinBlock extends VampirismBlockContainer {
                 return ActionResultType.SUCCESS;
             }
 
-            IForgeDimension.SleepResult sleepResult = worldIn.dimension.canSleepAt(player, pos);
-            if (sleepResult != IForgeDimension.SleepResult.BED_EXPLODES) {
-                if (sleepResult == IForgeDimension.SleepResult.DENY) return ActionResultType.SUCCESS;
-                if (state.get(BedBlock.OCCUPIED)) {
-                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
-                    return ActionResultType.SUCCESS;
-                } else {
-                    final BlockPos finalPos = pos;
-                    player.trySleep(pos).ifLeft(sleepResult1 -> {
-                        if (sleepResult1 != null) {
-                            player.sendStatusMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
-                        }
-                    }).ifRight(u -> {
-                        BlockState blockstate = worldIn.getBlockState(finalPos);
-                        if (blockstate.getBlock() instanceof CoffinBlock) {
-                            worldIn.setBlockState(finalPos, blockstate.with(BedBlock.OCCUPIED, Boolean.TRUE), 3);
-                        }
-                    });
-                    return ActionResultType.SUCCESS;
-                }
-            } else {
+            if (!BedBlock.func_235330_a_(worldIn)) {
                 worldIn.removeBlock(pos, false);
-                BlockPos blockPos = pos.offset(state.get(HORIZONTAL_FACING).getOpposite());
-                if (worldIn.getBlockState(blockPos).getBlock() == this) {
-                    worldIn.removeBlock(blockPos, false);
+                BlockPos blockpos = pos.offset(state.get(HORIZONTAL_FACING).getOpposite());
+                if (worldIn.getBlockState(blockpos).isIn(this)) {
+                    worldIn.removeBlock(blockpos, false);
                 }
-                worldIn.createExplosion(null, DamageSource.netherBedExplosion(), (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+
+                worldIn.func_230546_a_(null, DamageSource.func_233546_a_(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+                return ActionResultType.SUCCESS;
+            } else if (state.get(BedBlock.OCCUPIED)) {
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.coffin.occupied"), true);
+                return ActionResultType.SUCCESS;
+            } else {
+                final BlockPos finalPos = pos;
+                player.trySleep(pos).ifLeft(sleepResult1 -> {
+                    if (sleepResult1 != null) {
+                        player.sendStatusMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
+                    }
+                }).ifRight(u -> {
+                    BlockState blockstate = worldIn.getBlockState(finalPos);
+                    if (blockstate.getBlock() instanceof CoffinBlock) {
+                        worldIn.setBlockState(finalPos, blockstate.with(BedBlock.OCCUPIED, Boolean.TRUE), 3);
+                    }
+                });
                 return ActionResultType.SUCCESS;
             }
         }
@@ -234,8 +225,8 @@ public class CoffinBlock extends VampirismBlockContainer {
         if (!worldIn.isRemote) {
             BlockPos blockpos = pos.offset(state.get(HORIZONTAL_FACING));
             worldIn.setBlockState(blockpos, state.with(PART, CoffinPart.HEAD), 3);
-            worldIn.notifyNeighbors(pos, Blocks.AIR);
-            state.updateNeighbors(worldIn, pos, 3);
+            worldIn.func_230547_a_(pos, Blocks.AIR);
+            state.func_235734_a_(worldIn, pos, 3); //updateNeighbours
         }
     }
 
@@ -254,23 +245,6 @@ public class CoffinBlock extends VampirismBlockContainer {
         builder.add(HORIZONTAL_FACING, BedBlock.OCCUPIED, PART);
     }
 
-    /**
-     * Finds the player that is currently sleeping in this coffin
-     *
-     * @param worldIn
-     * @param pos
-     * @return
-     */
-    @Nullable
-    private PlayerEntity getPlayerInCoffin(World worldIn, BlockPos pos) {
-        for (PlayerEntity entityplayer : worldIn.getPlayers()) {
-            if (entityplayer.isSleeping() && entityplayer.getBedLocation(worldIn.getDimension().getType()).equals(pos)) {
-                return entityplayer;
-            }
-        }
-
-        return null;
-    }
 
     public enum CoffinPart implements IStringSerializable {
         HEAD("head"),
@@ -283,7 +257,7 @@ public class CoffinBlock extends VampirismBlockContainer {
         }
 
         @Nonnull
-        public String getName() {
+        public String func_176610_l() {
             return this.name;
         }
 

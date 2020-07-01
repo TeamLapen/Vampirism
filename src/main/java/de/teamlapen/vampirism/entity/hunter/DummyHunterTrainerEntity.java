@@ -5,13 +5,14 @@ import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -48,33 +49,25 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
     }
 
     @Override
-    protected boolean processInteract(PlayerEntity player, Hand hand) {
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
-        if (!flag && this.isAlive() && !player.isShiftKeyDown()) {
+        if (!flag && this.isAlive() && !player.isSneaking()) {
             if (!this.world.isRemote) {
                 if (Helper.isHunter(player)) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled_hunter"));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled_hunter"), Util.field_240973_b_);
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled"));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.trainer_disabled"), Util.field_240973_b_);
                 }
             }
-            return true;
+            return ActionResultType.SUCCESS;
         }
 
 
-        return super.processInteract(player, hand);
+        return super.func_230254_b_(player, hand);
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
-    }
 
     @Override
     protected void registerGoals() {

@@ -10,7 +10,9 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.entity.goals.DefendVillageGoal;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
@@ -71,12 +73,12 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     @Nullable
     private ICaptureAttributes villageAttributes;
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32);
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.HUNTER_VILLAGER_MAX_HEALTH);
+
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampirismVillagerEntity.getAttributeBuilder()
+                .func_233815_a_(SharedMonsterAttributes.MAX_HEALTH, BalanceMobProps.mobProps.HUNTER_VILLAGER_MAX_HEALTH)
+                .func_233815_a_(SharedMonsterAttributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE)
+                .func_233815_a_(SharedMonsterAttributes.FOLLOW_RANGE, 32);
     }
 
     @Override
@@ -96,7 +98,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    protected ITextComponent func_225513_by_() {
+    protected ITextComponent getProfessionName() {
         return this.getType().getName(); //Don't use profession as part of the translation key
     }
 

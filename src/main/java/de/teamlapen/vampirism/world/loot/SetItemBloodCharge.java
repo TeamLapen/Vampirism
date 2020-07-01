@@ -3,20 +3,11 @@ package de.teamlapen.vampirism.world.loot;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSyntaxException;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.core.ModLoot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.IRandomRange;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootFunction;
-import net.minecraft.world.storage.loot.RandomRanges;
-import net.minecraft.world.storage.loot.RandomValueRange;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
-import net.minecraft.world.storage.loot.functions.ILootFunction;
-import net.minecraft.world.storage.loot.functions.SetDamage;
+import net.minecraft.loot.*;
+import net.minecraft.loot.conditions.ILootCondition;
 
 import javax.annotation.Nonnull;
 
@@ -49,17 +40,19 @@ public class SetItemBloodCharge extends LootFunction {
         return builder((p_215930_1_) -> new SetItemBloodCharge(p_215930_1_, p_215931_0_));
     }
 
+    @Override
+    public LootFunctionType func_230425_b_() {
+        return ModLoot.set_item_blood_charge;
+    }
+
     public static class Serializer extends LootFunction.Serializer<SetItemBloodCharge> {
-
-        public Serializer() {
-            super(new ResourceLocation(REFERENCE.MODID, "set_item_blood_charge"), SetItemBloodCharge.class);
-        }
-
         @Override
-        public void serialize(@Nonnull JsonObject object, @Nonnull SetItemBloodCharge functionClazz, @Nonnull JsonSerializationContext serializationContext) {
-            super.serialize(object, functionClazz, serializationContext);
-            object.add("charge", RandomRanges.serialize(functionClazz.charge, serializationContext));
+        public void func_230424_a_(JsonObject object, SetItemBloodCharge p_230424_2_, JsonSerializationContext context) {
+            super.func_230424_a_(object, p_230424_2_, context);
+            object.add("charge", RandomRanges.serialize(p_230424_2_.charge, context));
+
         }
+
 
         @Nonnull
         @Override

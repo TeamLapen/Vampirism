@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.world.gen.features;
 
-import com.mojang.datafixers.Dynamic;
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModLootTables;
@@ -15,31 +15,26 @@ import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
-import java.util.function.Function;
 
 public class VampireDungeonFeature extends Feature<NoFeatureConfig> {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public VampireDungeonFeature(Function<Dynamic<?>, ? extends NoFeatureConfig> featureConfig) {
+    public VampireDungeonFeature(Codec<NoFeatureConfig> featureConfig) {
         super(featureConfig);
     }
 
-    /**
-     * almost copied from {@link net.minecraft.world.gen.feature.DungeonsFeature#place(net.minecraft.world.IWorld, net.minecraft.world.gen.ChunkGenerator, java.util.Random, net.minecraft.util.math.BlockPos, net.minecraft.world.gen.feature.NoFeatureConfig)}
-     */
     @Override
-    public boolean place(@Nonnull IWorld worldIn, @Nonnull ChunkGenerator<? extends GenerationSettings> generator, @Nonnull Random rand, @Nonnull BlockPos pos, @Nonnull NoFeatureConfig config) {
+    public boolean func_230362_a_(ISeedReader worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, Random rand, BlockPos pos, NoFeatureConfig config) {
         int i = 3;
         int j = rand.nextInt(2) + 2;
         int k = -j - 1;
@@ -115,7 +110,7 @@ public class VampireDungeonFeature extends Feature<NoFeatureConfig> {
                         }
 
                         if (j3 == 1) {
-                            worldIn.setBlockState(blockpos2, StructurePiece.func_197528_a(worldIn, blockpos2, Blocks.CHEST.getDefaultState()), 2);
+                            worldIn.setBlockState(blockpos2, StructurePiece.correctFacing(worldIn, blockpos2, Blocks.CHEST.getDefaultState()), 2);
                             LockableLootTileEntity.setLootTable(worldIn, rand, blockpos2, ModLootTables.chest_vampire_dungeon);
                             break;
                         }
@@ -177,6 +172,7 @@ public class VampireDungeonFeature extends Feature<NoFeatureConfig> {
             return false;
         }
     }
+
 
     private EntityType<?> getRandomDungeonMob(Random random) {
         return ModEntities.vampire;

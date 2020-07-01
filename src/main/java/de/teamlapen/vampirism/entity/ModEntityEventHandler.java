@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
@@ -41,8 +42,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -136,7 +137,7 @@ public class ModEntityEventHandler {
             if (event.getEntity() instanceof IAdjustableLevel) {
                 IAdjustableLevel entity = (IAdjustableLevel) event.getEntity();
                 if (entity.getLevel() == -1) {
-                    Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().getPosition(), 30);
+                    Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().func_233580_cy_(), 30);
                     int l = entity.suggestLevel(d);
                     if (l > entity.getMaxLevel()) {
                         l = entity.getMaxLevel();
@@ -239,21 +240,21 @@ public class ModEntityEventHandler {
             //------------------
 
             if (event.getEntity() instanceof VillagerEntity) {
-                if (Structures.VILLAGE.isPositionInStructure(event.getWorld(), event.getEntity().getPosition())) {
-                    StructureStart structure = Structures.VILLAGE.getStart(event.getWorld(), event.getEntity().getPosition(), false);
-                    if (!(structure == StructureStart.DUMMY)) {
-                        BlockPos pos = TotemTileEntity.getTotemPosition(structure);
-                        if (pos != null) {
-                            TileEntity tileEntity = event.getWorld().getTileEntity(pos);
-                            if (tileEntity instanceof TotemTileEntity) {
-                                if (VReference.HUNTER_FACTION.equals(((TotemTileEntity) tileEntity).getControllingFaction())) {
-                                    ExtendedCreature.getSafe(event.getEntity()).ifPresent(e -> e.setPoisonousBlood(true));
-                                }
+
+                StructureStart<?> structure = UtilLib.getStructureStartAtEntity(event.getEntity(), Structure.field_236381_q_);
+                if (structure != null && structure.isValid() && !(structure == StructureStart.DUMMY)) {
+                    BlockPos pos = TotemTileEntity.getTotemPosition(structure);
+                    if (pos != null) {
+                        TileEntity tileEntity = event.getWorld().getTileEntity(pos);
+                        if (tileEntity instanceof TotemTileEntity) {
+                            if (VReference.HUNTER_FACTION.equals(((TotemTileEntity) tileEntity).getControllingFaction())) {
+                                ExtendedCreature.getSafe(event.getEntity()).ifPresent(e -> e.setPoisonousBlood(true));
                             }
                         }
                     }
                 }
-            }
+                }
+
         }
     }
 

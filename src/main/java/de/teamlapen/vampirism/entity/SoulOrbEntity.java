@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
@@ -98,11 +97,6 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
     }
 
     @Override
-    public boolean handleWaterMovement() {
-        return this.world.isMaterialInBB(this.getBoundingBox(), Material.WATER);
-    }
-
-    @Override
     public boolean isInvisibleToPlayer(@Nonnull PlayerEntity player) {
         switch (getVariant()) {
             case VAMPIRE:
@@ -144,11 +138,11 @@ public class SoulOrbEntity extends Entity implements IRendersAsItem {
             this.setMotion(this.getMotion().add(0.0D, -0.03D, 0.0D));
         }
 
-        if (this.world.getFluidState(new BlockPos(this)).isTagged(FluidTags.LAVA)) {
+        if (this.world.getFluidState(func_233580_cy_()).isTagged(FluidTags.LAVA)) {
             this.setMotion((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F, 0.2F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
             this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
         }
-        if (!this.world.func_226664_a_(this.getBoundingBox())) { //areCollisionShapesEmpty
+        if (!this.world.hasNoCollisions(this.getBoundingBox())) { //areCollisionShapesEmpty
             this.pushOutOfBlocks(this.getPosX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getPosZ());
         }
 

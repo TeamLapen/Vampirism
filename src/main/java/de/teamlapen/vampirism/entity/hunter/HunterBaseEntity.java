@@ -9,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -62,7 +63,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     protected boolean tryCureSanguinare(PlayerEntity entity) {
         if (!this.world.isRemote && entity.isPotionActive(ModEffects.sanguinare)) {
             entity.removePotionEffect(ModEffects.sanguinare);
-            entity.sendMessage(new TranslationTextComponent("text.vampirism.hunter.cured_sanguinare"));
+            entity.sendMessage(new TranslationTextComponent("text.vampirism.hunter.cured_sanguinare"), Util.field_240973_b_);
             return true;
         }
         return false;

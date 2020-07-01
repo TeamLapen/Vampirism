@@ -3,12 +3,13 @@ package de.teamlapen.vampirism.player.vampire.skills;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.config.VampirismConfig;
+import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.player.skills.ActionSkill;
 import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.entity.SharedMonsterAttributes;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -54,17 +55,17 @@ public class VampireSkills {
     @SuppressWarnings("deprecation")
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
         registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getID(), false));
-        registry.register(new VampirismSkill.SimpleVampireSkill("advanced_biter", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription().registerAttributeModifier(VReference.biteDamage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", VampirismConfig.BALANCE.vsBiteDamageMult.get(), AttributeModifier.Operation.MULTIPLY_BASE));
+        registry.register(new VampirismSkill.SimpleVampireSkill("advanced_biter", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = true, player -> ((VampirePlayer) player).getSpecialAttributes().advanced_biter = false).setHasDefaultDescription().registerAttributeModifier(ModAttributes.bite_damage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", VampirismConfig.BALANCE.vsBiteDamageMult.get(), AttributeModifier.Operation.MULTIPLY_BASE));
         registry.register(new ActionSkill<>("bat", VampireActions.bat, true));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", true));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_vision", true).setToggleActions(player -> player.unlockVision(VReference.vision_bloodVision), player -> player.unUnlockVision(VReference.vision_bloodVision)));
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_vision_garlic", true).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().blood_vision_garlic = true, player -> ((VampirePlayer) player).getSpecialAttributes().blood_vision_garlic = false));
-        registry.register(new VampirismSkill.SimpleVampireSkill("creeper_avoided", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().avoided_by_creepers = true, player -> ((VampirePlayer) player).getSpecialAttributes().avoided_by_creepers = false).setDescription(() -> VampirismConfig.BALANCE.vsDisableAvoidedByCreepers.get() ? new StringTextComponent("Disabled by admin").applyTextStyle(TextFormatting.RED) : null));
+        registry.register(new VampirismSkill.SimpleVampireSkill("creeper_avoided", false).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().avoided_by_creepers = true, player -> ((VampirePlayer) player).getSpecialAttributes().avoided_by_creepers = false).setDescription(() -> VampirismConfig.BALANCE.vsDisableAvoidedByCreepers.get() ? new StringTextComponent("Disabled by admin").func_240699_a_(TextFormatting.RED) : null));
         registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile, true));
         registry.register(new ActionSkill<>("freeze", VampireActions.freeze, true));
         registry.register(new ActionSkill<>("half_invulnerable", VampireActions.half_invulnerable, true));
-        registry.register(new VampirismSkill.SimpleVampireSkill("less_blood_thirst", true).registerAttributeModifier(VReference.bloodExhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", VampirismConfig.BALANCE.vsThirstReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
-        registry.register(new VampirismSkill.SimpleVampireSkill("less_sundamage", false).registerAttributeModifier(VReference.sunDamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", VampirismConfig.BALANCE.vsSundamgeReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleVampireSkill("less_blood_thirst", true).registerAttributeModifier(ModAttributes.blood_exhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", VampirismConfig.BALANCE.vsThirstReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        registry.register(new VampirismSkill.SimpleVampireSkill("less_sundamage", false).registerAttributeModifier(ModAttributes.sundamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", VampirismConfig.BALANCE.vsSundamgeReduction1.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         registry.register(new VampirismSkill.SimpleVampireSkill("night_vision", false)
                 .setToggleActions(player -> {
                     player.unlockVision(VReference.vision_nightVision);

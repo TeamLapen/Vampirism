@@ -3,9 +3,9 @@ package de.teamlapen.vampirism.items;
 import com.google.common.collect.Multimap;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -34,7 +34,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
     private final TIER tier;
 
     public ArmorOfSwiftnessItem(EquipmentSlotType equipmentSlotIn, TIER tier) {
-        super(baseRegName, tier.getName(), ArmorMaterial.LEATHER, equipmentSlotIn, new Item.Properties().group(VampirismMod.creativeTab));
+        super(baseRegName, tier.func_176610_l(), ArmorMaterial.LEATHER, equipmentSlotIn, new Item.Properties().group(VampirismMod.creativeTab));
         this.tier = tier;
     }
 
@@ -70,7 +70,7 @@ public class ArmorOfSwiftnessItem extends VampirismHunterArmor implements IItemW
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
         if (equipmentSlot == this.getEquipmentSlot()) {
-            multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[equipmentSlot.getIndex()], "Armor Swiftness", getSpeedBoost(tier), AttributeModifier.Operation.MULTIPLY_TOTAL));
+            multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.func_233754_c_(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[equipmentSlot.getIndex()], "Armor Swiftness", getSpeedBoost(tier), AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
 
         return multimap;

@@ -22,12 +22,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.network.NetworkEvent;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -114,11 +112,5 @@ public class ClientProxy extends CommonProxy {
                 }
             }
         }
-    }
-
-    @Override
-    public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
-        str = StringEscapeUtils.unescapeJava(str);
-        return Minecraft.getInstance().fontRenderer.listFormattedStringToWidth(str, wrapWidth);
     }
 }

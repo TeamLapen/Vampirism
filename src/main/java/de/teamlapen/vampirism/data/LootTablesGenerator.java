@@ -22,14 +22,14 @@ import net.minecraft.data.loot.EntityLootTables;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Items;
+import net.minecraft.loot.*;
+import net.minecraft.loot.conditions.BlockStateProperty;
+import net.minecraft.loot.conditions.KilledByPlayer;
+import net.minecraft.loot.conditions.RandomChanceWithLooting;
+import net.minecraft.loot.conditions.SurvivesExplosion;
+import net.minecraft.loot.functions.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.*;
-import net.minecraft.world.storage.loot.conditions.BlockStateProperty;
-import net.minecraft.world.storage.loot.conditions.KilledByPlayer;
-import net.minecraft.world.storage.loot.conditions.RandomChanceWithLooting;
-import net.minecraft.world.storage.loot.conditions.SurvivesExplosion;
-import net.minecraft.world.storage.loot.functions.*;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -54,7 +54,7 @@ public class LootTablesGenerator extends LootTableProvider {
     @Override
     protected void validate(Map<ResourceLocation, LootTable> map, ValidationTracker validationtracker) {
         for (ResourceLocation resourcelocation : Sets.difference(ModLootTables.getLootTables(), map.keySet())) {
-            validationtracker.func_227530_a_("Missing built-in table: " + resourcelocation);
+            validationtracker.addProblem("Missing built-in table: " + resourcelocation);
         }
         map.forEach((resourceLocation, lootTable) -> LootTableManager.func_227508_a_(validationtracker, resourceLocation, lootTable));
     }
@@ -69,8 +69,8 @@ public class LootTablesGenerator extends LootTableProvider {
                     .addLootPool(LootPool.builder().name("general").acceptCondition(KilledByPlayer.builder()).rolls(ConstantRange.of(1))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_blood_bottle).weight(4))
                             .addEntry(ItemLootEntry.builder(ModItems.item_garlic).weight(4).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0, 1))))
-                            .addEntry(ItemLootEntry.builder(ModItems.holy_water_bottle_enhanced).weight(3).acceptFunction(SetNBT.func_215952_a(splash)))
-                            .addEntry(ItemLootEntry.builder(ModItems.holy_water_bottle_ultimate).weight(1).acceptFunction(SetNBT.func_215952_a(splash)))
+                            .addEntry(ItemLootEntry.builder(ModItems.holy_water_bottle_enhanced).weight(3).acceptFunction(SetNBT.builder(splash)))
+                            .addEntry(ItemLootEntry.builder(ModItems.holy_water_bottle_ultimate).weight(1).acceptFunction(SetNBT.builder(splash)))
                             .addEntry(ItemLootEntry.builder(ModItems.holy_salt).weight(4).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0, 1))).acceptFunction(SetCount.builder(RandomValueRange.of(1, 2)))))
                     .addLootPool(LootPool.builder().name("special").acceptCondition(RandomChanceWithLooting.builder(0.05f, 0.01f)).rolls(ConstantRange.of(1))
                             .addEntry(ItemLootEntry.builder(ModItems.vampire_book).weight(1).acceptFunction(AddBookNbt.builder())));
@@ -90,7 +90,6 @@ public class LootTablesGenerator extends LootTableProvider {
             this.registerLootTable(ModEntities.converted_sheep, LootTable.builder());
             this.registerLootTable(ModEntities.converted_horse, LootTable.builder());
             this.registerLootTable(ModEntities.dummy_creature, LootTable.builder());
-            this.registerLootTable(ModEntities.ghost, LootTable.builder());
             this.registerLootTable(ModEntities.hunter_trainer, LootTable.builder());
             LootTable.Builder vampire = LootTable.builder()
                     .addLootPool(LootPool.builder().name("general").rolls(ConstantRange.of(1)).acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.33f, 0.05f))

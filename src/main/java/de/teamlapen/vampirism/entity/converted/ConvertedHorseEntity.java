@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.BalanceMobProps;
+import de.teamlapen.vampirism.core.ModAttributes;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
@@ -13,11 +14,17 @@ import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.SoulOrbEntity;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.entity.*;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
+import net.minecraft.entity.CreatureAttribute;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RestrictSunGoal;
+import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -83,15 +90,10 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
         return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
-    @Override
-    public ITextComponent getName() {
-        if (hasCustomName()) {
-            return super.getName();
-        }
-        if (name == null) {
-            this.name = new TranslationTextComponent("entity.vampirism.vampire").appendSibling(new TranslationTextComponent("entity.horse"));
-        }
-        return name;
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return AbstractHorseEntity.func_234237_fg_()
+                .func_233815_a_(SharedMonsterAttributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG)
+                .func_233815_a_(ModAttributes.sundamage, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     @Override
@@ -121,29 +123,14 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
     }
 
     @Override
-    public void livingTick() {
-        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
-            isGettingGarlicDamage(this.world, true);
+    public ITextComponent getName() {
+        if (hasCustomName()) {
+            return super.getName();
         }
-        if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(this.world, true);
+        if (name == null) {
+            this.name = new TranslationTextComponent("entity.vampirism.vampire").func_230529_a_(new TranslationTextComponent("entity.horse"));
         }
-        if (!world.isRemote) {
-            if (isGettingSundamage(world) && ticksExisted % 40 == 11) {
-                double dmg = getAttribute(VReference.sunDamage).getValue();
-                if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
-            }
-            if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), this.ticksExisted);
-            }
-            if (isAlive() && isInWater()) {
-                setAir(300);
-                if (ticksExisted % 16 == 4) {
-                    addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
-                }
-            }
-        }
-        super.livingTick();
+        return name;
     }
 
     @Override
@@ -193,13 +180,34 @@ public class ConvertedHorseEntity extends HorseEntity implements IConvertedCreat
     }
 
     @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttributes().registerAttribute(VReference.sunDamage);
-        this.getAttribute(VReference.sunDamage).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(this.getMaxHealth() * 1.5);
-        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG);
+    public void livingTick() {
+        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
+            isGettingGarlicDamage(this.world, true);
+        }
+        if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
+            isGettingSundamage(this.world, true);
+        }
+        if (!world.isRemote) {
+            if (isGettingSundamage(world) && ticksExisted % 40 == 11) {
+                double dmg = getAttribute(ModAttributes.sundamage).getValue();
+                if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
+            }
+            if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), this.ticksExisted);
+            }
+            if (isAlive() && isInWater()) {
+                setAir(300);
+                if (ticksExisted % 16 == 4) {
+                    addPotionEffect(new EffectInstance(Effects.WEAKNESS, 80, 0));
+                }
+            }
+        }
+        super.livingTick();
+    }
 
+    @Override
+    protected void func_230273_eI_() {
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(this.getMaxHealth() * 1.5);
     }
 
     @Override

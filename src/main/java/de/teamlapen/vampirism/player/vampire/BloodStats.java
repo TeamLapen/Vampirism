@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.player.vampire;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import de.teamlapen.vampirism.core.ModAttributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
@@ -160,7 +160,7 @@ public class BloodStats implements IBloodStats {
     }
 
     /**
-     * Add exhaustion. Value is multiplied with the EntityAttribute {@link VReference#bloodExhaustion}
+     * Add exhaustion. Value is multiplied with the EntityAttribute {@link de.teamlapen.vampirism.core.ModAttributes#blood_exhaustion}
      *
      * @param amount
      */
@@ -172,10 +172,10 @@ public class BloodStats implements IBloodStats {
      * Add exhaustion
      *
      * @param amount
-     * @param ignoreModifier If the entity exhaustion attribute {@link VReference#bloodExhaustion} should be ignored
+     * @param ignoreModifier If the entity exhaustion attribute {@link de.teamlapen.vampirism.core.ModAttributes#blood_exhaustion} should be ignored
      */
     void addExhaustion(float amount, boolean ignoreModifier) {
-        IAttributeInstance attribute = player.getAttribute(VReference.bloodExhaustion);
+        ModifiableAttributeInstance attribute = player.getAttribute(ModAttributes.blood_exhaustion);
         float mult;
         if (ignoreModifier) {
             mult = 1F;

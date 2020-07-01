@@ -2,15 +2,17 @@ package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
+import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.goals.LookAtTrainerHunterGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.inventory.container.HunterTrainerContainer;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
@@ -18,7 +20,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -78,14 +82,12 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
     }
 
-    @Override
-    public void readAdditional(CompoundNBT nbt) {
-        super.readAdditional(nbt);
-        if(nbt.contains("createHome") && (this.shouldCreateHome = nbt.getBoolean("createHome"))){
-            if(this.getHomePosition().equals(BlockPos.ZERO)) {
-                setHomePosAndDistance(this.getPosition(), 5);
-            }
-        }
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampirismEntity.getAttributeBuilder()
+                .func_233815_a_(SharedMonsterAttributes.MAX_HEALTH, 300)
+                .func_233815_a_(SharedMonsterAttributes.ATTACK_DAMAGE, 19)
+                .func_233815_a_(SharedMonsterAttributes.MOVEMENT_SPEED, 0.17)
+                .func_233815_a_(SharedMonsterAttributes.FOLLOW_RANGE, 5);
     }
 
     @Override
@@ -95,12 +97,22 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
     }
 
     @Override
-    protected boolean processInteract(PlayerEntity player, Hand hand) {
-        if (tryCureSanguinare(player)) return true;
+    public void readAdditional(CompoundNBT nbt) {
+        super.readAdditional(nbt);
+        if (nbt.contains("createHome") && (this.shouldCreateHome = nbt.getBoolean("createHome"))) {
+            if (this.getHomePosition().equals(BlockPos.ZERO)) {
+                setHomePosAndDistance(this.func_233580_cy_(), 5);
+            }
+        }
+    }
+
+    @Override
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
+        if (tryCureSanguinare(player)) return ActionResultType.SUCCESS;
         ItemStack stack = player.getHeldItem(hand);
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
-        if (!flag && this.isAlive() && !player.isShiftKeyDown()) { //isSneaking
+        if (!flag && this.isAlive() && !player.isSneaking()) {
             if (!this.world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForTrainer(HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0) + 1)) {
                     if (trainee == null) {
@@ -108,29 +120,20 @@ public class HunterTrainerEntity extends HunterBaseEntity implements LookAtTrain
                         this.trainee = player;
                         this.getNavigator().clearPath();
                     } else {
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"));
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"), Util.field_240973_b_);
                     }
 
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_trainer.trainer_level_wrong"));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.hunter_trainer.trainer_level_wrong"), Util.field_240973_b_);
                 }
 
             }
 
-            return true;
+            return ActionResultType.SUCCESS;
         }
 
 
-        return super.processInteract(player, hand);
-    }
-
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
+        return super.func_230254_b_(player, hand);
     }
 
     @Override

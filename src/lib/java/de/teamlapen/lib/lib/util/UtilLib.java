@@ -17,10 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -33,6 +30,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
@@ -105,7 +104,7 @@ public class UtilLib {
         float pitchAdjustedCosYaw = cosYaw * cosPitch;
         double distance = 500D;
         if (restriction == 0 && player instanceof ServerPlayerEntity) {
-            distance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+            distance = player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() - 0.5f;
         } else if (restriction > 0) {
             distance = restriction;
         }
@@ -204,7 +203,7 @@ public class UtilLib {
      */
     private static void onInitialSpawn(Entity e, SpawnReason reason) {
         if (e instanceof MobEntity) {
-            ((MobEntity) e).onInitialSpawn(e.getEntityWorld(), e.getEntityWorld().getDifficultyForLocation(e.getPosition()), reason, null, null);
+            ((MobEntity) e).onInitialSpawn(e.getEntityWorld(), e.getEntityWorld().getDifficultyForLocation(e.func_233580_cy_()/*getPos*/), reason, null, null);
         }
     }
 
@@ -300,7 +299,7 @@ public class UtilLib {
         double d5 = entity.getPosZ();
         entity.setRawPosition(x, y, z);
         boolean flag = false;
-        BlockPos blockPos = entity.getPosition();
+        BlockPos blockPos = entity.func_233580_cy_(); //getPos
         double ty = y;
 
 
@@ -320,7 +319,7 @@ public class UtilLib {
             if (flag1) {
                 entity.setPosition(entity.getPosX(), entity.getPosY(), entity.getPosZ());
 
-                if (entity.getEntityWorld().checkBlockCollision(entity.getBoundingBox()) && !entity.getEntityWorld().containsAnyLiquid(entity.getBoundingBox()))
+                if (entity.getEntityWorld().hasNoCollisions(entity) && !entity.getEntityWorld().containsAnyLiquid(entity.getBoundingBox()))
                     flag = true;
             }
         }
@@ -393,7 +392,7 @@ public class UtilLib {
     public static void sendMessageToAllExcept(PlayerEntity player, ITextComponent message) {
         for (Object o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
             if (!o.equals(player)) {
-                ((PlayerEntity) o).sendMessage(message);
+                ((PlayerEntity) o).sendMessage(message, Util.field_240973_b_);
             }
         }
     }
@@ -666,6 +665,20 @@ public class UtilLib {
                 var2.append(',').append(' ');
             }
         }
+    }
+
+    public static boolean isInsideStructure(Entity entity, Structure<?> s) {
+        StructureStart<?> start = getStructureStartAtEntity(entity, s);
+        return start != null && start.isValid();
+    }
+
+    @Nullable
+    public static StructureStart<?> getStructureStartAtEntity(Entity entity, Structure<?> s) {
+        World w = entity.getEntityWorld();
+        if (w instanceof ServerWorld) {
+            return ((ServerWorld) w).func_241112_a_()/*getStructureManager*/.func_235010_a_(entity.func_233580_cy_(), true, s);
+        }
+        return null;
     }
 
     /**

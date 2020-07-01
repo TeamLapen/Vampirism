@@ -45,7 +45,7 @@ public class BlindingBatEntity extends BatEntity {
 
     @Override
     public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
-        return worldIn.checkNoEntityCollision(this, VoxelShapes.create(this.getBoundingBox())) && worldIn.func_226668_i_(this) && !worldIn.containsAnyLiquid(this.getBoundingBox()); //Check no entity collision
+        return worldIn.checkNoEntityCollision(this, VoxelShapes.create(this.getBoundingBox())) && worldIn.checkNoEntityCollision(this) && !worldIn.containsAnyLiquid(this.getBoundingBox()); //Check no entity collision
     }
 
     public void restrictLiveSpan() {

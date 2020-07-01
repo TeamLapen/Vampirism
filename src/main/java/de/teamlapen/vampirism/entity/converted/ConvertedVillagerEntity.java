@@ -17,10 +17,10 @@ import de.teamlapen.vampirism.entity.villager.Trades;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
@@ -39,6 +39,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
@@ -77,11 +78,9 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             return super.getDisplayName();
         } else {
             VillagerProfession villagerprofession = this.getVillagerData().getProfession();
-            ITextComponent itextcomponent1 = (new TranslationTextComponent(EntityType.VILLAGER.getTranslationKey() + '.' + (!"minecraft".equals(villagerprofession.getRegistryName().getNamespace()) ? villagerprofession.getRegistryName().getNamespace() + '.' : "") + villagerprofession.getRegistryName().getPath())).applyTextStyle((p_213773_1_) -> {
-                p_213773_1_.setHoverEvent(this.getHoverEvent()).setInsertion(this.getCachedUniqueIdString());
-            });
+            IFormattableTextComponent itextcomponent1 = (new TranslationTextComponent(EntityType.VILLAGER.getTranslationKey() + '.' + (!"minecraft".equals(villagerprofession.getRegistryName().getNamespace()) ? villagerprofession.getRegistryName().getNamespace() + '.' : "") + villagerprofession.getRegistryName().getPath())).func_240700_a_((p_211516_1_) -> p_211516_1_.func_240716_a_(this.getHoverEvent()).func_240714_a_(this.getCachedUniqueIdString()));
             if (team != null) {
-                itextcomponent1.applyTextStyle(team.getColor());
+                itextcomponent1.func_240699_a_(team.getColor());
             }
 
             return itextcomponent1;
@@ -165,11 +164,11 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
             brain.registerActivity(Activity.PLAY, VillagerTasks.play(f));
         } else {
             brain.setSchedule(ModVillage.converted_default);
-            brain.registerActivity(Activity.WORK, VillagerTasks.work(villagerprofession, f), ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryModuleStatus.VALUE_PRESENT)));
+            brain.func_233700_a_(Activity.WORK, VillagerTasks.work(villagerprofession, 0.5F), ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryModuleStatus.VALUE_PRESENT)));
         }
 
         brain.registerActivity(Activity.CORE, VillagerTasks.core(villagerprofession, f));
-        brain.registerActivity(Activity.MEET, VillagerTasks.meet(villagerprofession, f), ImmutableSet.of(Pair.of(MemoryModuleType.MEETING_POINT, MemoryModuleStatus.VALUE_PRESENT)));
+        brain.func_233700_a_(Activity.MEET, VillagerTasks.meet(villagerprofession, 0.5F), ImmutableSet.of(Pair.of(MemoryModuleType.MEETING_POINT, MemoryModuleStatus.VALUE_PRESENT)));
         brain.registerActivity(Activity.REST, VillagerTasks.rest(villagerprofession, f));
         brain.registerActivity(Activity.IDLE, VillagerTasks.idle(villagerprofession, f));
         brain.registerActivity(Activity.PANIC, VillagerTasks.panic(villagerprofession, f));

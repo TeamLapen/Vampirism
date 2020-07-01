@@ -2,16 +2,13 @@ package de.teamlapen.vampirism.world.loot;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.core.ModLoot;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.IRandomRange;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootFunction;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
-import net.minecraft.world.storage.loot.functions.ILootFunction;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootFunction;
+import net.minecraft.loot.LootFunctionType;
+import net.minecraft.loot.conditions.ILootCondition;
 
 import javax.annotation.Nonnull;
 
@@ -31,20 +28,16 @@ public class AddBookNbt extends LootFunction {
         return itemStack;
     }
 
-    public static Builder<?> builder(){
+    public static Builder<?> builder() {
         return builder(AddBookNbt::new);
     }
 
+    @Override
+    public LootFunctionType func_230425_b_() {
+        return ModLoot.add_book_nbt;
+    }
+
     public static class Serializer extends LootFunction.Serializer<AddBookNbt> {
-
-        public Serializer() {
-            super(new ResourceLocation(REFERENCE.MODID, "add_book_nbt"), AddBookNbt.class);
-        }
-
-        @Override
-        public void serialize(@Nonnull JsonObject object, @Nonnull AddBookNbt functionClazz, @Nonnull JsonSerializationContext serializationContext) {
-            super.serialize(object, functionClazz, serializationContext);
-        }
 
         @Nonnull
         @Override

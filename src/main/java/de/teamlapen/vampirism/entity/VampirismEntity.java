@@ -12,8 +12,11 @@ import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.particle.GenericParticleData;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MoveTowardsRestrictionGoal;
 import net.minecraft.entity.monster.IMob;
@@ -52,7 +55,7 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
     }
 
     public static boolean spawnPredicateVampireFog(IWorld world, BlockPos blockPos) {
-        return world.getBiome(blockPos).getRegistryName() == ModBiomes.vampire_forest.getRegistryName() || TotemTileEntity.isInsideVampireAreaCached(world.getDimension(), blockPos);
+        return world.getBiome(blockPos).getRegistryName() == ModBiomes.vampire_forest.getRegistryName() || (world instanceof World && TotemTileEntity.isInsideVampireAreaCached(((World) world).func_234923_W_(), blockPos));
     }
 
     public static boolean spawnPredicateCanSpawn(EntityType<? extends MobEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
@@ -288,10 +291,8 @@ public abstract class VampirismEntity extends CreatureEntity implements IEntityW
 
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return CreatureEntity.func_233639_cI_().func_233814_a_(Attributes.field_233823_f_);
     }
 
     protected void setDontDropEquipment() {

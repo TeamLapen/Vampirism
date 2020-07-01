@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.core;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -17,6 +16,8 @@ import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.vampire.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
@@ -54,7 +55,6 @@ public class ModEntities {
     public static final EntityType<CrossbowArrowEntity> crossbow_arrow = getNull();
     public static final EntityType<DarkBloodProjectileEntity> dark_blood_projectile = getNull();
     public static final EntityType<DummyBittenAnimalEntity> dummy_creature;
-    public static final EntityType<GhostEntity> ghost;
     public static final EntityType<HunterTrainerEntity> hunter_trainer;
     public static final EntityType<DummyHunterTrainerEntity> hunter_trainer_dummy = getNull();
     public static final EntityType<AreaParticleCloudEntity> particle_cloud = getNull();
@@ -72,7 +72,6 @@ public class ModEntities {
 
     static {
         //IMPORTANT - Must include all entity types that are used in vampire forest spawns
-        ghost = prepareEntityType("ghost", EntityType.Builder.create(GhostEntity::new, EntityClassification.MONSTER).size(0.8F, 1.95F), true);
         hunter = prepareEntityType("hunter", EntityType.Builder.create(BasicHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
         hunter_trainer = prepareEntityType("hunter_trainer", EntityType.Builder.create(HunterTrainerEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
         advanced_hunter = prepareEntityType("advanced_hunter", EntityType.Builder.create(AdvancedHunterEntity::new, VReference.HUNTER_CREATURE_TYPE).size(0.6F, 1.95F), true);
@@ -124,7 +123,6 @@ public class ModEntities {
         registry.register(prepareEntityType("crossbow_arrow", EntityType.Builder.<CrossbowArrowEntity>create(CrossbowArrowEntity::new, EntityClassification.MISC).size(0.5F, 0.5F).setCustomClientFactory((spawnEntity, world) -> new CrossbowArrowEntity(ModEntities.crossbow_arrow, world)), false));
         registry.register(prepareEntityType("dark_blood_projectile", EntityType.Builder.<DarkBloodProjectileEntity>create(DarkBloodProjectileEntity::new, EntityClassification.MISC).size(0.6F, 1.95F).immuneToFire().setCustomClientFactory((spawnEntity, world) -> new DarkBloodProjectileEntity(ModEntities.dark_blood_projectile, world)), false));
         registry.register(dummy_creature);
-        registry.register(ghost);
         registry.register(hunter_trainer);
         registry.register(prepareEntityType("hunter_trainer_dummy", EntityType.Builder.create(DummyHunterTrainerEntity::new, EntityClassification.MISC).size(0.6F, 1.95F), true));
         registry.register(prepareEntityType("particle_cloud", EntityType.Builder.create(AreaParticleCloudEntity::new, EntityClassification.MISC).size(6.0F, 0.5F).immuneToFire().setCustomClientFactory((spawnEntity, world) -> new AreaParticleCloudEntity(ModEntities.particle_cloud, world)), false));
@@ -153,7 +151,6 @@ public class ModEntities {
         EntitySpawnPlacementRegistry.register(dummy_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, DummyBittenAnimalEntity::spawnPredicate);
         EntitySpawnPlacementRegistry.register(converted_creature, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate);
         EntitySpawnPlacementRegistry.register(converted_sheep, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ConvertedCreatureEntity::spawnPredicate);
-        EntitySpawnPlacementRegistry.register(ghost, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, GhostEntity::spawnPredicateGhost);
         EntitySpawnPlacementRegistry.register(hunter_trainer, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
         EntitySpawnPlacementRegistry.register(hunter_trainer_dummy, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
         EntitySpawnPlacementRegistry.register(vampire, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, VampireBaseEntity::spawnPredicateVampire);
@@ -161,6 +158,28 @@ public class ModEntities {
         EntitySpawnPlacementRegistry.register(hunter, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, HunterBaseEntity::spawnPredicateHunter);
         EntitySpawnPlacementRegistry.register(villager_angry, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
         EntitySpawnPlacementRegistry.register(villager_converted, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canSpawnOn);
+    }
+
+    static void registerEntityTypeAttributes() {
+        GlobalEntityTypeAttributes.put(advanced_hunter, AdvancedHunterEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(advanced_hunter_imob, AdvancedHunterEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(advanced_vampire, AdvancedVampireEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(advanced_vampire_imob, AdvancedVampireEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(blinding_bat, BatEntity.func_234175_m_().func_233813_a_());
+        GlobalEntityTypeAttributes.put(converted_creature, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(converted_creature_imob, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(converted_horse, ConvertedHorseEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(converted_sheep, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(dummy_creature, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(hunter, BasicHunterEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(hunter_imob, BasicHunterEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(hunter_trainer, HunterTrainerEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(hunter_trainer_dummy, HunterTrainerEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(vampire, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(vampire_imob, BasicVampireEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(vampire_baron, VampireBaronEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(villager_angry, AggressiveVillagerEntity.getAttributeBuilder().func_233813_a_());
+        GlobalEntityTypeAttributes.put(villager_converted, ConvertedVillagerEntity.getAttributeBuilder().func_233813_a_());
     }
 
     private static Biome[] getZombieBiomes() {

@@ -43,6 +43,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -55,10 +56,10 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.PointOfInterestManager;
 import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.BossInfo;
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
-import net.minecraft.world.gen.feature.structure.Structures;
 import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -79,7 +80,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     /**
      * stores all BoundingBoxes of vampire controlled villages per dimension, mapped from totem positions
      */
-    private static final HashMap<Dimension, Map<BlockPos, MutableBoundingBox>> vampireVillages = Maps.newHashMap();
+    private static final HashMap<RegistryKey<World>, Map<BlockPos, MutableBoundingBox>> vampireVillages = Maps.newHashMap();
     /**
      * saves the position
      */
@@ -90,7 +91,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
      */
     private static final Map<IFaction, List<CaptureEntityEntry>> captureEntities;
 
-    public static boolean isInsideVampireAreaCached(Dimension dimension, BlockPos blockPos) {
+    public static boolean isInsideVampireAreaCached(RegistryKey<World> dimension, BlockPos blockPos) {
         if (vampireVillages.containsKey(dimension)) {
             for (Map.Entry<BlockPos, MutableBoundingBox> entry : vampireVillages.get(dimension).entrySet()) {
                 if (entry.getValue().isVecInside(blockPos)) {
@@ -101,15 +102,15 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         return false;
     }
 
-    public static void clearCacheForDimension(Dimension dimension) {
+    public static void clearCacheForDimension(RegistryKey<World> dimension) {
         vampireVillages.remove(dimension);
     }
 
-    private static void addVampireVillage(Dimension dimension, BlockPos pos, MutableBoundingBox box) {
+    private static void addVampireVillage(RegistryKey<World> dimension, BlockPos pos, MutableBoundingBox box) {
         vampireVillages.computeIfAbsent(dimension, dimension1 -> Maps.newHashMap()).put(pos, box);
     }
 
-    private static void removeVampireVillage(Dimension dimension, BlockPos pos) {
+    private static void removeVampireVillage(RegistryKey<World> dimension, BlockPos pos) {
         vampireVillages.computeIfPresent(dimension, (dimension1, structureStarts) -> {
             structureStarts.remove(pos);
             return structureStarts;
@@ -135,10 +136,12 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     public static ITextComponent forceFactionCommand(IFaction faction, ServerPlayerEntity player) {
-        if (!Structures.VILLAGE.isPositionInStructure(player.world, player.getPosition())) {
+        StructureStart<?> village = player.getServerWorld().func_241112_a_()/*getStructureManager*/.func_235010_a_(player.func_233580_cy_(), true, Structure.field_236381_q_);
+
+
+        if (!village.isValid()) {
             return new TranslationTextComponent("command.vampirism.test.village.no_village");
         }
-        StructureStart village = Structures.VILLAGE.getStart(player.world, player.getPosition(), false);
         if (village == StructureStart.DUMMY) {
             return new TranslationTextComponent("command.vampirism.test.village.no_village");
         }
@@ -234,30 +237,43 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void markDirty() {
+    public void func_230337_a_(BlockState state, CompoundNBT compound) {
+        super.func_230337_a_(state, compound);
+        this.isDisabled = compound.getBoolean("isDisabled");
+        this.isComplete = compound.getBoolean("isComplete");
+        this.isInsideVillage = compound.getBoolean("isInsideVillage");
+        if (compound.contains("controllingFaction")) {
+            this.setControllingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("controllingFaction"))));
+        } else {
+            this.setControllingFaction(null);
+        }
+        if (compound.contains("capturingFaction")) {
+            this.setCapturingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("capturingFaction"))));
+            this.captureTimer = compound.getInt("captureTimer");
+            this.captureAbortTimer = compound.getInt("captureabortTimer");
+            this.phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
+            if (this.phase == CAPTURE_PHASE.PHASE_2 && compound.contains("defenderMax")) {
+                this.defenderMax = compound.getInt("defenderMax");
+                this.setupPhase2();
+            }
+        } else {
+            this.setCapturingFaction(null);
+        }
         if (this.world != null) {
-            super.markDirty();
-            this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
-            if (this.village != null) {
-                if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
-                    addVampireVillage(this.world.dimension, this.village.getPos(), this.village.getBoundingBox());
+            if (compound.contains("villageArea")) {
+                if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
+                    addVampireVillage(this.world.func_234923_W_(), this.pos, UtilLib.intToMB(compound.getIntArray("villageArea")));
                 } else {
-                    removeVampireVillage(this.world.dimension, this.village.getPos());
+                    removeVampireVillage(this.world.func_234923_W_(), this.pos);
                 }
             }
         }
+        this.forceVillageUpdate = true;
     }
 
     @Override
-    public void remove() {
-        removeVampireVillage(this.world.dimension, this.pos);
-        removeTotem(this.village);
-        if (this.capturingFaction != null) {
-            this.abortCapture(false);
-        } else {
-            this.updateBossinfoPlayers(null);
-        }
-        super.remove();
+    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+        this.func_230337_a_(state, tag);
     }
 
     private void abortCapture(boolean notifyPlayer) {
@@ -291,20 +307,19 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         return this.capturingFaction == null ? 0 : this.phase == CAPTURE_PHASE.PHASE_2 ? 80 : (int) (this.captureTimer / (float) VampirismConfig.BALANCE.viPhase1Duration.get() * 80f);
     }
 
-    public void updateTileStatus() {
-        Block b = this.world.getBlockState(this.pos).getBlock();
-        if (!(this.isComplete = b instanceof TotemTopBlock && this.world.getBlockState(this.pos.down()).getBlock().equals(ModBlocks.totem_base)))
-            return;
-        ResourceLocation blockFaction = ((TotemTopBlock) b).faction;
-        if (!(blockFaction.equals(this.controllingFaction == null ? nonFactionTotem : this.controllingFaction.getID()))) { //If block faction does not match tile faction, force the tile to update to the block faction
-            this.forcedFaction = VampirismAPI.factionRegistry().getFactionByID(blockFaction);
+    @Override
+    public void markDirty() {
+        if (this.world != null) {
+            super.markDirty();
+            this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
+            if (this.village != null) {
+                if (this.controllingFaction == VReference.VAMPIRE_FACTION) {
+                    addVampireVillage(this.world.func_234923_W_()/*getDimension*/, this.village.getPos(), this.village.getBoundingBox());
+                } else {
+                    removeVampireVillage(this.world.func_234923_W_(), this.village.getPos());
+                }
+            }
         }
-        if (!(this.isInsideVillage = Structures.VILLAGE.isPositionInStructure(this.world, this.pos))) return;
-        StructureStart structure = Structures.VILLAGE.getStart(this.world, this.pos, false);
-        if (structure == StructureStart.DUMMY) return;
-        this.village = structure;
-        this.isDisabled = !addTotem(this.village, this.pos);
-        this.markDirty();
     }
 
     @Nullable
@@ -314,8 +329,15 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void handleUpdateTag(CompoundNBT tag) {
-        this.read(tag);
+    public void remove() {
+        removeVampireVillage(this.world.func_234923_W_(), this.pos);
+        removeTotem(this.village);
+        if (this.capturingFaction != null) {
+            this.abortCapture(false);
+        } else {
+            this.updateBossinfoPlayers(null);
+        }
+        super.remove();
     }
 
     @Nonnull
@@ -347,39 +369,20 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity {
         return super.write(compound);
     }
 
-    @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
-        this.isDisabled = compound.getBoolean("isDisabled");
-        this.isComplete = compound.getBoolean("isComplete");
-        this.isInsideVillage = compound.getBoolean("isInsideVillage");
-        if (compound.contains("controllingFaction")) {
-            this.setControllingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("controllingFaction"))));
-        } else {
-            this.setControllingFaction(null);
+    public void updateTileStatus() {
+        Block b = this.world.getBlockState(this.pos).getBlock();
+        if (!(this.isComplete = b instanceof TotemTopBlock && this.world.getBlockState(this.pos.down()).getBlock().equals(ModBlocks.totem_base)))
+            return;
+        ResourceLocation blockFaction = ((TotemTopBlock) b).faction;
+        if (!(blockFaction.equals(this.controllingFaction == null ? nonFactionTotem : this.controllingFaction.getID()))) { //If block faction does not match tile faction, force the tile to update to the block faction
+            this.forcedFaction = VampirismAPI.factionRegistry().getFactionByID(blockFaction);
         }
-        if (compound.contains("capturingFaction")) {
-            this.setCapturingFaction(VampirismAPI.factionRegistry().getFactionByID(new ResourceLocation(compound.getString("capturingFaction"))));
-            this.captureTimer = compound.getInt("captureTimer");
-            this.captureAbortTimer = compound.getInt("captureabortTimer");
-            this.phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
-            if (this.phase == CAPTURE_PHASE.PHASE_2 && compound.contains("defenderMax")) {
-                this.defenderMax = compound.getInt("defenderMax");
-                this.setupPhase2();
-            }
-        } else {
-            this.setCapturingFaction(null);
-        }
-        if (this.world != null) {
-            if (compound.contains("villageArea")) {
-                if (VReference.VAMPIRE_FACTION.equals(this.controllingFaction)) {
-                    addVampireVillage(this.world.dimension, this.pos, UtilLib.intToMB(compound.getIntArray("villageArea")));
-                } else {
-                    removeVampireVillage(this.world.dimension, this.pos);
-                }
-            }
-        }
-        this.forceVillageUpdate = true;
+        @Nullable StructureStart<?> structure = this.world instanceof ServerWorld ? ((ServerWorld) this.world).func_241112_a_()/*getStructureManager*/.func_235010_a_(getPos(), true, Structure.field_236381_q_) : null;
+        if (!(this.isInsideVillage = structure != null && structure.isValid())) return;
+        if (structure == StructureStart.DUMMY) return;
+        this.village = structure;
+        this.isDisabled = !addTotem(this.village, this.pos);
+        this.markDirty();
     }
 
     private boolean spawnVillagerDefault(boolean poisonousBlood) {

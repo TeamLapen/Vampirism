@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.world.gen.util;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.types.DynamicOps;
-
+import com.mojang.serialization.Dynamic;
 import de.teamlapen.vampirism.core.ModFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

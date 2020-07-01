@@ -4,20 +4,12 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.core.ModLoot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.ConstantRange;
-import net.minecraft.world.storage.loot.IRandomRange;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootFunction;
-import net.minecraft.world.storage.loot.RandomRanges;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
-import net.minecraft.world.storage.loot.functions.ILootFunction;
+import net.minecraft.loot.*;
+import net.minecraft.loot.conditions.ILootCondition;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Type;
 
 public class SetMetaBasedOnLevel extends LootFunction {
     private final IRandomRange max;
@@ -42,18 +34,20 @@ public class SetMetaBasedOnLevel extends LootFunction {
         return stack;
     }
 
+    @Override
+    public LootFunctionType func_230425_b_() {
+        return ModLoot.set_meta_from_level;
+    }
+
     public static class Serializer extends LootFunction.Serializer<SetMetaBasedOnLevel> {
 
-        public Serializer() {
-            super(new ResourceLocation(REFERENCE.MODID, "set_meta_from_level"), SetMetaBasedOnLevel.class);
-        }
-
         @Override
-        public void serialize(@Nonnull JsonObject json, SetMetaBasedOnLevel value, @Nonnull JsonSerializationContext context) {
-            super.serialize(json, value, context);
+        public void func_230424_a_(JsonObject json, SetMetaBasedOnLevel value, JsonSerializationContext context) {
+            super.func_230424_a_(json, value, context);
             json.add("max", RandomRanges.serialize(value.max, context));
             json.add("entity", context.serialize(value.target));
         }
+
 
         @Nonnull
         @Override

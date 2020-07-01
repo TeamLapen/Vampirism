@@ -2,10 +2,14 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.client.render.RenderAreaParticleCloud;
 import de.teamlapen.vampirism.client.render.entities.*;
+import de.teamlapen.vampirism.client.render.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.BatRenderer;
+import net.minecraft.client.renderer.entity.HorseRenderer;
 import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -20,10 +24,13 @@ public class ModEntitiesRender {
 
     public static void registerEntityRenderer(Supplier<Minecraft> minecraftSupplier) {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.blinding_bat, BatRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ghost, GhostRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_creature_imob, ConvertedCreatureRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_creature, ConvertedCreatureRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_horse, ConvertedHorseRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_horse, renderingManager -> {
+            HorseRenderer renderer = new HorseRenderer(renderingManager);
+            renderer.addLayer(new VampireEntityLayer<>(renderer, new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/horse_overlay.png"), false));
+            return renderer;
+        });
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.converted_sheep, ConvertedCreatureRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter, BasicHunterRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.hunter_imob, BasicHunterRenderer::new);

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityType;
 
 /**
  * Handles conversion of entities
@@ -20,13 +21,13 @@ public interface IConvertingHandler<T extends CreatureEntity> {
      */
     interface IDefaultHelper<Q extends CreatureEntity> {
 
-        double getConvertedDMG(Q entity);
+        double getConvertedDMG(EntityType<Q> entity);
 
-        double getConvertedKnockbackResistance(Q entity);
+        double getConvertedKnockbackResistance(EntityType<Q> entity);
 
-        double getConvertedMaxHealth(Q entity);
+        double getConvertedMaxHealth(EntityType<Q> entity);
 
-        double getConvertedSpeed(Q entity);
+        double getConvertedSpeed(EntityType<Q> entity);
 
     }
 }

@@ -22,6 +22,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -135,7 +136,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
     public void tick() {
         super.tick();
         if (this.world.isRemote) {
-            Vector3d center = this.getPositionVector();
+            Vector3d center = this.getPositionVec();
             ModParticles.spawnParticlesClient(this.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getCollisionBorderSize(), this.rand);
 
             if (this.ticksExisted % 3 == 0) {
@@ -160,7 +161,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
 
             if (result.getType() == RayTraceResult.Type.ENTITY) {
                 Entity entity = ((EntityRayTraceResult) result).getEntity();
-                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), directDamage);
+                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, func_234616_v_()), directDamage);
                 if (entity instanceof LivingEntity) {
                     if (this.rand.nextInt(3) == 0) {
                         ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100));
@@ -173,6 +174,8 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
 
             }
 
+
+            @Nullable Entity shootingEntity = func_234616_v_();
             List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(2), EntityPredicates.IS_ALIVE.and(EntityPredicates.NOT_SPECTATING));
             for (Entity e : list) {
                 if (excludeShooter && e == shootingEntity) {
@@ -183,9 +186,9 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
                     entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
                     if (result.getType() == RayTraceResult.Type.ENTITY) {
                         if (entity != ((EntityRayTraceResult) result).getEntity())
-                            entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), indirecDamage);
+                            entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, func_234616_v_()), indirecDamage);
                     } else {
-                        entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), indirecDamage);
+                        entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, func_234616_v_()), indirecDamage);
                     }
 
 

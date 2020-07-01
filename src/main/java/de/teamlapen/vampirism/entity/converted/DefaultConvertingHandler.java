@@ -4,9 +4,11 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
@@ -22,32 +24,35 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
     /**
      * Used if no helper is specified
      */
-    private final static IDefaultHelper defaultHelper = new IDefaultHelper() {
+    private final static IDefaultHelper<? extends CreatureEntity> defaultHelper = new IDefaultHelper() {
 
 
         @Override
-        public double getConvertedDMG(CreatureEntity entity) {
-            IAttributeInstance dmg = entity.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-            if (dmg != null) {
-                return dmg.getBaseValue() * 1.3;
+        public double getConvertedDMG(EntityType entityType) {
+            AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
+            if (map.func_233809_c_(SharedMonsterAttributes.ATTACK_DAMAGE)) {
+                return map.func_233807_b_(SharedMonsterAttributes.ATTACK_DAMAGE) * 1.3;
             } else {
                 return BalanceMobProps.mobProps.CONVERTED_MOB_DEFAULT_DMG;
             }
         }
 
         @Override
-        public double getConvertedKnockbackResistance(CreatureEntity entity) {
-            return entity.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).getBaseValue();
+        public double getConvertedKnockbackResistance(EntityType entityType) {
+            AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
+            return map.func_233807_b_(SharedMonsterAttributes.KNOCKBACK_RESISTANCE) * 1.3;
         }
 
         @Override
-        public double getConvertedMaxHealth(CreatureEntity entity) {
-            return entity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue() * 1.5;
+        public double getConvertedMaxHealth(EntityType entityType) {
+            AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
+            return map.func_233807_b_(SharedMonsterAttributes.MAX_HEALTH) * 1.5;
         }
 
         @Override
-        public double getConvertedSpeed(CreatureEntity entity) {
-            return Math.min(entity.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 1.2, 2.9D);
+        public double getConvertedSpeed(EntityType entityType) {
+            AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
+            return Math.min(map.func_233807_b_(SharedMonsterAttributes.MOVEMENT_SPEED) * 1.2, 2.9D);
         }
     };
 

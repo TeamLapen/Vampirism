@@ -117,7 +117,7 @@ public class ModWorld {
         //biome string -> list of all JigsawPieces with weight
         Map<String, List<Pair<JigsawPiece, Integer>>> buildings = Maps.newHashMapWithExpectedSize(patterns.size());
         //fill buildings with modifiable lists from the JigsawPattern's
-        patterns.forEach((biome, pattern) -> buildings.put(biome, Lists.newArrayList(pattern.field_214952_d)));
+        patterns.forEach((biome, pattern) -> buildings.put(biome, Lists.newArrayList(pattern.rawTemplates)));
 
         //biome string -> pair of new JigsawPiece & old JigsawPiece with weight
         Map<String, List<Pair<JigsawPiece, Pair<JigsawPiece, Integer>>>> allPieces = Maps.newHashMap();
@@ -155,17 +155,17 @@ public class ModWorld {
         //totem JigsawPiece
         StructureProcessor totemProcessor = new RandomStructureProcessor(ImmutableList.of(new RandomBlockState(new RandomBlockMatchRuleTest(ModBlocks.totem_top, VampirismConfig.BALANCE.viTotemPreSetPercentage.get().floatValue()), AlwaysTrueRuleTest.INSTANCE, ModBlocks.totem_top_vampirism_hunter.getDefaultState(), ModBlocks.totem_top_vampirism_vampire.getDefaultState())));
         StructureProcessor totemTopBlock = new BiomeTopBlockProcessor(Blocks.BRICK_WALL.getDefaultState());
-        JigsawPiece totem = singleJigsawPiece("village/totem", Lists.newArrayList(totemProcessor, totemTopBlock), JigsawPattern.PlacementBehaviour.RIGID);
+        JigsawPiece totem = singleJigsawPiece("village/totem", Lists.newArrayList(totemProcessor, totemTopBlock));
         //add totem to all village JigsawPattern lists
         buildings.values().forEach(list -> list.add(Pair.of(totem, VampirismConfig.BALANCE.viTotemWeight.get())));
 
         //write all Lists back to the specific JigsawPattern
-        buildings.forEach((biome, list) -> patterns.get(biome).field_214952_d = ImmutableList.copyOf(list));
+        buildings.forEach((biome, list) -> patterns.get(biome).rawTemplates = ImmutableList.copyOf(list));
 
         //sync all JigsawPattern JigsawPattern#field_214952_d (pairs piece with weight) with JigsawPattern#jigsawPieces (list of pieces * weights)
         patterns.values().forEach(pattern -> {
             pattern.jigsawPieces.clear();
-            pattern.field_214952_d.forEach(pair -> {
+            pattern.rawTemplates.forEach(pair -> {
                 for (int i = 0; i < pair.getSecond(); i++) {
                     pattern.jigsawPieces.add(pair.getFirst());
                 }
@@ -179,11 +179,8 @@ public class ModWorld {
     }
 
     private static SingleJigsawPiece singleJigsawPiece(@Nonnull String path, @Nonnull List<StructureProcessor> processors) {
-        return new SingleJigsawPiece(REFERENCE.MODID + ":" + path, processors, JigsawPattern.PlacementBehaviour.RIGID);
+        return new SingleJigsawPiece(REFERENCE.MODID + ":" + path, processors);
     }
 
-    private static SingleJigsawPiece singleJigsawPiece(@Nonnull String path, @Nonnull List<StructureProcessor> processors, @Nonnull JigsawPattern.PlacementBehaviour placement) {
-        return new SingleJigsawPiece(REFERENCE.MODID + ":" + path, processors, placement);
-    }
 
 }

@@ -1,15 +1,12 @@
 package de.teamlapen.vampirism.world.gen.util;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.types.DynamicOps;
 import com.mojang.datafixers.util.Pair;
-
-import de.teamlapen.vampirism.core.ModWorld;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicOps;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTDynamicOps;
-import net.minecraft.util.IDynamicDeserializer;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.feature.template.AlwaysTrueRuleTest;
 import net.minecraft.world.gen.feature.template.RuleEntry;
@@ -28,7 +25,7 @@ public class RandomBlockState extends RuleEntry {
     @Nullable
     private final CompoundNBT outputNbt2;
 
-    private boolean reCalculate = true;
+    private final boolean reCalculate = true;
 
     public RandomBlockState(RuleTest inputPredicate, RuleTest locationPredicate, BlockState outputState, BlockState outputState2) {
         this(inputPredicate, locationPredicate, outputState, outputState2, null, null);

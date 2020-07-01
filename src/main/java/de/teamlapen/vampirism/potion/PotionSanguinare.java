@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.potion;
 
 import com.google.common.base.Preconditions;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.BalanceMobProps;
@@ -11,8 +12,8 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.client.gui.DisplayEffectsScreen;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
@@ -43,7 +44,7 @@ public class PotionSanguinare extends VampirismPotion {
 
     public PotionSanguinare(String name, EffectType effectType, int potionColor) {
         super(name, effectType, potionColor);
-        addAttributesModifier(SharedMonsterAttributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
+        addAttributesModifier(Attributes.field_233823_f_, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, AttributeModifier.Operation.ADDITION);
     }
 
     @Override
@@ -77,8 +78,10 @@ public class PotionSanguinare extends VampirismPotion {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderInventoryEffect(EffectInstance effect, DisplayEffectsScreen<?> gui, int x, int y, float z) {
+    public void renderInventoryEffect(EffectInstance effect, DisplayEffectsScreen<?> gui, MatrixStack mStack, int x, int y, float z) {
         String s = UtilLib.translate(effect.getPotion().getName());
-        gui.font.drawStringWithShadow(s, (float) (x + 10 + 18), (float) (y + 6), 16777215);
+        gui.field_230712_o_
+                .func_238405_a_/*drawStringWithShadow*/
+                (mStack, s, (float) (x + 10 + 18), (float) (y + 6), 16777215);
     }
 }

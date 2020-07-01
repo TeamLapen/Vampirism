@@ -4,12 +4,14 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.core.ModLoot;
 import net.minecraft.entity.Entity;
+import net.minecraft.loot.ILootSerializer;
+import net.minecraft.loot.LootConditionType;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
+
 
 public class AdjustableLevelCondition implements ILootCondition {
     private final int levelTest;
@@ -18,6 +20,11 @@ public class AdjustableLevelCondition implements ILootCondition {
     public AdjustableLevelCondition(int level, LootContext.EntityTarget targetIn) {
         levelTest = level;
         this.target = targetIn;
+    }
+
+    @Override
+    public LootConditionType func_230419_b_() {
+        return ModLoot.adjustable_level;
     }
 
     @Override
@@ -36,21 +43,19 @@ public class AdjustableLevelCondition implements ILootCondition {
         return () -> new AdjustableLevelCondition(level, target);
     }
 
-    public static class Serializer extends ILootCondition.AbstractSerializer<AdjustableLevelCondition> {
+    public static class Serializer implements ILootSerializer<AdjustableLevelCondition> {
 
-        public Serializer() {
-            super(new ResourceLocation(REFERENCE.MODID, "adjustable_level"), AdjustableLevelCondition.class);
-        }
 
         @Override
-        public AdjustableLevelCondition deserialize(JsonObject json, JsonDeserializationContext context) {
+        public AdjustableLevelCondition func_230423_a_(JsonObject json, JsonDeserializationContext context) {
             return new AdjustableLevelCondition(json.has("level") ? JSONUtils.getInt(json, "level") : -1, JSONUtils.deserializeClass(json, "entity", context, LootContext.EntityTarget.class));
         }
 
         @Override
-        public void serialize(JsonObject json, AdjustableLevelCondition value, JsonSerializationContext context) {
+        public void func_230424_a_(JsonObject json, AdjustableLevelCondition value, JsonSerializationContext context) {
             json.add("level", context.serialize(value.levelTest));
             json.add("entity", context.serialize(value.target));
         }
+
     }
 }

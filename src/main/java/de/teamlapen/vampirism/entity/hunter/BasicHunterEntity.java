@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
@@ -10,6 +11,7 @@ import de.teamlapen.vampirism.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.VampirismEntity;
 import de.teamlapen.vampirism.entity.action.ActionHandlerEntity;
 import de.teamlapen.vampirism.entity.goals.AttackRangedCrossbowGoal;
 import de.teamlapen.vampirism.entity.goals.AttackVillageGoal;
@@ -21,7 +23,9 @@ import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.PatrollerEntity;
 import net.minecraft.entity.monster.ZombieEntity;
@@ -37,7 +41,9 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -45,7 +51,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.Structures;
+import net.minecraft.world.gen.feature.structure.Structure;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -277,35 +283,13 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return 6 + getLevel();
     }
 
-    @Override
-    protected boolean processInteract(PlayerEntity player, Hand hand) {
-        if (tryCureSanguinare(player)) return true;
-        int hunterLevel = HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0);
-        if (this.isAlive() && !player.isShiftKeyDown()) {//isSneaking
-            if (!world.isRemote) {
-                if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
-                    if (trainee == null) {
-                        player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterBasicContainer(id, playerInventory, this), name));
-                        trainee = player;
-                        this.getNavigator().clearPath();
-                    } else {
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"));
-                    }
-                } else if (hunterLevel > 0) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"));
-                }
-            }
-            return true;
-        }
-        return super.processInteract(player, hand);
+    public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
+        return VampirismEntity.getAttributeBuilder()
+                .func_233815_a_(SharedMonsterAttributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH)
+                .func_233815_a_(SharedMonsterAttributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE)
+                .func_233815_a_(SharedMonsterAttributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.updateEntityAttributes();
-
-    }
 
     @Override
     protected void registerData() {
@@ -321,11 +305,55 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.attack = true;
     }
 
-    protected void updateEntityAttributes() {
-        int l = Math.max(getLevel(), 0);
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * l);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED);
+    @Override
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) { //proccessInteract
+        if (tryCureSanguinare(player)) return ActionResultType.SUCCESS;
+        int hunterLevel = HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0);
+        if (this.isAlive() && !player.isSneaking()) {
+            if (!world.isRemote) {
+                if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
+                    if (trainee == null) {
+                        player.openContainer(new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> new HunterBasicContainer(id, playerInventory, this), name));
+                        trainee = player;
+                        this.getNavigator().clearPath();
+                    } else {
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.i_am_busy_right_now"), Util.field_240973_b_);
+                    }
+                } else if (hunterLevel > 0) {
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.basic_hunter.cannot_train_you_any_further"), Util.field_240973_b_);
+                }
+            }
+            return ActionResultType.SUCCESS;
+        }
+        return super.func_230254_b_(player, hand);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+
+        this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
+        //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
+        this.goalSelector.addGoal(3, new LookAtTrainerHunterGoal<>(this));
+        this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> false));
+        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7, 50));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, VampireBaseEntity.class, 17F));
+        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new AttackVillageGoal<>(this));
+        this.targetSelector.addGoal(2, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
+            @Override
+            protected double getTargetDistance() {
+                return super.getTargetDistance() / 2;
+            }
+        });
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, true, true));
+        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.field_236381_q_)));
+        //Also check the priority of tasks that are dynamically added. See top of class
     }
 
     private int getWatchedId() {
@@ -439,31 +467,10 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         return livingData;
     }
 
-    @Override
-    protected void registerGoals() {
-        super.registerGoals();
-
-        this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
-        //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
-        this.goalSelector.addGoal(3, new LookAtTrainerHunterGoal<>(this));
-        this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> false));
-        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7, 50));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, VampireBaseEntity.class, 17F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
-
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new AttackVillageGoal<>(this));
-        this.targetSelector.addGoal(2, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, false, null)));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)) {
-            @Override
-            protected double getTargetDistance() {
-                return super.getTargetDistance() / 2;
-            }
-        });
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, true, true));
-        this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> Structures.VILLAGE.isPositionInStructure(living.world, living.getPosition())));
-        //Also check the priority of tasks that are dynamically added. See top of class
+    protected void updateEntityAttributes() {
+        LOGGER.warn("MISSING ATTRIBUTES"); //TODO 1.16
+//        int l = Math.max(getLevel(), 0);
+//        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);
+//        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * l);
     }
 }
