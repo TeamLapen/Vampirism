@@ -21,7 +21,9 @@ import javax.annotation.Nullable;
 public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener {
 
     private static final Logger LOGGER = LogManager.getLogger(VampirismPlayer.class);
-    @Nullable
+    /**
+     * {@code @Nonnull} on server, otherwise {@code null}
+     */
     private final TaskManager taskManager;
     protected final PlayerEntity player;
 
@@ -43,7 +45,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     /**
      * null on client & @Nonnull on server
      */
-    @SuppressWarnings({"ConstantConditions", "NullableProblems"})
     @Nonnull
     @Override
     public TaskManager getTaskManager() {
@@ -84,7 +85,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer<?>> implements IF
     @Override
     public void onUpdate() {
         if(!isRemote()) {
-            this.taskManager.update();
+            this.taskManager.tick();
         }
     }
 

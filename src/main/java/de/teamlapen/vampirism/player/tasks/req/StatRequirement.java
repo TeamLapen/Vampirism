@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.tasks.req;
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.util.ResourceLocation;
 
@@ -23,12 +24,12 @@ public class StatRequirement implements TaskRequirement<ResourceLocation> {
 
     @Nonnull
     @Override
-    public ResourceLocation getStat() {
+    public ResourceLocation getStat(IFactionPlayer<?> player) {
         return stat;
     }
 
     @Override
-    public int getAmount() {
+    public int getAmount(IFactionPlayer<?> player) {
         return amount;
     }
 }

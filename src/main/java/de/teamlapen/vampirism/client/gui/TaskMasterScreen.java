@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
@@ -49,25 +50,25 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         @Nonnull
         @Override
         public TaskReward getReward() {
-            return TaskMasterScreen.this.container.getUnlockedTasks().get(TaskMasterScreen.this.openedTask).getReward();
+            return TaskMasterScreen.this.container.getTask(TaskMasterScreen.this.openedTask).getReward();
         }
 
         @Nonnull
         @Override
         public TaskRequirement<?> getRequirement() {
-            return TaskMasterScreen.this.container.getUnlockedTasks().get(TaskMasterScreen.this.openedTask).getRequirement();
+            return TaskMasterScreen.this.container.getTask(TaskMasterScreen.this.openedTask).getRequirement();
         }
 
         @Nullable
         @Override
         public IPlayableFaction<?> getFaction() {
-            return TaskMasterScreen.this.container.getUnlockedTasks().get(TaskMasterScreen.this.openedTask).getFaction();
+            return TaskMasterScreen.this.container.getTask(TaskMasterScreen.this.openedTask).getFaction();
         }
 
         @Nonnull
         @Override
         public String getTranslationKey() {
-            return TaskMasterScreen.this.container.getUnlockedTasks().get(TaskMasterScreen.this.openedTask).getTranslationKey();
+            return TaskMasterScreen.this.container.getTask(TaskMasterScreen.this.openedTask).getTranslationKey();
         }
     };
 
@@ -77,11 +78,14 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     private int openedTask;
     private boolean isOpen;
     private boolean mouseOnScroller;
+    private final IFactionPlayer<?> factionPlayer;
 
     public TaskMasterScreen(TaskMasterContainer container, PlayerInventory playerInventory, ITextComponent containerName) {
         super(container, playerInventory, containerName);
         this.xSize = 176;
         this.ySize = 181;
+        //noinspection OptionalGetWithoutIsPresent
+        this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
     }
 
     @Override
@@ -94,7 +98,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         for (int l = 0; l < 7; ++l) {
             this.buttons[l] = this.addButton(new CompleteButton(i + 5 + 132 - 2, k + 3, l, (button) -> {
                 if (button instanceof CompleteButton) {
-                    Task task = this.container.getUnlockedTasks().get(((CompleteButton) button).getChosenItem() + this.scrolledTask - 1);
+                    Task task = this.container.getTask(((CompleteButton) button).getChosenItem() + this.scrolledTask - 1);
                     if (this.container.canCompleteTask(task)) {
                         this.container.completeTask(task);
                     }
@@ -113,6 +117,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        assert this.minecraft != null;
         this.minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
@@ -148,11 +153,11 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             }
             for (CompleteButton button : this.buttons) {
                 try {
-                    button.visible = button.getChosenItem() < this.container.getUnlockedTasks().size() && this.container.getUnlockedTasks().get(button.getChosenItem() + this.scrolledTask) == dummy && this.container.canCompleteTask(this.container.getUnlockedTasks().get(button.getChosenItem() + this.scrolledTask - 1)) && !this.container.isCompleted(this.container.getUnlockedTasks().get(button.getChosenItem() + this.scrolledTask - 1));
+                    button.visible = button.getChosenItem() < this.container.size() && this.container.getTask(button.getChosenItem() + this.scrolledTask) == dummy && this.container.canCompleteTask(this.container.getTask(button.getChosenItem() + this.scrolledTask - 1)) && !this.container.isCompleted(this.container.getTask(button.getChosenItem() + this.scrolledTask - 1));
                 }catch (ArrayIndexOutOfBoundsException e) {
                     button.visible = false;
                     try {
-                        LogManager.getLogger().info(this.container.getUnlockedTasks().get(button.getChosenItem() + this.scrolledTask) == dummy);
+                        LogManager.getLogger().info(this.container.getTask(button.getChosenItem() + this.scrolledTask) == dummy);
                     }catch (ArrayIndexOutOfBoundsException e1){
                         LogManager.getLogger().info(button.getChosenItem() + this.scrolledTask);
                     }
@@ -203,20 +208,20 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 switch (requirement.getType()) {
                     case ITEMS:
                         toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.item_req").appendText(":").getFormattedText());
-                        toolTips.add(" " + ((Item) requirement.getStat()).getName().getFormattedText() + " " + requirement.getAmount());
+                        toolTips.add(" " + ((Item) requirement.getStat(this.factionPlayer)).getName().getFormattedText() + " " + requirement.getAmount(this.factionPlayer));
                         break;
                     case STATS:
                         toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.stat_req").appendText(":").getFormattedText());
-                        toolTips.add(" " + new TranslationTextComponent("stat." + requirement.getStat().toString().replace(':', '.')) + " " + requirement.getAmount());
+                        toolTips.add(" " + new TranslationTextComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')) + " " + requirement.getAmount(this.factionPlayer));
                         break;
                     case ENTITY:
                         toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entity_req").appendText(":").getFormattedText());
-                        toolTips.add(" " + ((EntityType<?>) requirement.getStat()).getName() + " " + requirement.getAmount());
+                        toolTips.add(" " + ((EntityType<?>) requirement.getStat(this.factionPlayer)).getName().getFormattedText() + " " + requirement.getAmount(this.factionPlayer));
                         break;
                     case ENTITY_TYPE:
                         toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entitytype_req").appendText(":").getFormattedText());
                         //noinspection unchecked
-                        toolTips.add(" " + new TranslationTextComponent(((Tag<EntityType<?>>)requirement.getStat()).getId().toString()) + " " + requirement.getAmount());
+                        toolTips.add(" " + new TranslationTextComponent("tasks.vampirism" + ((Tag<EntityType<?>>)requirement.getStat(this.factionPlayer)).getId().toString()).getFormattedText() + " " + requirement.getAmount(this.factionPlayer));
                 }
                 if (task.useDescription()) {
                     toolTips.add(task.getDescription().getFormattedText());
@@ -230,11 +235,12 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     private void renderTask(Task task, int x, int y, int mouseX, int mouseY) {
         RenderHelper.disableStandardItemLighting();
         GlStateManager.enableBlend();
+        assert this.minecraft != null;
         this.minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
         boolean dummy = task == this.dummy;
         int offset = dummy ? 63 : 0;
         if (dummy && this.isOpen) {
-            task = this.container.getUnlockedTasks().get(this.openedTask);
+            task = this.container.getTask(this.openedTask);
         }
         if (this.container.isCompleted(task)) {
             blit(x, y, this.blitOffset, 16, 208 + offset, 137, 21, 325, 256);
@@ -276,12 +282,19 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
     private void renderRequirementTool(Task task, int x, int y) {
         TaskRequirement<?> requirement = task.getRequirement();
-        if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
-            this.renderRewardTooltip(((ItemRequirement) requirement).getItemStack(), x,y, REQUIREMENT.getFormattedText());
-        }else if(requirement.getType().equals(TaskRequirement.Type.ENTITY)) {
-            this.renderEntitySkull(x,y, (EntityType<?>)requirement.getStat(), requirement.getAmount());
-        }else {
-            this.renderDefaultRequirementToolTip(task, x,y);
+        switch (requirement.getType()) {
+            case ITEMS:
+                this.renderRewardTooltip(((ItemRequirement) requirement).getItemStack(), x,y, REQUIREMENT.getFormattedText());
+                break;
+            case ENTITY:
+                this.renderEntitySkull(x,y, ((EntityType<?>)requirement.getStat(this.factionPlayer)).getName(), requirement.getAmount(this.factionPlayer));
+                break;
+            case ENTITY_TAG:
+                //noinspection unchecked
+                this.renderEntitySkull(x,y, new TranslationTextComponent("tasks.vampirism."+((Tag<EntityType<?>>)requirement.getStat(this.factionPlayer)).getId().toString()), requirement.getAmount(this.factionPlayer));
+                break;
+            default:
+                this.renderDefaultRequirementToolTip(task, x,y);
         }
     }
 
@@ -292,10 +305,10 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         this.renderTooltip(tooltips, x, y, this.font);
     }
 
-    private void renderEntitySkull(int x, int y, EntityType<?> entity, int amount) {
+    private void renderEntitySkull(int x, int y, ITextComponent text, int amount) {
         List<String> tooltips = Lists.newArrayList();
         tooltips.add(REQUIREMENT.getFormattedText());
-        tooltips.add(entity.getName().getFormattedText() + " " + amount);
+        tooltips.add(text.getFormattedText() + " " + amount);
         this.renderTooltip(tooltips, x, y, this.font);
     }
 
@@ -315,6 +328,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     }
 
     private void renderScroller(int x, int y, Collection<Task> tasks) {
+        assert this.minecraft != null;
         this.minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
         RenderHelper.disableStandardItemLighting();
         int i = tasks.size() - 7;
@@ -338,7 +352,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollAmount) {
-        int i = this.container.getUnlockedTasks().size();
+        int i = this.container.size();
         if (this.isTaskListTooLong(i)) {
             int j = i - 7;
             this.scrolledTask = (int) ((double) this.scrolledTask - scrollAmount);
@@ -350,7 +364,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
     @Override
     public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int buttonId, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-        int i = this.container.getUnlockedTasks().size();
+        int i = this.container.size();
         if (this.mouseOnScroller) {
             int j = this.guiTop + 18;
             int k = j + 144;
@@ -369,7 +383,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         this.mouseOnScroller = false;
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        if (this.isTaskListTooLong(this.container.getUnlockedTasks().size()) && mouseX > (double) (i + 154) && mouseX < (double) (i + 160) && mouseY > (double) (j + 17) && mouseY <= (double) (j + 166)) {
+        if (this.isTaskListTooLong(this.container.size()) && mouseX > (double) (i + 154) && mouseX < (double) (i + 160) && mouseY > (double) (j + 17) && mouseY <= (double) (j + 166)) {
             this.mouseOnScroller = true;
         }
         if (mouseX > i + 17 && mouseX < i + 136 + 17 && mouseY > j - 4 + 21 && mouseY < j + 168 - 4) {
@@ -380,18 +394,18 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                     if (num > this.openedTask) {
                         num--;
                     }
-                    if (num < this.container.getUnlockedTasks().size() && num != this.openedTask) {
+                    if (num < this.container.size() && num != this.openedTask) {
                         this.openedTask = num;
                         this.container.getUnlockedTasks().add(this.openedTask + 1, dummy);
                     } else {
                         this.isOpen = false;
-                        if (this.container.getUnlockedTasks().size() < this.scrolledTask + 7 && this.scrolledTask != 0) {
+                        if (this.container.size() < this.scrolledTask + 7 && this.scrolledTask != 0) {
                             this.scrolledTask--;
                         }
                     }
                 }
             } else {
-                if (num < this.container.getUnlockedTasks().size()) {
+                if (num < this.container.size()) {
                     this.isOpen = true;
                     this.openedTask = num;
                     this.container.getUnlockedTasks().add(this.openedTask + 1, dummy);
@@ -416,7 +430,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
         @Override
         public void renderToolTip(int mouseX, int mouseY) {
-            if (this.isHovered && TaskMasterScreen.this.container.getUnlockedTasks().size() > this.chosenItem + TaskMasterScreen.this.scrolledTask) {
+            if (this.isHovered && TaskMasterScreen.this.container.size() > this.chosenItem + TaskMasterScreen.this.scrolledTask) {
                 TaskMasterScreen.this.renderTooltip(SUBMIT.getFormattedText(), mouseX, mouseY);
             }
         }

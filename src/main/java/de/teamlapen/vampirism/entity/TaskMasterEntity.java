@@ -20,7 +20,7 @@ public interface TaskMasterEntity extends ForceLookEntityGoal.TaskOwner {
 
     default boolean processInteraction(PlayerEntity playerEntity, Task.Variant variant) {
         if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(iTaskManager -> iTaskManager.hasAvailableTasks(Task.Variant.REPEATABLE)).orElse(false)) {
-            OptionalInt containerIdOpt = playerEntity.openContainer(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskMasterContainer(containerId, playerInventory, variant), CONTAINERNAME.deepCopy()));
+            OptionalInt containerIdOpt = playerEntity.openContainer(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskMasterContainer(containerId, playerInventory), CONTAINERNAME.deepCopy()));
             if (containerIdOpt.isPresent()) {
                 FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(iFactionPlayer -> iFactionPlayer.getTaskManager().updateClient()));
                 return true;

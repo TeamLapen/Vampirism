@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.tasks.req;
 
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.entity.EntityType;
 
@@ -22,12 +23,12 @@ public class EntityRequirement implements TaskRequirement<EntityType<?>> {
 
     @Nonnull
     @Override
-    public EntityType<?> getStat() {
+    public EntityType<?> getStat(IFactionPlayer<?> player) {
         return entityType;
     }
 
     @Override
-    public int getAmount() {
+    public int getAmount(IFactionPlayer<?> player) {
         return amount;
     }
 }

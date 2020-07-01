@@ -15,8 +15,5 @@ public class ModTasks {
 
     public static void registerTasks(IForgeRegistry<Task> registry) {
 
-        registry.register(builder().setRequirement(new ItemStack(ModItems.vampire_fang)).setReward(new ItemStack(ModItems.human_heart)).build("test1"));
-        registry.register(builder().setRequirement(new ItemStack(ModItems.vampire_fang)).setReward(new ItemStack(ModItems.human_heart)).build("test2"));
-        registry.register(builder().setUnique().setRequirement(new ItemStack(ModItems.vampire_fang)).setReward(new ItemStack(ModItems.human_heart)).build("test3"));
     }
 }

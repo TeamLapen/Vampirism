@@ -12,8 +12,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,10 +41,18 @@ public class TaskMasterContainer extends Container {
     private final List<Task> unlockedTasks = Lists.newArrayList();
     @Nonnull
     private final TextFormatting factionColor;
+    @Nullable
+    private final Task.Variant variant;
 
     public TaskMasterContainer(int id, PlayerInventory playerInventory) {
+        this(id, playerInventory,null);
+    }
+
+    public TaskMasterContainer(int id, PlayerInventory playerInventory, @Nullable Task.Variant variant) {
         super(ModContainer.task_master, id);
+        //noinspection NullableProblems
         this.factionColor = FactionPlayerHandler.getOpt(playerInventory.player).map(FactionPlayerHandler::getCurrentFaction).map(IFaction::getChatColor).orElse(TextFormatting.RESET);
+        this.variant = variant;
     }
 
     /**
@@ -49,6 +60,7 @@ public class TaskMasterContainer extends Container {
      * @param completedTasks updated completedTasks
      * @param unlockedTasks updated unlockedTasks
      */
+    @OnlyIn(Dist.CLIENT)
     public void init(@Nonnull Set<Task> possibleTasks,@Nonnull Set<Task> completedTasks, @Nonnull List<Task> unlockedTasks) {
         this.possibleTasks.clear();
         this.possibleTasks.addAll(possibleTasks);
@@ -83,22 +95,21 @@ public class TaskMasterContainer extends Container {
     }
 
     @Nonnull
-    public Set<Task> getPossibleTasks() {
-        return possibleTasks;
-    }
-
-    @Nonnull
-    public Set<Task> getCompletedTasks() {
-        return completedTasks;
-    }
-
-    @Nonnull
     public List<Task> getUnlockedTasks() {
-        return unlockedTasks;
+        return this.unlockedTasks;
+    }
+
+    public Task getTask(int i) {
+        return this.unlockedTasks.get(i);
     }
 
     @Nonnull
     public TextFormatting getFactionColor() {
-        return factionColor;
+        return this.factionColor;
+    }
+
+    @Nullable
+    public Task.Variant getVariant() {
+        return this.variant;
     }
 }
