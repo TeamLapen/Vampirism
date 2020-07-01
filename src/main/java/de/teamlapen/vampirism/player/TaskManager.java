@@ -34,7 +34,6 @@ public class TaskManager implements ITaskManager {
     private final @Nonnull Map<Task.Variant, Set<Task>> completedTasks = Maps.newHashMap();
     private final @Nonnull Map<Task.Variant, Set<Task>> availableTasks = Maps.newHashMap();
     private final @Nonnull Map<Task, Integer> stats = Maps.newHashMap();
-    private long taskUpdateLast;
 
     public TaskManager(IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
@@ -56,7 +55,7 @@ public class TaskManager implements ITaskManager {
     }
 
     public void updateClient() {
-        VampirismMod.dispatcher.sendTo(new TaskStatusPacket(getCompletableTasks(), getCompletedTasks(), getAvailableTasks(),player.openContainer.windowId), player);
+        VampirismMod.dispatcher.sendTo(new TaskStatusPacket(getCompletableTasks(), getCompletedTasks(), getAvailableTasks(), player.openContainer.windowId), player);
     }
 
     public boolean isTaskUnlocked(Task task) {
@@ -113,7 +112,6 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public boolean hasAvailableTasks(Task.Variant variant) {
-        this.updateTasks();
         return !this.availableTasks.isEmpty() && this.availableTasks.get(variant) != null && !this.availableTasks.get(variant).isEmpty();
     }
 
@@ -200,20 +198,12 @@ public class TaskManager implements ITaskManager {
         this.updateAvailableTasks();
     }
 
-    public void updateTasks() {
-        if (this.taskUpdateLast < this.player.getEntityWorld().getGameTime() / 24000) {
+    public void update() {
+        if(this.player.getEntityWorld().getGameTime() % 24000 == 0 && getAvailableTasks(Task.Variant.REPEATABLE).size() < 3) {
             Set<Task> completed = this.getCompletedTasks(Task.Variant.REPEATABLE);
-            Set<Task> available = this.getAvailableTasks(Task.Variant.REPEATABLE);
-            for (int i = 0; i < this.taskUpdateLast - this.player.getEntityWorld().getGameTime() / 24000; i++) {
-                if (!completed.isEmpty()) {
-                    Task task = completed.stream().skip(new Random().nextInt(completed.size())).findFirst().orElse(null);
-                    if (task != null) {
-                        completed.remove(task);
-                        available.add(task);
-                    }
-                }
+            if(!completed.isEmpty()) {
+                completed.stream().skip(new Random().nextInt(completed.size())).findFirst().ifPresent(task -> this.getAvailableTasks(Task.Variant.REPEATABLE).add(task));
             }
-            this.taskUpdateLast = this.player.getEntityWorld().getGameTime() / 24000;
         }
     }
 
@@ -252,7 +242,6 @@ public class TaskManager implements ITaskManager {
 
     private void updateAvailableTasks() {
         Collection<Task> tasks = ModRegistries.TASKS.getValues();
-        this.availableTasks.clear();
         tasks.stream().filter(this::isTaskUnlocked).filter(task -> !isTaskCompleted(task)).forEach(task -> this.getAvailableTasks(task.getVariant()).add(task));
         this.updateStats();
     }

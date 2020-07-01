@@ -203,19 +203,20 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 switch (requirement.getType()) {
                     case ITEMS:
                         toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.item_req").appendText(":").getFormattedText());
-                        toolTips.add(paragraph.shallowCopy().appendSibling(((Item) requirement.getStat()).getName()).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
+                        toolTips.add(" " + ((Item) requirement.getStat()).getName().getFormattedText() + " " + requirement.getAmount());
                         break;
                     case STATS:
                         toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.stat_req").appendText(":").getFormattedText());
-                        toolTips.add(paragraph.shallowCopy().appendSibling(new TranslationTextComponent("stat." + requirement.getStat().toString().replace(':', '.')).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount()))).getFormattedText());
+                        toolTips.add(" " + new TranslationTextComponent("stat." + requirement.getStat().toString().replace(':', '.')) + " " + requirement.getAmount());
                         break;
                     case ENTITY:
                         toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entity_req").appendText(":").getFormattedText());
-                        toolTips.add(paragraph.shallowCopy().appendSibling(((EntityType<?>) requirement.getStat()).getName()).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
+                        toolTips.add(" " + ((EntityType<?>) requirement.getStat()).getName() + " " + requirement.getAmount());
                         break;
                     case ENTITY_TYPE:
                         toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entitytype_req").appendText(":").getFormattedText());
-                        toolTips.add(paragraph.shallowCopy().appendSibling(new TranslationTextComponent(((Tag<EntityType<?>>)requirement.getStat()).getId().toString())).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
+                        //noinspection unchecked
+                        toolTips.add(" " + new TranslationTextComponent(((Tag<EntityType<?>>)requirement.getStat()).getId().toString()) + " " + requirement.getAmount());
                 }
                 if (task.useDescription()) {
                     toolTips.add(task.getDescription().getFormattedText());

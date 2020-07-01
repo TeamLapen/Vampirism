@@ -12,44 +12,36 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.util.NonNullFunction;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 
 public class TaskMasterContainer extends Container {
 
-    private @Nonnull Task.Variant variant;
     /**
      * all tasks that can be completed by the player
      */
-    private @Nonnull Set<Task> possibleTasks = Sets.newHashSet();
+    @Nonnull
+    private final Set<Task> possibleTasks = Sets.newHashSet();
     /**
      * all tasks that have been completed and should not be displayed
      */
-    private @Nonnull Set<Task> completedTasks = Sets.newHashSet();
+    @Nonnull
+    private final Set<Task> completedTasks = Sets.newHashSet();
     /**
      * all tasks that should be displayed in the {@link de.teamlapen.vampirism.client.gui.TaskMasterScreen}
      */
-    private @Nonnull List<Task> unlockedTasks = Lists.newArrayList();
-    private @Nonnull PlayerEntity player;
-    private @Nonnull TextFormatting factionColor;
+    @Nonnull
+    private final List<Task> unlockedTasks = Lists.newArrayList();
+    @Nonnull
+    private final TextFormatting factionColor;
 
-    @Deprecated
     public TaskMasterContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, Task.Variant.REPEATABLE);
-    }
-
-    public TaskMasterContainer(int id, PlayerInventory playerInventory, @Nonnull Task.Variant variant) {
         super(ModContainer.task_master, id);
-        this.variant = variant;
-        this.player = playerInventory.player;
-        this.factionColor = FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFaction).map(IFaction::getChatColor).orElse(TextFormatting.RESET);
+        this.factionColor = FactionPlayerHandler.getOpt(playerInventory.player).map(FactionPlayerHandler::getCurrentFaction).map(IFaction::getChatColor).orElse(TextFormatting.RESET);
     }
 
     /**
@@ -83,7 +75,7 @@ public class TaskMasterContainer extends Container {
     }
 
     public boolean isCompleted(Task task) {
-        return this.completedTasks.contains(task);
+        return this.completedTasks.contains(task) && !this.possibleTasks.contains(task);
     }
 
     public int size() {
