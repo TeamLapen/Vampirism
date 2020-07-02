@@ -7,7 +7,8 @@ import net.minecraft.entity.EntityType;
 import javax.annotation.Nonnull;
 
 public class EntityRequirement implements TaskRequirement<EntityType<?>> {
-    private final @Nonnull EntityType<?> entityType;
+    @Nonnull
+    private final EntityType<?> entityType;
     private final int amount;
 
     public EntityRequirement(@Nonnull EntityType<?> entityType, int amount) {

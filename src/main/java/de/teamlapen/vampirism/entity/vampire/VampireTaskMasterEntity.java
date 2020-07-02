@@ -37,8 +37,8 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements TaskMa
     @Override
     protected boolean processInteract(@Nonnull PlayerEntity playerEntity, @Nonnull Hand hand) {
         if (this.world.isRemote) return true;
-        if(Helper.isVampire(playerEntity) && interactor == null) {
-            if(this.processInteraction(playerEntity, Task.Variant.REPEATABLE)) {
+        if (Helper.isVampire(playerEntity) && interactor == null) {
+            if (this.processInteraction(playerEntity, null)) {
                 this.getNavigator().clearPath();
                 this.interactor = playerEntity;
             }
@@ -47,14 +47,9 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements TaskMa
     }
 
     @Override
-    public boolean hasCustomName() {
-        return true;
-    }
-
-    @Override
     public void livingTick() {
         super.livingTick();
-        if(interactor != null && (!interactor.isAlive() || interactor.openContainer instanceof TaskMasterContainer)) {
+        if (interactor != null && (!interactor.isAlive() || interactor.openContainer instanceof TaskMasterContainer)) {
             this.interactor = null;
         }
     }

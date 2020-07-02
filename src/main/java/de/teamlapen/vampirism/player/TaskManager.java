@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
-import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
@@ -22,23 +21,27 @@ import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.Set;
-import java.util.Map;
-import java.util.Collection;
-import java.util.Random;
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TaskManager implements ITaskManager {
-    private final @Nonnull IPlayableFaction<?> faction;
-    private final @Nonnull ServerPlayerEntity player;
-    private final @Nonnull IFactionPlayer<?> factionPlayer;
-    private final @Nonnull Map<Task.Variant, Set<Task>> completedTasks = Maps.newHashMap();
-    private final @Nonnull Map<Task.Variant, Set<Task>> availableTasks = Maps.newHashMap();
-    private final @Nonnull Map<Task, Integer> stats = Maps.newHashMap();
+    @Nonnull
+    private final IPlayableFaction<?> faction;
+    @Nonnull
+    private final ServerPlayerEntity player;
+    @Nonnull
+    private final IFactionPlayer<?> factionPlayer;
+    @Nonnull
+    private final Map<Task.Variant, Set<Task>> completedTasks = Maps.newHashMap();
+    @Nonnull
+    private final Map<Task.Variant, Set<Task>> availableTasks = Maps.newHashMap();
+    @Nonnull
+    private final Map<Task, Integer> stats = Maps.newHashMap();
 
     public TaskManager(IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
-        this.player = (ServerPlayerEntity)factionPlayer.getRepresentingPlayer();
+        this.player = (ServerPlayerEntity) factionPlayer.getRepresentingPlayer();
         this.factionPlayer = factionPlayer;
     }
 
@@ -64,11 +67,11 @@ public class TaskManager implements ITaskManager {
      * @return whether the task is unlocked my the player or not
      */
     public boolean isTaskUnlocked(Task task) {
-        if(task.getFaction() != null && task.getFaction() != faction){
+        if (task.getFaction() != null && task.getFaction() != faction) {
             return false;
         }
         for (TaskUnlocker taskUnlocker : task.getUnlocker()) {
-            if(!taskUnlocker.isUnlocked(this.factionPlayer)){
+            if (!taskUnlocker.isUnlocked(this.factionPlayer)) {
                 return false;
             }
         }
@@ -180,7 +183,7 @@ public class TaskManager implements ITaskManager {
             case ENTITY_TAG:
                 int actualStats = 0;
                 //noinspection unchecked
-                for(EntityType<?> type : ((Tag<EntityType<?>>) task.getRequirement().getStat()).getAllElements()) {
+                for (EntityType<?> type : ((Tag<EntityType<?>>) task.getRequirement().getStat(this.factionPlayer)).getAllElements()) {
                     actualStats += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                 }
                 int neededStats = this.stats.get(task) + task.getRequirement().getAmount(this.factionPlayer);
@@ -217,9 +220,9 @@ public class TaskManager implements ITaskManager {
      * re enables a completed task 1 time per day as available task
      */
     public void tick() {
-        if(this.player.getEntityWorld().getGameTime() % 24000 == 0 && getAvailableTasks(Task.Variant.REPEATABLE).size() < 3) {
+        if (this.player.getEntityWorld().getGameTime() % 24000 == 0 && getAvailableTasks(Task.Variant.REPEATABLE).size() < 3) {
             Set<Task> completed = this.getCompletedTasks(Task.Variant.REPEATABLE);
-            if(!completed.isEmpty()) {
+            if (!completed.isEmpty()) {
                 completed.stream().skip(new Random().nextInt(completed.size())).findFirst().ifPresent(task -> this.getAvailableTasks(Task.Variant.REPEATABLE).add(task));
             }
         }
@@ -242,7 +245,7 @@ public class TaskManager implements ITaskManager {
                     case ENTITY_TAG:
                         int amount = 0;
                         //noinspection unchecked
-                        for(EntityType<?> type : ((Tag<EntityType<?>>) task.getRequirement().getStat()).getAllElements()) {
+                        for (EntityType<?> type : ((Tag<EntityType<?>>) task.getRequirement().getStat(this.factionPlayer)).getAllElements()) {
                             amount += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
                         }
                         this.stats.put(task, amount);

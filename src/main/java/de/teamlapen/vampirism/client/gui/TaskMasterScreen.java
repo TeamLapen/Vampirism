@@ -9,6 +9,8 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
+import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
@@ -27,7 +29,6 @@ import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.logging.log4j.LogManager;
@@ -43,10 +44,10 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     private static final ITextComponent SUBMIT = new TranslationTextComponent("gui.vampirism.taskmaster.complete_task");
     private static final ITextComponent REQUIREMENT = new TranslationTextComponent("gui.vampirism.taskmaster.requirement").applyTextStyle(TextFormatting.UNDERLINE);
     private static final ITextComponent REWARD = new TranslationTextComponent("gui.vampirism.taskmaster.reward").applyTextStyle(TextFormatting.UNDERLINE);
-    private static final ItemStack SKULLITEM = new ItemStack(Blocks.SKELETON_SKULL);
+    private static final ItemStack SKULL_ITEM = new ItemStack(Blocks.SKELETON_SKULL);
     private static final ItemStack PAPER = new ItemStack(Items.PAPER);
-    @SuppressWarnings("ConstantConditions")
-    private final Task dummy = new Task(Task.Variant.UNIQUE, null, null, null, null, false) {
+    @SuppressWarnings({"ConstantConditions", "RedundantCast"})
+    private final Task dummy = new Task(Task.Variant.UNIQUE, null, (TaskRequirement<?>)null, (TaskReward)null, (TaskUnlocker[])null, false) {
         @Nonnull
         @Override
         public TaskReward getReward() {
@@ -133,7 +134,6 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             int i = (this.width - this.xSize) / 2;
             int j = (this.height - this.ySize) / 2;
             int k = j + 16 + 3 + 2;
-            int l = i + 5 + 5;
             GlStateManager.pushMatrix();
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.enableRescaleNormal();
@@ -143,13 +143,11 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             int i1 = 0;
 
             for (Task task : tasks) {
-                if (tasks.size() > 7 && (i1 < this.scrolledTask || i1 >= 7 + this.scrolledTask)) {
-                    ++i1;
-                } else {
-                    this.renderTask(task, i - 1 + 17, k - 4, mouseX, mouseY);
+                if (tasks.size() <= 7 || (i1 >= this.scrolledTask && i1 < 7 + this.scrolledTask)) {
+                    this.renderTask(task, i - 1 + 17, k - 4);
                     k += 21;
-                    ++i1;
                 }
+                ++i1;
             }
             for (CompleteButton button : this.buttons) {
                 try {
@@ -172,15 +170,13 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             i1 = 0;
             k = j + 16 + 3 + 2;
             for (Task task : tasks) {
-                if (tasks.size() > 7 && (i1 < this.scrolledTask || i1 >= 7 + this.scrolledTask)) {
-                    ++i1;
-                } else {
+                if (tasks.size() <= 7 || (i1 >= this.scrolledTask && i1 < 7 + this.scrolledTask)) {
                     if (mouseX > i - 1 + 17 && mouseX < i - 1 + 139 + 17 && mouseY > k - 4 && mouseY < k + 21 - 4) {
                         this.renderTaskToolTip(task, i - 1 + 17, k - 4, mouseX, mouseY);
                     }
                     k += 21;
-                    ++i1;
                 }
+                ++i1;
             }
             GlStateManager.popMatrix();
         }
@@ -202,7 +198,6 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         } else {
             List<String> toolTips = this.toolTips.computeIfAbsent(task, task1 -> Lists.newArrayList());
             if (toolTips.isEmpty()) {
-                ITextComponent paragraph = new StringTextComponent(" ");
                 toolTips.add(task.getTranslation().applyTextStyle(this.container.getFactionColor()).getFormattedText());
                 TaskRequirement<?> requirement = task.getRequirement();
                 switch (requirement.getType()) {
@@ -218,8 +213,8 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                         toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entity_req").appendText(":").getFormattedText());
                         toolTips.add(" " + ((EntityType<?>) requirement.getStat(this.factionPlayer)).getName().getFormattedText() + " " + requirement.getAmount(this.factionPlayer));
                         break;
-                    case ENTITY_TYPE:
-                        toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entitytype_req").appendText(":").getFormattedText());
+                    case ENTITY_TAG:
+                        toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entity_tag_req").appendText(":").getFormattedText());
                         //noinspection unchecked
                         toolTips.add(" " + new TranslationTextComponent("tasks.vampirism" + ((Tag<EntityType<?>>)requirement.getStat(this.factionPlayer)).getId().toString()).getFormattedText() + " " + requirement.getAmount(this.factionPlayer));
                 }
@@ -232,7 +227,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         }
     }
 
-    private void renderTask(Task task, int x, int y, int mouseX, int mouseY) {
+    private void renderTask(Task task, int x, int y) {
         RenderHelper.disableStandardItemLighting();
         GlStateManager.enableBlend();
         assert this.minecraft != null;
@@ -270,8 +265,8 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                     this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 3, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
                     break;
                 case ENTITY:
-                case ENTITY_TYPE:
-                    this.itemRenderer.renderItemAndEffectIntoGUI(SKULLITEM, x + 3 + 3, y + 2);
+                case ENTITY_TAG:
+                    this.itemRenderer.renderItemAndEffectIntoGUI(SKULL_ITEM, x + 3 + 3, y + 2);
                     break;
                 default:
                     this.itemRenderer.renderItemAndEffectIntoGUI(PAPER,x + 3 + 3, y + 2);

@@ -8,7 +8,8 @@ import javax.annotation.Nonnull;
 
 public class StatRequirement implements TaskRequirement<ResourceLocation> {
 
-    private final @Nonnull ResourceLocation stat;
+    @Nonnull
+    private final ResourceLocation stat;
     private final int amount;
 
     public StatRequirement(@Nonnull ResourceLocation stat, int amount) {

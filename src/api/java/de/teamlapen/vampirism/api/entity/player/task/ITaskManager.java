@@ -7,7 +7,6 @@ import java.util.Set;
 public interface ITaskManager {
 
     /**
-     *
      * checks if the task can be completed
      * if yes calls {@link #addCompletedTask(Task)} and handles rewards, requirements and sync to client
      *
@@ -25,8 +24,7 @@ public interface ITaskManager {
     boolean addCompletedTask(@Nonnull Task task);
 
     /**
-     *
-     * @param variant the variant of the task list
+     * @param variant the variant of the task list or {@code null} if all variants should be considered
      * @return whether the player has task of the variant available or not
      */
     boolean hasAvailableTasks(@Nullable Task.Variant variant);
@@ -79,7 +77,6 @@ public interface ITaskManager {
     void updateClient();
 
     /**
-     *
      * @param task the task to check
      * @return whether the task can be completed or not
      */
@@ -96,7 +93,6 @@ public interface ITaskManager {
     void init();
 
     /**
-     *
      * @param task the task to check
      * @return whether the task is completed or not
      */
