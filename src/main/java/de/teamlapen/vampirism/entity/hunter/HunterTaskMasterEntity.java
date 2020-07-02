@@ -32,8 +32,8 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements TaskMast
     @Override
     protected boolean processInteract(@Nonnull PlayerEntity playerEntity, @Nonnull Hand hand) {
         if (this.world.isRemote) return true;
-        if(Helper.isHunter(playerEntity) && interactor == null) {
-            if(this.processInteraction(playerEntity, Task.Variant.REPEATABLE)) {
+        if (Helper.isHunter(playerEntity) && interactor == null) {
+            if (this.processInteraction(playerEntity, null)) {
                 this.getNavigator().clearPath();
                 this.interactor = playerEntity;
             }
@@ -44,7 +44,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements TaskMast
     @Override
     public void livingTick() {
         super.livingTick();
-        if(interactor != null && (!interactor.isAlive() || interactor.openContainer instanceof TaskMasterContainer)) {
+        if (interactor != null && (!interactor.isAlive() || interactor.openContainer instanceof TaskMasterContainer)) {
             this.interactor = null;
         }
     }

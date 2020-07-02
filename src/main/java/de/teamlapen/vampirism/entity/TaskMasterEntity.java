@@ -15,23 +15,21 @@ import java.util.OptionalInt;
 
 public interface TaskMasterEntity extends ForceLookEntityGoal.TaskOwner {
 
-    ITextComponent CONTAINERNAME = new TranslationTextComponent("container.vampirism.taskmaster");
-    ITextComponent NOTASK = new TranslationTextComponent("text.vampirism.taskmaster.no_tasks");
+    ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.vampirism.taskmaster");
+    ITextComponent NO_TASK = new TranslationTextComponent("text.vampirism.taskmaster.no_tasks");
+    ITextComponent NO_TASK_UNIQUE = new TranslationTextComponent("text.vampirism.taskmaster.no_tasks_unique");
 
     default boolean processInteraction(PlayerEntity playerEntity, Task.Variant variant) {
-        if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(iTaskManager -> iTaskManager.hasAvailableTasks(Task.Variant.REPEATABLE)).orElse(false)) {
-            OptionalInt containerIdOpt = playerEntity.openContainer(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskMasterContainer(containerId, playerInventory), CONTAINERNAME.deepCopy()));
+        if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(iTaskManager -> iTaskManager.hasAvailableTasks(variant)).orElse(false)) {
+            OptionalInt containerIdOpt = playerEntity.openContainer(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskMasterContainer(containerId, playerInventory, variant), CONTAINER_NAME.deepCopy()));
             if (containerIdOpt.isPresent()) {
                 FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(iFactionPlayer -> iFactionPlayer.getTaskManager().updateClient()));
                 return true;
             }
         } else {
-            playerEntity.sendStatusMessage(NOTASK, true);
+            playerEntity.sendStatusMessage(variant == Task.Variant.UNIQUE?NO_TASK_UNIQUE:NO_TASK, true);
         }
         return false;
     }
-
-    default boolean hasCustomName() {
-        return true;
-    }
+    
 }

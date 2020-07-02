@@ -9,15 +9,17 @@ import javax.annotation.Nonnull;
 
 public class ItemRequirement implements TaskRequirement<Item> {
 
+    @Nonnull
     private final ItemStack itemRequirement;
 
-    public ItemRequirement(ItemStack itemRequirement) {
+    public ItemRequirement(@Nonnull ItemStack itemRequirement) {
         this.itemRequirement = itemRequirement;
     }
 
     /**
      * @return a copy of the required itemStack
      */
+    @Nonnull
     public ItemStack getItemStack() {
         return itemRequirement.copy();
     }

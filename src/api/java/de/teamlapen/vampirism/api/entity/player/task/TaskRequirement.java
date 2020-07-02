@@ -14,8 +14,9 @@ public interface TaskRequirement<T> {
     }
 
     /**
+     * @param player the player who wants to complete this task
+     * @return the stat the needs to be achieved with {@link #getAmount(IFactionPlayer)} to complete the requirement
      * @throws ClassCastException if Object is not applicant for the {@link #getType()}
-     * @return the stat the needs to be achieved with {@link #getAmount()} to complete the requirement
      */
     @Nonnull
     T getStat(IFactionPlayer<?> player);
