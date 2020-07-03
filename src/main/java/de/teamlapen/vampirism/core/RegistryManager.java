@@ -58,7 +58,6 @@ public class RegistryManager implements IInitListener {
                 ModEntities.registerConvertibles();
                 ModEntities.registerSpawns();
                 ModEntities.registerCustomExtendedCreatures();
-                ModEntities.handleEntityAssignment();
                 ModItems.registerCraftingRecipes();
                 ModAdvancements.registerAdvancements();
                 ModCommands.registerArgumentTypes();

@@ -24,6 +24,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class VampireTaskMasterEntity extends VampireBaseEntity implements TaskMasterEntity {
 
@@ -78,10 +79,10 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements TaskMa
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
     }
 
-    @Nullable
-    @Override
-    public PlayerEntity getTrainee() {
-        return this.interactor;
+
+    @Nonnull
+    public Optional<PlayerEntity> getForceLookTarget() {
+        return Optional.ofNullable(this.interactor);
     }
 
     @Override

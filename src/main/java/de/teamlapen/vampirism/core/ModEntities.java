@@ -231,9 +231,4 @@ public class ModEntities {
         });
     }
 
-    static void handleEntityAssignment() {
-        TotemTileEntity.registerTaskMaster(task_master_hunter, VReference.HUNTER_FACTION);
-        TotemTileEntity.registerTaskMaster(task_master_vampire, VReference.VAMPIRE_FACTION);
-        TotemTileEntity.addCaptureEntities();
-    }
 }
