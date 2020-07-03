@@ -13,6 +13,6 @@ public class LvlUnlocker implements TaskUnlocker {
 
     @Override
     public boolean isUnlocked(IFactionPlayer<?> playerEntity) {
-        return playerEntity.getLevel() == reqLevel;
+        return playerEntity.getLevel() >= reqLevel;
     }
 }
