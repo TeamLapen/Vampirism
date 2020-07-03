@@ -49,7 +49,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements TaskMast
     @Override
     public void livingTick() {
         super.livingTick();
-        if (interactor != null && (!interactor.isAlive() || interactor.openContainer instanceof TaskBoardContainer)) {
+        if (interactor != null && !(interactor.isAlive() && interactor.openContainer instanceof TaskBoardContainer)){
             this.interactor = null;
         }
     }
@@ -73,7 +73,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements TaskMast
         this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
         this.goalSelector.addGoal(2, new ForceLookEntityGoal<>(this));
         this.goalSelector.addGoal(5, new MoveThroughVillageGoal(this, 0.7F, false, 300, () -> false));
-        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7, 50));
+        this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.7));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 13F));
         this.goalSelector.addGoal(8, new LookAtGoal(this, VampireBaseEntity.class, 17F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
