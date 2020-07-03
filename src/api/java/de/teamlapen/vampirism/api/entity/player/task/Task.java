@@ -2,37 +2,33 @@ package de.teamlapen.vampirism.api.entity.player.task;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatType;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class Task extends ForgeRegistryEntry<Task> {
 
     private final @Nullable IPlayableFaction<?> faction;
-    private final @Nullable Task parentTask;
-    private final @Nonnull ImmutableList<TaskRequirement> requirements;
+    private final @Nullable Supplier<Task> parentTask;
+    private final @Nonnull ImmutableList<TaskRequirement<?>> requirements;
+    private final @Nonnull ImmutableList<TaskReward> rewards;
     private @Nullable String translationKey;
     private @Nullable String descKey;
+    private final boolean useDescription;
     private @Nullable ITextComponent translation;
     private @Nullable ITextComponent desc;
 
-    public Task(@Nullable IPlayableFaction<?> faction, @Nonnull ImmutableList<TaskRequirement> requirements, @Nullable Task parentTask) {
+    public Task(@Nullable IPlayableFaction<?> faction, @Nonnull ImmutableList<TaskRequirement<?>> requirements, @Nonnull ImmutableList<TaskReward> rewards, @Nullable Supplier<Task> parentTask, boolean useDescription) {
         this.faction = faction;
         this.requirements = requirements;
         this.parentTask = parentTask;
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        this.useDescription = useDescription;
+        this.rewards = rewards;
     }
 
     @Nullable
@@ -41,13 +37,22 @@ public class Task extends ForgeRegistryEntry<Task> {
     }
 
     @Nonnull
-    public ImmutableList<TaskRequirement> getRequirements() {
-        return requirements;
+    public ImmutableList<TaskRequirement<?>> getRequirements() {
+        return this.requirements;
+    }
+
+    @Nonnull
+    public ImmutableList<TaskReward> getRewards() {
+        return this.rewards;
     }
 
     @Nullable
     public Task getParentTask() {
-        return parentTask;
+        return parentTask == null ? null : parentTask.get();
+    }
+
+    public boolean requireParent() {
+        return parentTask != null;
     }
 
     @Nonnull
@@ -70,40 +75,8 @@ public class Task extends ForgeRegistryEntry<Task> {
         return (this.desc != null ? this.desc : (this.desc = new TranslationTextComponent(this.getDescriptionKey()))).shallowCopy();
     }
 
-    public static class Builder {
-        private final ImmutableList.Builder<TaskRequirement> requirements = ImmutableList.builder();
-        private @Nullable IPlayableFaction<?> faction;
-        private @Nullable Task parentTask;
-
-        public Builder withFaction(@Nullable IPlayableFaction<?> faction) {
-            this.faction = faction;
-            return this;
-        }
-
-        public Builder requireParent(@Nullable Task parentTask) {
-            this.parentTask = parentTask;
-            return this;
-        }
-
-        public Builder addEntityRequirement(EntityType<?> entityType, int amount) {
-            return this.addStatRequirement(Stats.ENTITY_KILLED, entityType, amount);
-        }
-
-        public <T extends IForgeRegistryEntry<?>> Builder addStatRequirement(StatType<T> statType, T stat, int amount) {
-            this.requirements.add(new StatRequirement<>(statType, stat, amount));
-            return this;
-        }
-
-        public Builder addItemRequirement(ItemStack itemStack) {
-            this.requirements.add(new ItemRequirement(itemStack));
-            return this;
-        }
-
-        public Task build() {
-            ImmutableList<TaskRequirement> requirements = this.requirements.build();
-            if (requirements.isEmpty()) throw new IllegalStateException("The Task needs Requirements");
-            return new Task(faction, requirements, parentTask);
-        }
+    public boolean useDescription() {
+        return useDescription;
     }
 
 }

@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 public interface ITaskManager {
 
@@ -15,13 +15,13 @@ public interface ITaskManager {
     boolean hasAvailableTasks();
 
     @Nonnull
-    List<Task> getAvailableTasks();
+    Set<Task> getAvailableTasks();
 
     @Nonnull
-    List<Task> getCompletedTasks();
+    Set<Task> getCompletedTasks();
 
     @Nonnull
-    List<Task> getCompletableTasks();
+    Set<Task> getCompletableTasks();
 
     boolean canCompleteTask(Task task);
 
