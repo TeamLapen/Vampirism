@@ -37,10 +37,10 @@ public class HunterTaskMasterRenderer extends BipedRenderer<HunterTaskMasterEnti
 
     @Override
     protected void renderModel(@Nonnull HunterTaskMasterEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
-        getEntityModel().setSkipCloakOnce();
+//        getEntityModel().setSkipCloakOnce();
         super.renderModel(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
-        bindTexture(textureExtra);
-        getEntityModel().renderHat(scaleFactor, entitylivingbaseIn.getEntityId() % 3);
+//        bindTexture(textureExtra);
+//        getEntityModel().renderHat(scaleFactor, entitylivingbaseIn.getEntityId() % 3);
     }
 
     @Override

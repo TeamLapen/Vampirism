@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -13,7 +14,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-public interface TaskMasterEntity extends ForceLookEntityGoal.TaskOwner {
+public interface TaskMasterEntity extends ForceLookEntityGoal.TaskOwner, ITaskMasterEntity {
 
     ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.vampirism.taskmaster");
     ITextComponent NO_TASK = new TranslationTextComponent("text.vampirism.taskmaster.no_tasks");

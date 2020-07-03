@@ -1,8 +1,11 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
+import de.teamlapen.vampirism.api.entity.IEntityWithHome;
+import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 
@@ -31,6 +34,11 @@ public interface IVillageFactionData {
         public Block getTotemTopBlock() {
             return Blocks.AIR;
         }
+
+        @Override
+        public EntityType<? extends ITaskMasterEntity> getTaskMasterEntity() {
+            return null;
+        }
     };
 
     Class<? extends MobEntity> getGuardSuperClass();
@@ -40,4 +48,6 @@ public interface IVillageFactionData {
     List<CaptureEntityEntry> getCaptureEntries();
 
     Block getTotemTopBlock();
+
+    EntityType<? extends ITaskMasterEntity> getTaskMasterEntity();
 }

@@ -19,6 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class HunterTaskMasterEntity extends HunterBaseEntity implements TaskMasterEntity {
 
@@ -49,10 +50,9 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements TaskMast
         }
     }
 
-    @Nullable
-    @Override
-    public PlayerEntity getTrainee() {
-        return this.interactor;
+    @Nonnull
+    public Optional<PlayerEntity> getForceLookTarget() {
+        return Optional.ofNullable(this.interactor);
     }
 
     @OnlyIn(Dist.CLIENT)

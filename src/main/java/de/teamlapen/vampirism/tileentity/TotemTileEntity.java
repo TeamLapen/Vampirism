@@ -5,10 +5,7 @@ import com.google.common.collect.Maps;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
-import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
-import de.teamlapen.vampirism.api.entity.IFactionMob;
-import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
+import de.teamlapen.vampirism.api.entity.*;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
@@ -94,7 +91,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
      * saves the position
      */
     private static final Map<StructureStart, BlockPos> totemPositions = Maps.newHashMap();
-    private static final Map<IPlayableFaction<?>, EntityType<? extends VampirismEntity>> taskMaster = Maps.newHashMap();
 
     public static boolean isInsideVampireAreaCached(Dimension dimension, BlockPos blockPos) {
         if (vampireVillages.containsKey(dimension)) {
@@ -545,6 +541,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
             else {
                 if (this.controllingFaction != null && time % 512 == 0) {
                     int beds = (int) ((ServerWorld) world).getPointOfInterestManager().func_219146_b(pointOfInterestType -> pointOfInterestType.equals(PointOfInterestType.HOME), this.pos, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXSize(), 2) + Math.pow(this.getVillageArea().getZSize(), 2))) / 2, PointOfInterestManager.Status.ANY).count();
+                    boolean spawnTaskMaster = RNG.nextInt(6) == 0;
                     if (this.world.getEntitiesWithinAABB(VillagerEntity.class, this.getVillageArea().grow(20)).size() < Math.min(beds, VampirismConfig.BALANCE.viMaxVillagerRespawn.get())) {
                         boolean isConverted = this.controllingFaction == VReference.VAMPIRE_FACTION && RNG.nextBoolean();
                         if (isConverted) {
@@ -555,7 +552,7 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
                     }else {
                         spawnTaskMaster = true;
                     }
-                    if(spawnTaskMaster && this.world.getEntitiesWithinAABB(VampirismEntity.class, this.getVillageArea(), entity -> entity instanceof TaskMasterEntity).isEmpty()) {
+                    if(spawnTaskMaster && this.world.getEntitiesWithinAABB(VampirismEntity.class, this.getVillageArea(), entity -> entity instanceof ITaskMasterEntity).isEmpty()) {
                         this.spawnTaskMaster();
                     }
                     int defenderNumMax = Math.min(6, this.village.getComponents().size() / 5);
@@ -906,10 +903,12 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     private void spawnTaskMaster() {
-        EntityType<? extends VampirismEntity> entity = taskMaster.get(this.controllingFaction);
-        VampirismEntity newEntity = entity.create(this.world);
-        newEntity.setHome(this.getVillageAreaReduced());
-        UtilLib.spawnEntityInWorld(this.world, this.getVillageAreaReduced(), newEntity, 25, Lists.newArrayList(), SpawnReason.EVENT);
+        EntityType<? extends ITaskMasterEntity> entity = this.controllingFaction.getVillageData().getTaskMasterEntity();
+        if(entity != null) {
+            ITaskMasterEntity newEntity = entity.create(this.world);
+            newEntity.setHome(this.getVillageAreaReduced());
+            UtilLib.spawnEntityInWorld(this.world, this.getVillageAreaReduced(), (Entity) newEntity, 25, Lists.newArrayList(), SpawnReason.EVENT);
+        }
     }
 
     public void updateTrainer(boolean toDummy) {
@@ -934,10 +933,6 @@ public class TotemTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     //accessors for other classes --------------------------------------------------------------------------------------
-
-    public static <T extends VampirismEntity & TaskMasterEntity & IFactionMob> void registerTaskMaster(EntityType<T> entity, IPlayableFaction<?> faction){
-        taskMaster.put(faction, entity);
-    }
 
     private float getStrength(LivingEntity entity) {
         if (entity instanceof PlayerEntity)
