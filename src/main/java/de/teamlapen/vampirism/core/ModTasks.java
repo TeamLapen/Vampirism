@@ -14,6 +14,5 @@ import static de.teamlapen.vampirism.player.tasks.TaskBuilder.builder;
 public class ModTasks {
 
     public static void registerTasks(IForgeRegistry<Task> registry) {
-        registry.register(builder().setReward(new ItemStack(ModItems.item_med_chair)).setRequirement(new ItemStack(ModItems.human_heart,3)).build("test"));
     }
 }
