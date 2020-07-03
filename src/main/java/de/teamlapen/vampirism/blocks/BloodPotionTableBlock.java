@@ -13,6 +13,7 @@ import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -62,7 +63,7 @@ public class BloodPotionTableBlock extends VampirismBlock {
                 NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), new TranslationTextComponent("container.crafting")), pos);
 
             } else {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.blood_potion_table.cannot_use"));
+                player.sendMessage(new TranslationTextComponent("text.vampirism.blood_potion_table.cannot_use"), Util.field_240973_b_);
             }
         }
 

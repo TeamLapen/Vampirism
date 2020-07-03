@@ -95,7 +95,7 @@ public class MedChairBlock extends VampirismBlock {
                     used = true;
                 } else if (faction != null) {
                     if (!world.isRemote) {
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.med_chair_other_faction", faction.getName()));
+                        player.sendMessage(new TranslationTextComponent("text.vampirism.med_chair_other_faction", faction.getName()), Util.field_240973_b_);
                     }
 
                 }
@@ -114,7 +114,7 @@ public class MedChairBlock extends VampirismBlock {
                         }
                     }
                 } else if (VReference.VAMPIRE_FACTION.equals(faction)) {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.already_vampire"));
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.already_vampire"), false);
                 }
             }
             if (used) {

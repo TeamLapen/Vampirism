@@ -40,14 +40,14 @@ public class TeleportVampireAction extends DefaultVampireAction {
                 pos = ((BlockRayTraceResult) target).getPos().up();
             }
         } else {//TODO better solution / remove
-            if (player.getEntityWorld().getBlockState(((EntityRayTraceResult) target).getEntity().getPosition()).getMaterial().blocksMovement()) {
-                pos = ((EntityRayTraceResult) target).getEntity().getPosition();
+            if (player.getEntityWorld().getBlockState(((EntityRayTraceResult) target).getEntity().func_233580_cy_()).getMaterial().blocksMovement()) {
+                pos = ((EntityRayTraceResult) target).getEntity().func_233580_cy_();
             }
         }
 
         if (pos != null) {
             player.setPosition(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-            if (!(!player.getEntityWorld().containsAnyLiquid(player.getBoundingBox()) && player.getEntityWorld().func_226668_i_(player))) { //isEntityColliding
+            if (player.getEntityWorld().containsAnyLiquid(player.getBoundingBox()) || player.getEntityWorld().checkNoEntityCollision(player)) { //isEntityColliding
                 pos = null;
             }
         }

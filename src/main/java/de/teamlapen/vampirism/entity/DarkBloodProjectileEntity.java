@@ -165,7 +165,7 @@ public class DarkBloodProjectileEntity extends DamagingProjectileEntity {
                 if (entity instanceof LivingEntity) {
                     if (this.rand.nextInt(3) == 0) {
                         ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100));
-                        ((LivingEntity) entity).knockBack(this, 1f, -this.getMotion().x, -this.getMotion().z);
+                        ((LivingEntity) entity).func_233627_a_(1f, -this.getMotion().x, -this.getMotion().z); //knockback
                         ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 1));
 
                     }

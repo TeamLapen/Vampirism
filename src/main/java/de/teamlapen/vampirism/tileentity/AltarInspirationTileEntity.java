@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -20,9 +21,9 @@ import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
@@ -84,7 +85,7 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         FluidStack old = tank.getFluid();
-        this.read(pkt.getNbtCompound());
+        this.func_230337_a_(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
         if (!old.isFluidStackIdentical(tank.getFluid())) {
             updateModelData(true);
         }
@@ -102,12 +103,13 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
             if (p.world.isRemote)
-                p.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"));
+                p.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"), true);
             return;
         }
         int neededBlood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
         if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
-            if (p.world.isRemote) p.sendMessage(new TranslationTextComponent("text.vampirism.not_enough_blood"));
+            if (p.world.isRemote)
+                p.sendStatusMessage(new TranslationTextComponent("text.vampirism.not_enough_blood"), true);
             return;
         }
         if (!p.world.isRemote) {
@@ -126,7 +128,10 @@ public class AltarInspirationTileEntity extends net.minecraftforge.fluids.capabi
         if (!world.isRemote) {
             switch (ritualTicksLeft) {
                 case 5:
-                    ((ServerWorld) world).addLightningBolt(new LightningBoltEntity(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), true));
+                    LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(this.world);
+                    lightningboltentity.func_233576_c_(Vector3d.func_237492_c_(pos));
+                    lightningboltentity.func_233623_a_(true);
+                    this.world.addEntity(lightningboltentity);
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
                     break;
                 case 1:

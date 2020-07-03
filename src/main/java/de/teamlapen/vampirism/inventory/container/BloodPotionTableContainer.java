@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.inventory.container;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
@@ -18,6 +17,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.IContainerFactory;
@@ -90,20 +91,10 @@ public class BloodPotionTableContainer extends InventoryContainer {
         return craftingTimer == 0 ? 0 : (1F - craftingTimer / (float) max_crafting_time);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public
-    @Nullable
-    List<String> getLocalizedCraftingHint() {
-        ItemStack extra = inventory.getStackInSlot(3);
-        if (extra.isEmpty()) return null;
-        if (!hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_category_hint)) return null;
-        List<String> hints = BloodPotions.getLocalizedCategoryHint(extra);
-        if (hints.isEmpty()) {
-            hints.add(UtilLib.translate("text.vampirism.blood_potion.any_effect"));
-        } else {
-            hints.add(0, UtilLib.translate("text.vampirism.blood_potion.might_cause"));
-        }
-        return hints;
+    private static Ingredient getSpecialIngredient(ITag<Item> tag, Item... items) {
+        Collection<Item> d = tag.func_230236_b_()/*getAllElements*/;
+        d.addAll(Arrays.asList(items));
+        return Ingredient.fromStacks(d.stream().map(ItemStack::new).collect(Collectors.toList()).toArray(new ItemStack[0]));
     }
 
     public IWorldPosCallable getWorldPosCallable() {
@@ -194,24 +185,34 @@ public class BloodPotionTableContainer extends InventoryContainer {
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public
+    @Nullable
+    List<ITextComponent> getLocalizedCraftingHint() {
+        ItemStack extra = inventory.getStackInSlot(3);
+        if (extra.isEmpty()) return null;
+        if (!hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_category_hint)) return null;
+        List<ITextComponent> hints = BloodPotions.getLocalizedCategoryHint(extra);
+        if (hints.isEmpty()) {
+            hints.add(new TranslationTextComponent("text.vampirism.blood_potion.any_effect"));
+        } else {
+            hints.add(0, new TranslationTextComponent("text.vampirism.blood_potion.might_cause"));
+        }
+        return hints;
+    }
+
     /**
      * @return if all required tileInventory are in the container
      */
     private boolean areRequirementsMet() {
         ItemStack garlic = inventory.getStackInSlot(2);
-        if (garlic.isEmpty() || !ModTags.Items.GARLIC.contains(garlic.getItem())) return false;
+        if (garlic.isEmpty() || !ModTags.Items.GARLIC.func_230235_a_/*contains*/(garlic.getItem())) return false;
         boolean bottle = false;
         ItemStack bottle1 = inventory.getStackInSlot(0);
         ItemStack bottle2 = inventory.getStackInSlot(1);
         if (!bottle1.isEmpty() && bottle1.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
         if (!bottle2.isEmpty() && bottle2.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
         return bottle;
-    }
-
-    private static Ingredient getSpecialIngredient(ITag<Item> tag, Item... items) {
-        Collection<Item> d = tag.getAllElements();
-        d.addAll(Arrays.asList(items));
-        return Ingredient.fromStacks(d.stream().map(ItemStack::new).collect(Collectors.toList()).toArray(new ItemStack[0]));
     }
 
     /**

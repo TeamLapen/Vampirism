@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,7 +66,7 @@ public interface IBloodPotionRegistry {
      * Empty if no category belongs to that item
      */
     @Nonnull
-    List<String> getLocCategoryDescForItem(@Nonnull ItemStack item);
+    List<ITextComponent> getLocCategoryDescForItem(@Nonnull ItemStack item);
 
     /**
      * Retrieve a random effect (under consideration  of the given item)

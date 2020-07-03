@@ -285,40 +285,15 @@ public class ModPlayerEventHandler {
         }
     }
 
-    /**
-     * Checks if the player is allowed to use that item ({@link IFactionLevelItem}) and cancels the event if not.
-     *
-     * @return If it is allowed to use the item
-     */
-    private boolean checkItemUsePerm(ItemStack stack, PlayerEntity player) {
-
-        boolean message = !player.getEntityWorld().isRemote;
-        if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem) {
-            if (!player.isAlive()) return false;
-            IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            IPlayableFaction usingFaction = item.getUsingFaction(stack);
-            ISkill requiredSkill = item.getRequiredSkill(stack);
-            if (usingFaction != null && !handler.isInFaction(usingFaction)) {
-
-                if (message)
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()));
-                return false;
-            } else if (handler.getCurrentLevel() < item.getMinLevel(stack)) {
-                if (message)
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by_level", usingFaction == null ? new TranslationTextComponent("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)));
-                return false;
-            } else if (requiredSkill != null) {
-                IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
-                if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
-                    if (message)
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(requiredSkill.getTranslationKey())));
-                    return false;
+    @SubscribeEvent
+    public void eyeHeight(EntityEvent.EyeHeight event) {
+        if (event.getEntity() instanceof PlayerEntity) {
+            if (event.getEntity().isAlive() && event.getEntity().getPositionVec().lengthSquared() != 0) { //Do not attempt to get capability while entity is being initialized
+                if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false)) {
+                    event.setNewHeight(BatVampireAction.BAT_EYE_HEIGHT);
                 }
             }
-
         }
-        return true;
     }
 
     @SubscribeEvent
@@ -336,14 +311,39 @@ public class ModPlayerEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public void eyeHeight(EntityEvent.EyeHeight event) {
-        if (event.getEntity() instanceof PlayerEntity) {
-            if (event.getEntity().isAlive() && event.getEntity().getPositionVector().lengthSquared() != 0) { //Do not attempt to get capability while entity is being initialized
-                if (VampirePlayer.getOpt((PlayerEntity) event.getEntity()).map(vampire -> vampire.getSpecialAttributes().bat).orElse(false)) {
-                    event.setNewHeight(BatVampireAction.BAT_EYE_HEIGHT);
+    /**
+     * Checks if the player is allowed to use that item ({@link IFactionLevelItem}) and cancels the event if not.
+     *
+     * @return If it is allowed to use the item
+     */
+    private boolean checkItemUsePerm(ItemStack stack, PlayerEntity player) {
+
+        boolean message = !player.getEntityWorld().isRemote;
+        if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem) {
+            if (!player.isAlive()) return false;
+            IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            IPlayableFaction usingFaction = item.getUsingFaction(stack);
+            ISkill requiredSkill = item.getRequiredSkill(stack);
+            if (usingFaction != null && !handler.isInFaction(usingFaction)) {
+
+                if (message)
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", usingFaction.getNamePlural()), true);
+                return false;
+            } else if (handler.getCurrentLevel() < item.getMinLevel(stack)) {
+                if (message)
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by_level", usingFaction == null ? new TranslationTextComponent("text.vampirism.all") : usingFaction.getNamePlural(), item.getMinLevel(stack)), true);
+                return false;
+            } else if (requiredSkill != null) {
+                IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer().orElse(null);
+                if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
+                    if (message)
+                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(requiredSkill.getTranslationKey())), true);
+                    return false;
                 }
             }
+
         }
+        return true;
     }
 }

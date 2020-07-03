@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -71,17 +72,17 @@ public class CoffinTileEntity extends TileEntity implements ITickableTileEntity 
     }
 
 
+    @Override
+    public void func_230337_a_(BlockState state, CompoundNBT compound) {
+        super.func_230337_a_(state, compound);
+        this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
+
+    }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-        read(packet.getNbtCompound());
-    }
-
-    @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
-        this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
-
+        func_230337_a_(world.getBlockState(packet.getPos()), packet.getNbtCompound());
     }
 
     @Override

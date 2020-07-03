@@ -31,7 +31,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         Vector3d vec3d = shooter.getLook(1.0F);
 
         DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(shooter.getEntityWorld(), shooter.getPosX() + vec3d.x * 1.0f, shooter.getPosY() + shooter.getEyeHeight() * 0.9f, shooter.getPosZ() + vec3d.z * 1.0f, vec3d.x, vec3d.y, vec3d.z);
-        projectile.shootingEntity = shooter;
+        projectile.setShooter(shooter);
         projectile.setDamage(VampirismConfig.BALANCE.vaDarkBloodDamage.get().floatValue(), VampirismConfig.BALANCE.vaDarkBloodDamage.get().floatValue() * 0.5f);
 
         shooter.getEntityWorld().addEntity(projectile);

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.lib.lib.client.gui.GuiPieMenu;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -38,7 +39,7 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     /**
      * Fake skill which represents the cancel button
      */
-    private static IAction fakeAction = new DefaultVampireAction() {
+    private static final IAction fakeAction = new DefaultVampireAction() {
         @Override
         public boolean activate(IVampirePlayer vampire) {
             return true;
@@ -96,8 +97,9 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
             saveActionOrder();
         }
     }
+
     private IActionHandler actionHandler;
-    private boolean editActions;
+    private final boolean editActions;
 
     public SelectActionScreen(Color backgroundColor, boolean edit) {
         super(backgroundColor, new TranslationTextComponent("selectAction"));
@@ -105,32 +107,15 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     }
 
     @Override
-    public boolean keyPressed(int key, int scancode, int modifiers) {
-        if (editActions && key == GLFW.GLFW_KEY_ESCAPE) {
-            onClose();
-            return true;
-        }
-        if (getSelectedElement() >= 0) {
-            if (elements.get(getSelectedElement()) == fakeAction) {
-                return true;
-            }
-            if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).matchesKey(key, scancode)) {
-                FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction1(elements.get(getSelectedElement()), true);
-                if (!editActions) {
-                    GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
-                    onClose();
-                }
-                return true;
-            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).matchesKey(key, scancode)) {
-                FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction2(elements.get(getSelectedElement()), true);
-                if (!editActions) {
-                    GLFW.glfwSetCursorPos(this.minecraft.getMainWindow().getHandle(), this.minecraft.getMainWindow().getWidth() / 2f, this.minecraft.getMainWindow().getHeight() / 2f);
-                    onClose();
-                }
-                return true;
+    public boolean func_231044_a_(double mouseX, double mouseY, int mouseButton) { //mouseClicked
+        if (editActions && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && getSelectedElement() >= 0) {
+            if (elements.get(getSelectedElement()) != fakeAction) {
+                SELECTEDACTION = elements.get(getSelectedElement());
+            } else {
+                func_231175_as__();
             }
         }
-        return super.keyPressed(key, scancode, modifiers);
+        return super.func_231044_a_(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -140,20 +125,37 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (editActions && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && getSelectedElement() >= 0) {
-            if (elements.get(getSelectedElement()) != fakeAction) {
-                SELECTEDACTION = elements.get(getSelectedElement());
-            } else {
-                onClose();
+    public boolean func_231046_a_/*keyPressed*/(int key, int scancode, int modifiers) {
+        if (editActions && key == GLFW.GLFW_KEY_ESCAPE) {
+            func_231175_as__();
+            return true;
+        }
+        if (getSelectedElement() >= 0) {
+            if (elements.get(getSelectedElement()) == fakeAction) {
+                return true;
+            }
+            if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION1).matchesKey(key, scancode)) {
+                FactionPlayerHandler.get(field_230706_i_.player).setBoundAction1(elements.get(getSelectedElement()), true);
+                if (!editActions) {
+                    GLFW.glfwSetCursorPos(this.field_230706_i_.getMainWindow().getHandle(), this.field_230706_i_.getMainWindow().getWidth() / 2f, this.field_230706_i_.getMainWindow().getHeight() / 2f);
+                    func_231175_as__();
+                }
+                return true;
+            } else if (ModKeys.getKeyBinding(ModKeys.KEY.ACTION2).matchesKey(key, scancode)) {
+                FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction2(elements.get(getSelectedElement()), true);
+                if (!editActions) {
+                    GLFW.glfwSetCursorPos(this.field_230706_i_.getMainWindow().getHandle(), this.field_230706_i_.getMainWindow().getWidth() / 2f, this.field_230706_i_.getMainWindow().getHeight() / 2f);
+                    func_231175_as__();
+                }
+                return true;
             }
         }
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
+        return super.func_231046_a_(key, scancode, modifiers);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-        super.mouseReleased(mouseX, mouseY, mouseButton);
+    public boolean func_231048_c_(double mouseX, double mouseY, int mouseButton) {//mouseReleased
+        super.func_231048_c_(mouseX, mouseY, mouseButton);
         if (editActions && SELECTEDACTION != null) {
             if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT && getSelectedElement() >= 0 && elements.get(getSelectedElement()) != fakeAction) {
                 switchActions(SELECTEDACTION, elements.get(getSelectedElement()));
@@ -165,16 +167,16 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
     }
 
     @Override
-    public void onClose() {
+    public void func_231175_as__() {
         if (editActions) {
             saveActionOrder();
             SELECTEDACTION = null;
         }
-        super.onClose();
+        super.func_231175_as__();
     }
 
     @Override
-    protected void afterIconDraw(IAction p, int x, int y) {
+    protected void afterIconDraw(MatrixStack stack, IAction p, int x, int y) {
         if (p == fakeAction || editActions) return;
         // Draw usage indicator
 
@@ -182,11 +184,11 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
         if (active > 0) {
 
             float h = active * 16;
-            this.fillGradient(x, (int) (y + h), x + 16, y + 16, Color.YELLOW.getRGB() - 0x88000000, Color.YELLOW.getRGB());
+            this.func_238468_a_(stack, x, (int) (y + h), x + 16, y + 16, Color.YELLOW.getRGB() - 0x88000000, Color.YELLOW.getRGB());
         } else if (active < 0) {
 
             float h = (1F + (active)) * 16;
-            this.fillGradient(x, (int) (y + h), x + 16, y + 16, Color.BLACK.getRGB() - 0x55000000, Color.BLACK.getRGB());
+            this.func_238468_a_(stack, x, (int) (y + h), x + 16, y + 16, Color.BLACK.getRGB() - 0x55000000, Color.BLACK.getRGB());
         }
     }
 
@@ -199,8 +201,8 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
                 return Color.GREEN;
             else return Color.WHITE;
         }
-        if (!minecraft.player.isAlive()) return Color.RED;
-        IFactionPlayer factionPlayer = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null);
+        if (!field_230706_i_.player.isAlive()) return Color.RED;
+        IFactionPlayer factionPlayer = FactionPlayerHandler.get(field_230706_i_.player).getCurrentFactionPlayer().orElse(null);
         if (!(s.canUse(factionPlayer) == IAction.PERM.ALLOWED) || actionHandler.getPercentageForAction(s) < 0) {
             return Color.RED;
         } else if (actionHandler.getPercentageForAction(s) > 0) {
@@ -228,14 +230,14 @@ public class SelectActionScreen extends GuiPieMenu<IAction> {
 
     @Override
     protected void onElementSelected(IAction action) {
-        if (action != fakeAction && action.canUse(FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null)) == IAction.PERM.ALLOWED) {
+        if (action != fakeAction && action.canUse(FactionPlayerHandler.get(field_230706_i_.player).getCurrentFactionPlayer().orElse(null)) == IAction.PERM.ALLOWED) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName().toString()));
         }
     }
 
     @Override
     protected void onGuiInit() {
-        IFactionPlayer player = FactionPlayerHandler.get(minecraft.player).getCurrentFactionPlayer().orElse(null);
+        IFactionPlayer player = FactionPlayerHandler.get(field_230706_i_.player).getCurrentFactionPlayer().orElse(null);
         actionHandler = player.getActionHandler();
         updateElements();
 

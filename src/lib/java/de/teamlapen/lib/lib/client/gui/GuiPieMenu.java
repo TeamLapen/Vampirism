@@ -119,7 +119,7 @@ public abstract class GuiPieMenu<T> extends Screen {
             UtilLib.drawTexturedModalRect(func_230927_p_
                     (), x, y, 0, 0, 16, 16, 16, 16);
 
-            this.afterIconDraw(element, x, y);
+            this.afterIconDraw(stack, element, x, y);
 
         }
         if (selectedElement == -1) {
@@ -201,7 +201,7 @@ public abstract class GuiPieMenu<T> extends Screen {
     }
 
     @Override
-    public boolean func_231177_au__() {
+    public boolean func_231177_au__() { //isPauseScreen
         return false;
     }
 
@@ -209,7 +209,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         return getMenuKeyBinding().isKeyDown();
     }
 
-    protected void afterIconDraw(T element, int x, int y) {
+    protected void afterIconDraw(MatrixStack stack, T element, int x, int y) {
 
     }
 

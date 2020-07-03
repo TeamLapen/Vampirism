@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.inventory.container.BloodGrinderContainer;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -68,8 +69,8 @@ public class BloodGrinderTileEntity extends InventoryTileEntity implements ITick
     }
 
     @Override
-    public void read(CompoundNBT tagCompound) {
-        super.read(tagCompound);
+    public void func_230337_a_(BlockState state, CompoundNBT tagCompound) {
+        super.func_230337_a_(state, tagCompound);
         cooldownPull = tagCompound.getInt("cooldown_pull");
         cooldownProcess = tagCompound.getInt("cooldown_process");
     }

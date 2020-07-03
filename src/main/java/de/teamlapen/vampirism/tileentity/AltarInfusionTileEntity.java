@@ -30,10 +30,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -76,7 +73,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
      */
     private int targetLevel;
 
-    private LazyOptional<IItemHandler> itemHandlerOptional = LazyOptional.of(this::createWrapper);
+    private final LazyOptional<IItemHandler> itemHandlerOptional = LazyOptional.of(this::createWrapper);
 
     public AltarInfusionTileEntity() {
         super(ModTiles.altar_infusion, 3, AltarInfusionContainer.SELECTOR_INFOS);
@@ -91,7 +88,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
     public Result canActivate(PlayerEntity player, boolean messagePlayer) {
         if (runningTick > 0) {
             if (messagePlayer)
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"));
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), true);
 
             return Result.ISRUNNING;
         }
@@ -101,15 +98,15 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
             if (messagePlayer)
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"));
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_level_wrong"), true);
             return Result.WRONGLEVEL;
         } else if (player.getEntityWorld().isDaytime()) {
             if (messagePlayer)
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_night_only"));
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_night_only"), true);
             return Result.NIGHTONLY;
         } else if (!checkStructureLevel(requiredLevel)) {
             if (messagePlayer)
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_structure_wrong"));
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_structure_wrong"), true);
             tips = null;
             return Result.STRUCTUREWRONG;
         } else if (!checkItemRequirements(player, messagePlayer)) {
@@ -201,15 +198,9 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
         return write(new CompoundNBT());
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(pkt.getNbtCompound());
-    }
-
-    @Override
-    public void read(CompoundNBT tagCompound) {
-        super.read(tagCompound);
+    public void func_230337_a_(BlockState state, CompoundNBT tagCompound) {
+        super.func_230337_a_(state, tagCompound);
         int tick = tagCompound.getInt("tick");
         //This is used on both client and server side and has to be prepared for the world not being available yet
         if (tick > 0 && player == null && tagCompound.hasUniqueId("playerUUID")) {
@@ -220,6 +211,12 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             this.runningTick = tick;
         }
 
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        this.func_230337_a_(this.world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
     }
 
     /**
@@ -353,7 +350,7 @@ public class AltarInfusionTileEntity extends InventoryTileEntity implements ITic
             if (messagePlayer) {
                 ITextComponent item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
                 ITextComponent main = new TranslationTextComponent("text.vampirism.altar_infusion.ritual_missing_items", missing.getCount(), item);
-                player.sendMessage(main);
+                player.sendMessage(main, Util.field_240973_b_);
             }
 
             return false;

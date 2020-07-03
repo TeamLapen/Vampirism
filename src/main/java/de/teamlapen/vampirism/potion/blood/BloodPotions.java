@@ -22,6 +22,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -111,10 +112,12 @@ public class BloodPotions {
 
             }
             if (skillHandler.isSkillEnabled(HunterSkills.blood_potion_good_or_bad)) {
-                if (effect.getEffect().isBad()) {
-                    text = text.applyTextStyle(TextFormatting.DARK_RED);
-                } else {
-                    text = text.applyTextStyle(TextFormatting.DARK_GREEN);
+                if (text instanceof IFormattableTextComponent) {
+                    if (effect.getEffect().isBad()) {
+                        text = ((IFormattableTextComponent) text).func_240699_a_(TextFormatting.DARK_RED);
+                    } else {
+                        text = ((IFormattableTextComponent) text).func_240699_a_(TextFormatting.DARK_GREEN);
+                    }
                 }
             }
 
@@ -225,7 +228,7 @@ public class BloodPotions {
      */
     public static
     @Nonnull
-    List<String> getLocalizedCategoryHint(ItemStack extra) {
+    List<ITextComponent> getLocalizedCategoryHint(ItemStack extra) {
         IBloodPotionRegistry registry = VampirismAPI.bloodPotionRegistry();
         return registry.getLocCategoryDescForItem(extra);
     }

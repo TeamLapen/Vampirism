@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
@@ -154,7 +155,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     int color = 0xFF0000;
                     if (entity instanceof HunterBaseEntity || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
                         color = 0x099022;
-                    renderBloodFangs(this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
+                    renderBloodFangs(event.getMatrixStack(), this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                     event.setCanceled(true);
                 });
             }
@@ -167,7 +168,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     if (tile != null) {
                         tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(handler -> {
                             if (FluidLib.getFluidAmount(handler, ModFluids.blood) > 0) {
-                                renderBloodFangs(this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight(), 1, 0xFF0000);
+                                renderBloodFangs(event.getMatrixStack(), this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight(), 1, 0xFF0000);
                                 event.setCanceled(true);
                             }
                         });
@@ -189,8 +190,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
                     int l = (int) (progress * 14.0F) + 2;
 
-                    this.blit(x, y, 0, 19, 16, 2);
-                    this.blit(x, y, 16, 19, l, 2);
+                    this.func_238474_b_(event.getMatrixStack(), x, y, 0, 19, 16, 2);
+                    this.func_238474_b_(event.getMatrixStack(), x, y, 16, 19, l, 2);
                 }
 
             }
@@ -206,6 +207,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE || mc.player == null || !mc.player.isAlive()) {
             return;
         }
+        MatrixStack stack = event.getMatrixStack();
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_LIGHTING);
         IPlayableFaction faction = FactionPlayerHandler.get(mc.player).getCurrentFaction();
@@ -215,11 +217,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
             String text = "" + FactionPlayerHandler.get(mc.player).getCurrentLevel();
             int x = (this.mc.getMainWindow().getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + VampirismConfig.CLIENT.guiLevelOffsetX.get();
             int y = this.mc.getMainWindow().getScaledHeight() - VampirismConfig.CLIENT.guiLevelOffsetY.get();
-            mc.fontRenderer.drawString(text, x + 1, y, 0);
-            mc.fontRenderer.drawString(text, x - 1, y, 0);
-            mc.fontRenderer.drawString(text, x, y + 1, 0);
-            mc.fontRenderer.drawString(text, x, y - 1, 0);
-            mc.fontRenderer.drawString(text, x, y, color);
+            mc.fontRenderer.func_238421_b_(stack, text, x + 1, y, 0);
+            mc.fontRenderer.func_238421_b_(stack, text, x - 1, y, 0);
+            mc.fontRenderer.func_238421_b_(stack, text, x, y + 1, 0);
+            mc.fontRenderer.func_238421_b_(stack, text, x, y - 1, 0);
+            mc.fontRenderer.func_238421_b_(stack, text, x, y, color);
         }
     }
 
@@ -282,18 +284,18 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     int x = left - i * 8 - 9;
 
                     // Draw Background
-                    blit(x, top, 0, idx <= maxBlood2 ? 9 : 0, 9, 9);
+                    func_238474_b_(event.getMatrixStack(), x, top, 0, idx <= maxBlood2 ? 9 : 0, 9, 9);
 
                     if (idx < blood) {
-                        blit(x, top, 9, idx < blood2 ? 9 : 0, 9, 9);
+                        func_238474_b_(event.getMatrixStack(), x, top, 9, idx < blood2 ? 9 : 0, 9, 9);
                         if (idx == blood2) {
-                            blit(x, top, 18, 9, 9, 9);
+                            func_238474_b_(event.getMatrixStack(), x, top, 18, 9, 9, 9);
                         }
                     } else if (idx == blood) {
-                        blit(x, top, 18, 0, 9, 9);
+                        func_238474_b_(event.getMatrixStack(), x, top, 18, 0, 9, 9);
                     }
                 }
-                this.mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+                this.mc.getTextureManager().bindTexture(AbstractGui.field_230665_h_ /*ICON_LOCATION*/);
                 GlStateManager.disableBlend();
             }
         }
@@ -331,10 +333,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder worldrenderer = tessellator.getBuffer();
                 worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-                worldrenderer.pos(0, h, this.getBlitOffset()).color(r, g, b, a).endVertex();
-                worldrenderer.pos(w, h, this.getBlitOffset()).color(r, g, b, a).endVertex();
-                worldrenderer.pos(w, 0, this.getBlitOffset()).color(r, g, b, a).endVertex();
-                worldrenderer.pos(0, 0, this.getBlitOffset()).color(r, g, b, a).endVertex();
+                worldrenderer.pos(0, h, this.func_230927_p_()).color(r, g, b, a).endVertex();
+                worldrenderer.pos(w, h, this.func_230927_p_()).color(r, g, b, a).endVertex();
+                worldrenderer.pos(w, 0, this.func_230927_p_()).color(r, g, b, a).endVertex();
+                worldrenderer.pos(0, 0, this.func_230927_p_()).color(r, g, b, a).endVertex();
 
                 tessellator.draw();
                 GlStateManager.shadeModel(7424);
@@ -360,8 +362,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     bh = Math.round(h / (float) 4 * screenPercentage / 100);
                     bw = Math.round(w / (float) 8 * screenPercentage / 100);
 
-                    this.fillGradient(0, 0, w, bh, screenColor, 0x000);
-                    this.fillGradient(0, h - bh, w, h, 0x00000000, screenColor);
+                    this.func_238468_a_(event.getMatrixStack(), 0, 0, w, bh, screenColor, 0x000);
+                    this.func_238468_a_(event.getMatrixStack(), 0, h - bh, w, h, 0x00000000, screenColor);
                     this.fillGradient2(0, 0, bw, h, 0x000000, screenColor);
                     this.fillGradient2(w - bw, 0, w, h, screenColor, 0x00);
                 } else { //If here screenBottomPercentage has to be >0
@@ -371,7 +373,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
                     hh = Math.round(h / (float) 4 * screenBottomPercentage / 100);
 
-                    this.fillGradient(0, h - hh, w, h, 0x00000000, screenBottomColor);
+                    this.func_238468_a_(event.getMatrixStack(), 0, h - hh, w, h, 0x00000000, screenBottomColor);
                 }
 
             }
@@ -431,7 +433,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    private void renderBloodFangs(int width, int height, float perc, int color) {
+    private void renderBloodFangs(MatrixStack stack, int width, int height, float perc, int color) {
 
         float r = ((color & 0xFF0000) >> 16) / 256f;
         float g = ((color & 0xFF00) >> 8) / 256f;
@@ -441,10 +443,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
         int top = height / 2 - 4;
         GL11.glEnable(GL11.GL_BLEND);
         GlStateManager.color4f(1f, 1f, 1f, 0.7F);
-        blit(left, top, 27, 0, 16, 10);
+        func_238474_b_(stack, left, top, 27, 0, 16, 10);
         GlStateManager.color4f(r, g, b, 0.8F);
         int percHeight = (int) (10 * perc);
-        blit(left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
+        func_238474_b_(stack, left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
         GlStateManager.color4f(1F, 1F, 1F, 1F);
         GL11.glDisable(GL11.GL_BLEND);
 

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.vampirism.inventory.container.AltarInfusionContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -20,24 +21,21 @@ public class AltarInfusionScreen extends ContainerScreen<AltarInfusionContainer>
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
+    public void func_230430_a_
+            (MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.func_230446_a_(stack);
+        super.func_230430_a_
+                (stack, mouseX, mouseY, partialTicks);
+        this.func_230459_a_(stack, mouseX, mouseY);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
+    protected void func_230450_a_(MatrixStack stack, float var1, int var2, int var3) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(altarGuiTextures);
-        int k = (this.width - this.xSize) / 2;
-        int l = (this.height - this.ySize) / 2;
-        this.blit(k, l, 0, 0, this.xSize, this.ySize);
-    }
-
-    @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        this.font.drawString(this.title.getFormattedText(), this.xSize / 2 - this.font.getStringWidth(this.title.getFormattedText()) / 2, 6.0F, 4210752);
-        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 4210752);
+        this.field_230706_i_.getTextureManager().bindTexture(altarGuiTextures);
+        int k = (this.field_230708_k_ - this.xSize) / 2;
+        int l = (this.field_230709_l_ - this.ySize) / 2;
+        this.func_238474_b_(stack, k, l, 0, 0, this.xSize, this.ySize);
     }
 
 }

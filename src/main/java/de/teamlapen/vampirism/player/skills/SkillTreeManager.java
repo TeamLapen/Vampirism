@@ -31,7 +31,7 @@ public class SkillTreeManager extends JsonReloadListener {
         return instance;
     }
 
-    private SkillTree skillTree = new SkillTree();
+    private final SkillTree skillTree = new SkillTree();
 
     private SkillTreeManager() {
         super(GSON, "vampirismskillnodes");
@@ -42,7 +42,7 @@ public class SkillTreeManager extends JsonReloadListener {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonObject> resourceLocationJsonObjectMap, IResourceManager iResourceManager, IProfiler iProfiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> resourceLocationJsonObjectMap, IResourceManager iResourceManager, IProfiler iProfiler) {
         Map<ResourceLocation, SkillNode.Builder> parsed = new HashMap<>();
         resourceLocationJsonObjectMap.forEach((id, object) -> {
             try {

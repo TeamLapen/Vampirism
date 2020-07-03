@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -116,7 +117,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
         //If non empty hand or missing tileInventory -> open GUI
         if (!heldItem.isEmpty() || result == AltarInfusionTileEntity.Result.INVMISSING) {
             if (te.getCurrentPhase() != AltarInfusionTileEntity.PHASE.NOT_RUNNING) {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"));
+                player.sendMessage(new TranslationTextComponent("text.vampirism.altar_infusion.ritual_still_running"), Util.field_240973_b_);
                 return ActionResultType.SUCCESS;
             }
             player.openContainer(te);

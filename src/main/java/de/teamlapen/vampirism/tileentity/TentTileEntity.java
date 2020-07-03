@@ -1,19 +1,21 @@
 package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.util.SimpleSpawnerLogic;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModTiles;
 import de.teamlapen.vampirism.entity.hunter.AdvancedHunterEntity;
 import de.teamlapen.vampirism.entity.hunter.BasicHunterEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -45,8 +47,8 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void read(CompoundNBT nbt) {
-        super.read(nbt);
+    public void func_230337_a_(BlockState state, CompoundNBT nbt) {
+        super.func_230337_a_(state, nbt);
         if (nbt.contains("spawner_logic_1")) {
             spawnerLogicHunter.readFromNbt(nbt.getCompound("spawner_logic_1"));
         }
@@ -81,7 +83,7 @@ public class TentTileEntity extends TileEntity implements ITickableTileEntity {
 
         if (spawn) {
             if (!this.world.isRemote && this.world.getGameTime() % 64 == 0) {
-                if (Feature.VILLAGE.isPositionInsideStructure(world, pos)) {
+                if (UtilLib.isInsideStructure(this.world, this.pos, Structure.field_236381_q_)) {
                     this.spawn = false; //Disable spawning inside villages
                 }
             }

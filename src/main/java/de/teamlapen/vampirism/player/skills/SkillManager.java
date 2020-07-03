@@ -56,7 +56,7 @@ public class SkillManager implements ISkillManager {
      */
     public void printSkills(IPlayableFaction faction, CommandSource sender) {
         for (ISkill s : getSkillsForFaction(faction)) {
-            sender.sendFeedback(new StringTextComponent("ID: " + ModRegistries.SKILLS.getKey(s) + " Skill: ").appendSibling(new TranslationTextComponent(s.getTranslationKey())), true);
+            sender.sendFeedback(new StringTextComponent("ID: " + ModRegistries.SKILLS.getKey(s) + " Skill: ").func_230529_a_(new TranslationTextComponent(s.getTranslationKey())), true);
         }
     }
 

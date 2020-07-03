@@ -20,11 +20,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Pillar for Altar of Infusion structure
@@ -53,7 +51,7 @@ public class AltarPillarBlock extends VampirismBlock {
     }
 
     public AltarPillarBlock() {
-        super(name, Properties.create(Material.ROCK).hardnessAndResistance(0.9f));
+        super(name, Properties.create(Material.ROCK).hardnessAndResistance(0.9f).notSolid());
         this.setDefaultState(this.stateContainer.getBaseState().with(TYPE_PROPERTY, EnumPillarType.NONE));
 
     }
@@ -73,11 +71,6 @@ public class AltarPillarBlock extends VampirismBlock {
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return state.get(TYPE_PROPERTY) != EnumPillarType.NONE ? pillarShapeFilled : pillarShape;
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
     }
 
     @Override
@@ -129,8 +122,12 @@ public class AltarPillarBlock extends VampirismBlock {
         }
 
         @Override
-        public String getName() {
+        public String func_176610_l() {
             return name;
+        }
+
+        public String getName() {
+            return func_176610_l();
         }
 
 

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
@@ -13,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
@@ -65,15 +66,15 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
 
     @Nonnull
     @Override
-    public List<String> getLocCategoryDescForItem(@Nonnull ItemStack item) {
+    public List<ITextComponent> getLocCategoryDescForItem(@Nonnull ItemStack item) {
         assert !item.isEmpty();
         List<IBloodPotionCategory> categories = Lists.newLinkedList();
         categories.addAll(categoriesBad);
         categories.addAll(categoriesGood);
-        List<String> desc = Lists.newArrayList();
+        List<ITextComponent> desc = Lists.newArrayList();
         for (IBloodPotionCategory category : categories) {
             if (category.containsItem(item)) {
-                desc.add(UtilLib.translate(category.getDescTranslationKey()));
+                desc.add(new TranslationTextComponent(category.getDescTranslationKey()));
 
             }
         }

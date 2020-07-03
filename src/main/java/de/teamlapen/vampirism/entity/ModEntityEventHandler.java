@@ -241,7 +241,7 @@ public class ModEntityEventHandler {
 
             if (event.getEntity() instanceof VillagerEntity) {
 
-                StructureStart<?> structure = UtilLib.getStructureStartAtEntity(event.getEntity(), Structure.field_236381_q_);
+                StructureStart<?> structure = UtilLib.getStructureStartAt(event.getEntity(), Structure.field_236381_q_);
                 if (structure != null && structure.isValid() && !(structure == StructureStart.DUMMY)) {
                     BlockPos pos = TotemTileEntity.getTotemPosition(structure);
                     if (pos != null) {

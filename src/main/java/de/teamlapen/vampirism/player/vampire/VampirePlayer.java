@@ -39,6 +39,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -48,15 +49,12 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
@@ -209,7 +207,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             LOGGER.warn("Player can't bite in spectator mode");
             return;
         }
-        double dist = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1;
+        double dist = player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1;
         if (player.getDistanceSq(pos.getX(), pos.getY(), pos.getZ()) > dist * dist) {
             LOGGER.warn("Block sent by client is not in reach" + pos);
         } else {
@@ -238,7 +236,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             return;
         }
         if (e instanceof LivingEntity) {
-            if (e.getDistance(player) <= player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1) {
+            if (e.getDistance(player) <= player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue() + 1) {
                 feed_victim_bite_type = determineBiteType((LivingEntity) e);
                 if (feed_victim_bite_type == BITE_TYPE.ATTACK || feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER || feed_victim_bite_type == BITE_TYPE.HUNTER_CREATURE) {
                     biteAttack((LivingEntity) e, feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER);
@@ -530,13 +528,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    public void onChangedDimension(DimensionType from, DimensionType to) {
+    public void onChangedDimension(RegistryKey<World> from, RegistryKey<World> to) {
 
     }
 
     @Override
     public void onDeath(DamageSource src) {
-        if (actionHandler.isActionActive(VampireActions.bat) && src.getImmediateSource() instanceof IProjectile) {
+        if (actionHandler.isActionActive(VampireActions.bat) && src.getImmediateSource() instanceof ProjectileEntity) {
             if (player instanceof ServerPlayerEntity) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((ServerPlayerEntity) player, VampireActionTrigger.Action.SNIPED_IN_BAT);
             }
@@ -591,7 +589,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpStrengthMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADDITION, true);
             if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
-            LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            LevelAttributeModifier.applyModifier(player, ModAttributes.blood_exhaustion, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
             if (newLevel > 13) {
                 bloodStats.setMaxBlood(40);
             } else if (newLevel > 9) {
@@ -950,13 +948,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private void applyEntityAttributes() {
         //Checking if already registered, since this method has to be called multiple times due to SpongeForge not recreating the player, but resetting the attribute map
         if (player.getAttributes().getAttributeInstance(VReference.sunDamage) == null) {
-            player.getAttributes().registerAttribute(VReference.sunDamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
+            player.getAttributes().registerAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
         }
         if (player.getAttributes().getAttributeInstance(VReference.bloodExhaustion) == null) {
-            player.getAttributes().registerAttribute(VReference.bloodExhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
+            player.getAttributes().registerAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
         }
         if (player.getAttributes().getAttributeInstance(VReference.biteDamage) == null) {
-            player.getAttributes().registerAttribute(VReference.biteDamage).setBaseValue(VampirismConfig.BALANCE.vpBiteDamage.get());
+            player.getAttributes().registerAttribute(ModAttributes.bite_damage).setBaseValue(VampirismConfig.BALANCE.vpBiteDamage.get());
 
         }
     }
@@ -969,7 +967,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     private void biteAttack(LivingEntity entity, boolean hunter) {
         if (!PermissionAPI.hasPermission(player, Permissions.BITE_PLAYER)) return;
-        float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getAttribute(VReference.biteDamage).getValue();
+        float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getAttribute(ModAttributes.bite_damage).getValue();
         entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
         if (hunter || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
             player.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
@@ -1091,7 +1089,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             player.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 152, 0));
         }
         if (getLevel() >= VampirismConfig.BALANCE.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
-            float damage = (float) (player.getAttribute(VReference.sunDamage).getValue());
+            float damage = (float) (player.getAttribute(ModAttributes.sundamage).getValue());
             if (damage > 0) player.attackEntityFrom(VReference.SUNDAMAGE, damage);
         }
     }
@@ -1144,7 +1142,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             endFeeding(true);
         }
 
-        if (!(e.getDistance(player) <= player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue() + 1) || e.getHealth() == 0f)
+        if (!(e.getDistance(player) <= player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 1) || e.getHealth() == 0f)
             endFeeding(true);
     }
 

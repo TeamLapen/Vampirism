@@ -56,11 +56,12 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         this.world.notifyBlockUpdate(pos, state, state, 3);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT nbt = pkt.getNbtCompound();
-        handleUpdateTag(nbt);
+    public void func_230337_a_(BlockState state, CompoundNBT compound) {
+        super.func_230337_a_(state, compound);
+        r = compound.getInt("radius");
+        defaultStrength = EnumStrength.getFromStrenght(compound.getInt("strength"));
+        setFueledTime(compound.getInt("fueled"));
     }
 
     public void onFueled() {
@@ -76,12 +77,11 @@ public class GarlicBeaconTileEntity extends TileEntity implements ITickableTileE
         });
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
-        r = compound.getInt("radius");
-        defaultStrength = EnumStrength.getFromStrenght(compound.getInt("strength"));
-        setFueledTime(compound.getInt("fueled"));
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        CompoundNBT nbt = pkt.getNbtCompound();
+        handleUpdateTag(this.world.getBlockState(pkt.getPos()), nbt);
     }
 
     @Override

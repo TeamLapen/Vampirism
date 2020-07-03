@@ -17,7 +17,6 @@ import net.minecraft.block.CampfireBlock;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;

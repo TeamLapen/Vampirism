@@ -24,7 +24,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -668,15 +670,24 @@ public class UtilLib {
     }
 
     public static boolean isInsideStructure(Entity entity, Structure<?> s) {
-        StructureStart<?> start = getStructureStartAtEntity(entity, s);
+        StructureStart<?> start = getStructureStartAt(entity, s);
+        return start != null && start.isValid();
+    }
+
+    public static boolean isInsideStructure(World w, BlockPos p, Structure<?> s) {
+        StructureStart<?> start = getStructureStartAt(w, p, s);
         return start != null && start.isValid();
     }
 
     @Nullable
-    public static StructureStart<?> getStructureStartAtEntity(Entity entity, Structure<?> s) {
-        World w = entity.getEntityWorld();
+    public static StructureStart<?> getStructureStartAt(Entity entity, Structure<?> s) {
+        return getStructureStartAt(entity.getEntityWorld(), entity.func_233580_cy_(), s);
+    }
+
+    @Nullable
+    public static StructureStart<?> getStructureStartAt(World w, BlockPos pos, Structure<?> s) {
         if (w instanceof ServerWorld) {
-            return ((ServerWorld) w).func_241112_a_()/*getStructureManager*/.func_235010_a_(entity.func_233580_cy_(), true, s);
+            return ((ServerWorld) w).func_241112_a_()/*getStructureManager*/.func_235010_a_(pos, true, s);
         }
         return null;
     }
@@ -725,5 +736,12 @@ public class UtilLib {
         NINETY,
         HUNDRED_EIGHTY,
         TWO_HUNDRED_SEVENTY
+    }
+
+    public static ITextComponent addFormatting(ITextComponent component, TextFormatting format) {
+        if (component instanceof IFormattableTextComponent) {
+            ((IFormattableTextComponent) component).func_240699_a_(format);
+        }
+        return component;
     }
 }

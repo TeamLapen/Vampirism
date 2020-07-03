@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.inventory.container.BloodGrinderContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -24,17 +24,13 @@ public class BloodGrinderScreen extends ContainerScreen<BloodGrinderContainer> {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
+    protected void func_230450_a_(MatrixStack stack, float var1, int var2, int var3) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(background);
-        int k = (this.width - this.xSize) / 2;
-        int l = (this.height - this.ySize) / 2;
-        this.blit(k, l, 0, 0, this.xSize, this.ySize);
+        this.field_230706_i_.getTextureManager().bindTexture(background);
+        int k = (this.field_230708_k_ - this.xSize) / 2;
+        int l = (this.field_230709_l_ - this.ySize) / 2;
+        this.func_238474_b_(stack, k, l, 0, 0, this.xSize, this.ySize);
     }
 
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(title.getFormattedText(), 8, 6, 0x404040);
-        this.font.drawString(UtilLib.translate("container.inventory"), 8, this.ySize - 94, 0x404040);
-    }
+
 }

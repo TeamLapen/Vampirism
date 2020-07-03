@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.vampirism.inventory.container.HunterTableContainer;
 import de.teamlapen.vampirism.items.PureBloodItem;
@@ -20,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_table.png");
-    private IWorldPosCallable worldPos;
+    private final IWorldPosCallable worldPos;
 
     public HunterTableScreen(HunterTableContainer inventorySlotsIn, PlayerInventory playerInventory, ITextComponent name) {
         this(inventorySlotsIn, playerInventory, name, IWorldPosCallable.DUMMY);
@@ -32,25 +33,25 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
+    public void func_230430_a_(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.func_230446_a_(stack);
+        super.func_230430_a_(stack, mouseX, mouseY, partialTicks);
+        this.func_230459_a_(stack, mouseX, mouseY);
 
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
+    protected void func_230450_a_(MatrixStack stack, float var1, int var2, int var3) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(altarGuiTextures);
-        int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
-        this.blit(i, j, 0, 0, this.xSize, this.ySize);
+        this.field_230706_i_.getTextureManager().bindTexture(altarGuiTextures);
+        int i = (this.field_230708_k_ - this.xSize) / 2;
+        int j = (this.field_230709_l_ - this.ySize) / 2;
+        this.func_238474_b_(stack, i, j, 0, 0, this.xSize, this.ySize);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        this.font.drawString(this.title.getFormattedText(), 8.0F, 6.0F, 0x404040);
-        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 0x404040);
+    protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
+        super.func_230451_b_(stack, mouseX, mouseY);
 
         ITextComponent text = null;
         if (!container.isLevelValid()) {
@@ -58,8 +59,8 @@ public class HunterTableScreen extends ContainerScreen<HunterTableContainer> {
         } else if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
             ITextComponent item = missing.getItem() instanceof PureBloodItem ? ((PureBloodItem) missing.getItem()).getCustomName() : new TranslationTextComponent(missing.getTranslationKey());
-            text = new TranslationTextComponent("text.vampirism.hunter_table.ritual_missing_items", missing.getCount(), item.getFormattedText());
+            text = new TranslationTextComponent("text.vampirism.hunter_table.ritual_missing_items", missing.getCount(), item);
         }
-        if (text != null) this.font.drawSplitString(text.getFormattedText(), 8, 50, this.xSize - 10, 0x000000);
+        if (text != null) this.field_230712_o_.func_238418_a_(text, 8, 50, this.xSize - 10, 0x000000);
     }
 }

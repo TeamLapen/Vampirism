@@ -26,7 +26,7 @@ public class GolemTargetVampireGoal extends NearestAttackableTargetGoal<LivingEn
     @Override
     public boolean shouldExecute() {
 
-        StructureStart<?> structureStart = UtilLib.getStructureStartAtEntity(golem, Structure.field_236381_q_);
+        StructureStart<?> structureStart = UtilLib.getStructureStartAt(golem, Structure.field_236381_q_);
         if (structureStart != null && structureStart.isValid()) {
             BlockPos pos = TotemTileEntity.getTotemPosition(structureStart);
             if (pos != null) {

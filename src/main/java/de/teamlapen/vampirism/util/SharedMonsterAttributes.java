@@ -7,6 +7,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
  * Temp class until mappings are available. Fields can be inlined afterwards.
  */
 public class SharedMonsterAttributes {
+    public static final Attribute ARMOR = Attributes.field_233826_i_;
     public static final Attribute MAX_HEALTH = Attributes.field_233818_a_;
     public static final Attribute FOLLOW_RANGE = Attributes.field_233819_b_;
     public static final Attribute KNOCKBACK_RESISTANCE = Attributes.field_233820_c_;

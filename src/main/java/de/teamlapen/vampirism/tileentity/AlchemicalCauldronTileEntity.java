@@ -25,6 +25,7 @@ import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -71,10 +72,10 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
                 } else if (ownerID.equals(player.getUniqueID())) {
                     return true;
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.other", getOwnerName()));
+                    player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.other", getOwnerName()), Util.field_240973_b_);
                 }
             } else {
-                player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.cannot_use", getOwnerName()));
+                player.sendMessage(new TranslationTextComponent("text.vampirism.alchemical_cauldron.cannot_use", getOwnerName()), Util.field_240973_b_);
             }
         }
         return false;
@@ -129,11 +130,10 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
     }
 
     @Override
-    public void handleUpdateTag(CompoundNBT compound) {
-        super.handleUpdateTag(compound);
+    public void func_230337_a_(BlockState state, CompoundNBT compound) {
         ownerID = compound.hasUniqueId("owner") ? compound.getUniqueId("owner") : null;
         ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
-        ItemStackHelper.loadAllItems(compound, this.items);
+        super.func_230337_a_(state, compound);
     }
 
     @Override
@@ -150,23 +150,24 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
         }
     }
 
+    @Override
+    public void handleUpdateTag(BlockState state, CompoundNBT compound) {
+        super.handleUpdateTag(state, compound);
+        ownerID = compound.hasUniqueId("owner") ? compound.getUniqueId("owner") : null;
+        ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
+        ItemStackHelper.loadAllItems(compound, this.items);
+    }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         CompoundNBT nbt = pkt.getNbtCompound();
-        handleUpdateTag(nbt);
-    }
-
-    @Override
-    public void read(CompoundNBT compound) {
-        ownerID = compound.hasUniqueId("owner") ? compound.getUniqueId("owner") : null;
-        ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
-        super.read(compound);
+        handleUpdateTag(this.world.getBlockState(pkt.getPos()), nbt);
     }
 
     public void setOwnerID(PlayerEntity player) {
         ownerID = player.getUniqueID();
-        ownerName = player.getDisplayName().getFormattedText();
+        ownerName = player.getDisplayName().getString();
         this.markDirty();
     }
 
@@ -207,7 +208,7 @@ public class AlchemicalCauldronTileEntity extends AbstractFurnaceTileEntity {
                     furnaceData.set(2, furnaceData.get(2) + 1); //Increase cook time
                     if (furnaceData.get(2) == furnaceData.get(3)) { //If finished
                         furnaceData.set(2, 0);
-                        furnaceData.set(3, this.func_214005_h());
+                        furnaceData.set(3, this.getCookTime());
                         this.finishCooking(irecipe);
                         dirty = true;
                     }

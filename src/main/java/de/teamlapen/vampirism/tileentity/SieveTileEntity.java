@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.blocks.SieveBlock;
 import de.teamlapen.vampirism.core.ModTiles;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -28,7 +29,7 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
 
 
     private final LazyOptional<IFluidHandler> cap;
-    private FluidTankWithListener tank;
+    private final FluidTankWithListener tank;
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
     private boolean active;
@@ -89,8 +90,8 @@ public class SieveTileEntity extends TileEntity implements ITickableTileEntity, 
     }
 
     @Override
-    public void read(CompoundNBT tag) {
-        super.read(tag);
+    public void func_230337_a_(BlockState state, CompoundNBT tag) {
+        super.func_230337_a_(state, tag);
         tank.readFromNBT(tag);
         cooldownProcess = tag.getInt("cooldown_process");
         cooldownPull = tag.getInt("cooldown_pull");

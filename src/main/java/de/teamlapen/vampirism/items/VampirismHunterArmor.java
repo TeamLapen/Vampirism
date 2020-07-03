@@ -6,8 +6,9 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -46,24 +47,24 @@ public abstract class VampirismHunterArmor extends ArmorItem {
         translation_key = Util.makeTranslationKey("item", new ResourceLocation(REFERENCE.MODID, baseRegName + "_" + equipmentSlotIn.getName()));
     }
 
-    @Override
-    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
-        Multimap<String, AttributeModifier> map = HashMultimap.create();
-        if (slot == this.getEquipmentSlot()) {
-            map.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", this.getDamageReduction(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
-            map.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor toughness", this.getToughness(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
-        }
-        return map;
-    }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack p_77624_1_, @Nullable World p_77624_2_, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
         super.addInformation(p_77624_1_, p_77624_2_, tooltip, p_77624_4_);
         PlayerEntity player = VampirismMod.proxy.getClientPlayer();
         if (player != null && Helper.isVampire(player)) {
-            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_vampires").applyTextStyle(TextFormatting.RED));
+            tooltip.add(new TranslationTextComponent("text.vampirism.poisonous_to_vampires").func_240699_a_(TextFormatting.RED));
         }
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
+        Multimap<Attribute, AttributeModifier> map = HashMultimap.create();
+        if (slot == this.getEquipmentSlot()) {
+            map.put(SharedMonsterAttributes.ARMOR, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", this.getDamageReduction(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
+            map.put(SharedMonsterAttributes.ARMOR_TOUGHNESS, new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor toughness", this.getToughness(slot.getIndex(), stack), AttributeModifier.Operation.ADDITION));
+        }
+        return map;
     }
 
     @Override
@@ -94,6 +95,6 @@ public abstract class VampirismHunterArmor extends ArmorItem {
      * @return The toughness of the given stack
      */
     protected double getToughness(int slot, ItemStack stack) {
-        return this.toughness;
+        return this.getToughness();
     }
 }

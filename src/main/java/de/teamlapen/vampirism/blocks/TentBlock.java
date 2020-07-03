@@ -35,7 +35,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.*;
-import net.minecraftforge.common.extensions.IForgeDimension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,46 +60,41 @@ public class TentBlock extends VampirismBlock {
     }
 
     protected TentBlock(String name) {
-        super(name, Properties.create(Material.WOOL).hardnessAndResistance(0.6f).sound(SoundType.CLOTH));
+        super(name, Properties.create(Material.WOOL).hardnessAndResistance(0.6f).sound(SoundType.CLOTH).notSolid());
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(POSITION, 0).with(BedBlock.OCCUPIED, false));
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
-        return false;
-    }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState blockState, World world, final BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult rayTraceResult) {
+    public ActionResultType onBlockActivated(BlockState blockState, World world, final BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (world.isRemote()) return ActionResultType.SUCCESS;
-        if (HunterPlayer.getOpt(playerEntity).map(VampirismPlayer::getLevel).orElse(0) == 0) {
-            playerEntity.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.cant_use"), true);
+        if (HunterPlayer.getOpt(player).map(VampirismPlayer::getLevel).orElse(0) == 0) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.cant_use"), true);
             return ActionResultType.SUCCESS;
         }
-        IForgeDimension.SleepResult sleepResult = world.getDimension().canSleepAt(playerEntity, blockPos);
-        if (sleepResult != IForgeDimension.SleepResult.BED_EXPLODES) {
-            if (sleepResult == IForgeDimension.SleepResult.DENY) return ActionResultType.SUCCESS;
-            if (blockState.get(BedBlock.OCCUPIED)) {
-                playerEntity.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.occupied"), true);
-                return ActionResultType.SUCCESS;
-            } else {
-                playerEntity.trySleep(blockPos).ifLeft(sleepResult1 -> {
-                    if (sleepResult1 != null) {
-                        playerEntity.sendStatusMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
-                    }
-                }).ifRight(u -> {
-                    this.setBedOccupied(blockState, world, blockPos, null, true);
-                    setTentSleepPosition(playerEntity, blockPos, playerEntity.world.getBlockState(blockPos).get(POSITION), playerEntity.world.getBlockState(blockPos).get(HORIZONTAL_FACING));
-                });
-                return ActionResultType.SUCCESS;
+
+        if (!BedBlock.func_235330_a_(world)) {
+            world.removeBlock(pos, false);
+            BlockPos blockpos = pos.offset(blockState.get(HORIZONTAL_FACING).getOpposite());
+            if (world.getBlockState(blockpos).isIn(this)) {
+                world.removeBlock(blockpos, false);
             }
+
+            world.func_230546_a_(null, DamageSource.func_233546_a_(), null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+            return ActionResultType.SUCCESS;
+        } else if (blockState.get(BedBlock.OCCUPIED)) {
+            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.tent.occupied"), true);
+            return ActionResultType.SUCCESS;
         } else {
-            world.removeBlock(blockPos, false);
-            BlockPos blockPos1 = blockPos.offset(blockState.get(HORIZONTAL_FACING).getOpposite());
-            if (world.getBlockState(blockPos1).getBlock() == this) {
-                world.removeBlock(blockPos1, false);
-            }
-            world.createExplosion(null, DamageSource.netherBedExplosion(), (double) blockPos.getX() + 0.5D, (double) blockPos.getY() + 0.5D, (double) blockPos.getZ() + 0.5D, 5.0F, true, Explosion.Mode.DESTROY);
+            final BlockPos finalPos = pos;
+            player.trySleep(pos).ifLeft(sleepResult1 -> {
+                if (sleepResult1 != null) {
+                    player.sendStatusMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
+                }
+            }).ifRight(u -> {
+                this.setBedOccupied(blockState, world, pos, null, true);
+                setTentSleepPosition(player, pos, player.world.getBlockState(pos).get(POSITION), player.world.getBlockState(pos).get(HORIZONTAL_FACING));
+            });
             return ActionResultType.SUCCESS;
         }
     }
@@ -128,17 +122,16 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public void onLanded(IBlockReader worldIn, Entity entityIn) {
-        if (entityIn.isShiftKeyDown()) {
-            super.onLanded(worldIn, entityIn);
-        } else {
-            Vector3d vec3d = entityIn.getMotion();
-            if (vec3d.y < 0.0D) {
-                double d0 = entityIn instanceof LivingEntity ? 1.0D : 0.8D;
-                entityIn.setMotion(vec3d.x, -vec3d.y * (double)0.33F * d0, vec3d.z);
+    public void onBlockHarvested(World world, @Nonnull BlockPos blockPos, BlockState blockState, @Nonnull PlayerEntity playerEntity) {
+        forWholeTent(blockPos, blockState, (direction, blockPos1) -> {
+            world.destroyBlock(blockPos1, true);
+            if (!world.isRemote) {
+                VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1, blockPos1, Block.getStateId(world.getBlockState(blockPos1))), world.func_234923_W_(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
+                if (!playerEntity.isCreative()) {
+                    spawnDrops(world.getBlockState(blockPos1), world, blockPos1, null, playerEntity, playerEntity.getHeldItemMainhand());
+                }
             }
-        }
-
+        });
     }
 
     @Override
@@ -158,16 +151,17 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public void onBlockHarvested(World world, @Nonnull BlockPos blockPos, BlockState blockState, @Nonnull PlayerEntity playerEntity) {
-        forWholeTent(blockPos,blockState, (direction, blockPos1) -> {
-            world.destroyBlock(blockPos1, true);
-            if (!world.isRemote) {
-                VampirismMod.dispatcher.sendToAllAround(new PlayEventPacket(1, blockPos1, Block.getStateId(world.getBlockState(blockPos1))), world.getDimension().getType(), blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 64);
-                if (!playerEntity.isCreative()) {
-                    spawnDrops(world.getBlockState(blockPos1), world, blockPos1, null, playerEntity, playerEntity.getHeldItemMainhand());
-                }
+    public void onLanded(IBlockReader worldIn, Entity entityIn) {
+        if (entityIn.isSneaking()) {
+            super.onLanded(worldIn, entityIn);
+        } else {
+            Vector3d vec3d = entityIn.getMotion();
+            if (vec3d.y < 0.0D) {
+                double d0 = entityIn instanceof LivingEntity ? 1.0D : 0.8D;
+                entityIn.setMotion(vec3d.x, -vec3d.y * (double) 0.33F * d0, vec3d.z);
             }
-        });
+        }
+
     }
 
     private void forWholeTent(BlockPos blockPos, BlockState blockState, BiConsumer<Direction, BlockPos> consumer){
