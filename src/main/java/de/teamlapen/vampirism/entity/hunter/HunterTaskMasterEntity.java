@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.entity.TaskMasterEntity;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.tileentity.TotemTileEntity;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
@@ -24,13 +25,15 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements TaskMast
     @Override
     protected boolean processInteract(@Nonnull PlayerEntity playerEntity, @Nonnull Hand hand) {
         if (this.world.isRemote) return true;
-        this.processInteraction(playerEntity, Helper.isHunter(playerEntity), Task.Variant.REPEATABLE);
+        if(Helper.isHunter(playerEntity)) {
+            this.processInteraction(playerEntity, Task.Variant.REPEATABLE);
+        }
         return true;
     }
 
     @Override
     public boolean getAlwaysRenderNameTagForRender() {
-        return true;
+        return Helper.isHunter(Minecraft.getInstance().player);
     }
 
     @Override

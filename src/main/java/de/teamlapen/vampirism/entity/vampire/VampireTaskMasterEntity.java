@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
+import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
@@ -10,6 +11,7 @@ import de.teamlapen.vampirism.entity.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.entity.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -29,7 +31,9 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements TaskMa
     @Override
     protected boolean processInteract(@Nonnull PlayerEntity playerEntity, @Nonnull Hand hand) {
         if (this.world.isRemote) return true;
-        this.processInteraction(playerEntity, Helper.isVampire(playerEntity), Task.Variant.REPEATABLE);
+        if(Helper.isVampire(playerEntity)) {
+            this.processInteraction(playerEntity, Task.Variant.REPEATABLE);
+        }
         return true;
     }
 
@@ -40,8 +44,9 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements TaskMa
 
     @Override
     public boolean getAlwaysRenderNameTagForRender() {
-        return true;
+        return Helper.isVampire(Minecraft.getInstance().player);
     }
+
 
     @Override
     protected void registerGoals() {
