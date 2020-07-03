@@ -11,9 +11,9 @@ import de.teamlapen.vampirism.player.tasks.req.EntityTypeRequirement;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.req.StatRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
+import de.teamlapen.vampirism.player.tasks.unlock.ParentUnlocker;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
@@ -22,7 +22,6 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class TaskBuilder {

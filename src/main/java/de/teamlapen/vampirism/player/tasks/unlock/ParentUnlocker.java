@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.player.tasks;
+package de.teamlapen.vampirism.player.tasks.unlock;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
