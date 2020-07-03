@@ -1,25 +1,35 @@
 package de.teamlapen.vampirism.client.gui;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     private static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
 
     private final CompleteButton[] buttons = new CompleteButton[7];
+    private final Map<Task, List<String>> toolTips = Maps.newHashMap();
     private int scrolledTask;
     private boolean mouseOnScroller;
 
@@ -90,7 +100,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 } else {
                     int j1 = k + 2;
                     this.renderTask(task, i - 1, j1);
-                    this.font.drawString(this.font.trimStringToWidth(task.getTranslationKey(), 110), i - 1 + 21, k + 5, 3419941);//(6839882 & 16711422) >> 1 //8453920 //4226832
+                    this.font.drawString(this.font.trimStringToWidth(task.getTranslationKey(), 115), i - 1 + 21, k + 5, 3419941);//(6839882 & 16711422) >> 1 //8453920 //4226832
                     if (mouseX > i - 1 && mouseX < i - 1 + 139 && mouseY > j1 && mouseY < j1 + 21) {
                         tooltips = Triple.of(task, i - 1, j1);
                     }
@@ -98,7 +108,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                     ++i1;
                 }
             }
-            for (CompleteButton button : this.buttons) { //TODO
+            for (CompleteButton button : this.buttons) {
                 button.visible = button.getChosenItem() < this.container.getAvailableTasks().size() && this.container.canCompleteTask(this.container.getAvailableTasks().get(button.getChosenItem() + this.scrolledTask));
             }
             for (CompleteButton button : this.buttons) {
@@ -112,8 +122,37 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     }
 
     private void renderToolTip(Task task, int x, int y) {
-        ITextComponent title = task.getTranslation().applyTextStyle(this.container.getFactionColor());
-        this.renderTooltip(Lists.newArrayList(title.getFormattedText(), task.getDescription().getFormattedText()), x, y);
+        List<String> toolTips = this.toolTips.computeIfAbsent(task, task1 -> Lists.newArrayList());
+        if (toolTips.isEmpty()) {
+            ITextComponent paragraph = new StringTextComponent(" ");
+            toolTips.add(task.getTranslation().applyTextStyle(this.container.getFactionColor()).getFormattedText());
+            List<TaskRequirement<?>> items = task.getRequirements().stream().filter(taskRequirement -> taskRequirement.getType().equals(TaskRequirement.Type.ITEMS)).collect(Collectors.toList());
+            List<TaskRequirement<?>> entities = task.getRequirements().stream().filter(taskRequirement -> taskRequirement.getType().equals(TaskRequirement.Type.ENTITY)).collect(Collectors.toList());
+            List<TaskRequirement<?>> stats = task.getRequirements().stream().filter(taskRequirement -> taskRequirement.getType().equals(TaskRequirement.Type.STATS)).collect(Collectors.toList());
+            if (!items.isEmpty()) {
+                toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.itemreq").appendText(":").getFormattedText());
+                for (TaskRequirement<?> requirement : items) {
+                    toolTips.add(paragraph.shallowCopy().appendSibling(((Item) requirement.getStat()).getName()).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
+                }
+            }
+            if (!entities.isEmpty()) {
+                toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.entityreq").appendText(":").getFormattedText());
+                for (TaskRequirement<?> requirement : entities) {
+                    toolTips.add(paragraph.shallowCopy().appendSibling(((EntityType<?>) requirement.getStat()).getName()).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
+                }
+            }
+            if (!stats.isEmpty()) {
+                toolTips.add(new TranslationTextComponent("gui.vampirism.taskmaster.statreq").appendText(":").getFormattedText());
+                for (TaskRequirement<?> requirement : stats) {
+                    toolTips.add(paragraph.shallowCopy().appendSibling(new TranslationTextComponent("stat." + requirement.getStat().toString().replace(':', '.'))).appendSibling(paragraph.shallowCopy()).appendSibling(new StringTextComponent("" + requirement.getAmount())).getFormattedText());
+                }
+            }
+            if (task.useDescription()) {
+                toolTips.add(task.getDescription().getFormattedText());
+            }
+
+        }
+        this.renderTooltip(toolTips, x, y);
     }
 
     private void renderTask(Task task, int x, int y) {

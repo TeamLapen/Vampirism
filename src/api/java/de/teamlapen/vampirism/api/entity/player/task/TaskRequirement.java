@@ -1,19 +1,19 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
-public class TaskRequirement {
+import javax.annotation.Nonnull;
 
-    private final Type type;
+public interface TaskRequirement<T> {
 
-    public TaskRequirement(Type type) {
-        this.type = type;
-    }
+    @Nonnull
+    Type getType();
 
-    public Type getType() {
-        return type;
-    }
+    @Nonnull
+    T getStat();
 
-    public enum Type {
-        STATS, ITEMS
+    int getAmount();
+
+    enum Type {
+        STATS, ITEMS, ENTITY, BOOLEAN
     }
 
 }

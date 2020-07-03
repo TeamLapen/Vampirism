@@ -1,21 +1,24 @@
 package de.teamlapen.vampirism.player;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.task.*;
+import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskFinishedPacket;
+import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.stats.Stat;
-import net.minecraft.stats.StatType;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -26,9 +29,9 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TaskManager implements ITaskManager {
@@ -36,9 +39,10 @@ public class TaskManager implements ITaskManager {
 
     private final @Nonnull PlayerEntity player;
     private final @Nonnull IPlayableFaction<?> faction;
-    private final @Nonnull List<Task> completedTasks = Lists.newArrayList();
-    private final @Nonnull List<Task> availableTasks = Lists.newArrayList();
-    private final @Nonnull Map<Task, Map<Stat<?>, Integer>> stats = Maps.newHashMap();
+    private final @Nonnull Set<Task> completedTasks = Sets.newHashSet();
+    private final @Nonnull Set<Task> availableTasks = Sets.newHashSet();
+    private final @Nonnull Map<Task, Map<ResourceLocation, Integer>> stats = Maps.newHashMap();
+    private final @Nonnull Map<Task, Map<EntityType<?>, Integer>> entityStats = Maps.newHashMap();
     private boolean init = true;
 
     public TaskManager(@Nonnull PlayerEntity player, @Nonnull IPlayableFaction<?> faction) {
@@ -48,8 +52,8 @@ public class TaskManager implements ITaskManager {
     }
 
     @Nonnull
-    public static List<Task> getTasks(PlayerEntity player, NonNullFunction<? super ITaskManager, List<Task>> mapper) {
-        return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(mapper).orElse(ImmutableList.of());
+    public static Set<Task> getTasks(PlayerEntity player, NonNullFunction<? super ITaskManager, Set<Task>> mapper) {
+        return FactionPlayerHandler.getOpt(player).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(mapper).orElse(ImmutableSet.of());
     }
 
     /**
@@ -78,22 +82,23 @@ public class TaskManager implements ITaskManager {
         if (!(this.faction.equals(task.getFaction()) || task.getFaction() == null)) return false;
         this.completedTasks.add(task);
         this.getAvailableTasks().remove(task);
+        this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task1 -> task1.requireParent() && task == task1.getParentTask()).collect(Collectors.toList()));
+        this.updateStats();
         return true;
     }
 
     @Override
     public void removeRequirements(@Nonnull Task task) {
-        for (TaskRequirement requirement : task.getRequirements()) {
+        for (TaskRequirement<?> requirement : task.getRequirements()) {
             if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
-                ItemStack stack = ((ItemRequirement) requirement).getItemRequirement();
-                this.player.inventory.clearMatchingItems(itemStack -> itemStack.isItemEqual(stack), stack.getCount());
+                this.player.inventory.clearMatchingItems(itemStack -> itemStack.getItem() == requirement.getStat(), requirement.getAmount());
             }
         }
     }
 
     @Nonnull
     @Override
-    public List<Task> getCompletedTasks() {
+    public Set<Task> getCompletedTasks() {
         return completedTasks;
     }
 
@@ -115,17 +120,17 @@ public class TaskManager implements ITaskManager {
      */
     @Nonnull
     @Override
-    public List<Task> getAvailableTasks() {
+    public Set<Task> getAvailableTasks() {
         if (this.init) {
             this.init = false;
-            this.updateKillStats();
+            this.updateStats();
         }
         return this.availableTasks;
     }
 
     @Nonnull
-    public List<Task> getCompletableTasks() {
-        return this.getAvailableTasks().stream().filter(this::canCompleteTask).collect(Collectors.toList());
+    public Set<Task> getCompletableTasks() {
+        return this.getAvailableTasks().stream().filter(this::canCompleteTask).collect(Collectors.toSet());
     }
 
     @Override
@@ -136,17 +141,28 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public boolean canCompleteTask(Task task) {
-        for (TaskRequirement requirement : task.getRequirements()) {
-            if (requirement.getType().equals(TaskRequirement.Type.STATS)) {
-                if (this.player.getEntityWorld().isRemote()) return false;
-                int amount = ((StatRequirement<?>) requirement).getAmount();
-                if (((ServerPlayerEntity) this.player).getStats().getValue(((StatRequirement<?>) requirement).getStat()) < stats.get(task).get(((StatRequirement<?>) requirement).getStat()) + amount)
+        for (TaskRequirement<?> requirement : task.getRequirements()) {
+            if (task.requireParent() && !this.completedTasks.contains(task.getParentTask())) return false;
+            switch (requirement.getType()) {
+                case STATS:
+                    if (this.player.getEntityWorld().isRemote()) return false;
+                    if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM, (ResourceLocation) requirement.getStat()) < this.stats.get(task).get(requirement.getStat()) + requirement.getAmount())
+                        return false;
+                    continue;
+                case ENTITY:
+                    if (this.player.getEntityWorld().isRemote()) return false;
+                    if (((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED, (EntityType<?>) requirement.getStat()) < this.entityStats.get(task).get(requirement.getStat()) + requirement.getAmount())
+                        return false;
+                    continue;
+                case ITEMS:
+                    ItemStack stack = ((ItemRequirement) requirement).getItemStack();
+                    if (this.player.inventory.count(stack.getItem()) < stack.getCount()) return false;
+                    continue;
+                case BOOLEAN:
+                    if (!(Boolean) requirement.getStat()) return false;
+                    continue;
+                default:
                     return false;
-            } else if (requirement.getType().equals(TaskRequirement.Type.ITEMS)) {
-                ItemStack stack = ((ItemRequirement) requirement).getItemRequirement();
-                if (this.player.inventory.count(stack.getItem()) < stack.getCount()) return false;
-            } else {
-                return false;
             }
         }
         return true;
@@ -155,33 +171,35 @@ public class TaskManager implements ITaskManager {
     @Override
     public void reset() {
         this.completedTasks.clear();
-        this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task -> faction.equals(task.getFaction()) || task.getFaction() == null).collect(Collectors.toList()));
+        this.availableTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(task -> (faction.equals(task.getFaction()) || task.getFaction() == null) && !task.requireParent()).collect(Collectors.toList()));
         this.stats.clear();
     }
 
     /**
-     * cannot be called in constructor, because player is not constructed jet
+     * cannot be called in constructor, because player is not constructed yet
      */
-    private void updateKillStats() {
+    private void updateStats() {
         if (player.getEntityWorld().isRemote()) return;
         for (Task task : this.availableTasks) {
-            if (this.stats.containsKey(task)) continue;
-            Map<Stat<?>, Integer> stats = null;
-            for (TaskRequirement requirement : task.getRequirements()) {
-                if (!requirement.getType().equals(TaskRequirement.Type.STATS)) continue;
-                if (stats == null) {
-                    stats = Maps.newHashMap();
+            for (TaskRequirement<?> requirement : task.getRequirements()) {
+                if (this.stats.containsKey(task) || this.entityStats.containsKey(task)) continue;
+                switch (requirement.getType()) {
+                    case STATS:
+                        this.stats.computeIfAbsent(task, task1 -> Maps.newHashMap()).put((ResourceLocation) requirement.getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.CUSTOM, (ResourceLocation) requirement.getStat()));
+                        break;
+                    case ENTITY:
+                        this.entityStats.computeIfAbsent(task, task1 -> Maps.newHashMap()).put((EntityType<?>) requirement.getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(Stats.ENTITY_KILLED, (EntityType<?>) requirement.getStat()));
+                        break;
+                    default:
                 }
-                stats.put(((StatRequirement<?>) requirement).getStat(), ((ServerPlayerEntity) this.player).getStats().getValue(((StatRequirement<?>) requirement).getStat()));
-            }
-            if (stats != null) {
-                this.stats.put(task, stats);
             }
         }
+        this.stats.entrySet().removeIf(entry -> !this.availableTasks.contains(entry.getKey()));
+        this.entityStats.entrySet().removeIf(entry -> !this.availableTasks.contains(entry.getKey()));
     }
 
     public void writeNBT(CompoundNBT compoundNBT) {
-        //tasks
+        //completed tasks
         if (!this.completedTasks.isEmpty()) {
             CompoundNBT tasks = new CompoundNBT();
             this.completedTasks.forEach(task -> tasks.putBoolean(task.getRegistryName().toString(), true));
@@ -192,23 +210,25 @@ public class TaskManager implements ITaskManager {
             CompoundNBT stats = new CompoundNBT();
             this.stats.forEach((task, requirementStats) -> {
                 CompoundNBT statsNBT = new CompoundNBT();
-                for (int i = 0; i < task.getRequirements().size(); i++) {
-                    if (task.getRequirements().get(i).getType() == TaskRequirement.Type.ITEMS) return;
-                    StatRequirement<?> requirement = ((StatRequirement<?>) task.getRequirements().get(i));
-                    CompoundNBT statNBT = new CompoundNBT();
-                    statNBT.putString("statType", requirement.getStatsType().getRegistryName().toString());
-                    statNBT.putString("type", requirement.getStatType().getRegistryName().toString());
-                    statNBT.putInt("amount", this.stats.get(task).get(requirement.getStat()));
-                    statsNBT.put("requirement" + i, statNBT);
-                }
+                requirementStats.forEach((resourceLocation, amount) -> statsNBT.putInt(resourceLocation.toString(), amount));
                 stats.put(task.getRegistryName().toString(), statsNBT);
             });
             compoundNBT.put("stats", stats);
         }
+        //entities
+        if (!this.entityStats.isEmpty()) {
+            CompoundNBT entity = new CompoundNBT();
+            this.entityStats.forEach((task, requirementStats) -> {
+                CompoundNBT statsNBT = new CompoundNBT();
+                requirementStats.forEach((entityType, amount) -> statsNBT.putInt(entityType.getRegistryName().toString(), amount));
+                entity.put(task.getRegistryName().toString(), statsNBT);
+            });
+            compoundNBT.put("entities", entity);
+        }
     }
 
     public <T> void readNBT(CompoundNBT compoundNBT) {
-        //tasks
+        //completed tasks
         if (compoundNBT.contains("tasks")) {
             compoundNBT.getCompound("tasks").keySet().forEach(taskId -> {
                 Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
@@ -224,19 +244,18 @@ public class TaskManager implements ITaskManager {
                 Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
                 if (task != null) {
                     this.stats.put(task, Maps.newHashMap());
-                    CompoundNBT statsNBT = tasks.getCompound(taskId);
-                    statsNBT.keySet().forEach(requirement -> {
-                        CompoundNBT statNBT = statsNBT.getCompound(requirement);
-                        //noinspection unchecked
-                        StatType<T> statType = (StatType<T>) ForgeRegistries.STAT_TYPES.getValue(new ResourceLocation(statNBT.getString("statType")));
-                        if (statType == null) return;
-                        Optional<T> type = statType.getRegistry().getValue(new ResourceLocation(statNBT.getString("type")));
-                        if (type.isPresent()) {
-                            Stat<T> stat = statType.get(type.get());
-                            int amount = statNBT.getInt("amount");
-                            this.stats.get(task).put(stat, amount);
-                        }
-                    });
+                    tasks.getCompound(taskId).keySet().forEach(stat -> this.stats.computeIfAbsent(task, task1 -> Maps.newHashMap()).put(new ResourceLocation(stat), tasks.getCompound(taskId).getInt(stat)));
+                }
+            });
+        }
+        //entities
+        if (compoundNBT.contains("entities")) {
+            CompoundNBT tasks = compoundNBT.getCompound("entities");
+            tasks.keySet().forEach(taskId -> {
+                Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
+                if (task != null) {
+                    this.entityStats.put(task, Maps.newHashMap());
+                    tasks.getCompound(taskId).keySet().forEach(stat -> this.entityStats.computeIfAbsent(task, task1 -> Maps.newHashMap()).put(ForgeRegistries.ENTITIES.getValue(new ResourceLocation(stat)), tasks.getCompound(taskId).getInt(stat)));
                 }
             });
         }
