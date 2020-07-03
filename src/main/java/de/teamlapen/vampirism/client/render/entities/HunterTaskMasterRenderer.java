@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.client.render.entities;
 
+import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import de.teamlapen.vampirism.client.model.BasicHunterModel;
 import de.teamlapen.vampirism.entity.hunter.HunterTaskMasterEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.BipedRenderer;
@@ -15,20 +17,34 @@ import javax.annotation.Nonnull;
  * Render the advanced vampire with overlays
  */
 @OnlyIn(Dist.CLIENT)
-public class HunterTaskMasterRenderer extends BipedRenderer<HunterTaskMasterEntity, BipedModel<HunterTaskMasterEntity>> {
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base1.png");
+public class HunterTaskMasterRenderer extends BipedRenderer<HunterTaskMasterEntity, BasicHunterModel<HunterTaskMasterEntity>> {
+    private final ResourceLocation[] textures = {
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base2.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base3.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base4.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_base5.png")
+    };
+    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/hunter_extra.png");
 
     public HunterTaskMasterRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new BipedModel<>(0F, 0F, 64, 64), 0.5F);
+        super(renderManagerIn, new BasicHunterModel<>(), 0.5F);
     }
 
     @Override
     protected ResourceLocation getEntityTexture(@Nonnull HunterTaskMasterEntity entity) {
-        return texture;
+        return textures[entity.getEntityId() % textures.length];
     }
 
     @Override
-    protected void renderLivingLabel(HunterTaskMasterEntity entityIn, @Nonnull String str, double x, double y, double z, int maxDistance) {
+    protected void renderModel(@Nonnull HunterTaskMasterEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
+        getEntityModel().setSkipCloakOnce();
+        super.renderModel(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+        bindTexture(textureExtra);
+        getEntityModel().renderHat(scaleFactor, entitylivingbaseIn.getEntityId() % 3);
+    }
+
+    @Override
+    protected void renderLivingLabel(@Nonnull HunterTaskMasterEntity entityIn, @Nonnull String str, double x, double y, double z, int maxDistance) {
         super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 4);
     }
 
