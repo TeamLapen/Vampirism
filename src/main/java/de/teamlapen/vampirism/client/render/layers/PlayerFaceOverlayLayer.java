@@ -42,7 +42,7 @@ public class PlayerFaceOverlayLayer<T extends MobEntity & IPlayerFace, M extends
             }
 
         }
-        IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(loc));
+        IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.getEntityCutoutNoCull(loc));
         this.getEntityModel().bipedHead.showModel = true;
         this.getEntityModel().bipedHeadwear.showModel = true;
         this.getEntityModel().bipedHead.render(matrixStackIn, vertexBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);

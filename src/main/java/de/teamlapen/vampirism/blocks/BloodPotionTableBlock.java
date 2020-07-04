@@ -42,7 +42,7 @@ public class BloodPotionTableBlock extends VampirismBlock {
     }
 
     public BloodPotionTableBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(1f));
+        super(regName, Properties.create(Material.IRON).hardnessAndResistance(1f).notSolid());
     }
 
 
@@ -51,10 +51,6 @@ public class BloodPotionTableBlock extends VampirismBlock {
         return shape;
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {

@@ -38,9 +38,9 @@ public class VampireFangItem extends VampirismItem {
                     playerIn.addPotionEffect(new EffectInstance(ModEffects.poison, 60));
                 } else {
                     if (Helper.isVampire(playerIn)) {
-                        playerIn.sendMessage(new TranslationTextComponent("text.vampirism.already_vampire"));
+                        playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.already_vampire"), true);
                     } else {
-                        playerIn.sendMessage(new TranslationTextComponent("text.vampirism.immune_to").appendSibling(new TranslationTextComponent(ModEffects.sanguinare.getName())));
+                        playerIn.sendStatusMessage(new TranslationTextComponent("text.vampirism.immune_to").func_230529_a_(new TranslationTextComponent(ModEffects.sanguinare.getName())), true);
                     }
                 }
                 stack.shrink(1);

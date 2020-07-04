@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.modcompat.guide.pages;
 
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxanier.guideapi.api.impl.Book;
 import de.maxanier.guideapi.api.impl.Page;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -25,14 +27,14 @@ import java.util.List;
  * @author Maxanier
  */
 public class PageTable extends Page {
-    private List<String[]> lines;
+    private final List<String[]> lines;
     /**
      * Max char count in one cell for each column
      */
-    private int[] width;
-    private String headline;
+    private final int[] width;
+    private final ITextComponent headline;
 
-    private PageTable(List<String[]> lines, int[] width, String headline) {
+    private PageTable(List<String[]> lines, int[] width, ITextComponent headline) {
         this.lines = lines;
         this.width = width;
         this.headline = headline;
@@ -41,12 +43,12 @@ public class PageTable extends Page {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
-        float charWidth = fontRendererObj.getCharWidth('W');
+    public void draw(MatrixStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
+        float charWidth = fontRendererObj.getStringWidth("W");
         int y = guiTop + 12;
         int x = guiLeft + 39;
         if (headline != null) {
-            fontRendererObj.drawString("§l" + headline, x, y, 0);
+            fontRendererObj.func_238421_b_(stack, "§l" + headline, x, y, 0);
             y += fontRendererObj.FONT_HEIGHT;
         }
         drawLine(x, y + fontRendererObj.FONT_HEIGHT, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.FONT_HEIGHT, guiBase.publicZLevel);
@@ -56,7 +58,7 @@ public class PageTable extends Page {
                 int mw = (int) (width[i] * charWidth);
                 int aw = fontRendererObj.getStringWidth(l[i]);
                 int dw = (mw - aw) / 2;
-                fontRendererObj.drawString(l[i], x + dw, y, 0);
+                fontRendererObj.func_238421_b_(stack, l[i], x + dw, y, 0);
                 x += mw;
             }
             y += fontRendererObj.FONT_HEIGHT;
@@ -87,7 +89,7 @@ public class PageTable extends Page {
     public static class Builder {
         int columns;
         List<String[]> lines;
-        String headline;
+        ITextComponent headline;
 
         public Builder(int columns) {
             this.columns = columns;
@@ -127,7 +129,7 @@ public class PageTable extends Page {
             return new PageTable(lines, width, headline);
         }
 
-        public Builder setHeadline(String s) {
+        public Builder setHeadline(ITextComponent s) {
             headline = s;
             return this;
         }

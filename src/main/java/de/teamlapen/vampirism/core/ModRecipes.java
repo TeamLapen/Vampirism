@@ -61,7 +61,7 @@ public class ModRecipes {
     }
 
     public static void registerLiquidColor(ITag<Item> items, int color) {
-        items.getAllElements().forEach(item -> liquidColors.put(item, color));
+        items.func_230236_b_/*getAllElements*/().forEach(item -> liquidColors.put(item, color));
     }
 
 

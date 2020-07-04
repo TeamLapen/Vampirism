@@ -4,10 +4,11 @@ import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import net.minecraft.command.CommandSource;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
@@ -95,7 +96,7 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
 
     public static class Provider implements IGarlicChunkHandler.Provider {
 
-        private final HashMap<DimensionType, IGarlicChunkHandler> handlers = Maps.newHashMap();
+        private final HashMap<RegistryKey<World>, IGarlicChunkHandler> handlers = Maps.newHashMap();
 
         @Override
         public void clear() {
@@ -108,7 +109,7 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         @Nonnull
         @Override
         public IGarlicChunkHandler getHandler(IWorld world) {
-            return handlers.computeIfAbsent(world.getDimension().getType(), k -> new GarlicChunkHandler());
+            return handlers.computeIfAbsent(world.getWorld().func_234923_W_(), k -> new GarlicChunkHandler());
         }
     }
 

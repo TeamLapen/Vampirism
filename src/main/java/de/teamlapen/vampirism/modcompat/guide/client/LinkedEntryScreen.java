@@ -23,14 +23,14 @@ public class LinkedEntryScreen extends EntryScreen {
     }
 
     @Override
-    public void init() {
-        super.init();
-        this.buttons.remove(this.buttonBack);
-        this.children.remove(this.buttonBack);
-        this.addButton(this.buttonBack = new ButtonBack(this.guiLeft + this.xSize / 6, this.guiTop, (btn) -> {
+    public void func_231160_c_() {
+        super.func_231160_c_();
+        this.field_230710_m_.remove(this.buttonBack);
+        this.field_230705_e_.remove(this.buttonBack);
+        this.func_230480_a_(this.buttonBack = new ButtonBack(this.guiLeft + this.xSize / 6, this.guiTop, (btn) -> {
             EntryScreen e = new EntryScreen(book, category, from, player, bookStack);
             e.pageNumber = fromPage;
-            this.minecraft.displayGuiScreen(e);
+            this.field_230706_i_.displayGuiScreen(e);
         }, this));
     }
 }

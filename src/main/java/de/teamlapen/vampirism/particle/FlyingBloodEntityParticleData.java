@@ -2,6 +2,9 @@ package de.teamlapen.vampirism.particle;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
@@ -10,6 +13,16 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class FlyingBloodEntityParticleData implements IParticleData {
+
+    /**
+     * CODEC appears to be an alternative to De/Serializer. Not sure why both exist
+     */
+    public static final Codec<FlyingBloodEntityParticleData> CODEC = RecordCodecBuilder.create((p_239803_0_) -> p_239803_0_
+            .group(
+                    Codec.INT.fieldOf("e").forGetter((p_239807_0_) -> p_239807_0_.entity),
+                    Codec.BOOL.fieldOf("d").forGetter((p_239806_0_) -> p_239806_0_.direct))
+            .apply(p_239803_0_, (e, d) -> new FlyingBloodEntityParticleData(ModParticles.flying_blood_entity, e, d)));
+
     public static final IParticleData.IDeserializer<FlyingBloodEntityParticleData> DESERIALIZER = new IParticleData.IDeserializer<FlyingBloodEntityParticleData>() {
         public FlyingBloodEntityParticleData deserialize(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             return new FlyingBloodEntityParticleData(particleTypeIn, reader.readInt(), reader.readBoolean());
@@ -21,7 +34,7 @@ public class FlyingBloodEntityParticleData implements IParticleData {
     };
     private final int entity;
     private final boolean direct;
-    private ParticleType<FlyingBloodEntityParticleData> particleType;
+    private final ParticleType<FlyingBloodEntityParticleData> particleType;
 
     public FlyingBloodEntityParticleData(ParticleType<FlyingBloodEntityParticleData> particleTypeIn, int entityID, boolean directIn) {
         this.particleType = particleTypeIn;

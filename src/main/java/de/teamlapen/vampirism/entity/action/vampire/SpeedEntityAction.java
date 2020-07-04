@@ -27,7 +27,7 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
 
     @Override
     public void deactivate(T entity) {
-        entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(UUIDS);
+        entity.getRepresentingEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(UUIDS);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class SpeedEntityAction<T extends CreatureEntity & IEntityActionUser> ext
 
     @Override
     public void onUpdate(T entity, int duration) {
-        if (entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(UUIDS) == null) {
-            entity.getRepresentingEntity().getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(UUIDS, "speedaction", VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
+        if (entity.getRepresentingEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getModifier(UUIDS) == null) {
+            entity.getRepresentingEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).func_233769_c_(new AttributeModifier(UUIDS, "speedaction", VampirismConfig.BALANCE.eaSpeedAmount.get(), AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         if (duration % 5 == 0) {
             double maxDist = 0.5D;

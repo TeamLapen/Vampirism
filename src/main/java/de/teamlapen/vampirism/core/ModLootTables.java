@@ -4,7 +4,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.loot.*;
+import net.minecraft.loot.LootEntry;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.RandomValueRange;
+import net.minecraft.loot.TableLootEntry;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -47,7 +50,7 @@ public class ModLootTables {
 
     static ResourceLocation register(@Nonnull ResourceLocation resourceLocation) {
         LOOT_TABLES.add(resourceLocation);
-        return LootTables.register(resourceLocation);
+        return resourceLocation;
     }
 
     public static Set<ResourceLocation> getLootTables() {

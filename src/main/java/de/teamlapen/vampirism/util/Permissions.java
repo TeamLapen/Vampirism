@@ -1,10 +1,9 @@
 package de.teamlapen.vampirism.util;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.core.ModRegistries;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -26,7 +25,7 @@ public class Permissions {
         PermissionAPI.registerNode(FEED_PLAYER, DefaultPermissionLevel.ALL, "Allow feeding from players");
         PermissionAPI.registerNode(INFECT_PLAYER, DefaultPermissionLevel.ALL, "Allow players to infect other players");
         for (IAction action : ModRegistries.ACTIONS.getValues()) {
-            PermissionAPI.registerNode(ACTION_PREFIX + action.getRegistryName().getNamespace() + "." + action.getRegistryName().getPath(), DefaultPermissionLevel.ALL, new StringTextComponent("Use action ").appendSibling(new TranslationTextComponent(action.getTranslationKey())).getFormattedText());
+            PermissionAPI.registerNode(ACTION_PREFIX + action.getRegistryName().getNamespace() + "." + action.getRegistryName().getPath(), DefaultPermissionLevel.ALL, "Use action " + UtilLib.translate(action.getTranslationKey()));
         }
     }
 

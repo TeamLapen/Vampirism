@@ -30,7 +30,7 @@ public class FirePlaceBlock extends VampirismBlock {
 
 
     public FirePlaceBlock() {
-        super(regName, Properties.create(Material.WOOD).lightValue(15).hardnessAndResistance(1));
+        super(regName, Properties.create(Material.WOOD).func_235838_a_(s -> 15).hardnessAndResistance(1).notSolid());
 
     }
 
@@ -39,12 +39,6 @@ public class FirePlaceBlock extends VampirismBlock {
     public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
         return shape;
     }
-
-    @Override
-    public boolean isNormalCube(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_) {
-        return false;
-    }
-
 
 
     @Override

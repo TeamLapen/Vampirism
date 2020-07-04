@@ -12,6 +12,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Matrix3f;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -68,15 +71,15 @@ public class AltarInfusionTESR extends VampirismTESR<AltarInfusionTileEntity> {
         matrixStack.push();
         matrixStack.rotate(Vector3f.YP.rotation((float) (-Math.atan2(dz, dx)) - ((float) Math.PI / 2F)));
         matrixStack.rotate(Vector3f.XP.rotation((float) (-Math.atan2(distFlat, dy)) - ((float) Math.PI / 2F)));
-        IVertexBuilder ivertexbuilder = renderTypeBuffer.getBuffer(RenderType.entitySmoothCutout(beacon ? beaconBeamTexture : enderDragonCrystalBeamTextures));
+        IVertexBuilder ivertexbuilder = renderTypeBuffer.getBuffer(RenderType.getEntitySmoothCutout(beacon ? beaconBeamTexture : enderDragonCrystalBeamTextures));
         float f2 = partialTicks * 0.05f;
         float f3 = dist / 32.0F + partialTicks * 0.05f;
         float f4 = 0.0F;
         float f5 = 0.2F;
         float f6 = 0.0F;
         MatrixStack.Entry matrixstack$entry = matrixStack.getLast();
-        Matrix4f matrix4f = matrixstack$entry.getPositionMatrix();
-        Matrix3f matrix3f = matrixstack$entry.getNormalMatrix();
+        Matrix4f matrix4f = matrixstack$entry.getMatrix();
+        Matrix3f matrix3f = matrixstack$entry.getNormal();
 
         for (int j = 1; j <= 8; ++j) {
             float f7 = MathHelper.sin((float) j * ((float) Math.PI * 2F) / 8.0F) * 0.2F;

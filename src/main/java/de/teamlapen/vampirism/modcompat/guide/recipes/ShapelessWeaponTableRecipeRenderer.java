@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.modcompat.guide.recipes;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxanier.guideapi.api.impl.Book;
 import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
 import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
@@ -21,8 +22,8 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void draw(Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, FontRenderer fontRenderer, IngredientCycler ingredientCycler) {
-        super.draw(book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
+    public void draw(MatrixStack stack, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen baseScreen, FontRenderer fontRenderer, IngredientCycler ingredientCycler) {
+        super.draw(stack, book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 int i = 3 * y + x;
@@ -30,10 +31,10 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
                     int stackX = (x + 1) * 17 + (guiLeft + 49);
                     int stackY = (y + 1) * 17 + (guiTop + 30);
                     Ingredient ingredient = recipe.getIngredients().get(i);
-                    ingredientCycler.getCycledIngredientStack(ingredient, i).ifPresent(stack -> {
-                        GuiHelper.drawItemStack(stack, stackX, stackY);
+                    ingredientCycler.getCycledIngredientStack(ingredient, i).ifPresent(itemStack -> {
+                        GuiHelper.drawItemStack(stack, itemStack, stackX, stackY);
                         if (GuiHelper.isMouseBetween(mouseX, mouseY, stackX, stackY, 15, 15)) {
-                            tooltips = GuiHelper.getTooltip(stack);
+                            tooltips = GuiHelper.getTooltip(itemStack);
                         }
                     });
                 }

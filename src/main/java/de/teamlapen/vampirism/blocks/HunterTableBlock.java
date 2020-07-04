@@ -57,7 +57,7 @@ public class HunterTableBlock extends VampirismBlock {
     }
 
     public HunterTableBlock() {
-        super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.5f));
+        super(name, Properties.create(Material.WOOD).hardnessAndResistance(0.5f).notSolid());
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
     }
 
@@ -87,11 +87,6 @@ public class HunterTableBlock extends VampirismBlock {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
     }
 
     @Override

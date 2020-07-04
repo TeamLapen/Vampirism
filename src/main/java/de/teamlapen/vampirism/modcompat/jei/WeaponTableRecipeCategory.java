@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
@@ -18,6 +19,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -42,7 +45,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
     }
 
     @Override
-    public void draw(IWeaponTableRecipe recipe, double mouseX, double mouseY) {
+    public void draw(IWeaponTableRecipe recipe, MatrixStack stack, double mouseX, double mouseY) {
 
         int x = 2;
         int y = 80;
@@ -51,9 +54,9 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
             minecraft.getItemRenderer().renderItemIntoGUI(lavaStack, 83, 13);
         }
         if (recipe.getRequiredLevel() > 1) {
-            String level = UtilLib.translate("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+            ITextComponent level = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
 
-            minecraft.fontRenderer.drawString(level, x, y, Color.gray.getRGB());
+            minecraft.fontRenderer.func_238422_b_(stack, level, x, y, Color.gray.getRGB());
             y += minecraft.fontRenderer.FONT_HEIGHT + 2;
         }
         ISkill[] requiredSkills = recipe.getRequiredSkills();
@@ -63,8 +66,8 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<IWeaponTableRe
                 skills.append(UtilLib.translate(skill.getTranslationKey())).append(" ");
 
             }
-            String skillText = UtilLib.translate("gui.vampirism.hunter_weapon_table.skill", skills.toString());
-            minecraft.fontRenderer.drawSplitString(skillText, x, y, 132, Color.gray.getRGB());
+            ITextComponent skillText = new TranslationTextComponent("gui.vampirism.hunter_weapon_table.skill", skills.toString());
+            minecraft.fontRenderer.func_238418_a_(skillText, x, y, 132, Color.gray.getRGB());
 
 
         }

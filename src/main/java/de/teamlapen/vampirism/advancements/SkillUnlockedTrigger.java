@@ -1,15 +1,16 @@
 package de.teamlapen.vampirism.advancements;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.util.REFERENCE;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.criterion.CriterionInstance;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.loot.ConditionArrayParser;
+import net.minecraft.loot.ConditionArraySerializer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 
@@ -43,8 +44,8 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
     }
 
     @Override
-    public Instance deserializeInstance(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext) {
-        return new Instance(new ResourceLocation(JSONUtils.getString(jsonObject, "skill")));
+    public Instance func_230307_a_(JsonObject json, ConditionArrayParser parser) {
+        return new Instance(new ResourceLocation(JSONUtils.getString(json, "skill")));
     }
 
     static class Instance extends CriterionInstance {
@@ -52,12 +53,12 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
         private final ResourceLocation skillId;
 
         Instance(@Nonnull ISkill skill) {
-            super(ID);
+            super(ID, EntityPredicate.AndPredicate.field_234582_a_);
             this.skillId = skill.getRegistryName();
         }
 
         Instance(@Nonnull ResourceLocation skillId) {
-            super(ID);
+            super(ID, EntityPredicate.AndPredicate.field_234582_a_);
             this.skillId = skillId;
         }
 
@@ -66,8 +67,8 @@ public class SkillUnlockedTrigger extends AbstractCriterionTrigger<SkillUnlocked
         }
 
         @Override
-        public JsonElement serialize() {
-            JsonObject jsonObject = new JsonObject();
+        public JsonObject func_230240_a_(ConditionArraySerializer serializer) {
+            JsonObject jsonObject = super.func_230240_a_(serializer);
             jsonObject.addProperty("skill", skillId.toString());
             return jsonObject;
         }

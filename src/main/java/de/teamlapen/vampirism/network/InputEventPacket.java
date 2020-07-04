@@ -112,16 +112,16 @@ public class InputEventPacket implements IMessage {
                             IAction.PERM r = actionHandler.toggleAction(action);
                             switch (r) {
                                 case NOT_UNLOCKED:
-                                    player.sendMessage(new TranslationTextComponent("text.vampirism.action.not_unlocked"));
+                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.action.not_unlocked"), true);
                                     break;
                                 case DISABLED:
-                                    player.sendMessage(new TranslationTextComponent("text.vampirism.action.deactivated_by_serveradmin"));
+                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.action.deactivated_by_serveradmin"), false);
                                     break;
                                 case COOLDOWN:
-                                    player.sendMessage(new TranslationTextComponent("text.vampirism.action.cooldown_not_over"));
+                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.action.cooldown_not_over"), true);
                                     break;
                                 case DISALLOWED:
-                                    player.sendMessage(new TranslationTextComponent("text.vampirism.action.disallowed"));
+                                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.action.disallowed"), true);
                                 default://Everything alright
                             }
                         } else {
@@ -179,7 +179,7 @@ public class InputEventPacket implements IMessage {
                         if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
                             HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, factionPlayer.getRepresentingPlayer(), false);
                         }
-                        player.sendMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"));
+                        player.sendStatusMessage(new TranslationTextComponent("text.vampirism.skill.skills_reset"), true);
                     });
                     break;
                 case TRAINERLEVELUP:
@@ -189,7 +189,7 @@ public class InputEventPacket implements IMessage {
                     break;
                 case REVERTBACK:
                     FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
-                    player.sendMessage(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0));
+                    player.sendStatusMessage(new TranslationTextComponent("command.vampirism.base.level.successful", player.getName(), VReference.VAMPIRE_FACTION.getName(), 0), true);
                     LOGGER.debug("Player {} left faction", player);
                     if (!ServerLifecycleHooks.getCurrentServer().isHardcore()) {
                         player.attackEntityFrom(DamageSource.MAGIC, 1000);
@@ -210,13 +210,13 @@ public class InputEventPacket implements IMessage {
                         if (hunter.getLevel() > 0) {
                             if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_portable_crafting)) {
                                 if (!player.world.isRemote()) {
-                                    NetworkHooks.openGui(player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, new BlockPos(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()))), new TranslationTextComponent("container.crafting")), player.getPosition());
+                                    NetworkHooks.openGui(player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new BloodPotionTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, new BlockPos(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()))), new TranslationTextComponent("container.crafting")), player.func_233580_cy_());
                                 }
                             } else {
-                                player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(HunterSkills.blood_potion_portable_crafting.getTranslationKey())));
+                                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_with_skill", new TranslationTextComponent(HunterSkills.blood_potion_portable_crafting.getTranslationKey())), true);
                             }
                         } else {
-                            player.sendMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.HUNTER_FACTION.getName()));
+                            player.sendStatusMessage(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.HUNTER_FACTION.getName()), true);
                         }
                     }
                     break;

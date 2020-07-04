@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ThrowableItemEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -10,11 +11,11 @@ import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -37,15 +38,15 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
         if (!remote) {
             AxisAlignedBB axisalignedbb = entity.getBoundingBox().grow(4.0D, 2.0D, 4.0D);
             List<LivingEntity> list1 = entity.getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
-            LivingEntity thrower = entity.getThrower();
+            @Nullable Entity thrower = entity.func_234616_v_();
 
             if (!list1.isEmpty()) {
                 for (LivingEntity entitylivingbase : list1) {
-                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.getType() == RayTraceResult.Type.ENTITY, thrower);
+                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.getType() == RayTraceResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
                 }
             }
 
-            entity.getEntityWorld().playEvent(2002, new BlockPos(entity), PotionUtils.getPotionColor(Potions.MUNDANE));
+            entity.getEntityWorld().playEvent(2002, entity.func_233580_cy_(), PotionUtils.getPotionColor(Potions.MUNDANE));
         }
 
     }
@@ -64,7 +65,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
             ItemStack throwStack = stack.copy();
             throwStack.setCount(1);
             entityThrowable.setItem(throwStack);
-            entityThrowable.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
+            entityThrowable.shoot(playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
             worldIn.addEntity(entityThrowable);
         }
 

@@ -43,7 +43,7 @@ public class HunterTrainerContainer extends InventoryContainer implements IInven
     }
 
     public HunterTrainerContainer(int id, PlayerInventory playerInventory, @Nullable HunterTrainerEntity trainer) {
-        super(ModContainer.hunter_trainer, id, playerInventory, trainer == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(trainer.world, trainer.getPosition()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
+        super(ModContainer.hunter_trainer, id, playerInventory, trainer == null ? IWorldPosCallable.DUMMY : IWorldPosCallable.of(trainer.world, trainer.func_233580_cy_()), new Inventory(SELECTOR_INFOS.length), SELECTOR_INFOS);
         ((Inventory) this.inventory).addListener(this);
         this.player = playerInventory.player;
         this.addPlayerSlots(playerInventory);

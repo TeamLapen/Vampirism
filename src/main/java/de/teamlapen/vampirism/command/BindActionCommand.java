@@ -33,7 +33,7 @@ public class BindActionCommand extends BasicCommand {
         } else if (number == 2) {
             FactionPlayerHandler.get(asPlayer).setBoundAction2(action, true);
         }
-        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.success", action.getRegistryName() + " (" + new TranslationTextComponent(action.getTranslationKey()).getFormattedText() + ")", number), false);
+        context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.bind_action.success", new TranslationTextComponent(action.getTranslationKey()), number), false);
         return 0;
     }
 

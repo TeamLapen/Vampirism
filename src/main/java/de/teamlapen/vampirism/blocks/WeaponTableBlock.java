@@ -76,7 +76,7 @@ public class WeaponTableBlock extends VampirismBlock {
     }
 
     public WeaponTableBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(3));
+        super(regName, Properties.create(Material.IRON).hardnessAndResistance(3).notSolid());
         this.setDefaultState(this.getStateContainer().getBaseState().with(LAVA, 0).with(FACING, Direction.NORTH));
 
     }
@@ -109,10 +109,6 @@ public class WeaponTableBlock extends VampirismBlock {
         return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
@@ -150,7 +146,7 @@ public class WeaponTableBlock extends VampirismBlock {
                 if (canUse(player) && player instanceof ServerPlayerEntity) {
                     NetworkHooks.openGui((ServerPlayerEntity) player, new SimpleNamedContainerProvider((id, playerInventory, playerIn) -> new WeaponTableContainer(id, playerInventory, IWorldPosCallable.of(playerIn.world, pos)), new TranslationTextComponent("container.crafting")), pos);
                 } else {
-                    player.sendMessage(new TranslationTextComponent("text.vampirism.weapon_table.cannot_use"));
+                    player.sendStatusMessage(new TranslationTextComponent("text.vampirism.weapon_table.cannot_use"), true);
                 }
             }
         }

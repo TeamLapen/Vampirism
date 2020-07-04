@@ -1,14 +1,15 @@
 package de.teamlapen.vampirism.advancements;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.criterion.CriterionInstance;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.loot.ConditionArrayParser;
+import net.minecraft.loot.ConditionArraySerializer;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +35,7 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
 
     @Nonnull
     @Override
-    public Instance deserializeInstance(JsonObject json, @Nonnull JsonDeserializationContext context) {
+    public Instance func_230307_a_(JsonObject json, ConditionArrayParser parser) {
         Action action = Action.NONE;
         if (json.has("action")) {
             String name = json.get("action").getAsString();
@@ -66,7 +67,7 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
         private final Action action;
 
         Instance(@Nonnull Action action) {
-            super(ID);
+            super(ID, EntityPredicate.AndPredicate.field_234582_a_);
             this.action = action;
         }
 
@@ -76,8 +77,8 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
 
         @Nonnull
         @Override
-        public JsonElement serialize() {
-            JsonObject json = new JsonObject();
+        public JsonObject func_230240_a_(ConditionArraySerializer serializer) {
+            JsonObject json = super.func_230240_a_(serializer);
             json.addProperty("action", action.name());
             return json;
         }

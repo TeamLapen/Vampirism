@@ -51,7 +51,7 @@ public class ChurchAltarBlock extends HorizontalBlock {
 
 
     public ChurchAltarBlock() {
-        super(Properties.create(Material.WOOD).hardnessAndResistance(0.5f));
+        super(Properties.create(Material.WOOD).hardnessAndResistance(0.5f).notSolid());
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
         setRegistryName(REFERENCE.MODID, regName);
     }
@@ -71,10 +71,6 @@ public class ChurchAltarBlock extends HorizontalBlock {
         return this.getDefaultState().with(FACING, ctx.getPlacementHorizontalFacing().getOpposite());
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
-        return false;
-    }
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {

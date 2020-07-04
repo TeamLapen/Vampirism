@@ -58,7 +58,7 @@ public class SleepAtHomeNightTask extends Task<LivingEntity> {
             return false;
         } else {
             GlobalPos globalpos = owner.getBrain().getMemory(MemoryModuleType.HOME).get();
-            if (!Objects.equals(worldIn.getDimension().getType(), globalpos.getDimension())) {
+            if (!Objects.equals(worldIn.func_234923_W_(), globalpos.func_239646_a_())) {
                 return false;
             } else {
                 BlockState blockstate = worldIn.getBlockState(globalpos.getPos());

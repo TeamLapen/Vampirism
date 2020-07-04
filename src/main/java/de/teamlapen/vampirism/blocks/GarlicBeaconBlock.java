@@ -46,7 +46,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     private final Type type;
 
     public GarlicBeaconBlock(Type type) {
-        super(regName + "_" + type.getName(), Properties.create(Material.ROCK).hardnessAndResistance(3f).sound(SoundType.STONE));
+        super(regName + "_" + type.getName(), Properties.create(Material.ROCK).hardnessAndResistance(3f).sound(SoundType.STONE).notSolid());
         this.type = type;
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
     }
@@ -55,7 +55,7 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag advanced) {
         if (type == Type.WEAK || type == Type.IMPROVED) {
-            tooltip.add(new TranslationTextComponent(getTranslationKey() + "." + type.getName()).applyTextStyle(TextFormatting.AQUA));
+            tooltip.add(new TranslationTextComponent(getTranslationKey() + "." + type.getName()).func_240699_a_(TextFormatting.AQUA));
         }
 
         tooltip.add(new TranslationTextComponent("block.vampirism.garlic_beacon.tooltip1"));
@@ -98,11 +98,6 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
         if (te != null && te instanceof GarlicBeaconTileEntity) {
             ((GarlicBeaconTileEntity) te).onTouched(player);
         }
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
     }
 
     @Override
@@ -173,8 +168,12 @@ public class GarlicBeaconBlock extends VampirismBlockContainer {
 
 
         @Override
-        public String getName() {
+        public String func_176610_l() {
             return name;
+        }
+
+        public String getName() {
+            return this.func_176610_l();
         }
     }
 }

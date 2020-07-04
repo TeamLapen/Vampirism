@@ -53,7 +53,7 @@ public class Helper {
     public static boolean gettingSundamge(LivingEntity entity, IWorld world, @Nullable IProfiler profiler) {
         if (profiler != null) profiler.startSection("vampirism_checkSundamage");
         if (entity instanceof PlayerEntity && entity.isSpectator()) return false;
-        if (VampirismAPI.sundamageRegistry().getSundamageInDim(world.getDimension().getType())) {
+        if (VampirismAPI.sundamageRegistry().getSundamageInDim(world.getWorld().func_234923_W_())) {
             if (!(world instanceof World) || !((World) world).isRaining()) {
                 float angle = world.getCelestialAngle(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
@@ -63,7 +63,7 @@ public class Helper {
                         try {
                             Biome biome = world.getBiome(pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                if (!TotemTileEntity.isInsideVampireAreaCached(world.getDimension(), new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))) { //For some reason client returns different value for #getPosition than server
+                                if (!TotemTileEntity.isInsideVampireAreaCached(world.getWorld().func_234923_W_(), new BlockPos(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ()))) { //For some reason client returns different value for #getPosition than server
                                     if (profiler != null) profiler.endSection();
                                     return true;
                                 }
@@ -111,7 +111,7 @@ public class Helper {
 
     @Nonnull
     public static EnumStrength getGarlicStrength(Entity e, IWorld world) {
-        return getGarlicStrengthAt(world, e.getPosition());
+        return getGarlicStrengthAt(world, e.func_233580_cy_());
     }
 
     @Nonnull
@@ -169,7 +169,7 @@ public class Helper {
     public static boolean isEntityInVampireBiome(Entity e) {
         if (e == null) return false;
         try {
-            return ModBiomes.vampire_forest.getRegistryName().equals(e.getEntityWorld().getBiome(e.getPosition()).getRegistryName());
+            return ModBiomes.vampire_forest.getRegistryName().equals(e.getEntityWorld().getBiome(e.func_233580_cy_()).getRegistryName());
         } catch (NullPointerException e1) {
             //http://openeye.openmods.info/crashes/8cef4d710e41adf9be8362e57ad70d28
             LOGGER.error("Nullpointer when checking biome. This is strange and should not happen", e1);

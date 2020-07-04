@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -58,7 +59,9 @@ public class HunterIntelItem extends VampirismItem {
 
         }
     }
+
     private final int level;
+    private ITextComponent tooltip;
 
     public HunterIntelItem(int level) {
         super(name + "_" + level, new Properties().group(VampirismMod.creativeTab));
@@ -68,12 +71,15 @@ public class HunterIntelItem extends VampirismItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").appendText(": " + (level + 5)).applyTextStyle(TextFormatting.RED));
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltips, ITooltipFlag flagIn) {
+        if (this.tooltip == null) {
+            this.tooltip = new TranslationTextComponent("item.vampirism.hunter_intel.for_level").func_230529_a_(new StringTextComponent(": " + (level + 5))).func_240699_a_(TextFormatting.RED);
+        }
+        tooltips.add(this.tooltip);
     }
 
     public ITextComponent getCustomName() {
-        return new TranslationTextComponent(this.getDefaultTranslationKey()).appendText(" ").appendSibling(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").appendText(" " + (level + 5)));
+        return new TranslationTextComponent(this.getDefaultTranslationKey()).func_230529_a_(new StringTextComponent(" ")).func_230529_a_(new TranslationTextComponent("item.vampirism.hunter_intel.for_level").func_230529_a_(new StringTextComponent(" " + (level + 5))));
     }
 
     /**

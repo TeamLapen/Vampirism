@@ -947,16 +947,15 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     private void applyEntityAttributes() {
         //Checking if already registered, since this method has to be called multiple times due to SpongeForge not recreating the player, but resetting the attribute map
-        if (player.getAttributes().getAttributeInstance(VReference.sunDamage) == null) {
-            player.getAttributes().registerAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
-        }
-        if (player.getAttributes().getAttributeInstance(VReference.bloodExhaustion) == null) {
-            player.getAttributes().registerAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
-        }
-        if (player.getAttributes().getAttributeInstance(VReference.biteDamage) == null) {
-            player.getAttributes().registerAttribute(ModAttributes.bite_damage).setBaseValue(VampirismConfig.BALANCE.vpBiteDamage.get());
-
-        }
+//        if (player.getAttributes().getAttributeInstance(VReference.sunDamage) == null) { TODO 1.16
+//            player.getAttributes().registerAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
+//        }
+//        if (player.getAttributes().getAttributeInstance(VReference.bloodExhaustion) == null) {
+//            player.getAttributes().registerAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
+//        }
+//        if (player.getAttributes().getAttributeInstance(VReference.biteDamage) == null) {
+//            player.getAttributes().registerAttribute(ModAttributes.bite_damage).setBaseValue(VampirismConfig.BALANCE.vpBiteDamage.get());
+//        }
     }
 
     /**

@@ -34,6 +34,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
@@ -168,7 +169,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                     return false;
                 }
                 if (this.world.isBlockPresent(func_233580_cy_()) && worldIn instanceof ServerWorld) {
-                    BlockPos nearestVillage = ((ServerWorld) worldIn).findNearestStructure("Village", func_233580_cy_(), 1, false);
+                    BlockPos nearestVillage = ((ServerWorld) worldIn).func_241117_a_(Structure.field_236381_q_, func_233580_cy_(), 1, false);
                     if (nearestVillage != null && nearestVillage.withinDistance(func_233580_cy_(), 50)) {
                         if (getRNG().nextInt(60) != 0) {
                             return false;

@@ -55,7 +55,7 @@ public class SkillCommand extends BasicCommand {
         switch (result) {
             case OK:
                 factionPlayer.getSkillHandler().enableSkill(skill);
-                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.enabled", skill.getRegistryName() + " (" + new TranslationTextComponent(skill.getTranslationKey()).getFormattedText() + ")"), false);
+                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.enabled", skill.getRegistryName() + " (" + skill.getTranslationKey() + ")"), false);
                 return 0;
             case ALREADY_ENABLED:
                 commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.alreadyenabled", new TranslationTextComponent(skill.getTranslationKey())), false);

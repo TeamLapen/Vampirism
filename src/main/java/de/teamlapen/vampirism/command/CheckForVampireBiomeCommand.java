@@ -49,14 +49,12 @@ public class CheckForVampireBiomeCommand extends BasicCommand {
             List<Biome> biomes = new ArrayList<>();
             biomes.add(ModBiomes.vampire_forest);
             context.getSource().sendFeedback((new TranslationTextComponent("command.vampirism.base.vampire_biome.searching")), true);
-            ChunkPos pos = UtilLib.findNearBiome(entityPlayerMP.getServerWorld(), entityPlayerMP.getPosition(), radius, biomes);
+            ChunkPos pos = UtilLib.findNearBiome(entityPlayerMP.getServerWorld(), entityPlayerMP.func_233580_cy_(), radius, biomes);
             if (pos == null) {
                 context.getSource().sendFeedback((new TranslationTextComponent("command.vampirism.base.vampire_biome.not_found")), true);
             } else { //copy from locate command
                 int i = MathHelper.floor(getDistance(context.getSource().getPos().getX(), context.getSource().getPos().getZ(), pos.asBlockPos().getX(), pos.asBlockPos().getZ()));
-                ITextComponent itextcomponent = TextComponentUtils.wrapInSquareBrackets(new TranslationTextComponent("chat.coordinates", pos.asBlockPos().getX(), "~", pos.asBlockPos().getZ())).applyTextStyle((p_211746_1_) -> {
-                    p_211746_1_.setColor(TextFormatting.GREEN).setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + pos.asBlockPos().getX() + " ~ " + pos.asBlockPos().getZ())).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslationTextComponent("chat.coordinates.tooltip")));
-                });
+                ITextComponent itextcomponent = TextComponentUtils.func_240647_a_(new TranslationTextComponent("chat.coordinates", pos.asBlockPos().getX(), "~", pos.asBlockPos().getZ())).func_240700_a_((p_211746_1_) -> p_211746_1_.func_240712_a_(TextFormatting.GREEN).func_240715_a_(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + pos.asBlockPos().getX() + " ~ " + pos.asBlockPos().getZ())).func_240716_a_(new HoverEvent(HoverEvent.Action.field_230550_a_, new TranslationTextComponent("chat.coordinates.tooltip"))));
                 context.getSource().sendFeedback(new TranslationTextComponent("command.vampirism.base.vampire_biome.found", itextcomponent, i), false);
             }
         }

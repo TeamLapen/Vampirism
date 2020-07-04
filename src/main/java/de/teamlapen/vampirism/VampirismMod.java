@@ -90,13 +90,13 @@ public class VampirismMod {
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private final static EntityClassification HUNTER_CREATURE_TYPE = EntityClassification.create("vampirism_hunter", "vampirism_hunter", 25, false, false);
+    private final static EntityClassification HUNTER_CREATURE_TYPE = EntityClassification.create("vampirism_hunter", "vampirism_hunter", 25, false, false, 128);
     /**
      * Vampire creatures are of this creature type. Use the instance in
      * {@link VReference} instead of this one. This is only here to init it as early
      * as possible
      */
-    private static final EntityClassification VAMPIRE_CREATURE_TYPE = EntityClassification.create("vampirism_vampire", "vampirism_vampire", 30, false, false);
+    private static final EntityClassification VAMPIRE_CREATURE_TYPE = EntityClassification.create("vampirism_vampire", "vampirism_vampire", 30, false, false, 128);
     /**
      * Vampire creatures have this attribute Vampire creatures are of this creature
      * type. Use the instance in {@link VReference} instead of this one. This is
@@ -160,10 +160,11 @@ public class VampirismMod {
     @SubscribeEvent
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
         SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
-        event.getServer().getResourceManager().addReloadListener(SkillTreeManager.getInstance());
-        event.getServer().getResourceManager().addReloadListener(BloodValues.ENTITIES);
-        event.getServer().getResourceManager().addReloadListener(BloodValues.ITEMS);
-        event.getServer().getResourceManager().addReloadListener(BloodValues.FLUIDS);
+//        event.getServer().getResourceManager().addReloadListener(SkillTreeManager.getInstance());
+//        event.getServer().getResourceManager().addReloadListener(BloodValues.ENTITIES);
+//        event.getServer().getResourceManager().addReloadListener(BloodValues.ITEMS);
+//        event.getServer().getResourceManager().addReloadListener(BloodValues.FLUIDS);
+        //TODO 1.16 waiting for https://github.com/MinecraftForge/MinecraftForge/pull/6849
     }
 
     @SubscribeEvent

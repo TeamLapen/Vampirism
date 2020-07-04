@@ -9,11 +9,11 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -125,7 +125,7 @@ public class BakedBloodContainerModel implements IDynamicBakedModel {
         }
 
         @Override
-        public IBakedModel getModelWithOverrides(@Nonnull IBakedModel originalModel, @Nonnull ItemStack stack, World world, LivingEntity entity) {
+        public IBakedModel func_239290_a_/*getModelWithOverrides*/(@Nonnull IBakedModel originalModel, @Nonnull ItemStack stack, ClientWorld world, LivingEntity entity) {
             if (originalModel instanceof BakedBloodContainerModel) {
                 if (stack.hasTag() && stack.getTag().contains("fluid")) {
                     FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound("fluid"));

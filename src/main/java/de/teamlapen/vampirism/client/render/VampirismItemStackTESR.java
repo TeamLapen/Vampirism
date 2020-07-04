@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.vampirism.blocks.CoffinBlock;
 import de.teamlapen.vampirism.tileentity.CoffinTileEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.BlockItem;
@@ -14,8 +15,9 @@ public class VampirismItemStackTESR extends ItemStackTileEntityRenderer {
 
     private CoffinTileEntity coffin;
 
+
     @Override
-    public void render(ItemStack itemStack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+    public void func_239207_a_(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
         Item item = itemStack.getItem();
         if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof CoffinBlock) {
             if (coffin == null) {
@@ -23,7 +25,7 @@ public class VampirismItemStackTESR extends ItemStackTileEntityRenderer {
             }
             TileEntityRendererDispatcher.instance.renderItem(this.coffin, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
         } else {
-            super.render(itemStack, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
+            super.func_239207_a_(itemStack, transformType, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
         }
     }
 }

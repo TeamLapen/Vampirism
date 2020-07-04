@@ -46,7 +46,7 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public float getBlockHardness(BlockState p_176195_1_, IBlockReader p_176195_2_, BlockPos p_176195_3_) {
+    public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos) {
         return VampirismConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : -1;
     }
 
@@ -60,8 +60,4 @@ public class SunscreenBeaconBlock extends VampirismBlockContainer {
         return BlockRenderType.MODEL;
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
 }

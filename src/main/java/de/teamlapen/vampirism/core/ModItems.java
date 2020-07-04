@@ -371,7 +371,6 @@ public class ModItems {
         registry.register(new SpawnEggItem(ModEntities.advanced_vampire, 0x8B15A3, 0x560a7e, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.advanced_hunter, 0x2d05f2, 0x1a028c, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "advanced_vampire_hunter_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.vampire_baron, 0x8B15A3, 0x15acda, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "vampire_baron_spawn_egg"));
-        registry.register(new SpawnEggItem(ModEntities.ghost, 0x626262, 0xbcbcbc, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "ghost_spawn_egg"));
         registry.register(new SpawnEggItem(ModEntities.hunter_trainer, 0x2d05f2, 0x1cdb49, new Item.Properties().group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "hunter_trainer_spawn_egg"));
 
         registry.register(new BucketItem(ModFluids.blood, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)).setRegistryName(REFERENCE.MODID, "blood_bucket"));

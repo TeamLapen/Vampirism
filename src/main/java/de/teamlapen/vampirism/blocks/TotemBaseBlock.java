@@ -34,7 +34,7 @@ public class TotemBaseBlock extends VampirismBlock {
     }
 
     public TotemBaseBlock() {
-        super(regName, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
+        super(regName, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE).notSolid());
 
     }
 
@@ -43,10 +43,6 @@ public class TotemBaseBlock extends VampirismBlock {
         return shape;
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
 
     @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {

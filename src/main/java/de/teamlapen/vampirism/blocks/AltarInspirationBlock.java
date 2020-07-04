@@ -57,7 +57,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
     }
 
     public AltarInspirationBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(2f));
+        super(regName, Properties.create(Material.IRON).hardnessAndResistance(2f).notSolid());
     }
 
     @Override
@@ -87,10 +87,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
         return altarShape;
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
+
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
@@ -99,7 +96,7 @@ public class AltarInspirationBlock extends VampirismBlockContainer {
             LazyOptional<IFluidHandlerItem> opt = FluidLib.getFluidItemCap(stack);
             if (opt.isPresent()) {
                 AltarInspirationTileEntity tileEntity = (AltarInspirationTileEntity) worldIn.getTileEntity(pos);
-                if (!player.isShiftKeyDown() && tileEntity != null) {
+                if (!player.isSneaking() && tileEntity != null) {
                     FluidUtil.interactWithFluidHandler(player, hand, worldIn, pos, hit.getFace());
                 }
                 return ActionResultType.SUCCESS;

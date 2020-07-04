@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -18,6 +19,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -55,25 +58,25 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<Alchemi
     }
 
     @Override
-    public void draw(AlchemicalCauldronRecipe recipe, double mouseX, double mouseY) {
-        flame.draw(19, 27);
-        arrow.draw(41, 25);
-        bubbles.draw(104, 19);
+    public void draw(AlchemicalCauldronRecipe recipe, MatrixStack stack, double mouseX, double mouseY) {
+        flame.draw(stack, 19, 27);
+        arrow.draw(stack, 41, 25);
+        bubbles.draw(stack, 104, 19);
         Minecraft minecraft = Minecraft.getInstance();
-        int x=0;
-        int y=65;
-        if(recipe.getRequiredLevel() > 1){
-            String level = UtilLib.translate("gui.vampirism.alchemical_cauldron.level", recipe.getRequiredLevel());
-            minecraft.fontRenderer.drawString(level,x,y, Color.gray.getRGB());
-            y += minecraft.fontRenderer.FONT_HEIGHT+2;
+        int x = 0;
+        int y = 65;
+        if (recipe.getRequiredLevel() > 1) {
+            ITextComponent level = new TranslationTextComponent("gui.vampirism.alchemical_cauldron.level", recipe.getRequiredLevel());
+            minecraft.fontRenderer.func_238422_b_(stack, level, x, y, Color.gray.getRGB());
+            y += minecraft.fontRenderer.FONT_HEIGHT + 2;
         }
-        if(recipe.getRequiredSkills().length>0){
+        if (recipe.getRequiredSkills().length > 0) {
             StringBuilder skills = new StringBuilder();
-            for(ISkill s:recipe.getRequiredSkills()){
+            for (ISkill s : recipe.getRequiredSkills()) {
                 skills.append(UtilLib.translate(s.getTranslationKey())).append(" ");
             }
-            String skillText = UtilLib.translate("gui.vampirism.alchemical_cauldron.skill",skills.toString());
-            minecraft.fontRenderer.drawSplitString(skillText,x,y,132,Color.gray.getRGB());
+            ITextComponent skillText = new TranslationTextComponent("gui.vampirism.alchemical_cauldron.skill", skills.toString());
+            minecraft.fontRenderer.func_238418_a_(skillText, x, y, 132, Color.gray.getRGB());
         }
     }
 

@@ -35,7 +35,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     private static final String name = "alchemical_fire";
 
     public AlchemicalFireBlock() {
-        super(name, Properties.create(Material.FIRE, MaterialColor.TNT).hardnessAndResistance(0.0f).lightValue(15).sound(SoundType.CLOTH).doesNotBlockMovement().tickRandomly().notSolid().noDrops());
+        super(name, Properties.create(Material.FIRE, MaterialColor.TNT).hardnessAndResistance(0.0f).func_235838_a_(s -> 15).sound(SoundType.CLOTH).doesNotBlockMovement().tickRandomly().notSolid().noDrops());
         this.setDefaultState(this.stateContainer.getBaseState().with(AGE, 0));
     }
 
@@ -67,10 +67,6 @@ public class AlchemicalFireBlock extends VampirismBlock {
         return true;
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
 
 
     @Override
@@ -99,7 +95,7 @@ public class AlchemicalFireBlock extends VampirismBlock {
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
         if (!this.isValidPosition(state, worldIn, pos)) {
-            worldIn.removeBlock(pos, this.blocksMovement);
+            worldIn.removeBlock(pos, this.field_235688_at_/*blocksMovement*/);
         }
 
 
@@ -110,15 +106,11 @@ public class AlchemicalFireBlock extends VampirismBlock {
             state = state.with(AGE, age + 1);
             worldIn.setBlockState(pos, state, 4);
         } else if (age == 14) {
-            worldIn.removeBlock(pos, this.blocksMovement);
+            worldIn.removeBlock(pos, this.field_235688_at_/*blocksMovement*/);
         }
-        worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn) + random.nextInt(10));
+        worldIn.getPendingBlockTicks().scheduleTick(pos, this, 30 + random.nextInt(10));
     }
 
-    @Override
-    public int tickRate(IWorldReader worldIn) {
-        return 30;
-    }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {

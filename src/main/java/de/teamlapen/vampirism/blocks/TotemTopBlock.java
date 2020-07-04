@@ -58,7 +58,7 @@ public class TotemTopBlock extends VampirismBlockContainer {
 
     @Deprecated
     public TotemTopBlock() {
-        super(regName, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE));
+        super(regName, Properties.create(Material.ROCK).hardnessAndResistance(40, 2000).sound(SoundType.STONE).notSolid());
         this.faction = new ResourceLocation("none");
         factionTotems.put(this.faction, this);
     }
@@ -100,11 +100,6 @@ public class TotemTopBlock extends VampirismBlockContainer {
     @Override
     public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
         return shape;
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
-        return false;
     }
 
     @Override

@@ -49,7 +49,7 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     }
 
     public AlchemicalCauldronBlock() {
-        super(Block.Properties.create(Material.IRON).hardnessAndResistance(4f));
+        super(Block.Properties.create(Material.IRON).hardnessAndResistance(4f).notSolid());
         this.setDefaultState(this.stateContainer.getBaseState().with(LIQUID, 0).with(FACING, Direction.NORTH).with(LIT, false));
         this.setRegistryName(REFERENCE.MODID, regName);
     }
@@ -67,11 +67,6 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     @Override
     public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
         return cauldronShape;
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_) {
-        return false;
     }
 
     @Override

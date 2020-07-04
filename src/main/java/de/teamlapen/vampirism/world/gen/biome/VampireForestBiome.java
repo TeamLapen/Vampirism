@@ -5,7 +5,9 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.world.gen.features.VampirismBiomeFeatures;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.world.biome.BiomeAmbience;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
+import net.minecraft.world.biome.MoodSoundAmbience;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
@@ -15,7 +17,7 @@ public class VampireForestBiome extends VampireBiome {
     private static final SurfaceBuilderConfig vampire_surface = new SurfaceBuilderConfig(ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState(), ModBlocks.cursed_earth.getDefaultState());
 
     public VampireForestBiome() {//TODO 1.14 entity weight
-        super(regName, new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).waterColor(0xEE2505).waterFogColor(0xEE2505).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f));
+        super(regName, new Builder().surfaceBuilder(SurfaceBuilder.DEFAULT, vampire_surface).category(Category.FOREST).depth(0.1F).scale(0.025F).func_235097_a_((new BiomeAmbience.Builder()).func_235246_b_/*waterColor*/(0xEE2505).func_235248_c_/*waterfogColor*/(0xEE2505).func_235239_a_(0xAA5555).func_235243_a_(MoodSoundAmbience.field_235027_b_).func_235238_a_()).precipitation(RainType.NONE).parent(null).downfall(0).temperature(0.3f));
 
         VampirismBiomeFeatures.addVampireTrees(this);
         VampirismBiomeFeatures.addVampirismFlowers(this);
@@ -23,7 +25,6 @@ public class VampireForestBiome extends VampireBiome {
         DefaultBiomeFeatures.addDeadBushes(this);
 
         //All EntityTypes used here have to be registered in the static part of ModEntities
-        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.ghost, BalanceMobProps.mobProps.GHOST_SPAWN_CHANCE, 1, 1));
         this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.vampire, BalanceMobProps.mobProps.VAMPIRE_SPAWN_CHANCE / 2, 1, 3));
         this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.vampire_baron, BalanceMobProps.mobProps.VAMPIRE_BARON_SPAWN_CHANCE, 1, 1));
         this.addSpawn(EntityClassification.AMBIENT, new SpawnListEntry(ModEntities.blinding_bat, BalanceMobProps.mobProps.BLINDING_BAT_SPAWN_CHANCE, 2, 4));

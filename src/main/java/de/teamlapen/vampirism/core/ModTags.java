@@ -10,62 +10,62 @@ import net.minecraft.util.ResourceLocation;
 
 public class ModTags {
     public static class Blocks {
-        public static final ITag<Block> CASTLE_BLOCK = tag("castle_block");
-        public static final ITag<Block> CURSEDEARTH = tag("cursed_earth");
-        public static final ITag<Block> CASTLE_STAIRS = tag("castle_stairs");
-        public static final ITag<Block> CASTLE_SLAPS = tag("castle_slaps");
+        public static final ITag.INamedTag<Block> CASTLE_BLOCK = tag("castle_block");
+        public static final ITag.INamedTag<Block> CURSEDEARTH = tag("cursed_earth");
+        public static final ITag.INamedTag<Block> CASTLE_STAIRS = tag("castle_stairs");
+        public static final ITag.INamedTag<Block> CASTLE_SLAPS = tag("castle_slaps");
 
-        private static ITag<Block> tag(ResourceLocation resourceLocation) {
-            return new BlockTags.Wrapper(resourceLocation);
+        private static ITag.INamedTag<Block> tag(ResourceLocation resourceLocation) {
+            return BlockTags.makeWrapperTag(resourceLocation.toString());
         }
 
-        private static ITag<Block> tag(String name) {
+        private static ITag.INamedTag<Block> tag(String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 
     public static class Items {
-        public static final ITag<Item> CROSSBOW_ARROW = tag("crossbow_arrow");
-        public static final ITag<Item> HUNTER_INTEL = tag("hunter_intel");
-        public static final ITag<Item> PURE_BLOOD = tag("pure_blood");
-        public static final ITag<Item> VAMPIRE_CLOAK = tag("vampire_cloak");
-        public static final ITag<Item> CASTLE_BLOCK = tag("castle_block");
-        public static final ITag<Item> GARLIC = tag(forge("crops/garlic"));
-        public static final ITag<Item> HOLY_WATER = tag("holy_water");
-        public static final ITag<Item> HOLY_WATER_SPLASH = tag("holy_water_splash");
+        public static final ITag.INamedTag<Item> CROSSBOW_ARROW = tag("crossbow_arrow");
+        public static final ITag.INamedTag<Item> HUNTER_INTEL = tag("hunter_intel");
+        public static final ITag.INamedTag<Item> PURE_BLOOD = tag("pure_blood");
+        public static final ITag.INamedTag<Item> VAMPIRE_CLOAK = tag("vampire_cloak");
+        public static final ITag.INamedTag<Item> CASTLE_BLOCK = tag("castle_block");
+        public static final ITag.INamedTag<Item> GARLIC = tag(forge("crops/garlic"));
+        public static final ITag.INamedTag<Item> HOLY_WATER = tag("holy_water");
+        public static final ITag.INamedTag<Item> HOLY_WATER_SPLASH = tag("holy_water_splash");
 
 
-        private static ITag<Item> tag(ResourceLocation resourceLocation) {
-            return new ItemTags.Wrapper(resourceLocation);
+        private static ITag.INamedTag<Item> tag(ResourceLocation resourceLocation) {
+            return ItemTags.makeWrapperTag(resourceLocation.toString());
         }
 
-        private static ITag<Item> tag(String name) {
+        private static ITag.INamedTag<Item> tag(String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 
     public static class Entities {
-        public static final ITag<EntityType<?>> HUNTER = tag("hunter");
-        public static final ITag<EntityType<?>> VAMPIRE = tag("vampire");
+        public static final ITag.INamedTag<EntityType<?>> HUNTER = tag("hunter");
+        public static final ITag.INamedTag<EntityType<?>> VAMPIRE = tag("vampire");
 
-        private static ITag<EntityType<?>> tag(ResourceLocation resourceLocation) {
-            return new EntityTypeTags.Wrapper(resourceLocation);
+        private static ITag.INamedTag<EntityType<?>> tag(ResourceLocation resourceLocation) {
+            return EntityTypeTags.func_232896_a_(resourceLocation.toString());
         }
 
-        private static ITag<EntityType<?>> tag(String name) {
+        private static ITag.INamedTag<EntityType<?>> tag(String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }
 
     public static class Fluids {
-        public static final ITag<Fluid> BLOOD = tag("vampirism_blood");
-        public static final ITag<Fluid> IMPURE_BLOOD = tag("vampirism_impure_blood");
+        public static final ITag.INamedTag<Fluid> BLOOD = tag("vampirism_blood");
+        public static final ITag.INamedTag<Fluid> IMPURE_BLOOD = tag("vampirism_impure_blood");
 
-        private static ITag<Fluid> tag(ResourceLocation resourceLocation) {
-            return new FluidTags.Wrapper(resourceLocation);
+        private static ITag.INamedTag<Fluid> tag(ResourceLocation resourceLocation) {
+            return FluidTags.makeWrapperTag(resourceLocation.toString());
         }
 
-        private static ITag<Fluid> tag(String name) {
+        private static ITag.INamedTag<Fluid> tag(String name) {
             return tag(new ResourceLocation(REFERENCE.MODID, name));
         }
     }

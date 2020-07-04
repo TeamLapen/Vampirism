@@ -43,10 +43,10 @@ public class ChangelogCommand extends BasicCommand {
         context.getSource().sendFeedback(new StringTextComponent(""), false);
         String homepage = VampirismMod.instance.getVersionInfo().getHomePage();
 
-        ITextComponent download = new TranslationTextComponent("text.vampirism.update_message.download").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? homepage : newVersion.getUrl())).setUnderlined(true).setColor(TextFormatting.BLUE));
-        ITextComponent changelog = new TranslationTextComponent("text.vampirism.update_message.changelog").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).setUnderlined(true));
-        ITextComponent modpage = new TranslationTextComponent("text.vampirism.update_message.modpage").applyTextStyle(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, homepage)).setUnderlined(true).setColor(TextFormatting.BLUE));
-        context.getSource().sendFeedback(download.appendText(" ").appendSibling(changelog).appendText(" ").appendSibling(modpage), false);
+        ITextComponent download = new TranslationTextComponent("text.vampirism.update_message.download").func_240700_a_(style -> style.func_240715_a_(new ClickEvent(ClickEvent.Action.OPEN_URL, newVersion.getUrl() == null ? homepage : newVersion.getUrl())).setUnderlined(true).func_240712_a_(TextFormatting.BLUE));
+        ITextComponent changelog = new TranslationTextComponent("text.vampirism.update_message.changelog").func_240700_a_(style -> style.func_240715_a_(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vampirism changelog")).setUnderlined(true));
+        ITextComponent modpage = new TranslationTextComponent("text.vampirism.update_message.modpage").func_240700_a_(style -> style.func_240715_a_(new ClickEvent(ClickEvent.Action.OPEN_URL, homepage)).setUnderlined(true).func_240712_a_(TextFormatting.BLUE));
+        context.getSource().sendFeedback(new StringTextComponent("").func_230529_a_(download).func_230529_a_(new StringTextComponent(" ")).func_230529_a_(changelog).func_230529_a_(new StringTextComponent(" ")).func_230529_a_(modpage), false);
         return 1;
     }
 

@@ -15,20 +15,20 @@ import java.util.List;
 public class CoffinModel extends Model {
 
     // fields
-    private ModelRenderer leftPlate;
-    private ModelRenderer rightPlate;
-    private ModelRenderer backPlate;
-    private ModelRenderer topPlate;
-    private ModelRenderer bottomPlate;
-    private ModelRenderer leftLid;
-    private ModelRenderer rightLid;
-    private ModelRenderer leftHandle;
-    private ModelRenderer rightHandle;
+    private final ModelRenderer leftPlate;
+    private final ModelRenderer rightPlate;
+    private final ModelRenderer backPlate;
+    private final ModelRenderer topPlate;
+    private final ModelRenderer bottomPlate;
+    private final ModelRenderer leftLid;
+    private final ModelRenderer rightLid;
+    private final ModelRenderer leftHandle;
+    private final ModelRenderer rightHandle;
 
     private final List<ModelRenderer> modelParts;
 
     public CoffinModel() {
-        super(RenderType::entitySolid);
+        super(RenderType::getEntitySolid);
         textureWidth = 256;
         textureHeight = 128;
 

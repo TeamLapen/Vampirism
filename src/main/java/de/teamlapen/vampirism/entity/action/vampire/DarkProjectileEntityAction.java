@@ -24,7 +24,7 @@ public class DarkProjectileEntityAction<T extends CreatureEntity & IEntityAction
         vec3dd.normalize();
 
         DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(shooter.getEntityWorld(), shooter.getPosX() + vec3dd.x * 1.0f, shooter.getPosY() + shooter.getEyeHeight() * 0.9f, shooter.getPosZ() + vec3dd.z * 1.0f, vec3dd.x, vec3dd.y, vec3dd.z);
-        projectile.shootingEntity = shooter;
+        projectile.setShooter(shooter);
         projectile.setDamage(VampirismConfig.BALANCE.eaDarkProjectileDamage.get().floatValue(), VampirismConfig.BALANCE.eaDarkProjectileIndirectDamage.get().floatValue());
 
         shooter.getEntityWorld().addEntity(projectile);

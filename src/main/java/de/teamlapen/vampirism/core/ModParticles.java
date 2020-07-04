@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.particle.FlyingBloodEntityParticleData;
 import de.teamlapen.vampirism.particle.FlyingBloodParticleData;
 import de.teamlapen.vampirism.particle.GenericParticleData;
@@ -23,9 +24,27 @@ public class ModParticles {
     public static final ParticleType<GenericParticleData> generic = getNull();
 
     static void registerParticles(IForgeRegistry<ParticleType<?>> registry) {
-        registry.register(new ParticleType<>(false, FlyingBloodParticleData.DESERIALIZER).setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood")));
-        registry.register(new ParticleType<>(false, FlyingBloodEntityParticleData.DESERIALIZER).setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood_entity")));
-        registry.register(new ParticleType<>(false, GenericParticleData.DESERIALIZER).setRegistryName(new ResourceLocation(REFERENCE.MODID, "generic")));
+        registry.register(new ParticleType<FlyingBloodParticleData>(false, FlyingBloodParticleData.DESERIALIZER) {
+
+            @Override
+            public Codec<FlyingBloodParticleData> func_230522_e_() {
+                return FlyingBloodParticleData.CODEC;
+            }
+        }.setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood")));
+        registry.register(new ParticleType<FlyingBloodEntityParticleData>(false, FlyingBloodEntityParticleData.DESERIALIZER) {
+
+            @Override
+            public Codec<FlyingBloodEntityParticleData> func_230522_e_() {
+                return FlyingBloodEntityParticleData.CODEC;
+            }
+        }.setRegistryName(new ResourceLocation(REFERENCE.MODID, "flying_blood_entity")));
+        registry.register(new ParticleType<GenericParticleData>(false, GenericParticleData.DESERIALIZER) {
+
+            @Override
+            public Codec<GenericParticleData> func_230522_e_() {
+                return GenericParticleData.CODEC;
+            }
+        }.setRegistryName(new ResourceLocation(REFERENCE.MODID, "generic")));
     }
 
     public static void spawnParticlesClient(World worldIn, IParticleData particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int count, double maxDist, Random rand) {

@@ -78,7 +78,7 @@ public class FollowAdvancedVampireGoal extends Goal {
         if (--this.delayCounter <= 0 && entity.getAdvancedLeader() != null) {
             this.delayCounter = 10;
             this.entity.getNavigator().tryMoveToEntityLiving(this.entity.getAdvancedLeader(), this.speed);
-            this.entity.lookAt(EntityAnchorArgument.Type.EYES, this.entity.getAdvancedLeader().getPositionVector().add(0, this.entity.getAdvancedLeader().getEyeHeight(), 0));
+            this.entity.lookAt(EntityAnchorArgument.Type.EYES, this.entity.getAdvancedLeader().getPositionVec().add(0, this.entity.getAdvancedLeader().getEyeHeight(), 0));
         }
     }
 }

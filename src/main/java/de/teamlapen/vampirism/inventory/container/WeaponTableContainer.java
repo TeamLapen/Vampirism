@@ -43,8 +43,8 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     private final IWorldPosCallable worldPos;
     private final HunterPlayer hunterPlayer;
     private final PlayerEntity player;
-    private CraftingInventory craftMatrix = new CraftingInventory(this, 4, 4);
-    private CraftResultInventory craftResult = new CraftResultInventory();
+    private final CraftingInventory craftMatrix = new CraftingInventory(this, 4, 4);
+    private final CraftResultInventory craftResult = new CraftResultInventory();
     private boolean missingLava = false;
     private boolean prevMissingLava = false;
 
@@ -256,7 +256,7 @@ public class WeaponTableContainer extends RecipeBookContainer<CraftingInventory>
     @Nonnull
     @Override
     public List<RecipeBookCategories> getRecipeBookCategories() {
-        return Lists.newArrayList(RecipeBookCategories.MISC);
+        return Lists.newArrayList(RecipeBookCategories.CRAFTING_MISC);
     }
 
     public static class Factory implements IContainerFactory<WeaponTableContainer> {

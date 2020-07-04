@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -218,6 +219,7 @@ public class ClientProxy extends CommonProxy {
      * copied from {@link net.minecraft.client.particle.ParticleManager#addBlockDestroyEffects(net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState)} but which much lesser particles
      */
     private void spawnParticles(World world, BlockPos pos, BlockState state) {
+        if (!(world instanceof ClientWorld)) return;
         VoxelShape voxelshape = state.getShape(world, pos);
         voxelshape.forEachBox((p_199284_3_, p_199284_5_, p_199284_7_, p_199284_9_, p_199284_11_, p_199284_13_) -> {
             double d1 = Math.min(1.0D, p_199284_9_ - p_199284_3_);
@@ -236,7 +238,7 @@ public class ClientProxy extends CommonProxy {
                         double d7 = d4 * d1 + p_199284_3_;
                         double d8 = d5 * d2 + p_199284_5_;
                         double d9 = d6 * d3 + p_199284_7_;
-                        Minecraft.getInstance().particles.addEffect((new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8, (double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).setBlockPos(pos));
+                        Minecraft.getInstance().particles.addEffect((new DiggingParticle((ClientWorld) world, (double) pos.getX() + d7, (double) pos.getY() + d8, (double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).setBlockPos(pos));
                     }
                 }
             }

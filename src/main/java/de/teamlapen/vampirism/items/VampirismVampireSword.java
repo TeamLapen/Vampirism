@@ -28,6 +28,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -65,8 +66,8 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         super.addInformation(stack, worldIn, tooltip, flagIn);
         float charged = getCharged(stack);
         float trained = getTrained(stack, VampirismMod.proxy.getClientPlayer());
-        tooltip.add(new TranslationTextComponent("text.vampirism.sword_charged").appendText(" " + ((int) Math.ceil(charged * 100f)) + "%"));
-        tooltip.add(new TranslationTextComponent("text.vampirism.sword_trained").appendText(" " + ((int) Math.ceil(trained * 100f)) + "%"));
+        tooltip.add(new TranslationTextComponent("text.vampirism.sword_charged").func_230529_a_(new StringTextComponent(" " + ((int) Math.ceil(charged * 100f)) + "%")));
+        tooltip.add(new TranslationTextComponent("text.vampirism.sword_trained").func_230529_a_(new StringTextComponent(" " + ((int) Math.ceil(trained * 100f)) + "%")));
         if (Minecraft.getInstance().player != null && !Helper.isVampire(Minecraft.getInstance().player)) {
             tooltip.add(new TranslationTextComponent("text.vampirism.can_only_be_used_by", VReference.VAMPIRE_FACTION.getNamePlural()));
         }
@@ -111,7 +112,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
             if (VampirePlayer.getOpt((PlayerEntity) attacker).map(VampirePlayer::getSkillHandler).map(h -> h.isSkillEnabled(VampireSkills.sword_finisher)).orElse(false)) {
                 DamageSource dmg = DamageSource.causePlayerDamage((PlayerEntity) attacker).setDamageBypassesArmor();
                 target.attackEntityFrom(dmg, 10000F);
-                Vector3d center = new Vector3d(target.getPosition());
+                Vector3d center = Vector3d.func_237491_b_(target.func_233580_cy_());
                 center.add(0, target.getHeight() / 2d, 0);
                 ModParticles.spawnParticlesServer(target.world, new GenericParticleData(ModParticles.generic, new ResourceLocation("minecraft", "effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
             }
@@ -145,7 +146,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
             if (vampire.getLevel() == 0) return new ActionResult<>(ActionResultType.PASS, stack);
 
 
-            if (this.canBeCharged(stack) && playerIn.isShiftKeyDown() && (playerIn.isCreative() || vampire.getBloodLevel() >= 2) && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge)) {
+            if (this.canBeCharged(stack) && playerIn.isSneaking() && (playerIn.isCreative() || vampire.getBloodLevel() >= 2) && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge)) {
                 playerIn.setActiveHand(handIn);
                 return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }

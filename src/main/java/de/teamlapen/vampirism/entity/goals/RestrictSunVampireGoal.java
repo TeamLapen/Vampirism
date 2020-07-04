@@ -25,8 +25,8 @@ public class RestrictSunVampireGoal<T extends CreatureEntity & IVampire> extends
     @Override
     public boolean shouldExecute() {
         if (vampire.ticksExisted % 10 == 3) {
-            Biome biome = vampire.getEntityWorld().getBiome(vampire.getPosition());
-            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(vampire.getEntityWorld().dimension.getType()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome) && !TotemTileEntity.isInsideVampireAreaCached(vampire.getEntityWorld().getDimension(), vampire.getPosition());
+            Biome biome = vampire.getEntityWorld().getBiome(vampire.func_233580_cy_());
+            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(vampire.getEntityWorld().func_234923_W_()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome) && !TotemTileEntity.isInsideVampireAreaCached(vampire.getEntityWorld().func_234923_W_(), vampire.func_233580_cy_());
         }
         return cache && vampire.getEntityWorld().isDaytime() && !vampire.isIgnoringSundamage();
     }

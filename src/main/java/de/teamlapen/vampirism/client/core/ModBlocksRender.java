@@ -67,19 +67,19 @@ public class ModBlocksRender {
     }
 
     private static void registerRenderType() {
-        RenderType cutout = RenderType.cutout();
+        RenderType cutout = RenderType.getCutout();
         RenderTypeLookup.setRenderLayer(ModBlocks.garlic_beacon_weak, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.garlic_beacon_improved, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.garlic_beacon_normal, cutout);
-        RenderTypeLookup.setRenderLayer(ModFluids.impure_blood, RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModFluids.blood, RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModFluids.impure_blood, RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(ModFluids.blood, RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(ModBlocks.alchemical_cauldron, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.alchemical_fire, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.altar_infusion, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.altar_inspiration, RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModBlocks.altar_inspiration, RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(ModBlocks.altar_pillar, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.altar_tip, cutout);
-        RenderTypeLookup.setRenderLayer(ModBlocks.blood_container, RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModBlocks.blood_container, RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(ModBlocks.blood_pedestal, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.blood_potion_table, cutout);
         RenderTypeLookup.setRenderLayer(ModBlocks.blood_sieve, cutout);

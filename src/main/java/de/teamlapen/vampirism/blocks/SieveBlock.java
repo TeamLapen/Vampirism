@@ -35,7 +35,7 @@ public class SieveBlock extends VampirismBlockContainer {
     }
 
     public SieveBlock() {
-        super(regName, Properties.create(Material.WOOD).hardnessAndResistance(2.5f).sound(SoundType.WOOD));
+        super(regName, Properties.create(Material.WOOD).hardnessAndResistance(2.5f).sound(SoundType.WOOD).notSolid());
         this.setDefaultState(this.getStateContainer().getBaseState().with(PROPERTY_ACTIVE, false));
     }
 
@@ -53,11 +53,6 @@ public class SieveBlock extends VampirismBlockContainer {
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return sieveShape;
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
     }
 
     @Override

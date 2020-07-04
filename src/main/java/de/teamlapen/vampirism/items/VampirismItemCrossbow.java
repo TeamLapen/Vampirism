@@ -188,7 +188,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     boolean rightHand = player.getPrimaryHand() == HandSide.RIGHT && hand == Hand.MAIN_HAND || player.getPrimaryHand() == HandSide.LEFT && hand == Hand.OFF_HAND;
                     IVampirismCrossbowArrow itemarrow = itemstack.getItem() instanceof IVampirismCrossbowArrow ? (IVampirismCrossbowArrow) itemstack.getItem() : ModItems.crossbow_arrow_normal;
                     AbstractArrowEntity entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
-                    entityarrow.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+                    entityarrow.shoot(player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 
                     if (isCritical(player.getRNG())) {
                         entityarrow.setIsCritical(true);

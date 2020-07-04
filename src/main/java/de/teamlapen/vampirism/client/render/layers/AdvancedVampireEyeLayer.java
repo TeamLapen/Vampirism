@@ -40,7 +40,7 @@ public class AdvancedVampireEyeLayer extends LayerRenderer<AdvancedVampireEntity
         if (type < 0 || type >= overlays.length) {
             type = 0;
         }
-        IVertexBuilder builder = iRenderTypeBuffer.getBuffer(RenderType.entityCutoutNoCull(overlays[type]));
+        IVertexBuilder builder = iRenderTypeBuffer.getBuffer(RenderType.getEntityCutoutNoCull(overlays[type]));
         boolean showModel = this.getEntityModel().bipedHead.showModel;
         this.getEntityModel().bipedHead.showModel = true;
         this.getEntityModel().getModelHead().render(matrixStack, builder, packetLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);

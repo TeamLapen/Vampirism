@@ -52,7 +52,7 @@ public class PedestalBlock extends VampirismBlockContainer {
     }
 
     public PedestalBlock() {
-        super(regName, Properties.create(Material.ROCK).hardnessAndResistance(3f));
+        super(regName, Properties.create(Material.ROCK).hardnessAndResistance(3f).notSolid());
     }
 
     @Nullable
@@ -83,10 +83,6 @@ public class PedestalBlock extends VampirismBlockContainer {
         return pedestalShape;
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {

@@ -64,7 +64,7 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     }
 
     public AltarInfusionBlock() {
-        super(name, Properties.create(Material.ROCK).hardnessAndResistance(5));
+        super(name, Properties.create(Material.ROCK).hardnessAndResistance(5).notSolid());
     }
 
     @Nullable
@@ -93,11 +93,6 @@ public class AltarInfusionBlock extends VampirismBlockContainer {
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return altarBase;
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
     }
 
     @Override

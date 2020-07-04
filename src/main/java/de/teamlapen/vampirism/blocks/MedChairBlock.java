@@ -46,7 +46,7 @@ public class MedChairBlock extends VampirismBlock {
 
 
     public MedChairBlock() {
-        super(name, Properties.create(Material.IRON).hardnessAndResistance(1));
+        super(name, Properties.create(Material.IRON).hardnessAndResistance(1).notSolid());
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(PART, EnumPart.TOP));
         SHAPE_TOP = makeCuboidShape(2, 6, 0, 14, 16, 16);
         SHAPE_BOTTOM = makeCuboidShape(1, 1, 0, 15, 10, 16);
@@ -58,10 +58,6 @@ public class MedChairBlock extends VampirismBlock {
         return this.getDefaultState().with(FACING, context.getNearestLookingDirection());
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
@@ -126,7 +122,7 @@ public class MedChairBlock extends VampirismBlock {
 
         } else {
             if (world.isRemote)
-                player.sendMessage(new TranslationTextComponent("text.vampirism.need_item_to_use", new TranslationTextComponent((new ItemStack(ModItems.injection_garlic).getTranslationKey()))));
+                player.sendStatusMessage(new TranslationTextComponent("text.vampirism.need_item_to_use", new TranslationTextComponent((new ItemStack(ModItems.injection_garlic).getTranslationKey()))), true);
         }
 
         return ActionResultType.SUCCESS;
@@ -191,13 +187,13 @@ public class MedChairBlock extends VampirismBlock {
         }
 
         @Override
-        public String toString() {
-            return getName();
+        public String func_176610_l() {
+            return name;
         }
 
         @Override
-        public String getName() {
-            return name;
+        public String toString() {
+            return func_176610_l();
         }
 
 

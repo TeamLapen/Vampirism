@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -43,10 +44,10 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
             PlayerEntity player = VampirismMod.proxy.getClientPlayer();
             TextFormatting color = player != null && player.isAlive() && Helper.canUseFactionItem(stack, this, FactionPlayerHandler.get(player)) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
             IFaction f = getUsingFaction(stack);
-            tooltip.add(((f == null ? new TranslationTextComponent("text.vampirism.all") : f.getNamePlural())).appendText("@" + getMinLevel(stack)).applyTextStyle(color));
+            tooltip.add(new StringTextComponent("").func_230529_a_(f == null ? new TranslationTextComponent("text.vampirism.all") : f.getNamePlural()).func_230529_a_(new StringTextComponent("@" + getMinLevel(stack))).func_240699_a_(color));
             ISkill reqSkill = this.getRequiredSkill(stack);
             if (reqSkill != null) {
-                tooltip.add(new TranslationTextComponent("text.vampirism.required_skill", new TranslationTextComponent(reqSkill.getTranslationKey())).applyTextStyle(color));
+                tooltip.add(new TranslationTextComponent("text.vampirism.required_skill", new TranslationTextComponent(reqSkill.getTranslationKey())).func_240699_a_(color));
             }
         }
     }

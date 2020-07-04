@@ -29,7 +29,7 @@ public class AltarTipBlock extends VampirismBlock {
     }
 
     public AltarTipBlock() {
-        super(name, Properties.create(Material.IRON).hardnessAndResistance(1f));
+        super(name, Properties.create(Material.IRON).hardnessAndResistance(1f).notSolid());
     }
 
     @Override
@@ -48,8 +48,5 @@ public class AltarTipBlock extends VampirismBlock {
         return tipShape;
     }
 
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-    }
+
 }

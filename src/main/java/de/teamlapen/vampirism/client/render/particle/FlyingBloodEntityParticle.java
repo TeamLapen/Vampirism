@@ -6,9 +6,9 @@ import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.Validate;
@@ -27,7 +27,7 @@ public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
     private final int MAX_AGE = 60;
     private final Entity entity;
 
-    public FlyingBloodEntityParticle(World world, double posX, double posY, double posZ, Entity entity, boolean direct) {
+    public FlyingBloodEntityParticle(ClientWorld world, double posX, double posY, double posZ, Entity entity, boolean direct) {
         super(world, posX, posY, posZ, 0D, 0D, 0D);
 
         Validate.notNull(entity);
@@ -86,7 +86,7 @@ public class FlyingBloodEntityParticle extends SpriteTexturedParticle {
     public static class Factory implements IParticleFactory<FlyingBloodEntityParticleData> {
         @Nullable
         @Override
-        public Particle makeParticle(FlyingBloodEntityParticleData typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle makeParticle(FlyingBloodEntityParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             Entity e = worldIn.getEntityByID(typeIn.getEntityID());
             if (e == null) {
                 LOGGER.warn("Could not find entity {} for flying blood particle", typeIn.getEntityID());

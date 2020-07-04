@@ -6,8 +6,8 @@ import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,7 +25,7 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
     private final boolean direct;
 
 
-    public FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, boolean direct, ResourceLocation particleId) {
+    public FlyingBloodParticle(ClientWorld world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, boolean direct, ResourceLocation particleId) {
         super(world, posX, posY, posZ);
         this.maxAge = maxage;
         this.destX = destX;
@@ -86,7 +86,7 @@ public class FlyingBloodParticle extends SpriteTexturedParticle {
 
         @Nullable
         @Override
-        public Particle makeParticle(FlyingBloodParticleData typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle makeParticle(FlyingBloodParticleData typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             return new FlyingBloodParticle(worldIn, x, y, z, typeIn.getTargetX(), typeIn.getTargetY(), typeIn.getTargetZ(), typeIn.getMaxAge(), typeIn.isDirect(), typeIn.getTexturePos());
         }
     }

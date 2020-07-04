@@ -69,7 +69,7 @@ public class GrinderBlock extends VampirismBlockContainer {
     }
 
     public GrinderBlock() {
-        super(regName, Properties.create(Material.IRON).hardnessAndResistance(5).sound(SoundType.METAL));
+        super(regName, Properties.create(Material.IRON).hardnessAndResistance(5).sound(SoundType.METAL).notSolid());
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
 
     }
@@ -104,11 +104,6 @@ public class GrinderBlock extends VampirismBlockContainer {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
     }
 
     @Override

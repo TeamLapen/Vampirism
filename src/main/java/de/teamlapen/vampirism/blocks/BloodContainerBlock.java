@@ -26,6 +26,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -48,7 +49,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     private final static Logger LOGGER = LogManager.getLogger();
 
     public BloodContainerBlock() {
-        super(regName, Properties.create(Material.GLASS).hardnessAndResistance(1f));
+        super(regName, Properties.create(Material.GLASS).hardnessAndResistance(1f).notSolid());
     }
 
     @Override
@@ -86,11 +87,6 @@ public class BloodContainerBlock extends VampirismBlockContainer {
             }
         }
         spawnAsEntity(worldIn, pos, stack);
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
     }
 
     @Override
@@ -139,7 +135,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
             CompoundNBT nbt = stack.getTag().getCompound("fluid");
             FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
             if (fluid != null) {
-                tooltip.add(new TranslationTextComponent(fluid.getTranslationKey()).appendText(": ").appendText(fluid.getAmount() + "mB").applyTextStyle(TextFormatting.DARK_RED));
+                tooltip.add(new TranslationTextComponent(fluid.getTranslationKey()).func_230529_a_(new StringTextComponent(": " + fluid.getAmount() + "mB")).func_240699_a_(TextFormatting.DARK_RED));
             }
 
         }

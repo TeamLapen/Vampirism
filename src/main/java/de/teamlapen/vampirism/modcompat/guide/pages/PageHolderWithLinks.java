@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.modcompat.guide.pages;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxanier.guideapi.api.IPage;
 import de.maxanier.guideapi.api.impl.Book;
 import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
@@ -87,23 +89,23 @@ public class PageHolderWithLinks implements IPage {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
-        page.draw(book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
+    public void draw(MatrixStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
+        page.draw(stack, book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void drawExtras(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
+    public void drawExtras(MatrixStack stack, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, FontRenderer fontRendererObj) {
         int ll = guiLeft + guiBase.xSize - 5;
         int y = guiTop + 10;
         for (Link l : links) {
-            fontRendererObj.drawStringWithShadow(l.getDisplayName(), ll, y, 0xFFFFFF);
+            fontRendererObj.func_238407_a_(stack, l.getDisplayName(), ll, y, 0xFFFFFF);
             if (l.width == 0) {
-                l.width = fontRendererObj.getStringWidth(l.getDisplayName());
+                l.width = fontRendererObj.func_238414_a_(l.getDisplayName());
             }
             y += 20;
         }
-        page.drawExtras(book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
+        page.drawExtras(stack, book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -151,23 +153,23 @@ public class PageHolderWithLinks implements IPage {
     private static abstract class Link {
         public int width;
 
-        public abstract String getDisplayName();
+        public abstract ITextComponent getDisplayName();
 
         @OnlyIn(Dist.CLIENT)
         public abstract void onClicked(Book book, CategoryAbstract category, EntryAbstract entry, PlayerEntity player, ItemStack bookStack, int page);
     }
 
     public static class URLLink extends Link {
-        private final String name;
+        private final ITextComponent name;
         private final URI link;
 
-        public URLLink(String name, URI link) {
+        public URLLink(ITextComponent name, URI link) {
             this.name = name;
             this.link = link;
         }
 
         @Override
-        public String getDisplayName() {
+        public ITextComponent getDisplayName() {
             return name;
         }
 
@@ -181,7 +183,7 @@ public class PageHolderWithLinks implements IPage {
                 Throwable throwable = throwable1.getCause();
                 LOGGER.error("Couldn't open link: {}", link);
                 LOGGER.catching(throwable);
-                player.sendMessage(ForgeHooks.newChatWithLinks("Couldn't open link: " + link.toString()));
+                player.sendStatusMessage(ForgeHooks.newChatWithLinks("Couldn't open link: " + link.toString()), false);
             }
         }
     }
@@ -194,8 +196,8 @@ public class PageHolderWithLinks implements IPage {
         }
 
         @Override
-        public String getDisplayName() {
-            return linkedEntry.getLocalizedName();
+        public ITextComponent getDisplayName() {
+            return linkedEntry.getName();
         }
 
         @OnlyIn(Dist.CLIENT)
