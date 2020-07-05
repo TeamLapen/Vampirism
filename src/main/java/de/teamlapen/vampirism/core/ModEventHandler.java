@@ -25,13 +25,9 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -49,21 +45,6 @@ import java.util.Map;
 public class ModEventHandler {
 
     private final static Logger LOGGER = LogManager.getLogger(ModEventHandler.class);
-
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void on(WorldEvent.Load event) {
-        IWorld w = event.getWorld();
-        if (w instanceof ServerWorld) {
-            ChunkGenerator<?> generator = ((ServerWorld) w).getChunkProvider().generator;
-            if (generator instanceof OverworldChunkGenerator) {
-                GenerationSettings settings = ((OverworldChunkGenerator) generator).getSettings();
-                ModWorld.modifyVillageSize(settings);
-            }
-        }
-
-    }
-
 
 
     @SubscribeEvent

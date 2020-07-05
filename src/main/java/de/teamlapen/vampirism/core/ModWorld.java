@@ -8,7 +8,6 @@ import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.util.ASMHooks;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.util.SRGNAMES;
 import de.teamlapen.vampirism.world.gen.util.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.world.gen.util.RandomBlockState;
 import de.teamlapen.vampirism.world.gen.util.RandomStructureProcessor;
@@ -23,8 +22,6 @@ import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
 import net.minecraft.world.gen.feature.jigsaw.SingleJigsawPiece;
 import net.minecraft.world.gen.feature.structure.*;
 import net.minecraft.world.gen.feature.template.*;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,29 +34,6 @@ public class ModWorld {
     private static final Logger LOGGER = LogManager.getLogger();
     public static boolean debug = false;
 
-    static void modifyVillageSize(GenerationSettings settings) {
-
-        if (!VampirismConfig.SERVER.villageModify.get()) {
-            LOGGER.trace("Not modifying village");
-            return;
-        }
-        try {
-            ObfuscationReflectionHelper.setPrivateValue(GenerationSettings.class, settings, VampirismConfig.SERVER.villageDistance.get(), SRGNAMES.GenerationSettings_villageDistance);
-        } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
-            LOGGER.error("Could not modify field 'villageDistance' in GenerationSettings", e);
-        }
-
-
-        try {
-            ObfuscationReflectionHelper.setPrivateValue(GenerationSettings.class, settings, VampirismConfig.SERVER.villageSeparation.get(), SRGNAMES.GenerationSettings_villageSeparation);
-        } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
-            LOGGER.error("Could not modify field for villageSeparation in GenerationSettings", e);
-        }
-
-
-        LOGGER.debug("Modified MapGenVillage fields.");
-
-    }
 
     public static void addVillageStructures() {
         //ensure single generation of following structures

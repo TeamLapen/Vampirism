@@ -45,8 +45,8 @@ public class ModVillage {
         PointOfInterestType vampire_faction = new PointOfInterestType("vampire_faction", ImmutableSet.of(ModBlocks.totem_top_vampirism_vampire.getStateContainer().getBaseState()), 1, 1).setRegistryName(REFERENCE.MODID, "vampire_faction");
         registry.register(hunter_faction);
         registry.register(vampire_faction);
-        PointOfInterestType.func_221052_a(hunter_faction);
-        PointOfInterestType.func_221052_a(vampire_faction);
+        PointOfInterestType.registerBlockStates(hunter_faction);
+        PointOfInterestType.registerBlockStates(vampire_faction);
     }
 
     static void registerSchedule(IForgeRegistry<Schedule> registry) {
