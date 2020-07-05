@@ -45,7 +45,7 @@ public class ModRecipes {
         registerLiquidColor(ModItems.holy_water_bottle_enhanced, 0x6666FF);
         registerLiquidColor(ModItems.holy_water_bottle_ultimate, 0x6666FF);
 
-        registerLiquidColor(ModTags.Items.GARLIC, 0xBBBBBB);
+        //registerLiquidColor(ModTags.Items.GARLIC, 0xBBBBBB); TODO 1.16 use some kind of datapack load event to (re-)register stuff or find a different solution
 
     }
 
