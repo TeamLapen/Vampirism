@@ -27,6 +27,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.ModLifecycleEvent;
@@ -192,5 +193,10 @@ public class RegistryManager implements IInitListener {
     @SubscribeEvent
     public void onRegisterAttributes(RegistryEvent.Register<Attribute> event) {
         ModAttributes.registerAttributes(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterStructures(RegistryEvent.Register<Structure<?>> event) {
+        ModFeatures.registerStructures(event.getRegistry());
     }
 }

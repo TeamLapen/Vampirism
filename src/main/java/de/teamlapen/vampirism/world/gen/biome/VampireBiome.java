@@ -12,7 +12,7 @@ public abstract class VampireBiome extends VampirismBiome implements IFactionBio
     }
 
     @Override
-    public IFaction getFaction() {
+    public IFaction<?> getFaction() {
         return VReference.VAMPIRE_FACTION;
     }
 }

@@ -14,6 +14,8 @@ import net.minecraft.loot.LootContext;
 import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.util.JSONUtils;
 
+import javax.annotation.Nonnull;
+
 
 public class StakeCondition implements ILootCondition {
     private final LootContext.EntityTarget target;
@@ -22,6 +24,7 @@ public class StakeCondition implements ILootCondition {
         this.target = targetIn;
     }
 
+    @Nonnull
     @Override
     public LootConditionType func_230419_b_() {
         return ModLoot.with_stake;
@@ -44,8 +47,9 @@ public class StakeCondition implements ILootCondition {
     public static class Serializer implements ILootSerializer<StakeCondition> {
 
 
+        @Nonnull
         @Override
-        public StakeCondition func_230423_a_(JsonObject json, JsonDeserializationContext context) {
+        public StakeCondition func_230423_a_(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
             return new StakeCondition(JSONUtils.deserializeClass(json, "entity", context, LootContext.EntityTarget.class));
         }
 

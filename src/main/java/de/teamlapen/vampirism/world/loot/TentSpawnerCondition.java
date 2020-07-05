@@ -12,11 +12,14 @@ import net.minecraft.loot.LootParameters;
 import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.tileentity.TileEntity;
 
+import javax.annotation.Nonnull;
+
 
 public class TentSpawnerCondition implements ILootCondition {
 
     private final static TentSpawnerCondition INSTANCE = new TentSpawnerCondition();
 
+    @Nonnull
     @Override
     public LootConditionType func_230419_b_() {
         return ModLoot.is_tent_spawner;
@@ -39,13 +42,14 @@ public class TentSpawnerCondition implements ILootCondition {
     public static class Serializer implements ILootSerializer<TentSpawnerCondition> {
 
 
+        @Nonnull
         @Override
-        public TentSpawnerCondition func_230423_a_(JsonObject json, JsonDeserializationContext context) {
+        public TentSpawnerCondition func_230423_a_(@Nonnull JsonObject json, @Nonnull JsonDeserializationContext context) {
             return INSTANCE;
         }
 
         @Override
-        public void func_230424_a_(JsonObject json, TentSpawnerCondition value, JsonSerializationContext context) {
+        public void func_230424_a_(@Nonnull JsonObject json, @Nonnull TentSpawnerCondition value, @Nonnull JsonSerializationContext context) {
 
         }
 

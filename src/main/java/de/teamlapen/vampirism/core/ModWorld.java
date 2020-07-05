@@ -33,11 +33,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@ObjectHolder(REFERENCE.MODID)
 public class ModWorld {
     private static final Logger LOGGER = LogManager.getLogger();
     public static boolean debug = false;
-
 
     static void modifyVillageSize(GenerationSettings settings) {
 

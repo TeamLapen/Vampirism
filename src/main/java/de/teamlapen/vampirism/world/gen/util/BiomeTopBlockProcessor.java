@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world.gen.util;
 
-import com.google.common.collect.ImmutableMap;
-import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.core.ModFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BiomeTopBlockProcessor extends StructureProcessor {
+    public static final Codec<BiomeTopBlockProcessor> CODEC = BlockState.field_235877_b_.fieldOf("replace_block").xmap(BiomeTopBlockProcessor::new, (entry) -> entry.replaceBlock).codec();
     private static final Map<Block,Block> streetBlocks = new HashMap<Block, Block>(){{
         put(Blocks.SAND, Blocks.SMOOTH_SANDSTONE);
         put(Blocks.GRASS_BLOCK, Blocks.GRASS_PATH);
@@ -30,32 +30,22 @@ public class BiomeTopBlockProcessor extends StructureProcessor {
         this.replaceBlock = blockState;
     }
 
-    public BiomeTopBlockProcessor(Dynamic<?> dynamic) {
-        this(BlockState.deserialize(dynamic.get("replaceBlock").orElseEmptyMap()));
-    }
-
     @Nullable
-    @Override
-    public Template.BlockInfo process(@Nonnull IWorldReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull Template.BlockInfo p_215194_3_, @Nonnull Template.BlockInfo blockInfo, @Nonnull PlacementSettings placementSettingsIn, @Nullable Template template) {
-        if (blockInfo.state.equals(replaceBlock)) {
-            BlockState topBlock = worldReaderIn.getBiome(blockInfo.pos).getSurfaceBuilderConfig().getTop();
+    public Template.BlockInfo process(@Nonnull IWorldReader worldReaderIn, @Nonnull BlockPos pos, @Nonnull BlockPos pos1, @Nonnull Template.BlockInfo blockInfo, Template.BlockInfo blockInfo1, @Nonnull PlacementSettings placementSettings, @Nullable Template template) {
+        if (blockInfo1.state.equals(replaceBlock)) {
+            BlockState topBlock = worldReaderIn.getBiome(blockInfo1.pos).getSurfaceBuilderConfig().getTop();
             if(streetBlocks.containsKey(topBlock.getBlock())){
                 topBlock = streetBlocks.get(topBlock.getBlock()).getDefaultState();
             }
-            return new Template.BlockInfo(blockInfo.pos, topBlock, null);
+            return new Template.BlockInfo(blockInfo1.pos, topBlock, null);
         }
-        return blockInfo;
+        return blockInfo1;
     }
 
     @Nonnull
     @Override
-    protected IStructureProcessorType getType() {
+    protected IStructureProcessorType<?> getType() {
         return ModFeatures.biome_based;
     }
 
-    @Nonnull
-    @Override
-    protected <T> Dynamic<T> serialize0(@Nonnull DynamicOps<T> ops) {
-        return new Dynamic<>(ops,ops.createMap(ImmutableMap.of(ops.createString("replaceBlock"), BlockState.serialize(ops, this.replaceBlock).getValue())));
-    }
 }
