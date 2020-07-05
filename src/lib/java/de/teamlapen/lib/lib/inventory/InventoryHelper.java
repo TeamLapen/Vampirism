@@ -75,6 +75,9 @@ public class InventoryHelper {
         return LazyOptional.empty();
     }
 
+    /**
+     * Write the given inventory as new ListNBT "inventory" to given tag
+     */
     public static void writeInventoryToTag(CompoundNBT tag, Inventory inventory) {
         ListNBT listnbt = new ListNBT();
 
@@ -87,6 +90,9 @@ public class InventoryHelper {
         tag.put("inventory", listnbt);
     }
 
+    /**
+     * Write the given inventory from ListNBT "inventory" in the given tag
+     */
     public static void readInventoryFromTag(CompoundNBT tag, Inventory inventory) {
         ListNBT listnbt = tag.getList("inventory", 10);
 
@@ -136,6 +142,12 @@ public class InventoryHelper {
         addStack.shrink(addAmount);
     }
 
+    /**
+     * Find the slot the given stack should be added to. First checks if there already is a stack it can be merged into, then looks for empty slots.  Prefers lower index slots.
+     *
+     * @param invLimit The maximum item count per slot in the inventory
+     * @return the slot id or -1 if none found
+     */
     public static int getFirstSuitableSlotToAdd(NonNullList<ItemStack> inventory, ItemStack stack, int invLimit) {
         if (!stack.isDamaged() && stack.isStackable()) {
             for (int i = 0; i < inventory.size(); ++i) {

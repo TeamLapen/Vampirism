@@ -9,6 +9,9 @@ import javax.annotation.Nonnull;
  */
 public interface IFactionExclusiveItem {
 
+    /**
+     * @return The faction this item is meant for
+     */
     @Nonnull
     IFaction<?> getExclusiveFaction();
 }

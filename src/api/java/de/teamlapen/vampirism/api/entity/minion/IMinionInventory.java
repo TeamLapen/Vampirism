@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.minion;
 
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -7,9 +8,8 @@ import net.minecraft.util.NonNullList;
 import javax.annotation.Nonnull;
 
 /**
- * 1.14
- *
- * @author maxanier
+ * Similar to {@link PlayerInventory}
+ * Manages the different inventories of a minion (armor, held item, main inventory)
  */
 public interface IMinionInventory extends IInventory {
     /**
@@ -19,6 +19,9 @@ public interface IMinionInventory extends IInventory {
      */
     void addItemStack(@Nonnull ItemStack stack);
 
+    /**
+     * @return The number of available main inventory slots. Must be 9, 12 or 15
+     */
     int getAvailableSize();
 
     NonNullList<ItemStack> getInventoryArmor();
