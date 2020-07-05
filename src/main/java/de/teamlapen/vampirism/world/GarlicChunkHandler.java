@@ -45,7 +45,7 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         for (Emitter e : emitterHashMap.values()) {
             sender.sendFeedback(new StringTextComponent("E: " + e.toString()), true);
         }
-        for (Map.Entry e : strengthHashMap.entrySet()) {
+        for (Map.Entry<ChunkPos, EnumStrength> e : strengthHashMap.entrySet()) {
             sender.sendFeedback(new StringTextComponent("S: " + e.toString()), true);
         }
     }
@@ -94,6 +94,7 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         rebuildStrengthMap();
     }
 
+    @SuppressWarnings("deprecation")
     public static class Provider implements IGarlicChunkHandler.Provider {
 
         private final HashMap<RegistryKey<World>, IGarlicChunkHandler> handlers = Maps.newHashMap();
@@ -113,7 +114,7 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         }
     }
 
-    private class Emitter {
+    private static class Emitter {
         final EnumStrength strength;
         final ChunkPos[] pos;
 

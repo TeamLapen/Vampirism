@@ -12,6 +12,8 @@ import net.minecraft.loot.LootContext;
 import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.util.JSONUtils;
 
+import javax.annotation.Nonnull;
+
 
 public class AdjustableLevelCondition implements ILootCondition {
     private final int levelTest;
@@ -22,6 +24,7 @@ public class AdjustableLevelCondition implements ILootCondition {
         this.target = targetIn;
     }
 
+    @Nonnull
     @Override
     public LootConditionType func_230419_b_() {
         return ModLoot.adjustable_level;
@@ -46,15 +49,16 @@ public class AdjustableLevelCondition implements ILootCondition {
     public static class Serializer implements ILootSerializer<AdjustableLevelCondition> {
 
 
+        @Nonnull
         @Override
-        public AdjustableLevelCondition func_230423_a_(JsonObject json, JsonDeserializationContext context) {
+        public AdjustableLevelCondition func_230423_a_(JsonObject json, @Nonnull JsonDeserializationContext context) {
             return new AdjustableLevelCondition(json.has("level") ? JSONUtils.getInt(json, "level") : -1, JSONUtils.deserializeClass(json, "entity", context, LootContext.EntityTarget.class));
         }
 
         @Override
-        public void func_230424_a_(JsonObject json, AdjustableLevelCondition value, JsonSerializationContext context) {
-            json.add("level", context.serialize(value.levelTest));
-            json.add("entity", context.serialize(value.target));
+        public void func_230424_a_(JsonObject json, AdjustableLevelCondition lootFunction, JsonSerializationContext context) {
+            json.add("level", context.serialize(lootFunction.levelTest));
+            json.add("entity", context.serialize(lootFunction.target));
         }
 
     }

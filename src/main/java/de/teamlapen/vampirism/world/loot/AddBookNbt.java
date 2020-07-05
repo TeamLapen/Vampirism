@@ -32,6 +32,7 @@ public class AddBookNbt extends LootFunction {
         return builder(AddBookNbt::new);
     }
 
+    @Nonnull
     @Override
     public LootFunctionType func_230425_b_() {
         return ModLoot.add_book_nbt;

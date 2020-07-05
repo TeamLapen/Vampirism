@@ -51,7 +51,7 @@ public class VampirismWorldData extends WorldSavedData {
 
     /**
      * Called when an altar of inspiration is destroyed.
-     * If ther was a vampire dungeon at this postion it is removed
+     * If there was a vampire dungeon at this position it is removed
      */
     public void onAltarInspirationDestroyed(BlockPos pos) {
         if (vampireDungeons.remove(pos)) {
@@ -71,8 +71,9 @@ public class VampirismWorldData extends WorldSavedData {
         }
     }
 
+    @Nonnull
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT write(@Nonnull CompoundNBT compound) {
         ListNBT dungeons = new ListNBT();
         for (BlockPos pos : vampireDungeons) {
             dungeons.add(NBTUtil.writeBlockPos(pos));
