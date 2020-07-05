@@ -8,10 +8,12 @@ import javax.annotation.Nullable;
 
 /**
  * Interface for the player lord related data.
- * Attached to all players as capability
  */
 public interface ILordPlayer {
 
+    /**
+     * @return The faction of this lord player or null if not currently a lord
+     */
     @Nullable
     IPlayableFaction<?> getLordFaction();
 

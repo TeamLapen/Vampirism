@@ -65,6 +65,7 @@ public interface IFactionPlayerHandler extends ILordPlayer {
     /**
      * @return The player represented by this handler
      */
+    @Nonnull
     PlayerEntity getPlayer();
 
     /**

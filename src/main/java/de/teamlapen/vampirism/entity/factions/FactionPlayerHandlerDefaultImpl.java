@@ -74,6 +74,7 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
         return 0;
     }
 
+    @Nonnull
     @Override
     public PlayerEntity getPlayer() {
         return null;

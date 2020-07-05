@@ -184,6 +184,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return currentLordLevel;
     }
 
+    @Nonnull
     @Override
     public PlayerEntity getPlayer() {
         return player;
