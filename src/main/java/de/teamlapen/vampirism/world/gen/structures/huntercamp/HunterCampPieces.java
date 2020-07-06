@@ -354,6 +354,6 @@ public abstract class HunterCampPieces extends StructurePiece {
     protected boolean testPreconditions(ISeedReader worldIn, StructureManager manager) {
         return this.y >= 63
                 && !worldIn.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid()
-                && manager.func_235010_a_(new BlockPos(x, y, z), true, Structure.field_236381_q_).isValid();
+                && !manager.func_235010_a_(new BlockPos(x, y, z), false, Structure.field_236381_q_).isValid();
     }
 }
