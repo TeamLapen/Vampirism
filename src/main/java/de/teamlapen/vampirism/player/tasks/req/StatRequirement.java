@@ -6,21 +6,24 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class StatRequirement implements TaskRequirement<ResourceLocation> {
+public class StatRequirement implements TaskRequirement.Requirement<ResourceLocation> {
 
     @Nonnull
     private final ResourceLocation stat;
     private final int amount;
+    @Nonnull
+    private final ResourceLocation id;
 
-    public StatRequirement(@Nonnull ResourceLocation stat, int amount) {
+    public StatRequirement(@Nonnull ResourceLocation id, @Nonnull ResourceLocation stat, int amount) {
+        this.id = id;
         this.stat = stat;
         this.amount = amount;
     }
 
     @Nonnull
     @Override
-    public Type getType() {
-        return Type.STATS;
+    public TaskRequirement.Type getType() {
+        return TaskRequirement.Type.STATS;
     }
 
     @Nonnull
@@ -33,4 +36,11 @@ public class StatRequirement implements TaskRequirement<ResourceLocation> {
     public int getAmount(IFactionPlayer<?> player) {
         return amount;
     }
+
+    @Nonnull
+    @Override
+    public ResourceLocation getId() {
+        return id;
+    }
+
 }

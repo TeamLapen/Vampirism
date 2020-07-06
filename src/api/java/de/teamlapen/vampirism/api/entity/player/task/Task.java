@@ -16,7 +16,7 @@ public class Task extends ForgeRegistryEntry<Task> {
     @Nullable
     private final IPlayableFaction<?> faction;
     @Nonnull
-    private final TaskRequirement<?> requirements;
+    private final TaskRequirement requirements;
     @Nonnull
     private final TaskReward rewards;
     @Nonnull
@@ -51,7 +51,7 @@ public class Task extends ForgeRegistryEntry<Task> {
      * @param unlocker       the unlocker to unlock the task for completion
      * @param useDescription whether the task should display a description of not
      */
-    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement<?> requirements, @Nonnull TaskReward rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
+    public Task(@Nonnull Variant variant, @Nullable IPlayableFaction<?> faction, @Nonnull TaskRequirement requirements, @Nonnull TaskReward rewards, @Nonnull TaskUnlocker[] unlocker, boolean useDescription) {
         this.variant = variant;
         this.faction = faction;
         this.requirements = requirements;
@@ -71,7 +71,7 @@ public class Task extends ForgeRegistryEntry<Task> {
     }
 
     @Nonnull
-    public TaskRequirement<?> getRequirement() {
+    public TaskRequirement getRequirement() {
         return this.requirements;
     }
 

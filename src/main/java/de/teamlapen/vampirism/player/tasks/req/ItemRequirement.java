@@ -4,15 +4,19 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class ItemRequirement implements TaskRequirement<Item> {
+public class ItemRequirement implements TaskRequirement.Requirement<Item> {
 
     @Nonnull
     private final ItemStack itemRequirement;
+    @Nonnull
+    private final ResourceLocation id;
 
-    public ItemRequirement(@Nonnull ItemStack itemRequirement) {
+    public ItemRequirement(@Nonnull ResourceLocation id, @Nonnull ItemStack itemRequirement) {
+        this.id = id;
         this.itemRequirement = itemRequirement;
     }
 
@@ -26,8 +30,8 @@ public class ItemRequirement implements TaskRequirement<Item> {
 
     @Nonnull
     @Override
-    public Type getType() {
-        return Type.ITEMS;
+    public TaskRequirement.Type getType() {
+        return TaskRequirement.Type.ITEMS;
     }
 
     /**
@@ -50,4 +54,11 @@ public class ItemRequirement implements TaskRequirement<Item> {
     public int getAmount(IFactionPlayer<?> player) {
         return itemRequirement.getCount();
     }
+
+    @Override
+    @Nonnull
+    public ResourceLocation getId() {
+        return id;
+    }
+
 }
