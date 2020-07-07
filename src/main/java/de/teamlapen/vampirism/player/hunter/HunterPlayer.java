@@ -163,6 +163,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     public void loadData(CompoundNBT compound) {
+        super.loadData(compound);
         actionHandler.loadFromNbt(compound);
         skillHandler.loadFromNbt(compound);
     }
@@ -269,6 +270,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     public void saveData(CompoundNBT compound) {
+        super.saveData(compound);
         actionHandler.saveToNbt(compound);
         skillHandler.saveToNbt(compound);
     }
