@@ -64,6 +64,7 @@ public class ModBlocks {
     public static final TotemTopBlock totem_top_vampirism_hunter = getNull();
     public static final VampirismFlowerBlock vampire_orchid = getNull();
     public static final WeaponTableBlock weapon_table = getNull();
+    public static final ExtendedPotionTableBlock extended_potion_table = getNull();
 
     static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.register(itemBlock(alchemical_cauldron));
@@ -102,6 +103,7 @@ public class ModBlocks {
         registry.register(itemBlock(totem_top_vampirism_vampire, new Item.Properties()));
         registry.register(itemBlock(vampire_orchid));
         registry.register(itemBlock(weapon_table));
+        registry.register(itemBlock(extended_potion_table));
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
@@ -152,6 +154,7 @@ public class ModBlocks {
         registry.register(new TotemTopBlock(REFERENCE.VAMPIRE_PLAYER_KEY).setRegistryName(REFERENCE.MODID,"totem_top_vampirism_vampire"));
         registry.register(vampire_orchid);
         registry.register(new WeaponTableBlock());
+        registry.register(new ExtendedPotionTableBlock());
     }
 
     @Nonnull

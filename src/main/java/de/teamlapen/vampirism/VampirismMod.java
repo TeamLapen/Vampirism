@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
+import de.teamlapen.vampirism.inventory.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
@@ -293,10 +294,11 @@ public class VampirismMod {
         GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
         ActionManagerEntity entityActionManager = new ActionManagerEntity();
         WorldGenManager worldGenRegistry = new WorldGenManager();
+        ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry = new ExtendedBrewingRecipeRegistry();
 
         biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
         BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
-        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, bloodPotionRegistry, entityActionManager, worldGenRegistry);
+        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, bloodPotionRegistry, entityActionManager, worldGenRegistry, extendedBrewingRecipeRegistry);
         VampirismAPI.setUpAccessors(new GarlicChunkHandler.Provider());
     }
 
