@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.player.tasks;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
-import de.teamlapen.vampirism.player.tasks.req.EntityRequirement;
-import de.teamlapen.vampirism.player.tasks.req.EntityTypeRequirement;
-import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
-import de.teamlapen.vampirism.player.tasks.req.StatRequirement;
+import de.teamlapen.vampirism.player.tasks.req.*;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.player.tasks.unlock.ParentUnlocker;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -17,16 +15,17 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class TaskBuilder {
     @Nonnull
-    private final List<TaskRequirement.Requirement<?>> requirement = Lists.newArrayList();
+    private final Map<TaskRequirement.Type, List<TaskRequirement.Requirement<?>>> requirement = Maps.newHashMapWithExpectedSize(TaskRequirement.Type.values().length);
     @Nullable
     private TaskReward reward;
     @Nullable
@@ -75,31 +74,32 @@ public class TaskBuilder {
 
     @Nonnull
     public TaskBuilder addRequirement(String name, @Nonnull EntityType<?> entityType, int amount) {
-        this.requirement.add(new EntityRequirement(new ResourceLocation(modId(),name), entityType, amount));
-        return this;
+        return this.addRequirement(new EntityRequirement(new ResourceLocation(modId(),name), entityType, amount));
     }
 
     @Nonnull
     public TaskBuilder addRequirement(String name, @Nonnull Tag<EntityType<?>> entityType, int amount) {
-        this.requirement.add(new EntityTypeRequirement(new ResourceLocation(modId(), name), entityType, amount));
-        return this;
+        return this.addRequirement(new EntityTypeRequirement(new ResourceLocation(modId(), name), entityType, amount));
     }
 
     @Nonnull
-    public <T extends IForgeRegistryEntry<?>> TaskBuilder setRequirement(String name, @Nonnull ResourceLocation stat, int amount) {
-        this.requirement.add(new StatRequirement(new ResourceLocation(modId(), name), stat, amount));
-        return this;
+    public TaskBuilder addRequirement(String name, @Nonnull ResourceLocation stat, int amount) {
+        return this.addRequirement(new StatRequirement(new ResourceLocation(modId(), name), stat, amount));
     }
 
     @Nonnull
     public TaskBuilder addRequirement(String name, @Nonnull ItemStack itemStack) {
-        this.requirement.add(new ItemRequirement(new ResourceLocation(modId(),name), itemStack));
-        return this;
+        return this.addRequirement(new ItemRequirement(new ResourceLocation(modId(),name), itemStack));
+    }
+
+    @Nonnull
+    public TaskBuilder addRequirement(String name, @Nonnull BooleanRequirement.BooleanSupplier function) {
+        return this.addRequirement(new BooleanRequirement(new ResourceLocation(modId(),name), function));
     }
 
     @Nonnull
     public TaskBuilder addRequirement(@Nonnull TaskRequirement.Requirement<?> requirement) {
-        this.requirement.add(requirement);
+        this.requirement.computeIfAbsent(requirement.getType(), type -> Lists.newArrayListWithExpectedSize(3)).add(requirement);
         return this;
     }
 
@@ -124,7 +124,7 @@ public class TaskBuilder {
     @Nonnull
     public Task build(ResourceLocation registryName) {
         if (requirement.isEmpty()) throw new IllegalStateException("The task " + registryName + " needs requirements");
-        return new Task(this.variant, this.faction, new TaskRequirement(this.requirement.toArray(new TaskRequirement.Requirement[]{})), this.reward == null ? player -> {
+        return new Task(this.variant, this.faction, new TaskRequirement(this.requirement), this.reward == null ? player -> {
         } : this.reward, this.unlocker.toArray(new TaskUnlocker[]{}), this.useDescription).setRegistryName(registryName);
     }
 

@@ -1,16 +1,19 @@
 package de.teamlapen.vampirism.inventory.container;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskFinishedPacket;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,6 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,6 +43,11 @@ public class TaskMasterContainer extends Container {
      */
     @Nonnull
     private final List<Task> unlockedTasks = Lists.newArrayList();
+    /**
+     * all task requirements that are completed
+     */
+    @Nullable
+    private Map<Task, List<ResourceLocation>> completedRequirements;
     @Nonnull
     private final TextFormatting factionColor;
     @Nullable
@@ -61,12 +70,13 @@ public class TaskMasterContainer extends Container {
      * @param unlockedTasks updated unlockedTasks
      */
     @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Set<Task> possibleTasks,@Nonnull Set<Task> completedTasks, @Nonnull List<Task> unlockedTasks) {
+    public void init(@Nonnull Set<Task> possibleTasks, @Nonnull Set<Task> completedTasks, @Nonnull List<Task> unlockedTasks, @Nonnull Map<Task, List<ResourceLocation>> completedRequirements) {
         this.possibleTasks.clear();
         this.possibleTasks.addAll(possibleTasks);
         this.completedTasks.clear();
         this.completedTasks.addAll(completedTasks);
         this.unlockedTasks.addAll(unlockedTasks.stream().filter(task -> !this.unlockedTasks.contains(task)).sorted((task1, task2) -> (this.possibleTasks.contains(task1) && !this.possibleTasks.contains(task2)) || (!possibleTasks.contains(task1) && !this.completedTasks.contains(task1) && this.completedTasks.contains(task2)) ? -1 : 0).collect(Collectors.toList()));
+        this.completedRequirements = completedRequirements;
     }
 
     @Override
@@ -76,6 +86,29 @@ public class TaskMasterContainer extends Container {
 
     public boolean canCompleteTask(Task task) {
         return this.possibleTasks.contains(task);
+    }
+
+    public boolean isRequirementCompleted(Task task, TaskRequirement.Requirement<?> requirement) {
+        if(this.completedRequirements != null) {
+            if(this.completedRequirements.containsKey(task)) {
+                return this.completedRequirements.get(task).contains(requirement.getId());
+            }
+        }
+        return false;
+    }
+
+    public boolean areRequirementsCompleted(Task task, TaskRequirement.Type type) {
+        if(this.completedRequirements != null) {
+            if(this.completedRequirements.containsKey(task)) {
+                for (TaskRequirement.Requirement<?> requirement : task.getRequirement().requirements().get(type)) {
+                    if(!this.completedRequirements.get(task).contains(requirement.getId())) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     public void completeTask(Task task) {

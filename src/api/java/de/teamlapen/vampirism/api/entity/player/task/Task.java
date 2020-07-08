@@ -38,7 +38,7 @@ public class Task extends ForgeRegistryEntry<Task> {
      *  <p>
      *  if needed:
      *  <p>
-     *  - {@code task.<registryname>.requirement}
+     *  - {@code task.<registryname>.req.<requirementname>}
      *  <p>
      *  - {@code task.<registryname>.reward}
      *  <p>

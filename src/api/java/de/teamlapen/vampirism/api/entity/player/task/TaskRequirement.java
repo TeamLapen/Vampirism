@@ -1,25 +1,28 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TaskRequirement {
 
-    private final Requirement<?>[] requirements;
+    private final Map<Type, List<Requirement<?>>> requirements;
+    private final int size;
 
-    public TaskRequirement(Requirement<?>[] requirements) {
+    public TaskRequirement(Map<Type, List<Requirement<?>>> requirements) {
         this.requirements = requirements;
-        for (int i = 0; i < this.requirements.length; i++) {
-
-        }
+        this.size = requirements.values().stream().mapToInt(List::size).sum();
     }
 
-    public Requirement<?>[] getRequirements() {
+    public Map<Type, List<Requirement<?>>> requirements() {
         return requirements;
+    }
+
+    public int size() {
+        return size;
     }
 
     /**
@@ -28,6 +31,15 @@ public class TaskRequirement {
      * @param player the player which completed the task
      */
     public void removeRequirement(IFactionPlayer<?> player) {
+        for (Type type : this.requirements.keySet()) {
+            for (Requirement<?> requirement : this.requirements.get(type)) {
+                requirement.removeRequirement(player);
+            }
+        }
+    }
+
+    public List<Requirement<?>> getAll() {
+        return this.requirements.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     public interface Requirement<T> {
@@ -85,7 +97,7 @@ public class TaskRequirement {
         /**
          * based on boolean supplier
          */
-        BOOLEAN
+        BOOLEAN;
     }
 
 }

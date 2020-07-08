@@ -95,6 +95,7 @@
   "gui.vampirism.taskmaster.item_req": "Items to acquire",
   "gui.vampirism.taskmaster.entity_req": "Entities to kill",
   "gui.vampirism.taskmaster.entity_tag_req": "Entity types to kill",
+  "gui.vampirism.taskmaster.bool_req": "Achieve",
   "gui.vampirism.taskmaster.stat_req": "Stats to achieve",
   "gui.vampirism.taskmaster.complete_task": "Submit",
   "gui.vampirism.taskmaster.requirement": "Requirement:",

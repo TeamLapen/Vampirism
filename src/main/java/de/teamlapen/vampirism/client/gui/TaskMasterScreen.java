@@ -122,7 +122,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         this.minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        blit(i, j, this.blitOffset, 0, 0, this.xSize, this.ySize, 325, 256);
+        blit(i, j, this.blitOffset, 0, 0, this.xSize, this.ySize, 256, 256);
     }
 
     @Override
@@ -236,17 +236,20 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         assert this.minecraft != null;
         this.minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
         boolean dummy = task == this.dummy;
-        int offset = dummy ? 63 : 0;
+        int offset = dummy ? 21 : 0;
         if (dummy && this.isOpen) {
             task = this.container.getTask(this.openedTask);
         }
         if (this.container.isCompleted(task)) {
-            blit(x, y, this.blitOffset, 16, 208 + offset, 137, 21, 325, 256);
+            GlStateManager.color4f(0.4f,0.4f,0.4f,1);
+
         } else if (this.container.canCompleteTask(task)) {
-            blit(x, y, this.blitOffset, 16, 229 + offset, 137, Math.min(64 + 54 + 99 - (y), 21), 325, 256);
-        } else {
-            blit(x, y, this.blitOffset, 16, 187 + offset, 137, Math.min(64 + 54 + 99 - (y), 21), 325, 256);
+            if(!dummy) {
+                GlStateManager.color4f(0, 0.8f, 0, 1);
+            }
         }
+        blit(x, y, this.blitOffset, 16, 187 + offset, 137, Math.min(64 + 54 + 99 - (y), 21), 256, 256);
+        GlStateManager.color4f(1,1,1,1);
         RenderHelper.enableGUIStandardItemLighting();
 
         if (!dummy) {
@@ -338,9 +341,9 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             if (this.scrolledTask >= i + 4) {
                 i1 = 121;
             }
-            blit(x + 94, y + 18 + i1, this.blitOffset, 2.0F, 195.0F, 6, 27, 325, 256);
+            blit(x + 94, y + 18 + i1, this.blitOffset, 2.0F, 195.0F, 6, 27, 256, 256);
         } else {
-            blit(x + 94, y + 18, this.blitOffset, 2.0F, 195.0F, 6, 27, 325, 256);
+            blit(x + 94, y + 18, this.blitOffset, 2.0F, 195.0F, 6, 27, 256, 256);
         }
 
         RenderHelper.enableGUIStandardItemLighting();
@@ -419,7 +422,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         final int chosenItem;
 
         public CompleteButton(int xPos, int yPos, int chosenItem, IPressable onPress) {
-            super(xPos, yPos, 14, 12, 0, 222, 12, TASKMASTER_GUI_TEXTURE, 256, 325, onPress, "");
+            super(xPos, yPos, 14, 12, 0, 222, 12, TASKMASTER_GUI_TEXTURE, 256, 256, onPress, "");
             this.chosenItem = chosenItem;
             this.visible = false;
         }
