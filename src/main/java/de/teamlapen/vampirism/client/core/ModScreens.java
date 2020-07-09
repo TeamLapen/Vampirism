@@ -22,6 +22,7 @@ public class ModScreens {
         ScreenManager.<BloodGrinderContainer, BloodGrinderScreen>registerFactory(ModContainer.blood_grinder, BloodGrinderScreen::new);
         ScreenManager.<MinionContainer, MinionScreen>registerFactory(ModContainer.minion, MinionScreen::new);
         ScreenManager.registerFactory(ModContainer.task_master, TaskBoardScreen::new);
+        ScreenManager.registerFactory(ModContainer.extended_potion_table, ExtendedBrewingTableScreen::new);
     }
 
 }

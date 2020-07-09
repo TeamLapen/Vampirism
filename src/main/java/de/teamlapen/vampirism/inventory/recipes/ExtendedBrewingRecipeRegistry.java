@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory.recipes;
 
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipe;
 import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
+import de.teamlapen.vampirism.api.items.MixPredicate;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
@@ -16,11 +17,18 @@ import java.util.Optional;
 public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegistry {
 
     private final List<IExtendedBrewingRecipe> recipes = new ArrayList<>();
-    private final List<IExtendedBrewingRecipeRegistry.MixPredicate> conversionMixes = new ArrayList<>();
+    private final List<MixPredicate> conversionMixes = new ArrayList<>();
 
     @Override
     public void addMix(MixPredicate mixPredicate) {
         this.conversionMixes.add(mixPredicate);
+    }
+
+    @Override
+    public void addMix(MixPredicate[] mixPredicate) {
+        for (MixPredicate predicate : mixPredicate) {
+            this.conversionMixes.add(predicate);
+        }
     }
 
     @Override

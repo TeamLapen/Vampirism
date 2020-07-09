@@ -34,6 +34,15 @@ public class ExtendedPotionTableContainer extends InventoryContainer {
 
     private final boolean extended;
 
+    public boolean isExtendedTable() {
+        return this.extended;
+    }
+
+    @Override
+    protected boolean isSlotEnabled(int id) {
+        return id < 5 || this.isExtendedTable();
+    }
+
     public ExtendedPotionTableContainer(int id, PlayerInventory playerInventory, IWorldPosCallable worldPos, @Nonnull IInventory inventory, boolean extended) {
         super(ModContainer.extended_potion_table, id, playerInventory, worldPos, inventory, SELECTOR_INFOS);
         assert inventory.getSizeInventory() >= (extended ? 8 : 6);

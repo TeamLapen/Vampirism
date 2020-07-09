@@ -37,6 +37,11 @@ public abstract class InventoryContainer extends Container {
                     super.onSlotChange(p_75220_1_, p_75220_2_);
                     InventoryContainer.this.onCraftMatrixChanged(this.inventory);
                 }
+
+                @Override
+                public boolean isEnabled() {
+                    return InventoryContainer.this.isSlotEnabled(this.slotNumber);
+                }
             });
         }
 
@@ -105,6 +110,10 @@ public abstract class InventoryContainer extends Container {
 
     protected void addPlayerSlots(PlayerInventory playerInventory) {
         this.addPlayerSlots(playerInventory, 8, 84);
+    }
+
+    protected boolean isSlotEnabled(int id) {
+        return true;
     }
 
     public static class SelectorSlot extends Slot {
@@ -192,5 +201,7 @@ public abstract class InventoryContainer extends Container {
             boolean result = ingredient.map(ingredient -> ingredient.test(s) || ingredient.hasNoMatchingItems(), function -> function.test(s));
             return result != inverted;
         }
+
+
     }
 }

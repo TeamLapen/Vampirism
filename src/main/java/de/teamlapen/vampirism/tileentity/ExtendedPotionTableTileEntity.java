@@ -4,13 +4,13 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.core.ModTiles;
+import de.teamlapen.vampirism.inventory.container.ExtendedPotionTableContainer;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.BrewingStandContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,6 +20,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -312,7 +313,7 @@ public class ExtendedPotionTableTileEntity extends LockableTileEntity implements
 
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
-        return new BrewingStandContainer(id, player, this, this.syncedProperties);
+        return new ExtendedPotionTableContainer(id, player, IWorldPosCallable.of(this.world, this.getPos()), this, this.config.multiTaskBrewing);
     }
 
     @Override

@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
@@ -218,7 +216,6 @@ public class ModItems {
             }
         });
 
-        VampirismAPI.extendedBrewingRecipeRegistry().addMix(new IExtendedBrewingRecipeRegistry.MixPredicate(Potions.WATER, Ingredient.fromItems(ModItems.human_heart), 2, Ingredient.EMPTY, 0, Potions.NIGHT_VISION, t -> true));
     }
 
 
