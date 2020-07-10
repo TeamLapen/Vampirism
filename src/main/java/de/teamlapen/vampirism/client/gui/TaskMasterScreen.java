@@ -30,6 +30,7 @@ import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.logging.log4j.LogManager;
@@ -206,6 +207,10 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             List<String> toolTips = this.toolTips.computeIfAbsent(task, task1 -> Lists.newArrayList());
             if (toolTips.isEmpty()) {
                 toolTips.add(task.getTranslation().applyTextStyle(this.container.getFactionColor()).getFormattedText());
+                if (task.useDescription()) {
+                    toolTips.add(task.getDescription().getFormattedText());
+                    toolTips.add("");
+                }
                 for (List<TaskRequirement.Requirement<?>> requirements : task.getRequirement().requirements().values()) {
                     if(requirements == null)continue;
                     ITextComponent title;
@@ -255,11 +260,8 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                         if(completed || this.container.isRequirementCompleted(task,requirement)) {
                             desc.applyTextStyle(TextFormatting.STRIKETHROUGH);
                         }
-                        toolTips.add(desc.getFormattedText());
+                        toolTips.add(new StringTextComponent("  ").appendSibling(desc).getFormattedText());
                     }
-                }
-                if (task.useDescription()) {
-                    toolTips.add(task.getDescription().getFormattedText());
                 }
             }
             this.renderTooltip(toolTips, x, y);
@@ -314,6 +316,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                     case ENTITY:
                     case ENTITY_TAG:
                         this.itemRenderer.renderItemAndEffectIntoGUI(SKULL_ITEM, x + 3 + 3 + i*20, y + 2);
+                        this.itemRenderer.renderItemOverlayIntoGUI(this.font, SKULL_ITEM, x + 3 + 3 + i*20, y + 2, "" + requirement.getAmount(factionPlayer));
                         break;
                     default:
                         this.itemRenderer.renderItemAndEffectIntoGUI(PAPER,x + 3 + 3 + i*20, y + 2);
