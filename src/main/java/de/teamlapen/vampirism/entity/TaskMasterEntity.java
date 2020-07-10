@@ -24,11 +24,14 @@ public interface TaskMasterEntity extends ForceLookEntityGoal.TaskOwner, ITaskMa
         if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(iTaskManager -> iTaskManager.hasAvailableTasks(variant)).orElse(false)) {
             OptionalInt containerIdOpt = playerEntity.openContainer(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskMasterContainer(containerId, playerInventory, variant), CONTAINER_NAME.deepCopy()));
             if (containerIdOpt.isPresent()) {
-                FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(iFactionPlayer -> iFactionPlayer.getTaskManager().updateClient()));
+                FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(iFactionPlayer -> {
+                    iFactionPlayer.getTaskManager().init();
+                    iFactionPlayer.getTaskManager().updateClient();
+                }));
                 return true;
             }
         } else {
-            playerEntity.sendStatusMessage(variant == Task.Variant.UNIQUE?NO_TASK_UNIQUE:NO_TASK, true);
+            playerEntity.sendStatusMessage(variant == Task.Variant.UNIQUE ? NO_TASK_UNIQUE : NO_TASK, true);
         }
         return false;
     }

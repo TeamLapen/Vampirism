@@ -330,6 +330,7 @@ public class TaskManager implements ITaskManager {
      */
     private void updateAvailableTasks() {
         Collection<Task> tasks = ModRegistries.TASKS.getValues();
+        getAvailableTasks().stream().filter(task -> !this.isTaskUnlocked(task)).map(task -> this.availableTasks.get(task.getVariant()).remove(task));
         tasks.stream().filter(this::isTaskUnlocked).filter(task -> !isTaskCompleted(task)).forEach(task -> this.getAvailableTasks(task.getVariant()).add(task));
         this.initStats(false);
     }
