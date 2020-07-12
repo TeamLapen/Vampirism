@@ -26,11 +26,13 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -39,10 +41,13 @@ import java.util.Random;
 public class VampireBaronEntity extends VampireBaseEntity implements IVampireBaron {
     private final static Logger LOGGER = LogManager.getLogger(VampireBaronEntity.class);
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(VampireBaronEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Boolean> ENRAGED = EntityDataManager.createKey(VampireBaronEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> LADY = EntityDataManager.createKey(VampireBaronEntity.class, DataSerializers.BOOLEAN);
 
     public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         return world.getBiome(blockPos) == ModBiomes.vampire_forest && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && spawnPredicateCanSpawn(entityType, world, spawnReason, blockPos, random);
     }
+
     public static final int MAX_LEVEL = 4;
     /**
      * Used for ranged vs melee attack decision
@@ -57,6 +62,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     public VampireBaronEntity(EntityType<? extends VampireBaronEntity> type, World world) {
         super(type, world, true);
         this.garlicResist = EnumStrength.MEDIUM;
+        this.hasArms = true;
     }
 
     @Override
@@ -107,6 +113,23 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return true;
     }
 
+    @Override
+    public int func_213396_dB() {
+        return 5; //Turn around slowly
+    }
+
+    @Override
+    public int getHorizontalFaceSpeed() {
+        return 5; //Don't move the head too far
+    }
+
+    public boolean isEnraged() {
+        return getDataManager().get(ENRAGED);
+    }
+
+    public boolean isLady() {
+        return getDataManager().get(LADY);
+    }
 
     @Override
     public int getLevel() {
@@ -120,7 +143,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            LOGGER.info("Lev {}", level);
             this.setCustomName(new TranslationTextComponent("entity.vampirism.vampire_baron.level", level + 1));
         } else {
             this.setCustomName(null);
@@ -187,10 +209,11 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         }
     }
 
+    @Nullable
     @Override
-    public void readAdditional(CompoundNBT nbt) {
-        super.readAdditional(nbt);
-        setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
+    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        this.getDataManager().set(LADY, this.getRNG().nextBoolean());
+        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @Override
@@ -217,9 +240,10 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt) {
-        super.writeAdditional(nbt);
-        nbt.putInt("level", getLevel());
+    public void readAdditional(CompoundNBT nbt) {
+        super.readAdditional(nbt);
+        setLevel(MathHelper.clamp(nbt.getInt("level"), 0, MAX_LEVEL));
+        this.getDataManager().set(LADY, nbt.getBoolean("lady"));
     }
 
     @Override
@@ -239,9 +263,24 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
+    public void setAttackTarget(@Nullable LivingEntity target) {
+        super.setAttackTarget(target);
+        this.getDataManager().set(ENRAGED, target != null);
+    }
+
+    @Override
+    public void writeAdditional(CompoundNBT nbt) {
+        super.writeAdditional(nbt);
+        nbt.putInt("level", getLevel());
+        nbt.putBoolean("lady", isLady());
+    }
+
+    @Override
     protected void registerData() {
         super.registerData();
         getDataManager().register(LEVEL, -1);
+        getDataManager().register(ENRAGED, false);
+        getDataManager().register(LADY, false);
     }
 
     @Override
