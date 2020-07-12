@@ -59,6 +59,12 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     private boolean rangedAttack = false;
     private boolean prevAttacking = false;
 
+    /**
+     * Store the approximate count of entities that are following this advanced vampire.
+     * Not guaranteed to be exact and not saved to nbt
+     */
+    private int followingEntities = 0;
+
     public VampireBaronEntity(EntityType<? extends VampireBaronEntity> type, World world) {
         super(type, world, true);
         this.garlicResist = EnumStrength.MEDIUM;
@@ -159,6 +165,30 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         return MAX_LEVEL;
     }
 
+
+    @Override
+    public void decreaseFollowerCount() {
+        followingEntities = Math.max(0, followingEntities - 1);
+    }
+
+    @Override
+    public int getFollowingCount() {
+        return followingEntities;
+    }
+
+    @Override
+    public int getMaxFollowerCount() {
+        return (int) (BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_FOLLOWER * this.getLevel() / (float) this.getMaxLevel() * 2f);
+    }
+
+    @Override
+    public boolean increaseFollowerCount() {
+        if (followingEntities < getMaxFollowerCount()) {
+            followingEntities++;
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public LivingEntity getRepresentingEntity() {

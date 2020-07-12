@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.entity.goals;
 
-import de.teamlapen.vampirism.entity.vampire.AdvancedVampireEntity;
+import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.entity.vampire.BasicVampireEntity;
+import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.ai.goal.Goal;
 
@@ -32,7 +33,7 @@ public class FollowAdvancedVampireGoal extends Goal {
         if (this.entity.getAdvancedLeader() == null) {
             return false;
         } else {
-            double d0 = this.entity.getDistanceSq(this.entity.getAdvancedLeader());
+            double d0 = this.entity.getDistanceSq(this.entity.getAdvancedLeader().getRepresentingEntity());
             return d0 >= DIST && d0 <= 256.0D;
         }
     }
@@ -40,22 +41,24 @@ public class FollowAdvancedVampireGoal extends Goal {
     @Override
     public boolean shouldExecute() {
 
-        AdvancedVampireEntity leader = entity.getAdvancedLeader();
+        IEntityLeader leader = entity.getAdvancedLeader();
         if (leader != null) {
-            return leader.isAlive() && this.entity.getDistanceSq(leader) > DIST;
+            return leader.getRepresentingEntity().isAlive() && this.entity.getDistanceSq(leader.getRepresentingEntity()) > DIST;
         }
 
-        List<AdvancedVampireEntity> list = this.entity.getEntityWorld().getEntitiesWithinAABB(AdvancedVampireEntity.class, this.entity.getBoundingBox().grow(8, 4, 8));
+        List<VampireBaseEntity> list = this.entity.getEntityWorld().getEntitiesWithinAABB(VampireBaseEntity.class, this.entity.getBoundingBox().grow(8, 4, 8), entity -> entity instanceof IEntityLeader);
+
 
         double d0 = Double.MAX_VALUE;
 
-        for (AdvancedVampireEntity entity1 : list) {
-            if (entity1.isAlive() && entity1.getFollowingCount() < entity1.getMaxFollowerCount()) {
+        for (VampireBaseEntity entity1 : list) {
+            IEntityLeader leader1 = ((IEntityLeader) entity1);
+            if (entity1.isAlive() && leader1.getFollowingCount() < leader1.getMaxFollowerCount()) {
                 double d1 = this.entity.getDistanceSq(entity1);
 
                 if (d1 <= d0) {
                     d0 = d1;
-                    leader = entity1;
+                    leader = leader1;
                 }
             }
         }
@@ -64,7 +67,7 @@ public class FollowAdvancedVampireGoal extends Goal {
         else {
             entity.setAdvancedLeader(leader);
             leader.increaseFollowerCount();
-            return this.entity.getDistanceSq(leader) > DIST;
+            return this.entity.getDistanceSq(leader.getRepresentingEntity()) > DIST;
         }
     }
 
@@ -77,8 +80,8 @@ public class FollowAdvancedVampireGoal extends Goal {
     public void tick() {
         if (--this.delayCounter <= 0 && entity.getAdvancedLeader() != null) {
             this.delayCounter = 10;
-            this.entity.getNavigator().tryMoveToEntityLiving(this.entity.getAdvancedLeader(), this.speed);
-            this.entity.lookAt(EntityAnchorArgument.Type.EYES, this.entity.getAdvancedLeader().getPositionVector().add(0, this.entity.getAdvancedLeader().getEyeHeight(), 0));
+            this.entity.getNavigator().tryMoveToEntityLiving(this.entity.getAdvancedLeader().getRepresentingEntity(), this.speed);
+            this.entity.lookAt(EntityAnchorArgument.Type.EYES, this.entity.getAdvancedLeader().getRepresentingEntity().getPositionVector().add(0, this.entity.getAdvancedLeader().getRepresentingEntity().getEyeHeight(), 0));
         }
     }
 }
