@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -22,7 +23,7 @@ public class FeedingAdapterItem extends VampirismItem {
     private final static String regName = "feeding_adapter";
 
     public FeedingAdapterItem() {
-        super(regName, new Item.Properties().maxStackSize(1));
+        super(regName, new Item.Properties().maxStackSize(1).group(VampirismMod.creativeTab));
     }
 
 
@@ -71,8 +72,7 @@ public class FeedingAdapterItem extends VampirismItem {
 
 
         if (blood > 0 && count == 1) {
-            Hand activeHand = player.getActiveHand();
-            int drink = Math.min(blood, 3);
+            int drink = Math.min(blood, 3 * VReference.FOOD_TO_FLUID_BLOOD);
             BloodContainerBlock.writeFluidToItemStack(bloodContainer, new FluidStack(ModFluids.blood, blood - drink));
             vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false);
 

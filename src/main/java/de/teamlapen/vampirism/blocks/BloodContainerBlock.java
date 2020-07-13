@@ -45,7 +45,7 @@ public class BloodContainerBlock extends VampirismBlockContainer {
     protected static final VoxelShape containerShape = Block.makeCuboidShape(2, 0, 2, 14, 16, 14);
     private final static Logger LOGGER = LogManager.getLogger();
     @ObjectHolder("vampirism:blood_container")
-    private static final Item item = UtilLib.getNull();
+    public static final Item item = UtilLib.getNull();
 
     public BloodContainerBlock() {
         super(regName, Properties.create(Material.GLASS).hardnessAndResistance(1f));
@@ -86,6 +86,8 @@ public class BloodContainerBlock extends VampirismBlockContainer {
                 CompoundNBT fluidTag = stack.getTag().getCompound("fluid");
                 FluidStack fluidStack = FluidStack.loadFluidStackFromNBT(fluidTag);
                 return fluidStack;
+            } else {
+                return new FluidStack(ModFluids.blood, 0);
             }
         }
         return FluidStack.EMPTY;

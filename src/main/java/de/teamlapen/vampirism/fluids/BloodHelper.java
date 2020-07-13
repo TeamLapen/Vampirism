@@ -175,7 +175,7 @@ public class BloodHelper {
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             FluidStack content = BloodContainerBlock.getFluidFromItemStack(stack);
-            if (content.getFluid() == ModFluids.blood && (allowFull || content.getAmount() < BloodContainerTileEntity.CAPACITY) && (allowEmpty || content.getAmount() > 0)) {
+            if (content.getRawFluid() == ModFluids.blood && (allowFull || content.getAmount() < BloodContainerTileEntity.CAPACITY) && (allowEmpty || content.getAmount() > 0)) {
                 return stack;
             }
         }
