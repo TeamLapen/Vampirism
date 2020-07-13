@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
+import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
@@ -36,7 +37,9 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -56,7 +59,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     private final int MAX_LEVEL = 2;
     private final int ANGRY_TICKS_PER_ATTACK = 120;
     private int bloodtimer = 100;
-    private AdvancedVampireEntity advancedLeader = null;
+    private IEntityLeader advancedLeader = null;
     private int angryTimer = 0;
     private Goal tasks_avoidHunter;
 
@@ -86,15 +89,21 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         bloodtimer += amt * 40 + this.getRNG().nextInt(1000) * (dedicated ? 2 : 1);
     }
 
-    //Village stuff ----------------------------------------------------------------------------------------------------
-    @Nullable
-    private ICaptureAttributes villageAttributes;
+    /**
+     * @return The advanced vampire this entity is following or null if none
+     */
+    public @Nullable
+    IEntityLeader getAdvancedLeader() {
+        return advancedLeader;
+    }
 
-    @Override
-    public void attackVillage(ICaptureAttributes totem) {
-        this.goalSelector.removeGoal(tasks_avoidHunter);
-        this.villageAttributes = totem;
-        this.attack = true;
+    /**
+     * Set an advanced vampire, this vampire should follow
+     *
+     * @param advancedLeader new leader
+     */
+    public void setAdvancedLeader(@Nullable IEntityLeader advancedLeader) {
+        this.advancedLeader = advancedLeader;
     }
 
     @Override
@@ -135,6 +144,16 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         return super.isIgnoringSundamage() || angryTimer > 0 && health < 0.7f || health < 0.3f;
     }
 
+    @Nullable
+    private ICaptureAttributes villageAttributes;
+
+    @Override
+    public void attackVillage(ICaptureAttributes totem) {
+        this.goalSelector.removeGoal(tasks_avoidHunter);
+        this.villageAttributes = totem;
+        this.attack = true;
+    }
+
     @Override
     public void defendVillage(ICaptureAttributes totem) {
         this.goalSelector.removeGoal(tasks_avoidHunter);
@@ -173,7 +192,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public void tick() {
         super.tick();
-        if (advancedLeader != null && !advancedLeader.isAlive()) {
+        if (advancedLeader != null && !advancedLeader.getRepresentingEntity().isAlive()) {
             advancedLeader = null;
         }
     }
@@ -232,13 +251,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         }
     }
 
-    /**
-     * @return The advanced vampire this entity is following or null if none
-     */
-    public @Nullable
-    AdvancedVampireEntity getAdvancedLeader() {
-        return advancedLeader;
-    }
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
@@ -303,14 +315,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         return entityActionHandler;
     }
 
-    /**
-     * Set an advanced vampire, this vampire should follow
-     *
-     * @param advancedLeader new leader
-     */
-    public void setAdvancedLeader(@Nullable AdvancedVampireEntity advancedLeader) {
-        this.advancedLeader = advancedLeader;
-    }
+
 
     private boolean attack;
 
@@ -436,5 +441,13 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
         this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.field_236381_q_)));
+        this.targetSelector.addGoal(8, new DefendLeaderGoal(this));
+    }
+
+
+    @Override
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
+        convertToMinion(player);
+        return ActionResultType.SUCCESS;
     }
 }
