@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.api.entity.player.task.TaskReward;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
+import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -41,7 +41,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
+public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
     private static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
     private static final ITextComponent SUBMIT = new TranslationTextComponent("gui.vampirism.taskmaster.complete_task");
     private static final ITextComponent ACCEPT = new TranslationTextComponent("gui.vampirism.taskmaster.accept_task");
@@ -51,42 +51,41 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     private static final ITextComponent REWARD = new TranslationTextComponent("gui.vampirism.taskmaster.reward").applyTextStyle(TextFormatting.UNDERLINE);
     private static final ItemStack SKULL_ITEM = new ItemStack(Blocks.SKELETON_SKULL);
     private static final ItemStack PAPER = new ItemStack(Items.PAPER);
+    private final TaskActionButton[] buttons = new TaskActionButton[7];
+    private final Map<Task, List<String>> toolTips = Maps.newHashMap();
+    private final IFactionPlayer<?> factionPlayer;
+    private int scrolledTask;
+    private int openedTask;
     @SuppressWarnings({"ConstantConditions", "RedundantCast"})
-    private final Task dummy = new Task(Task.Variant.UNIQUE, null, (TaskRequirement)null, (TaskReward)null, (TaskUnlocker[])null, false) {
+    private final Task dummy = new Task(Task.Variant.UNIQUE, null, (TaskRequirement) null, (TaskReward) null, (TaskUnlocker[]) null, false) {
         @Nonnull
         @Override
         public TaskReward getReward() {
-            return TaskMasterScreen.this.container.getTask(TaskMasterScreen.this.openedTask).getReward();
+            return TaskBoardScreen.this.container.getTask(TaskBoardScreen.this.openedTask).getReward();
         }
 
         @Nonnull
         @Override
         public TaskRequirement getRequirement() {
-            return TaskMasterScreen.this.container.getTask(TaskMasterScreen.this.openedTask).getRequirement();
+            return TaskBoardScreen.this.container.getTask(TaskBoardScreen.this.openedTask).getRequirement();
         }
 
         @Nullable
         @Override
         public IPlayableFaction<?> getFaction() {
-            return TaskMasterScreen.this.container.getTask(TaskMasterScreen.this.openedTask).getFaction();
+            return TaskBoardScreen.this.container.getTask(TaskBoardScreen.this.openedTask).getFaction();
         }
 
         @Nonnull
         @Override
         public String getTranslationKey() {
-            return TaskMasterScreen.this.container.getTask(TaskMasterScreen.this.openedTask).getTranslationKey();
+            return TaskBoardScreen.this.container.getTask(TaskBoardScreen.this.openedTask).getTranslationKey();
         }
     };
-
-    private final TaskActionButton[] buttons = new TaskActionButton[7];
-    private final Map<Task, List<String>> toolTips = Maps.newHashMap();
-    private int scrolledTask;
-    private int openedTask;
     private boolean isOpen;
     private boolean mouseOnScroller;
-    private final IFactionPlayer<?> factionPlayer;
 
-    public TaskMasterScreen(TaskMasterContainer container, PlayerInventory playerInventory, ITextComponent containerName) {
+    public TaskBoardScreen(TaskBoardContainer container, PlayerInventory playerInventory, ITextComponent containerName) {
         super(container, playerInventory, containerName);
         this.xSize = 176;
         this.ySize = 181;
@@ -107,9 +106,9 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                     Task task = this.container.getTask(((TaskActionButton) button).getChosenItem() + this.scrolledTask - 1);
                     if (this.container.canCompleteTask(task)) {
                         this.container.completeTask(task);
-                    }else if(!this.container.isTaskAccepted(task)) {
+                    } else if (this.container.isTaskNotAccepted(task)) {
                         this.container.acceptTask(task);
-                    }else {
+                    } else {
                         this.container.abortTask(task);
                     }
                 }
@@ -190,13 +189,13 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 if (reward instanceof ItemReward) {
                     this.renderItemTooltip(((ItemReward) reward).getReward(), x + 3 + 113 - 21, y + 2, REWARD.getFormattedText(), false);
                 } else {
-                    this.renderItemTooltip(task,x + 3 + 113 - 21, y + 2);
+                    this.renderItemTooltip(task, x + 3 + 113 - 21, y + 2);
                 }
             }
             List<TaskRequirement.Requirement<?>> requirements = task.getRequirement().getAll();
             for (int i = 0; i < requirements.size(); i++) {
-                if (mouseX >= x + 3 + 3 + i*20&& mouseX < x + 3 + 16 + 3 + i*20&& mouseY >= y + 2 && mouseY < y + 2 + 16) {
-                    this.renderRequirementTool(this.container.getTask(this.openedTask), requirements.get(i), x + 3 + 3 + i*20, y + 2);
+                if (mouseX >= x + 3 + 3 + i * 20 && mouseX < x + 3 + 16 + 3 + i * 20 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
+                    this.renderRequirementTool(this.container.getTask(this.openedTask), requirements.get(i), x + 3 + 3 + i * 20, y + 2);
                 }
             }
         } else {
@@ -209,11 +208,11 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                     toolTips.add("");
                 }
                 for (List<TaskRequirement.Requirement<?>> requirements : task.getRequirement().requirements().values()) {
-                    if(requirements == null)continue;
+                    if (requirements == null) continue;
                     ITextComponent title;
                     TaskRequirement.Type type = requirements.get(0).getType();
                     boolean completed = this.container.areRequirementsCompleted(task, type);
-                    switch (type){
+                    switch (type) {
                         case ITEMS:
                             title = new TranslationTextComponent("gui.vampirism.taskmaster.item_req").appendText(":");
                             break;
@@ -230,7 +229,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                             title = new TranslationTextComponent("gui.vampirism.taskmaster.bool_req").appendText(":");
                             break;
                     }
-                    if(completed) {
+                    if (completed) {
                         title.applyTextStyle(TextFormatting.STRIKETHROUGH);
                     }
                     toolTips.add(title.getFormattedText());
@@ -238,7 +237,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                         ITextComponent desc;
                         switch (type) {
                             case ITEMS:
-                                desc = ((Item) requirement.getStat(this.factionPlayer)).getName().shallowCopy().appendText(" "+requirement.getAmount(this.factionPlayer));
+                                desc = ((Item) requirement.getStat(this.factionPlayer)).getName().shallowCopy().appendText(" " + requirement.getAmount(this.factionPlayer));
                                 break;
                             case STATS:
                                 desc = new TranslationTextComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).appendText(" " + requirement.getAmount(this.factionPlayer));
@@ -248,13 +247,13 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                                 break;
                             case ENTITY_TAG:
                                 //noinspection unchecked
-                                desc = new TranslationTextComponent("tasks.vampirism." + ((Tag<EntityType<?>>)requirement.getStat(this.factionPlayer)).getId().toString()).appendText(" " + requirement.getAmount(this.factionPlayer));
+                                desc = new TranslationTextComponent("tasks.vampirism." + ((Tag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getId().toString()).appendText(" " + requirement.getAmount(this.factionPlayer));
                                 break;
                             default:
-                                desc = new TranslationTextComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':','.'));
+                                desc = new TranslationTextComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
                                 break;
                         }
-                        if(completed || this.container.isRequirementCompleted(task,requirement)) {
+                        if (completed || this.container.isRequirementCompleted(task, requirement)) {
                             desc.applyTextStyle(TextFormatting.STRIKETHROUGH);
                         }
                         toolTips.add(new StringTextComponent("  ").appendSibling(desc).getFormattedText());
@@ -276,17 +275,17 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             task = this.container.getTask(this.openedTask);
         }
         if (this.container.isCompleted(task)) {
-            GlStateManager.color4f(0.4f,0.4f,0.4f,1);
+            GlStateManager.color4f(0.4f, 0.4f, 0.4f, 1);
 
         } else if (this.container.canCompleteTask(task)) {
-            if(!dummy) {
+            if (!dummy) {
                 GlStateManager.color4f(0, 0.8f, 0, 1);
             }
-        } else if (!this.container.isTaskAccepted(task)) {
-            GlStateManager.color4f(0.8f,0.8f,1f,1);
+        } else if (this.container.isTaskNotAccepted(task)) {
+            GlStateManager.color4f(0.8f, 0.8f, 1f, 1);
         }
         blit(x, y, this.blitOffset, 16, 187 + offset, 137, Math.min(64 + 54 + 99 - (y), 21), 256, 256);
-        GlStateManager.color4f(1,1,1,1);
+        GlStateManager.color4f(1, 1, 1, 1);
         RenderHelper.enableGUIStandardItemLighting();
 
         if (!dummy) {
@@ -297,28 +296,28 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 ItemStack stack = ((ItemReward) reward).getReward();
                 this.itemRenderer.renderItemAndEffectIntoGUI(stack, x + 3 + 113 - 21, y + 2);
                 this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 113 - 21, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
-            }else{
-                this.itemRenderer.renderItemAndEffectIntoGUI(PAPER,x + 3 + 113 - 21, y + 2);
+            } else {
+                this.itemRenderer.renderItemAndEffectIntoGUI(PAPER, x + 3 + 113 - 21, y + 2);
             }
             List<TaskRequirement.Requirement<?>> requirements = task.getRequirement().getAll();
             for (int i = 0; i < requirements.size(); i++) {
                 TaskRequirement.Requirement<?> requirement = requirements.get(i);
-                if(this.container.isRequirementCompleted(task,requirement)) {
-                    GlStateManager.color4f(0,0,0,1);
+                if (this.container.isRequirementCompleted(task, requirement)) {
+                    GlStateManager.color4f(0, 0, 0, 1);
                 }
                 switch (requirement.getType()) {
                     case ITEMS:
                         ItemStack stack = ((ItemRequirement) requirement).getItemStack();
-                        this.itemRenderer.renderItemAndEffectIntoGUI(stack, x + 3 + 3 + i*20, y + 2);
-                        this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 3 + i*20, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
+                        this.itemRenderer.renderItemAndEffectIntoGUI(stack, x + 3 + 3 + i * 20, y + 2);
+                        this.itemRenderer.renderItemOverlayIntoGUI(this.font, stack, x + 3 + 3 + i * 20, y + 2, "" + Math.min(stack.getCount(), stack.getMaxStackSize()));
                         break;
                     case ENTITY:
                     case ENTITY_TAG:
-                        this.itemRenderer.renderItemAndEffectIntoGUI(SKULL_ITEM, x + 3 + 3 + i*20, y + 2);
-                        this.itemRenderer.renderItemOverlayIntoGUI(this.font, SKULL_ITEM, x + 3 + 3 + i*20, y + 2, "" + requirement.getAmount(factionPlayer));
+                        this.itemRenderer.renderItemAndEffectIntoGUI(SKULL_ITEM, x + 3 + 3 + i * 20, y + 2);
+                        this.itemRenderer.renderItemOverlayIntoGUI(this.font, SKULL_ITEM, x + 3 + 3 + i * 20, y + 2, "" + requirement.getAmount(factionPlayer));
                         break;
                     default:
-                        this.itemRenderer.renderItemAndEffectIntoGUI(PAPER,x + 3 + 3 + i*20, y + 2);
+                        this.itemRenderer.renderItemAndEffectIntoGUI(PAPER, x + 3 + 3 + i * 20, y + 2);
                         break;
                 }
 
@@ -327,10 +326,10 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     }
 
     private void renderRequirementTool(Task task, TaskRequirement.Requirement<?> requirement, int x, int y) {
-        boolean completed = this.container.isRequirementCompleted(task,requirement);
+        boolean completed = this.container.isRequirementCompleted(task, requirement);
         switch (requirement.getType()) {
             case ITEMS:
-                this.renderItemTooltip(((ItemRequirement) requirement).getItemStack(), x, y, (completed? REQUIREMENT_STRIKE: REQUIREMENT).getFormattedText(), completed);
+                this.renderItemTooltip(((ItemRequirement) requirement).getItemStack(), x, y, (completed ? REQUIREMENT_STRIKE : REQUIREMENT).getFormattedText(), completed);
                 break;
             case ENTITY:
                 this.renderEntitySkull(x, y, ((EntityType<?>) requirement.getStat(this.factionPlayer)).getName().shallowCopy().appendText(" " + requirement.getAmount(this.factionPlayer)), completed);
@@ -346,9 +345,9 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
     private void renderDefaultRequirementToolTip(Task task, TaskRequirement.Requirement<?> requirement, int x, int y, boolean strikeThrough) {
         List<String> tooltips = Lists.newArrayList();
-        tooltips.add((strikeThrough ? REQUIREMENT_STRIKE:REQUIREMENT).getFormattedText());
-        ITextComponent text = new TranslationTextComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':','.'));
-        if(strikeThrough) {
+        tooltips.add((strikeThrough ? REQUIREMENT_STRIKE : REQUIREMENT).getFormattedText());
+        ITextComponent text = new TranslationTextComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
+        if (strikeThrough) {
             text.applyTextStyle(TextFormatting.STRIKETHROUGH);
         }
         tooltips.add(text.getFormattedText());
@@ -357,8 +356,8 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
     private void renderEntitySkull(int x, int y, ITextComponent text, boolean strikeThrough) {
         List<String> tooltips = Lists.newArrayList();
-        tooltips.add((strikeThrough? REQUIREMENT_STRIKE:REQUIREMENT).getFormattedText());
-        if(strikeThrough) {
+        tooltips.add((strikeThrough ? REQUIREMENT_STRIKE : REQUIREMENT).getFormattedText());
+        if (strikeThrough) {
             text.applyTextStyle(TextFormatting.STRIKETHROUGH);
         }
         tooltips.add(text.getFormattedText());
@@ -385,8 +384,8 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         List<ITextComponent> list = itemStack.getTooltip(this.minecraft.player, this.minecraft.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
         List<String> list1 = Lists.newArrayList();
 
-        for(ITextComponent itextcomponent : list) {
-            if(strikeThough) {
+        for (ITextComponent itextcomponent : list) {
+            if (strikeThough) {
                 itextcomponent.applyTextStyle(TextFormatting.STRIKETHROUGH);
             }
             list1.add(itextcomponent.getFormattedText());
@@ -402,13 +401,13 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         int i = tasks.size() - 7;
         if (i >= 1) {
             int k = 144 - (2 + (i - 1) * 144 / i);
-            int i1 = Math.min(121, this.scrolledTask * k);
+            int i1 = Math.min(120, this.scrolledTask * k);
             if (this.scrolledTask >= i + 4) {
-                i1 = 121;
+                i1 = 120;
             }
-            blit(x + 94, y + 18 + i1, this.blitOffset, 2.0F, 195.0F, 6, 27, 256, 256);
+            blit(x + 94, y + 18 + i1, this.blitOffset, 0F, 181.0F, 6, 27, 256, 256);
         } else {
-            blit(x + 94, y + 18, this.blitOffset, 2.0F, 195.0F, 6, 27, 256, 256);
+            blit(x + 94, y + 18, this.blitOffset, 6F, 181.0F, 6, 27, 256, 256);
         }
 
         RenderHelper.enableGUIStandardItemLighting();
@@ -498,15 +497,15 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
         @Override
         public void renderToolTip(int mouseX, int mouseY) {
-            if (this.isHovered && this.visible && TaskMasterScreen.this.container.size() > this.chosenItem + TaskMasterScreen.this.scrolledTask) {
-                TaskMasterContainer.TaskAction action = getAction();
-                TaskMasterScreen.this.renderTooltip((action == TaskMasterContainer.TaskAction.ACCEPT?ACCEPT:action == TaskMasterContainer.TaskAction.ABORT?ABORT:SUBMIT).getFormattedText(), mouseX, mouseY);
+            if (this.isHovered && this.visible && TaskBoardScreen.this.container.size() > this.chosenItem + TaskBoardScreen.this.scrolledTask) {
+                TaskBoardContainer.TaskAction action = getAction();
+                TaskBoardScreen.this.renderTooltip((action == TaskBoardContainer.TaskAction.ACCEPT ? ACCEPT : action == TaskBoardContainer.TaskAction.ABORT ? ABORT : SUBMIT).getFormattedText(), mouseX, mouseY);
             }
         }
 
         @Override
         public void renderButton(int mouseX, int mouseY, float p_renderButton_3_) {
-            TaskMasterContainer.TaskAction action = getAction();
+            TaskBoardContainer.TaskAction action = getAction();
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
             GlStateManager.disableDepthTest();
@@ -515,7 +514,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 i += 13;
             }
             int j;
-            switch (action){
+            switch (action) {
                 case ACCEPT:
                     j = 190;
                     break;
@@ -527,18 +526,18 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
             }
 
-            blit(this.x, this.y, (float)j, (float)i, this.width, this.height, 256, 256);
+            blit(this.x, this.y, (float) j, (float) i, this.width, this.height, 256, 256);
             GlStateManager.enableDepthTest();
         }
 
-        private TaskMasterContainer.TaskAction getAction() {
-            Task task = TaskMasterScreen.this.container.getTask(this.chosenItem + TaskMasterScreen.this.scrolledTask - 1);
-            if (TaskMasterScreen.this.container.canCompleteTask(task)) {
-                return TaskMasterContainer.TaskAction.COMPLETE;
-            } else if (!TaskMasterScreen.this.container.isTaskAccepted(task)) {
-                return TaskMasterContainer.TaskAction.ACCEPT;
+        private TaskBoardContainer.TaskAction getAction() {
+            Task task = TaskBoardScreen.this.container.getTask(this.chosenItem + TaskBoardScreen.this.scrolledTask - 1);
+            if (TaskBoardScreen.this.container.canCompleteTask(task)) {
+                return TaskBoardContainer.TaskAction.COMPLETE;
+            } else if (TaskBoardScreen.this.container.isTaskNotAccepted(task)) {
+                return TaskBoardContainer.TaskAction.ACCEPT;
             } else {
-                return TaskMasterContainer.TaskAction.ABORT;
+                return TaskBoardContainer.TaskAction.ABORT;
             }
         }
     }

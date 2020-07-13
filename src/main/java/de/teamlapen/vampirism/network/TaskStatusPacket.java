@@ -22,19 +22,28 @@ public class TaskStatusPacket implements IMessage {
     public final Set<Task> notAcceptedTasks;
     public final Map<Task, List<ResourceLocation>> completedRequirements;
     public final int containerId;
-    public final int entityId;
+    public final int taskBoardId;
 
-    public TaskStatusPacket(Set<Task> completableTasks, Collection<Task> visibleTasks, Set<Task> notAcceptedTasks, Map<Task, List<ResourceLocation>> completedRequirements, int containerId, int entityId) {
+    /**
+     *
+     * @param completableTasks all visible task that are completable
+     * @param visibleTasks all visible tasks except completable or not accepted ones
+     * @param notAcceptedTasks all visible tasks that are not accepted
+     * @param completedRequirements all requirements of the visible tasks that are already completed
+     * @param containerId the id of the {@link de.teamlapen.vampirism.inventory.container.TaskBoardContainer}
+     * @param taskBoardId the task board id
+     */
+    public TaskStatusPacket(Set<Task> completableTasks, Collection<Task> visibleTasks, Set<Task> notAcceptedTasks, Map<Task, List<ResourceLocation>> completedRequirements, int containerId, int taskBoardId) {
         this.completableTasks = completableTasks;
         this.visibleTasks = visibleTasks;
         this.notAcceptedTasks = notAcceptedTasks;
         this.completedRequirements = completedRequirements;
         this.containerId = containerId;
-        this.entityId = entityId;
+        this.taskBoardId = taskBoardId;
     }
 
     static void encode(@Nonnull TaskStatusPacket msg, @Nonnull PacketBuffer buf) {
-        buf.writeVarInt(msg.entityId);
+        buf.writeVarInt(msg.taskBoardId);
         buf.writeVarInt(msg.containerId);
         buf.writeVarInt(msg.notAcceptedTasks.size());
         buf.writeVarInt(msg.completableTasks.size());
@@ -51,19 +60,19 @@ public class TaskStatusPacket implements IMessage {
     }
 
     static TaskStatusPacket decode(@Nonnull PacketBuffer buf) {
-        int entityId = buf.readVarInt();
+        int taskBoardId = buf.readVarInt();
         int containerId = buf.readVarInt();
         int notAcceptedSize = buf.readVarInt();
-        int taskSize = buf.readVarInt();
-        int unlockedSize = buf.readVarInt();
+        int completableSize = buf.readVarInt();
+        int visibleSize = buf.readVarInt();
         int completedReqSize = buf.readVarInt();
-        Set<Task> possible = Sets.newHashSet();
-        for (int i = 0; i < taskSize; i++) {
-            possible.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
+        Set<Task> completable = Sets.newHashSet();
+        for (int i = 0; i < completableSize; i++) {
+            completable.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
         }
-        List<Task> unlocked = Lists.newArrayList();
-        for (int i = 0; i < unlockedSize; i++) {
-            unlocked.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
+        List<Task> visible = Lists.newArrayList();
+        for (int i = 0; i < visibleSize; i++) {
+            visible.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
         }
         Set<Task> notAccepted = Sets.newHashSet();
         for (int i = 0; i < notAcceptedSize; i++) {
@@ -79,8 +88,7 @@ public class TaskStatusPacket implements IMessage {
             }
             completedRequirements.put(task,req);
         }
-
-        return new TaskStatusPacket(possible,unlocked, notAccepted,completedRequirements, containerId, entityId);
+        return new TaskStatusPacket(completable,visible, notAccepted,completedRequirements, containerId, taskBoardId);
     }
 
     public static void handle(final TaskStatusPacket msg, @Nonnull Supplier<NetworkEvent.Context> contextSupplier) {

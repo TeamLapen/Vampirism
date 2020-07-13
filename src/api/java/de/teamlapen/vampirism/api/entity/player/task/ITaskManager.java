@@ -1,54 +1,81 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
-import net.minecraft.util.ResourceLocation;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public interface ITaskManager {
 
-    void openTaskMasterScreen(int entityId);
+    /**
+     * opens a TaskBoardScreen based on the taskBoardId
+     *
+     * @param taskBoardId the unique id of the task board
+     */
+    void openTaskMasterScreen(int taskBoardId);
 
     /**
-     * checks if the task can be completed
-     * if yes calls {@link #addCompletedTask(Task)} and handles rewards, requirements and sync to client
+     * updated an open TaskBoardScreen on the client
      *
+     * @param taskBoardId the unique id of the task board
+     */
+    void updateTaskMasterScreen(int taskBoardId);
+
+    /**
+     * checks if the task is unlocked and can be completed
+     * cleans the task board from the task
+     *
+     * handles rewards and requirements
+     *
+     * @implNote syncs changes to the client
+     * @param taskBoardId the id of the task board
      * @param task the task to complete
      */
-    boolean completeTask(int entityId, @Nonnull Task task);
-
-    void acceptTask(int entityId, @Nonnull Task task);
-
-    void abortTask(int entityId, @Nonnull Task task);
-
-    boolean hasAvailableTasks(int entityId);
+    void completeTask(int taskBoardId, @Nonnull Task task);
 
     /**
-     * syncs completed, available and completable tasks to the client
+     * accepts the task, so that the TaskManger knows that the player is working on the Task at the task board
+     *
+     * @implNote does not sync changes to the client
+     * @param taskBoardId the id of the task board
+     * @param task the accepted task
      */
-    void updateClient(int entityId, Map<Task, List<ResourceLocation>> requirements, Set<Task> completable,Set<Task> notAcceptedTasks, Set<Task> available);
+    void acceptTask(int taskBoardId, @Nonnull Task task);
 
     /**
-     * @param task the task to check
-     * @return whether the task can be completed or not
+     * removes a accepted task from the task board and cleans the the task board from already completed requirements
+     *
+     * @implNote does not sync changes to the client
+     * @param taskBoardId the id of the task board
+     * @param task the aborted task
      */
-    boolean canCompleteTask(int entityId, @Nonnull Task task);
+    void abortTask(int taskBoardId, @Nonnull Task task);
 
     /**
-     * resets all completed tasks
+     * checks if the task board has available tasks
+     *
+     * @param taskBoardId the id of the task board
+     * @return weather the task board would show tasks
+     */
+    boolean hasAvailableTasks(int taskBoardId);
+
+    /**
+     * cleans the TaskManager from every trace of completed/active tasks
      */
     void reset();
 
     /**
+     * checks if the task was completed by the player
+     *
      * @param task the task to check
-     * @return whether the task is completed or not
+     * @return whether the task has been completed or not
      */
-    boolean isUniqueTaskCompleted(@Nonnull Task task);
+    boolean isTaskCompleted(@Nonnull Task task);
 
+    /**
+     * removes chosen, but not accepted tasks for every task board to have space for new ones
+     */
     void updateTaskLists();
 
+    /**
+     * cleans all task boards from all tasks except unique tasks
+     */
     void resetTaskLists();
 }
