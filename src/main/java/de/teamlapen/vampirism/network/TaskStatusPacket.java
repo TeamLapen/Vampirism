@@ -17,18 +17,16 @@ import java.util.function.Supplier;
 
 public class TaskStatusPacket implements IMessage {
 
-    public final Set<Task> possibleTasks;
-    public final Set<Task> completedTasks;
-    public final Collection<Task> unlockedTask;
+    public final Set<Task> completableTasks;
+    public final Collection<Task> visibleTasks;
     public final Set<Task> notAcceptedTasks;
     public final Map<Task, List<ResourceLocation>> completedRequirements;
     public final int containerId;
     public final int entityId;
 
-    public TaskStatusPacket(Set<Task> possibleTasks, Set<Task> completedTasks, Collection<Task> unlockedTask, Set<Task> notAcceptedTasks, Map<Task, List<ResourceLocation>> completedRequirements, int containerId, int entityId) {
-        this.possibleTasks = possibleTasks;
-        this.completedTasks = completedTasks;
-        this.unlockedTask = unlockedTask;
+    public TaskStatusPacket(Set<Task> completableTasks, Collection<Task> visibleTasks, Set<Task> notAcceptedTasks, Map<Task, List<ResourceLocation>> completedRequirements, int containerId, int entityId) {
+        this.completableTasks = completableTasks;
+        this.visibleTasks = visibleTasks;
         this.notAcceptedTasks = notAcceptedTasks;
         this.completedRequirements = completedRequirements;
         this.containerId = containerId;
@@ -39,13 +37,11 @@ public class TaskStatusPacket implements IMessage {
         buf.writeVarInt(msg.entityId);
         buf.writeVarInt(msg.containerId);
         buf.writeVarInt(msg.notAcceptedTasks.size());
-        buf.writeVarInt(msg.possibleTasks.size());
-        buf.writeVarInt(msg.completedTasks.size());
-        buf.writeVarInt(msg.unlockedTask.size());
+        buf.writeVarInt(msg.completableTasks.size());
+        buf.writeVarInt(msg.visibleTasks.size());
         buf.writeVarInt(msg.completedRequirements.size());
-        msg.possibleTasks.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
-        msg.completedTasks.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
-        msg.unlockedTask.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
+        msg.completableTasks.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
+        msg.visibleTasks.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
         msg.notAcceptedTasks.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
         msg.completedRequirements.forEach(((task, resourceLocations) -> {
             buf.writeVarInt(resourceLocations.size());
@@ -59,16 +55,11 @@ public class TaskStatusPacket implements IMessage {
         int containerId = buf.readVarInt();
         int notAcceptedSize = buf.readVarInt();
         int taskSize = buf.readVarInt();
-        int completeSize = buf.readVarInt();
         int unlockedSize = buf.readVarInt();
         int completedReqSize = buf.readVarInt();
         Set<Task> possible = Sets.newHashSet();
         for (int i = 0; i < taskSize; i++) {
             possible.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
-        }
-        Set<Task> completed = Sets.newHashSet();
-        for (int i = 0; i < completeSize; i++) {
-            completed.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
         }
         List<Task> unlocked = Lists.newArrayList();
         for (int i = 0; i < unlockedSize; i++) {
@@ -89,7 +80,7 @@ public class TaskStatusPacket implements IMessage {
             completedRequirements.put(task,req);
         }
 
-        return new TaskStatusPacket(possible, completed,unlocked, notAccepted,completedRequirements, containerId, entityId);
+        return new TaskStatusPacket(possible,unlocked, notAccepted,completedRequirements, containerId, entityId);
     }
 
     public static void handle(final TaskStatusPacket msg, @Nonnull Supplier<NetworkEvent.Context> contextSupplier) {

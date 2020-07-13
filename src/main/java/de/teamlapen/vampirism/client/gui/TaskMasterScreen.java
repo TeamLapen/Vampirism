@@ -33,7 +33,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -140,7 +139,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     public void render(int mouseX, int mouseY, float partialTicks) {
         this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
-        Collection<Task> tasks = this.container.getUnlockedTasks();
+        Collection<Task> tasks = this.container.getVisibleTasks();
         if (!tasks.isEmpty()) {
             int i = (this.width - this.xSize) / 2;
             int j = (this.height - this.ySize) / 2;
@@ -485,13 +484,13 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             int num = ((int) (mouseY - (j - 4 + 21)) / 21) + this.scrolledTask;
             if (this.isOpen) {
                 if (this.openedTask + 1 != num) {
-                    this.container.getUnlockedTasks().remove(this.openedTask + 1);
+                    this.container.getVisibleTasks().remove(this.openedTask + 1);
                     if (num > this.openedTask) {
                         num--;
                     }
                     if (num < this.container.size() && num != this.openedTask) {
                         this.openedTask = num;
-                        this.container.getUnlockedTasks().add(this.openedTask + 1, dummy);
+                        this.container.getVisibleTasks().add(this.openedTask + 1, dummy);
                     } else {
                         this.isOpen = false;
                         if (this.container.size() < this.scrolledTask + 7 && this.scrolledTask != 0) {
@@ -503,7 +502,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 if (num < this.container.size()) {
                     this.isOpen = true;
                     this.openedTask = num;
-                    this.container.getUnlockedTasks().add(this.openedTask + 1, dummy);
+                    this.container.getVisibleTasks().add(this.openedTask + 1, dummy);
                 }
             }
         }

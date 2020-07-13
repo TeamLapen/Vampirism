@@ -27,7 +27,7 @@ public interface ITaskManager {
     /**
      * syncs completed, available and completable tasks to the client
      */
-    void updateClient(int entityId, Set<Task> completable, Set<Task> completed, Set<Task> available, Map<Task, List<ResourceLocation>> requirements, Set<Task> notAcceptedTasks);
+    void updateClient(int entityId, Map<Task, List<ResourceLocation>> requirements, Set<Task> completable,Set<Task> notAcceptedTasks, Set<Task> available);
 
     /**
      * @param task the task to check

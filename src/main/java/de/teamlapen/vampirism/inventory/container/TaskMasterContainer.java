@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.inventory.container;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -33,7 +32,7 @@ public class TaskMasterContainer extends Container {
      * all tasks that can be completed by the player
      */
     @Nonnull
-    private final Set<Task> possibleTasks = Sets.newHashSet();
+    private final Set<Task> completableTasks = Sets.newHashSet();
     /**
      * all tasks that have been completed and should not be displayed
      */
@@ -43,7 +42,7 @@ public class TaskMasterContainer extends Container {
      * all tasks that should be displayed in the {@link de.teamlapen.vampirism.client.gui.TaskMasterScreen}
      */
     @Nonnull
-    private final List<Task> unlockedTasks = Lists.newArrayList();
+    private final List<Task> visibleTasks = Lists.newArrayList();
     @Nonnull
     private final Set<Task> notAcceptedTasks = Sets.newHashSet();
     /**
@@ -62,20 +61,15 @@ public class TaskMasterContainer extends Container {
     }
 
     /**
-     * @param possibleTasks updated possibleTasks
-     * @param completedTasks updated completedTasks
-     * @param unlockedTasks updated unlockedTasks
+     * @param completableTasks updated possibleTasks
+     * @param visibleTasks updated unlockedTasks
      */
     @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Set<Task> possibleTasks, @Nonnull Set<Task> completedTasks, @Nonnull List<Task> unlockedTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, List<ResourceLocation>> completedRequirements, int entityId) {
-        this.possibleTasks.clear();
-        this.possibleTasks.addAll(possibleTasks);
-        this.completedTasks.clear();
-        this.completedTasks.addAll(completedTasks);
-        this.unlockedTasks.addAll(unlockedTasks.stream().filter(task -> !this.unlockedTasks.contains(task)).sorted((task1, task2) -> (this.possibleTasks.contains(task1) && !this.possibleTasks.contains(task2)) || (!possibleTasks.contains(task1) && !this.completedTasks.contains(task1) && this.completedTasks.contains(task2)) ? -1 : 0).collect(Collectors.toList()));
+    public void init(@Nonnull Set<Task> completableTasks, @Nonnull List<Task> visibleTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, List<ResourceLocation>> completedRequirements, int entityId) {
+        this.completableTasks.addAll(completableTasks);
+        this.visibleTasks.addAll(visibleTasks.stream().filter(task -> !this.visibleTasks.contains(task)).sorted((task1, task2) -> (this.completableTasks.contains(task1) && !this.completableTasks.contains(task2)) || (!completableTasks.contains(task1) && !this.completedTasks.contains(task1) && this.completedTasks.contains(task2)) ? -1 : 0).collect(Collectors.toList()));
         this.completedRequirements = completedRequirements;
         this.entityId = entityId;
-        this.notAcceptedTasks.clear();
         this.notAcceptedTasks.addAll(notAcceptedTasks);
     }
 
@@ -85,7 +79,7 @@ public class TaskMasterContainer extends Container {
     }
 
     public boolean canCompleteTask(Task task) {
-        return this.possibleTasks.contains(task);
+        return this.completableTasks.contains(task);
     }
 
     public boolean isTaskAccepted(Task task) {
@@ -119,7 +113,7 @@ public class TaskMasterContainer extends Container {
         if(this.canCompleteTask(task)) {
             VampirismMod.dispatcher.sendToServer(new TaskFinishedPacket(task, entityId));
             this.completedTasks.add(task);
-            this.possibleTasks.remove(task);
+            this.completableTasks.remove(task);
         }
     }
 
@@ -133,16 +127,16 @@ public class TaskMasterContainer extends Container {
     }
 
     public int size() {
-        return this.unlockedTasks.size();
+        return this.visibleTasks.size();
     }
 
     @Nonnull
-    public List<Task> getUnlockedTasks() {
-        return this.unlockedTasks;
+    public List<Task> getVisibleTasks() {
+        return this.visibleTasks;
     }
 
     public Task getTask(int i) {
-        return this.unlockedTasks.get(i);
+        return this.visibleTasks.get(i);
     }
 
     @Nonnull
