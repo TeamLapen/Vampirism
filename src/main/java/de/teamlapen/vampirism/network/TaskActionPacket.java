@@ -4,7 +4,7 @@ import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.core.ModRegistries;
-import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
+import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -16,9 +16,9 @@ public class TaskActionPacket implements IMessage {
 
     public final Task task;
     public final int entityId;
-    public final TaskMasterContainer.TaskAction action;
+    public final TaskBoardContainer.TaskAction action;
 
-    public TaskActionPacket(Task task, int entityId, TaskMasterContainer.TaskAction action) {
+    public TaskActionPacket(Task task, int entityId, TaskBoardContainer.TaskAction action) {
         this.task = task;
         this.entityId = entityId;
         this.action = action;
@@ -31,7 +31,7 @@ public class TaskActionPacket implements IMessage {
     }
 
     static TaskActionPacket decode(PacketBuffer buf) {
-        return new TaskActionPacket(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())), buf.readVarInt(), TaskMasterContainer.TaskAction.values()[buf.readVarInt()]);
+        return new TaskActionPacket(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())), buf.readVarInt(), TaskBoardContainer.TaskAction.values()[buf.readVarInt()]);
     }
 
     public static void handle(final TaskActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {

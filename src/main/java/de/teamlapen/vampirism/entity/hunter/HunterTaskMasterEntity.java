@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.config.BalanceMobProps;
 import de.teamlapen.vampirism.entity.TaskMasterEntity;
 import de.teamlapen.vampirism.entity.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
-import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
+import de.teamlapen.vampirism.inventory.container.TaskBoardContainer;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
@@ -50,7 +49,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements TaskMast
     @Override
     public void livingTick() {
         super.livingTick();
-        if (interactor != null && !(interactor.isAlive() && interactor.openContainer instanceof TaskMasterContainer)){
+        if (interactor != null && !(interactor.isAlive() && interactor.openContainer instanceof TaskBoardContainer)){
             this.interactor = null;
         }
     }

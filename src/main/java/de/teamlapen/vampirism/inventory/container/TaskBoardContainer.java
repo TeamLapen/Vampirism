@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
+import de.teamlapen.vampirism.client.gui.TaskBoardScreen;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.TaskActionPacket;
@@ -25,7 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-public class TaskMasterContainer extends Container {
+public class TaskBoardContainer extends Container {
 
     /**
      * all tasks that can be completed by the player
@@ -38,37 +39,39 @@ public class TaskMasterContainer extends Container {
     @Nonnull
     private final Set<Task> completedTasks = Sets.newHashSet();
     /**
-     * all tasks that should be displayed in the {@link de.teamlapen.vampirism.client.gui.TaskMasterScreen}
+     * all tasks that should be displayed in the {@link TaskBoardScreen}
      */
     @Nonnull
     private final List<Task> visibleTasks = Lists.newArrayList();
     @Nonnull
     private final Set<Task> notAcceptedTasks = Sets.newHashSet();
+    @Nonnull
+    private final TextFormatting factionColor;
     /**
      * all task requirements that are completed
      */
     @Nullable
     private Map<Task, List<ResourceLocation>> completedRequirements;
-    @Nonnull
-    private final TextFormatting factionColor;
-    private int entityId;
+    private int taskBoardId;
 
-    public TaskMasterContainer(int id, PlayerInventory playerInventory) {
+    public TaskBoardContainer(int id, PlayerInventory playerInventory) {
         super(ModContainer.task_master, id);
         //noinspection NullableProblems
         this.factionColor = FactionPlayerHandler.getOpt(playerInventory.player).map(FactionPlayerHandler::getCurrentFaction).map(IFaction::getChatColor).orElse(TextFormatting.RESET);
     }
 
     /**
-     * @param completableTasks updated possibleTasks
-     * @param visibleTasks updated unlockedTasks
+     * @param completableTasks updated possible tasks
+     * @param visibleTasks     updated unlocked tasks
+     * @param notAcceptedTasks updated not accepted tasks
+     * @param completedRequirements updated completed requirements
      */
     @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Set<Task> completableTasks, @Nonnull List<Task> visibleTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, List<ResourceLocation>> completedRequirements, int entityId) {
+    public void init(@Nonnull Set<Task> completableTasks, @Nonnull List<Task> visibleTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, List<ResourceLocation>> completedRequirements, int taskBoardId) {
         this.completableTasks.addAll(completableTasks);
         this.visibleTasks.addAll(visibleTasks.stream().filter(task -> !this.visibleTasks.contains(task)).sorted((task1, task2) -> (this.completableTasks.contains(task1) && !this.completableTasks.contains(task2)) || (!completableTasks.contains(task1) && !this.completedTasks.contains(task1) && this.completedTasks.contains(task2)) ? -1 : 0).collect(Collectors.toList()));
         this.completedRequirements = completedRequirements;
-        this.entityId = entityId;
+        this.taskBoardId = taskBoardId;
         this.notAcceptedTasks.addAll(notAcceptedTasks);
     }
 
@@ -81,13 +84,13 @@ public class TaskMasterContainer extends Container {
         return this.completableTasks.contains(task);
     }
 
-    public boolean isTaskAccepted(Task task) {
-        return !this.notAcceptedTasks.contains(task);
+    public boolean isTaskNotAccepted(Task task) {
+        return this.notAcceptedTasks.contains(task);
     }
 
     public boolean isRequirementCompleted(Task task, TaskRequirement.Requirement<?> requirement) {
-        if(this.completedRequirements != null) {
-            if(this.completedRequirements.containsKey(task)) {
+        if (this.completedRequirements != null) {
+            if (this.completedRequirements.containsKey(task)) {
                 return this.completedRequirements.get(task).contains(requirement.getId());
             }
         }
@@ -95,10 +98,10 @@ public class TaskMasterContainer extends Container {
     }
 
     public boolean areRequirementsCompleted(Task task, TaskRequirement.Type type) {
-        if(this.completedRequirements != null) {
-            if(this.completedRequirements.containsKey(task)) {
+        if (this.completedRequirements != null) {
+            if (this.completedRequirements.containsKey(task)) {
                 for (TaskRequirement.Requirement<?> requirement : task.getRequirement().requirements().get(type)) {
-                    if(!this.completedRequirements.get(task).contains(requirement.getId())) {
+                    if (!this.completedRequirements.get(task).contains(requirement.getId())) {
                         return false;
                     }
                 }
@@ -109,20 +112,20 @@ public class TaskMasterContainer extends Container {
     }
 
     public void completeTask(Task task) {
-        if(this.canCompleteTask(task)) {
-            VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, entityId, TaskAction.COMPLETE));
+        if (this.canCompleteTask(task)) {
+            VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskAction.COMPLETE));
             this.completedTasks.add(task);
             this.completableTasks.remove(task);
         }
     }
 
     public void acceptTask(Task task) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, entityId, TaskAction.ACCEPT));
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskAction.ACCEPT));
         this.notAcceptedTasks.remove(task);
     }
 
     public void abortTask(Task task) {
-        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, entityId, TaskAction.ABORT));
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, taskBoardId, TaskAction.ABORT));
         this.notAcceptedTasks.add(task);
     }
 
@@ -149,6 +152,6 @@ public class TaskMasterContainer extends Container {
     }
 
     public enum TaskAction {
-        COMPLETE, ACCEPT, ABORT;
+        COMPLETE, ACCEPT, ABORT
     }
 }
