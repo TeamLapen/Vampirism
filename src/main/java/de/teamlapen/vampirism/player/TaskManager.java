@@ -264,9 +264,9 @@ public class TaskManager implements ITaskManager {
         }
         int neededTaskAmount = VampirismConfig.BALANCE.taskMasterTaskAmount.get() - lessTasks.getOrDefault(taskBoardId, 0);
         if (selectedTasks.size() < neededTaskAmount) {
-            List<Task> tasks = ModRegistries.TASKS.getValues().stream().filter(this::matchesFaction).filter(task -> !task.isUnique()).filter(this::isTaskUnlocked).collect(Collectors.toList());
+            List<Task> tasks = new ArrayList<>(ModRegistries.TASKS.getValues());
             Collections.shuffle(tasks);
-            selectedTasks.addAll(tasks.subList(0, neededTaskAmount - selectedTasks.size()));
+            selectedTasks.addAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.isUnique()).filter(this::isTaskUnlocked).limit(neededTaskAmount - selectedTasks.size()).collect(Collectors.toList()));
         }
         this.tasks.put(taskBoardId, selectedTasks);
         this.updateStats(taskBoardId, selectedTasks);
