@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.EntityClassType;
+import de.teamlapen.vampirism.api.entity.IEntityLeader;
 import de.teamlapen.vampirism.api.entity.actions.EntityActionTier;
 import de.teamlapen.vampirism.api.entity.actions.IEntityActionUser;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
@@ -58,7 +59,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     private final int MAX_LEVEL = 2;
     private final int ANGRY_TICKS_PER_ATTACK = 120;
     private int bloodtimer = 100;
-    private AdvancedVampireEntity advancedLeader = null;
+    private IEntityLeader advancedLeader = null;
     private int angryTimer = 0;
     private Goal tasks_avoidHunter;
 
@@ -92,7 +93,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
      * @return The advanced vampire this entity is following or null if none
      */
     public @Nullable
-    AdvancedVampireEntity getAdvancedLeader() {
+    IEntityLeader getAdvancedLeader() {
         return advancedLeader;
     }
 
@@ -101,7 +102,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
      *
      * @param advancedLeader new leader
      */
-    public void setAdvancedLeader(@Nullable AdvancedVampireEntity advancedLeader) {
+    public void setAdvancedLeader(@Nullable IEntityLeader advancedLeader) {
         this.advancedLeader = advancedLeader;
     }
 
@@ -197,7 +198,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public void tick() {
         super.tick();
-        if (advancedLeader != null && !advancedLeader.isAlive()) {
+        if (advancedLeader != null && !advancedLeader.getRepresentingEntity().isAlive()) {
             advancedLeader = null;
         }
     }
@@ -284,6 +285,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
         this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> Structures.VILLAGE.isPositionInStructure(living.world, living.getPosition())));
+        this.targetSelector.addGoal(8, new DefendLeaderGoal(this));
     }
 
     protected void updateEntityAttributes() {

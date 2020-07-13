@@ -11,10 +11,10 @@ public class BalanceMobProps {
     //    @DefaultInt(value = 40, name = "blinding_bat_effect_duration", minValue = 1, comment = "Blinding duration in ticks")
     public final int BLINDING_BAT_EFFECT_DURATION = 40;
     //    @DefaultInt(value = 30, minValue = 0, maxValue = 1000000, name = "blinding_bat_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
-    public final int BLINDING_BAT_SPAWN_CHANCE = 30;
+    public final int BLINDING_BAT_SPAWN_CHANCE = 60;
 
     //    @DefaultInt(value = 75, minValue = 0, maxValue = 1000000, name = "dummy_creature_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
-    public final int DUMMY_CREATURE_SPAWN_CHANCE = 75;
+    public final int DUMMY_CREATURE_SPAWN_CHANCE = 80;
 
     //    @DefaultDouble(value = 5D, name = "ghost_attack_damage", minValue = 0)
     public final double GHOST_ATTACK_DAMAGE = 5;

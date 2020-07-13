@@ -1,30 +1,35 @@
 package de.teamlapen.vampirism.client.render.entities;
 
 import com.google.common.base.Predicates;
-import de.teamlapen.vampirism.client.model.VampireBaronModel;
-import de.teamlapen.vampirism.client.render.LayerCloak;
+import de.teamlapen.vampirism.client.model.BaronWrapperModel;
+import de.teamlapen.vampirism.client.render.LayerBaronAttire;
+import de.teamlapen.vampirism.client.render.LayerWings;
 import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class VampireBaronRenderer extends BipedRenderer<VampireBaronEntity, VampireBaronModel<VampireBaronEntity>> {
+public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, BaronWrapperModel> {
 
-    private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampire_baron.png");
+    private static final ResourceLocation textureLord = new ResourceLocation(REFERENCE.MODID + ":textures/entity/baron.png");
+    private static final ResourceLocation textureLady = new ResourceLocation(REFERENCE.MODID + ":textures/entity/baroness.png");
+    private static final ResourceLocation textureLordEnraged = new ResourceLocation(REFERENCE.MODID + ":textures/entity/baron_enraged.png");
+    private static final ResourceLocation textureLadyEnraged = new ResourceLocation(REFERENCE.MODID + ":textures/entity/baroness_enraged.png");
 
     public VampireBaronRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new VampireBaronModel<>(), 0.5F);
-        this.addLayer(new LayerCloak<>(this, texture, Predicates.alwaysTrue()));
+        super(renderManagerIn, new BaronWrapperModel(), 0.5F);
+        this.addLayer(new LayerWings<>(this, Predicates.alwaysTrue(), (entity, model) -> model.getBodyPart(entity)));
+        this.addLayer(new LayerBaronAttire<>(this, VampireBaronEntity::isLady));
 
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(VampireBaronEntity p_110775_1_) {
-        return texture;
+    protected ResourceLocation getEntityTexture(VampireBaronEntity entity) {
+        return entity.isEnraged() ? (entity.isLady() ? textureLadyEnraged : textureLordEnraged) : (entity.isLady() ? textureLady : textureLord);
     }
 
 }
