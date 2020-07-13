@@ -59,6 +59,9 @@ public interface IProxy extends IInitListener {
     default void handleTaskFinishedPacket(TaskFinishedPacket msg, PlayerEntity playerEntity) {
     }
 
+    default void handleTaskAcceptedPacket(TaskAcceptedPacket msg, PlayerEntity playerEntity) {
+    }
+
     default void handleTaskStatusPacket(TaskStatusPacket msg) {
     }
 

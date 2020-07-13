@@ -1,10 +1,16 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
+import net.minecraft.util.ResourceLocation;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface ITaskManager {
+
+    void openTaskMasterScreen(int entityId);
 
     /**
      * checks if the task can be completed
@@ -12,75 +18,22 @@ public interface ITaskManager {
      *
      * @param task the task to complete
      */
-    void completeTask(@Nonnull Task task);
+    boolean completeTask(int entityId, @Nonnull Task task);
 
-    /**
-     * if the task is unlocked
-     * adds the task as completed and updates related task lists
-     *
-     * @param task the completed task
-     * @return if the task could be added
-     */
-    boolean addCompletedTask(@Nonnull Task task);
+    void acceptTask(int entityId, @Nonnull Task task);
 
-    /**
-     * @param variant the variant of the task list or {@code null} if all variants should be considered
-     * @return whether the player has task of the variant available or not
-     */
-    boolean hasAvailableTasks(@Nullable Task.Variant variant);
-
-    /**
-     *
-     * @param variant the type of the tasks or {@code null} if all variants should be considered
-     * @return all available tasks of type variant
-     */
-    @Nonnull
-    Set<Task> getAvailableTasks(@Nullable Task.Variant variant);
-
-    /**
-     * @return all available tasks
-     */
-    @Nonnull
-    Set<Task> getAvailableTasks();
-
-    /**
-     *
-     * @param variant the type of the tasks or {@code null} if all variants should be considered
-     * @return all completed tasks of type variant
-     */
-    @Nonnull
-    Set<Task> getCompletedTasks(@Nullable Task.Variant variant);
-
-    /**
-     * @return all completed tasks
-     */
-    @Nonnull
-    Set<Task> getCompletedTasks();
-
-    /**
-     *
-     * @param variant the type of the tasks or {@code null} if all variants should be considered
-     * @return all completable tasks of type variant
-     */
-    @Nonnull
-    Set<Task> getCompletableTasks(@Nullable Task.Variant variant);
-
-    /**
-     * @return all completable tasks
-     */
-    @Nonnull
-    Set<Task> getCompletableTasks();
+    boolean hasAvailableTasks(int entityId);
 
     /**
      * syncs completed, available and completable tasks to the client
      */
-    void updateClient();
+    void updateClient(int entityId, Set<Task> completable, Set<Task> completed, Set<Task> available, Map<Task, List<ResourceLocation>> requirements, Set<Task> notAcceptedTasks);
 
     /**
      * @param task the task to check
      * @return whether the task can be completed or not
      */
-    boolean canCompleteTask(@Nonnull Task task);
+    boolean canCompleteTask(int entityId, @Nonnull Task task);
 
     /**
      * resets all completed tasks
@@ -88,13 +41,8 @@ public interface ITaskManager {
     void reset();
 
     /**
-     * initialize usage of the taskmanager
-     */
-    void init();
-
-    /**
      * @param task the task to check
      * @return whether the task is completed or not
      */
-    boolean isTaskCompleted(@Nonnull Task task);
+    boolean isUniqueTaskCompleted(@Nonnull Task task);
 }

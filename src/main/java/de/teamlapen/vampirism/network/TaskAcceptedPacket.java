@@ -11,28 +11,28 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class TaskFinishedPacket implements IMessage {
+public class TaskAcceptedPacket implements IMessage {
 
     public final Task task;
     public final int entityId;
 
-    public TaskFinishedPacket(Task task, int entityId) {
+    public TaskAcceptedPacket(Task task, int entityId) {
         this.task = task;
         this.entityId = entityId;
     }
 
-    static void encode(TaskFinishedPacket msg, PacketBuffer buf) {
+    static void encode(TaskAcceptedPacket msg, PacketBuffer buf) {
         buf.writeString(Objects.requireNonNull(msg.task.getRegistryName()).toString());
         buf.writeVarInt(msg.entityId);
     }
 
-    static TaskFinishedPacket decode(PacketBuffer buf) {
-        return new TaskFinishedPacket(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())), buf.readVarInt());
+    static TaskAcceptedPacket decode(PacketBuffer buf) {
+        return new TaskAcceptedPacket(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())), buf.readVarInt());
     }
 
-    public static void handle(final TaskFinishedPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(final TaskAcceptedPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         final NetworkEvent.Context ctx = contextSupplier.get();
-        ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskFinishedPacket(msg, ctx.getSender()));
+        ctx.enqueueWork(() -> VampirismMod.proxy.handleTaskAcceptedPacket(msg, ctx.getSender()));
         ctx.setPacketHandled(true);
     }
 }

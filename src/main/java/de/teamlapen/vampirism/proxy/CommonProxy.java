@@ -5,6 +5,7 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.network.AppearancePacket;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.network.TaskAcceptedPacket;
 import de.teamlapen.vampirism.network.TaskFinishedPacket;
 import de.teamlapen.vampirism.player.skills.SkillTree;
 import de.teamlapen.vampirism.player.skills.SkillTreeManager;
@@ -46,7 +47,14 @@ public abstract class CommonProxy implements IProxy {
     @Override
     public void handleTaskFinishedPacket(TaskFinishedPacket msg, PlayerEntity playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
-            factionPlayer.getTaskManager().completeTask(msg.task);
+            factionPlayer.getTaskManager().completeTask(msg.entityId, msg.task);
+        }));
+    }
+
+    @Override
+    public void handleTaskAcceptedPacket(TaskAcceptedPacket msg, PlayerEntity playerEntity) {
+        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(factionPlayer -> {
+            factionPlayer.getTaskManager().acceptTask(msg.entityId, msg.task);
         }));
     }
 }

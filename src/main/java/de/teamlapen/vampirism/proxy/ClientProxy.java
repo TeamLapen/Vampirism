@@ -246,7 +246,7 @@ public class ClientProxy extends CommonProxy {
     public void handleTaskStatusPacket(TaskStatusPacket msg) {
         Container container = Minecraft.getInstance().player.openContainer;
         if (msg.containerId == container.windowId && container instanceof TaskMasterContainer) {
-            ((TaskMasterContainer)container).init(msg.possibleTasks,msg.completedTasks, (List<Task>)msg.unlockedTask, msg.completedRequirements);
+            ((TaskMasterContainer)container).init(msg.possibleTasks,msg.completedTasks, (List<Task>)msg.unlockedTask, msg.notAcceptedTasks,msg.completedRequirements, msg.entityId);
         }
     }
 

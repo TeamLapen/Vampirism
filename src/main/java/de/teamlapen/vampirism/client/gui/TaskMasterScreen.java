@@ -44,6 +44,7 @@ import java.util.Map;
 public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     private static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
     private static final ITextComponent SUBMIT = new TranslationTextComponent("gui.vampirism.taskmaster.complete_task");
+    private static final ITextComponent ACCEPT = new TranslationTextComponent("gui.vampirism.taskmaster.accept_task");
     private static final ITextComponent REQUIREMENT = new TranslationTextComponent("gui.vampirism.taskmaster.requirement").applyTextStyle(TextFormatting.UNDERLINE);
     private static final ITextComponent REQUIREMENT_STRIKE = REQUIREMENT.shallowCopy().applyTextStyle(TextFormatting.STRIKETHROUGH);
     private static final ITextComponent REWARD = new TranslationTextComponent("gui.vampirism.taskmaster.reward").applyTextStyle(TextFormatting.UNDERLINE);
@@ -77,6 +78,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     };
 
     private final CompleteButton[] buttons = new CompleteButton[7];
+    private final AcceptButton[] aButtons = new AcceptButton[7];
     private final Map<Task, List<String>> toolTips = Maps.newHashMap();
     private int scrolledTask;
     private int openedTask;
@@ -106,6 +108,12 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                     if (this.container.canCompleteTask(task)) {
                         this.container.completeTask(task);
                     }
+                }
+            }));
+            this.aButtons[l] = this.addButton(new AcceptButton(i + 5 + 132 - 2, k + 3, l, (button) -> {
+                if (button instanceof AcceptButton) {
+                    Task task = this.container.getTask(((AcceptButton) button).getChosenItem() + this.scrolledTask);
+                    this.container.acceptTask(task);
                 }
             }));
             k += 21;
@@ -157,17 +165,28 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                     button.visible = button.getChosenItem() < this.container.size() && this.container.getTask(button.getChosenItem() + this.scrolledTask) == dummy && this.container.canCompleteTask(this.container.getTask(button.getChosenItem() + this.scrolledTask - 1)) && !this.container.isCompleted(this.container.getTask(button.getChosenItem() + this.scrolledTask - 1));
                 }catch (ArrayIndexOutOfBoundsException e) {
                     button.visible = false;
-                    try {
-                        LogManager.getLogger().info(this.container.getTask(button.getChosenItem() + this.scrolledTask) == dummy);
-                    }catch (ArrayIndexOutOfBoundsException e1){
-                        LogManager.getLogger().info(button.getChosenItem() + this.scrolledTask);
-                    }
+                }
+            }
+            for (AcceptButton button : this.aButtons) {
+                try {
+                    button.visible = button.getChosenItem() < this.container.size()
+                            && this.container.getTask(button.getChosenItem() + this.scrolledTask) != dummy
+                            && !this.container.isTaskAccepted(this.container.getTask(button.getChosenItem() + this.scrolledTask))
+                            && !this.container.isCompleted(this.container.getTask(button.getChosenItem() + this.scrolledTask));
+                }catch (ArrayIndexOutOfBoundsException e) {
+                    button.visible = false;
                 }
             }
             for (CompleteButton button : this.buttons) {
                 button.render(mouseX, mouseY, partialTicks);
             }
+            for (AcceptButton button : this.aButtons) {
+                button.render(mouseX, mouseY, partialTicks);
+            }
             for (CompleteButton button : this.buttons) {
+                button.renderToolTip(mouseX, mouseY);
+            }
+            for (AcceptButton button : this.aButtons) {
                 button.renderToolTip(mouseX, mouseY);
             }
             i1 = 0;
@@ -285,6 +304,8 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
             if(!dummy) {
                 GlStateManager.color4f(0, 0.8f, 0, 1);
             }
+        } else if (!this.container.isTaskAccepted(task)) {
+            GlStateManager.color4f(0.8f,0.8f,1f,1);
         }
         blit(x, y, this.blitOffset, 16, 187 + offset, 137, Math.min(64 + 54 + 99 - (y), 21), 256, 256);
         GlStateManager.color4f(1,1,1,1);
@@ -449,6 +470,11 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int buttonId) {
+        for (AcceptButton aButton : this.aButtons) {
+            if(aButton.isMouseOver(mouseX,mouseY) && aButton.mouseClicked(mouseX, mouseY, buttonId)) {
+                return true;
+            }
+        }
         this.mouseOnScroller = false;
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
@@ -488,7 +514,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         final int chosenItem;
 
         public CompleteButton(int xPos, int yPos, int chosenItem, IPressable onPress) {
-            super(xPos, yPos, 14, 12, 0, 222, 12, TASKMASTER_GUI_TEXTURE, 256, 256, onPress, "");
+            super(xPos, yPos, 14, 12, 176, 0, 12, TASKMASTER_GUI_TEXTURE, 256, 256, onPress, "");
             this.chosenItem = chosenItem;
             this.visible = false;
         }
@@ -501,6 +527,27 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         public void renderToolTip(int mouseX, int mouseY) {
             if (this.isHovered && TaskMasterScreen.this.container.size() > this.chosenItem + TaskMasterScreen.this.scrolledTask) {
                 TaskMasterScreen.this.renderTooltip(SUBMIT.getFormattedText(), mouseX, mouseY);
+            }
+        }
+    }
+
+    private class AcceptButton extends ImageButton {
+        final int chosenItem;
+
+        public AcceptButton(int xIn, int yIn, int chosenItem, IPressable onPress) {
+            super(xIn, yIn, 14, 12, 190, 0, 12, TASKMASTER_GUI_TEXTURE, 256,256, onPress, "");
+            this.chosenItem = chosenItem;
+            this.visible = false;
+        }
+
+        public int getChosenItem() {
+            return chosenItem;
+        }
+
+        @Override
+        public void renderToolTip(int mouseX, int mouseY) {
+            if (this.isHovered && TaskMasterScreen.this.container.size() > this.chosenItem + TaskMasterScreen.this.scrolledTask) {
+                TaskMasterScreen.this.renderTooltip(ACCEPT.getFormattedText(), mouseX, mouseY);
             }
         }
     }

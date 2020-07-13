@@ -263,7 +263,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public boolean setFactionAndLevel(@Nonnull IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
+    public boolean setFactionAndLevel(@Nullable IPlayableFaction<? extends IFactionPlayer<?>> faction, int level) {
         IPlayableFaction<? extends IFactionPlayer<?>> old = currentFaction;
         int oldLevel = currentLevel;
         int newLordLevel = this.currentLordLevel;
@@ -304,9 +304,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             this.setLordLevel(newLordLevel, false);
         }
         notifyFaction(old, oldLevel);
-        if(faction != null && faction != old) {
-            faction.getPlayerCapability(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().init());
-        }
+//        if(faction != null && faction != old) {
+//            faction.getPlayerCapability(player).ifPresent(factionPlayer -> factionPlayer.getTaskManager().init());
+//        }
         sync(!Objects.equals(old, currentFaction));
         if (player instanceof ServerPlayerEntity) {
             ModAdvancements.TRIGGER_FACTION.trigger((ServerPlayerEntity) player, currentFaction, currentLevel);

@@ -20,19 +20,25 @@ public class TaskStatusPacket implements IMessage {
     public final Set<Task> possibleTasks;
     public final Set<Task> completedTasks;
     public final Collection<Task> unlockedTask;
+    public final Set<Task> notAcceptedTasks;
     public final Map<Task, List<ResourceLocation>> completedRequirements;
     public final int containerId;
+    public final int entityId;
 
-    public TaskStatusPacket(Set<Task> possibleTasks, Set<Task> completedTasks, Collection<Task> unlockedTask, Map<Task, List<ResourceLocation>> completedRequirements, int containerId) {
+    public TaskStatusPacket(Set<Task> possibleTasks, Set<Task> completedTasks, Collection<Task> unlockedTask, Set<Task> notAcceptedTasks, Map<Task, List<ResourceLocation>> completedRequirements, int containerId, int entityId) {
         this.possibleTasks = possibleTasks;
         this.completedTasks = completedTasks;
         this.unlockedTask = unlockedTask;
+        this.notAcceptedTasks = notAcceptedTasks;
         this.completedRequirements = completedRequirements;
         this.containerId = containerId;
+        this.entityId = entityId;
     }
 
     static void encode(@Nonnull TaskStatusPacket msg, @Nonnull PacketBuffer buf) {
+        buf.writeVarInt(msg.entityId);
         buf.writeVarInt(msg.containerId);
+        buf.writeVarInt(msg.notAcceptedTasks.size());
         buf.writeVarInt(msg.possibleTasks.size());
         buf.writeVarInt(msg.completedTasks.size());
         buf.writeVarInt(msg.unlockedTask.size());
@@ -40,6 +46,7 @@ public class TaskStatusPacket implements IMessage {
         msg.possibleTasks.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
         msg.completedTasks.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
         msg.unlockedTask.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
+        msg.notAcceptedTasks.forEach(res -> buf.writeString(Objects.requireNonNull(res.getRegistryName()).toString()));
         msg.completedRequirements.forEach(((task, resourceLocations) -> {
             buf.writeVarInt(resourceLocations.size());
             buf.writeString(Objects.requireNonNull(task.getRegistryName()).toString());
@@ -48,7 +55,9 @@ public class TaskStatusPacket implements IMessage {
     }
 
     static TaskStatusPacket decode(@Nonnull PacketBuffer buf) {
+        int entityId = buf.readVarInt();
         int containerId = buf.readVarInt();
+        int notAcceptedSize = buf.readVarInt();
         int taskSize = buf.readVarInt();
         int completeSize = buf.readVarInt();
         int unlockedSize = buf.readVarInt();
@@ -65,6 +74,10 @@ public class TaskStatusPacket implements IMessage {
         for (int i = 0; i < unlockedSize; i++) {
             unlocked.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
         }
+        Set<Task> notAccepted = Sets.newHashSet();
+        for (int i = 0; i < notAcceptedSize; i++) {
+            notAccepted.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
+        }
         Map<Task, List<ResourceLocation>> completedRequirements = Maps.newHashMapWithExpectedSize(completedReqSize);
         for(int i = 0; i < completedReqSize;++i) {
             int l = buf.readVarInt();
@@ -76,7 +89,7 @@ public class TaskStatusPacket implements IMessage {
             completedRequirements.put(task,req);
         }
 
-        return new TaskStatusPacket(possible, completed,unlocked, completedRequirements, containerId);
+        return new TaskStatusPacket(possible, completed,unlocked, notAccepted,completedRequirements, containerId, entityId);
     }
 
     public static void handle(final TaskStatusPacket msg, @Nonnull Supplier<NetworkEvent.Context> contextSupplier) {
