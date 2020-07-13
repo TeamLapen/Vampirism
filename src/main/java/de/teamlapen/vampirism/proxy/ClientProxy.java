@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.container.TaskMasterContainer;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.player.skills.ClientSkillTreeManager;
@@ -246,7 +245,9 @@ public class ClientProxy extends CommonProxy {
     public void handleTaskStatusPacket(TaskStatusPacket msg) {
         Container container = Minecraft.getInstance().player.openContainer;
         if (msg.containerId == container.windowId && container instanceof TaskMasterContainer) {
-            ((TaskMasterContainer)container).init(msg.possibleTasks,msg.completedTasks, (List<Task>)msg.unlockedTask, msg.notAcceptedTasks,msg.completedRequirements, msg.entityId);
+            msg.visibleTasks.addAll(msg.notAcceptedTasks);
+            msg.visibleTasks.addAll(msg.completableTasks);
+            ((TaskMasterContainer)container).init(msg.completableTasks, (List<Task>)msg.visibleTasks, msg.notAcceptedTasks,msg.completedRequirements, msg.entityId);
         }
     }
 
