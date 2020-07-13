@@ -23,7 +23,7 @@ public class VampireForestBiome extends VampireBiome {
         DefaultBiomeFeatures.addDeadBushes(this);
 
         //All EntityTypes used here have to be registered in the static part of ModEntities
-        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.ghost, BalanceMobProps.mobProps.GHOST_SPAWN_CHANCE, 1, 1));
+        this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.ghost, BalanceMobProps.mobProps.GHOST_SPAWN_CHANCE / 2, 1, 1));
         this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.vampire, BalanceMobProps.mobProps.VAMPIRE_SPAWN_CHANCE / 2, 1, 3));
         this.addSpawn(EntityClassification.MONSTER, new SpawnListEntry(ModEntities.vampire_baron, BalanceMobProps.mobProps.VAMPIRE_BARON_SPAWN_CHANCE, 1, 1));
         this.addSpawn(EntityClassification.AMBIENT, new SpawnListEntry(ModEntities.blinding_bat, BalanceMobProps.mobProps.BLINDING_BAT_SPAWN_CHANCE, 2, 4));
