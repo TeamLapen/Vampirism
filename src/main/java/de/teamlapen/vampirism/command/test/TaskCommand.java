@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskManager;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
-import de.teamlapen.vampirism.command.arguments.TaskArgument;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -26,56 +25,33 @@ public class TaskCommand extends BasicCommand {
         return Commands.literal("tasks")
                 .requires(context -> context.hasPermissionLevel(PERMISSION_LEVEL_ADMIN))
                 .then(Commands.literal("clear")
-                    .executes(context -> {
-                        return clearTasks(context.getSource().asPlayer());
-                    }))
-                /*.then(Commands.literal("add")
-                    .then(Commands.argument("task", TaskArgument.tasks())
                         .executes(context -> {
-                            return completeTask(context.getSource().asPlayer(), TaskArgument.getTask(context, "task"));
-                        })))*/
-                /*.then(Commands.literal("list")
-                    .then(Commands.literal("completed")
-                        .executes(context -> {
-                            return showCompleted(context.getSource().asPlayer());
+                            return clearTasks(context.getSource().asPlayer());
                         }))
-                    .then(Commands.literal("available")
+                .then(Commands.literal("refreshTaskList")
                         .executes(context -> {
-                            return showAvailable(context.getSource().asPlayer());
+                            return refreshTasksList(context.getSource().asPlayer());
                         }))
-                    .then(Commands.literal("completable")
+                .then(Commands.literal("resetTaskList")
                         .executes(context -> {
-                            return showCompletable(context.getSource().asPlayer());
-                        })))*/;
+                            return resetTasksList(context.getSource().asPlayer());
+                        }));
     }
 
-    /*private static int completeTask(ServerPlayerEntity playerEntity, Task task) {
-        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(player -> player.getTaskManager().completeTask(task)));
+    private static int refreshTasksList(ServerPlayerEntity playerEntity) {
+        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(player -> player.getTaskManager().updateTaskLists()));
         return 0;
-    }*/
+    }
+
+    private static int resetTasksList(ServerPlayerEntity playerEntity) {
+        FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(player -> player.getTaskManager().resetTaskLists()));
+        return 0;
+    }
 
     private static int clearTasks(ServerPlayerEntity playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(player -> {
             player.getTaskManager().reset();
         }));
-        return 0;
-    }
-
-//    private static int showCompleted(ServerPlayerEntity playerEntity) {
-//        return show(playerEntity,ITaskManager::getCompletedTasks);
-//    }
-//
-//    private static int showAvailable(ServerPlayerEntity playerEntity) {
-//        return show(playerEntity,ITaskManager::getAvailableTasks);
-//    }
-//
-//    private static int showCompletable(ServerPlayerEntity playerEntity) {
-//        return show(playerEntity, ITaskManager::getCompletableTasks);
-//    }
-
-    private static int show(ServerPlayerEntity playerEntity, NonNullFunction<ITaskManager, Set<Task>> mapping) {
-        LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(playerEntity);
-        handler.map(FactionPlayerHandler::getCurrentFactionPlayer).map(Optional::get).map(IFactionPlayer::getTaskManager).map(mapping).ifPresent(tasks -> tasks.forEach(task -> playerEntity.sendMessage(new StringTextComponent(Objects.requireNonNull(task.getRegistryName()).toString()))));
         return 0;
     }
 

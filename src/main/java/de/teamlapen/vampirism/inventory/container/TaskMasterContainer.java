@@ -8,8 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.TaskAcceptedPacket;
-import de.teamlapen.vampirism.network.TaskFinishedPacket;
+import de.teamlapen.vampirism.network.TaskActionPacket;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -111,15 +110,20 @@ public class TaskMasterContainer extends Container {
 
     public void completeTask(Task task) {
         if(this.canCompleteTask(task)) {
-            VampirismMod.dispatcher.sendToServer(new TaskFinishedPacket(task, entityId));
+            VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, entityId, TaskAction.COMPLETE));
             this.completedTasks.add(task);
             this.completableTasks.remove(task);
         }
     }
 
     public void acceptTask(Task task) {
-        VampirismMod.dispatcher.sendToServer(new TaskAcceptedPacket(task, entityId));
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, entityId, TaskAction.ACCEPT));
         this.notAcceptedTasks.remove(task);
+    }
+
+    public void abortTask(Task task) {
+        VampirismMod.dispatcher.sendToServer(new TaskActionPacket(task, entityId, TaskAction.ABORT));
+        this.notAcceptedTasks.add(task);
     }
 
     public boolean isCompleted(Task task) {
@@ -144,4 +148,7 @@ public class TaskMasterContainer extends Container {
         return this.factionColor;
     }
 
+    public enum TaskAction {
+        COMPLETE, ACCEPT, ABORT;
+    }
 }

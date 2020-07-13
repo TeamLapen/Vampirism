@@ -99,6 +99,7 @@
   "gui.vampirism.taskmaster.stat_req": "Stats to achieve",
   "gui.vampirism.taskmaster.complete_task": "Submit",
   "gui.vampirism.taskmaster.accept_task": "Accept",
+  "gui.vampirism.taskmaster.abort_task": "Abort",
   "gui.vampirism.taskmaster.requirement": "Requirement:",
   "gui.vampirism.taskmaster.reward": "Reward:",
   "enchantment.vampirism.arrow_frugality": "Arrow Frugality",
