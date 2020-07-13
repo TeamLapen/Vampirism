@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.player.tasks.req.ItemRequirement;
 import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -44,6 +45,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
     private static final ResourceLocation TASKMASTER_GUI_TEXTURE = new ResourceLocation(REFERENCE.MODID, "textures/gui/taskmaster.png");
     private static final ITextComponent SUBMIT = new TranslationTextComponent("gui.vampirism.taskmaster.complete_task");
     private static final ITextComponent ACCEPT = new TranslationTextComponent("gui.vampirism.taskmaster.accept_task");
+    private static final ITextComponent ABORT = new TranslationTextComponent("gui.vampirism.taskmaster.abort_task");
     private static final ITextComponent REQUIREMENT = new TranslationTextComponent("gui.vampirism.taskmaster.requirement").applyTextStyle(TextFormatting.UNDERLINE);
     private static final ITextComponent REQUIREMENT_STRIKE = REQUIREMENT.shallowCopy().applyTextStyle(TextFormatting.STRIKETHROUGH);
     private static final ITextComponent REWARD = new TranslationTextComponent("gui.vampirism.taskmaster.reward").applyTextStyle(TextFormatting.UNDERLINE);
@@ -76,8 +78,7 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         }
     };
 
-    private final CompleteButton[] buttons = new CompleteButton[7];
-    private final AcceptButton[] aButtons = new AcceptButton[7];
+    private final TaskActionButton[] buttons = new TaskActionButton[7];
     private final Map<Task, List<String>> toolTips = Maps.newHashMap();
     private int scrolledTask;
     private int openedTask;
@@ -101,18 +102,16 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         int k = j + 16 + 2;
 
         for (int l = 0; l < 7; ++l) {
-            this.buttons[l] = this.addButton(new CompleteButton(i + 5 + 132 - 2, k + 3, l, (button) -> {
-                if (button instanceof CompleteButton) {
-                    Task task = this.container.getTask(((CompleteButton) button).getChosenItem() + this.scrolledTask - 1);
+            this.buttons[l] = this.addButton(new TaskActionButton(i + 5 + 132 - 2, k + 3, l, (button) -> {
+                if (button instanceof TaskActionButton) {
+                    Task task = this.container.getTask(((TaskActionButton) button).getChosenItem() + this.scrolledTask - 1);
                     if (this.container.canCompleteTask(task)) {
                         this.container.completeTask(task);
+                    }else if(!this.container.isTaskAccepted(task)) {
+                        this.container.acceptTask(task);
+                    }else {
+                        this.container.abortTask(task);
                     }
-                }
-            }));
-            this.aButtons[l] = this.addButton(new AcceptButton(i + 5 + 132 - 2, k + 3, l, (button) -> {
-                if (button instanceof AcceptButton) {
-                    Task task = this.container.getTask(((AcceptButton) button).getChosenItem() + this.scrolledTask);
-                    this.container.acceptTask(task);
                 }
             }));
             k += 21;
@@ -159,33 +158,13 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
                 }
                 ++i1;
             }
-            for (CompleteButton button : this.buttons) {
-                try {
-                    button.visible = button.getChosenItem() < this.container.size() && this.container.getTask(button.getChosenItem() + this.scrolledTask) == dummy && this.container.canCompleteTask(this.container.getTask(button.getChosenItem() + this.scrolledTask - 1)) && !this.container.isCompleted(this.container.getTask(button.getChosenItem() + this.scrolledTask - 1));
-                }catch (ArrayIndexOutOfBoundsException e) {
-                    button.visible = false;
-                }
+            for (TaskActionButton button : this.buttons) {
+                button.visible = button.getChosenItem() < this.container.size() && this.container.getTask(button.getChosenItem() + this.scrolledTask) == dummy && !this.container.isCompleted(this.container.getTask(button.getChosenItem() + this.scrolledTask - 1));
             }
-            for (AcceptButton button : this.aButtons) {
-                try {
-                    button.visible = button.getChosenItem() < this.container.size()
-                            && this.container.getTask(button.getChosenItem() + this.scrolledTask) != dummy
-                            && !this.container.isTaskAccepted(this.container.getTask(button.getChosenItem() + this.scrolledTask))
-                            && !this.container.isCompleted(this.container.getTask(button.getChosenItem() + this.scrolledTask));
-                }catch (ArrayIndexOutOfBoundsException e) {
-                    button.visible = false;
-                }
-            }
-            for (CompleteButton button : this.buttons) {
+            for (TaskActionButton button : this.buttons) {
                 button.render(mouseX, mouseY, partialTicks);
             }
-            for (AcceptButton button : this.aButtons) {
-                button.render(mouseX, mouseY, partialTicks);
-            }
-            for (CompleteButton button : this.buttons) {
-                button.renderToolTip(mouseX, mouseY);
-            }
-            for (AcceptButton button : this.aButtons) {
+            for (TaskActionButton button : this.buttons) {
                 button.renderToolTip(mouseX, mouseY);
             }
             i1 = 0;
@@ -469,11 +448,6 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int buttonId) {
-        for (AcceptButton aButton : this.aButtons) {
-            if(aButton.isMouseOver(mouseX,mouseY) && aButton.mouseClicked(mouseX, mouseY, buttonId)) {
-                return true;
-            }
-        }
         this.mouseOnScroller = false;
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
@@ -509,11 +483,11 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
         return super.mouseClicked(mouseX, mouseY, buttonId);
     }
 
-    private class CompleteButton extends ImageButton {
+    private class TaskActionButton extends ImageButton {
         final int chosenItem;
 
-        public CompleteButton(int xPos, int yPos, int chosenItem, IPressable onPress) {
-            super(xPos, yPos, 14, 12, 176, 0, 12, TASKMASTER_GUI_TEXTURE, 256, 256, onPress, "");
+        public TaskActionButton(int xPos, int yPos, int chosenItem, IPressable onPress) {
+            super(xPos, yPos, 14, 13, 0, 0, 0, TASKMASTER_GUI_TEXTURE, 0, 0, onPress, "");
             this.chosenItem = chosenItem;
             this.visible = false;
         }
@@ -524,29 +498,47 @@ public class TaskMasterScreen extends ContainerScreen<TaskMasterContainer> {
 
         @Override
         public void renderToolTip(int mouseX, int mouseY) {
-            if (this.isHovered && TaskMasterScreen.this.container.size() > this.chosenItem + TaskMasterScreen.this.scrolledTask) {
-                TaskMasterScreen.this.renderTooltip(SUBMIT.getFormattedText(), mouseX, mouseY);
+            if (this.isHovered && this.visible && TaskMasterScreen.this.container.size() > this.chosenItem + TaskMasterScreen.this.scrolledTask) {
+                TaskMasterContainer.TaskAction action = getAction();
+                TaskMasterScreen.this.renderTooltip((action == TaskMasterContainer.TaskAction.ACCEPT?ACCEPT:action == TaskMasterContainer.TaskAction.ABORT?ABORT:SUBMIT).getFormattedText(), mouseX, mouseY);
             }
         }
-    }
-
-    private class AcceptButton extends ImageButton {
-        final int chosenItem;
-
-        public AcceptButton(int xIn, int yIn, int chosenItem, IPressable onPress) {
-            super(xIn, yIn, 14, 12, 190, 0, 12, TASKMASTER_GUI_TEXTURE, 256,256, onPress, "");
-            this.chosenItem = chosenItem;
-            this.visible = false;
-        }
-
-        public int getChosenItem() {
-            return chosenItem;
-        }
 
         @Override
-        public void renderToolTip(int mouseX, int mouseY) {
-            if (this.isHovered && TaskMasterScreen.this.container.size() > this.chosenItem + TaskMasterScreen.this.scrolledTask) {
-                TaskMasterScreen.this.renderTooltip(ACCEPT.getFormattedText(), mouseX, mouseY);
+        public void renderButton(int mouseX, int mouseY, float p_renderButton_3_) {
+            TaskMasterContainer.TaskAction action = getAction();
+            Minecraft minecraft = Minecraft.getInstance();
+            minecraft.getTextureManager().bindTexture(TASKMASTER_GUI_TEXTURE);
+            GlStateManager.disableDepthTest();
+            int i = 0;
+            if (this.isHovered()) {
+                i += 13;
+            }
+            int j;
+            switch (action){
+                case ACCEPT:
+                    j = 190;
+                    break;
+                case COMPLETE:
+                    j = 176;
+                    break;
+                default:
+                    j = 204;
+
+            }
+
+            blit(this.x, this.y, (float)j, (float)i, this.width, this.height, 256, 256);
+            GlStateManager.enableDepthTest();
+        }
+
+        private TaskMasterContainer.TaskAction getAction() {
+            Task task = TaskMasterScreen.this.container.getTask(this.chosenItem + TaskMasterScreen.this.scrolledTask - 1);
+            if (TaskMasterScreen.this.container.canCompleteTask(task)) {
+                return TaskMasterContainer.TaskAction.COMPLETE;
+            } else if (!TaskMasterScreen.this.container.isTaskAccepted(task)) {
+                return TaskMasterContainer.TaskAction.ACCEPT;
+            } else {
+                return TaskMasterContainer.TaskAction.ABORT;
             }
         }
     }

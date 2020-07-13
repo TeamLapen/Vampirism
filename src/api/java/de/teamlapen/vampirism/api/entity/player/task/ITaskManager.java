@@ -22,6 +22,8 @@ public interface ITaskManager {
 
     void acceptTask(int entityId, @Nonnull Task task);
 
+    void abortTask(int entityId, @Nonnull Task task);
+
     boolean hasAvailableTasks(int entityId);
 
     /**
@@ -45,4 +47,8 @@ public interface ITaskManager {
      * @return whether the task is completed or not
      */
     boolean isUniqueTaskCompleted(@Nonnull Task task);
+
+    void updateTaskLists();
+
+    void resetTaskLists();
 }

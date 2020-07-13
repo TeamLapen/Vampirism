@@ -90,6 +90,20 @@ public class TaskManager implements ITaskManager {
     }
 
     @Override
+    public void abortTask(int entityId, @Nonnull Task task) {
+        this.acceptedTasks.compute(task.isUnique()?-1:entityId, (id, tasks) -> {
+            if(tasks != null) {
+                tasks.remove(task);
+                this.stats.computeIfPresent(entityId, (entityId1, tasks1) -> {
+                    tasks1.remove(task);
+                    return tasks1;
+                });
+            }
+            return tasks;
+        });
+    }
+
+    @Override
     public boolean hasAvailableTasks(int entityId) {
         return !(getTasks(entityId).isEmpty() && getUniqueTasks().isEmpty());
     }
@@ -298,16 +312,28 @@ public class TaskManager implements ITaskManager {
      */
     public void tick() {
         if (this.player.getEntityWorld().getGameTime() % 24000 == 0) {
-            for (Map.Entry<Integer, Set<Task>> entrySet : this.tasks.entrySet()) {
-                if(entrySet.getKey() == -1)continue;
-                Set<Task> accepted = this.acceptedTasks.get(entrySet.getKey());
-                if(accepted == null || accepted.isEmpty()) {
-                    tasks.clear();
-                    continue;
-                }
-                entrySet.getValue().removeIf(task -> !accepted.contains(task));
-            }
+            this.updateTaskLists();
         }
+    }
+
+    @Override
+    public void updateTaskLists() {
+        for (Map.Entry<Integer, Set<Task>> entrySet : this.tasks.entrySet()) {
+            if(entrySet.getKey() == -1)continue;
+            Set<Task> accepted = this.acceptedTasks.get(entrySet.getKey());
+            if(accepted == null || accepted.isEmpty()) {
+                tasks.get(entrySet.getKey()).clear();
+                continue;
+            }
+            entrySet.getValue().removeIf(task -> !accepted.contains(task));
+        }
+    }
+
+    @Override
+    public void resetTaskLists() {
+        this.acceptedTasks.clear();
+        this.lessTasks.clear();
+        this.updateTaskLists();
     }
 
     @Override
