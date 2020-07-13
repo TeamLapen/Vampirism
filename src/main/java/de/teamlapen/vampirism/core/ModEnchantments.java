@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.items.enchantment.EnchantmentArrowFrugality;
 import de.teamlapen.vampirism.items.enchantment.EnchantmentVampireSlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -23,4 +25,12 @@ public class ModEnchantments {
         registry.register(new EnchantmentVampireSlayer(Enchantment.Rarity.UNCOMMON));
     }
 
+    public static void fixMapping(RegistryEvent.MissingMappings<Enchantment> event) {
+        event.getMappings().forEach(missingMapping -> {
+            if ("vampirism:crossbowinfinite".equals(missingMapping.key.toString())) {
+                missingMapping.remap(Enchantments.INFINITY);
+            }
+        });
+
+    }
 }
