@@ -60,9 +60,8 @@ public class Task extends ForgeRegistryEntry<Task> {
         this.unlocker = unlocker;
     }
 
-    @Nonnull
-    public Variant getVariant() {
-        return variant;
+    public boolean isUnique() {
+        return variant == Variant.UNIQUE;
     }
 
     @Nullable

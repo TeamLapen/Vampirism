@@ -31,10 +31,15 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements TaskMast
     }
 
     @Override
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return false;
+    }
+
+    @Override
     protected boolean processInteract(@Nonnull PlayerEntity playerEntity, @Nonnull Hand hand) {
         if (this.world.isRemote) return true;
         if (Helper.isHunter(playerEntity) && interactor == null) {
-            if (this.processInteraction(playerEntity, null)) {
+            if (this.processInteraction(playerEntity, this)) {
                 this.getNavigator().clearPath();
                 this.interactor = playerEntity;
             }

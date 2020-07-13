@@ -11,10 +11,12 @@ public class TaskRequirement {
 
     private final Map<Type, List<Requirement<?>>> requirements;
     private final int size;
+    private final boolean hasStatBasedReq;
 
     public TaskRequirement(Map<Type, List<Requirement<?>>> requirements) {
         this.requirements = requirements;
         this.size = requirements.values().stream().mapToInt(List::size).sum();
+        this.hasStatBasedReq = requirements.keySet().stream().anyMatch(Type::isStatBased);
     }
 
     public Map<Type, List<Requirement<?>>> requirements() {
@@ -40,6 +42,10 @@ public class TaskRequirement {
 
     public List<Requirement<?>> getAll() {
         return this.requirements.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    public boolean isHasStatBasedReq() {
+        return hasStatBasedReq;
     }
 
     public interface Requirement<T> {
@@ -81,23 +87,33 @@ public class TaskRequirement {
         /**
          * based on {@link net.minecraft.stats.Stats.CUSTOM} stat increase
          */
-        STATS,
+        STATS(true),
         /**
          * based on item in inventory
          */
-        ITEMS,
+        ITEMS(false),
         /**
          * based on {@link net.minecraft.stats.Stats.ENTITY_KILLED} stat increased
          */
-        ENTITY,
+        ENTITY(true),
         /**
          * based on {@link net.minecraft.stats.Stats.ENTITY_KILLED} stat increased, but for multiple entities.
          */
-        ENTITY_TAG,
+        ENTITY_TAG(true),
         /**
          * based on boolean supplier
          */
-        BOOLEAN;
+        BOOLEAN(false);
+
+        private boolean statBased;
+
+        Type(boolean statBased) {
+            this.statBased = statBased;
+        }
+
+        public boolean isStatBased() {
+            return statBased;
+        }
     }
 
 }

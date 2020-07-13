@@ -29,12 +29,12 @@ public class TaskCommand extends BasicCommand {
                     .executes(context -> {
                         return clearTasks(context.getSource().asPlayer());
                     }))
-                .then(Commands.literal("add")
+                /*.then(Commands.literal("add")
                     .then(Commands.argument("task", TaskArgument.tasks())
                         .executes(context -> {
                             return completeTask(context.getSource().asPlayer(), TaskArgument.getTask(context, "task"));
-                        })))
-                .then(Commands.literal("list")
+                        })))*/
+                /*.then(Commands.literal("list")
                     .then(Commands.literal("completed")
                         .executes(context -> {
                             return showCompleted(context.getSource().asPlayer());
@@ -46,33 +46,32 @@ public class TaskCommand extends BasicCommand {
                     .then(Commands.literal("completable")
                         .executes(context -> {
                             return showCompletable(context.getSource().asPlayer());
-                        })));
+                        })))*/;
     }
 
-    private static int completeTask(ServerPlayerEntity playerEntity, Task task) {
+    /*private static int completeTask(ServerPlayerEntity playerEntity, Task task) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(player -> player.getTaskManager().completeTask(task)));
         return 0;
-    }
+    }*/
 
     private static int clearTasks(ServerPlayerEntity playerEntity) {
         FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(player -> {
             player.getTaskManager().reset();
-            player.getTaskManager().init();
         }));
         return 0;
     }
 
-    private static int showCompleted(ServerPlayerEntity playerEntity) {
-        return show(playerEntity,ITaskManager::getCompletedTasks);
-    }
-
-    private static int showAvailable(ServerPlayerEntity playerEntity) {
-        return show(playerEntity,ITaskManager::getAvailableTasks);
-    }
-
-    private static int showCompletable(ServerPlayerEntity playerEntity) {
-        return show(playerEntity, ITaskManager::getCompletableTasks);
-    }
+//    private static int showCompleted(ServerPlayerEntity playerEntity) {
+//        return show(playerEntity,ITaskManager::getCompletedTasks);
+//    }
+//
+//    private static int showAvailable(ServerPlayerEntity playerEntity) {
+//        return show(playerEntity,ITaskManager::getAvailableTasks);
+//    }
+//
+//    private static int showCompletable(ServerPlayerEntity playerEntity) {
+//        return show(playerEntity, ITaskManager::getCompletableTasks);
+//    }
 
     private static int show(ServerPlayerEntity playerEntity, NonNullFunction<ITaskManager, Set<Task>> mapping) {
         LazyOptional<FactionPlayerHandler> handler = FactionPlayerHandler.getOpt(playerEntity);

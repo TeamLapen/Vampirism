@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.core.ModContainer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.network.TaskAcceptedPacket;
 import de.teamlapen.vampirism.network.TaskFinishedPacket;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -43,6 +44,8 @@ public class TaskMasterContainer extends Container {
      */
     @Nonnull
     private final List<Task> unlockedTasks = Lists.newArrayList();
+    @Nonnull
+    private final Set<Task> notAcceptedTasks = Sets.newHashSet();
     /**
      * all task requirements that are completed
      */
@@ -50,18 +53,12 @@ public class TaskMasterContainer extends Container {
     private Map<Task, List<ResourceLocation>> completedRequirements;
     @Nonnull
     private final TextFormatting factionColor;
-    @Nullable
-    private final Task.Variant variant;
+    private int entityId;
 
     public TaskMasterContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory,null);
-    }
-
-    public TaskMasterContainer(int id, PlayerInventory playerInventory, @Nullable Task.Variant variant) {
         super(ModContainer.task_master, id);
         //noinspection NullableProblems
         this.factionColor = FactionPlayerHandler.getOpt(playerInventory.player).map(FactionPlayerHandler::getCurrentFaction).map(IFaction::getChatColor).orElse(TextFormatting.RESET);
-        this.variant = variant;
     }
 
     /**
@@ -70,13 +67,16 @@ public class TaskMasterContainer extends Container {
      * @param unlockedTasks updated unlockedTasks
      */
     @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Set<Task> possibleTasks, @Nonnull Set<Task> completedTasks, @Nonnull List<Task> unlockedTasks, @Nonnull Map<Task, List<ResourceLocation>> completedRequirements) {
+    public void init(@Nonnull Set<Task> possibleTasks, @Nonnull Set<Task> completedTasks, @Nonnull List<Task> unlockedTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, List<ResourceLocation>> completedRequirements, int entityId) {
         this.possibleTasks.clear();
         this.possibleTasks.addAll(possibleTasks);
         this.completedTasks.clear();
         this.completedTasks.addAll(completedTasks);
         this.unlockedTasks.addAll(unlockedTasks.stream().filter(task -> !this.unlockedTasks.contains(task)).sorted((task1, task2) -> (this.possibleTasks.contains(task1) && !this.possibleTasks.contains(task2)) || (!possibleTasks.contains(task1) && !this.completedTasks.contains(task1) && this.completedTasks.contains(task2)) ? -1 : 0).collect(Collectors.toList()));
         this.completedRequirements = completedRequirements;
+        this.entityId = entityId;
+        this.notAcceptedTasks.clear();
+        this.notAcceptedTasks.addAll(notAcceptedTasks);
     }
 
     @Override
@@ -86,6 +86,10 @@ public class TaskMasterContainer extends Container {
 
     public boolean canCompleteTask(Task task) {
         return this.possibleTasks.contains(task);
+    }
+
+    public boolean isTaskAccepted(Task task) {
+        return !this.notAcceptedTasks.contains(task);
     }
 
     public boolean isRequirementCompleted(Task task, TaskRequirement.Requirement<?> requirement) {
@@ -113,14 +117,19 @@ public class TaskMasterContainer extends Container {
 
     public void completeTask(Task task) {
         if(this.canCompleteTask(task)) {
-            VampirismMod.dispatcher.sendToServer(new TaskFinishedPacket(task));
+            VampirismMod.dispatcher.sendToServer(new TaskFinishedPacket(task, entityId));
             this.completedTasks.add(task);
             this.possibleTasks.remove(task);
         }
     }
 
+    public void acceptTask(Task task) {
+        VampirismMod.dispatcher.sendToServer(new TaskAcceptedPacket(task, entityId));
+        this.notAcceptedTasks.remove(task);
+    }
+
     public boolean isCompleted(Task task) {
-        return this.completedTasks.contains(task) && !this.possibleTasks.contains(task);
+        return this.completedTasks.contains(task);
     }
 
     public int size() {
@@ -141,8 +150,4 @@ public class TaskMasterContainer extends Container {
         return this.factionColor;
     }
 
-    @Nullable
-    public Task.Variant getVariant() {
-        return this.variant;
-    }
 }

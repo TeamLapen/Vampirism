@@ -28,5 +28,6 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
         dispatcher.registerMessage(nextID(), AppearancePacket.class, AppearancePacket::encode, AppearancePacket::decode, AppearancePacket::handle);
         dispatcher.registerMessage(nextID(), TaskFinishedPacket.class, TaskFinishedPacket::encode, TaskFinishedPacket::decode, TaskFinishedPacket::handle);
         dispatcher.registerMessage(nextID(), TaskStatusPacket.class, TaskStatusPacket::encode, TaskStatusPacket::decode, TaskStatusPacket::handle);
+        dispatcher.registerMessage(nextID(), TaskAcceptedPacket.class, TaskAcceptedPacket::encode, TaskAcceptedPacket::decode, TaskAcceptedPacket::handle);
     }
 }

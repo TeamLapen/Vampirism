@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.player.tasks.unlock;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import net.minecraft.entity.player.PlayerEntity;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ParentUnlocker implements TaskUnlocker {
@@ -19,7 +16,7 @@ public class ParentUnlocker implements TaskUnlocker {
 
     @Override
     public boolean isUnlocked(IFactionPlayer<?> playerEntity) {
-        return playerEntity.getTaskManager().isTaskCompleted(parent.get());
+        return playerEntity.getTaskManager().isUniqueTaskCompleted(parent.get());
     }
 
     public Supplier<Task> getParent() {
