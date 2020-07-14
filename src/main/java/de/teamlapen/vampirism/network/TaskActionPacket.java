@@ -10,15 +10,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class TaskActionPacket implements IMessage {
 
     public final Task task;
-    public final int entityId;
+    public final UUID entityId;
     public final TaskBoardContainer.TaskAction action;
 
-    public TaskActionPacket(Task task, int entityId, TaskBoardContainer.TaskAction action) {
+    public TaskActionPacket(Task task, UUID entityId, TaskBoardContainer.TaskAction action) {
         this.task = task;
         this.entityId = entityId;
         this.action = action;
@@ -26,12 +27,12 @@ public class TaskActionPacket implements IMessage {
 
     static void encode(TaskActionPacket msg, PacketBuffer buf) {
         buf.writeString(Objects.requireNonNull(msg.task.getRegistryName()).toString());
-        buf.writeVarInt(msg.entityId);
+        buf.writeString(msg.entityId.toString());
         buf.writeVarInt(msg.action.ordinal());
     }
 
     static TaskActionPacket decode(PacketBuffer buf) {
-        return new TaskActionPacket(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())), buf.readVarInt(), TaskBoardContainer.TaskAction.values()[buf.readVarInt()]);
+        return new TaskActionPacket(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())), UUID.fromString(buf.readString()), TaskBoardContainer.TaskAction.values()[buf.readVarInt()]);
     }
 
     public static void handle(final TaskActionPacket msg, Supplier<NetworkEvent.Context> contextSupplier) {

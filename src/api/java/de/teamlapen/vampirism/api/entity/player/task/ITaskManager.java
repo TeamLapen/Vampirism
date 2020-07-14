@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.task;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 public interface ITaskManager {
 
@@ -9,44 +10,44 @@ public interface ITaskManager {
      *
      * @param taskBoardId the unique id of the task board
      */
-    void openTaskMasterScreen(int taskBoardId);
+    void openTaskMasterScreen(UUID taskBoardId);
 
     /**
      * updated an open TaskBoardScreen on the client
      *
      * @param taskBoardId the unique id of the task board
      */
-    void updateTaskMasterScreen(int taskBoardId);
+    void updateTaskMasterScreen(UUID taskBoardId);
 
     /**
      * checks if the task is unlocked and can be completed
      * cleans the task board from the task
-     *
+     * <p>
      * handles rewards and requirements
      *
-     * @implNote syncs changes to the client
      * @param taskBoardId the id of the task board
-     * @param task the task to complete
+     * @param task        the task to complete
+     * @implNote syncs changes to the client
      */
-    void completeTask(int taskBoardId, @Nonnull Task task);
+    void completeTask(UUID taskBoardId, @Nonnull Task task);
 
     /**
      * accepts the task, so that the TaskManger knows that the player is working on the Task at the task board
      *
-     * @implNote does not sync changes to the client
      * @param taskBoardId the id of the task board
-     * @param task the accepted task
+     * @param task        the accepted task
+     * @implNote does not sync changes to the client
      */
-    void acceptTask(int taskBoardId, @Nonnull Task task);
+    void acceptTask(UUID taskBoardId, @Nonnull Task task);
 
     /**
      * removes a accepted task from the task board and cleans the the task board from already completed requirements
      *
-     * @implNote does not sync changes to the client
      * @param taskBoardId the id of the task board
-     * @param task the aborted task
+     * @param task        the aborted task
+     * @implNote does not sync changes to the client
      */
-    void abortTask(int taskBoardId, @Nonnull Task task);
+    void abortTask(UUID taskBoardId, @Nonnull Task task);
 
     /**
      * checks if the task board has available tasks
@@ -54,7 +55,7 @@ public interface ITaskManager {
      * @param taskBoardId the id of the task board
      * @return weather the task board would show tasks
      */
-    boolean hasAvailableTasks(int taskBoardId);
+    boolean hasAvailableTasks(UUID taskBoardId);
 
     /**
      * cleans the TaskManager from every trace of completed/active tasks

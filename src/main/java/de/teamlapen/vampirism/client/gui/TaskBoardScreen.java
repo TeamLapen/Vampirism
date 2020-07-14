@@ -187,15 +187,15 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
             if (mouseX >= x + 3 + 113 - 21 && mouseX < x + 3 + 113 - 21 + 16 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
                 TaskReward reward = task.getReward();
                 if (reward instanceof ItemReward) {
-                    this.renderItemTooltip(((ItemReward) reward).getReward(), x + 3 + 113 - 21, y + 2, REWARD.getFormattedText(), false);
+                    this.renderItemTooltip(((ItemReward) reward).getReward(), mouseX, mouseY, REWARD.getFormattedText(), false);
                 } else {
-                    this.renderItemTooltip(task, x + 3 + 113 - 21, y + 2);
+                    this.renderItemTooltip(task, mouseX, mouseY);
                 }
             }
             List<TaskRequirement.Requirement<?>> requirements = task.getRequirement().getAll();
             for (int i = 0; i < requirements.size(); i++) {
                 if (mouseX >= x + 3 + 3 + i * 20 && mouseX < x + 3 + 16 + 3 + i * 20 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
-                    this.renderRequirementTool(this.container.getTask(this.openedTask), requirements.get(i), x + 3 + 3 + i * 20, y + 2);
+                    this.renderRequirementTool(this.container.getTask(this.openedTask), requirements.get(i), mouseX, mouseY);
                 }
             }
         } else {
@@ -260,7 +260,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
                     }
                 }
             }
-            this.renderTooltip(toolTips, x, y);
+            this.renderTooltip(toolTips, mouseX, mouseY);
         }
     }
 
@@ -274,18 +274,28 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
         if (dummy && this.isOpen) {
             task = this.container.getTask(this.openedTask);
         }
-        if (this.container.isCompleted(task)) {
-            GlStateManager.color4f(0.4f, 0.4f, 0.4f, 1);
+        if (!dummy) {
+            if (this.container.isCompleted(task)) {
+                GlStateManager.color4f(0.4f, 0.4f, 0.4f, 1);
 
-        } else if (this.container.canCompleteTask(task)) {
-            if (!dummy) {
-                GlStateManager.color4f(0, 0.8f, 0, 1);
-            }
-        } else if (this.container.isTaskNotAccepted(task)) {
-            GlStateManager.color4f(0.5f, 0.5f, 1f, 1);
-        }else {
-            if(task.isUnique()) {
-                GlStateManager.color4f(0.9f, 0.755859375f, 0, 1);
+            } else if (this.container.canCompleteTask(task)) {
+                if (task.isUnique()) {
+                    GlStateManager.color4f(1f, 0.855859375f, 0, 1);
+                } else {
+                    GlStateManager.color4f(0, 0.9f, 0, 1);
+                }
+            } else if (this.container.isTaskNotAccepted(task)) {
+                if (task.isUnique()) {
+                    GlStateManager.color4f(0.64f, 0.57f, 0.5f, 1);
+                } else {
+                    GlStateManager.color4f(0.55f, 0.55f, 0.55f, 1);
+                }
+            } else {
+                if (task.isUnique()) {
+                    GlStateManager.color4f(1f, 0.9f, 0.6f, 1f);
+                } else {
+                    GlStateManager.color4f(0.85f, 1f, 0.85f, 1f);
+                }
             }
         }
         blit(x, y, this.blitOffset, 16, 187 + offset, 137, Math.min(64 + 54 + 99 - (y), 21), 256, 256);
@@ -293,11 +303,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
         RenderHelper.enableGUIStandardItemLighting();
 
         if (!dummy) {
-            ITextComponent name = task.getTranslation();
-            if(task.isUnique() && (this.container.isTaskNotAccepted(task) || this.container.canCompleteTask(task))) {
-                name.applyTextStyle(TextFormatting.GOLD);
-            }
-            this.font.drawString(this.font.trimStringToWidth(name.getFormattedText(), 131), x + 4, y + 7, 3419941);//(6839882 & 16711422) >> 1 //8453920 //4226832
+            this.font.drawString(this.font.trimStringToWidth(task.getTranslation().getFormattedText(), 131), x + 4, y + 7, 3419941);//(6839882 & 16711422) >> 1 //8453920 //4226832
         } else {
             TaskReward reward = task.getReward();
             if (reward instanceof ItemReward) {
@@ -310,9 +316,6 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
             List<TaskRequirement.Requirement<?>> requirements = task.getRequirement().getAll();
             for (int i = 0; i < requirements.size(); i++) {
                 TaskRequirement.Requirement<?> requirement = requirements.get(i);
-                if (this.container.isRequirementCompleted(task, requirement)) {
-                    GlStateManager.color4f(0, 0, 0, 1);
-                }
                 switch (requirement.getType()) {
                     case ITEMS:
                         ItemStack stack = ((ItemRequirement) requirement).getItemStack();
@@ -328,7 +331,6 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
                         this.itemRenderer.renderItemAndEffectIntoGUI(PAPER, x + 3 + 3 + i * 20, y + 2);
                         break;
                 }
-
             }
         }
     }

@@ -33,6 +33,8 @@ public class TaskManager implements ITaskManager {
     @Nonnull
     private static final Logger LOGGER = LogManager.getLogger();
     @Nonnull
+    private static final UUID UNIQUE_TASKS = UUID.fromString("e2c6068a-8f0e-4d5b-822a-38ad6ecf98c9");
+    @Nonnull
     private final IPlayableFaction<?> faction;
     @Nonnull
     private final ServerPlayerEntity player;
@@ -43,15 +45,15 @@ public class TaskManager implements ITaskManager {
     @Nonnull
     private final Set<Task> completedTasks = new HashSet<>();
     @Nonnull
-    private final Map<Integer, Set<Task>> tasks = new HashMap<>();
+    private final Map<UUID, Set<Task>> tasks = new HashMap<>();
     @Nonnull
-    private final Map<Integer, Integer> lessTasks = new HashMap<>();
+    private final Map<UUID, Integer> lessTasks = new HashMap<>();
 
     @Nonnull
-    private final Map<Integer, Set<Task>> acceptedTasks = new HashMap<>();
+    private final Map<UUID, Set<Task>> acceptedTasks = new HashMap<>();
 
     @Nonnull
-    private final Map<Integer, Map<Task, Map<ResourceLocation, Integer>>> stats = Maps.newHashMap();
+    private final Map<UUID, Map<Task, Map<ResourceLocation, Integer>>> stats = Maps.newHashMap();
 
     public TaskManager(@Nonnull IFactionPlayer<?> factionPlayer, @Nonnull IPlayableFaction<?> faction) {
         this.faction = faction;
@@ -62,8 +64,8 @@ public class TaskManager implements ITaskManager {
     // interface -------------------------------------------------------------------------------------------------------
 
     @Override
-    public void completeTask(int taskBoardId, @Nonnull Task task) {
-        int tmpId = task.isUnique() ? -1 : taskBoardId;
+    public void completeTask(UUID taskBoardId, @Nonnull Task task) {
+        UUID tmpId = task.isUnique() ? UNIQUE_TASKS : taskBoardId;
         if (!canCompleteTask(taskBoardId, task)) return;
         if (task.getRequirement().isHasStatBasedReq()) {
             this.stats.get(tmpId).remove(task);
@@ -80,8 +82,8 @@ public class TaskManager implements ITaskManager {
     }
 
     @Override
-    public void acceptTask(int taskBoardId, @Nonnull Task task) {
-        this.acceptedTasks.compute(task.isUnique() ? -1 : taskBoardId, (id, tasks) -> {
+    public void acceptTask(UUID taskBoardId, @Nonnull Task task) {
+        this.acceptedTasks.compute(task.isUnique() ? UNIQUE_TASKS : taskBoardId, (id, tasks) -> {
             if (tasks == null) {
                 return Sets.newHashSet(task);
             } else {
@@ -93,8 +95,8 @@ public class TaskManager implements ITaskManager {
     }
 
     @Override
-    public void abortTask(int taskBoardId, @Nonnull Task task) {
-        this.acceptedTasks.compute(task.isUnique() ? -1 : taskBoardId, (id, tasks) -> {
+    public void abortTask(UUID taskBoardId, @Nonnull Task task) {
+        this.acceptedTasks.compute(task.isUnique() ? UNIQUE_TASKS : taskBoardId, (id, tasks) -> {
             if (tasks != null) {
                 tasks.remove(task);
                 this.stats.computeIfPresent(taskBoardId, (entityId1, tasks1) -> {
@@ -107,28 +109,28 @@ public class TaskManager implements ITaskManager {
     }
 
     @Override
-    public void openTaskMasterScreen(int taskBoardId) {
+    public void openTaskMasterScreen(UUID taskBoardId) {
         Set<Task> selectedTasks = new HashSet<>(getTasks(taskBoardId));
         selectedTasks.addAll(getUniqueTasks());
         this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks);
     }
 
     @Override
-    public void updateTaskMasterScreen(int taskBoardId) {
+    public void updateTaskMasterScreen(UUID taskBoardId) {
         Set<Task> selectedTasks = new HashSet<>(this.getTasks(taskBoardId));
         selectedTasks.addAll(getUniqueTasks());
         this.updateClient(taskBoardId, getCompletedRequirements(taskBoardId, selectedTasks), reduceToCompletableTasks(taskBoardId, selectedTasks), reduceToNotAcceptedTasks(taskBoardId, selectedTasks), selectedTasks);
     }
 
     @Override
-    public boolean hasAvailableTasks(int taskBoardId) {
+    public boolean hasAvailableTasks(UUID taskBoardId) {
         return !(getTasks(taskBoardId).isEmpty() && getUniqueTasks().isEmpty());
     }
 
     /**
      * syncs all shown task for a specific task board to the client
      */
-    private void updateClient(int taskBoardId, @Nonnull Map<Task, List<ResourceLocation>> requirements, @Nonnull Set<Task> completable, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Set<Task> available) {
+    private void updateClient(UUID taskBoardId, @Nonnull Map<Task, List<ResourceLocation>> requirements, @Nonnull Set<Task> completable, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Set<Task> available) {
         if (player.openContainer instanceof TaskBoardContainer) {
             VampirismMod.dispatcher.sendTo(new TaskStatusPacket(completable, available, notAcceptedTasks, requirements, player.openContainer.windowId, taskBoardId), player);
         }
@@ -162,7 +164,7 @@ public class TaskManager implements ITaskManager {
      * @param task the task that should be checked
      * @return whether the task can be completed or not
      */
-    public boolean canCompleteTask(int taskBoardId, @Nonnull Task task) {
+    public boolean canCompleteTask(UUID taskBoardId, @Nonnull Task task) {
         if (!isTaskUnlocked(task))
             return false;
         for (TaskRequirement.Requirement<?> requirement : task.getRequirement().getAll()) {
@@ -180,8 +182,8 @@ public class TaskManager implements ITaskManager {
      * @param task        the task that should be checked
      * @return whether the task is accepted or not
      */
-    private boolean isTaskNotAccepted(int taskBoardId, @Nonnull Task task) {
-        return !this.acceptedTasks.getOrDefault(task.isUnique() ? -1 : taskBoardId, Collections.emptySet()).contains(task);
+    private boolean isTaskNotAccepted(UUID taskBoardId, @Nonnull Task task) {
+        return !this.acceptedTasks.getOrDefault(task.isUnique() ? UNIQUE_TASKS : taskBoardId, Collections.emptySet()).contains(task);
     }
 
     @Override
@@ -228,8 +230,8 @@ public class TaskManager implements ITaskManager {
 
     @Override
     public void updateTaskLists() {
-        for (Map.Entry<Integer, Set<Task>> entrySet : this.tasks.entrySet()) {
-            if (entrySet.getKey() == -1) continue;
+        for (Map.Entry<UUID, Set<Task>> entrySet : this.tasks.entrySet()) {
+            if (entrySet.getKey() == UNIQUE_TASKS) continue;
             Set<Task> accepted = this.acceptedTasks.get(entrySet.getKey());
             if (accepted == null || accepted.isEmpty()) {
                 tasks.get(entrySet.getKey()).clear();
@@ -257,7 +259,7 @@ public class TaskManager implements ITaskManager {
      * @param taskBoardId the id of the task board
      * @return all visible tasks for the task board
      */
-    private Set<Task> getTasks(int taskBoardId) {
+    private Set<Task> getTasks(UUID taskBoardId) {
         Set<Task> selectedTasks = this.tasks.getOrDefault(taskBoardId, new HashSet<>());
         if (!selectedTasks.isEmpty()) {
             this.removeLockedTasks(taskBoardId, selectedTasks);
@@ -281,13 +283,13 @@ public class TaskManager implements ITaskManager {
      * @return all visible unique tasks
      */
     private Set<Task> getUniqueTasks() {
-        Set<Task> uniqueTasks = this.tasks.getOrDefault(-1, new HashSet<>());
+        Set<Task> uniqueTasks = this.tasks.getOrDefault(UNIQUE_TASKS, new HashSet<>());
         if (!uniqueTasks.isEmpty()) {
-            this.removeLockedTasks(-1, uniqueTasks);
+            this.removeLockedTasks(UNIQUE_TASKS, uniqueTasks);
         }
         uniqueTasks.addAll(ModRegistries.TASKS.getValues().stream().filter(this::matchesFaction).filter(Task::isUnique).filter(task -> !this.completedTasks.contains(task)).filter(this::isTaskUnlocked).collect(Collectors.toSet()));
-        this.tasks.put(-1, uniqueTasks);
-        this.updateStats(-1, uniqueTasks);
+        this.tasks.put(UNIQUE_TASKS, uniqueTasks);
+        this.updateStats(UNIQUE_TASKS, uniqueTasks);
         return uniqueTasks;
     }
 
@@ -298,7 +300,7 @@ public class TaskManager implements ITaskManager {
      * @param tasks       the tasks to be filtered
      * @return all completable tasks from the given task set
      */
-    private Set<Task> reduceToCompletableTasks(int taskBoardId, @Nonnull Set<Task> tasks) {
+    private Set<Task> reduceToCompletableTasks(UUID taskBoardId, @Nonnull Set<Task> tasks) {
         Set<Task> completable = tasks.stream().filter(task -> canCompleteTask(taskBoardId, task)).collect(Collectors.toSet());
         tasks.removeAll(completable);
         return completable;
@@ -311,7 +313,7 @@ public class TaskManager implements ITaskManager {
      * @param tasks       the tasks to be filtered
      * @return all not accepted tasks from the given task set
      */
-    private Set<Task> reduceToNotAcceptedTasks(int taskBoardId, @Nonnull Set<Task> tasks) {
+    private Set<Task> reduceToNotAcceptedTasks(UUID taskBoardId, @Nonnull Set<Task> tasks) {
         Set<Task> notAccepted = tasks.stream().filter(task -> isTaskNotAccepted(taskBoardId, task)).collect(Collectors.toSet());
         tasks.removeAll(notAccepted);
         return notAccepted;
@@ -325,7 +327,7 @@ public class TaskManager implements ITaskManager {
      * @return map of completed requirement per task
      */
     @Nonnull
-    public Map<Task, List<ResourceLocation>> getCompletedRequirements(int taskBoardId, @Nonnull Set<Task> tasks) {
+    public Map<Task, List<ResourceLocation>> getCompletedRequirements(UUID taskBoardId, @Nonnull Set<Task> tasks) {
         Map<Task, List<ResourceLocation>> completedRequirements = Maps.newHashMap();
         tasks.forEach(task -> {
             List<ResourceLocation> completed = getCompletedRequirements(taskBoardId, task);
@@ -343,7 +345,7 @@ public class TaskManager implements ITaskManager {
      * @param task        the task to be checked
      * @return a list of all task requirements
      */
-    private List<ResourceLocation> getCompletedRequirements(int taskBoardId, @Nonnull Task task) {
+    private List<ResourceLocation> getCompletedRequirements(UUID taskBoardId, @Nonnull Task task) {
         List<ResourceLocation> completed = Lists.newArrayList();
         for (TaskRequirement.Requirement<?> requirement : task.getRequirement().getAll()) {
             if (checkStat(taskBoardId, task, requirement)) {
@@ -359,7 +361,7 @@ public class TaskManager implements ITaskManager {
      * @param taskBoardId the id of the task board
      * @param tasks       the task to be checked
      */
-    private void removeLockedTasks(int taskBoardId, @Nonnull Collection<Task> tasks) {
+    private void removeLockedTasks(UUID taskBoardId, @Nonnull Collection<Task> tasks) {
         tasks.removeIf(task -> {
             if (!this.isTaskUnlocked(task)) {
                 this.stats.getOrDefault(taskBoardId, Collections.emptyMap()).remove(task);
@@ -377,9 +379,9 @@ public class TaskManager implements ITaskManager {
      * @param requirement the requirement to check
      * @return if the requirement is completed
      */
-    private boolean checkStat(int taskBoardId, @Nonnull Task task, @Nonnull TaskRequirement.Requirement<?> requirement) {
+    private boolean checkStat(UUID taskBoardId, @Nonnull Task task, @Nonnull TaskRequirement.Requirement<?> requirement) {
         if (task.isUnique()) {
-            taskBoardId = -1;
+            taskBoardId = UNIQUE_TASKS;
         }
         if (isTaskNotAccepted(taskBoardId, task)) return false;
         try {
@@ -430,7 +432,7 @@ public class TaskManager implements ITaskManager {
      * @param taskBoardId the id of the task board
      * @param tasks       the tasks to be updated
      */
-    private void updateStats(int taskBoardId, @Nonnull Collection<Task> tasks) {
+    private void updateStats(UUID taskBoardId, @Nonnull Collection<Task> tasks) {
         tasks.forEach(task -> updateStats(taskBoardId, task));
     }
 
@@ -440,10 +442,10 @@ public class TaskManager implements ITaskManager {
      * @param taskBoardId the id of the task board
      * @param task        the task to be updated
      */
-    private void updateStats(int taskBoardId, @Nonnull Task task) {
+    private void updateStats(UUID taskBoardId, @Nonnull Task task) {
         if (isTaskNotAccepted(taskBoardId, task)) return;
         if (!task.getRequirement().isHasStatBasedReq()) return;
-        Map<Task, Map<ResourceLocation, Integer>> taskStats = this.stats.getOrDefault(task.isUnique() ? -1 : taskBoardId, new HashMap<>());
+        Map<Task, Map<ResourceLocation, Integer>> taskStats = this.stats.getOrDefault(task.isUnique() ? UNIQUE_TASKS : taskBoardId, new HashMap<>());
         Map<ResourceLocation, Integer> reqStats = taskStats.getOrDefault(task, new HashMap<>());
         for (TaskRequirement.Requirement<?> requirement : task.getRequirement().getAll()) {
             switch (requirement.getType()) {
@@ -465,7 +467,7 @@ public class TaskManager implements ITaskManager {
             }
         }
         taskStats.put(task, reqStats);
-        this.stats.put(task.isUnique() ? -1 : taskBoardId, taskStats);
+        this.stats.put(task.isUnique() ? UNIQUE_TASKS : taskBoardId, taskStats);
     }
 
     // save/load -------------------------------------------------------------------------------------------------------
@@ -490,17 +492,13 @@ public class TaskManager implements ITaskManager {
         //less tasks
         if (!this.lessTasks.isEmpty()) {
             CompoundNBT tasksNBT = new CompoundNBT();
-            this.tasks.forEach((entityId, tasks) -> {
-                CompoundNBT entityIdNBT = new CompoundNBT();
-                tasks.forEach(task -> entityIdNBT.putBoolean(Objects.requireNonNull(task.getRegistryName()).toString(), true));
-                tasksNBT.put(entityId.toString(), entityIdNBT);
-            });
+            this.lessTasks.forEach((entityId, tasks) -> tasksNBT.putInt(entityId.toString(), tasks));
             compoundNBT.put("lessTasks", tasksNBT);
         }
         //accepted tasks
         if (!this.acceptedTasks.isEmpty()) {
             CompoundNBT tasksNBT = new CompoundNBT();
-            this.tasks.forEach((entityId, tasks) -> {
+            this.acceptedTasks.forEach((entityId, tasks) -> {
                 CompoundNBT entityIdNBT = new CompoundNBT();
                 tasks.forEach(task -> entityIdNBT.putBoolean(Objects.requireNonNull(task.getRegistryName()).toString(), true));
                 tasksNBT.put(entityId.toString(), entityIdNBT);
@@ -535,8 +533,8 @@ public class TaskManager implements ITaskManager {
         }
         //tasks
         if (compoundNBT.contains("tasks")) {
-            compoundNBT.getCompound("tasks").keySet().forEach(entityId -> {
-                CompoundNBT entityIdNBT = compoundNBT.getCompound("tasks").getCompound(entityId);
+            compoundNBT.getCompound("tasks").keySet().forEach(taskBoardId -> {
+                CompoundNBT entityIdNBT = compoundNBT.getCompound("tasks").getCompound(taskBoardId);
                 Set<Task> tasks = new HashSet<>();
                 entityIdNBT.keySet().forEach((taskId -> {
                     Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
@@ -544,27 +542,18 @@ public class TaskManager implements ITaskManager {
                         tasks.add(task);
                     }
                 }));
-                this.tasks.put(Integer.valueOf(entityId), tasks);
+                this.tasks.put(UUID.fromString(taskBoardId), tasks);
             });
         }
         //less tasks
         if (compoundNBT.contains("lessTasks")) {
-            compoundNBT.getCompound("lessTasks").keySet().forEach(entityId -> {
-                CompoundNBT entityIdNBT = compoundNBT.getCompound("lessTasks").getCompound(entityId);
-                Set<Task> tasks = new HashSet<>();
-                entityIdNBT.keySet().forEach((taskId -> {
-                    Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
-                    if (task != null) {
-                        tasks.add(task);
-                    }
-                }));
-                this.tasks.put(Integer.valueOf(entityId), tasks);
-            });
+            CompoundNBT lessTasksNBT = compoundNBT.getCompound("lessTasks");
+            lessTasksNBT.keySet().forEach(taskBoardId -> this.lessTasks.put(UUID.fromString(taskBoardId), lessTasksNBT.getInt(taskBoardId)));
         }
         //accepted tasks
         if (compoundNBT.contains("acceptedTasks")) {
-            compoundNBT.getCompound("acceptedTasks").keySet().forEach(entityId -> {
-                CompoundNBT entityIdNBT = compoundNBT.getCompound("acceptedTasks").getCompound(entityId);
+            compoundNBT.getCompound("acceptedTasks").keySet().forEach(taskBoardId -> {
+                CompoundNBT entityIdNBT = compoundNBT.getCompound("acceptedTasks").getCompound(taskBoardId);
                 Set<Task> tasks = new HashSet<>();
                 entityIdNBT.keySet().forEach((taskId -> {
                     Task task = ModRegistries.TASKS.getValue(new ResourceLocation(taskId));
@@ -572,14 +561,14 @@ public class TaskManager implements ITaskManager {
                         tasks.add(task);
                     }
                 }));
-                this.tasks.put(Integer.valueOf(entityId), tasks);
+                this.acceptedTasks.put(UUID.fromString(taskBoardId), tasks);
             });
         }
         //stats
         if (compoundNBT.contains("stats")) {
             CompoundNBT stats = compoundNBT.getCompound("stats");
-            stats.keySet().forEach(entityId -> {
-                CompoundNBT entityIdNBT = stats.getCompound(entityId);
+            stats.keySet().forEach(taskBoardId -> {
+                CompoundNBT entityIdNBT = stats.getCompound(taskBoardId);
                 Map<Task, Map<ResourceLocation, Integer>> tasks = new HashMap<>();
                 entityIdNBT.keySet().forEach((task) -> {
                     CompoundNBT taskNBT = entityIdNBT.getCompound(task);
@@ -587,7 +576,7 @@ public class TaskManager implements ITaskManager {
                     taskNBT.keySet().forEach((requirementId) -> requirements.put(new ResourceLocation(requirementId), taskNBT.getInt(requirementId)));
                     tasks.put(ModRegistries.TASKS.getValue(new ResourceLocation(task)), requirements);
                 });
-                this.stats.put(Integer.valueOf(entityId), tasks);
+                this.stats.put(UUID.fromString(taskBoardId), tasks);
             });
         }
     }

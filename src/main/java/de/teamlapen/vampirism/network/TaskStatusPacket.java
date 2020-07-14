@@ -22,18 +22,17 @@ public class TaskStatusPacket implements IMessage {
     public final Set<Task> notAcceptedTasks;
     public final Map<Task, List<ResourceLocation>> completedRequirements;
     public final int containerId;
-    public final int taskBoardId;
+    public final UUID taskBoardId;
 
     /**
-     *
-     * @param completableTasks all visible task that are completable
-     * @param visibleTasks all visible tasks except completable or not accepted ones
-     * @param notAcceptedTasks all visible tasks that are not accepted
+     * @param completableTasks      all visible task that are completable
+     * @param visibleTasks          all visible tasks except completable or not accepted ones
+     * @param notAcceptedTasks      all visible tasks that are not accepted
      * @param completedRequirements all requirements of the visible tasks that are already completed
-     * @param containerId the id of the {@link de.teamlapen.vampirism.inventory.container.TaskBoardContainer}
-     * @param taskBoardId the task board id
+     * @param containerId           the id of the {@link de.teamlapen.vampirism.inventory.container.TaskBoardContainer}
+     * @param taskBoardId           the task board id
      */
-    public TaskStatusPacket(Set<Task> completableTasks, Collection<Task> visibleTasks, Set<Task> notAcceptedTasks, Map<Task, List<ResourceLocation>> completedRequirements, int containerId, int taskBoardId) {
+    public TaskStatusPacket(Set<Task> completableTasks, Collection<Task> visibleTasks, Set<Task> notAcceptedTasks, Map<Task, List<ResourceLocation>> completedRequirements, int containerId, UUID taskBoardId) {
         this.completableTasks = completableTasks;
         this.visibleTasks = visibleTasks;
         this.notAcceptedTasks = notAcceptedTasks;
@@ -43,7 +42,7 @@ public class TaskStatusPacket implements IMessage {
     }
 
     static void encode(@Nonnull TaskStatusPacket msg, @Nonnull PacketBuffer buf) {
-        buf.writeVarInt(msg.taskBoardId);
+        buf.writeString(msg.taskBoardId.toString());
         buf.writeVarInt(msg.containerId);
         buf.writeVarInt(msg.notAcceptedTasks.size());
         buf.writeVarInt(msg.completableTasks.size());
@@ -60,7 +59,7 @@ public class TaskStatusPacket implements IMessage {
     }
 
     static TaskStatusPacket decode(@Nonnull PacketBuffer buf) {
-        int taskBoardId = buf.readVarInt();
+        UUID taskBoardId = UUID.fromString(buf.readString());
         int containerId = buf.readVarInt();
         int notAcceptedSize = buf.readVarInt();
         int completableSize = buf.readVarInt();
