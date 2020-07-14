@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "vampirism:crossbow_arrow",
+    "item": "vampirism:crossbow_arrow_normal",
     "count": 1
   },
   "level": 1,
@@ -8,7 +8,7 @@
   "type": "vampirism:shapeless_crafting_weapontable",
   "ingredients": [
     {
-      "item": "minecraft_arrow"
+      "item": "minecraft:arrow"
     }
   ]
 }

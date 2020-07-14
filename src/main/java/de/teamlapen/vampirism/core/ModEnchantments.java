@@ -26,7 +26,7 @@ public class ModEnchantments {
     }
 
     public static void fixMapping(RegistryEvent.MissingMappings<Enchantment> event) {
-        event.getMappings().forEach(missingMapping -> {
+        event.getAllMappings().forEach(missingMapping -> {
             if ("vampirism:crossbowinfinite".equals(missingMapping.key.toString())) {
                 missingMapping.remap(Enchantments.INFINITY);
             }
