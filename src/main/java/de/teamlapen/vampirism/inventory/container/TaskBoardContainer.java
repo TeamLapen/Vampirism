@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -52,7 +53,7 @@ public class TaskBoardContainer extends Container {
      */
     @Nullable
     private Map<Task, List<ResourceLocation>> completedRequirements;
-    private int taskBoardId;
+    private UUID taskBoardId;
 
     public TaskBoardContainer(int id, PlayerInventory playerInventory) {
         super(ModContainer.task_master, id);
@@ -61,13 +62,13 @@ public class TaskBoardContainer extends Container {
     }
 
     /**
-     * @param completableTasks updated possible tasks
-     * @param visibleTasks     updated unlocked tasks
-     * @param notAcceptedTasks updated not accepted tasks
+     * @param completableTasks      updated possible tasks
+     * @param visibleTasks          updated unlocked tasks
+     * @param notAcceptedTasks      updated not accepted tasks
      * @param completedRequirements updated completed requirements
      */
     @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Set<Task> completableTasks, @Nonnull List<Task> visibleTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, List<ResourceLocation>> completedRequirements, int taskBoardId) {
+    public void init(@Nonnull Set<Task> completableTasks, @Nonnull List<Task> visibleTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, List<ResourceLocation>> completedRequirements, UUID taskBoardId) {
         this.completableTasks.addAll(completableTasks);
         this.visibleTasks.addAll(visibleTasks.stream().filter(task -> !this.visibleTasks.contains(task)).sorted((task1, task2) -> (this.completableTasks.contains(task1) && !this.completableTasks.contains(task2)) || (!completableTasks.contains(task1) && !this.completedTasks.contains(task1) && this.completedTasks.contains(task2)) ? -1 : 0).collect(Collectors.toList()));
         this.completedRequirements = completedRequirements;

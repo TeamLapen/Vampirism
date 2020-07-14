@@ -20,11 +20,11 @@ public interface TaskMasterEntity extends ForceLookEntityGoal.TaskOwner, ITaskMa
     ITextComponent NO_TASK = new TranslationTextComponent("text.vampirism.taskmaster.no_tasks");
 
     default boolean processInteraction(PlayerEntity playerEntity, Entity entity) {
-        if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(taskManager -> taskManager.hasAvailableTasks(entity.getEntityId())).orElse(false)) {
+        if (FactionPlayerHandler.getOpt(playerEntity).map(FactionPlayerHandler::getCurrentFactionPlayer).filter(Optional::isPresent).map(Optional::get).map(IFactionPlayer::getTaskManager).map(taskManager -> taskManager.hasAvailableTasks(entity.getUniqueID())).orElse(false)) {
             OptionalInt containerIdOpt = playerEntity.openContainer(new SimpleNamedContainerProvider((containerId, playerInventory, player) -> new TaskBoardContainer(containerId, playerInventory), CONTAINER_NAME.deepCopy()));
             if (containerIdOpt.isPresent()) {
                 FactionPlayerHandler.getOpt(playerEntity).ifPresent(factionPlayerHandler -> factionPlayerHandler.getCurrentFactionPlayer().ifPresent(iFactionPlayer -> {
-                    iFactionPlayer.getTaskManager().openTaskMasterScreen(entity.getEntityId());
+                    iFactionPlayer.getTaskManager().openTaskMasterScreen(entity.getUniqueID());
                 }));
                 return true;
             }
