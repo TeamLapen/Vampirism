@@ -8,16 +8,18 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import org.apache.commons.lang3.tuple.Triple;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegistry {
 
     private final List<IExtendedBrewingRecipe> recipes = new ArrayList<>();
     private final List<MixPredicate> conversionMixes = new ArrayList<>();
+
+
+    public ExtendedBrewingRecipeRegistry() {
+        this.recipes.add(new ExtendedReagentRecipes());
+    }
 
     @Override
     public void addMix(MixPredicate mixPredicate) {
@@ -26,9 +28,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
 
     @Override
     public void addMix(MixPredicate[] mixPredicate) {
-        for (MixPredicate predicate : mixPredicate) {
-            this.conversionMixes.add(predicate);
-        }
+        this.conversionMixes.addAll(Arrays.asList(mixPredicate));
     }
 
     @Override

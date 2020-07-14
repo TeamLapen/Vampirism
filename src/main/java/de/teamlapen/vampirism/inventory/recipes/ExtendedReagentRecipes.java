@@ -22,7 +22,7 @@ public class ExtendedReagentRecipes implements IExtendedBrewingRecipe {
             Potion potion = PotionUtils.getPotionFromItem(bottleItem);
             Item item = bottleItem.getItem();
             for (MixPredicate mix : VampirismAPI.extendedBrewingRecipeRegistry().getConversionMixes()) {
-                if (mix.input.get() == potion && mix.reagent1.test(ingredient) && ingredient.getCount() >= mix.reagent1Count && mix.reagent2.test(extraIngredient) && extraIngredient.getCount() >= mix.reagent2Count && mix.condition.test(capabilities)) {
+                if (mix.input.get() == potion && mix.reagent1.test(ingredient) && ingredient.getCount() >= mix.reagent1Count && (mix.reagent2Count <= 0 || (mix.reagent2.test(extraIngredient) && extraIngredient.getCount() >= mix.reagent2Count)) && mix.condition.test(capabilities)) {
                     return Optional.of(Triple.of(PotionUtils.addPotionToItemStack(new ItemStack(item), mix.output.get()), mix.reagent1Count, mix.reagent2Count));
                 }
             }

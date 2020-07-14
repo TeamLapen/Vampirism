@@ -3,8 +3,9 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.core.ModTiles;
-import de.teamlapen.vampirism.inventory.container.ExtendedPotionTableContainer;
+import de.teamlapen.vampirism.inventory.container.PotionTableContainer;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,6 +13,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -32,7 +34,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 
-public class ExtendedPotionTableTileEntity extends LockableTileEntity implements ISidedInventory, ITickableTileEntity {
+public class PotionTableTileEntity extends LockableTileEntity implements ISidedInventory, ITickableTileEntity, INamedContainerProvider {
 
     /*
      * 0: Fuel
@@ -62,11 +64,9 @@ public class ExtendedPotionTableTileEntity extends LockableTileEntity implements
         public int get(int index) {
             switch (index) {
                 case 0:
-                    return ExtendedPotionTableTileEntity.this.brewTime;
+                    return PotionTableTileEntity.this.brewTime;
                 case 1:
-                    return ExtendedPotionTableTileEntity.this.fuel;
-                case 2:
-                    return ExtendedPotionTableTileEntity.this.config.toByte();
+                    return PotionTableTileEntity.this.fuel;
                 default:
                     return 0;
             }
@@ -75,13 +75,10 @@ public class ExtendedPotionTableTileEntity extends LockableTileEntity implements
         public void set(int index, int value) {
             switch (index) {
                 case 0:
-                    ExtendedPotionTableTileEntity.this.brewTime = value;
+                    PotionTableTileEntity.this.brewTime = value;
                     break;
                 case 1:
-                    ExtendedPotionTableTileEntity.this.fuel = value;
-                    break;
-                case 2:
-                    ExtendedPotionTableTileEntity.this.config.fromByte((byte) value);
+                    PotionTableTileEntity.this.fuel = value;
                     break;
             }
 
@@ -92,8 +89,8 @@ public class ExtendedPotionTableTileEntity extends LockableTileEntity implements
         }
     };
 
-    public ExtendedPotionTableTileEntity() {
-        super(ModTiles.extended_potion_table);
+    public PotionTableTileEntity() {
+        super(ModTiles.potion_table);
     }
 
     @Override
@@ -214,6 +211,10 @@ public class ExtendedPotionTableTileEntity extends LockableTileEntity implements
         }
     }
 
+    public boolean isExtended() {
+        return this.config.isMultiTaskBrewing();
+    }
+
     @Override
     public boolean isUsableByPlayer(PlayerEntity player) {
         if (this.world.getTileEntity(this.pos) != this) {
@@ -313,7 +314,7 @@ public class ExtendedPotionTableTileEntity extends LockableTileEntity implements
 
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
-        return new ExtendedPotionTableContainer(id, player, IWorldPosCallable.of(this.world, this.getPos()), this, this.config.multiTaskBrewing);
+        return new PotionTableContainer(id, player, IWorldPosCallable.of(this.world, this.getPos()), this, this.config.multiTaskBrewing, syncedProperties);
     }
 
     @Override
@@ -380,7 +381,7 @@ public class ExtendedPotionTableTileEntity extends LockableTileEntity implements
         return false;
     }
 
-    private static class BrewingCapabilities implements de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities {
+    protected static class BrewingCapabilities implements IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities {
         boolean durableBrewing;
         boolean concentratedBrewing;
         boolean swiftBrewing;
@@ -390,6 +391,12 @@ public class ExtendedPotionTableTileEntity extends LockableTileEntity implements
 
         public void deriveFromHunter(IHunterPlayer player) {
             ISkillHandler<IHunterPlayer> manager = player.getSkillHandler();
+            durableBrewing = true;
+            concentratedBrewing = true;
+            swiftBrewing = true;
+            masterBrewing = true;
+            efficientBrewing = true;
+            multiTaskBrewing = true;
         }
 
         public void fromByte(byte d) {
