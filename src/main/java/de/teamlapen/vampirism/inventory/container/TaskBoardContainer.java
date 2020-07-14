@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.inventory.container;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.entity.player.task.TaskRequirement;
 import de.teamlapen.vampirism.client.gui.TaskBoardScreen;
@@ -48,17 +48,20 @@ public class TaskBoardContainer extends Container {
     private final Set<Task> notAcceptedTasks = Sets.newHashSet();
     @Nonnull
     private final TextFormatting factionColor;
+    @Nonnull
+    private final IFactionPlayer<?> factionPlayer;
     /**
      * all task requirements that are completed
      */
     @Nullable
-    private Map<Task, List<ResourceLocation>> completedRequirements;
+    private Map<Task, Map<ResourceLocation, Integer>> completedRequirements;
     private UUID taskBoardId;
 
     public TaskBoardContainer(int id, PlayerInventory playerInventory) {
         super(ModContainer.task_master, id);
-        //noinspection NullableProblems
-        this.factionColor = FactionPlayerHandler.getOpt(playerInventory.player).map(FactionPlayerHandler::getCurrentFaction).map(IFaction::getChatColor).orElse(TextFormatting.RESET);
+        //noinspection OptionalGetWithoutIsPresent
+        this.factionPlayer = FactionPlayerHandler.get(playerInventory.player).getCurrentFactionPlayer().get();
+        this.factionColor = this.factionPlayer.getFaction().getChatColor();
     }
 
     /**
@@ -68,7 +71,7 @@ public class TaskBoardContainer extends Container {
      * @param completedRequirements updated completed requirements
      */
     @OnlyIn(Dist.CLIENT)
-    public void init(@Nonnull Set<Task> completableTasks, @Nonnull List<Task> visibleTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, List<ResourceLocation>> completedRequirements, UUID taskBoardId) {
+    public void init(@Nonnull Set<Task> completableTasks, @Nonnull List<Task> visibleTasks, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Map<Task, Map<ResourceLocation, Integer>> completedRequirements, UUID taskBoardId) {
         this.completableTasks.addAll(completableTasks);
         this.visibleTasks.addAll(visibleTasks.stream().filter(task -> !this.visibleTasks.contains(task)).sorted((task1, task2) -> (this.completableTasks.contains(task1) && !this.completableTasks.contains(task2)) || (!completableTasks.contains(task1) && !this.completedTasks.contains(task1) && this.completedTasks.contains(task2)) ? -1 : 0).collect(Collectors.toList()));
         this.completedRequirements = completedRequirements;
@@ -90,19 +93,21 @@ public class TaskBoardContainer extends Container {
     }
 
     public boolean isRequirementCompleted(Task task, TaskRequirement.Requirement<?> requirement) {
+        if (this.isCompleted(task)) return true;
         if (this.completedRequirements != null) {
             if (this.completedRequirements.containsKey(task)) {
-                return this.completedRequirements.get(task).contains(requirement.getId());
+                return this.completedRequirements.get(task).containsKey(requirement.getId()) && this.completedRequirements.get(task).get(requirement.getId()) >= requirement.getAmount(this.factionPlayer);
             }
         }
         return false;
     }
 
     public boolean areRequirementsCompleted(Task task, TaskRequirement.Type type) {
+        if (this.isCompleted(task)) return true;
         if (this.completedRequirements != null) {
             if (this.completedRequirements.containsKey(task)) {
                 for (TaskRequirement.Requirement<?> requirement : task.getRequirement().requirements().get(type)) {
-                    if (!this.completedRequirements.get(task).contains(requirement.getId())) {
+                    if (!this.completedRequirements.get(task).containsKey(requirement.getId()) || this.completedRequirements.get(task).get(requirement.getId()) < requirement.getAmount(this.factionPlayer)) {
                         return false;
                     }
                 }
@@ -110,6 +115,15 @@ public class TaskBoardContainer extends Container {
             }
         }
         return false;
+    }
+
+    public int getRequirementStatus(Task task, TaskRequirement.Requirement<?> requirement) {
+        assert this.completedRequirements != null;
+        if (this.completedRequirements.containsKey(task)) {
+            return this.completedRequirements.get(task).get(requirement.getId());
+        } else {
+            return requirement.getAmount(this.factionPlayer);
+        }
     }
 
     public void completeTask(Task task) {

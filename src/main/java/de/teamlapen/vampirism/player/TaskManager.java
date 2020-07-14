@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.player;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
@@ -130,7 +129,7 @@ public class TaskManager implements ITaskManager {
     /**
      * syncs all shown task for a specific task board to the client
      */
-    private void updateClient(UUID taskBoardId, @Nonnull Map<Task, List<ResourceLocation>> requirements, @Nonnull Set<Task> completable, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Set<Task> available) {
+    private void updateClient(UUID taskBoardId, @Nonnull Map<Task, Map<ResourceLocation, Integer>> requirements, @Nonnull Set<Task> completable, @Nonnull Set<Task> notAcceptedTasks, @Nonnull Set<Task> available) {
         if (player.openContainer instanceof TaskBoardContainer) {
             VampirismMod.dispatcher.sendTo(new TaskStatusPacket(completable, available, notAcceptedTasks, requirements, player.openContainer.windowId, taskBoardId), player);
         }
@@ -327,10 +326,10 @@ public class TaskManager implements ITaskManager {
      * @return map of completed requirement per task
      */
     @Nonnull
-    public Map<Task, List<ResourceLocation>> getCompletedRequirements(UUID taskBoardId, @Nonnull Set<Task> tasks) {
-        Map<Task, List<ResourceLocation>> completedRequirements = Maps.newHashMap();
+    public Map<Task, Map<ResourceLocation, Integer>> getCompletedRequirements(UUID taskBoardId, @Nonnull Set<Task> tasks) {
+        Map<Task, Map<ResourceLocation, Integer>> completedRequirements = Maps.newHashMap();
         tasks.forEach(task -> {
-            List<ResourceLocation> completed = getCompletedRequirements(taskBoardId, task);
+            Map<ResourceLocation, Integer> completed = getCompletedRequirements(taskBoardId, task);
             if (!completed.isEmpty()) {
                 completedRequirements.put(task, completed);
             }
@@ -345,12 +344,10 @@ public class TaskManager implements ITaskManager {
      * @param task        the task to be checked
      * @return a list of all task requirements
      */
-    private List<ResourceLocation> getCompletedRequirements(UUID taskBoardId, @Nonnull Task task) {
-        List<ResourceLocation> completed = Lists.newArrayList();
+    private Map<ResourceLocation, Integer> getCompletedRequirements(UUID taskBoardId, @Nonnull Task task) {
+        Map<ResourceLocation, Integer> completed = Maps.newHashMap();
         for (TaskRequirement.Requirement<?> requirement : task.getRequirement().getAll()) {
-            if (checkStat(taskBoardId, task, requirement)) {
-                completed.add(requirement.getId());
-            }
+            completed.put(requirement.getId(), getStat(taskBoardId, task, requirement));
         }
         return completed;
     }
@@ -380,50 +377,42 @@ public class TaskManager implements ITaskManager {
      * @return if the requirement is completed
      */
     private boolean checkStat(UUID taskBoardId, @Nonnull Task task, @Nonnull TaskRequirement.Requirement<?> requirement) {
+        return getStat(taskBoardId, task, requirement) >= requirement.getAmount(this.factionPlayer);
+    }
+
+    private int getStat(UUID taskBoardId, @Nonnull Task task, @Nonnull TaskRequirement.Requirement<?> requirement) {
         if (task.isUnique()) {
             taskBoardId = UNIQUE_TASKS;
         }
-        if (isTaskNotAccepted(taskBoardId, task)) return false;
-        try {
-            switch (requirement.getType()) {
-                case STATS:
-                    int actualStat = this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer)));
-                    int neededStat = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
-                    if (actualStat < neededStat)
-                        return false;
-                    break;
-                case ENTITY:
-                    int actualStat1 = this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer)));
-                    int neededStat1 = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
-                    if (actualStat1 < neededStat1)
-                        return false;
-                    break;
-                case ENTITY_TAG:
-                    int actualStats = 0;
-                    //noinspection unchecked
-                    for (EntityType<?> type : ((Tag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getAllElements()) {
-                        actualStats += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
-                    }
-                    int neededStats = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
-                    if (actualStats < neededStats)
-                        return false;
-                    break;
-                case ITEMS:
-                    ItemStack stack = ((ItemRequirement) requirement).getItemStack();
-                    if (this.player.inventory.count(stack.getItem()) < stack.getCount()) return false;
-                    break;
-                case BOOLEAN:
-                    if (!(Boolean) requirement.getStat(this.factionPlayer)) return false;
-                    break;
-                default:
-                    return false;
-            }
-        } catch (NullPointerException exception) {
-            LOGGER.warn("failed to find registered stat value. Recalculating.", exception);
-            this.updateStats(taskBoardId, task);
-            return false;
+        if (isTaskNotAccepted(taskBoardId, task)) return 0;
+        int neededStat = 0;
+        int actualStat = 0;
+        switch (requirement.getType()) {
+            case STATS:
+                actualStat = this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer)));
+                neededStat = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
+                break;
+            case ENTITY:
+                actualStat = this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer)));
+                neededStat = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
+                break;
+            case ENTITY_TAG:
+                //noinspection unchecked
+                for (EntityType<?> type : ((Tag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getAllElements()) {
+                    actualStat += this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type));
+                }
+                neededStat = this.stats.get(taskBoardId).get(task).get(requirement.getId()) + requirement.getAmount(this.factionPlayer);
+                break;
+            case ITEMS:
+                ItemStack stack = ((ItemRequirement) requirement).getItemStack();
+                neededStat = stack.getCount();
+                actualStat = this.player.inventory.count(stack.getItem());
+                break;
+            case BOOLEAN:
+                if (!(Boolean) requirement.getStat(this.factionPlayer)) return 0;
+                return 1;
         }
-        return true;
+        return Math.min(requirement.getAmount(this.factionPlayer) - (neededStat - actualStat), requirement.getAmount(this.factionPlayer));
     }
 
     /**

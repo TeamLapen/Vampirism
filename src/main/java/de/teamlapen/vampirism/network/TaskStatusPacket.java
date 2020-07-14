@@ -20,7 +20,7 @@ public class TaskStatusPacket implements IMessage {
     public final Set<Task> completableTasks;
     public final Collection<Task> visibleTasks;
     public final Set<Task> notAcceptedTasks;
-    public final Map<Task, List<ResourceLocation>> completedRequirements;
+    public final Map<Task, Map<ResourceLocation, Integer>> completedRequirements;
     public final int containerId;
     public final UUID taskBoardId;
 
@@ -32,7 +32,7 @@ public class TaskStatusPacket implements IMessage {
      * @param containerId           the id of the {@link de.teamlapen.vampirism.inventory.container.TaskBoardContainer}
      * @param taskBoardId           the task board id
      */
-    public TaskStatusPacket(Set<Task> completableTasks, Collection<Task> visibleTasks, Set<Task> notAcceptedTasks, Map<Task, List<ResourceLocation>> completedRequirements, int containerId, UUID taskBoardId) {
+    public TaskStatusPacket(Set<Task> completableTasks, Collection<Task> visibleTasks, Set<Task> notAcceptedTasks, Map<Task, Map<ResourceLocation, Integer>> completedRequirements, int containerId, UUID taskBoardId) {
         this.completableTasks = completableTasks;
         this.visibleTasks = visibleTasks;
         this.notAcceptedTasks = notAcceptedTasks;
@@ -54,7 +54,10 @@ public class TaskStatusPacket implements IMessage {
         msg.completedRequirements.forEach(((task, resourceLocations) -> {
             buf.writeVarInt(resourceLocations.size());
             buf.writeString(Objects.requireNonNull(task.getRegistryName()).toString());
-            resourceLocations.forEach(res -> buf.writeString(res.toString()));
+            resourceLocations.forEach(((resourceLocation, integer) -> {
+                buf.writeString(resourceLocation.toString());
+                buf.writeVarInt(integer);
+            }));
         }));
     }
 
@@ -77,13 +80,13 @@ public class TaskStatusPacket implements IMessage {
         for (int i = 0; i < notAcceptedSize; i++) {
             notAccepted.add(ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString())));
         }
-        Map<Task, List<ResourceLocation>> completedRequirements = Maps.newHashMapWithExpectedSize(completedReqSize);
+        Map<Task, Map<ResourceLocation, Integer>> completedRequirements = Maps.newHashMapWithExpectedSize(completedReqSize);
         for(int i = 0; i < completedReqSize;++i) {
             int l = buf.readVarInt();
             Task task = ModRegistries.TASKS.getValue(new ResourceLocation(buf.readString()));
-            List<ResourceLocation> req = Lists.newArrayListWithCapacity(l);
+            Map<ResourceLocation, Integer> req = Maps.newHashMapWithExpectedSize(l);
             for(; l>0;--l) {
-                req.add(new ResourceLocation(buf.readString()));
+                req.put(new ResourceLocation(buf.readString()), buf.readVarInt());
             }
             completedRequirements.put(task,req);
         }
