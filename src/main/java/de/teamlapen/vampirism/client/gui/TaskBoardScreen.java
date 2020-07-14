@@ -111,6 +111,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
                     } else {
                         this.container.abortTask(task);
                     }
+                    this.generateTaskToolTip(task, this.toolTips.get(task));
                 }
             }));
             k += 21;
@@ -187,7 +188,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
             if (mouseX >= x + 3 + 113 - 21 && mouseX < x + 3 + 113 - 21 + 16 && mouseY >= y + 2 && mouseY < y + 2 + 16) {
                 TaskReward reward = task.getReward();
                 if (reward instanceof ItemReward) {
-                    this.renderItemTooltip(((ItemReward) reward).getReward(), mouseX, mouseY, REWARD.getFormattedText(), false);
+                    this.renderItemTooltip(((ItemReward) reward).getReward(), mouseX, mouseY, REWARD.getFormattedText(), false, null);
                 } else {
                     this.renderItemTooltip(task, mouseX, mouseY);
                 }
@@ -200,68 +201,75 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
             }
         } else {
             //default task tooltips
-            List<String> toolTips = this.toolTips.computeIfAbsent(task, task1 -> Lists.newArrayList());
+            List<String> toolTips = this.toolTips.getOrDefault(task, Lists.newArrayList());
             if (toolTips.isEmpty()) {
-                toolTips.add(task.getTranslation().applyTextStyle(this.container.getFactionColor()).getFormattedText());
-                if (task.useDescription()) {
-                    toolTips.add(task.getDescription().getFormattedText());
-                    toolTips.add("");
-                }
-                for (List<TaskRequirement.Requirement<?>> requirements : task.getRequirement().requirements().values()) {
-                    if (requirements == null) continue;
-                    ITextComponent title;
-                    TaskRequirement.Type type = requirements.get(0).getType();
-                    boolean completed = this.container.areRequirementsCompleted(task, type);
-                    switch (type) {
-                        case ITEMS:
-                            title = new TranslationTextComponent("gui.vampirism.taskmaster.item_req").appendText(":");
-                            break;
-                        case STATS:
-                            title = new TranslationTextComponent("gui.vampirism.taskmaster.stat_req").appendText(":");
-                            break;
-                        case ENTITY:
-                            title = new TranslationTextComponent("gui.vampirism.taskmaster.entity_req").appendText(":");
-                            break;
-                        case ENTITY_TAG:
-                            title = new TranslationTextComponent("gui.vampirism.taskmaster.entity_tag_req").appendText(":");
-                            break;
-                        default:
-                            title = new TranslationTextComponent("gui.vampirism.taskmaster.bool_req").appendText(":");
-                            break;
-                    }
-                    if (completed) {
-                        title.applyTextStyle(TextFormatting.STRIKETHROUGH);
-                    }
-                    toolTips.add(title.getFormattedText());
-                    for (TaskRequirement.Requirement<?> requirement : requirements) {
-                        ITextComponent desc;
-                        switch (type) {
-                            case ITEMS:
-                                desc = ((Item) requirement.getStat(this.factionPlayer)).getName().shallowCopy().appendText(" " + requirement.getAmount(this.factionPlayer));
-                                break;
-                            case STATS:
-                                desc = new TranslationTextComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).appendText(" " + requirement.getAmount(this.factionPlayer));
-                                break;
-                            case ENTITY:
-                                desc = (((EntityType<?>) requirement.getStat(this.factionPlayer)).getName().shallowCopy().appendText(" " + requirement.getAmount(this.factionPlayer)));
-                                break;
-                            case ENTITY_TAG:
-                                //noinspection unchecked
-                                desc = new TranslationTextComponent("tasks.vampirism." + ((Tag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getId().toString()).appendText(" " + requirement.getAmount(this.factionPlayer));
-                                break;
-                            default:
-                                desc = new TranslationTextComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
-                                break;
-                        }
-                        if (completed || this.container.isRequirementCompleted(task, requirement)) {
-                            desc.applyTextStyle(TextFormatting.STRIKETHROUGH);
-                        }
-                        toolTips.add(new StringTextComponent("  ").appendSibling(desc).getFormattedText());
-                    }
-                }
+                generateTaskToolTip(task, toolTips);
             }
             this.renderTooltip(toolTips, mouseX, mouseY);
         }
+    }
+
+    private void generateTaskToolTip(Task task, List<String> toolTips) {
+        toolTips.clear();
+        toolTips.add(task.getTranslation().applyTextStyle(this.container.getFactionColor()).getFormattedText());
+        if (task.useDescription()) {
+            toolTips.add(task.getDescription().getFormattedText());
+            toolTips.add("");
+        }
+        for (List<TaskRequirement.Requirement<?>> requirements : task.getRequirement().requirements().values()) {
+            if (requirements == null) continue;
+            ITextComponent title;
+            TaskRequirement.Type type = requirements.get(0).getType();
+            boolean completed = this.container.areRequirementsCompleted(task, type);
+            switch (type) {
+                case ITEMS:
+                    title = new TranslationTextComponent("gui.vampirism.taskmaster.item_req").appendText(":");
+                    break;
+                case STATS:
+                    title = new TranslationTextComponent("gui.vampirism.taskmaster.stat_req").appendText(":");
+                    break;
+                case ENTITY:
+                    title = new TranslationTextComponent("gui.vampirism.taskmaster.entity_req").appendText(":");
+                    break;
+                case ENTITY_TAG:
+                    title = new TranslationTextComponent("gui.vampirism.taskmaster.entity_tag_req").appendText(":");
+                    break;
+                default:
+                    title = new TranslationTextComponent("gui.vampirism.taskmaster.bool_req").appendText(":");
+                    break;
+            }
+            if (completed) {
+                title.applyTextStyle(TextFormatting.STRIKETHROUGH);
+            }
+            toolTips.add(title.getFormattedText());
+            for (TaskRequirement.Requirement<?> requirement : requirements) {
+                ITextComponent desc;
+                int completedAmount = this.container.getRequirementStatus(task, requirement);
+                switch (type) {
+                    case ITEMS:
+                        desc = ((Item) requirement.getStat(this.factionPlayer)).getName().shallowCopy().appendText(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
+                        break;
+                    case STATS:
+                        desc = new TranslationTextComponent("stat." + requirement.getStat(this.factionPlayer).toString().replace(':', '.')).appendText(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
+                        break;
+                    case ENTITY:
+                        desc = (((EntityType<?>) requirement.getStat(this.factionPlayer)).getName().shallowCopy().appendText(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer)));
+                        break;
+                    case ENTITY_TAG:
+                        //noinspection unchecked
+                        desc = new TranslationTextComponent("tasks.vampirism." + ((Tag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getId().toString()).appendText(" " + completedAmount + "/" + requirement.getAmount(this.factionPlayer));
+                        break;
+                    default:
+                        desc = new TranslationTextComponent(task.getTranslationKey() + ".req." + requirement.getId().toString().replace(':', '.'));
+                        break;
+                }
+                if (completed || this.container.isRequirementCompleted(task, requirement)) {
+                    desc.applyTextStyle(TextFormatting.STRIKETHROUGH);
+                }
+                toolTips.add(new StringTextComponent("  ").appendSibling(desc).getFormattedText());
+            }
+        }
+        this.toolTips.put(task, toolTips);
     }
 
     private void renderTask(Task task, int x, int y) {
@@ -274,11 +282,10 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
         if (dummy && this.isOpen) {
             task = this.container.getTask(this.openedTask);
         }
-        if (!dummy) {
-            if (this.container.isCompleted(task)) {
-                GlStateManager.color4f(0.4f, 0.4f, 0.4f, 1);
-
-            } else if (this.container.canCompleteTask(task)) {
+        if (this.container.isCompleted(task)) {
+            GlStateManager.color4f(0.4f, 0.4f, 0.4f, 1);
+        } else if (!dummy) {
+            if (this.container.canCompleteTask(task)) {
                 if (task.isUnique()) {
                     GlStateManager.color4f(1f, 0.855859375f, 0, 1);
                 } else {
@@ -298,7 +305,7 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
                 }
             }
         }
-        blit(x, y, this.blitOffset, 16, 187 + offset, 137, Math.min(64 + 54 + 99 - (y), 21), 256, 256);
+        blit(x, y, this.blitOffset, 16, 187 + offset, 137, 21, 256, 256);
         GlStateManager.color4f(1, 1, 1, 1);
         RenderHelper.enableGUIStandardItemLighting();
 
@@ -337,16 +344,17 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
 
     private void renderRequirementTool(Task task, TaskRequirement.Requirement<?> requirement, int x, int y) {
         boolean completed = this.container.isRequirementCompleted(task, requirement);
+        int completedAmount = this.container.getRequirementStatus(task, requirement);
         switch (requirement.getType()) {
             case ITEMS:
-                this.renderItemTooltip(((ItemRequirement) requirement).getItemStack(), x, y, (completed ? REQUIREMENT_STRIKE : REQUIREMENT).getFormattedText(), completed);
+                this.renderItemTooltip(((ItemRequirement) requirement).getItemStack(), x, y, (completed ? REQUIREMENT_STRIKE : REQUIREMENT).getFormattedText(), completed, completedAmount + "/");
                 break;
             case ENTITY:
-                this.renderEntitySkull(x, y, ((EntityType<?>) requirement.getStat(this.factionPlayer)).getName().shallowCopy().appendText(" " + requirement.getAmount(this.factionPlayer)), completed);
+                this.renderEntitySkull(x, y, ((EntityType<?>) requirement.getStat(this.factionPlayer)).getName().shallowCopy().appendText(" " + (completedAmount + "/") + requirement.getAmount(this.factionPlayer)), completed);
                 break;
             case ENTITY_TAG:
                 //noinspection unchecked
-                this.renderEntitySkull(x, y, new TranslationTextComponent("tasks.vampirism." + ((Tag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getId().toString()).appendText(" " + requirement.getAmount(this.factionPlayer)), completed);
+                this.renderEntitySkull(x, y, new TranslationTextComponent("tasks.vampirism." + ((Tag<EntityType<?>>) requirement.getStat(this.factionPlayer)).getId().toString()).appendText(" " + (completedAmount + "/") + requirement.getAmount(this.factionPlayer)), completed);
                 break;
             default:
                 this.renderDefaultRequirementToolTip(task, requirement, x, y, completed);
@@ -380,18 +388,19 @@ public class TaskBoardScreen extends ContainerScreen<TaskBoardContainer> {
         this.renderTooltip(tooltips, x, y, this.font);
     }
 
-    private void renderItemTooltip(ItemStack stack, int x, int y, String text, boolean strikeThrough) {
+    private void renderItemTooltip(ItemStack stack, int x, int y, String text, boolean strikeThrough, @Nullable String bonus) {
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         net.minecraftforge.fml.client.config.GuiUtils.preItemToolTip(stack);
-        List<String> tooltips = getTooltipFromItem2(stack, strikeThrough);
+        List<String> tooltips = getTooltipFromItem2(stack, strikeThrough, bonus);
         tooltips.add(0, text);
         this.renderTooltip(tooltips, x, y, (font == null ? this.font : font));
         net.minecraftforge.fml.client.config.GuiUtils.postItemToolTip();
     }
 
-    public List<String> getTooltipFromItem2(ItemStack itemStack, boolean strikeThough) {
+    public List<String> getTooltipFromItem2(ItemStack itemStack, boolean strikeThough, @Nullable String bonus) {
         assert this.minecraft != null;
         List<ITextComponent> list = itemStack.getTooltip(this.minecraft.player, this.minecraft.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+        list.get(0).appendText(" " + (bonus != null ? bonus : "") + itemStack.getCount());
         List<String> list1 = Lists.newArrayList();
 
         for (ITextComponent itextcomponent : list) {
