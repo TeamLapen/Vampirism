@@ -29,10 +29,12 @@ import javax.annotation.Nonnull;
 public class VampirismAPI {
 
 
+    @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IExtendedCreatureVampirism.class)
-    private static final Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
+    private static Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
+    @SuppressWarnings("FieldMayBeFinal")
     @CapabilityInject(IFactionPlayerHandler.class)
-    private static final Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
+    private static Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
     private static IVampirismEntityRegistry entityRegistry;
