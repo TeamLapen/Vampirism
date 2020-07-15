@@ -158,7 +158,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     public VampirePlayer(PlayerEntity player) {
         super(player);
-        applyEntityAttributes();
         bloodStats = new BloodStats(player);
         actionHandler = new ActionHandler<>(this);
         skillHandler = new SkillHandler<>(this, VReference.VAMPIRE_FACTION);
@@ -583,6 +582,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
+        this.applyEntityAttributes();
         if (!isRemote()) {
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), getMaxLevel(), VampirismConfig.BALANCE.vpSpeedMaxMod.get(), 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL, false);
@@ -946,16 +946,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     private void applyEntityAttributes() {
-        //Checking if already registered, since this method has to be called multiple times due to SpongeForge not recreating the player, but resetting the attribute map
-//        if (player.getAttributes().getAttributeInstance(VReference.sunDamage) == null) { TODO 1.16
-//            player.getAttributes().registerAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
-//        }
-//        if (player.getAttributes().getAttributeInstance(VReference.bloodExhaustion) == null) {
-//            player.getAttributes().registerAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
-//        }
-//        if (player.getAttributes().getAttributeInstance(VReference.biteDamage) == null) {
-//            player.getAttributes().registerAttribute(ModAttributes.bite_damage).setBaseValue(VampirismConfig.BALANCE.vpBiteDamage.get());
-//        }
+        player.getAttribute(ModAttributes.sundamage).setBaseValue(VampirismConfig.BALANCE.vpSundamage.get());
+        player.getAttribute(ModAttributes.blood_exhaustion).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
+        player.getAttribute(ModAttributes.bite_damage).setBaseValue(VampirismConfig.BALANCE.vpExhaustionMaxMod.get());
     }
 
     /**

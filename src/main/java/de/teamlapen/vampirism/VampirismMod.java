@@ -262,7 +262,7 @@ public class VampirismMod {
         if (inDev) {
             Tests.runBackgroundTests();
         }
-        ModWorld.addVillageStructures();
+        //ModWorld.addVillageStructures();
     }
 
     private void setup(final FMLCommonSetupEvent event) {

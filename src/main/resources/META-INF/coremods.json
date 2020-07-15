@@ -1,5 +1,6 @@
 {
   "batmode": "META-INF/coremods/batmode.js",
   "jigsaw": "META-INF/coremods/jigsaw.js",
-  "fogre": "META-INF/coremods/forge_modlist.js"
+  "forge": "META-INF/coremods/forge_modlist.js",
+  "entity_attributes": "META-INF/coremods/entity_attributes.js"
 }
