@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 
-//TODO 1.14 model does not render properly. Maybe related to https://github.com/MinecraftForge/MinecraftForge/pull/6154
+//TODO 1.16 model does this render properly?
 public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public static final String regName = "alchemical_cauldron";
     /**
@@ -60,10 +60,6 @@ public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
         return new AlchemicalCauldronTileEntity();
     }
 
-    @Override
-    public BlockState getExtendedState(BlockState state, IBlockReader world, BlockPos pos) {
-        return null;
-    }
     @Override
     public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
         return cauldronShape;

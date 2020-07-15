@@ -105,15 +105,13 @@ public class TentBlock extends VampirismBlock {
     }
 
     @Override
-    public void setBedOccupied(BlockState state, IWorldReader world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
-        if(world instanceof IWorldWriter){
-            forWholeTent(pos, state, ((direction, blockPos) -> {
-                BlockState blockState = world.getBlockState(blockPos);
-                if(blockState.getBlock() instanceof TentBlock){
-                    ((IWorldWriter & IWorldReader)world).setBlockState(pos, world.getBlockState(pos).with(BlockStateProperties.OCCUPIED, occupied), 2);
-                }
-            }));
-        }
+    public void setBedOccupied(BlockState state, World world, BlockPos pos, LivingEntity sleeper, boolean occupied) {
+        forWholeTent(pos, state, ((direction, blockPos) -> {
+            BlockState blockState = world.getBlockState(blockPos);
+            if (blockState.getBlock() instanceof TentBlock) {
+                ((IWorldWriter & IWorldReader) world).setBlockState(pos, world.getBlockState(pos).with(BlockStateProperties.OCCUPIED, occupied), 2);
+            }
+        }));
     }
 
     @Override

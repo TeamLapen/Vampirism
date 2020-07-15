@@ -168,7 +168,7 @@ public class RenderHandler implements ISelectiveResourceReloadListener {
         f *= vampireBiomeFogDistanceMultiplier;
         float fogStart = Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
         float fogEnd = Math.min(event.getFarPlaneDistance(), 50 * f);
-        RenderSystem.fogStart(event.getType() == FogRenderer.FogType.FOG_SKY ? 0 : fogStart); //TODO maybe invert
+        RenderSystem.fogStart(event.getType() == FogRenderer.FogType.FOG_SKY ? 0 : fogStart); //maybe invert
         RenderSystem.fogEnd(fogEnd);
     }
 

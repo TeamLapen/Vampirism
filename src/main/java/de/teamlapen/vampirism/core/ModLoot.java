@@ -7,12 +7,8 @@ import net.minecraft.loot.LootFunctionType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 
-/**
- * 1.16
- *
- * @author maxanier
- */
-//@ObjectHolder(REFERENCE.MODID) TODO 1.16 adapt if ForgeRegistries have been implemented
+
+//@ObjectHolder(REFERENCE.MODID) TODO 1.16 adapt if ForgeRegistries for LootFunctionType and LootConditionType have been implemented
 public class ModLoot {
 
     public static LootFunctionType add_book_nbt;

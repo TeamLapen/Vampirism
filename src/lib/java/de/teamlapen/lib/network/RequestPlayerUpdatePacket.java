@@ -10,7 +10,6 @@ import java.util.function.Supplier;
 
 /**
  * Request a update packet for the players {@link ISyncable.ISyncableEntityCapabilityInst} (e.g. on World join)
- * TODO check if there is a better way to do this
  */
 public class RequestPlayerUpdatePacket implements IMessage {
 

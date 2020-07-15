@@ -79,7 +79,7 @@ public class ModEffects {
     }
 
 
-    static void fixMapping(RegistryEvent.MissingMappings.Mapping<Effect> m) {//TODO still needed
+    static void fixMapping(RegistryEvent.MissingMappings.Mapping<Effect> m) {//TODO 1.16 still needed?
         if ("night_vision".equals(m.key.getPath())) {
             m.ignore();
         }

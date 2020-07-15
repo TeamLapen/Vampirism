@@ -6,8 +6,10 @@ import de.teamlapen.vampirism.network.SkillTreePacket;
 import net.minecraft.client.resources.JsonReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,7 +58,10 @@ public class SkillTreeManager extends JsonReloadListener {
         });
 
         skillTree.loadNodes(parsed);
-        VampirismMod.dispatcher.sendToAll(new SkillTreePacket(skillTree.getCopy()));
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server != null) { //On first pack load server will be null, so sending package crashes
+            VampirismMod.dispatcher.sendToAll(new SkillTreePacket(skillTree.getCopy()));
+        }
     }
 
 

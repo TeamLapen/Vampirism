@@ -95,6 +95,6 @@ public abstract class VampirismHunterArmor extends ArmorItem {
      * @return The toughness of the given stack
      */
     protected double getToughness(int slot, ItemStack stack) {
-        return this.getToughness();
+        return this.func_234657_f_();
     }
 }

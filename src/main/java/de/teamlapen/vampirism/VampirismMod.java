@@ -51,12 +51,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
@@ -158,18 +159,22 @@ public class VampirismMod {
     }
 
     @SubscribeEvent
-    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+    public void onAddReloadListenerEvent(AddReloadListenerEvent event) {
         SkillTreeManager.getInstance().getSkillTree().initRootSkills();//Load root skills here, so even if data pack reload fail, the root skills are available #622
-//        event.getServer().getResourceManager().addReloadListener(SkillTreeManager.getInstance());
-//        event.getServer().getResourceManager().addReloadListener(BloodValues.ENTITIES);
-//        event.getServer().getResourceManager().addReloadListener(BloodValues.ITEMS);
-//        event.getServer().getResourceManager().addReloadListener(BloodValues.FLUIDS);
-        //TODO 1.16 waiting for https://github.com/MinecraftForge/MinecraftForge/pull/6849
+        event.addListener(SkillTreeManager.getInstance());
+        event.addListener(BloodValues.ENTITIES);
+        event.addListener(BloodValues.ITEMS);
+        event.addListener(BloodValues.FLUIDS);
+
+    }
+
+    @SubscribeEvent
+    public void onCommandsRegister(RegisterCommandsEvent event) {
+        ModCommands.registerCommands(event.getDispatcher());
     }
 
     @SubscribeEvent
     public void onServerStart(FMLServerStartingEvent event) {
-        ModCommands.registerCommands(event.getCommandDispatcher());
         for (BloodValueLoaderDynamic loader : BloodValues.getDynamicLoader()) {
             loader.onServerStarting(event.getServer());
         }

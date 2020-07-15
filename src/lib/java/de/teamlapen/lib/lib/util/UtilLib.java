@@ -236,7 +236,7 @@ public class UtilLib {
         BlockPos backupPos = null; //
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box); //TODO select a better location (more viable)
-            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(e.getType()), world, c, e.getType())) {//TODO i see no other way
+            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(e.getType()), world, c, e.getType())) {//i see no other way
                 e.setPosition(c.getX(), c.getY() + 0.2, c.getZ());
                 if (!(e instanceof MobEntity) || (((MobEntity) e).canSpawn(world, reason) && ((MobEntity) e).isNotColliding(e.getEntityWorld()))) {
                     backupPos = c; //Store the location in case we do not find a better one
@@ -659,7 +659,7 @@ public class UtilLib {
 
             while (true) {
                 Object var3 = var1.next();
-                var2.append(var3 == c ? "(this Collection)" : (((PrioritizedGoal) var3).getGoal()));//TODO Test
+                var2.append(var3 == c ? "(this Collection)" : (((PrioritizedGoal) var3).getGoal()));// Test
                 if (!var1.hasNext()) {
                     return var2.append(']').toString();
                 }

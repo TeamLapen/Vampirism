@@ -117,11 +117,6 @@ public class CoffinBlock extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isBedFoot(BlockState state, IWorldReader world, BlockPos pos) {
-        return state.get(PART) == CoffinPart.FOOT;
-    }
-
-    @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         Direction enumfacing = state.get(HORIZONTAL_FACING);
 
