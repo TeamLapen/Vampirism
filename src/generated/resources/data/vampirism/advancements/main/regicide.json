@@ -19,9 +19,15 @@
     "main": {
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
-        "entity": {
-          "type": "vampirism:vampire_baron"
-        }
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "predicate": {
+              "type": "vampirism:vampire_baron"
+            },
+            "entity": "this"
+          }
+        ]
       }
     }
   },

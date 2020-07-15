@@ -2,7 +2,7 @@
   "parent": "vampirism:vampire/bat",
   "display": {
     "icon": {
-      "item": "vampirism:item_garlic"
+      "item": "vampirism:vampire_fang"
     },
     "title": {
       "translate": "advancement.vampirism.max_level_vampire"

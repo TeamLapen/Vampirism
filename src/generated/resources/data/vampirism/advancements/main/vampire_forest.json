@@ -19,7 +19,9 @@
     "main": {
       "trigger": "minecraft:location",
       "conditions": {
-        "biome": "vampirism:vampire_forest"
+        "location": {
+          "biome": "vampirism:vampire_forest"
+        }
       }
     }
   },

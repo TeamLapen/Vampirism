@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
@@ -102,7 +101,11 @@ public class ItemModelGenerator extends ItemModelProvider {
             add(ModItems.vampire_fang);
             add(ModItems.weak_human_heart);
             add(ModItems.item_tent);
-            addAll(ModTags.Items.PURE_BLOOD.func_230236_b_());
+            add(ModItems.pure_blood_0);
+            add(ModItems.pure_blood_1);
+            add(ModItems.pure_blood_2);
+            add(ModItems.pure_blood_3);
+            add(ModItems.pure_blood_4);
         }};
         Map<Item, ResourceLocation> itemsWithTexture = new HashMap<Item, ResourceLocation>() {{
             put(ModItems.holy_water_bottle_normal, modLoc("item/holy_water_normal"));
@@ -157,7 +160,6 @@ public class ItemModelGenerator extends ItemModelProvider {
 
         withExistingParent(ModItems.advanced_vampire_hunter_spawn_egg, mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.advanced_vampire_spawn_egg, mcLoc("item/template_spawn_egg"));
-        withExistingParent(ModItems.ghost_spawn_egg, mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.hunter_trainer_spawn_egg, mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.vampire_baron_spawn_egg, mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.vampire_spawn_egg, mcLoc("item/template_spawn_egg"));
@@ -188,8 +190,17 @@ public class ItemModelGenerator extends ItemModelProvider {
         withExistingParent(ModItems.hunter_axe_normal, modLoc("item/hunter_axe"));
         withExistingParent(ModItems.hunter_axe_enhanced, modLoc("item/hunter_axe"));
         withExistingParent(ModItems.hunter_axe_ultimate, modLoc("item/hunter_axe"));
+        withExistingParent(ModItems.hunter_intel_0, modLoc("item/hunter_intel"));
+        withExistingParent(ModItems.hunter_intel_1, modLoc("item/hunter_intel"));
+        withExistingParent(ModItems.hunter_intel_2, modLoc("item/hunter_intel"));
+        withExistingParent(ModItems.hunter_intel_3, modLoc("item/hunter_intel"));
+        withExistingParent(ModItems.hunter_intel_4, modLoc("item/hunter_intel"));
+        withExistingParent(ModItems.hunter_intel_5, modLoc("item/hunter_intel"));
+        withExistingParent(ModItems.hunter_intel_6, modLoc("item/hunter_intel"));
+        withExistingParent(ModItems.hunter_intel_7, modLoc("item/hunter_intel"));
+        withExistingParent(ModItems.hunter_intel_8, modLoc("item/hunter_intel"));
+        withExistingParent(ModItems.hunter_intel_9, modLoc("item/hunter_intel"));
 
-        ModTags.Items.HUNTER_INTEL.func_230236_b_().forEach(item -> withExistingParent(item, modLoc("item/hunter_intel")));
 
         singleTexture("blood_bottle", mcLoc("item/generated"), "layer0", modLoc("item/blood_bottle_0"))
                 .override().predicate(mcLoc("damage"), 0f).model(withExistingParent("blood_bottle_0", mcLoc("item/generated")).texture("layer0", modLoc("item/blood_bottle_0"))).end()

@@ -19,9 +19,15 @@
     "kill": {
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
-        "entity": {
-          "type": "#vampirism:hunter"
-        }
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "predicate": {
+              "type": "#vampirism:hunter"
+            },
+            "entity": "this"
+          }
+        ]
       }
     },
     "faction": {
