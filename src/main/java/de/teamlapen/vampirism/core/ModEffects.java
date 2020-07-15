@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.potion.*;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -75,13 +74,6 @@ public class ModEffects {
             }
         } catch (ObfuscationReflectionHelper.UnableToAccessFieldException e) {
             LOGGER.error("Unable to modify vanilla night vision types. Potion tileInventory and more might not work", e);
-        }
-    }
-
-
-    static void fixMapping(RegistryEvent.MissingMappings.Mapping<Effect> m) {//TODO 1.16 still needed?
-        if ("night_vision".equals(m.key.getPath())) {
-            m.ignore();
         }
     }
 

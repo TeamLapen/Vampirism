@@ -29,7 +29,7 @@ public class AdvancementGenerator extends AdvancementProvider {
 
     private static class HunterAdvancements implements Consumer<Consumer<Advancement>> {
 
-        private Supplier<Advancement> root;
+        private final Supplier<Advancement> root;
 
         public HunterAdvancements(Supplier<Advancement> root) {
             this.root = root;
@@ -106,7 +106,7 @@ public class AdvancementGenerator extends AdvancementProvider {
 
     private static class VampireAdvancements implements Consumer<Consumer<Advancement>> {
 
-        private Supplier<Advancement> root;
+        private final Supplier<Advancement> root;
 
         public VampireAdvancements(Supplier<Advancement> root) {
             this.root = root;
@@ -140,7 +140,7 @@ public class AdvancementGenerator extends AdvancementProvider {
                     .withCriterion("blood_container", InventoryChangeTrigger.Instance.forItems(ModBlocks.blood_container))
                     .register(consumer, REFERENCE.MODID + ":vampire/extra_storage");
             Advancement max_level = Advancement.Builder.builder()
-                    .withDisplay(ModItems.item_garlic, new TranslationTextComponent("advancement.vampirism.max_level_vampire"), new TranslationTextComponent("advancement.vampirism.max_level_vampire.desc"), null, FrameType.GOAL, true, true, true)
+                    .withDisplay(ModItems.vampire_fang, new TranslationTextComponent("advancement.vampirism.max_level_vampire"), new TranslationTextComponent("advancement.vampirism.max_level_vampire.desc"), null, FrameType.GOAL, true, true, true)
                     .withParent(bat)
                     .withCriterion("level", TriggerFaction.builder(VReference.VAMPIRE_FACTION, 14))
                     .withRewards(AdvancementRewards.Builder.experience(100))

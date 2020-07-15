@@ -39,13 +39,14 @@ public class ModRecipes {
     public static final IConditionSerializer<?> CONFIG_CONDITION = CraftingHelper.register(new ConfigCondition.Serializer());
 
     private static final Map<Item, Integer> liquidColors = Maps.newHashMap();
+    private static final Map<ITag<Item>, Integer> liquidColorsTags = Maps.newHashMap();
 
     static void registerDefaultLiquidColors() {
         registerLiquidColor(ModItems.holy_water_bottle_normal, 0x6666FF);
         registerLiquidColor(ModItems.holy_water_bottle_enhanced, 0x6666FF);
         registerLiquidColor(ModItems.holy_water_bottle_ultimate, 0x6666FF);
 
-        //registerLiquidColor(ModTags.Items.GARLIC, 0xBBBBBB); TODO 1.16 use some kind of datapack load event to (re-)register stuff or find a different solution
+        registerLiquidColor(ModTags.Items.GARLIC, 0xBBBBBB);
 
     }
 
@@ -61,7 +62,7 @@ public class ModRecipes {
     }
 
     public static void registerLiquidColor(ITag<Item> items, int color) {
-        items.func_230236_b_/*getAllElements*/().forEach(item -> liquidColors.put(item, color));
+        liquidColorsTags.put(items, color);
     }
 
 
@@ -69,7 +70,15 @@ public class ModRecipes {
      * gets liquid color for item
      */
     public static int getLiquidColor(Item stack) {
-        return liquidColors.getOrDefault(stack, 0x505050);
+        Integer c = liquidColors.get(stack);
+        if (c != null) return c;
+        for (Map.Entry<ITag<Item>, Integer> entry : liquidColorsTags.entrySet()) {
+            if (entry.getKey().func_230235_a_(stack)) {
+                return entry.getValue();
+            }
+        }
+
+        return 0x505050;
     }
 
 }

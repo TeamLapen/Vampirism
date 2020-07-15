@@ -30,7 +30,6 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 
-//TODO 1.16 model does this render properly?
 public class AlchemicalCauldronBlock extends AbstractFurnaceBlock {
     public static final String regName = "alchemical_cauldron";
     /**
