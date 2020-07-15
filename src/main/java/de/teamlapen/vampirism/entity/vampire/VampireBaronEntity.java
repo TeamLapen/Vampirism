@@ -29,6 +29,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -64,6 +66,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
      * Not guaranteed to be exact and not saved to nbt
      */
     private int followingEntities = 0;
+    private final static int ENRAGED_TRANSITION_TIME = 15;
+    private int enragedTransitionTime = 0;
 
     public VampireBaronEntity(EntityType<? extends VampireBaronEntity> type, World world) {
         super(type, world, true);
@@ -127,6 +131,14 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     @Override
     public int getHorizontalFaceSpeed() {
         return 5; //Don't move the head too far
+    }
+
+    /**
+     * @return float between 0 and 1 representing the transition progress
+     */
+    @OnlyIn(Dist.CLIENT)
+    public float getEnragedProgress() {
+        return enragedTransitionTime / (float) ENRAGED_TRANSITION_TIME;
     }
 
     public boolean isEnraged() {
@@ -226,6 +238,13 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             }
             if (getLevel() > 3 && this.rand.nextInt(9) == 0) {
                 this.addPotionEffect(new EffectInstance(Effects.INVISIBILITY, 60));
+            }
+        }
+        if (this.world.isRemote()) {
+            if (isEnraged() && enragedTransitionTime < ENRAGED_TRANSITION_TIME) {
+                enragedTransitionTime++;
+            } else if (!isEnraged() && enragedTransitionTime > 0) {
+                enragedTransitionTime--;
             }
         }
         super.livingTick();

@@ -23,7 +23,7 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, BaronW
     public VampireBaronRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new BaronWrapperModel(), 0.5F);
         this.addLayer(new LayerWings<>(this, Predicates.alwaysTrue(), (entity, model) -> model.getBodyPart(entity)));
-        this.addLayer(new LayerBaronAttire<>(this, VampireBaronEntity::isLady));
+        this.addLayer(new LayerBaronAttire(this, VampireBaronEntity::isLady));
 
     }
 

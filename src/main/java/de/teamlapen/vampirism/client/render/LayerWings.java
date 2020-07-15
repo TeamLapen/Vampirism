@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.client.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.vampirism.client.model.WingModel;
+import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -37,7 +39,15 @@ public class LayerWings<T extends LivingEntity, Q extends EntityModel<T>> extend
             this.getEntityModel().setModelAttributes(model);
             this.model.copyRotationFromBody(bodyPartFunction.apply(entityIn, this.getEntityModel()));
             this.model.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTicks);
+            float s = 1f;
+            if (entityIn instanceof VampireBaronEntity) {
+                s = ((VampireBaronEntity) entityIn).getEnragedProgress();
+            }
+            GlStateManager.pushMatrix();
+            GlStateManager.translatef(0f, 0, 0.02f);
+            GlStateManager.scalef(s, s, s);
             this.model.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+            GlStateManager.popMatrix();
         }
     }
 

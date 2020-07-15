@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.client.model;
 
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import de.teamlapen.vampirism.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
@@ -12,7 +13,7 @@ import net.minecraft.util.math.MathHelper;
  * Attire designed for the female vampire baroness - RebelT
  * Created using Tabula 7.1.0
  */
-public class BaronessAttireModel<T extends LivingEntity> extends EntityModel<T> {
+public class BaronessAttireModel extends EntityModel<VampireBaronEntity> {
     public RendererModel dressTorso;
     public RendererModel dressArmBandRight;
     public RendererModel dressArmBandLeft;
@@ -65,9 +66,13 @@ public class BaronessAttireModel<T extends LivingEntity> extends EntityModel<T> 
     }
 
     @Override
-    public void render(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         this.dressArmBandLeft.render(scale);
+        GlStateManager.pushMatrix();
+        float enraged = entityIn.getEnragedProgress();
+        GlStateManager.scalef(1 - 0.5f * enraged, 1 - 0.7f * enraged, 1 - 0.5f * enraged);
         this.hood.render(scale);
+        GlStateManager.popMatrix();
         this.dressTorso.render(scale);
         this.hat.render(scale);
         this.dressArmBandRight.render(scale);
@@ -83,7 +88,7 @@ public class BaronessAttireModel<T extends LivingEntity> extends EntityModel<T> 
     }
 
     @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
+    public void setRotationAngles(VampireBaronEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
         float bodyRotateY = 0;
         float headRotateY = 0;
         headRotateY = netHeadYaw * ((float) Math.PI / 180f);
@@ -107,7 +112,7 @@ public class BaronessAttireModel<T extends LivingEntity> extends EntityModel<T> 
         this.dressArmBandRight.rotateAngleY = bodyRotateY;
     }
 
-    protected HandSide getSwingingSide(T entity) {
+    protected HandSide getSwingingSide(VampireBaronEntity entity) {
         HandSide handside = entity.getPrimaryHand();
         return entity.swingingHand == Hand.MAIN_HAND ? handside : handside.opposite();
     }
