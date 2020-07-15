@@ -4,10 +4,12 @@ function initializeCoreMod() {
             'target': {
                 'type': 'METHOD',
                 'class': 'net/minecraft/world/gen/feature/jigsaw/JigsawManager$Assembler',
-                'methodName': 'func_214881_a', //func_214881_a
-                'methodDesc': '(Lnet/minecraft/world/gen/feature/structure/AbstractVillagePiece;Ljava/util/concurrent/atomic/AtomicReference;II)V'
+                'methodName': 'func_236831_a_', //func_236831_a_
+                'methodDesc': '(Lnet/minecraft/world/gen/feature/structure/AbstractVillagePiece;Lorg/apache/commons/lang3/mutable/MutableObject;IIZ)V'
             },
             'transformer': function (method) {
+                Java.type('net.minecraftforge.coremod.api.ASMAPI').log("INFO", "Adding hook to JigsawManager$Assembler#func_236831_a_ second for loop");
+
                 var ASM = Java.type('net.minecraftforge.coremod.api.ASMAPI');
                 var Opcodes = Java.type('org.objectweb.asm.Opcodes');
                 var InsnList = Java.type('org.objectweb.asm.tree.InsnList');
@@ -53,32 +55,30 @@ function initializeCoreMod() {
                 /*
                 Should look like this afterwards
 
-                L36
+                L35
                 LINENUMBER 139 L36
                FRAME APPEND [java/util/Iterator]
-                ALOAD 26
+                ALOAD 27
                 INVOKEINTERFACE java/util/Iterator.hasNext ()Z (itf)
-                IFEQ L37
-               L38
-                LINENUMBER 140 L38
-                ALOAD 26
+                IFEQ L36
+                ALOAD 27
                 INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object; (itf)
                 CHECKCAST net/minecraft/world/gen/feature/jigsaw/JigsawPiece
-                ASTORE 27
-               L39
-                LINENUMBER 141 L39
+                ASTORE 28
+               L37
+                LINENUMBER 150 L37
                 ALOAD 0
                 GETFIELD de/teamlapen/vampirism/util/JigsawManager$Assembler.structurePieces : Ljava/util/List;
-                ALOAD 27
+                ALOAD 28
                 INVOKESTATIC de/teamlapen/vampirism/util/ASMHooks.checkStructures (Ljava/util/List;Lnet/minecraft/world/gen/feature/jigsaw/JigsawPiece;)Z
                 IFEQ L40
-                GOTO L36
+                GOTO L35
                L40
                 LINENUMBER 143 L40
                FRAME APPEND [net/minecraft/world/gen/feature/jigsaw/JigsawPiece]
-                ALOAD 27
+                ALOAD 28
                 GETSTATIC net/minecraft/world/gen/feature/jigsaw/EmptyJigsawPiece.INSTANCE : Lnet/minecraft/world/gen/feature/jigsaw/EmptyJigsawPiece;
-                IF_ACMPNE L41
+                IF_ACMPNE L38
                L42
                  */
 

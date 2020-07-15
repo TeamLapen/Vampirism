@@ -8,6 +8,8 @@ function initializeCoreMod() {
                 'methodDesc': '(Lnet/minecraft/entity/Pose;)Lnet/minecraft/entity/EntitySize;'
             },
             'transformer': function (method) {
+                Java.type('net.minecraftforge.coremod.api.ASMAPI').log("INFO", "Hacking PlayerEntity#func_213305_a to add a conditional early return statement");
+
                 var ASM = Java.type('net.minecraftforge.coremod.api.ASMAPI');
                 var Opcodes = Java.type('org.objectweb.asm.Opcodes');
                 var InsnList = Java.type('org.objectweb.asm.tree.InsnList');
