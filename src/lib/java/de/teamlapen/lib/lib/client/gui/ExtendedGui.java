@@ -1,10 +1,12 @@
 package de.teamlapen.lib.lib.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -15,10 +17,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ExtendedGui extends AbstractGui {
 
     /**
-     * Draws a rectangle with a vertical gradient between the specified colors (ARGB format). Args : x1, y1, x2, y2,
+     * Draws a rectangle with a horizontal gradient between the specified colors (ARGB format). Args : x1, y1, x2, y2,
      * topColor, bottomColor
+     * Similar to func_238468_a_, but with gradient on the horizontal axis
      */
-    protected void fillGradient2(int left, int top, int right, int bottom, int startColor, int endColor) {
+    protected void fillGradient2(MatrixStack stack, int left, int top, int right, int bottom, int startColor, int endColor) {
+        Matrix4f matrix = stack.getLast().getMatrix();
         float f = (float) (startColor >> 24 & 255) / 255.0F;
         float f1 = (float) (startColor >> 16 & 255) / 255.0F;
         float f2 = (float) (startColor >> 8 & 255) / 255.0F;
@@ -30,20 +34,22 @@ public class ExtendedGui extends AbstractGui {
         GlStateManager.disableTexture();
         GlStateManager.enableBlend();
         GlStateManager.disableAlphaTest();
-        GlStateManager.disableAlphaTest();
         GlStateManager.blendFuncSeparate(770, 771, 1, 0);
         GlStateManager.shadeModel(7425);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder worldrenderer = tessellator.getBuffer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos(right, top, this.func_230927_p_()).color(f1, f2, f3, f).endVertex(); //Get blit offset
-        worldrenderer.pos(left, top, this.func_230927_p_()).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos(left, bottom, this.func_230927_p_()).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos(right, bottom, this.func_230927_p_()).color(f1, f2, f3, f).endVertex();
+        worldrenderer.pos(matrix, right, top, this.func_230927_p_()).color(f1, f2, f3, f).endVertex(); //Get blit offset
+        worldrenderer.pos(matrix, left, top, this.func_230927_p_()).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos(matrix, left, bottom, this.func_230927_p_()).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos(matrix, right, bottom, this.func_230927_p_()).color(f1, f2, f3, f).endVertex();
         tessellator.draw();
         GlStateManager.shadeModel(7424);
         GlStateManager.disableBlend();
         GlStateManager.enableAlphaTest();
         GlStateManager.enableTexture();
     }
+
+
+
 }

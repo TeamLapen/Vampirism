@@ -259,9 +259,9 @@ public class SkillsScreen extends Screen {
 
         this.func_230926_e_(0);
         RenderSystem.depthFunc(518);
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef((float) i1, (float) j1, -200.0F);
-        RenderSystem.scalef(1.0F / this.zoomOut, 1.0F / this.zoomOut, 1.0F);
+        stack.push();
+        stack.translate(i1, j1, -200);
+        stack.scale(1 / this.zoomOut, 1 / this.zoomOut, 1);
         RenderSystem.enableTexture();
         RenderSystem.disableLighting();
         RenderSystem.enableRescaleNormal();
@@ -401,7 +401,7 @@ public class SkillsScreen extends Screen {
                     RenderSystem.disableLighting();
                     //GlStateManager.enableCull();
                     RenderSystem.enableBlend();
-                    UtilLib.drawTexturedModalRect(this.func_230927_p_(), x + 3, y + 3, 0, 0, 16, 16, 16, 16);
+                    UtilLib.drawTexturedModalRect(stack.getLast().getMatrix(), this.func_230927_p_(), x + 3, y + 3, 0, 0, 16, 16, 16, 16);
                     //GlStateManager.blendFunc(770, 771);
                     RenderSystem.disableLighting();
 
@@ -423,7 +423,7 @@ public class SkillsScreen extends Screen {
 
         RenderSystem.disableDepthTest();
         RenderSystem.enableBlend();
-        RenderSystem.popMatrix();
+        stack.pop();
 
         //Draw "window" and buttons
         Color color = skillHandler.getPlayer().getFaction().getColor();
@@ -439,8 +439,8 @@ public class SkillsScreen extends Screen {
         //Draw information for selected skill
         selected = newselected;
         if (selected != null) {
-            RenderSystem.pushMatrix();
-            RenderSystem.translated(0, 0, 1); //Render tooltips in front of buttons
+            stack.push();
+            stack.translate(0, 0, 1); //Render tooltips in front of buttons
             int m2MouseX = mouseX + 12;
             int m2MouseY = mouseY - 4;
 
@@ -472,7 +472,7 @@ public class SkillsScreen extends Screen {
             } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
                 this.field_230712_o_.func_238407_a_(stack, new TranslationTextComponent("text.vampirism.skill.unlock_parent_first"), m2MouseX, m2MouseY + height_desc + 3, 0xFFA32228);
             }
-            RenderSystem.popMatrix();
+            stack.pop();
         }
 
 

@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -76,7 +78,7 @@ public abstract class GuiPieMenu<T> extends Screen {
         int cY = this.field_230709_l_ / 2;
         double radius = this.field_230709_l_ / 4d;
 
-        drawBackground(cX, cY);
+        drawBackground(stack, cX, cY);
         // Check if the mouse is in bounds and whether its in the center or not
         double mouseRad = updateMouse(mouseX, mouseY, cX, cY, radius / 2);
         boolean center = (mouseX - cX) * (mouseX - cX) + (mouseY - cY) * (mouseY - cY) < (radius / 4) * (radius / 4);
@@ -110,20 +112,20 @@ public abstract class GuiPieMenu<T> extends Screen {
             }
             if (selected) {
                 selectedElement = i;
-                drawSelectedCenter(cX, cY, rad);
+                drawSelectedCenter(stack, cX, cY, rad);
             }
             // Draw Icon
             RenderSystem.color4f(1F, 1F, 1F, 1F);
             this.field_230706_i_
                     .getTextureManager().bindTexture(getIconLoc(element));
-            UtilLib.drawTexturedModalRect(func_230927_p_
+            UtilLib.drawTexturedModalRect(stack.getLast().getMatrix(), func_230927_p_
                     (), x, y, 0, 0, 16, 16, 16, 16);
 
             this.afterIconDraw(stack, element, x, y);
 
         }
         if (selectedElement == -1) {
-            this.drawUnselectedCenter(cX, cY);
+            this.drawUnselectedCenter(stack, cX, cY);
         } else {
             String name = UtilLib.translate(getUnlocalizedName(elements.get(selectedElement)));
             int tx = cX - field_230706_i_
@@ -216,16 +218,16 @@ public abstract class GuiPieMenu<T> extends Screen {
     /**
      * Draws a line between the given coordinates
      */
-    protected void drawLine(double x1, double y1, double x2, double y2) {
+    protected void drawLine(MatrixStack stack, double x1, double y1, double x2, double y2) {
         RenderSystem.disableTexture();
         BufferBuilder builder = Tessellator.getInstance().getBuffer();
-        builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+        builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
         RenderSystem.lineWidth(2F);
 
-        builder.pos(x1, y1, this.func_230927_p_
-                ()).endVertex();
-        builder.pos(x2, y2, this.func_230927_p_
-                ()).endVertex();
+        builder.pos(stack.getLast().getMatrix(), (float) x1, (float) y1, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
+        builder.pos(stack.getLast().getMatrix(), (float) x2, (float) y2, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).endVertex();
         Tessellator.getInstance().draw();
         RenderSystem.enableTexture();
     }
@@ -278,34 +280,31 @@ public abstract class GuiPieMenu<T> extends Screen {
      * @param cX CenterX
      * @param cY CenterY
      */
-    private void drawBackground(float cX, float cY) {
+    private void drawBackground(MatrixStack stack, float cX, float cY) {
         // Calculate the scale which has to be applied for the image to fit
         float scale = (this.field_230709_l_
                 / 2F + 16 + 16) / BGS;
-
-        RenderSystem.pushMatrix();
+        stack.push();
         RenderSystem.enableBlend();
-        RenderSystem.translatef(cX, cY, this.func_230927_p_
-                ());
-        RenderSystem.scalef(scale, scale, 1);
+        stack.translate(cX, cY, this.func_230927_p_());
+        stack.scale(scale, scale, 1);
 
         // Draw the cicle image
         this.field_230706_i_
                 .getTextureManager().bindTexture(backgroundTex);
-        RenderSystem.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
-
+        Matrix4f matrix = stack.getLast().getMatrix();
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
-        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        builder.pos(BGS / 2f, BGS / 2f, this.func_230927_p_
-                ()).tex(1, 1).endVertex();
-        builder.pos(BGS / 2f, -BGS / 2f, this.func_230927_p_
-                ()).tex(1, 0).endVertex();
-        builder.pos(-BGS / 2f, -BGS / 2f, this.func_230927_p_
-                ()).tex(0, 0).endVertex();
-        builder.pos(-BGS / 2f, BGS / 2f, this.func_230927_p_
-                ()).tex(0, 1).endVertex();
+        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+        builder.pos(matrix, BGS / 2f, BGS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 1).endVertex();
+        builder.pos(matrix, BGS / 2f, -BGS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 0).endVertex();
+        builder.pos(matrix, -BGS / 2f, -BGS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 0).endVertex();
+        builder.pos(matrix, -BGS / 2f, BGS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 1).endVertex();
         tessellator.draw();
 
 
@@ -315,11 +314,11 @@ public abstract class GuiPieMenu<T> extends Screen {
                 double rad = i * radDiff + radDiff / 2;
                 double cos = Math.cos(rad);
                 double sin = Math.sin(rad);
-                this.drawLine(cos * RR, sin * RR, +cos * BGS / 2, sin * BGS / 2);
+                this.drawLine(stack, cos * RR, sin * RR, +cos * BGS / 2, sin * BGS / 2);
             }
         }
         RenderSystem.disableBlend();
-        RenderSystem.popMatrix();
+        stack.pop();
 
     }
 
@@ -330,76 +329,76 @@ public abstract class GuiPieMenu<T> extends Screen {
      * @param cY
      * @param rad The direction the arrow should point in radiant
      */
-    private void drawSelectedCenter(double cX, double cY, double rad) {
+    private void drawSelectedCenter(MatrixStack stack, double cX, double cY, double rad) {
 
         // Caluculate rotation and scale
         double deg = Math.toDegrees(-rad);
         float scale = (this.field_230709_l_
         ) / 4F / CS;
-
-        RenderSystem.pushMatrix();
+        stack.push();
         RenderSystem.enableBlend();
         // Move origin to center, scale and rotate
-        RenderSystem.translated(cX, cY, this.func_230927_p_
+        stack.translate(cX, cY, this.func_230927_p_
                 ());
-        RenderSystem.scalef(scale, scale, 1);
-        RenderSystem.rotatef((float) deg, 0, 0, 1);
+        stack.scale(scale, scale, 1);
+        stack.rotate(Vector3f.ZP.rotationDegrees((float) deg));
 
         // Draw
+        Matrix4f matrix = stack.getLast().getMatrix();
         this.field_230706_i_
                 .getTextureManager().bindTexture(centerTex);
-        RenderSystem.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
-        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        builder.pos(CS / 2f, CS / 2f, this.func_230927_p_
-                ()).tex(0.5f, 1).endVertex();
-        builder.pos(CS / 2f, -CS / 2f, this.func_230927_p_
-                ()).tex(0.5f, 0).endVertex();
-        builder.pos(-CS / 2f, -CS / 2f, this.func_230927_p_
-                ()).tex(0, 0).endVertex();
-        builder.pos(-CS / 2f, CS / 2f, this.func_230927_p_
-                ()).tex(0, 1).endVertex();
+        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+        builder.pos(matrix, CS / 2f, CS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 1).endVertex();
+        builder.pos(matrix, CS / 2f, -CS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 0).endVertex();
+        builder.pos(matrix, -CS / 2f, -CS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 0).endVertex();
+        builder.pos(matrix, -CS / 2f, CS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0, 1).endVertex();
         tessellator.draw();
 
 
         RenderSystem.disableBlend();
-        RenderSystem.popMatrix();
+        stack.pop();
     }
 
-    private void drawUnselectedCenter(double cX, double cY) {
+    private void drawUnselectedCenter(MatrixStack stack, double cX, double cY) {
 
         float scale = (this.field_230709_l_
         ) / 4F / CS;
 
-        RenderSystem.pushMatrix();
+        stack.push();
         RenderSystem.enableBlend();
         // Move origin to center, scale and rotate
-        RenderSystem.translated(cX, cY, this.func_230927_p_
+        stack.translate(cX, cY, this.func_230927_p_
                 ());
-        RenderSystem.scalef(scale, scale, 1);
+        stack.scale(scale, scale, 1);
 
         // Draw
+        Matrix4f matrix = stack.getLast().getMatrix();
+
         this.field_230706_i_
                 .getTextureManager().bindTexture(centerTex);
-        RenderSystem.color4f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), BGT);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
-        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        builder.pos(CS / 2f, CS / 2f, this.func_230927_p_
-                ()).tex(1, 1).endVertex();
-        builder.pos(CS / 2f, -CS / 2f, this.func_230927_p_
-                ()).tex(1, 0).endVertex();
-        builder.pos(-CS / 2f, -CS / 2f, this.func_230927_p_
-                ()).tex(0.5f, 0).endVertex();
-        builder.pos(-CS / 2f, CS / 2f, this.func_230927_p_
-                ()).tex(0.5f, 1).endVertex();
+        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+        builder.pos(matrix, CS / 2f, CS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 1).endVertex();
+        builder.pos(matrix, CS / 2f, -CS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(1, 0).endVertex();
+        builder.pos(matrix, -CS / 2f, -CS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 0).endVertex();
+        builder.pos(matrix, -CS / 2f, CS / 2f, this.func_230927_p_
+                ()).color(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), (int) (BGT * 255)).tex(0.5f, 1).endVertex();
         tessellator.draw();
 
 
         RenderSystem.disableBlend();
-        RenderSystem.popMatrix();
+        stack.pop();
     }
 
     /**

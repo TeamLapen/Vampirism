@@ -41,6 +41,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.GameType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -309,12 +310,14 @@ public class VampirismHUDOverlay extends ExtendedGui {
             // the player
             // int factor=scaledresolution.getScaleFactor();
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT, Minecraft.IS_RUNNING_ON_MAC);
-            GlStateManager.matrixMode(GL11.GL_PROJECTION);
-            GlStateManager.loadIdentity();
-            GlStateManager.ortho(0.0D, this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight(), 0.0D, 1D, -1D);
-            GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-            GlStateManager.loadIdentity();
-            GlStateManager.pushMatrix();
+            //Setup a new matrix stack as vanilla currently does as well for rendering the GUI
+            MatrixStack stack = new MatrixStack();
+            stack.push();
+            RenderSystem.matrixMode(GL11.GL_PROJECTION);
+            RenderSystem.loadIdentity();
+            RenderSystem.ortho(0.0D, this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight(), 0.0D, 1D, -1D);
+            RenderSystem.matrixMode(GL11.GL_MODELVIEW);
+            RenderSystem.loadIdentity();
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             int w = (this.mc.getMainWindow().getScaledWidth());
             int h = (this.mc.getMainWindow().getScaledHeight());
@@ -325,24 +328,25 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 float b = (float) (screenColor & 255) / 255.0F;
                 float a = (screenPercentage / 100f) * (screenColor >> 24 & 255) / 255F;
 
-                GlStateManager.disableTexture();
-                GlStateManager.enableBlend();
-                GlStateManager.disableAlphaTest();
-                GlStateManager.blendFuncSeparate(770, 771, 1, 0);
-                GlStateManager.shadeModel(7425);
+                RenderSystem.disableTexture();
+                RenderSystem.enableBlend();
+                RenderSystem.disableAlphaTest();
+                RenderSystem.blendFuncSeparate(770, 771, 1, 0);
+                RenderSystem.shadeModel(7425);
                 Tessellator tessellator = Tessellator.getInstance();
+                Matrix4f matrix = stack.getLast().getMatrix();
                 BufferBuilder worldrenderer = tessellator.getBuffer();
                 worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-                worldrenderer.pos(0, h, this.func_230927_p_()).color(r, g, b, a).endVertex();
-                worldrenderer.pos(w, h, this.func_230927_p_()).color(r, g, b, a).endVertex();
-                worldrenderer.pos(w, 0, this.func_230927_p_()).color(r, g, b, a).endVertex();
-                worldrenderer.pos(0, 0, this.func_230927_p_()).color(r, g, b, a).endVertex();
+                worldrenderer.pos(matrix, 0, h, this.func_230927_p_()).color(r, g, b, a).endVertex();
+                worldrenderer.pos(matrix, w, h, this.func_230927_p_()).color(r, g, b, a).endVertex();
+                worldrenderer.pos(matrix, w, 0, this.func_230927_p_()).color(r, g, b, a).endVertex();
+                worldrenderer.pos(matrix, 0, 0, this.func_230927_p_()).color(r, g, b, a).endVertex();
 
                 tessellator.draw();
-                GlStateManager.shadeModel(7424);
-                GlStateManager.disableBlend();
-                GlStateManager.enableAlphaTest();
-                GlStateManager.enableTexture();
+                RenderSystem.shadeModel(7424);
+                RenderSystem.disableBlend();
+                RenderSystem.enableAlphaTest();
+                RenderSystem.enableTexture();
 
                 /*
                  * Try later this.drawGradientRect(0, 0, w,Math.round(h/(2/renderRed)),
@@ -362,10 +366,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     bh = Math.round(h / (float) 4 * screenPercentage / 100);
                     bw = Math.round(w / (float) 8 * screenPercentage / 100);
 
-                    this.func_238468_a_(event.getMatrixStack(), 0, 0, w, bh, screenColor, 0x000);
-                    this.func_238468_a_(event.getMatrixStack(), 0, h - bh, w, h, 0x00000000, screenColor);
-                    this.fillGradient2(0, 0, bw, h, 0x000000, screenColor);
-                    this.fillGradient2(w - bw, 0, w, h, screenColor, 0x00);
+                    this.func_238468_a_(stack, 0, 0, w, bh, screenColor, 0x000);
+                    this.func_238468_a_(stack, 0, h - bh, w, h, 0x00000000, screenColor);
+                    this.fillGradient2(stack, 0, 0, bw, h, 0x000000, screenColor);
+                    this.fillGradient2(stack, w - bw, 0, w, h, screenColor, 0x00);
                 } else { //If here screenBottomPercentage has to be >0
 
                     // batmode border
@@ -378,7 +382,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
             }
             GL11.glEnable(GL11.GL_DEPTH_TEST);
-            GlStateManager.popMatrix();
+            stack.pop();
         }
     }
 

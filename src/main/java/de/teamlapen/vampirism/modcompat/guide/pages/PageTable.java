@@ -13,6 +13,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -51,7 +52,7 @@ public class PageTable extends Page {
             fontRendererObj.func_238421_b_(stack, "§l" + headline, x, y, 0);
             y += fontRendererObj.FONT_HEIGHT;
         }
-        drawLine(x, y + fontRendererObj.FONT_HEIGHT, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.FONT_HEIGHT, guiBase.publicZLevel);
+        drawLine(stack, x, y + fontRendererObj.FONT_HEIGHT, x + (guiBase.xSize * 3F / 5F), y + fontRendererObj.FONT_HEIGHT, guiBase.publicZLevel);
         for (String[] l : lines) {
             x = guiLeft + 39;
             for (int i = 0; i < l.length; i++) {
@@ -70,19 +71,18 @@ public class PageTable extends Page {
     /**
      * Copied from GuiPieMenu
      */
-    protected void drawLine(double x1, double y1, double x2, double y2, float publicZLevel) {
-        RenderSystem.pushMatrix();
+    protected void drawLine(MatrixStack stack, double x1, double y1, double x2, double y2, float publicZLevel) {
+        stack.push();
+        Matrix4f matrix = stack.getLast().getMatrix();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        RenderSystem.color4f(0F, 0F, 0F, 1F);
         RenderSystem.lineWidth(2F);
         BufferBuilder builder = Tessellator.getInstance().getBuffer();
-        builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-        builder.pos((float) x1, (float) y1, publicZLevel).endVertex();
-        builder.pos((float) x2, (float) y2, publicZLevel).endVertex();
+        builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        builder.pos(matrix, (float) x1, (float) y1, publicZLevel).color(0, 0, 0, 255).endVertex();
+        builder.pos(matrix, (float) x2, (float) y2, publicZLevel).color(0, 0, 0, 255).endVertex();
         Tessellator.getInstance().draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        RenderSystem.color4f(0F, 0F, 0F, 1F);
-        RenderSystem.popMatrix();
+        stack.pop();
     }
 
 
