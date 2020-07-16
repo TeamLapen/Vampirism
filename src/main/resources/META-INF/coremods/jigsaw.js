@@ -43,7 +43,7 @@ function initializeCoreMod() {
                 newInstructions.add(new LabelNode());
                 newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
                 newInstructions.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/gen/feature/jigsaw/JigsawManager$Assembler", ASM.mapField("field_214886_e"), "Ljava/util/List;")); //structurePieces
-                newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 27));
+                newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 28));
                 newInstructions.add(ASM.buildMethodCall("de/teamlapen/vampirism/util/ASMHooks", "checkStructures", "(Ljava/util/List;Lnet/minecraft/world/gen/feature/jigsaw/JigsawPiece;)Z", ASM.MethodType.STATIC));
                 newInstructions.add(new JumpInsnNode(Opcodes.IFEQ, loopStart));
                 newInstructions.add(new JumpInsnNode(Opcodes.GOTO, loopBeginLabel));

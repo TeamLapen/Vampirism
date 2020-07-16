@@ -17,6 +17,7 @@ import java.util.List;
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 
+@SuppressWarnings("unused")
 public class ASMHooks {
 
     @ObjectHolder("vampirism:sundamage")

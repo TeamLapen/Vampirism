@@ -222,7 +222,7 @@ public class ModWorld {
     }
 
     private static String singleJigsawString(String resourceLocation) {
-        return "LegacySingle[Left[" + resourceLocation + "]]";
+        return "Single[Left[" + resourceLocation + "]]";
     }
 
 
