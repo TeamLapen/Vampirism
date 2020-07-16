@@ -175,7 +175,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
         ItemStack itemstack = this.findAmmo(player, stack);
 
-        if (!itemstack.isEmpty() || bowInfinite) {
+        if (!itemstack.isEmpty() || creative) {
             if (itemstack.isEmpty()) {
                 itemstack = new ItemStack(ModItems.crossbow_arrow_normal);
             }
