@@ -170,7 +170,7 @@ public class Tests {
         info.world.setBlockState(info.pos, ModBlocks.weapon_table.getDefaultState());
         info.player.setHeldItem(info.player.getActiveHand(), new ItemStack(Items.LAVA_BUCKET));
         BlockState block = info.world.getBlockState(info.pos);
-        block.onBlockActivated(info.world, info.player, info.player.getActiveHand(), new BlockRayTraceResult(new Vector3d(0, 0, 0), Direction.func_239631_a_(info.world.rand), info.pos, false));//TODO 1.14 test BlockRayTraceResult
+        block.onBlockActivated(info.world, info.player, info.player.getActiveHand(), new BlockRayTraceResult(new Vector3d(0, 0, 0), Direction.func_239631_a_(info.world.rand), info.pos, false));
         block = info.world.getBlockState(info.pos);
         assert info.player.getHeldItem(info.player.getActiveHand()).getItem().equals(Items.BUCKET) : "Incorrect Fluid Container Handling";
         LOGGER.warn("Block lava level: {}", new Object[]{block.get(WeaponTableBlock.LAVA)});

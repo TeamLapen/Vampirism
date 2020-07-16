@@ -237,7 +237,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     public static AttributeModifierMap.MutableAttribute getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
-                .func_233815_a_(SharedMonsterAttributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH)
+                .func_233815_a_(SharedMonsterAttributes.MAX_HEALTH, 1)
                 .func_233815_a_(SharedMonsterAttributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE)
                 .func_233815_a_(SharedMonsterAttributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.VAMPIRE_SPEED);
     }
@@ -264,7 +264,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.targetSelector.addGoal(4, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(4, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
         this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollerEntity.class, 5, true, true, (living) -> UtilLib.isInsideStructure(living, Structure.field_236381_q_)));
     }
     //IMob -------------------------------------------------------------------------------------------------------------
@@ -357,10 +357,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     protected void updateEntityAttributes() {
-        LOGGER.warn("MISSING UPDATE ATTRIBUTES"); //TODO 1.16
         int l = Math.max(getLevel(), 0);
-//        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
-//        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH + BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE + BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
     }
 
     @Override

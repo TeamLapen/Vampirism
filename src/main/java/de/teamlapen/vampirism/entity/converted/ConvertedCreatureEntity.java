@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.goals.AttackMeleeNoSunGoal;
 import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
+import de.teamlapen.vampirism.util.SharedMonsterAttributes;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -283,18 +284,17 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
     }
 
     protected void updateEntityAttributes() {
-        LOGGER.warn("MISSING ATTRIBUTES"); //TODO 1.16
-//        IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
-//        if (helper != null) {
-//            this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG(entityCreature));
-//            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth(entityCreature));
-//            this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance(entityCreature));
-//            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed(entityCreature));
-//        } else {
-//            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
-//            this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(0);
-//            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0);
-//        }
+        IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
+        if (helper != null) {
+            this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG(entityCreature.getType()));
+            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth(entityCreature.getType()));
+            this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance(entityCreature.getType()));
+            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed(entityCreature.getType()));
+        } else {
+            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
+            this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(0);
+            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0);
+        }
 
     }
 

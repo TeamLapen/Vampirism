@@ -337,10 +337,9 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     protected void updateEntityAttributes() {
-        LOGGER.warn("MISSING UPDATE ATTRIBUTES"); //TODO 1.16
         int l = Math.max(getLevel(), 0);
-//        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue( + BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
-//        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue( + BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(+BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(+BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
 
     }
 

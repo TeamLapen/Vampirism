@@ -247,7 +247,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         this.goalSelector.addGoal(4, new FleeGarlicVampireGoal(this, 0.9F, false));
         this.goalSelector.addGoal(5, new BaronAIAttackMelee(this, 1.0F));
         this.goalSelector.addGoal(6, new BaronAIAttackRanged(this, 60, 64, 6, 4));
-        this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, PlayerEntity.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel(input)));//TODO Works only partially. Pathfinding somehow does not find escape routes
+        this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, PlayerEntity.class, 6.0F, 0.6, 0.7F, input -> input != null && !isLowerLevel(input)));//Works only partially. Pathfinding somehow does not find escape routes
         this.goalSelector.addGoal(7, new RandomWalkingGoal(this, 0.2));
         this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
@@ -267,19 +267,18 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     protected void updateEntityAttributes(boolean aggressive) {
-        LOGGER.warn("Missing ATTRIBUTES"); //TODO 1.16
-//        if (aggressive) {
-//            this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20D);
-//            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
-//                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getLevel())));
-//        } else {
-//            this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5D);
-//            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
-//                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()) / 3);
-//        }
-//        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
-//        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-//                .setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+        if (aggressive) {
+            this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20D);
+            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
+                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getLevel())));
+        } else {
+            this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5D);
+            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
+                    BalanceMobProps.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()) / 3);
+        }
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
+                .setBaseValue(BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(BalanceMobProps.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
     }
 
     private boolean isLowerLevel(LivingEntity player) {

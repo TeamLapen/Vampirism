@@ -151,7 +151,7 @@ public class VampirismConfig {
 
             builder.push("sundamage");
             sundamageUnknownDimension = builder.comment("Whether vampires should receive sundamage in unknown dimensions").define("sundamageUnknownDimension", false);
-            sundamageDimensionsOverridePositive = builder.comment("Add the id of any dimension you want to enforce sundamage for to this list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverridePositive", Collections.emptyList(), (o -> {
+            sundamageDimensionsOverridePositive = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to enforce sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverridePositive", Collections.emptyList(), (o -> {
                 if (o instanceof String) {
                     try {
                         new ResourceLocation((String) o);
@@ -163,7 +163,7 @@ public class VampirismConfig {
 
             }));
 
-            sundamageDimensionsOverrideNegative = builder.comment("Add the id of any dimension you want to disable sundamage for to this list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverrideNegative", Collections.emptyList(), (object) -> {
+            sundamageDimensionsOverrideNegative = builder.comment("Add the string id in quotes of any dimension (/vampirism currentDimension) you want to disable sundamage for to this comma-separated list. Overrides defaults and values added by other mods").defineList("sundamageDimensionsOverrideNegative", Collections.emptyList(), (object) -> {
                 if (object instanceof String) {
                     try {
                         new ResourceLocation((String) object);

@@ -93,7 +93,7 @@ public class SundamageRegistry implements ISundamageRegistry {
         for (String s : negative) {
             ResourceLocation id = new ResourceLocation(s); //Should be safe because config validates values?
             RegistryKey<World> key = RegistryKey.func_240903_a_(Registry.field_239699_ae_, id);
-            sundamageConfiguredDims.put(key, false); //TODO 1.16 verify
+            sundamageConfiguredDims.put(key, false);
         }
         List<? extends String> positive = VampirismConfig.SERVER.sundamageDimensionsOverridePositive.get();
         for (String s : positive) {
