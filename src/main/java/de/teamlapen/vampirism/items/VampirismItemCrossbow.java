@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
@@ -148,7 +149,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If the crossbow can shoot without an arrow in the players inventory
      */
     protected boolean isCrossbowInfinite(ItemStack stack, PlayerEntity player) {
-        int enchant = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowinfinite, stack);
+        int enchant = EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack);
         return enchant > 0 || player.isCreative();
     }
 
@@ -174,7 +175,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
         ItemStack itemstack = this.findAmmo(player, stack);
 
-        if (!itemstack.isEmpty() || bowInfinite) {
+        if (!itemstack.isEmpty() || creative) {
             if (itemstack.isEmpty()) {
                 itemstack = new ItemStack(ModItems.crossbow_arrow_normal);
             }
@@ -239,6 +240,11 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return super.canApplyAtEnchantingTable(stack, enchantment) || enchantment == Enchantments.INFINITY;
     }
 
     /**

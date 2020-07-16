@@ -196,6 +196,11 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onMissingMappingsEnchantments(RegistryEvent.MissingMappings<Enchantment> event) {
+        ModEnchantments.fixMapping(event);
+    }
+
+    @SubscribeEvent
     public void onRegisterTasks(RegistryEvent.Register<Task> event) {
         ModTasks.registerTasks(event.getRegistry());
     }
