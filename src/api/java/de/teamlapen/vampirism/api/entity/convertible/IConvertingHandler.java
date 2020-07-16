@@ -16,18 +16,16 @@ public interface IConvertingHandler<T extends CreatureEntity> {
 
     /**
      * If Vampirism's default converted creature is used, this can be used to specify some properties of the converted creature
-     *
-     * @param <Q>
      */
-    interface IDefaultHelper<Q extends CreatureEntity> {
+    interface IDefaultHelper {
 
-        double getConvertedDMG(EntityType<Q> entity);
+        double getConvertedDMG(EntityType<? extends CreatureEntity> entity);
 
-        double getConvertedKnockbackResistance(EntityType<Q> entity);
+        double getConvertedKnockbackResistance(EntityType<? extends CreatureEntity> entity);
 
-        double getConvertedMaxHealth(EntityType<Q> entity);
+        double getConvertedMaxHealth(EntityType<? extends CreatureEntity> entity);
 
-        double getConvertedSpeed(EntityType<Q> entity);
+        double getConvertedSpeed(EntityType<? extends CreatureEntity> entity);
 
     }
 }

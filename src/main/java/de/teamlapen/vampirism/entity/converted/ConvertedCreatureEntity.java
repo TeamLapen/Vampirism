@@ -283,13 +283,14 @@ public class ConvertedCreatureEntity<T extends CreatureEntity> extends VampireBa
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<CreatureEntity>(this, CreatureEntity.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
+    @SuppressWarnings("unchecked")
     protected void updateEntityAttributes() {
         IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
         if (helper != null) {
-            this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG(entityCreature.getType()));
-            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth(entityCreature.getType()));
-            this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance(entityCreature.getType()));
-            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed(entityCreature.getType()));
+            this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG((EntityType<? extends CreatureEntity>) entityCreature.getType()));
+            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth((EntityType<? extends CreatureEntity>) entityCreature.getType()));
+            this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance((EntityType<? extends CreatureEntity>) entityCreature.getType()));
+            this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed((EntityType<? extends CreatureEntity>) entityCreature.getType()));
         } else {
             this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
             this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(0);

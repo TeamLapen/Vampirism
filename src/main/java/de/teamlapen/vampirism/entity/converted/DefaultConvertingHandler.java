@@ -24,11 +24,11 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
     /**
      * Used if no helper is specified
      */
-    private final static IDefaultHelper<? extends CreatureEntity> defaultHelper = new IDefaultHelper() {
+    private final static IDefaultHelper defaultHelper = new IDefaultHelper() {
 
 
         @Override
-        public double getConvertedDMG(EntityType entityType) {
+        public double getConvertedDMG(EntityType<? extends CreatureEntity> entityType) {
             AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
             if (map.func_233809_c_(SharedMonsterAttributes.ATTACK_DAMAGE)) {
                 return map.func_233807_b_(SharedMonsterAttributes.ATTACK_DAMAGE) * 1.3;
@@ -38,19 +38,19 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
         }
 
         @Override
-        public double getConvertedKnockbackResistance(EntityType entityType) {
+        public double getConvertedKnockbackResistance(EntityType<? extends CreatureEntity> entityType) {
             AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
             return map.func_233807_b_(SharedMonsterAttributes.KNOCKBACK_RESISTANCE) * 1.3;
         }
 
         @Override
-        public double getConvertedMaxHealth(EntityType entityType) {
+        public double getConvertedMaxHealth(EntityType<? extends CreatureEntity> entityType) {
             AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
             return map.func_233807_b_(SharedMonsterAttributes.MAX_HEALTH) * 1.5;
         }
 
         @Override
-        public double getConvertedSpeed(EntityType entityType) {
+        public double getConvertedSpeed(EntityType<? extends CreatureEntity> entityType) {
             AttributeModifierMap map = GlobalEntityTypeAttributes.func_233835_a_(entityType);
             return Math.min(map.func_233807_b_(SharedMonsterAttributes.MOVEMENT_SPEED) * 1.2, 2.9D);
         }
@@ -80,11 +80,11 @@ public class DefaultConvertingHandler<T extends CreatureEntity> implements IConv
     /**
      * @return The helper for this handler
      */
-    public IDefaultHelper<T> getHelper() {
+    public IDefaultHelper getHelper() {
         return helper;
     }
 
-    protected void copyImportantStuff(ConvertedCreatureEntity converted, T entity) {
+    protected void copyImportantStuff(ConvertedCreatureEntity<T> converted, T entity) {
         converted.copyLocationAndAnglesFrom(entity);
         converted.setEntityCreature(entity);
         converted.updateEntityAttributes();
