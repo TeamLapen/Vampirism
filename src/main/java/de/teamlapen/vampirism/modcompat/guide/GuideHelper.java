@@ -5,8 +5,12 @@ import de.maxanier.guideapi.api.IPage;
 import de.maxanier.guideapi.api.IRecipeRenderer;
 import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.page.PageIRecipe;
+import de.maxanier.guideapi.page.PageItemStack;
 import de.maxanier.guideapi.page.PageJsonRecipe;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.task.Task;
+import de.teamlapen.vampirism.api.entity.player.task.TaskUnlocker;
 import de.teamlapen.vampirism.inventory.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.inventory.recipes.ShapedWeaponTableRecipe;
 import de.teamlapen.vampirism.inventory.recipes.ShapelessWeaponTableRecipe;
@@ -14,15 +18,20 @@ import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
 import de.teamlapen.vampirism.modcompat.guide.recipes.AlchemicalCauldronRecipeRenderer;
 import de.teamlapen.vampirism.modcompat.guide.recipes.ShapedWeaponTableRecipeRenderer;
 import de.teamlapen.vampirism.modcompat.guide.recipes.ShapelessWeaponTableRecipeRenderer;
+import de.teamlapen.vampirism.player.tasks.reward.ItemReward;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -103,5 +112,33 @@ public class GuideHelper {
         return new PageJsonRecipe(id, GuideHelper::getRenderer);
     }
 
+    /**
+     * Create a simple page informing the reader about a task that can be used to obtain an item
+     */
+    public static PageItemStack createItemTaskDescription(Task task) {
+        assert task.getReward() instanceof ItemReward;
+        ItemStack reward = ((ItemReward) task.getReward()).getReward();
+        List<ITextProperties> text = new ArrayList<>();
+        StringTextComponent newLine = new StringTextComponent("\n");
+        IPlayableFaction<?> f = task.getFaction();
+        String type = f == null ? "" : f.getName().getString() + " ";
+        text.add(new TranslationTextComponent("text.vampirism.task.reward_obtain", type));
+        text.add(newLine);
+        text.add(newLine);
+        text.add(task.getTranslation());
+        text.add(newLine);
+        text.add(new TranslationTextComponent("text.vampirism.task.prerequisites"));
+        text.add(newLine);
+        TaskUnlocker[] unlockers = task.getUnlocker();
+        if (unlockers.length > 0) {
+            for (TaskUnlocker u : unlockers) {
+                text.add(new StringTextComponent("- ").append(u.getDescription()).append(newLine));
+            }
 
+
+        } else {
+            text.add(new TranslationTextComponent("text.vampirism.task.prerequisites.none"));
+        }
+        return new PageItemStack(ITextProperties.func_240654_a_(text), reward);
+    }
 }

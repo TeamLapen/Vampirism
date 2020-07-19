@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.client.gui.WeaponTableScreen;
 import de.teamlapen.vampirism.core.ModRecipes;
 import de.teamlapen.vampirism.inventory.container.AlchemicalCauldronContainer;
 import de.teamlapen.vampirism.inventory.container.WeaponTableContainer;
+import de.teamlapen.vampirism.player.tasks.TaskUtil;
 import de.teamlapen.vampirism.util.REFERENCE;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -26,6 +27,7 @@ import javax.annotation.Nonnull;
 public class VampirismJEIPlugin implements IModPlugin {
     static final ResourceLocation WEAPON_TABLE_RECIPE_ID = new ResourceLocation("vampirism", "hunter_weapon");
     static final ResourceLocation ALCHEMICAL_CAULDRON_RECIPE_UID = new ResourceLocation("vampirism", "alchemical_cauldron");
+    static final ResourceLocation TASK_RECIPE_UID = new ResourceLocation("vampirism", "task");
     private static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "plugin");
 
     @Nonnull
@@ -38,7 +40,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
-        registration.addRecipeCategories(new AlchemicalCauldronRecipeCategory(helper), new WeaponTableRecipeCategory(helper));
+        registration.addRecipeCategories(new AlchemicalCauldronRecipeCategory(helper), new WeaponTableRecipeCategory(helper), new TaskRecipeCategory(helper));
     }
 
     @Override
@@ -53,6 +55,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         RecipeManager recipeManager = world.getRecipeManager();
         registration.addRecipes(recipeManager.getRecipes(ModRecipes.ALCHEMICAL_CAULDRON_TYPE).values(),ALCHEMICAL_CAULDRON_RECIPE_UID);
         registration.addRecipes(recipeManager.getRecipes(ModRecipes.WEAPONTABLE_CRAFTING_TYPE).values(), WEAPON_TABLE_RECIPE_ID);
+        registration.addRecipes(TaskUtil.getItemRewardTasks(), TASK_RECIPE_UID);
     }
 
     @Override
