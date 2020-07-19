@@ -13,7 +13,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Handles skills for Vampirism's IFactionPlayers
@@ -40,6 +43,9 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
         }
         SkillNode node = findSkillNode(getRootNode(), skill);
         if (node != null) {
+            if (isSkillNodeLocked(node)) {
+                return Result.LOCKED_BY_OTHER_NODE;
+            }
             if (node.isRoot() || isNodeEnabled(node.getParent())) {
                 if (getLeftSkillPoints() > 0) {
                     return isNodeEnabled(node) ? Result.OTHER_NODE_SKILL : Result.OK;//If another skill in that node is already enabled this one cannot be enabled
@@ -54,6 +60,14 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
             LOGGER.warn("Node for skill {} could not be found", skill);
             return Result.NOT_FOUND;
         }
+    }
+
+    public boolean isSkillNodeLocked(SkillNode nodeIn) {
+        return Arrays.stream(nodeIn.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node -> Arrays.stream(node.getElements())).anyMatch(this::isSkillEnabled);
+    }
+
+    public List<ISkill> getLockingSkills(SkillNode nodeIn) {
+        return Arrays.stream(nodeIn.getLockingNodes()).map(id -> SkillTreeManager.getInstance().getSkillTree().getNodeFromId(id)).filter(Objects::nonNull).flatMap(node -> Arrays.stream(node.getElements())).collect(Collectors.toList());
     }
 
     public void disableAllSkills() {
@@ -160,6 +174,7 @@ public class SkillHandler<T extends IFactionPlayer<?>> implements ISkillHandler<
 
     public void readUpdateFromServer(CompoundNBT nbt) {
         if (!nbt.contains("skills")) return;
+        //noinspection unchecked
         List<ISkill> old = (List<ISkill>) enabledSkills.clone();
         for (String id : nbt.getCompound("skills").keySet()) {
             ISkill skill = ModRegistries.SKILLS.getValue(new ResourceLocation(id));

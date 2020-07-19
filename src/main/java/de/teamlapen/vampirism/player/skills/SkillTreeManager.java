@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class SkillTreeManager extends JsonReloadListener {
         return instance;
     }
 
-    private SkillTree skillTree = new SkillTree();
+    private final SkillTree skillTree = new SkillTree();
 
     private SkillTreeManager() {
         super(GSON, "vampirismskillnodes");
@@ -42,7 +43,7 @@ public class SkillTreeManager extends JsonReloadListener {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonObject> resourceLocationJsonObjectMap, IResourceManager iResourceManager, IProfiler iProfiler) {
+    protected void apply(Map<ResourceLocation, JsonObject> resourceLocationJsonObjectMap, @Nonnull IResourceManager iResourceManager, @Nonnull IProfiler iProfiler) {
         Map<ResourceLocation, SkillNode.Builder> parsed = new HashMap<>();
         resourceLocationJsonObjectMap.forEach((id, object) -> {
             try {

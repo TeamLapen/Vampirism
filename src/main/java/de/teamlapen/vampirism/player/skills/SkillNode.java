@@ -25,25 +25,27 @@ public class SkillNode {
     private final SkillNode parent;
     private final List<SkillNode> children;
     private final ISkill[] elements;
+    private final ResourceLocation[] lockingNodes;
     private final int depth;
-    private final IPlayableFaction faction;
+    private final IPlayableFaction<?> faction;
     private final ResourceLocation id;
 
-    private SkillNode(ResourceLocation id, IPlayableFaction faction, SkillNode parent, int depth, ISkill... elements) {
+    private SkillNode(ResourceLocation id, IPlayableFaction<?> faction, SkillNode parent, int depth, ISkill[] elements, ResourceLocation... lockingNodes) {
         this.id = id;
         this.parent = parent;
         this.faction = faction;
         this.depth = depth;
         this.children = new ArrayList<>();
         this.elements = elements;
+        this.lockingNodes = lockingNodes;
     }
 
 
     /**
      * For root skill node
      */
-    public SkillNode(IPlayableFaction faction, ISkill element) {
-        this(faction.getID(), faction, null, 0, element);
+    public SkillNode(IPlayableFaction<?> faction, ISkill element) {
+        this(faction.getID(), faction, null, 0, new ISkill[]{element});
 
     }
 
@@ -52,13 +54,12 @@ public class SkillNode {
      *
      * @param elements One or more xor skills
      */
-    public SkillNode(ResourceLocation id, SkillNode parent, ISkill... elements) {
-        this(id, parent.getFaction(), parent, parent.depth + 1, elements);
+    public SkillNode(ResourceLocation id, SkillNode parent, ISkill[] elements, ResourceLocation... lockingNodes) {
+        this(id, parent.getFaction(), parent, parent.depth + 1, elements, lockingNodes);
         parent.children.add(this);
     }
 
     /**
-     * @param skill
      * @return If the given skill is an element of this node
      */
     public boolean containsSkill(ISkill skill) {
@@ -70,7 +71,7 @@ public class SkillNode {
     }
 
     public Builder getCopy() {
-        return new Builder(parent.id, null, Arrays.asList(elements));
+        return new Builder(parent.id, null, Arrays.asList(elements), Arrays.asList(lockingNodes));
     }
 
     public int getDepth() {
@@ -81,7 +82,7 @@ public class SkillNode {
         return elements;
     }
 
-    public IPlayableFaction getFaction() {
+    public IPlayableFaction<?> getFaction() {
         return faction;
     }
 
@@ -91,6 +92,10 @@ public class SkillNode {
 
     public SkillNode getParent() {
         return parent;
+    }
+
+    public ResourceLocation[] getLockingNodes() {
+        return lockingNodes;
     }
 
     public boolean isRoot() {
@@ -107,7 +112,19 @@ public class SkillNode {
     }
 
     public static class Builder {
-        public static Builder deserialize(JsonObject json, JsonDeserializationContext context) {
+        public final List<ResourceLocation> lockingNodes;
+        public final ResourceLocation parentId;
+        public final List<ISkill> skills;
+        public final ResourceLocation mergeId;
+
+        private Builder(ResourceLocation parentId, ResourceLocation mergeId, List<ISkill> skills, List<ResourceLocation> lockingNodes) {
+            this.mergeId = mergeId;
+            this.parentId = parentId;
+            this.skills = skills;
+            this.lockingNodes = lockingNodes;
+        }
+
+        public static Builder deserialize(JsonObject json, @SuppressWarnings("unused") JsonDeserializationContext context) {
             if (json.has("remove") && JSONUtils.getBoolean(json, "remove")) return null;
             ResourceLocation parent = json.has("parent") ? new ResourceLocation(JSONUtils.getString(json, "parent")) : null;
             ResourceLocation merge = json.has("merge") ? new ResourceLocation(JSONUtils.getString(json, "merge")) : null;
@@ -121,7 +138,12 @@ public class SkillNode {
                 }
                 skillList.add(s);
             }
-            return new Builder(parent, merge, skillList);
+            JsonArray locking = JSONUtils.getJsonArray(json, "locking", new JsonArray());
+            List<ResourceLocation> lockingList = new ArrayList<>();
+            for (int i = 0; i < locking.size(); i++) {
+                lockingList.add(new ResourceLocation(JSONUtils.getString(locking.get(i), "skill")));
+            }
+            return new Builder(parent, merge, skillList, lockingList);
         }
 
         public static Builder readFrom(PacketBuffer buf) {
@@ -139,21 +161,21 @@ public class SkillNode {
                 skillList.add(s);
             }
 
+            List<ResourceLocation> lockingList = new ArrayList<>();
+            int count2 = buf.readVarInt();
+            for (int i = 0; i < count2; i++) {
+                lockingList.add(buf.readResourceLocation());
+            }
 
-            return new Builder(parent, merge, skillList);
+
+            return new Builder(parent, merge, skillList, lockingList);
         }
 
-        public final ResourceLocation parentId;
-        public final List<ISkill> skills;
-        public final ResourceLocation mergeId;
-
-        private Builder(ResourceLocation parentId, ResourceLocation mergeId, List<ISkill> skills) {
-            this.mergeId = mergeId;
-            this.parentId = parentId;
-            this.skills = skills;
+        public SkillNode build(ResourceLocation id, SkillNode parent) {
+            return new SkillNode(id, parent, skills.toArray(new ISkill[0]), lockingNodes.toArray(new ResourceLocation[0]));
         }
 
-        public boolean checkSkillFaction(IPlayableFaction faction) {
+        public boolean checkSkillFaction(IPlayableFaction<?> faction) {
             for (ISkill s : skills) {
                 if (!faction.getID().equals(s.getFaction().getID())) {
                     return false;
@@ -172,12 +194,18 @@ public class SkillNode {
             }
 
             JsonArray skillIds = new JsonArray();
-
             for (ISkill s : skills) {
                 skillIds.add(s.getRegistryName().toString());
             }
-
             jsonobject.add("skills", skillIds);
+
+            if (!lockingNodes.isEmpty()) {
+                JsonArray lockedIds = new JsonArray();
+                for (ResourceLocation s : lockingNodes) {
+                    lockedIds.add(s.toString());
+                }
+                jsonobject.add("locking", skillIds);
+            }
             return jsonobject;
         }
 
@@ -204,6 +232,11 @@ public class SkillNode {
             buf.writeVarInt(this.skills.size());
             for (ISkill s : skills) {
                 buf.writeResourceLocation(s.getRegistryName());
+            }
+
+            buf.writeVarInt(this.lockingNodes.size());
+            for (ResourceLocation s : lockingNodes) {
+                buf.writeResourceLocation(s);
             }
 
         }

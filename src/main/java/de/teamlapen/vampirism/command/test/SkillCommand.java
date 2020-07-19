@@ -77,6 +77,9 @@ public class SkillCommand extends BasicCommand {
             case NOT_FOUND:
                 commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.otherfaction"), false);
                 return 0;
+            case LOCKED_BY_OTHER_NODE:
+                commandSource.sendFeedback(new TranslationTextComponent("command.vampirism.test.skill.locked"), false);
+                return 0;
             default:
         }
         return 0;
