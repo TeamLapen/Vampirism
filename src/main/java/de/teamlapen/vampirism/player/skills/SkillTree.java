@@ -10,6 +10,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,6 +20,7 @@ public class SkillTree {
     private final static Logger LOGGER = LogManager.getLogger();
 
     private final Map<ResourceLocation, SkillNode> rootNodes = new HashMap<>();
+    private Map<ResourceLocation, SkillNode> allNodes = new HashMap<>();
 
     /**
      * Stores values relevant for rendering the skill menu. Only filled on client
@@ -27,7 +30,7 @@ public class SkillTree {
     public Map<ResourceLocation, SkillNode.Builder> getCopy() {
         Map<ResourceLocation, SkillNode.Builder> map = new HashMap<>();
         for (SkillNode root : rootNodes.values()) {
-            addChildenCopyToMap(root, map);
+            addChildrenCopyToMap(root, map);
         }
         return map;
     }
@@ -44,10 +47,16 @@ public class SkillTree {
         return skillNodeSizeMap.get(faction);
     }
 
+    @Nonnull
     public SkillNode getRootNodeForFaction(ResourceLocation id) {
         if (!rootNodes.containsKey(id))
             throw new IllegalStateException("Faction " + id + " does not have a root skill");
         return rootNodes.get(id);
+    }
+
+    @Nullable
+    public SkillNode getNodeFromId(ResourceLocation id) {
+        return allNodes.get(id);
     }
 
     /**
@@ -104,7 +113,7 @@ public class SkillTree {
                         if (!builder.checkSkillFaction(parent.getFaction())) {
                             LOGGER.error("Cannot create skill node {} because skills do not match the derived faction {}", id, parent.getFaction());
                         } else {
-                            builtNodes.put(id, new SkillNode(id, parent, builder.skills.toArray(new ISkill[0])));
+                            builtNodes.put(id, builder.build(id, parent));
                         }
                         iterator.remove();
                         flag = true;
@@ -118,6 +127,7 @@ public class SkillTree {
                 break;
             }
         }
+        this.allNodes = builtNodes;
         LOGGER.info("Loaded {} skill nodes", builtNodes.size() - rootNodes.size());
     }
 
@@ -128,10 +138,10 @@ public class SkillTree {
         }
     }
 
-    private void addChildenCopyToMap(SkillNode n, Map<ResourceLocation, SkillNode.Builder> map) {
+    private void addChildrenCopyToMap(SkillNode n, Map<ResourceLocation, SkillNode.Builder> map) {
         for (SkillNode c : n.getChildren()) {
             map.put(c.getId(), c.getCopy());
-            addChildenCopyToMap(c, map);
+            addChildrenCopyToMap(c, map);
         }
     }
 

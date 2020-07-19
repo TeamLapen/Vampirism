@@ -35,6 +35,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -68,6 +69,9 @@ public class SkillsScreen extends Screen {
     private SkillHandler skillHandler;
     private boolean display;
     private ISkill selected;
+    private SkillNode selectedNode;
+    private int displayXWidth;
+    private int displayYHeight;
 
     public SkillsScreen() {
         super(new TranslationTextComponent("screen.vampirism.skills"));
@@ -195,7 +199,8 @@ public class SkillsScreen extends Screen {
                 resetSkills.active = false;
             }
         }
-
+        this.displayXWidth = this.skillNodes.stream().flatMap(node -> Arrays.stream(node.getElements())).mapToInt(ISkill::getRenderColumn).max().orElse(0) * 25;
+        this.displayYHeight = this.skillNodes.stream().flatMap(node -> Arrays.stream(node.getElements())).mapToInt(ISkill::getRenderRow).max().orElse(0) * 20;
     }
 
     @Override
@@ -228,13 +233,13 @@ public class SkillsScreen extends Screen {
     }
 
     private void checkDisplay() {
-        displayY = MathHelper.clamp(displayY, -20 / zoomOut, 350 / zoomOut);
-        displayX = MathHelper.clamp(displayX, -400 / zoomOut + (zoomOut - 2.0F) * (-1) * 250, -300 / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
+        displayY = MathHelper.clamp(displayY, -20 / zoomOut, (this.displayYHeight - 20)  / zoomOut);
+        displayX = MathHelper.clamp(displayX, (-400 - displayXWidth)  / zoomOut + (zoomOut - 2.0F) * (-1) * 250, (-400 + displayXWidth) / zoomOut + (zoomOut - 2.0F) * (-1) * 250);
         displayXNew = displayX;
         displayYNew = displayY;
     }
 
-    private void drawSkills(MatrixStack stack, int mouseX, int mouseY, float partialTicks) { //TODO 1.16 migrate RenderSystem.push
+    private void drawSkills(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         int offsetX = MathHelper.floor(this.displayX + (this.displayXNew - this.displayX) * (double) partialTicks);
         int offsetY = MathHelper.floor(this.displayY + (this.displayYNew - this.displayY) * (double) partialTicks);
 
@@ -333,9 +338,11 @@ public class SkillsScreen extends Screen {
 
                 int unlockstate = skillHandler.isNodeEnabled(node) ? 0 : skillHandler.isNodeEnabled(node.getParent()) ? 1 : -1;
                 int color = 0xff000000;
-                if (unlockstate == 0) {
+                if (skillHandler.isNodeEnabled(node)) {
                     color = 0xffa0a0a0;
-                } else if (unlockstate == 1) {
+                } else if (skillHandler.isSkillNodeLocked(node)) {
+                    color = 0xff990000;
+                } else if (skillHandler.isNodeEnabled(node.getParent())) {
                     color = 0xff009900;
                 }
                 this.hLine(stack, xs, xp, yp, color);
@@ -361,7 +368,8 @@ public class SkillsScreen extends Screen {
         RenderSystem.enableColorMaterial();
 
         //Draw skills
-        ISkill newselected = null;//Not sure if mouse clicks can occur while this is running, so don't set #selected to null here but use a extra variable to be sure
+        ISkill newSelected = null;//Not sure if mouse clicks can occur while this is running, so don't set #selected to null here but use a extra variable to be sure
+        SkillNode newSelectedNode = null;
         for (SkillNode node : skillNodes) {
             ISkill[] elements = node.getElements();
             if (elements.length > 1) {
@@ -400,7 +408,7 @@ public class SkillsScreen extends Screen {
                     this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
                     RenderSystem.enableBlend();
-                    this.blit(stack, x - 2, y - 2, 0, 202, 26, 26);
+                    this.blit(stack, x - 2, y - 2, node.getLockingNodes().length == 0 ? 0 : 26, 202, 26, 26);
                     RenderSystem.disableBlend();
 
                     this.minecraft.getTextureManager().bindTexture(getIconLoc(skill));
@@ -416,7 +424,8 @@ public class SkillsScreen extends Screen {
                     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
                     if (mMouseX >= (float) x && mMouseX <= (float) (x + 22) && mMouseY >= (float) y && mMouseY <= (float) (y + 22)) {
-                        newselected = skill;
+                        newSelected = skill;
+                        newSelectedNode = node;
                     }
 
                     if (i + 1 < elements.length) {
@@ -444,7 +453,8 @@ public class SkillsScreen extends Screen {
         super.render(stack, mouseX, mouseY, partialTicks);
 
         //Draw information for selected skill
-        selected = newselected;
+        selected = newSelected;
+        selectedNode = newSelectedNode;
         if (selected != null) {
             stack.push();
             stack.translate(0, 0, 1); //Render tooltips in front of buttons
@@ -461,7 +471,15 @@ public class SkillsScreen extends Screen {
             List<IReorderingProcessor> descLines = desc == null ? Collections.emptyList() : this.font.trimStringToWidth(desc, width_name);
             int height_desc = descLines.size() * this.font.FONT_HEIGHT;
 
-            if (result == ISkillHandler.Result.ALREADY_ENABLED || result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
+            List<ISkill> lockingSkills = null;
+            int lockingColor = 0xFF000000;
+            if (selectedNode.getLockingNodes().length != 0) {
+                lockingSkills = skillHandler.getLockingSkills(selectedNode);
+                height_desc += 12 * (lockingSkills.size() + 1);
+                lockingColor = result == ISkillHandler.Result.ALREADY_ENABLED ? 0xff808080 : lockingSkills.stream().anyMatch(skill -> skillHandler.isSkillEnabled(skill)) ? 0xFFA32228 : 0xFFFBAE00;
+            }
+            int locking_desc = height_desc;
+            if (result == ISkillHandler.Result.ALREADY_ENABLED || result == ISkillHandler.Result.PARENT_NOT_ENABLED || result == ISkillHandler.Result.LOCKED_BY_OTHER_NODE) {
                 height_desc += 12;
             }
             this.fillGradient(stack, m2MouseX - 3, m2MouseY - 3, m2MouseX + width_name + 3, m2MouseY + height_desc + 3 + 12, -1073741824, -1073741824);
@@ -472,6 +490,12 @@ public class SkillsScreen extends Screen {
             for (IReorderingProcessor t : descLines) {
                 this.font.func_238422_b_(stack, t, m2MouseX, m2MouseY + 12 + j, 0xff505050);
                 j += this.font.FONT_HEIGHT;
+            }
+            if (lockingSkills != null) {
+                this.font.func_243248_b(stack, new TranslationTextComponent("text.vampirism.skill.excluding"), m2MouseX, m2MouseY + locking_desc - 12 * lockingSkills.size() + 3, lockingColor);
+                for (int i = 0; i < lockingSkills.size(); i++) {
+                    this.font.func_243248_b(stack, new StringTextComponent("  ").append(lockingSkills.get(i).getName()), m2MouseX, m2MouseY + locking_desc - i * 12 + 3, lockingColor);
+                }
             }
 
             if (result == ISkillHandler.Result.ALREADY_ENABLED) {
