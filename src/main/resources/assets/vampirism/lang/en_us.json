@@ -699,5 +699,7 @@
   "text.vampirism.name": "Name: ",
   "text.vampirism.minion.call_single": "Call single",
   "text.vampirism.minion.call_all": "Call all",
-  "text.vampirism.minion.respawn": "Respawn dead"
+  "text.vampirism.minion.respawn": "Respawn dead",
+  "__comment": "tasks",
+  "task.vampirism.feeding_adapter": "Kitchen utility"
 }
